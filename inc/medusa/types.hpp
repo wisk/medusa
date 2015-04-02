@@ -51,7 +51,7 @@ typedef boost::multiprecision::int128_t   s128;
 typedef boost::multiprecision::uint128_t  u128;
 
 typedef boost::multiprecision::int256_t   s256;
-typedef boost::multiprecision::uint128_t  u256;
+typedef boost::multiprecision::uint256_t  u256;
 
 typedef boost::multiprecision::int512_t   s512;
 typedef boost::multiprecision::uint512_t  u512;
@@ -60,6 +60,38 @@ typedef boost::multiprecision::int1024_t  s1024;
 typedef boost::multiprecision::uint1024_t u1024;
 
 typedef boost::multiprecision::cpp_int    ap_int;
+
+class IntType
+{
+public:
+  IntType(void) : m_BitSize(0), m_Value() {}
+  explicit IntType(s8 Value)    : m_BitSize(8),    m_Value(Value) {}
+  explicit IntType(u8 Value)    : m_BitSize(8),    m_Value(Value) {}
+  explicit IntType(s16 Value)   : m_BitSize(16),   m_Value(Value) {}
+  explicit IntType(u16 Value)   : m_BitSize(16),   m_Value(Value) {}
+  explicit IntType(s32 Value)   : m_BitSize(32),   m_Value(Value) {}
+  explicit IntType(u32 Value)   : m_BitSize(32),   m_Value(Value) {}
+  explicit IntType(s64 Value)   : m_BitSize(64),   m_Value(Value) {}
+  explicit IntType(u64 Value)   : m_BitSize(64),   m_Value(Value) {}
+  explicit IntType(s128 Value)  : m_BitSize(128),  m_Value(Value) {}
+  explicit IntType(u128 Value)  : m_BitSize(128),  m_Value(Value) {}
+  explicit IntType(s256 Value)  : m_BitSize(256),  m_Value(Value) {}
+  explicit IntType(u256 Value)  : m_BitSize(256),  m_Value(Value) {}
+  explicit IntType(s512 Value)  : m_BitSize(512),  m_Value(Value) {}
+  explicit IntType(u512 Value)  : m_BitSize(512),  m_Value(Value) {}
+  explicit IntType(s1024 Value) : m_BitSize(1024), m_Value(Value) {}
+  explicit IntType(u1024 Value) : m_BitSize(1024), m_Value(Value) {}
+
+  explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) {}
+
+  u16 GetBitSize(void) const { return m_BitSize; }
+  ap_int GetValue(void) const { return m_Value; }
+  ap_int& Value(void) { return m_Value; }
+
+private:
+  u16 m_BitSize;
+  ap_int m_Value;
+};
 
 
 typedef u16                 TTranslationUnit;

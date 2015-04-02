@@ -430,7 +430,7 @@ std::string OperationExpression::ToString(void) const
   }
 }
 
-u32 OperationExpression::GetSizeInBit(void) const
+u32 OperationExpression::GetBitSize(void) const
 {
   return 0;
 }
@@ -462,9 +462,9 @@ Expression::SPType UnaryOperationExpression::Clone(void) const
     m_spExpr->Clone());
 }
 
-u32 UnaryOperationExpression::GetSizeInBit(void) const
+u32 UnaryOperationExpression::GetBitSize(void) const
 {
-  return m_spExpr->GetSizeInBit();
+  return m_spExpr->GetBitSize();
 }
 
 Expression::SPType UnaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
@@ -502,9 +502,9 @@ Expression::SPType BinaryOperationExpression::Clone(void) const
     m_spLeftExpr->Clone(), m_spRightExpr->Clone());
 }
 
-u32 BinaryOperationExpression::GetSizeInBit(void) const
+u32 BinaryOperationExpression::GetBitSize(void) const
 {
-  return std::max(m_spLeftExpr->GetSizeInBit(), m_spRightExpr->GetSizeInBit());
+  return std::max(m_spLeftExpr->GetBitSize(), m_spRightExpr->GetBitSize());
 }
 
 Expression::SPType BinaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
@@ -546,35 +546,19 @@ void BinaryOperationExpression::SwapLeftExpressions(BinaryOperationExpression::S
 
 // constant expression ////////////////////////////////////////////////////////
 
-ConstantExpression::ConstantExpression(u32 ConstType, u64 Value)
-: m_ConstType(ConstType), m_Value(
-ConstType == ConstUnknownBit ||
-ConstType == Const64Bit ?
-Value : (Value & ((1ULL << m_ConstType) - 1)))
+ConstantExpression::ConstantExpression(u16 BitSize, ap_int Value)
+: m_Value(BitSize, Value)
 {
 }
 
 std::string ConstantExpression::ToString(void) const
 {
-  std::ostringstream Buffer;
-  if (m_ConstType != ConstUnknownBit)
-    Buffer << "int" << m_ConstType << "(";
-
-  auto TmpValue = m_Value;
-  //if (m_Value < 0)
-  //{
-  //  Buffer << "-";
-  //  TmpValue = (~m_Value) + 1;
-  //}
-  Buffer << "0x" << (boost::format("%x") % TmpValue).str();
-  if (m_ConstType != ConstUnknownBit)
-    Buffer << ")";
-  return Buffer.str();
+  return str(boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.GetValue());
 }
 
 Expression::SPType ConstantExpression::Clone(void) const
 {
-  return std::make_shared<ConstantExpression>(m_ConstType, m_Value);
+  return std::make_shared<ConstantExpression>(m_Value.GetBitSize(), m_Value.GetValue());
 }
 
 Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
@@ -587,7 +571,7 @@ bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Dat
   if (rData.size() != 1)
     return false;
 
-  rData.front() = std::make_tuple(m_ConstType, m_Value);
+  rData.front() = m_Value;
   return true;
 }
 
@@ -599,29 +583,6 @@ bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Da
 bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
 {
   return false;
-}
-
-bool ConstantExpression::SignExtend(u32 NewSizeInBit)
-{
-  switch (NewSizeInBit)
-  {
-  case Const8Bit:  m_Value = medusa::SignExtend<s64, 8>(m_Value); break;
-  case Const16Bit: m_Value = medusa::SignExtend<s64, 16>(m_Value); break;
-  case Const32Bit: m_Value = medusa::SignExtend<s64, 32>(m_Value); break;
-  case Const64Bit:                                                 break;
-  default: return false;
-  }
-
-  switch (m_ConstType)
-  {
-  case Const8Bit:  m_Value &= 0x000000ff; break;
-  case Const16Bit: m_Value &= 0x0000ffff; break;
-  case Const32Bit: m_Value &= 0xffffffff; break;
-  case Const64Bit:                        break;
-  default: return false;
-  }
-
-  return true;
 }
 
 // identifier expression //////////////////////////////////////////////////////
@@ -646,7 +607,7 @@ Expression::SPType IdentifierExpression::Clone(void) const
 
 }
 
-u32 IdentifierExpression::GetSizeInBit(void) const
+u32 IdentifierExpression::GetBitSize(void) const
 {
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 
@@ -668,7 +629,7 @@ bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, D
   if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize))
     return false;
 
-  rData.front() = std::make_tuple(RegSize, Value);
+  rData.front() = IntType(RegSize, ap_int(Value));
   return true;
 }
 
@@ -676,13 +637,11 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
 {
   auto DataValue = rData.front();
 
-  // FIXME: it seems to cause issue with movsx instruction
   u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
-  if (RegSize != std::get<0>(DataValue))
-    Log::Write("core").Level(LogWarning) << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << std::get<0>(DataValue) << LogEnd;
-    //return false;)
+  if (RegSize != DataValue.GetBitSize())
+    Log::Write("core").Level(LogDebug) << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << DataValue.GetBitSize() << LogEnd;
 
-  u64 RegVal = std::get<1>(DataValue).convert_to<u64>();
+  u64 RegVal = DataValue.GetValue().convert_to<u64>();
   if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize))
     return false;
 
@@ -719,7 +678,7 @@ Expression::SPType VectorIdentifierExpression::Clone(void) const
   return std::make_shared<VectorIdentifierExpression>(m_VecId, m_pCpuInfo);
 }
 
-u32 VectorIdentifierExpression::GetSizeInBit(void) const
+u32 VectorIdentifierExpression::GetBitSize(void) const
 {
   u32 SizeInBit = 0;
   for (auto Id : m_VecId)
@@ -750,7 +709,7 @@ bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemC
     u64 RegValue = 0;
     if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize))
       return false;
-    rData.push_front(std::make_tuple(RegSize, RegValue));
+    rData.push_front(IntType(RegSize, RegValue));
   }
   return true;
 }
@@ -763,7 +722,7 @@ bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMem
       return false;
     u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
     auto DataValue = rData.front();
-    if (!pCpuCtxt->WriteRegister(Id, &std::get<1>(DataValue), RegSize))
+    if (!pCpuCtxt->WriteRegister(Id, &DataValue.GetValue(), RegSize))
       return false;
     rData.pop_front();
   }
@@ -799,7 +758,7 @@ Expression::SPType TrackedIdentifierExpression::Clone(void) const
 
 }
 
-u32 TrackedIdentifierExpression::GetSizeInBit(void) const
+u32 TrackedIdentifierExpression::GetBitSize(void) const
 {
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 
@@ -839,7 +798,7 @@ Expression::SPType MemoryExpression::Clone(void) const
   return std::make_shared<MemoryExpression>(m_AccessSizeInBit, m_spBaseExpr->Clone(), m_spOffExpr->Clone(), m_Dereference);
 }
 
-u32 MemoryExpression::GetSizeInBit(void) const
+u32 MemoryExpression::GetBitSize(void) const
 {
   return m_AccessSizeInBit;
 }
@@ -866,14 +825,14 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataC
       u64 MemVal = 0;
       if (!pMemCtxt->ReadMemory(LinAddr, &MemVal, m_AccessSizeInBit / 8))
         return false;
-      rDataValue = std::make_tuple(m_AccessSizeInBit, MemVal);
+      rDataValue = IntType(m_AccessSizeInBit, MemVal);
     }
   }
   else
   {
     if (rData.size() != 1)
       return false;
-    rData.front() = std::make_tuple(m_AccessSizeInBit, LinAddr);
+    rData.front() = IntType(m_AccessSizeInBit, LinAddr);
   }
 
   return true;
@@ -893,9 +852,9 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
 
     for (auto const& rDataValue : rData)
     {
-      if (!pMemCtxt->WriteMemory(LinAddr, &std::get<1>(rDataValue), std::get<0>(rDataValue) / 8))
+      if (!pMemCtxt->WriteMemory(LinAddr, &rDataValue.GetValue(), rDataValue.GetBitSize() / 8))
         return false;
-      LinAddr += std::get<0>(rDataValue) / 8;
+      LinAddr += rDataValue.GetBitSize() / 8;
     }
   }
   // but if it's just an addressing operation, we have to make sure the address is moved
@@ -912,9 +871,9 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
       return false;
 
     //auto DataSize = std::get<0>(rData.front());
-    auto DataVal = std::get<1>(rData.front());
+    auto DataVal = rData.front().GetValue();
     u64 DataToWrite = DataVal.convert_to<u64>(); // TODO: is it mandatory?
-    if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetSizeInBit()))
+    if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetBitSize()))
       return false;
   }
   return true;
@@ -930,10 +889,10 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, OffsetData) == false)
     return false;
 
-  TBase Base = BaseData.size() != 1 ? 0x0 : std::get<1>(BaseData.front()).convert_to<TBase>();
+  TBase Base = BaseData.size() != 1 ? 0x0 : BaseData.front().GetValue().convert_to<TBase>();
   if (OffsetData.size() != 1)
     return false;
-  TOffset OffsetValue = std::get<1>(OffsetData.front()).convert_to<TOffset>();
+  TOffset OffsetValue = OffsetData.front().GetValue().convert_to<TOffset>();
   rAddress = Address(Base, OffsetValue);
   return true;
 }
@@ -987,14 +946,9 @@ Expression::SPType SymbolicExpression::Clone(void) const
   return std::make_shared<SymbolicExpression>(m_Type, m_Value, m_Address);
 }
 
-u32 SymbolicExpression::GetSizeInBit(void) const
+u32 SymbolicExpression::GetBitSize(void) const
 {
   return 0;
-}
-
-bool SymbolicExpression::SignExtend(u32 NewSizeInBit)
-{
-  return false;
 }
 
 Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
@@ -1004,14 +958,14 @@ Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
 
 // helper /////////////////////////////////////////////////////////////////////
 
-Expression::SPType Expr::MakeConst(u32 ConstType, u64 Value)
+Expression::SPType Expr::MakeConst(u16 BitSize, ap_int Value)
 {
-  return std::make_shared<ConstantExpression>(ConstType, Value);
+  return std::make_shared<ConstantExpression>(BitSize, Value);
 }
 
 Expression::SPType Expr::MakeBoolean(bool Value)
 {
-  return std::make_shared<ConstantExpression>(ConstantExpression::Const1Bit, Value ? 1 : 0);
+  return std::make_shared<ConstantExpression>(1, Value ? 1 : 0);
 }
 
 Expression::SPType Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)

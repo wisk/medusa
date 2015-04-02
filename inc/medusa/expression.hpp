@@ -52,8 +52,7 @@ public:
   typedef std::list<Expression::SPType> LSPType;
   typedef std::vector<Expression::SPType> VSPType;
 
-  typedef std::tuple<u16, ap_int> DataType;
-  typedef std::deque<DataType> DataContainerType;
+  typedef std::deque<IntType> DataContainerType;
 
   enum Kind
   {
@@ -80,9 +79,8 @@ public:
 
   virtual std::string ToString(void) const = 0;
   virtual Expression::SPType Clone(void) const = 0;
-  virtual u32 GetSizeInBit(void) const = 0;
+  virtual u32 GetBitSize(void) const = 0;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor) = 0;
-  virtual bool SignExtend(u32 NewSizeInBit) = 0;
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
 
   virtual Kind GetClassKind(void) const { return Unknown; }
@@ -128,9 +126,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   std::string const& GetName(void)    const { return m_Name;    }
@@ -155,9 +152,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
 private:
@@ -192,8 +188,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const { return nullptr; }
-  virtual u32 GetSizeInBit(void) const { return 0; }
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   Type GetType(void) const { return m_Type; }
@@ -238,9 +233,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   Expression::SPType GetThenExpression(void) { return m_spThenExpr; }
@@ -261,7 +255,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
@@ -278,15 +272,13 @@ class Medusa_EXPORT AssignmentExpression : public Expression
   DECL_EXPR(AssignmentExpression, Expression::Assign, Expression)
 
 public:
-  //! pLeftExpr and pRightExpr must be allocated by standard new
   AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
   virtual ~AssignmentExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return 0; }
+  virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   virtual Expression::SPType GetDestinationExpression(void) { return m_spDstExpr; }
@@ -340,8 +332,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const { return nullptr; }
-  virtual u32 GetSizeInBit(void) const;
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
+  virtual u32 GetBitSize(void) const;
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   u8 GetOperation(void) const { return m_OpType; }
@@ -361,9 +352,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   Expression::SPType GetExpression(void) { return m_spExpr;  }
@@ -382,9 +372,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   Expression::SPType GetLeftExpression(void)  { return m_spLeftExpr; }
@@ -407,41 +396,23 @@ class Medusa_EXPORT ConstantExpression : public Expression
   DECL_EXPR(ConstantExpression, Expression::Const, Expression)
 
 public:
-  enum Type
-  {
-    ConstUnknownBit = 0,
-    Const1Bit = 1,
-    Const8Bit = 8,
-    Const16Bit = 16,
-    Const32Bit = 32,
-    Const64Bit = 64,
-    Const80Bit = 80,
-    Const128Bit = 128,
-    Const256Bit = 256,
-    Const512Bit = 512,
-    ConstSigned = 0x80000000
-  };
-
-  ConstantExpression(u32 ConstType, u64 Value);
+  ConstantExpression(u16 BitSize, ap_int Value);
   virtual ~ConstantExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const { return m_ConstType; }
+  virtual u32 GetBitSize(void) const { return m_Value.GetBitSize(); }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
-  Type         GetType(void) const { return static_cast<Type>(m_ConstType); }
-  u64          GetConstant(void) const { return m_Value; }
+  ap_int          GetConstant(void) const { return m_Value.GetValue(); }
 
 private:
-  u32 m_ConstType;
-  u64 m_Value;
+  IntType m_Value;
 };
 
 // identifier expression //////////////////////////////////////////////////////
@@ -457,9 +428,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
@@ -485,9 +455,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   virtual void Prepare(DataContainerType& rData) const;
@@ -514,9 +483,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   u32 GetId(void) const { return m_Id; }
@@ -546,9 +514,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit) { return false; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
 
   virtual bool               Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
@@ -587,9 +554,8 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetSizeInBit(void) const;
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor *pVisitor);
-  virtual bool SignExtend(u32 NewSizeInBit);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
 
   Type GetType(void) const { return m_Type; }
@@ -627,7 +593,7 @@ public:
 
 namespace Expr
 {
-  Medusa_EXPORT Expression::SPType MakeConst(u32 ConstType, u64 Value);
+  Medusa_EXPORT Expression::SPType MakeConst(u16 BitSize, ap_int Value);
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);

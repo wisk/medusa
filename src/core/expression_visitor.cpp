@@ -166,7 +166,7 @@ Expression::SPType CloneVisitor::VisitBinaryOperation(BinaryOperationExpression:
 Expression::SPType CloneVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   return Expr::MakeConst(
-    spConstExpr->GetType(),
+    spConstExpr->GetBitSize(),
     spConstExpr->GetConstant());
 }
 
@@ -534,9 +534,9 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
   if (spExpr == nullptr)
     return nullptr;
 
-  u32 Bit = spExpr->GetSizeInBit();
-  u64 Value = spExpr->GetConstant();
-  u64 Result = 0;
+  u32 Bit = spExpr->GetBitSize();
+  auto Value = spExpr->GetConstant();
+  ap_int Result;
 
   switch (spUnOpExpr->GetOperation())
   {
@@ -555,17 +555,13 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
 
   case OperationExpression::OpBsf:
   {
-    Result = CountTrailingZero(Value);
-    if (Result == 32)
-      Result = 0;
+    Result = boost::multiprecision::lsb(Value);
     break;
   }
 
   case OperationExpression::OpBsr:
   {
-    Result = CountLeadingZero(Value);
-    if (Result == 32)
-      Result = 0;
+    Result = boost::multiprecision::msb(Value);
     break;
   }
 
@@ -584,31 +580,31 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
   if (spLExpr == nullptr || spRExpr == nullptr)
     return nullptr;
 
-  u32 Bit = std::max(spLExpr->GetSizeInBit(), spRExpr->GetSizeInBit());
+  u32 Bit = std::max(spLExpr->GetBitSize(), spRExpr->GetBitSize());
   auto ULeft = spLExpr->GetConstant();
   auto URight = spRExpr->GetConstant();
-  std::make_signed<decltype(ULeft)>::type SLeft;
-  std::make_signed<decltype(URight)>::type SRight;
+  auto SLeft = spLExpr->GetConstant();
+  auto SRight = spRExpr->GetConstant();
 
-  switch (spLExpr->GetSizeInBit())
+  switch (spLExpr->GetBitSize())
   {
-  case  8: SLeft = SignExtend<s64,  8>(ULeft); break;
-  case 16: SLeft = SignExtend<s64, 16>(ULeft); break;
-  case 32: SLeft = SignExtend<s64, 32>(ULeft); break;
-  case 64: SLeft = SignExtend<s64, 64>(ULeft); break;
+  case  8: SLeft = SignExtend< 8>(IntType(Bit, ULeft)).GetValue(); break;
+  case 16: SLeft = SignExtend<16>(IntType(Bit, ULeft)).GetValue(); break;
+  case 32: SLeft = SignExtend<32>(IntType(Bit, ULeft)).GetValue(); break;
+  case 64: SLeft = SignExtend<64>(IntType(Bit, ULeft)).GetValue(); break;
   default: return nullptr;
   }
 
-  switch (spRExpr->GetSizeInBit())
+  switch (spRExpr->GetBitSize())
   {
-  case  8: SRight = SignExtend<s64,  8>(URight); break;
-  case 16: SRight = SignExtend<s64, 16>(URight); break;
-  case 32: SRight = SignExtend<s64, 32>(URight); break;
-  case 64: SRight = SignExtend<s64, 64>(URight); break;
+  case  8: SRight = SignExtend< 8>(IntType(Bit, URight)).GetValue(); break;
+  case 16: SRight = SignExtend<16>(IntType(Bit, URight)).GetValue(); break;
+  case 32: SRight = SignExtend<32>(IntType(Bit, URight)).GetValue(); break;
+  case 64: SRight = SignExtend<64>(IntType(Bit, URight)).GetValue(); break;
   default: return nullptr;
   }
 
-  u64 Result = 0;
+  ap_int Result = 0;
 
   switch (spBinOpExpr->GetOperation())
   {
@@ -661,34 +657,34 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     break;
 
   case OperationExpression::OpLls:
-    Result = ULeft << URight;
+    Result = ULeft << URight.convert_to<u32>();
     break;
 
   case OperationExpression::OpLrs:
-    Result = ULeft >> URight;
+    Result = ULeft >> URight.convert_to<u32>();
     break;
 
   case OperationExpression::OpArs:
-    Result = SLeft >> SRight;
+    Result = SLeft >> SRight.convert_to<u32>();
     break;
 
   case OperationExpression::OpSext:
-    Result = (SLeft << (sizeof(SLeft) * 8) - SRight) >> SRight;
+    Result = (SLeft << (sizeof(SLeft)* 8) - SRight.convert_to<u32>()) >> SRight.convert_to<u32>();
     break;
 
   case OperationExpression::OpZext:
-    Result = (ULeft << (sizeof(ULeft) * 8) - URight) >> URight;
+    Result = (ULeft << (sizeof(ULeft)* 8) - URight.convert_to<u32>()) >> URight.convert_to<u32>();
     break;
 
   case OperationExpression::OpXchg:
     return nullptr;
 
   case OperationExpression::OpInsertBits:
-    Result = ((ULeft << CountTrailingZero(URight)) & URight);
+    Result = ((ULeft << boost::multiprecision::lsb(URight)) & URight);
     break;
 
   case OperationExpression::OpExtractBits:
-    Result = (ULeft & URight) >> CountTrailingZero(URight);
+    Result = (ULeft & URight) >> boost::multiprecision::lsb(URight);
     break;
 
   default:

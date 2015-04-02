@@ -41,7 +41,7 @@ u8 Operand::GetRawLength(void) const
   }
 }
 
-u32 Operand::GetSizeInBit(void) const
+u32 Operand::GetBitSize(void) const
 {
   switch (m_Type & MS_MASK)
   {

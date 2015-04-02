@@ -322,6 +322,8 @@ bool MappedMemoryArea::_InsertCell(TOffset Offset, CellData::SPType spCellData)
   {
     m_Cells[CellOffset + i] = spCellData;
   }
+
+  return true;
 }
 
 bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
@@ -332,7 +334,7 @@ bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
   // LATER(KS): Optimize this piece of code
   size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
   u16 CellLen = spCellData->GetLength();
-  for (u16 i; i < CellLen; ++i)
+  for (u16 i = 0; i < CellLen; ++i)
   {
     if (IsCellPresent(CellOffset - i))
     {
@@ -348,6 +350,8 @@ bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
         m_Cells[CellOffset + i] = nullptr;
     }
   }
+
+  return true;
 }
 
 VirtualMemoryArea::~VirtualMemoryArea(void)

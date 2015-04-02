@@ -53,7 +53,7 @@ bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue)
     rValue = PropTree.get<std::string>(rKey);
     return true;
   }
-  catch (std::exception& e)
+  catch (std::exception&)
   {
     auto const& rDefOpts = _GetDefaultOptions();
     auto const itOpt = rDefOpts.find(rKey);

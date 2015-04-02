@@ -361,7 +361,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
     if (spResExpr == nullptr)
       return false;
 
-    u32 Bit = rInsn.GetOperand(0)->GetSizeInBit();
+    u32 Bit = rInsn.GetOperand(0)->GetBitSize();
     if (Bit == 0)
       return false;
     auto InsnLen = static_cast<u8>(rInsn.GetLength());
@@ -398,17 +398,17 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
     {
       auto MaskLsb = [](Expression::SPType spExpr) -> Expression::SPType
       {
-        return Expr::MakeBinOp(OperationExpression::OpAnd, spExpr, Expr::MakeConst(spExpr->GetSizeInBit(), 1));
+        return Expr::MakeBinOp(OperationExpression::OpAnd, spExpr, Expr::MakeConst(spExpr->GetBitSize(), 1));
       };
 
-      auto spBit0 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 0)));
-      auto spBit1 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 1)));
-      auto spBit2 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 2)));
-      auto spBit3 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 3)));
-      auto spBit4 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 4)));
-      auto spBit5 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 5)));
-      auto spBit6 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 6)));
-      auto spBit7 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetSizeInBit(), 7)));
+      auto spBit0 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 0)));
+      auto spBit1 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 1)));
+      auto spBit2 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 2)));
+      auto spBit3 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 3)));
+      auto spBit4 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 4)));
+      auto spBit5 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 5)));
+      auto spBit6 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 6)));
+      auto spBit7 = MaskLsb(Expr::MakeBinOp(OperationExpression::OpLrs, spResExpr, Expr::MakeConst(spResExpr->GetBitSize(), 7)));
 
       auto spPart0 = Expr::MakeBinOp(OperationExpression::OpXor, spBit0, spBit1);
       auto spPart1 = Expr::MakeBinOp(OperationExpression::OpXor, spBit2, spBit3);
@@ -420,7 +420,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
 
       auto spPart6 = Expr::MakeBinOp(OperationExpression::OpXor, spPart4, spPart5);
 
-      auto spCond = Expr::MakeTernaryCond(ConditionExpression::CondEq, spPart6, Expr::MakeConst(spResExpr->GetSizeInBit(), 0), Expr::MakeBoolean(true), Expr::MakeBoolean(false));
+      auto spCond = Expr::MakeTernaryCond(ConditionExpression::CondEq, spPart6, Expr::MakeConst(spResExpr->GetBitSize(), 0), Expr::MakeBoolean(true), Expr::MakeBoolean(false));
       rExprs.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlPf, &m_CpuInfo), spCond));
     }
 
@@ -452,7 +452,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         auto spXor1 = Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1));
         auto spNot = Expr::MakeUnOp(OperationExpression::OpNot, spXor1);
         auto spAnd = Expr::MakeBinOp(OperationExpression::OpAnd, spXor0, spNot);
-        auto spMsb = Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1));
+        auto spMsb = Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 1 << (rInsn.GetOperand(0)->GetBitSize() - 1));
         auto spMask = Expr::MakeBinOp(OperationExpression::OpAnd, spAnd, spMsb);
         auto spCheckOf = Expr::MakeTernaryCond(ConditionExpression::CondEq, spMask, spMsb, Expr::MakeBoolean(true), Expr::MakeBoolean(false));
         rExprs.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), spCheckOf));
@@ -478,8 +478,8 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /****/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr),
         /****/Expr::MakeUnOp(OperationExpression::OpNot,
         /******/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1)))),
-        /**/Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1))),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetSizeInBit(), 1 << (rInsn.GetOperand(0)->GetSizeInBit() - 1)),
+        /**/Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 1 << (rInsn.GetOperand(0)->GetBitSize() - 1))),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 1 << (rInsn.GetOperand(0)->GetBitSize() - 1)),
         Expr::MakeBoolean(false), Expr::MakeBoolean(true)));
 
 

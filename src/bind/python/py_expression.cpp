@@ -26,7 +26,7 @@ void PydusaExpression(void)
 
   bp::class_<Expression, boost::noncopyable>("Expression", bp::no_init)
     .def("__str__", &Expression::ToString)
-    .add_property("size", &Expression::GetSizeInBit)
+    .add_property("size", &Expression::GetBitSize)
     ;
   bp::register_ptr_to_python<Expression::SPType>();
   bp::class_<Expression::VSPType>("ExprVec")

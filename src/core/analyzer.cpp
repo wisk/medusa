@@ -319,8 +319,8 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
                 auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
                 if (auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression()))
                 {
-                  TBase Base = spBaseExpr != nullptr ? spBaseExpr->GetConstant() : 0x0;
-                  TOffset Off = spOffExpr->GetConstant();
+                  TBase Base = spBaseExpr != nullptr ? spBaseExpr->GetConstant().convert_to<TBase>() : 0x0;
+                  TOffset Off = spOffExpr->GetConstant().convert_to<TOffset>();
                   Address SrcAddr(Base, Off);
                   auto Lbl = m_rDoc.GetLabelFromAddress(SrcAddr);
                   if (Lbl.GetType() != Label::Unknown)
@@ -599,7 +599,7 @@ bool Analyzer::DisassembleTask::CreateCrossReferences(Address const& rAddr)
     {
       Address RefAddr;
       if (spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(rAddr, *spInsn), RefAddr, false))
-        m_rDoc.ChangeValueSize(RefAddr, spInsn->GetOperand(CurOp)->GetSizeInBit(), false);
+        m_rDoc.ChangeValueSize(RefAddr, spInsn->GetOperand(CurOp)->GetBitSize(), false);
     }
 
     // Check if the destination is valid and is an instruction
@@ -762,7 +762,7 @@ bool Analyzer::DisassembleTask::FindJumpTable(
     return false;
   rCaseTblAddr = Address(
     rJmpInsnAddr.GetAddressingType(),
-    rJmpInsnAddr.GetBase(), spOffExpr->GetConstant(), // TODO(KS): handle base address correctly...
+    rJmpInsnAddr.GetBase(), spOffExpr->GetConstant().convert_to<u64>(), // TODO(KS): handle base address correctly...
     rJmpInsnAddr.GetBaseSize(), rJmpInsnAddr.GetOffsetSize()
     );
 

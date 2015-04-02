@@ -182,7 +182,7 @@ class ArchConvertion:
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
                     elif value_name.startswith('rInsn.GetOperand'):
-                        get_insn_size_bit = '(%s->GetSizeInBit() / 8)' % value_name
+                        get_insn_size_bit = '(%s->GetBitSize() / 8)' % value_name
                         return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent('32'), Indent(get_insn_size_bit))
 
@@ -193,7 +193,7 @@ class ArchConvertion:
 
                 elif attr_name == 'bit':
                     if value_name.startswith('rInsn.GetOperand'):
-                        return '%s->GetSizeInBit()' % value_name
+                        return '%s->GetBitSize()' % value_name
                     else:
                         return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
 
@@ -305,11 +305,11 @@ class ArchConvertion:
         if 'clear_flags' in opcd:
             res += 'rInsn.SetClearedFlags(%s);\n' % ' | '.join(self.id_mapper[x] for x in opcd['clear_flags'])
             for f in opcd['clear_flags']:
-                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 0)));\n' % ('X86_Fl' + f.capitalize())
+                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeBoolean(false)));\n' % ('X86_Fl' + f.capitalize())
         if 'set_flags' in opcd:
             res += 'rInsn.SetFixedFlags(%s);\n' % ' | '.join(self.id_mapper[x] for x in opcd['set_flags'])
             for f in opcd['set_flags']:
-                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeConst(ConstantExpression::Const1Bit, 1)));\n' % ('X86_Fl' + f.capitalize())
+                res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeBoolean(true)));\n' % ('X86_Fl' + f.capitalize())
 
         if sem != None:
             all_expr = []

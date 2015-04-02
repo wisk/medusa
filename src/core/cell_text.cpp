@@ -42,7 +42,7 @@ PrintData& PrintData::operator()(Address const& rAddress)
   return *this;
 }
 
-PrintData& PrintData::AppendImmediate(u64 Immediate, u32 Bits, u8 Base)
+PrintData& PrintData::AppendImmediate(ap_int Immediate, u32 Bits, u8 Base)
 {
   std::ostringstream Buf;
 

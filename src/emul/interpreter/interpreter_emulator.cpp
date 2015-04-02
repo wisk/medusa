@@ -187,7 +187,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnary
 
   u8 Op = spUnOpExpr->GetOperation();
 
-  switch (spExpr->GetSizeInBit())
+  switch (spExpr->GetBitSize())
   {
   case  1: // TODO: _DoBinaryOperation<bool>?
   case  8: return _DoUnaryOperation<s8>(Op,  spExpr);
@@ -237,9 +237,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    s64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
-    u32 LeftBitSize = std::get<0>(DataLeft.front());
-    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    s64 Left = DataLeft.front().GetValue().convert_to<u64>();
+    u32 LeftBitSize = DataLeft.front().GetBitSize();
+    auto Right = DataRight.front().GetValue().convert_to<u32>();
     u64 Result = 0;
 
     switch (LeftBitSize)
@@ -265,9 +265,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    u64 Left = std::get<1>(DataLeft.front()).convert_to<u64>();
-    u32 LeftBitSize = std::get<0>(DataLeft.front());
-    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    u64 Left = DataLeft.front().GetValue().convert_to<u64>();
+    u32 LeftBitSize = DataLeft.front().GetBitSize();
+    auto Right = DataRight.front().GetValue().convert_to<u32>();
     u64 Result = 0;
 
     switch (LeftBitSize)
@@ -293,10 +293,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    auto Left = std::get<1>(DataLeft.front()).convert_to<u64>();
-    auto Right = std::get<1>(DataRight.front()).convert_to<u32>();
+    auto Left = DataLeft.front().GetValue().convert_to<u64>();
+    auto Right = DataRight.front().GetValue().convert_to<u32>();
 
-    if (std::get<0>(DataLeft.front()) != std::get<0>(DataRight.front()))
+    if (DataLeft.front().GetBitSize() != DataRight.front().GetBitSize())
     {
       Log::Write("emul_interpreter") << "mismatch size while exchanging data" << LogEnd;
       return nullptr;
@@ -311,7 +311,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   }
   } // end of switch (Op)
 
-  auto Bit = std::max(spLeft->GetSizeInBit(), spRight->GetSizeInBit());
+  auto Bit = std::max(spLeft->GetBitSize(), spRight->GetBitSize());
   switch (Bit)
   {
   case  1: // TODO: _DoBinaryOperation<bool>?
@@ -371,7 +371,7 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(Condi
 
   if (spRefExpr == nullptr || spTestExpr == nullptr)
     return false;
-  auto Bit = std::max(spRefExpr->GetSizeInBit(), spTestExpr->GetSizeInBit());
+  auto Bit = std::max(spRefExpr->GetBitSize(), spTestExpr->GetBitSize());
 
   switch (Bit)
   {
@@ -402,12 +402,12 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_DoComparison(u8 Op, Exp
     return false;
 
   auto
-    URef = std::get<1>(RefData.front()).convert_to<typename std::make_unsigned<_Type>::type>(),
-    UTest = std::get<1>(TestData.front()).convert_to<typename std::make_unsigned<_Type>::type>();
+    URef = RefData.front().GetValue().convert_to<typename std::make_unsigned<_Type>::type>(),
+    UTest = TestData.front().GetValue().convert_to<typename std::make_unsigned<_Type>::type>();
 
   auto
-    SRef = std::get<1>(RefData.front()).convert_to<typename std::make_signed<_Type>::type>(),
-    STest = std::get<1>(TestData.front()).convert_to<typename std::make_signed<_Type>::type>();
+    SRef = RefData.front().GetValue().convert_to<typename std::make_signed<_Type>::type>(),
+    STest = TestData.front().GetValue().convert_to<typename std::make_signed<_Type>::type>();
 
   switch (Op)
   {
@@ -470,11 +470,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
   if (!spExpr->Read(m_pCpuCtxt, m_pMemCtxt, Data))
     return nullptr;
 
-  auto Bit = spExpr->GetSizeInBit();
-
-  typename std::make_unsigned<_Type>::type
-    Value = std::get<1>(Data.front()).convert_to<_Type>(),
-    Result = 0;
+  auto Bit = spExpr->GetBitSize();
+  auto Value = Data.front().GetValue().convert_to<_Type>();
+  ap_int Result = 0;
 
   switch (Op)
   {
@@ -535,11 +533,11 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
   if (!spRightExpr->Read(m_pCpuCtxt, m_pMemCtxt, RightData))
     return nullptr;
 
-  auto Bit = std::max(spLeftExpr->GetSizeInBit(), spRightExpr->GetSizeInBit());
+  auto Bit = std::max(spLeftExpr->GetBitSize(), spRightExpr->GetBitSize());
 
   _Type
-    Left   = std::get<1>(LeftData.front()).convert_to<_Type>(),
-    Right  = std::get<1>(RightData.front()).convert_to<_Type>(),
+    Left   = LeftData.front().GetValue().convert_to<_Type>(),
+    Right  = RightData.front().GetValue().convert_to<_Type>(),
     Result = 0;
 
   switch (Op)

@@ -200,7 +200,7 @@ bool ArmArchitecture::ARMCpuContext::SetAddress(CpuContext::AddressKind AddrKind
   switch (AddrKind)
   {
   case AddressExecution:
-    m_Context.Registers[15] = rAddr.GetOffset();
+    m_Context.Registers[15] = static_cast<u32>(rAddr.GetOffset());
     return true;
 
   default:
@@ -355,7 +355,7 @@ public:
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetConstant());
+    Address const OprdAddr(spConstExpr->GetConstant().convert_to<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -363,7 +363,7 @@ public:
       return nullptr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetSizeInBit());
+    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetBitSize());
     return nullptr;
   }
 

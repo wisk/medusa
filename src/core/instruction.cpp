@@ -120,15 +120,15 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
     auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
-    rDstAddr.SetOffset(spOffExpr->GetConstant());
+    rDstAddr.SetOffset(spOffExpr->GetConstant().convert_to<TOffset>());
     return true;
   }
 
   // HACK: We ignore 8-bit const since it's probably not a reference
   auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
-  if (spConstExpr != nullptr && spConstExpr->GetSizeInBit() > 8)
+  if (spConstExpr != nullptr && spConstExpr->GetBitSize() > 8)
   {
-    rDstAddr.SetOffset(spConstExpr->GetConstant());
+    rDstAddr.SetOffset(spConstExpr->GetConstant().convert_to<TOffset>());
     return true;
   }
 

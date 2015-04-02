@@ -318,20 +318,12 @@ bool ConstantPropagation::_RunOnce(void)
     return false;
 
   u64 Res = 0;
-  u32 Bit = std::max(spLConstExpr->GetSizeInBit(), spRConstExpr->GetSizeInBit()); // NOTE: cast to the larger type
+  u32 Bit = std::max(spLConstExpr->GetBitSize(), spRConstExpr->GetBitSize()); // NOTE: cast to the larger type
 
   switch (spBinOpExpr->GetOperation())
   {
   default:
     return false;
-
-  case OperationExpression::OpAdd:
-    Res = spLConstExpr->GetConstant() + spRConstExpr->GetConstant();
-    break;
-
-  case OperationExpression::OpSub:
-    Res = spLConstExpr->GetConstant() - spRConstExpr->GetConstant();
-    break;
 
     // TODO: handle all operations...
   }

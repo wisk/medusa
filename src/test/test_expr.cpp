@@ -111,14 +111,14 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   NormalizeIdentifier NrmId(*pCpuInfo, X86_32_Mode);
 
   // EAX = 0x11223344
-  auto spInitEax = Expr::MakeAssign(spEax, Expr::MakeConst(spEax->GetSizeInBit(), 0x11223344));
+  auto spInitEax = Expr::MakeAssign(spEax, Expr::MakeConst(spEax->GetBitSize(), 0x11223344));
   std::cout << "init eax: " << spInitEax->ToString() << std::endl;
 
   spInitEax = spInitEax->Visit(&NrmId);
   std::cout << "init eax (id normalized): " << spInitEax->ToString() << std::endl;
 
   // BX = 0xAA55
-  auto spInitBx = Expr::MakeAssign(spBx, Expr::MakeConst(spBx->GetSizeInBit(), 0xAA55));
+  auto spInitBx = Expr::MakeAssign(spBx, Expr::MakeConst(spBx->GetBitSize(), 0xAA55));
   std::cout << "init bx: " << spInitBx->ToString() << std::endl;
 
   spInitBx = spInitBx->Visit(&NrmId);
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
 
   // EAX = zero_extend_32(AL + BH)
   auto spOp0 = Expr::MakeBinOp(OperationExpression::OpAdd, spAl, spBh);
-  auto spOp1 = Expr::MakeBinOp(OperationExpression::OpZext, spOp0, Expr::MakeConst(spEax->GetSizeInBit(), spEax->GetSizeInBit()));
+  auto spOp1 = Expr::MakeBinOp(OperationExpression::OpZext, spOp0, Expr::MakeConst(spEax->GetBitSize(), spEax->GetBitSize()));
   auto spExpr = Expr::MakeAssign(spEax, spOp1);
 
   std::cout << "oper: " << spExpr->ToString() << std::endl;

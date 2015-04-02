@@ -45,7 +45,6 @@ set(SRC
   ${INCROOT}/module.hpp
   ${INCROOT}/multicell.hpp
   ${INCROOT}/namespace.hpp
-  ${INCROOT}/operand.hpp
   ${INCROOT}/os.hpp
   ${INCROOT}/plugin.hpp
   ${INCROOT}/string.hpp
@@ -94,7 +93,6 @@ set(SRC
   ${SRCROOT}/memory_area.cpp
   ${SRCROOT}/module.cpp
   ${SRCROOT}/multicell.cpp
-  ${SRCROOT}/operand.cpp
   ${SRCROOT}/os.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/structure.cpp
@@ -124,7 +122,6 @@ endif ()
 # define libMedusa architecture target
 add_library(Medusa SHARED ${SRC})
 target_link_libraries(Medusa ${Boost_LIBRARIES})
-cotire(Medusa)
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)

@@ -880,7 +880,7 @@ Expression::SPType X86Architecture::__Decode_Ibs(BinaryStream const& rBinStrm, T
   u8 BitSize = 8;
   auto spOprd0 = rInsn.GetOperand(0);
   if (spOprd0 != nullptr)
-    BitSize = spOprd0->GetSizeInBit();
+    BitSize = spOprd0->GetBitSize();
 
   return Expr::MakeConst(BitSize, SignExtend<s64, 8>(Value));
 }
