@@ -31,6 +31,13 @@ BOOST_AUTO_TEST_CASE(core_ap_int_test_case)
 
   IntType Int1(16, 0xffff);
   BOOST_CHECK(Int1.GetSignedValue() == -1);
+
+  ++Int1;
+  BOOST_CHECK(Int1.GetSignedValue() == 0);
+
+  --Int1;
+  BOOST_CHECK(Int1.GetUnsignedValue() == 0xffff);
+  BOOST_CHECK(Int1.GetSignedValue() == -1);
 }
 
 BOOST_AUTO_TEST_CASE(core_structure_test_case)

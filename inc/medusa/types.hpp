@@ -128,55 +128,90 @@ public:
 
   // Unary
 
-  IntType Not(void) const;
-  IntType operator~(void) const { return Not(); }
+  IntType  Not(void) const;
+  IntType  operator~(void) const { return Not(); }
 
-  IntType Neg(void) const;
-  IntType operator-(void) const { return Neg(); }
+  IntType  Neg(void) const;
+  IntType  operator-(void) const { return Neg(); }
 
-  IntType Bsf(void) const;
-  IntType Lsb(void) const;
-  IntType Bsr(void) const;
-  IntType Msb(void) const;
+  IntType& PreInc(void);
+  IntType& operator++(void) { return PreInc(); }
+  IntType  PostInc(void);
+  IntType  operator++(int) { return PostInc(); }
 
-  IntType Swap(void) const;
+  IntType& PreDec(void);
+  IntType& operator--(void) { return PreDec(); }
+  IntType  PostDec(void);
+  IntType  operator--(int) { return PostDec(); }
+
+  IntType  Bsf(void) const;
+  IntType  Lsb(void) const;
+  IntType  Bsr(void) const;
+  IntType  Msb(void) const;
+
+  IntType  Swap(void) const;
 
   // Binary
 
-  IntType Add(IntType const& rVal) const;
-  IntType operator+(IntType const& rVal) const { return Add(rVal); }
+  IntType  Add(IntType const& rVal) const;
+  IntType  operator+(IntType const& rVal) const { return Add(rVal); }
+  IntType& AddAssign(IntType const& rVal);
+  IntType& operator+=(IntType const& rVal) { return AddAssign(rVal); }
 
-  IntType Sub(IntType const& rVal) const;
-  IntType operator-(IntType const& rVal) const { return Sub(rVal); }
+  IntType  Sub(IntType const& rVal) const;
+  IntType  operator-(IntType const& rVal) const { return Sub(rVal); }
+  IntType& SubAssign(IntType const& rVal);
+  IntType& operator-=(IntType const& rVal) { return SubAssign(rVal); }
 
-  IntType Mul(IntType const& rVal) const;
-  IntType operator*(IntType const& rVal) const { return Mul(rVal); }
+  IntType  Mul(IntType const& rVal) const;
+  IntType  operator*(IntType const& rVal) const { return Mul(rVal); }
+  IntType& MulAssign(IntType const& rVal);
+  IntType& operator*=(IntType const& rVal) { return MulAssign(rVal); }
 
-  IntType UDiv(IntType const& rVal) const;
-  IntType operator/(IntType const& rVal) const { return UDiv(rVal); }
-  IntType SDiv(IntType const& rVal) const;
+  IntType  UDiv(IntType const& rVal) const;
+  IntType  operator/(IntType const& rVal) const { return UDiv(rVal); }
+  IntType& UDivAssign(IntType const& rVal);
+  IntType& operator/=(IntType const& rVal) { return UDivAssign(rVal); }
+  IntType  SDiv(IntType const& rVal) const;
+  IntType& SDivAssign(IntType const& rVal);
 
-  IntType UMod(IntType const& rVal) const;
-  IntType operator%(IntType const& rVal) const { return UMod(rVal); }
-  IntType SMod(IntType const& rVal) const;
+  IntType  UMod(IntType const& rVal) const;
+  IntType  operator%(IntType const& rVal) const { return UMod(rVal); }
+  IntType& UModAssign(IntType const& rVal);
+  IntType& operator%=(IntType const& rVal) { return UModAssign(rVal); }
+  IntType  SMod(IntType const& rVal) const;
+  IntType& SModAssign(IntType const& rVal);
 
-  IntType And(IntType const& rVal) const;
-  IntType operator&(IntType const& rVal) const { return And(rVal); }
+  IntType  And(IntType const& rVal) const;
+  IntType  operator&(IntType const& rVal) const { return And(rVal); }
+  IntType& AndAssign(IntType const& rVal);
+  IntType& operator&=(IntType const& rVal) { return AndAssign(rVal); }
 
   IntType Or(IntType const& rVal) const;
   IntType operator|(IntType const& rVal) const { return Or(rVal); }
+  IntType& OrAssign(IntType const& rVal);
+  IntType& operator|=(IntType const& rVal) { return OrAssign(rVal); }
 
-  IntType Xor(IntType const& rVal) const;
-  IntType operator^(IntType const& rVal) const { return Xor(rVal); }
+  IntType  Xor(IntType const& rVal) const;
+  IntType  operator^(IntType const& rVal) const { return Xor(rVal); }
+  IntType& XorAssign(IntType const& rVal);
+  IntType& operator^=(IntType const& rVal) { return XorAssign(rVal); }
 
-  IntType Lls(IntType const& rVal) const;
-  IntType operator<<(IntType const& rVal) const { return Lls(rVal); }
+  IntType  Lls(IntType const& rVal) const;
+  IntType  operator<<(IntType const& rVal) const { return Lls(rVal); }
+  IntType& LlsAssign(IntType const& rVal);
+  IntType& operator<<=(IntType const& rVal) { return LlsAssign(rVal); }
 
-  IntType Lrs(IntType const& rVal) const;
-  IntType operator>>(IntType const& rVal) const { return Lrs(rVal); }
-  IntType Ars(IntType const& rVal) const;
+  IntType  Lrs(IntType const& rVal) const;
+  IntType  operator>>(IntType const& rVal) const { return Lrs(rVal); }
+  IntType& LrsAssign(IntType const& rVal);
+  IntType& operator>>=(IntType const& rVal) { return LrsAssign(rVal); }
+  IntType  Ars(IntType const& rVal) const;
+  IntType& ArsAssign(IntType const& rVal);
 
 private:
+  void _Adjust(void);
+
   u16 m_BitSize;
   ap_int m_Value;
 };
