@@ -90,7 +90,7 @@ void PydusaExpression(void)
   
   // helpers used to create instance of a specific expression type
 
-  bp::def("expr_make_const", Expr::MakeConst);
+  //bp::def("expr_make_const", Expr::MakeConst);
   bp::def("expr_make_id", Expr::MakeId);
 
   // exposing enumerations

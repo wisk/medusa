@@ -423,7 +423,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   {
     // HACK:
     Address DstAddr = rCurAddr;
-    DstAddr.SetOffset(spConstExpr->GetConstant().convert_to<TOffset>());
+    DstAddr.SetOffset(spConstExpr->GetConstant().ConvertTo<TOffset>());
     rNextAddresses.push_back(DstAddr);
     return true;
   }
@@ -437,8 +437,8 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
     if (spOffExpr == nullptr)
       return false;
     Address DstAddr(rCurAddr.GetAddressingType(),
-      spBaseExpr != nullptr ? spBaseExpr->GetConstant() : 0x0,
-      spOffExpr->GetConstant(),
+      spBaseExpr != nullptr ? spBaseExpr->GetConstant().ConvertTo<u16>() : 0x0,
+      spOffExpr->GetConstant().ConvertTo<u64>(),
       spBaseExpr != nullptr ? spBaseExpr->GetBitSize() : 0x0,
       spOffExpr->GetBitSize());
     rNextAddresses.push_back(DstAddr);

@@ -165,9 +165,7 @@ Expression::SPType CloneVisitor::VisitBinaryOperation(BinaryOperationExpression:
 
 Expression::SPType CloneVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
-  return Expr::MakeConst(
-    spConstExpr->GetBitSize(),
-    spConstExpr->GetConstant());
+  return Expr::MakeConst(spConstExpr->GetConstant());
 }
 
 Expression::SPType CloneVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
@@ -536,7 +534,7 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
 
   u32 Bit = spExpr->GetBitSize();
   auto Value = spExpr->GetConstant();
-  ap_int Result;
+  IntType Result;
 
   switch (spUnOpExpr->GetOperation())
   {
@@ -545,31 +543,26 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
     break;
 
   case OperationExpression::OpNeg:
-    Result = ~Value + 1;
+    Result = -Value;
     break;
 
   case OperationExpression::OpSwap:
-    Result = Value;
-    EndianSwap(Result);
+    Result = Value.Swap();
     break;
 
   case OperationExpression::OpBsf:
-  {
-    Result = boost::multiprecision::lsb(Value);
+    Result = Value.Bsf();
     break;
-  }
 
   case OperationExpression::OpBsr:
-  {
-    Result = boost::multiprecision::msb(Value);
+    Result = Value.Bsr();
     break;
-  }
 
   default:
     return nullptr;
   }
 
-  return Expr::MakeConst(Bit, Result);
+  return Expr::MakeConst(Result);
 }
 
 Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
@@ -580,118 +573,98 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
   if (spLExpr == nullptr || spRExpr == nullptr)
     return nullptr;
 
-  u32 Bit = std::max(spLExpr->GetBitSize(), spRExpr->GetBitSize());
-  auto ULeft = spLExpr->GetConstant();
-  auto URight = spRExpr->GetConstant();
-  auto SLeft = spLExpr->GetConstant();
-  auto SRight = spRExpr->GetConstant();
-
-  switch (spLExpr->GetBitSize())
-  {
-  case  8: SLeft = SignExtend< 8>(IntType(Bit, ULeft)).GetValue(); break;
-  case 16: SLeft = SignExtend<16>(IntType(Bit, ULeft)).GetValue(); break;
-  case 32: SLeft = SignExtend<32>(IntType(Bit, ULeft)).GetValue(); break;
-  case 64: SLeft = SignExtend<64>(IntType(Bit, ULeft)).GetValue(); break;
-  default: return nullptr;
-  }
-
-  switch (spRExpr->GetBitSize())
-  {
-  case  8: SRight = SignExtend< 8>(IntType(Bit, URight)).GetValue(); break;
-  case 16: SRight = SignExtend<16>(IntType(Bit, URight)).GetValue(); break;
-  case 32: SRight = SignExtend<32>(IntType(Bit, URight)).GetValue(); break;
-  case 64: SRight = SignExtend<64>(IntType(Bit, URight)).GetValue(); break;
-  default: return nullptr;
-  }
-
-  ap_int Result = 0;
+  auto Left = spLExpr->GetConstant();
+  auto Right = spRExpr->GetConstant();
+  IntType Result;
 
   switch (spBinOpExpr->GetOperation())
   {
   case OperationExpression::OpAdd:
-    Result = ULeft + URight;
+    Result = Left + Right;
     break;
 
   case OperationExpression::OpSub:
-    Result = ULeft - URight;
+    Result = Left - Right;
     break;
 
   case OperationExpression::OpMul:
-    Result = ULeft * URight;
+    Result = Left * Right;
     break;
 
   case OperationExpression::OpUDiv:
-    if (URight == 0)
+    if (Right.GetUnsignedValue() == 0)
       return nullptr;
-    Result = ULeft / URight;
+    Result = Left.UDiv(Right);
     break;
 
   case OperationExpression::OpSDiv:
-    if (SRight == 0)
+    if (Right.GetSignedValue() == 0)
       return nullptr;
-    Result = SLeft / SRight;
+    Result = Left.SDiv(Right);
     break;
 
   case OperationExpression::OpUMod:
-    if (URight == 0)
+    if (Right.GetUnsignedValue() == 0)
       return nullptr;
-    Result = ULeft % URight;
+    Result = Left.UMod(Right);
     break;
 
   case OperationExpression::OpSMod:
-    if (SRight == 0)
+    if (Right.GetSignedValue() == 0)
       return nullptr;
-    Result = SLeft % SRight;
+    Result = Left.SMod(Right);
     break;
 
   case OperationExpression::OpAnd:
-    Result = ULeft & URight;
+    Result = Left & Right;
     break;
 
   case OperationExpression::OpOr:
-    Result = ULeft | URight;
+    Result = Left | Right;
     break;
 
   case OperationExpression::OpXor:
-    Result = ULeft ^ URight;
+    Result = Left ^ Right;
     break;
 
   case OperationExpression::OpLls:
-    Result = ULeft << URight.convert_to<u32>();
+    Result = Left.Lls(Right);
     break;
 
   case OperationExpression::OpLrs:
-    Result = ULeft >> URight.convert_to<u32>();
+    Result = Left.Lrs(Right);
     break;
 
   case OperationExpression::OpArs:
-    Result = SLeft >> SRight.convert_to<u32>();
+    Result = Left.Ars(Right);
     break;
 
   case OperationExpression::OpSext:
-    Result = (SLeft << (sizeof(SLeft)* 8) - SRight.convert_to<u32>()) >> SRight.convert_to<u32>();
+    Result = Left;
+    Result.SignExtend(Right.ConvertTo<u16>());
     break;
 
   case OperationExpression::OpZext:
-    Result = (ULeft << (sizeof(ULeft)* 8) - URight.convert_to<u32>()) >> URight.convert_to<u32>();
+    Result = Left;
+    Result.ZeroExtend(Right.ConvertTo<u16>());
     break;
 
   case OperationExpression::OpXchg:
     return nullptr;
 
   case OperationExpression::OpInsertBits:
-    Result = ((ULeft << boost::multiprecision::lsb(URight)) & URight);
+    Result = ((Left << Right.Lsb()) & Right);
     break;
 
   case OperationExpression::OpExtractBits:
-    Result = (ULeft & URight) >> boost::multiprecision::lsb(URight);
+    Result = (Left & Right) >> Right.Lsb();
     break;
 
   default:
     return nullptr;
   }
 
-  return Expr::MakeConst(Bit, Result);
+  return Expr::MakeConst(Result);
 }
 
 Expression::SPType EvaluateVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
@@ -778,7 +751,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseConst, spOffConst, spMemExpr->IsDereferencable());
   }
 
-  Address CurAddr(Base, spOffConst->GetConstant());
+  Address CurAddr(Base, spOffConst->GetConstant().ConvertTo<u64>());
 
   TOffset FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))

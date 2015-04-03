@@ -98,6 +98,7 @@ set(SRC
   ${SRCROOT}/structure.cpp
   ${SRCROOT}/symbolic.cpp
   ${SRCROOT}/task.cpp
+  ${SRCROOT}/types.cpp
   ${SRCROOT}/user_configuration.cpp
   ${SRCROOT}/util.cpp
   ${SRCROOT}/value.cpp

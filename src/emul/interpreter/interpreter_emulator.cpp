@@ -237,9 +237,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    s64 Left = DataLeft.front().GetValue().convert_to<u64>();
+    s64 Left = DataLeft.front().ConvertTo<u64>();
     u32 LeftBitSize = DataLeft.front().GetBitSize();
-    auto Right = DataRight.front().GetValue().convert_to<u32>();
+    auto Right = DataRight.front().ConvertTo<u32>();
     u64 Result = 0;
 
     switch (LeftBitSize)
@@ -265,9 +265,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    u64 Left = DataLeft.front().GetValue().convert_to<u64>();
+    u64 Left = DataLeft.front().ConvertTo<u64>();
     u32 LeftBitSize = DataLeft.front().GetBitSize();
-    auto Right = DataRight.front().GetValue().convert_to<u32>();
+    auto Right = DataRight.front().ConvertTo<u32>();
     u64 Result = 0;
 
     switch (LeftBitSize)
@@ -293,8 +293,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       return nullptr;
     if (!spRight->Read(m_pCpuCtxt, m_pMemCtxt, DataRight))
       return nullptr;
-    auto Left = DataLeft.front().GetValue().convert_to<u64>();
-    auto Right = DataRight.front().GetValue().convert_to<u32>();
+    auto Left = DataLeft.front().ConvertTo<u64>();
+    auto Right = DataRight.front().ConvertTo<u32>();
 
     if (DataLeft.front().GetBitSize() != DataRight.front().GetBitSize())
     {
@@ -401,13 +401,8 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_DoComparison(u8 Op, Exp
   if (RefData.size() != 1 || TestData.size() != 1)
     return false;
 
-  auto
-    URef = RefData.front().GetValue().convert_to<typename std::make_unsigned<_Type>::type>(),
-    UTest = TestData.front().GetValue().convert_to<typename std::make_unsigned<_Type>::type>();
-
-  auto
-    SRef = RefData.front().GetValue().convert_to<typename std::make_signed<_Type>::type>(),
-    STest = TestData.front().GetValue().convert_to<typename std::make_signed<_Type>::type>();
+  auto Ref = RefData.front();
+  auto Test = RefData.front();
 
   switch (Op)
   {
@@ -415,43 +410,43 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_DoComparison(u8 Op, Exp
     return false;
 
   case ConditionExpression::CondEq:
-    rResult = URef == UTest;
+    rResult = Ref.GetUnsignedValue() == Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondNe:
-    rResult = URef != UTest;
+    rResult = Ref.GetUnsignedValue() != Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondUgt:
-    rResult = URef > UTest;
+    rResult = Ref.GetUnsignedValue() > Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondUge:
-    rResult = URef >= UTest;
+    rResult = Ref.GetUnsignedValue() >= Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondUlt:
-    rResult = URef < UTest;
+    rResult = Ref.GetUnsignedValue() < Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondUle:
-    rResult = URef <= UTest;
+    rResult = Ref.GetUnsignedValue() <= Test.GetUnsignedValue();
     break;
 
   case ConditionExpression::CondSgt:
-    rResult = SRef > STest;
+    rResult = Ref.GetSignedValue() > Test.GetSignedValue();
     break;
 
   case ConditionExpression::CondSge:
-    rResult = SRef >= STest;
+    rResult = Ref.GetSignedValue() >= Test.GetSignedValue();
     break;
 
   case ConditionExpression::CondSlt:
-    rResult = SRef < STest;
+    rResult = Ref.GetSignedValue() < Test.GetSignedValue();
     break;
 
   case ConditionExpression::CondSle:
-    rResult = SRef <= STest;
+    rResult = Ref.GetSignedValue() <= Test.GetSignedValue();
     break;
   }
 
@@ -471,8 +466,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
     return nullptr;
 
   auto Bit = spExpr->GetBitSize();
-  auto Value = Data.front().GetValue().convert_to<_Type>();
-  ap_int Result = 0;
+  auto Value = Data.front();
+  IntType Result;
 
   switch (Op)
   {
@@ -481,35 +476,26 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoUnaryOp
     break;
 
   case OperationExpression::OpNeg:
-    Result = ~Value + 1;
+    Result = -Value;
     break;
 
   case OperationExpression::OpSwap:
-    Result = Value;
-    EndianSwap(Result);
+    Result = Value.Swap();
     break;
 
   case OperationExpression::OpBsf:
-  {
-    Result = CountTrailingZero(Value);
-    if (Result == 32)
-      Result = 0;
+    Result = Value.Bsf();
     break;
-  }
 
   case OperationExpression::OpBsr:
-  {
-    Result = CountLeadingZero(Value);
-    if (Result == 32)
-      Result = 0;
+    Result = Value.Bsr();
     break;
-  }
 
   default:
     return nullptr;
   }
 
-  return Expr::MakeConst(Bit, Result);
+  return Expr::MakeConst(Result);
 }
 
 template<typename _Type>
@@ -535,10 +521,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
 
   auto Bit = std::max(spLeftExpr->GetBitSize(), spRightExpr->GetBitSize());
 
-  _Type
-    Left   = LeftData.front().GetValue().convert_to<_Type>(),
-    Right  = RightData.front().GetValue().convert_to<_Type>(),
-    Result = 0;
+  auto Left  = LeftData.front();
+  auto Right = RightData.front();
+  IntType Result;
 
   switch (Op)
   {
@@ -555,17 +540,27 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpUDiv:
-  case OperationExpression::OpSDiv:
-    if (Right == 0)
+    if (Right.GetUnsignedValue() == 0)
       return nullptr;
-    Result = Left / Right;
+    Result = Left.UDiv(Right);
+    break;
+
+  case OperationExpression::OpSDiv:
+    if (Right.GetSignedValue() == 0)
+      return nullptr;
+    Result = Left.SDiv(Right);
+    break;
+
+  case OperationExpression::OpUMod:
+    if (Right.GetUnsignedValue() == 0)
+      return nullptr;
+    Result = Left.UMod(Right);
     break;
 
   case OperationExpression::OpSMod:
-  case OperationExpression::OpUMod:
-    if (Right == 0)
+    if (Right.GetSignedValue() == 0)
       return nullptr;
-    Result = Left % Right;
+    Result = Left.SMod(Right);
     break;
 
   case OperationExpression::OpAnd:
@@ -585,11 +580,11 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpLrs:
-    Result = static_cast<typename std::make_unsigned<_Type>::type>(Left) >> Right;
+    Result = Left.Lrs(Right);
     break;
 
   case OperationExpression::OpArs:
-    Result = Left >> Right;
+    Result = Left.Ars(Right);
     break;
 
   case OperationExpression::OpSext:
@@ -605,11 +600,11 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     break;
 
   case OperationExpression::OpInsertBits:
-    Result = ((Left << CountTrailingZero(Right)) & Right);
+    Result = (Left << Right.Lsb()) & Right;
     break;
 
   case OperationExpression::OpExtractBits:
-    Result = (Left & Right) >> CountTrailingZero(Right);
+    Result = (Left & Right) >> Right.Lsb();
     break;
 
   default:
@@ -617,5 +612,5 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::_DoBinaryO
     return nullptr;
   }
 
-  return Expr::MakeConst(Bit, Result);
+  return Expr::MakeConst(Result);
 }

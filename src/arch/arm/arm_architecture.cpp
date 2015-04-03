@@ -355,7 +355,7 @@ public:
   }
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetConstant().convert_to<TOffset>());
+    Address const OprdAddr(spConstExpr->GetConstant().ConvertTo<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {

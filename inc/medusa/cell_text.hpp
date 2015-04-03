@@ -81,7 +81,8 @@ public:
   { _AppendText(rRegister, Mark::RegisterType);   return *this; }
   PrintData& AppendImmediate(std::string const& rImmediate)
   { _AppendText(rImmediate, Mark::ImmediateType); return *this; }
-  PrintData& AppendImmediate(ap_int Immediate, u32 Bits, u8 Base = 0x10);
+  PrintData& AppendImmediate(ap_int const& rImmediate, u32 Bits, u8 Base = 0x10);
+  PrintData& AppendImmediate(IntType const& rImmediate, u8 Base = 0x10);
   PrintData& AppendLabel    (std::string const& rLabel)
   { _AppendText(rLabel, Mark::LabelType);         return *this; }
   PrintData& AppendKeyword  (std::string const& rKeyword)

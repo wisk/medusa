@@ -168,7 +168,7 @@ void Execution::Execute(Address const& rAddr)
       // it's not enough generic
       Sems.push_back(Expr::MakeAssign(
         Expr::MakeId(ProgPtrReg, m_pCpuInfo),
-        Expr::MakeConst(PcAddr.GetOffsetSize(), PcAddr.GetOffset())));
+        Expr::MakeConst(IntType(PcAddr.GetOffsetSize(), PcAddr.GetOffset()))));
 
       CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
 

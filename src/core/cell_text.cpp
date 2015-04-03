@@ -42,7 +42,7 @@ PrintData& PrintData::operator()(Address const& rAddress)
   return *this;
 }
 
-PrintData& PrintData::AppendImmediate(ap_int Immediate, u32 Bits, u8 Base)
+PrintData& PrintData::AppendImmediate(ap_int const& rImmediate, u32 Bits, u8 Base)
 {
   std::ostringstream Buf;
 
@@ -52,7 +52,7 @@ PrintData& PrintData::AppendImmediate(ap_int Immediate, u32 Bits, u8 Base)
     {
       Buf << "0b";
       while (Bits--)
-        Buf << ((Immediate & (1 << Bits)) ? "1" : "0");
+        Buf << ((rImmediate & (1 << Bits)) ? "1" : "0");
       return AppendImmediate(Buf.str());
     }
   case  8: Buf << std::oct << "0";  break;
@@ -60,8 +60,13 @@ PrintData& PrintData::AppendImmediate(ap_int Immediate, u32 Bits, u8 Base)
   default: Buf << std::hex << "0x"; break;
   }
 
-  Buf << std::setfill('0') << std::setw(Bits / 4) << Immediate;
+  Buf << std::setfill('0') << std::setw(Bits / 4) << rImmediate;
   return AppendImmediate(Buf.str());
+}
+
+PrintData& PrintData::AppendImmediate(IntType const& rVal, u8 Base)
+{
+  return AppendImmediate(rVal.ToString(Base));
 }
 
 PrintData& PrintData::AppendAddress(Address const& rAddress)

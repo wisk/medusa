@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_eval)
   auto spRes = expr_cast<ConstantExpression>(EvalVst.GetResultExpression());
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
-  BOOST_CHECK(spRes->GetConstant() == 0x1122cc44);
+  BOOST_CHECK(spRes->GetConstant().ConvertTo<u32>() == 0x1122cc44);
 
   delete pX86Disasm;
 }
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_64_id_nrm_eval)
   auto spRes = expr_cast<ConstantExpression>(EvalVst.GetResultExpression());
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
-  BOOST_CHECK(spRes->GetConstant() == 0x11223344);
+  BOOST_CHECK(spRes->GetConstant().ConvertTo<u32>() == 0x11223344);
 
   delete pX86Disasm;
 }

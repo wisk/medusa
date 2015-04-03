@@ -26,22 +26,11 @@ BOOST_AUTO_TEST_CASE(core_ap_int_test_case)
 {
   using namespace medusa;
 
-  ap_int Reg8 = 1 << 7;
-  ap_int Reg16 = 1 << 15;
-  ap_int Reg32 = 1 << 31;
-  ap_int Reg64 = 1 << 63;
-  ap_int Reg128 = 1 << 127;
-  ap_int Reg256 = 1 << 255;
-  ap_int Reg512 = 1 << 511;
-  ap_int Reg1024 = 1 << 1023;
+  IntType Int0(16, -1);
+  BOOST_CHECK(Int0.GetUnsignedValue() == 0xffff);
 
-  std::cout << "r8: "   << Reg8.backend().size() << std::endl;
-  std::cout << "r16: "  << Reg16.backend().size() << std::endl;
-  std::cout << "r32: "  << Reg32.backend().size() << std::endl;
-  std::cout << "r64: "  << Reg64.backend().size() << std::endl;
-  std::cout << "r128: " << Reg128.backend().size() << std::endl;
-  std::cout << "r256: " << Reg256.backend().size() << std::endl;
-  std::cout << "r512: " << Reg512.backend().size() << std::endl;
+  IntType Int1(16, 0xffff);
+  BOOST_CHECK(Int1.GetSignedValue() == -1);
 }
 
 BOOST_AUTO_TEST_CASE(core_structure_test_case)

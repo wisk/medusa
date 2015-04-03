@@ -59,9 +59,16 @@ typedef boost::multiprecision::uint512_t  u512;
 typedef boost::multiprecision::int1024_t  s1024;
 typedef boost::multiprecision::uint1024_t u1024;
 
-typedef boost::multiprecision::cpp_int    ap_int;
+typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
+  0, 0,
+  boost::multiprecision::signed_magnitude,
+  boost::multiprecision::unchecked>>
+  ap_int;
 
-class IntType
+// boost::multiprecision::cpp_int doesn't support arbitrary unsigned int
+typedef ap_int ap_uint;
+
+class Medusa_EXPORT IntType
 {
 public:
   IntType(void) : m_BitSize(0), m_Value() {}
@@ -84,9 +91,90 @@ public:
 
   explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) {}
 
+  template<typename _Ty>
+  std::enable_if_t<std::is_signed<_Ty>::value, _Ty> ConvertTo(void) const
+  {
+    return m_Value.convert_to<typename _Ty>();
+  }
+
+  template<typename _Ty>
+  std::enable_if_t<std::is_unsigned<_Ty>::value, _Ty> ConvertTo(void) const
+  {
+    auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
+    if (Res == 0)
+      return 0;
+    if (m_Value.sign())
+    {
+      typename _Ty Mask = 1;
+      Mask <<= m_BitSize;
+      --Mask;
+      typename _Ty Msb = boost::multiprecision::msb(m_Value);
+      Mask -= ((1 << Msb) - 1);
+      Res |= Mask;
+    }
+    return Res;
+  }
+
+  std::string ToString(u16 Base = 16) const;
+
   u16 GetBitSize(void) const { return m_BitSize; }
-  ap_int GetValue(void) const { return m_Value; }
-  ap_int& Value(void) { return m_Value; }
+
+  void SignExtend(u16 NewBitSize);
+  void ZeroExtend(u16 NewBitSize);
+  void BitCast(u16 NewBitSize);
+
+  ap_int  GetSignedValue(void) const;
+  ap_uint GetUnsignedValue(void) const;
+
+  // Unary
+
+  IntType Not(void) const;
+  IntType operator~(void) const { return Not(); }
+
+  IntType Neg(void) const;
+  IntType operator-(void) const { return Neg(); }
+
+  IntType Bsf(void) const;
+  IntType Lsb(void) const;
+  IntType Bsr(void) const;
+  IntType Msb(void) const;
+
+  IntType Swap(void) const;
+
+  // Binary
+
+  IntType Add(IntType const& rVal) const;
+  IntType operator+(IntType const& rVal) const { return Add(rVal); }
+
+  IntType Sub(IntType const& rVal) const;
+  IntType operator-(IntType const& rVal) const { return Sub(rVal); }
+
+  IntType Mul(IntType const& rVal) const;
+  IntType operator*(IntType const& rVal) const { return Mul(rVal); }
+
+  IntType UDiv(IntType const& rVal) const;
+  IntType operator/(IntType const& rVal) const { return UDiv(rVal); }
+  IntType SDiv(IntType const& rVal) const;
+
+  IntType UMod(IntType const& rVal) const;
+  IntType operator%(IntType const& rVal) const { return UMod(rVal); }
+  IntType SMod(IntType const& rVal) const;
+
+  IntType And(IntType const& rVal) const;
+  IntType operator&(IntType const& rVal) const { return And(rVal); }
+
+  IntType Or(IntType const& rVal) const;
+  IntType operator|(IntType const& rVal) const { return Or(rVal); }
+
+  IntType Xor(IntType const& rVal) const;
+  IntType operator^(IntType const& rVal) const { return Xor(rVal); }
+
+  IntType Lls(IntType const& rVal) const;
+  IntType operator<<(IntType const& rVal) const { return Lls(rVal); }
+
+  IntType Lrs(IntType const& rVal) const;
+  IntType operator>>(IntType const& rVal) const { return Lrs(rVal); }
+  IntType Ars(IntType const& rVal) const;
 
 private:
   u16 m_BitSize;

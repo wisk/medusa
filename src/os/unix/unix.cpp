@@ -143,7 +143,7 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   Address DstAddr(
     Address::FlatType,
     0x0,
-    static_cast<u32>(spBase->GetConstant() + spDisp->GetConstant() + spOff->GetConstant()),
+    static_cast<u32>(spBase->GetConstant().ConvertTo<u32>() + spDisp->GetConstant().ConvertTo<u32>() + spOff->GetConstant().ConvertTo<u32>()),
     0, 32);
 
   EvaluateVisitor EvalVst(rDoc, spArch->CurrentAddress(rAddress, *spAdrIpImm), spAdrIpImm->GetMode(), true);

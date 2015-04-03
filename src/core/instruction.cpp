@@ -115,12 +115,12 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   {
     auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
     if (spBaseExpr != nullptr)
-      rDstAddr.SetBase(static_cast<TBase>(spBaseExpr->GetConstant()));
+      rDstAddr.SetBase(spBaseExpr->GetConstant().ConvertTo<TBase>());
 
     auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
-    rDstAddr.SetOffset(spOffExpr->GetConstant().convert_to<TOffset>());
+    rDstAddr.SetOffset(spOffExpr->GetConstant().ConvertTo<TOffset>());
     return true;
   }
 
@@ -128,7 +128,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
   if (spConstExpr != nullptr && spConstExpr->GetBitSize() > 8)
   {
-    rDstAddr.SetOffset(spConstExpr->GetConstant().convert_to<TOffset>());
+    rDstAddr.SetOffset(spConstExpr->GetConstant().ConvertTo<TOffset>());
     return true;
   }
 

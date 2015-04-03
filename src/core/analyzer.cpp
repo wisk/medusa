@@ -319,8 +319,8 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
                 auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
                 if (auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression()))
                 {
-                  TBase Base = spBaseExpr != nullptr ? spBaseExpr->GetConstant().convert_to<TBase>() : 0x0;
-                  TOffset Off = spOffExpr->GetConstant().convert_to<TOffset>();
+                  TBase Base = spBaseExpr != nullptr ? spBaseExpr->GetConstant().ConvertTo<TBase>() : 0x0;
+                  TOffset Off = spOffExpr->GetConstant().ConvertTo<TOffset>();
                   Address SrcAddr(Base, Off);
                   auto Lbl = m_rDoc.GetLabelFromAddress(SrcAddr);
                   if (Lbl.GetType() != Label::Unknown)
@@ -762,7 +762,7 @@ bool Analyzer::DisassembleTask::FindJumpTable(
     return false;
   rCaseTblAddr = Address(
     rJmpInsnAddr.GetAddressingType(),
-    rJmpInsnAddr.GetBase(), spOffExpr->GetConstant().convert_to<u64>(), // TODO(KS): handle base address correctly...
+    rJmpInsnAddr.GetBase(), spOffExpr->GetConstant().ConvertTo<u64>(), // TODO(KS): handle base address correctly...
     rJmpInsnAddr.GetBaseSize(), rJmpInsnAddr.GetOffsetSize()
     );
 
@@ -807,7 +807,7 @@ bool Analyzer::DisassembleTask::FindJumpTable(
     if (!rMatchExprs.empty())
     {
       // HACK(KS): We have to add 1 if zf is tested, it's hardcoded here for testing purpose...
-      rNrOfCase = static_cast<u32>(expr_cast<ConstantExpression>(rMatchExprs.front())->GetConstant()) + 1;
+      rNrOfCase = static_cast<u32>(expr_cast<ConstantExpression>(rMatchExprs.front())->GetConstant().ConvertTo<u32>()) + 1;
       return true;
     }
   }

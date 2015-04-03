@@ -551,14 +551,19 @@ ConstantExpression::ConstantExpression(u16 BitSize, ap_int Value)
 {
 }
 
+ConstantExpression::ConstantExpression(IntType const& rValue)
+: m_Value(rValue)
+{
+}
+
 std::string ConstantExpression::ToString(void) const
 {
-  return str(boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.GetValue());
+  return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
 }
 
 Expression::SPType ConstantExpression::Clone(void) const
 {
-  return std::make_shared<ConstantExpression>(m_Value.GetBitSize(), m_Value.GetValue());
+  return std::make_shared<ConstantExpression>(m_Value);
 }
 
 Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
@@ -641,7 +646,7 @@ bool IdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, 
   if (RegSize != DataValue.GetBitSize())
     Log::Write("core").Level(LogDebug) << "mismatch type when writing into an identifier: " << ToString() << " id size: " << RegSize << " write size: " << DataValue.GetBitSize() << LogEnd;
 
-  u64 RegVal = DataValue.GetValue().convert_to<u64>();
+  u64 RegVal = DataValue.ConvertTo<u64>();
   if (!pCpuCtxt->WriteRegister(m_Id, &RegVal, RegSize))
     return false;
 
@@ -721,8 +726,8 @@ bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMem
     if (rData.empty())
       return false;
     u32 RegSize = m_pCpuInfo->GetSizeOfRegisterInBit(Id);
-    auto DataValue = rData.front();
-    if (!pCpuCtxt->WriteRegister(Id, &DataValue.GetValue(), RegSize))
+    auto DataValue = rData.front().ConvertTo<u64>();
+    if (!pCpuCtxt->WriteRegister(Id, &DataValue, RegSize))
       return false;
     rData.pop_front();
   }
@@ -852,7 +857,8 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
 
     for (auto const& rDataValue : rData)
     {
-      if (!pMemCtxt->WriteMemory(LinAddr, &rDataValue.GetValue(), rDataValue.GetBitSize() / 8))
+      auto Val = rDataValue.ConvertTo<u64>();
+      if (!pMemCtxt->WriteMemory(LinAddr, &Val, rDataValue.GetBitSize() / 8))
         return false;
       LinAddr += rDataValue.GetBitSize() / 8;
     }
@@ -871,8 +877,8 @@ bool MemoryExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
       return false;
 
     //auto DataSize = std::get<0>(rData.front());
-    auto DataVal = rData.front().GetValue();
-    u64 DataToWrite = DataVal.convert_to<u64>(); // TODO: is it mandatory?
+    auto DataVal = rData.front().ConvertTo<u64>();
+    u64 DataToWrite = DataVal; // TODO: is it mandatory?
     if (!pCpuCtxt->WriteRegister(spRegOff->GetId(), &DataToWrite, spRegOff->GetBitSize()))
       return false;
   }
@@ -889,10 +895,10 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, OffsetData) == false)
     return false;
 
-  TBase Base = BaseData.size() != 1 ? 0x0 : BaseData.front().GetValue().convert_to<TBase>();
+  TBase Base = BaseData.size() != 1 ? 0x0 : BaseData.front().ConvertTo<TBase>();
   if (OffsetData.size() != 1)
     return false;
-  TOffset OffsetValue = OffsetData.front().GetValue().convert_to<TOffset>();
+  TOffset OffsetValue = OffsetData.front().ConvertTo<TOffset>();
   rAddress = Address(Base, OffsetValue);
   return true;
 }
@@ -957,6 +963,11 @@ Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
 }
 
 // helper /////////////////////////////////////////////////////////////////////
+
+Expression::SPType Expr::MakeConst(IntType const& rValue)
+{
+  return std::make_shared<ConstantExpression>(rValue);
+}
 
 Expression::SPType Expr::MakeConst(u16 BitSize, ap_int Value)
 {

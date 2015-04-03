@@ -397,6 +397,7 @@ class Medusa_EXPORT ConstantExpression : public Expression
 
 public:
   ConstantExpression(u16 BitSize, ap_int Value);
+  ConstantExpression(IntType const& rValue);
   virtual ~ConstantExpression(void) {}
 
   virtual std::string ToString(void) const;
@@ -409,7 +410,7 @@ public:
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
-  ap_int          GetConstant(void) const { return m_Value.GetValue(); }
+  IntType      GetConstant(void) const { return m_Value; }
 
 private:
   IntType m_Value;
@@ -593,6 +594,7 @@ public:
 
 namespace Expr
 {
+  Medusa_EXPORT Expression::SPType MakeConst(IntType const& rValue);
   Medusa_EXPORT Expression::SPType MakeConst(u16 BitSize, ap_int Value);
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
