@@ -6,13 +6,18 @@ MEDUSA_NAMESPACE_BEGIN
 std::string IntType::ToString(u16 Base) const
 {
   std::ostringstream Out;
-  Out << std::setw(m_BitSize / 8) << std::setfill('0') << m_Value;
+  switch (Base)
+  {
+  case 16: Out << "0x" << std::setw(m_BitSize / 8) << std::hex; break;
+  default: break;
+  }
+  Out << std::setfill('0') << GetUnsignedValue();
   return Out.str();
 }
 
 void IntType::SignExtend(u16 NewBitSize)
 {
-  assert(NewBitSize > m_BitSize);
+  //assert(NewBitSize > m_BitSize);
   ap_int Mask = (ap_int(1) << NewBitSize) - 1;
   m_Value = Mask & m_Value;
   m_BitSize = NewBitSize;
@@ -20,7 +25,7 @@ void IntType::SignExtend(u16 NewBitSize)
 
 void IntType::ZeroExtend(u16 NewBitSize)
 {
-  assert(NewBitSize > m_BitSize);
+  //assert(NewBitSize > m_BitSize);
   m_BitSize = NewBitSize;
 }
 

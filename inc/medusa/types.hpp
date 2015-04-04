@@ -72,24 +72,24 @@ class Medusa_EXPORT IntType
 {
 public:
   IntType(void) : m_BitSize(0), m_Value() {}
-  explicit IntType(s8 Value)    : m_BitSize(8),    m_Value(Value) {}
-  explicit IntType(u8 Value)    : m_BitSize(8),    m_Value(Value) {}
-  explicit IntType(s16 Value)   : m_BitSize(16),   m_Value(Value) {}
-  explicit IntType(u16 Value)   : m_BitSize(16),   m_Value(Value) {}
-  explicit IntType(s32 Value)   : m_BitSize(32),   m_Value(Value) {}
-  explicit IntType(u32 Value)   : m_BitSize(32),   m_Value(Value) {}
-  explicit IntType(s64 Value)   : m_BitSize(64),   m_Value(Value) {}
-  explicit IntType(u64 Value)   : m_BitSize(64),   m_Value(Value) {}
-  explicit IntType(s128 Value)  : m_BitSize(128),  m_Value(Value) {}
-  explicit IntType(u128 Value)  : m_BitSize(128),  m_Value(Value) {}
-  explicit IntType(s256 Value)  : m_BitSize(256),  m_Value(Value) {}
-  explicit IntType(u256 Value)  : m_BitSize(256),  m_Value(Value) {}
-  explicit IntType(s512 Value)  : m_BitSize(512),  m_Value(Value) {}
-  explicit IntType(u512 Value)  : m_BitSize(512),  m_Value(Value) {}
-  explicit IntType(s1024 Value) : m_BitSize(1024), m_Value(Value) {}
-  explicit IntType(u1024 Value) : m_BitSize(1024), m_Value(Value) {}
+  explicit IntType(s8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit IntType(u8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit IntType(s16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit IntType(u16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit IntType(s32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit IntType(u32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit IntType(s64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit IntType(u64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit IntType(s128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit IntType(u128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit IntType(s256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit IntType(u256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit IntType(s512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit IntType(u512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit IntType(s1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+  explicit IntType(u1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
 
-  explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) {}
+  explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
   template<typename _Ty>
   std::enable_if_t<std::is_signed<_Ty>::value, _Ty> ConvertTo(void) const
