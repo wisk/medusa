@@ -42,11 +42,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
   auto& rDoc = Core.GetDocument();
   auto StartAddr = rDoc.GetAddressFromLabelName("start");
-  auto spStartInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(StartAddr));
-  auto ArchTag = spStartInsn->GetArchitectureTag();
+  auto ArchTag = rDoc.GetArchitectureTag(StartAddr);
   auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
   BOOST_REQUIRE(spArch != nullptr);
-  auto Mode = spStartInsn->GetMode();
+  auto Mode = rDoc.GetMode(StartAddr);
   BOOST_REQUIRE(Mode != 0);
 
   auto spOs = ModuleManager::Instance().GetOperatingSystem(rDoc.GetOperatingSystemName());
@@ -82,7 +81,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
   });
 
-  Exec.HookFunction("puts", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  bool PutsCalled = false;
+  Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
     u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
@@ -116,6 +116,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
       return;
     if (!pCpuCtxt->WriteRegister(PC, RetAddr))
       return;
+    PutsCalled = true;
   });
 
   Exec.HookFunction("abort", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
@@ -124,6 +125,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   });
 
   Exec.Execute(StartAddr);
+
+  BOOST_CHECK(PutsCalled);
 
   Core.CloseDocument();
 }

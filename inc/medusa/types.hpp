@@ -103,7 +103,7 @@ public:
     auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
     if (Res == 0)
       return 0;
-    if (m_Value.sign())
+    if (m_Value.backend().sign())
     {
       typename _Ty Mask = 1;
       Mask <<= m_BitSize;
