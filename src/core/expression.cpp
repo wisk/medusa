@@ -774,6 +774,51 @@ Expression::SPType TrackedIdentifierExpression::Visit(ExpressionVisitor* pVisito
   return pVisitor->VisitTrackedIdentifier(std::static_pointer_cast<TrackedIdentifierExpression>(shared_from_this()));
 }
 
+// variable ///////////////////////////////////////////////////////////////////
+
+VariableExpression::VariableExpression(std::string const& rVarName, ActionType VarAct, u16 BitSize)
+  : m_Name(rVarName), m_Action(VarAct), m_BitSize(BitSize)
+{
+  if (BitSize != 0 && VarAct != Alloc)
+    Log::Write("core").Level(LogWarning) << "variable expression doesn't require bit size if action is different from ``alloc''" << LogEnd;
+  if (BitSize == 0 && VarAct == Alloc)
+    Log::Write("core").Level(LogWarning) << "try to allocate a 0-bit variable" << LogEnd;
+}
+
+VariableExpression::~VariableExpression(void)
+{
+}
+
+std::string VariableExpression::ToString(void) const
+{
+  std::string ActStr = "";
+
+  switch (m_Action)
+  {
+  case Alloc: ActStr = "alloc"; break;
+  case Free: ActStr = "free"; break;
+  case Use: ActStr = "use"; break;
+  default: return "<invalid variable>";
+  }
+
+  return (boost::format("Var%d[%s]") % m_BitSize % ActStr).str();
+}
+
+Expression::SPType VariableExpression::Clone(void) const
+{
+  return Expr::MakeVar(m_Name, m_Action, m_BitSize);
+}
+
+u32 VariableExpression::GetBitSize(void) const
+{
+  return m_BitSize;
+}
+
+Expression::SPType VariableExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitVariable(std::static_pointer_cast<VariableExpression>(shared_from_this()));
+}
+
 // memory expression //////////////////////////////////////////////////////////
 
 MemoryExpression::MemoryExpression(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)
@@ -992,6 +1037,11 @@ Expression::SPType Expr::MakeVecId(std::vector<u32> const& rVecId, CpuInformatio
 Expression::SPType Expr::MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)
 {
   return std::make_shared<MemoryExpression>(AccessSize, spExprBase, spExprOffset, Dereference);
+}
+
+Expression::SPType Expr::MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize)
+{
+  return std::make_shared<VariableExpression>(rName, Act, BitSize);
 }
 
 Expression::SPType Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)

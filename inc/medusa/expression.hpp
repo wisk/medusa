@@ -71,6 +71,7 @@ public:
     Id,
     VecId,
     TrackedId,
+    Var,
     Mem,
     Sym,
   };
@@ -498,6 +499,40 @@ private:
   Address m_CurAddr;
 };
 
+// variable ///////////////////////////////////////////////////////////////////
+
+class Medusa_EXPORT VariableExpression : public Expression
+{
+  DECL_EXPR(VariableExpression, Expression::Var, Expression)
+
+public:
+  enum ActionType
+  {
+    Unknown,
+    Alloc,
+    Free,
+    Use,
+  };
+
+  VariableExpression(std::string const& rVarName, ActionType VarType, u16 BitSize = 0);
+
+  virtual ~VariableExpression(void);
+
+  virtual std::string ToString(void) const;
+  virtual Expression::SPType Clone(void) const;
+  virtual u32 GetBitSize(void) const;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+
+  std::string const& GetName(void) const { return m_Name; }
+  ActionType         GetAction(void) const { return m_Action; }
+
+protected:
+  std::string m_Name;
+  ActionType m_Action;
+  u16 m_BitSize;
+};
+
 // memory expression //////////////////////////////////////////////////////////
 
 class Medusa_EXPORT MemoryExpression : public Expression
@@ -586,6 +621,7 @@ public:
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 };
@@ -600,6 +636,7 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
+  Medusa_EXPORT Expression::SPType MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize = 0);
 
   Medusa_EXPORT Expression::SPType MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
   Medusa_EXPORT Expression::SPType MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr);

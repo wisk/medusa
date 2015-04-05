@@ -59,7 +59,23 @@ semantic:
     [ ]
 
   idiv: &idiv
-    [ ]
+    [
+      'alloc_var("div_res", op0.bit)',
+      'alloc_var("rem_res", op0.bit)',
+      'alloc_var("dividend", concat(op0.bit, ignore(" * 2")))',
+
+      'if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id',
+      'if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id )',
+      'if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id)',
+      'if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id)',
+
+      'div_res = sdiv(dividend, op0.val)',
+      'rem_res = smod(dividend, op0.val)',
+
+      'free_var("dividend")',
+      'free_var("rem_res")',
+      'free_var("div_res")'
+    ]
 
   div: &div
     [ 'res = acc.id / op0.val', acc.id = res ]
@@ -11747,6 +11763,7 @@ instruction:
     - opcode: 0x07
       mnemonic: idiv
       operand: [ Eb ]
+      semantic: *idiv
 
     group_03B:
     - opcode: 0x00
@@ -11790,6 +11807,7 @@ instruction:
     - opcode: 0x07
       mnemonic: idiv
       operand: [ Ev ]
+      semantic: *idiv
 
     group_04:
     - opcode: 0x00

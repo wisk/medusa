@@ -161,4 +161,15 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   delete pX86Disasm;
 }
 
+BOOST_AUTO_TEST_CASE(expr_var)
+{
+  auto spAllocVarExpr = Expr::MakeVar("test", VariableExpression::Alloc, 32);
+  auto spAssignVarExpr = Expr::MakeAssign(Expr::MakeVar("test", VariableExpression::Use), Expr::MakeConst(32, 0x11223344));
+  auto spFreeVarExpr = Expr::MakeVar("test", VariableExpression::Free);
+
+  std::cout << spAllocVarExpr->ToString() << std::endl;
+  std::cout << spAssignVarExpr->ToString() << std::endl;
+  std::cout << spFreeVarExpr->ToString() << std::endl;
+}
+
 BOOST_AUTO_TEST_SUITE_END()

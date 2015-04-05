@@ -19,6 +19,8 @@ public:
     ProgramPointerRegister,
     AccumulatorRegister,
     CounterRegister,
+    DividendRegister,
+    RemainderRegister,
     InvalidRegister
   };
 

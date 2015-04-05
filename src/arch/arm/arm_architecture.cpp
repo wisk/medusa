@@ -84,12 +84,7 @@ u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type R
   switch (RegType)
   {
   case StackPointerRegister:   return ARM_RegSP;
-  case StackFrameRegister:     return ARM_RegUnknown;
-  case ProgramBaseRegister:    return ARM_RegUnknown;
   case ProgramPointerRegister: return ARM_RegPC;
-  case AccumulatorRegister:    return ARM_RegUnknown;
-  case CounterRegister:        return ARM_RegUnknown;
-  case InvalidRegister:        return ARM_RegUnknown;
   default:                     return ARM_RegUnknown;
   };
 }

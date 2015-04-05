@@ -54,6 +54,7 @@ class ArchConvertion:
                 ast.NodeVisitor.__init__(self)
                 self.id_mapper = id_mapper
                 self.var_expr = []
+                self.var_pool = []
 
             def reset(self):
                 self.var_expr = []
@@ -153,6 +154,21 @@ class ArchConvertion:
                 for arg in node.args:
                     args_name.append(self.visit(arg))
 
+                if func_name == 'ignore':
+                    return args_name[0][1:-1]
+
+                if func_name == 'concat':
+                    return ''.join(args_name)
+
+                if 'VariableExpression::Alloc' in func_name:
+                    var_name = args_name[0][1:-1]
+                    assert(not var_name in self.var_pool)
+                    self.var_pool.append(var_name)
+                if 'VariableExpression::Free' in func_name:
+                    var_name = args_name[0][1:-1]
+                    assert(var_name in self.var_pool)
+                    self.var_pool.remove(args_name[0][1:-1])
+
                 if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
@@ -206,8 +222,14 @@ class ArchConvertion:
             def visit_Name(self, node):
                 node_name = node.id
 
+                if node_name in [ 'ignore', 'concat' ]:
+                    return node_name
+
                 if node_name in self.id_mapper:
                     return self.id_mapper[node_name]
+
+                if node_name in self.var_pool:
+                    return 'Expr::MakeVar("%s", VariableExpression::Use)' % node_name
 
                 # Operand
                 if node_name.startswith('op'):
@@ -224,6 +246,17 @@ class ArchConvertion:
                     int_size = int(node_name[3:])
                     return 'Expr::MakeConst(%d, %%s)' % int_size
 
+                # Variable
+                elif node_name == 'alloc_var':
+                    return 'Expr::MakeVar(%s, VariableExpression::Alloc, %s)'
+                elif node_name.startswith('alloc_var'):
+                    var_size = int(node_name[9:])
+                    return 'Expr::MakeVar(%%s, VariableExpression::Alloc, %d)' % var_size
+                elif node_name == 'free_var':
+                    return 'Expr::MakeVar(%s, VariableExpression::Free)'
+                elif node_name == 'var':
+                    return 'Expr::MakeVar(%s, VariableExpression::Use)'
+
                 if node_name == 'stack':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())'
                 elif node_name == 'frame':
@@ -234,8 +267,10 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::AccumulatorRegister, rInsn.GetMode())'
                 elif node_name == 'cnt':
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())'
-                elif node_name == 'flag':
-                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::FlagRegister, rInsn.GetMode())'
+                elif node_name == 'div':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::DivisorRegister, rInsn.GetMode())'
+                elif node_name == 'rem':
+                    return 'm_CpuInfo.GetRegisterByType(CpuInformation::RemainderRegister, rInsn.GetMode())'
                 elif node_name == 'insn':
                     return 'rInsn'
                 elif node_name == 'res':
@@ -254,6 +289,12 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'zero_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
+                elif node_name == 'ars':
+                    return 'Expr::MakeBinOp(OperationExpression::OpArs, %s, %s)'
+                elif node_name == 'sdiv':
+                    return 'Expr::MakeBinOp(OperationExpression::OpSDiv, %s, %s)'
+                elif node_name == 'smod':
+                    return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 

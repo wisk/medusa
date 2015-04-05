@@ -83,6 +83,11 @@ Expression::SPType ExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierEx
   return nullptr;
 }
 
+Expression::SPType ExpressionVisitor::VisitVariable(VariableExpression::SPType spVarExpr)
+{
+  return nullptr;
+}
+
 Expression::SPType ExpressionVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   if (spMemExpr->GetBaseExpression() != nullptr)
@@ -188,6 +193,14 @@ Expression::SPType CloneVisitor::VisitTrackedIdentifier(TrackedIdentifierExpress
     spTrkIdExpr->GetId(),
     spTrkIdExpr->GetCpuInformation(),
     spTrkIdExpr->GetCurrentAddress());
+}
+
+Expression::SPType CloneVisitor::VisitVariable(VariableExpression::SPType spVarExpr)
+{
+  return Expr::MakeVar(
+    spVarExpr->GetName(),
+    spVarExpr->GetAction(),
+    spVarExpr->GetBitSize());
 }
 
 Expression::SPType CloneVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
@@ -357,6 +370,12 @@ Expression::SPType FilterVisitor::VisitVectorIdentifier(VectorIdentifierExpressi
 Expression::SPType FilterVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   _Evaluate(spTrkIdExpr);
+  return nullptr;
+}
+
+Expression::SPType FilterVisitor::VisitVariable(VariableExpression::SPType spVarExpr)
+{
+  _Evaluate(spVarExpr);
   return nullptr;
 }
 
@@ -708,6 +727,12 @@ Expression::SPType EvaluateVisitor::VisitVectorIdentifier(VectorIdentifierExpres
 Expression::SPType EvaluateVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
   m_IsSymbolic = true;
+  return nullptr;
+}
+
+Expression::SPType EvaluateVisitor::VisitVariable(VariableExpression::SPType spVarExpr)
+{
+  Log::Write("core").Level(LogDebug) << "variable are not yet implemented in evaluate visitor" << LogEnd;
   return nullptr;
 }
 

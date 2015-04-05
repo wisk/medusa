@@ -147,9 +147,20 @@ u32 X86Architecture::X86CpuInformation::ConvertNameToIdentifier(std::string cons
 
 u32 X86Architecture::X86CpuInformation::GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const
 {
-  static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Cs, X86_Reg_Ip,  X86_Reg_Ax,  X86_Reg_Cx  };
-  static const u32 Register32[] = { X86_Reg_Esp, X86_Reg_Ebp, X86_Reg_Cs, X86_Reg_Eip, X86_Reg_Eax, X86_Reg_Ecx };
-  static const u32 Register64[] = { X86_Reg_Rsp, X86_Reg_Rbp, X86_Reg_Cs, X86_Reg_Rip, X86_Reg_Rax, X86_Reg_Rcx };
+  /*
+    StackPointerRegister,
+    StackFrameRegister,
+    ProgramBaseRegister,
+    ProgramPointerRegister,
+    AccumulatorRegister,
+    CounterRegister,
+    DivisorRegister,
+    RemainderRegister,
+    InvalidRegister
+    */
+  static const u32 Register16[] = { X86_Reg_Sp,  X86_Reg_Bp,  X86_Reg_Cs, X86_Reg_Ip,  X86_Reg_Ax,  X86_Reg_Cx,  0, X86_Reg_Ah  };
+  static const u32 Register32[] = { X86_Reg_Esp, X86_Reg_Ebp, X86_Reg_Cs, X86_Reg_Eip, X86_Reg_Eax, X86_Reg_Ecx, 0, X86_Reg_Edx };
+  static const u32 Register64[] = { X86_Reg_Rsp, X86_Reg_Rbp, X86_Reg_Cs, X86_Reg_Rip, X86_Reg_Rax, X86_Reg_Rcx, 0, X86_Reg_Rdx };
 
   if (RegType < InvalidRegister)
     switch (Mode)
