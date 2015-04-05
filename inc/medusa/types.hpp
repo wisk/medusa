@@ -94,7 +94,7 @@ public:
   template<typename _Ty>
   typename std::enable_if<std::is_signed<_Ty>::value, _Ty>::type ConvertTo(void) const
   {
-    return m_Value.convert_to<typename _Ty>();
+    return m_Value.convert_to<_Ty>();
   }
 
   template<typename _Ty>
@@ -105,10 +105,10 @@ public:
       return 0;
     if (m_Value.backend().sign())
     {
-      typename _Ty Mask = 1;
+      _Ty Mask = 1;
       Mask <<= m_BitSize;
       --Mask;
-      typename _Ty Msb = boost::multiprecision::msb(m_Value);
+      _Ty Msb = boost::multiprecision::msb(m_Value);
       Mask -= ((1 << Msb) - 1);
       Res |= Mask;
     }
