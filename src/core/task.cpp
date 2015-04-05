@@ -74,7 +74,8 @@ void TaskManager::Stop(void)
   m_Tasks.push(nullptr);
   m_CondVar.notify_one();
   m_Mutex.unlock();
-  m_Thread.join();
+  if (m_Thread.joinable())
+    m_Thread.join();
 }
 
 void TaskManager::Wait(void)
@@ -82,7 +83,8 @@ void TaskManager::Wait(void)
   if (m_Tasks.empty())
     return;
   m_Running = false;
-  m_Thread.join();
+  if (m_Thread.joinable())
+    m_Thread.join();
   m_Running = true;
 }
 

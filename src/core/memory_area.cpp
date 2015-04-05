@@ -333,6 +333,10 @@ bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
 
   // LATER(KS): Optimize this piece of code
   size_t CellOffset = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
+  if (spCellData == nullptr)
+    spCellData = m_Cells[CellOffset];
+  if (spCellData == nullptr)
+    return true;
   u16 CellLen = spCellData->GetLength();
   for (u16 i = 0; i < CellLen; ++i)
   {

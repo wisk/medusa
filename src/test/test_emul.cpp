@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   std::cout << "Using emulator type: " << pEmulatorType << std::endl;
   BOOST_REQUIRE(Exec.SetEmulator(pEmulatorType));
 
-  Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     std::cout << "[__libc_start_main] try to execute R0 (main)" << std::endl;
     u32 MainAddr = 0;
@@ -79,10 +79,10 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     if (!pCpuCtxt->WriteRegister(PC, MainAddr))
       return;
 
-  });
+  }));
 
   bool PutsCalled = false;
-  Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
     u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
@@ -117,11 +117,25 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     if (!pCpuCtxt->WriteRegister(PC, RetAddr))
       return;
     PutsCalled = true;
-  });
+  }));
 
-  Exec.HookFunction("abort", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("abort", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     std::cout << "[abort]" << std::endl;
+  }));
+
+  Exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
+  {
+    std::cout << pCpuCtxt->ToString() << std::endl;
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(Core.GetCell(rAddr));
+    auto const& rModMgr = ModuleManager::Instance();
+    auto spArch = rModMgr.GetArchitecture(spInsn->GetArchitectureTag());
+    PrintData PD;
+    PD(rAddr);
+    spArch->FormatCell(rDoc, rAddr, *spInsn, PD);
+    std::cout << PD.GetTexts() << std::endl;
+    for (auto e : spInsn->GetSemantic())
+      std::cout << e->ToString() << std::endl;
   });
 
   Exec.Execute(StartAddr);

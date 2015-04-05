@@ -92,13 +92,13 @@ public:
   explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
   template<typename _Ty>
-  std::enable_if_t<std::is_signed<_Ty>::value, _Ty> ConvertTo(void) const
+  typename std::enable_if<std::is_signed<_Ty>::value, _Ty>::type ConvertTo(void) const
   {
     return m_Value.convert_to<typename _Ty>();
   }
 
   template<typename _Ty>
-  std::enable_if_t<std::is_unsigned<_Ty>::value, _Ty> ConvertTo(void) const
+  typename std::enable_if<std::is_unsigned<_Ty>::value, _Ty>::type ConvertTo(void) const
   {
     auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
     if (Res == 0)
