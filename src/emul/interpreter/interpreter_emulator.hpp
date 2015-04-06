@@ -29,13 +29,14 @@ public:
   virtual bool Execute(Address const& rAddress, Expression::LSPType  const& rExprList);
 
 protected:
+  std::unordered_map<std::string, IntType> m_Vars;
 
 private:
   class InterpreterExpressionVisitor : public ExpressionVisitor
   {
   public:
-    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
-      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt) {}
+    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, IntType>& rVars)
+      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars) {}
 
     virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
     virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
@@ -49,6 +50,7 @@ private:
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
     virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
     virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
@@ -58,6 +60,12 @@ private:
     MemoryContext*            m_pMemCtxt;
 
   private:
+    bool _AllocateVariable(std::string const& rVarName, u16 BitSize);
+    bool _FreeVariable(std::string const& rVarName);
+    bool _ReadVariable(std::string const& rVarName, IntType& rValue) const;
+    bool _WriteVariable(std::string const& rVarName, IntType const& rValue);
+    std::unordered_map<std::string, IntType>& m_rVars;
+
     bool _EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult);
     template<typename _Type>
     bool _DoComparison(u8 Op, Expression::SPType spRefExpr, Expression::SPType spTestExpr, bool& rResult);

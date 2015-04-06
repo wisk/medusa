@@ -35,7 +35,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
     }
   }
 
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
   auto spCurExpr = spExpr->Visit(&Visitor);
 
   if (spCurExpr == nullptr)
@@ -46,7 +46,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt);
+  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
 
   for (Expression::SPType spExpr : rExprList)
   {
@@ -327,39 +327,80 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPType pConstExpr)
 {
-  return pConstExpr->Clone();
+  return spConstExpr;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdentifier(IdentifierExpression::SPType pIdExpr)
 {
-  return pIdExpr->Clone();
+  return pIdExpr;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
 {
-  return spVecIdExpr->Clone();
+  return spVecIdExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType pTrkIdExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
 {
-  return pTrkIdExpr->Clone();
+  return spTrkIdExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression::SPType pMemExpr)
+Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr)
+{
+  return spVarExpr;
+}
+
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
   Expression::SPType pBaseExprVisited = nullptr;
-  if (pMemExpr->GetBaseExpression() != nullptr)
-    pBaseExprVisited = pMemExpr->GetBaseExpression()->Visit(this);
+  if (spMemExpr->GetBaseExpression() != nullptr)
+    pBaseExprVisited = spMemExpr->GetBaseExpression()->Visit(this);
 
-  auto pOffsetExprVisited = pMemExpr->GetOffsetExpression()->Visit(this);
+  auto pOffsetExprVisited = spMemExpr->GetOffsetExpression()->Visit(this);
 
-  return Expr::MakeMem(pMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, pMemExpr->IsDereferencable());
+  return Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), pBaseExprVisited, pOffsetExprVisited, spMemExpr->IsDereferencable());
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType pSymExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
   // TODO:
   return nullptr;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::_AllocateVariable(std::string const& rVarName, u16 BitSize)
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar != std::end(m_rVars))
+    return false;
+  m_rVars[rVarName] = IntType(BitSize, 0);
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::_FreeVariable(std::string const& rVarName)
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar == std::end(m_rVars))
+    return false;
+  m_rVars.erase(itVar);
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::_ReadVariable(std::string const& rVarName, IntType& rValue) const
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar == std::end(m_rVars))
+    return false;
+  rValue = itVar->second;
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::_WriteVariable(std::string const& rVarName, IntType const& rValue)
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar == std::end(m_rVars))
+    return false;
+  itVar->second = rValue;
+  return true;
 }
 
 bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult)
