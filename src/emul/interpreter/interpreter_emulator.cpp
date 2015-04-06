@@ -367,6 +367,93 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbo
   return nullptr;
 }
 
+bool InterpreterEmulator::InterpreterExpressionVisitor::ReadExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType& rValue)
+{
+  if (auto spIdExpr = expr_cast<IdentifierExpression>(spExpr))
+    return ReadIdentifier(spIdExpr->GetId(), AccessBitSize, rValue);
+  if (auto spMemExpr = expr_cast<MemoryExpression>(spExpr))
+  {
+    auto spBase = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
+    auto spOffset = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    TBase Base = spBase ? spBase->GetConstant().ConvertTo<TBase>() : 0;
+    TOffset Offset = spOffset->GetConstant().ConvertTo<TOffset>();
+    return ReadMemory(Address(Base, Offset), AccessBitSize, rValue);
+  }
+  if (auto spVarExpr = expr_cast<VariableExpression>(spExpr))
+    return ReadVariable(spVarExpr->GetName(), AccessBitSize, rValue);
+  return false;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::WriteExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType const& rValue)
+{
+  if (auto spIdExpr = expr_cast<IdentifierExpression>(spExpr))
+    return WriteIdentifier(spIdExpr->GetId(), AccessBitSize, rValue);
+  if (auto spMemExpr = expr_cast<MemoryExpression>(spExpr))
+  {
+    auto spBase = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
+    auto spOffset = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    TBase Base = spBase ? spBase->GetConstant().ConvertTo<TBase>() : 0;
+    TOffset Offset = spOffset->GetConstant().ConvertTo<TOffset>();
+    return WriteMemory(Address(Base, Offset), AccessBitSize, rValue);
+  }
+  if (auto spVarExpr = expr_cast<VariableExpression>(spExpr))
+    return WriteVariable(spVarExpr->GetName(), AccessBitSize, rValue);
+  return false;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::ReadIdentifier(u32 Id, u16 AccessBitSize, IntType& rValue)
+{
+  auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+  auto RegSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+  if (RegSize != AccessBitSize)
+    return false;
+  u64 RegVal = 0;
+  if (!m_pCpuCtxt->ReadRegister(Id, &RegVal, RegSize))
+    return false;
+  rValue = IntType(RegSize, RegVal);
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::WriteIdentifier(u32 Id, u16 AccessBitSize, IntType const& rValue)
+{
+  auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+  auto RegSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+  if (RegSize != AccessBitSize)
+    return false;
+  u64 RegVal = rValue.ConvertTo<u64>();
+  if (!m_pCpuCtxt->WriteRegister(Id, &RegVal, RegSize))
+    return false;
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::ReadMemory(Address const& rAddr, u16 AccessBitSize, IntType& rValue)
+{
+  return false;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::WriteMemory(Address const& rAddr, u16 AccessBitSize, IntType const& rValue)
+{
+  return false;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::ReadVariable(std::string const& rVarName, u16 AccessBitSize, IntType& rValue)
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar == std::end(m_rVars))
+    return false;
+  rValue = itVar->second;
+  return true;
+}
+
+bool InterpreterEmulator::InterpreterExpressionVisitor::WriteVariable(std::string const& rVarName, u16 AccessBitSize, IntType const& rValue)
+{
+  auto itVar = m_rVars.find(rVarName);
+  if (itVar == std::end(m_rVars))
+    return false;
+  itVar->second = rValue;
+  return true;
+}
+
 bool InterpreterEmulator::InterpreterExpressionVisitor::_AllocateVariable(std::string const& rVarName, u16 BitSize)
 {
   auto itVar = m_rVars.find(rVarName);

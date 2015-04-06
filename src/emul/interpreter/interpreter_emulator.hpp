@@ -54,6 +54,18 @@ private:
     virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
+    bool ReadExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType& rValue);
+    bool WriteExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType const& rValue);
+
+    bool ReadIdentifier(u32 Id, u16 AccessBitSize, IntType& rValue);
+    bool WriteIdentifier(u32 Id, u16 AccessBitSize, IntType const& rValue);
+
+    bool ReadMemory(Address const& rAddr, u16 AccessBitSize, IntType& rValue);
+    bool WriteMemory(Address const& rAddr, u16 AccessBitSize, IntType const& rValue);
+
+    bool ReadVariable(std::string const& rVarName, u16 AccessBitSize, IntType& rValue);
+    bool WriteVariable(std::string const& rVarName, u16 AccessBitSize, IntType const& rValue);
+
   protected:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
