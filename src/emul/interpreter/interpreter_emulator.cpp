@@ -345,7 +345,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrack
   return spTrkIdExpr;
 }
 
-Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVariable(VariableExpression::SPType spVarExpr)
 {
   return spVarExpr;
 }
