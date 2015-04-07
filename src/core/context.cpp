@@ -10,9 +10,72 @@ bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const
 }
 
 template<>
-bool CpuContext::WriteRegister<bool>(u32 Reg, bool Val)
+bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal)
 {
-  return WriteRegister(Reg, &Val, 1);
+  u8 Tmp = rVal ? 1 : 0;
+  return WriteRegister(Reg, &Tmp, 1);
+}
+
+namespace
+{
+  template<typename _Ty>
+  bool ReadRegisterHelper(CpuContext const& rCpuCtxt, u32 Reg, IntType& rVal)
+  {
+    auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
+    if (RegBitSize != rVal.GetBitSize())
+      return false;
+    typename _Ty RegVal;
+    if (!rCpuCtxt.ReadRegister(Reg, &RegVal, RegBitSize))
+      return false;
+    rVal = IntType(RegVal);
+    return true;
+  }
+
+  template<typename _Ty>
+  bool WriteRegisterHelper(CpuContext& rCpuCtxt, u32 Reg, IntType const& rVal)
+  {
+    auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
+    if (RegBitSize != rVal.GetBitSize())
+      return false;
+    auto RegVal = rVal.ConvertTo<typename _Ty>();
+    if (!rCpuCtxt.WriteRegister(Reg, &RegVal, RegBitSize))
+      return false;
+    return true;
+  }
+}
+
+template<>
+bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const
+{
+  auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
+  switch (RegBitSize)
+  {
+  default:  return false;
+  case   8: return ReadRegisterHelper<  u8>(*this, Reg, rVal);
+  case  16: return ReadRegisterHelper< u16>(*this, Reg, rVal);
+  case  32: return ReadRegisterHelper< u32>(*this, Reg, rVal);
+  case  64: return ReadRegisterHelper< u64>(*this, Reg, rVal);
+  case 128: return ReadRegisterHelper<u128>(*this, Reg, rVal);
+  case 256: return ReadRegisterHelper<u256>(*this, Reg, rVal);
+  case 512: return ReadRegisterHelper<u512>(*this, Reg, rVal);
+  }
+}
+
+template<>
+bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal)
+{
+  auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
+  switch (RegBitSize)
+  {
+  default:  return false;
+  case   8: return WriteRegisterHelper<  u8>(*this, Reg, rVal);
+  case  16: return WriteRegisterHelper< u16>(*this, Reg, rVal);
+  case  32: return WriteRegisterHelper< u32>(*this, Reg, rVal);
+  case  64: return WriteRegisterHelper< u64>(*this, Reg, rVal);
+  case 128: return WriteRegisterHelper<u128>(*this, Reg, rVal);
+  case 256: return WriteRegisterHelper<u256>(*this, Reg, rVal);
+  case 512: return WriteRegisterHelper<u512>(*this, Reg, rVal);
+  }
 }
 
 bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
@@ -44,6 +107,59 @@ bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
   return true;
 }
 
+namespace
+{
+  template<typename _Ty>
+  bool ReadMemoryHelper(MemoryContext const& rMemCtxt, u64 LinAddr, IntType& rVal)
+  {
+    typename _Ty MemVal = 0;
+    if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
+      return false;
+    return true;
+  }
+
+  template<typename _Ty>
+  bool WriteMemoryHelper(MemoryContext& rMemCtxt, u64 LinAddr, IntType const& rVal)
+  {
+    auto MemVal = rVal.ConvertTo<typename _Ty>();
+    if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
+      return false;
+    return true;
+  }
+}
+
+template<>
+bool MemoryContext::ReadMemory<IntType>(u64 LinAddr, IntType& rVal) const
+{
+  switch (rVal.GetBitSize())
+  {
+  default:  return false;
+  case   8: return ReadMemoryHelper<  u8>(*this, LinAddr, rVal);
+  case  16: return ReadMemoryHelper< u16>(*this, LinAddr, rVal);
+  case  32: return ReadMemoryHelper< u32>(*this, LinAddr, rVal);
+  case  64: return ReadMemoryHelper< u64>(*this, LinAddr, rVal);
+  case 128: return ReadMemoryHelper<u128>(*this, LinAddr, rVal);
+  case 256: return ReadMemoryHelper<u256>(*this, LinAddr, rVal);
+  case 512: return ReadMemoryHelper<u512>(*this, LinAddr, rVal);
+  }
+}
+
+template<>
+bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, IntType const& rVal)
+{
+  switch (rVal.GetBitSize())
+  {
+  default:  return false;
+  case   8: return WriteMemoryHelper<  u8>(*this, LinAddr, rVal);
+  case  16: return WriteMemoryHelper< u16>(*this, LinAddr, rVal);
+  case  32: return WriteMemoryHelper< u32>(*this, LinAddr, rVal);
+  case  64: return WriteMemoryHelper< u64>(*this, LinAddr, rVal);
+  case 128: return WriteMemoryHelper<u128>(*this, LinAddr, rVal);
+  case 256: return WriteMemoryHelper<u256>(*this, LinAddr, rVal);
+  case 512: return WriteMemoryHelper<u512>(*this, LinAddr, rVal);
+  }
+}
+
 MemoryContext::~MemoryContext(void)
 {
   for (auto& rMemChunk : m_Memories)
@@ -66,7 +182,7 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
   return true;
 }
 
-bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize, bool SignExtend)
+bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize)
 {
   MemoryChunk MemChnk;
   if (!FindMemoryChunk(LinearAddress, MemChnk))

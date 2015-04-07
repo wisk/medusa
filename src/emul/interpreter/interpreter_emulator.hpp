@@ -36,7 +36,7 @@ private:
   {
   public:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, IntType>& rVars)
-      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars) {}
+      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_ValueOffset(), m_State(Unknown) {}
 
     virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
     virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
@@ -54,37 +54,26 @@ private:
     virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
-    bool ReadExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType& rValue);
-    bool WriteExpression(Expression::SPType spExpr, u16 AccessBitSize, IntType const& rValue);
-
-    bool ReadIdentifier(u32 Id, u16 AccessBitSize, IntType& rValue);
-    bool WriteIdentifier(u32 Id, u16 AccessBitSize, IntType const& rValue);
-
-    bool ReadMemory(Address const& rAddr, u16 AccessBitSize, IntType& rValue);
-    bool WriteMemory(Address const& rAddr, u16 AccessBitSize, IntType const& rValue);
-
-    bool ReadVariable(std::string const& rVarName, u16 AccessBitSize, IntType& rValue);
-    bool WriteVariable(std::string const& rVarName, u16 AccessBitSize, IntType const& rValue);
-
   protected:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
 
   private:
-    bool _AllocateVariable(std::string const& rVarName, u16 BitSize);
-    bool _FreeVariable(std::string const& rVarName);
-    bool _ReadVariable(std::string const& rVarName, IntType& rValue) const;
-    bool _WriteVariable(std::string const& rVarName, IntType const& rValue);
-    std::unordered_map<std::string, IntType>& m_rVars;
+    bool _EvaluateComparison(u8 CondOp, bool& rRes);
 
-    bool _EvaluateCondition(ConditionExpression::SPType spCondExpr, bool& rResult);
-    template<typename _Type>
-    bool _DoComparison(u8 Op, Expression::SPType spRefExpr, Expression::SPType spTestExpr, bool& rResult);
-    template<typename _Type>
-    Expression::SPType _DoUnaryOperation(u8 Op, Expression::SPType spExpr);
-    template<typename _Type>
-    Expression::SPType _DoBinaryOperation(u8 Op, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+    std::unordered_map<std::string, IntType>& m_rVars;
+    Expression::DataContainerType m_Values;
+    s32 m_ValueOffset;
+
+    enum State
+    {
+      Unknown,
+      Read,
+      Write,
+    };
+
+    State m_State;
   };
 };
 

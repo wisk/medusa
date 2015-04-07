@@ -119,7 +119,7 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
   return true;
 }
 
-bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend)
+bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize)
 {
   if (BitSize != 32)
     return false;

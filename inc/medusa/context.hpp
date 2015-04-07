@@ -35,11 +35,11 @@ public:
     return ReadRegister(Reg, &rVal, sizeof(rVal) * 8);
   }
 
-  virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend = false) = 0;
+  virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) = 0;
   template<typename _RegTy>
-  bool WriteRegister(u32 Reg, _RegTy Val)
+  bool WriteRegister(u32 Reg, _RegTy const& rVal)
   {
-    return WriteRegister(Reg, &Val, sizeof(Val) * 8);
+    return WriteRegister(Reg, &rVal, sizeof(rVal)* 8);
   }
 
   virtual void* GetRegisterAddress(u32 Register) = 0;
@@ -69,7 +69,10 @@ protected:
 };
 
 template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
-template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool Val);
+template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal);
+
+template<> Medusa_EXPORT bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const;
+template<> Medusa_EXPORT bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal);
 
 class Medusa_EXPORT MemoryContext
 {
@@ -97,7 +100,7 @@ public:
     return ReadMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool WriteMemory(u64 LinAddr, void const* pVal, u32 Size, bool SignExtend = false);
+  virtual bool WriteMemory(u64 LinAddr, void const* pVal, u32 Size);
   template<typename _MemTy>
   bool WriteMemory(u64 LinAddr, _MemTy const& rVal)
   {
@@ -124,6 +127,9 @@ private:
   MemoryContext(MemoryContext const&);
   MemoryContext const& operator=(MemoryContext const&);
 };
+
+template<> Medusa_EXPORT bool MemoryContext::ReadMemory<IntType>(u64 LinAddr, IntType& rVal) const;
+template<> Medusa_EXPORT bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, IntType const& rVal);
 
 MEDUSA_NAMESPACE_END
 

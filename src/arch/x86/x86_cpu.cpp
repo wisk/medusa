@@ -121,7 +121,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
   return true;
 }
 
-bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize, bool SignExtend)
+bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize)
 {
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
   if (RegBitSize != BitSize)

@@ -92,14 +92,21 @@ public:
   explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
   template<typename _Ty>
-  typename std::enable_if<std::is_signed<_Ty>::value, _Ty>::type ConvertTo(void) const
+  typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo(void) const
+  {
+    return m_Value.convert_to<u8>() ? true : false;
+  }
+
+  template<typename _Ty>
+  typename std::enable_if<boost::multiprecision::is_signed_number<_Ty>::value, _Ty>::type ConvertTo(void) const
   {
     return m_Value.convert_to<_Ty>();
   }
 
   template<typename _Ty>
-  typename std::enable_if<std::is_unsigned<_Ty>::value, _Ty>::type ConvertTo(void) const
+  typename std::enable_if<boost::multiprecision::is_unsigned_number<_Ty>::value, _Ty>::type ConvertTo(void) const
   {
+
     auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
     if (Res == 0)
       return 0;
@@ -108,7 +115,7 @@ public:
       _Ty Mask = 1;
       Mask <<= m_BitSize;
       --Mask;
-      _Ty Msb = boost::multiprecision::msb(m_Value);
+      auto Msb = boost::multiprecision::msb(m_Value);
       Mask -= ((1 << Msb) - 1);
       Res |= Mask;
     }
@@ -216,7 +223,6 @@ private:
   ap_int m_Value;
 };
 
-
 typedef u16                 TTranslationUnit;
 typedef u16                 TBase;
 typedef u64                 TOffset;
@@ -235,5 +241,11 @@ MEDUSA_NAMESPACE_END
 #define MEDUSA_ARCH_TAG(a,b,c)   MEDUSA_MAKE_TAG(a,b,c,0)
 #define MEDUSA_ARCH_UNK          MEDUSA_ARCH_TAG('u', 'n', 'k')
 #define MEDUSA_CMP_TAG(lhs, rhs) (((lhs) & 0xffffff00) == ((rhs) & 0xffffff00))
+
+
+template<> struct std::make_signed<medusa::u128 > { typedef medusa::s128  type; };
+template<> struct std::make_signed<medusa::u256 > { typedef medusa::s256  type; };
+template<> struct std::make_signed<medusa::u512 > { typedef medusa::s512  type; };
+template<> struct std::make_signed<medusa::u1024> { typedef medusa::s1024 type; };
 
 #endif // MEDUSA_TYPES_HPP
