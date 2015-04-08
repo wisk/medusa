@@ -242,10 +242,12 @@ MEDUSA_NAMESPACE_END
 #define MEDUSA_ARCH_UNK          MEDUSA_ARCH_TAG('u', 'n', 'k')
 #define MEDUSA_CMP_TAG(lhs, rhs) (((lhs) & 0xffffff00) == ((rhs) & 0xffffff00))
 
-
-template<> struct std::make_signed<medusa::u128 > { typedef medusa::s128  type; };
-template<> struct std::make_signed<medusa::u256 > { typedef medusa::s256  type; };
-template<> struct std::make_signed<medusa::u512 > { typedef medusa::s512  type; };
-template<> struct std::make_signed<medusa::u1024> { typedef medusa::s1024 type; };
+namespace std
+{
+  template<> struct make_signed<medusa::u128 > { typedef medusa::s128  type; };
+  template<> struct make_signed<medusa::u256 > { typedef medusa::s256  type; };
+  template<> struct make_signed<medusa::u512 > { typedef medusa::s512  type; };
+  template<> struct make_signed<medusa::u1024> { typedef medusa::s1024 type; };
+}
 
 #endif // MEDUSA_TYPES_HPP

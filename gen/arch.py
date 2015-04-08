@@ -381,6 +381,8 @@ class ArchConvertion:
                 if 'HandleExpression' in expr:
                     res += expr
                     continue
+                elif 'spResExpr = ' in expr:
+                    res += expr
                 else:
                     res += 'auto pExpr%d = %s' % (sem_no, expr)
                     res += 'AllExpr.push_back(pExpr%d);\n' % sem_no

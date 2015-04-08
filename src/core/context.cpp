@@ -24,7 +24,7 @@ namespace
     auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
     if (RegBitSize != rVal.GetBitSize())
       return false;
-    typename _Ty RegVal;
+    _Ty RegVal;
     if (!rCpuCtxt.ReadRegister(Reg, &RegVal, RegBitSize))
       return false;
     rVal = IntType(RegVal);
@@ -37,7 +37,7 @@ namespace
     auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
     if (RegBitSize != rVal.GetBitSize())
       return false;
-    auto RegVal = rVal.ConvertTo<typename _Ty>();
+    auto RegVal = rVal.ConvertTo<_Ty>();
     if (!rCpuCtxt.WriteRegister(Reg, &RegVal, RegBitSize))
       return false;
     return true;
@@ -112,7 +112,7 @@ namespace
   template<typename _Ty>
   bool ReadMemoryHelper(MemoryContext const& rMemCtxt, u64 LinAddr, IntType& rVal)
   {
-    typename _Ty MemVal = 0;
+    _Ty MemVal = 0;
     if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
       return false;
     rVal = IntType(MemVal);
@@ -122,7 +122,7 @@ namespace
   template<typename _Ty>
   bool WriteMemoryHelper(MemoryContext& rMemCtxt, u64 LinAddr, IntType const& rVal)
   {
-    auto MemVal = rVal.ConvertTo<typename _Ty>();
+    auto MemVal = rVal.ConvertTo<_Ty>();
     if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
       return false;
     return true;
