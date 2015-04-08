@@ -316,12 +316,15 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
   }
 
   case Write:
+  {
     if (m_Values.empty())
       return nullptr;
-    if (!m_pCpuCtxt->WriteRegister(spIdExpr->GetId(), m_Values.back()))
+    IntType RegVal = m_Values.back();
+    if (!m_pCpuCtxt->WriteRegister(spIdExpr->GetId(), RegVal))
       return nullptr;
     m_Values.pop_back();
     break;
+  }
 
   default:
     return nullptr;

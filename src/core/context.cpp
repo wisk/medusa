@@ -115,6 +115,7 @@ namespace
     typename _Ty MemVal = 0;
     if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
       return false;
+    rVal = IntType(MemVal);
     return true;
   }
 
