@@ -36,7 +36,7 @@ private:
   {
   public:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, IntType>& rVars)
-      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_ValueOffset(), m_State(Unknown) {}
+      : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_NrOfValueToRead(), m_State(Unknown) {}
 
     virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
     virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
@@ -64,7 +64,7 @@ private:
 
     std::unordered_map<std::string, IntType>& m_rVars;
     Expression::DataContainerType m_Values;
-    s32 m_ValueOffset;
+    size_t m_NrOfValueToRead;
 
     enum State
     {

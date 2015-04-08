@@ -173,6 +173,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitWhile
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
+  if (auto spDstVecId = expr_cast<VectorIdentifierExpression>(spAssignExpr->GetDestinationExpression()))
+    m_NrOfValueToRead = spDstVecId->GetVector().size();
+  else m_NrOfValueToRead = 1;
+
   State OldState = m_State;
 
   m_State = Read;
@@ -542,10 +546,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   {
     if (spMemExpr->IsDereferencable())
     {
-      IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
-      if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
-        return nullptr;
-      m_Values.push_back(MemVal);
+      while (m_NrOfValueToRead--)
+      {
+        IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
+        if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
+          return nullptr;
+        LinAddr += MemVal.GetBitSize() / 8;
+        m_Values.push_back(MemVal);
+      }
     }
     else
     {
@@ -560,9 +568,16 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
       return nullptr;
     if (m_Values.empty())
       return nullptr;
-    if (!m_pMemCtxt->WriteMemory(LinAddr, m_Values.back()))
-      return nullptr;
-    m_Values.pop_back();
+
+    do
+    {
+      auto MemVal = m_Values.back();
+      if (!m_pMemCtxt->WriteMemory(LinAddr, MemVal))
+        return nullptr;
+      m_Values.pop_back();
+      LinAddr += MemVal.GetBitSize() / 8;
+    } while (!m_Values.empty());
+
     break;
   }
   }

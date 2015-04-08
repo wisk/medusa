@@ -125,7 +125,7 @@ namespace
   bool WriteMemoryHelper(MemoryContext& rMemCtxt, u64 LinAddr, IntType const& rVal)
   {
     auto MemVal = rVal.ConvertTo<_Ty>();
-    if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
+    if (!rMemCtxt.WriteMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
       return false;
     return true;
   }

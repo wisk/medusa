@@ -82,6 +82,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   }));
 
   bool PutsCalled = false;
+  bool IsHelloWorld = false;
   BOOST_REQUIRE(Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
@@ -117,11 +118,14 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     if (!pCpuCtxt->WriteRegister(PC, RetAddr))
       return;
     PutsCalled = true;
+    IsHelloWorld = Param == "hello world!";
   }));
 
-  BOOST_REQUIRE(Exec.HookFunction("abort", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  bool AbortCalled = false;
+  BOOST_REQUIRE(Exec.HookFunction("abort", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
   {
     std::cout << "[abort]" << std::endl;
+    AbortCalled = true;
   }));
 
   Exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
@@ -141,6 +145,8 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   Exec.Execute(StartAddr);
 
   BOOST_CHECK(PutsCalled);
+  BOOST_CHECK(IsHelloWorld);
+  BOOST_CHECK(AbortCalled);
 
   Core.CloseDocument();
 }
