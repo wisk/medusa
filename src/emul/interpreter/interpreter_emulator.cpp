@@ -105,26 +105,64 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
-  bool Cond;
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spTernExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spTernExpr->GetTestExpression()->Visit(this);
+  m_State = m_State;
 
+  if (spRefExpr == nullptr || spTestExpr == nullptr)
+    return nullptr;
+
+  bool Cond;
   if (!_EvaluateComparison(spTernExpr->GetType(), Cond))
     return nullptr;
 
-  return (Cond ? spTernExpr->GetTrueExpression()->Clone() : spTernExpr->GetFalseExpression()->Clone());
+  if (Cond)
+  {
+    auto spTrueExpr = spTernExpr->GetTrueExpression()->Visit(this);
+    if (spTrueExpr == nullptr)
+      return nullptr;
+  }
+  else
+  {
+    auto spFalseExpr = spTernExpr->GetFalseExpression()->Visit(this);
+    if (spFalseExpr == nullptr)
+      return nullptr;
+  }
+
+  return spTernExpr;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  bool Cond;
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
+  m_State = OldState;
 
+  if (spRefExpr == nullptr || spTestExpr == nullptr)
+    return nullptr;
+
+  bool Cond;
   if (!_EvaluateComparison(spIfElseExpr->GetType(), Cond))
     return nullptr;
 
-  auto spExpr = (Cond ? spIfElseExpr->GetThenExpression()->Clone() : (spIfElseExpr->GetElseExpression() ? spIfElseExpr->GetElseExpression()->Clone() : Expr::MakeBoolean(false)));
-  if (spExpr != nullptr)
-    return spExpr->Visit(this);
+  if (Cond)
+  {
+    auto spThenExpr = spIfElseExpr->GetThenExpression()->Visit(this);
+    if (spThenExpr == nullptr)
+      return nullptr;
+  }
+  else if (spIfElseExpr->GetElseExpression() != nullptr)
+  {
+    auto spElseExpr = spIfElseExpr->GetElseExpression()->Visit(this);
+    if (spElseExpr == nullptr)
+      return nullptr;
+  }
 
-  return spExpr;
+  return spIfElseExpr;
 }
 
 // FIXME:
@@ -192,6 +230,21 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnary
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
+  if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
+  {
+    State OldState = m_State;
+    m_State = Read;
+    auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+    m_State = Write;
+    auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
+    m_State = Read;
+    auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+    m_State = Write;
+    auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
+    m_State = OldState;
+    return spBinOpExpr;
+  }
+
   auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
   auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
 
@@ -579,5 +632,5 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateComparison(u8 C
     return false;
   }
 
-  return false;
+  return true;
 }

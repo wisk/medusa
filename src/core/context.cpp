@@ -51,6 +51,7 @@ bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const
   switch (RegBitSize)
   {
   default:  return false;
+  case   1: return ReadRegisterHelper<  u8>(*this, Reg, rVal);
   case   8: return ReadRegisterHelper<  u8>(*this, Reg, rVal);
   case  16: return ReadRegisterHelper< u16>(*this, Reg, rVal);
   case  32: return ReadRegisterHelper< u32>(*this, Reg, rVal);
@@ -68,6 +69,7 @@ bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal)
   switch (RegBitSize)
   {
   default:  return false;
+  case   1: return WriteRegisterHelper<  u8>(*this, Reg, rVal);
   case   8: return WriteRegisterHelper<  u8>(*this, Reg, rVal);
   case  16: return WriteRegisterHelper< u16>(*this, Reg, rVal);
   case  32: return WriteRegisterHelper< u32>(*this, Reg, rVal);

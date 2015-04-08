@@ -234,7 +234,7 @@ public:
       return nullptr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetBitSize());
+    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), 16);
     return nullptr;
   }
 
