@@ -348,6 +348,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
     {
       auto Result = LeftVal;
       Result.BitCast(RightVal.ConvertTo<u16>());
+      m_Values.push_back(Result);
       break;
     }
 
