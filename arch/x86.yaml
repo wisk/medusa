@@ -1,7 +1,7 @@
 #
 ## Description ################################################################
-# This yaml file tries do detail all x86 instruction.
-# It's used by Medusa to generate c++ code in order to disassemble x86
+# This yaml file tries to detail all x86 instructions.
+# It's used by Medusa to generate C++ code in order to disassemble x86
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
 
@@ -14,7 +14,7 @@ architecture_information:
 
 semantic:
 
-## Arimethic / Logical operations
+## Arithmetic / Logical operations
   add: &add
     [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
@@ -83,8 +83,11 @@ semantic:
   not: &not
     [ expr('begin_update_flags'), 'res = op0.val ^ int(op0.bit, -1)', expr('end_update_flags'), op0.val = res ]
 
-  bswap: &bswap
-    [ res = swap(op0.val), op0 = res ]
+  bswap: &bswap |
+    if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
+      op0.val = int(op0.bit, 0)
+    else:
+      op0.val = swap(op0.val);
 
   # TODO(KS): update flags
   shld: &shld
@@ -354,8 +357,8 @@ semantic:
 
 ## Bit manipulation
 
-  bt: &bt
-    [ 'cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1))' ]
+  bt: &bt |
+    cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
 
   btc: &btc
     [

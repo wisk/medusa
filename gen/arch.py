@@ -363,6 +363,11 @@ class ArchConvertion:
                     break
             if need_flat:
                 sem = itertools.chain(*sem)
+                
+            # Handle new type of instructions semantic definition
+            if isinstance(sem, str):
+                sem = sem.split(";")
+                if sem[-1] == "\n": del sem[-1]
 
             v = SemVisitor(id_mapper)
             for expr in sem:
