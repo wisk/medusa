@@ -38,6 +38,8 @@ private:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, IntType>& rVars)
       : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_NrOfValueToRead(), m_State(Unknown) {}
 
+    virtual ~InterpreterExpressionVisitor(void);
+
     virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
     virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
     virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);

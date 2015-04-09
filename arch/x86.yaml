@@ -18,8 +18,11 @@ semantic:
   add: &add
     [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
-  adc: &adc
-    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val + int(op0.bit, 1)", "res = op0.val + op1.val", "expr('end_update_flags')", "op0.val = res" ]
+  adc: &adc |
+    expr('begin_update_flags');
+    res = op0.val + op1.val + bit_cast(cf.id, int16(op0.bit));
+    expr('end_update_flags');
+    op0.val = res;
 
   inc: &inc
     [ expr('begin_update_flags'), 'res = op0.val + int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -36,8 +39,11 @@ semantic:
   sub: &sub
     [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
 
-  sbb: &sbb
-    [ "expr('begin_update_flags')", "if cf.id == int1(1): op0.val = op0.val - int(op0.bit, 1)", "res = op0.val - op1.val - cf.id", "expr('end_update_flags')", "op0.val = res" ]
+  sbb: &sbb |
+    expr('begin_update_flags');
+    res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
+    expr('end_update_flags');
+    op0.val = res;
 
   dec: &dec
     [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -146,13 +152,15 @@ semantic:
     ]
 
   # HACK(KS): we use of as a temporary register...
-  rcl: &rcl
-    [
-      "if op1.val != int(op1.bit, 0):\n\tres = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )\n\tof.id = ((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1)))",
-      op0.val = res,
-      cf.id = of.id,
-      of.id = int1(0)
-    ]
+  rcl: &rcl |
+    alloc_var("rcl_res", op0.bit);
+    if op1.val != int(op1.bit, 0):
+      rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
+      of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+    op0.val = rcl_res;
+    cf.id = of.id;
+    of.id = int1(0);
+    free_var("rcl_res");
 
   # HACK(KS): we use of as a temporary register...
   rcr: &rcr
@@ -201,11 +209,19 @@ semantic:
 
   # http://en.wikipedia.org/wiki/FLAGS_register
   # TODO(KS): interrupt flag
-  pushf: &pushf
-    [
-      'stack.id -= stack.size',
-      'stack.mem = (cf.id | (int1(1) << int(stack.bit, 1)) | (pf.id << int(stack.bit, 2)) | (af.id << int(stack.bit, 4)) | (zf.id << int(stack.bit, 6)) | (sf.id << int(stack.bit, 7)) | (tf.id << int(stack.bit, 8)) | (int1(1) << int(stack.bit, 9)) | (df.id << int(stack.bit, 10)) | (of.id << int(stack.bit, 11)))'
-    ]
+  pushf: &pushf |
+      stack.id -= stack.size;
+      stack.mem =\
+        (  bit_cast(cf.id, int16(stack.bit))
+        | (int64(1)                          << int(stack.bit, 1))
+        | (bit_cast(af.id, int16(stack.bit)) << int(stack.bit, 4))
+        | (bit_cast(zf.id, int16(stack.bit)) << int(stack.bit, 6))
+        | (bit_cast(sf.id, int16(stack.bit)) << int(stack.bit, 7))
+        | (bit_cast(pf.id, int16(stack.bit)) << int(stack.bit, 2))
+        | (bit_cast(tf.id, int16(stack.bit)) << int(stack.bit, 8))
+        | (int64(1)                          << int(stack.bit, 9))
+        | (bit_cast(df.id, int16(stack.bit)) << int(stack.bit, 10))
+        | (bit_cast(of.id, int16(stack.bit)) << int(stack.bit, 11)));
 
   pusha: &pusha
     [

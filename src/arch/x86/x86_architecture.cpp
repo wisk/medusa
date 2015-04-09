@@ -483,7 +483,9 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /**/Expr::MakeBoolean(true), Expr::MakeBoolean(false))));
 
       // of = (((op0 ^ op1) ^ res) ^ ((op0 ^ res) & (op0 ^ op1))) & int(op0.bit, 1 << (op0.bit - 1))
-      rExprs.push_back(Expr::MakeTernaryCond(ConditionExpression::CondNe,
+      rExprs.push_back(
+        Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondNe,
         Expr::MakeBinOp(OperationExpression::OpAnd,
         /**/Expr::MakeBinOp(OperationExpression::OpAnd,
         /****/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), spResExpr),
@@ -491,7 +493,7 @@ bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string
         /******/Expr::MakeBinOp(OperationExpression::OpXor, rInsn.GetOperand(0), rInsn.GetOperand(1)))),
         /**/Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 1 << (rInsn.GetOperand(0)->GetBitSize() - 1))),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 1 << (rInsn.GetOperand(0)->GetBitSize() - 1)),
-        Expr::MakeBoolean(false), Expr::MakeBoolean(true)));
+        Expr::MakeBoolean(false), Expr::MakeBoolean(true))));
 
 
       // of = (res < op0) ? true : false (signed) (cf is already included in res)

@@ -343,11 +343,32 @@ public:
 
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
-    spBinOpExpr->GetLeftExpression()->Visit(this);
-    m_rPrintData.AppendSpace().AppendOperator(std::static_pointer_cast<OperationExpression>(spBinOpExpr)->ToString()).AppendSpace();
-    spBinOpExpr->GetRightExpression()->Visit(this);
+    if (!spBinOpExpr->GetLeftExpression()->Visit(this))
+      return nullptr;
+    char const* pOpTok = "???";
+    switch (spBinOpExpr->GetOperation())
+    {
+    default: break;
+    case OperationExpression::OpAnd:  pOpTok = "&";   break;
+    case OperationExpression::OpOr:   pOpTok = "|";   break;
+    case OperationExpression::OpXor:  pOpTok = "^";   break;
+    case OperationExpression::OpLls:  pOpTok = "LSL"; break;
+    case OperationExpression::OpLrs:  pOpTok = "LSR"; break;
+    case OperationExpression::OpArs:  pOpTok = "ASR"; break;
+    case OperationExpression::OpAdd:  pOpTok = "+";   break;
+    case OperationExpression::OpSub:  pOpTok = "-";   break;
+    case OperationExpression::OpMul:  pOpTok = "*";   break;
+    case OperationExpression::OpSDiv:
+    case OperationExpression::OpUDiv: pOpTok = "/";   break;
+    case OperationExpression::OpSMod:
+    case OperationExpression::OpUMod: pOpTok = "%";   break;
+    }
+    m_rPrintData.AppendSpace().AppendOperator(pOpTok).AppendSpace();
+    if (!spBinOpExpr->GetRightExpression()->Visit(this))
+      return nullptr;
     return nullptr;
   }
+
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
   {
     Address const OprdAddr(spConstExpr->GetConstant().ConvertTo<TOffset>());
@@ -358,7 +379,7 @@ public:
       return nullptr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), spConstExpr->GetBitSize());
+    m_rPrintData.AppendImmediate(spConstExpr->GetConstant());
     return nullptr;
   }
 

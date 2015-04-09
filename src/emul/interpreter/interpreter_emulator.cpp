@@ -90,6 +90,14 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
   return true;
 }
 
+InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor(void)
+{
+  if (!m_Values.empty())
+  {
+    Log::Write("emul_interpreter") << "unconsumed value" << LogEnd;
+  }
+}
+
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
   return nullptr; // TODO
@@ -99,8 +107,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBind(
 {
   Expression::LSPType SmplExprList;
   for (Expression::SPType spExpr : spBindExpr->GetBoundExpressions())
-    SmplExprList.push_back(spExpr->Visit(this));
-  return Expr::MakeBind(SmplExprList);
+    if (spExpr->Visit(this) == nullptr)
+      return nullptr;
+  return spBindExpr;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
@@ -482,6 +491,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
     default:
       return nullptr;
     }
+    break;
   }
 
   case Read:

@@ -27,7 +27,7 @@ namespace
     _Ty RegVal;
     if (!rCpuCtxt.ReadRegister(Reg, &RegVal, RegBitSize))
       return false;
-    rVal = IntType(RegVal);
+    rVal = IntType(RegBitSize, RegVal);
     return true;
   }
 
