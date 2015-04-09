@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Apr  8 17:34:07 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Apr  9 15:01:25 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -28758,7 +28758,7 @@ bool X86Architecture::Table_2_a2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * opcode: a3
  * cpu_model: >= X86_Arch_80386
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))']
+ * semantic: ['cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1))']
 **/
 bool X86Architecture::Table_2_a3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -28773,16 +28773,16 @@ bool X86Architecture::Table_2_a3(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -30094,7 +30094,7 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: bt
  * operand: ['Ev', 'Ib']
  * opcode: 04
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))']
+ * semantic: ['cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1))']
  *
  * mnemonic: bts
  * operand: ['Ev', 'Ib']
@@ -30139,16 +30139,16 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }

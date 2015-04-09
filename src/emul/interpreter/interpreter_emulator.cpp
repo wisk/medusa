@@ -344,6 +344,13 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       m_Values.push_back((LeftVal & RightVal) >> RightVal.Lsb());
       break;
 
+    case OperationExpression::OpBcast:
+    {
+      auto Result = LeftVal;
+      Result.BitCast(RightVal.ConvertTo<u16>());
+      break;
+    }
+
     default:
       return nullptr;
   }

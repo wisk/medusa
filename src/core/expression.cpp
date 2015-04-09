@@ -427,6 +427,7 @@ std::string OperationExpression::ToString(void) const
   case OpZext: return "↗{z}";
   case OpInsertBits: return "<insert_bits>";
   case OpExtractBits: return "<extract_bits>";
+  case OpBcast: return "<bcast>";
   }
 }
 

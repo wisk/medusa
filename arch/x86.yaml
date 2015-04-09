@@ -355,7 +355,7 @@ semantic:
 ## Bit manipulation
 
   bt: &bt
-    [ cf.id = ((op0.val >> op1.val) & int1(1)) ]
+    [ 'cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1))' ]
 
   btc: &btc
     [

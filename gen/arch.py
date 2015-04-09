@@ -295,6 +295,8 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSDiv, %s, %s)'
                 elif node_name == 'smod':
                     return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
+                elif node_name == 'bit_cast':
+                    return 'Expr::MakeBinOp(OperationExpression::OpBcast, %s, %s)'
                 elif node_name == 'expr':
                     return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 

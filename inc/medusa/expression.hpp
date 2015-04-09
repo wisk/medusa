@@ -325,6 +325,7 @@ public:
     OpZext, /* Zero Extend */
     OpInsertBits,
     OpExtractBits,
+    OpBcast, /* Bit Cast */
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new

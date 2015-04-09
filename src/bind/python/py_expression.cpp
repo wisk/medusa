@@ -120,6 +120,7 @@ void PydusaExpression(void)
     .value("OP_ZEXT", OperationExpression::OpZext)
     .value("OP_INSERTBITS", OperationExpression::OpInsertBits)
     .value("OP_EXTRACTBITS", OperationExpression::OpExtractBits)
+    .value("OP_BCAST", OperationExpression::OpBcast)
     ;
   bp::def("expr_op_get_name", expr_op_get_name);
 }
