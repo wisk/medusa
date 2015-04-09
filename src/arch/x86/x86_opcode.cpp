@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Apr 09 17:11:06 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Apr  9 17:54:38 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -13402,10 +13402,8 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -13552,7 +13550,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -13575,7 +13573,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -13589,21 +13587,9 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13813,10 +13799,8 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -13968,7 +13952,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -13991,7 +13975,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -14005,21 +13989,9 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14739,10 +14711,8 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -14894,7 +14864,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -14917,7 +14887,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -14931,21 +14901,9 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -15155,10 +15113,8 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -15310,7 +15266,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -15333,7 +15289,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -15347,21 +15303,9 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -15571,10 +15515,8 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -15726,7 +15668,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -15749,7 +15691,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -15763,21 +15705,9 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -15987,10 +15917,8 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var("rcl_res", op0.bit);
 if op1.val != int(op1.bit, 0):
   rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-  of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+  cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
 op0.val = rcl_res;
-cf.id = of.id;
-of.id = int1(0);
 free_var("rcl_res");
 
  *
@@ -16142,7 +16070,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))))
         );
         BodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
             Expr::MakeBinOp(
@@ -16165,7 +16093,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = /* Semantic: 
         if op1.val != int(op1.bit, 0):
           rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-          of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
+          cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1)) */
         Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -16179,21 +16107,9 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("rcl_res", VariableExpression::Use));
         AllExpr.push_back(pExpr2);
         auto pExpr3 = /* Semantic: 
-        cf.id = of.id */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeId(X86_FlOf, &m_CpuInfo));
-        AllExpr.push_back(pExpr3);
-        auto pExpr4 = /* Semantic: 
-        of.id = int1(0) */
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlOf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0));
-        AllExpr.push_back(pExpr4);
-        auto pExpr5 = /* Semantic: 
         free_var("rcl_res") */
         Expr::MakeVar("rcl_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr5);
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29189,7 +29105,9 @@ bool X86Architecture::Table_2_aa(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * opcode: ab
  * cpu_model: >= X86_Arch_80386
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)));
+
 **/
 bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -29204,18 +29122,19 @@ bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val | ((int(op0.bit, 1) << op1.val))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val | ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -29813,7 +29732,9 @@ bool X86Architecture::Table_2_b2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * opcode: b3
  * cpu_model: >= X86_Arch_80386
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)));
+
 **/
 bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -29828,18 +29749,19 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -30166,17 +30088,23 @@ bool X86Architecture::Table_2_b9(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: bts
  * operand: ['Ev', 'Ib']
  * opcode: 05
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)));
+
  *
  * mnemonic: btr
  * operand: ['Ev', 'Ib']
  * opcode: 06
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)));
+
  *
  * mnemonic: btc
  * operand: ['Ev', 'Ib']
  * opcode: 07
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)));
+
  *
 **/
 bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -30230,18 +30158,19 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val | ((int(op0.bit, 1) << op1.val))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val | ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -30265,18 +30194,19 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -30303,18 +30233,19 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -30338,7 +30269,9 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * opcode: bb
  * cpu_model: >= X86_Arch_80386
- * semantic: ['cf.id = ((op0.val >> op1.val) & int1(1))', 'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))']
+ * semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)));
+
 **/
 bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -30353,18 +30286,19 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        auto pExpr0 = /* Semantic: cf.id = ((op0.val >> op1.val) & int1(1)) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1)) */
         Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
-          Expr::MakeBinOp(
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpAnd,
             Expr::MakeBinOp(
               OperationExpression::OpLrs,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConst(1, 0x1)));
+            Expr::MakeConst(1, 0x1)), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        auto pExpr1 = /* Semantic: op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
+        auto pExpr1 = /* Semantic: 
+        op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val))) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(

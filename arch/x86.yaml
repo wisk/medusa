@@ -151,15 +151,12 @@ semantic:
       op0.val = res
     ]
 
-  # HACK(KS): we use of as a temporary register...
   rcl: &rcl |
     alloc_var("rcl_res", op0.bit);
     if op1.val != int(op1.bit, 0):
       rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-      of.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
+      cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
     op0.val = rcl_res;
-    cf.id = of.id;
-    of.id = int1(0);
     free_var("rcl_res");
 
   # HACK(KS): we use of as a temporary register...
@@ -376,23 +373,17 @@ semantic:
   bt: &bt |
     cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
 
-  btc: &btc
-    [
-      cf.id = ((op0.val >> op1.val) & int1(1)),
-      'op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)))'
-    ]
+  btc: &btc |
+    cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+    op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)));
 
-  bts: &bts
-    [
-      cf.id = ((op0.val >> op1.val) & int1(1)),
-      'op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)))'
-    ]
+  bts: &bts |
+    cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+    op0.val = (op0.val | ((int(op0.bit, 1) << op1.val)));
 
-  btr: &btr
-    [
-      cf.id = ((op0.val >> op1.val) & int1(1)),
-      'op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)))'
-    ]
+  btr: &btr |
+    cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
+    op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)));
 
   bsf: &bsf
     [ 'op0 = bsf(op1)' ]
