@@ -46,8 +46,6 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
 
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
-
   for (Expression::SPType spExpr : rExprList)
   {
     if (auto spSys = expr_cast<SystemExpression>(spExpr))
@@ -71,6 +69,7 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
       }
     }
 
+    InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
     {
@@ -95,6 +94,10 @@ InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor
   if (!m_Values.empty())
   {
     Log::Write("emul_interpreter") << "unconsumed value" << LogEnd;
+    for (auto const& rValue : m_Values)
+    {
+      Log::Write("emul_interpreter") << "leaked value: " << rValue.ToString() << LogEnd;
+    }
   }
 }
 
@@ -184,7 +187,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
 {
   if (auto spDstVecId = expr_cast<VectorIdentifierExpression>(spAssignExpr->GetDestinationExpression()))
     m_NrOfValueToRead = spDstVecId->GetVector().size();
-  else m_NrOfValueToRead = 1;
+  else
+    m_NrOfValueToRead = 1;
 
   State OldState = m_State;
 
@@ -553,7 +557,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   Address Addr(Base, Offset);
 
   u64 LinAddr = 0;
-  if (m_pCpuCtxt->Translate(Addr, LinAddr))
+  if (!m_pCpuCtxt->Translate(Addr, LinAddr))
     LinAddr = Offset;
 
   switch (m_State)
@@ -564,13 +568,16 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   {
     if (spMemExpr->IsDereferencable())
     {
-      while (m_NrOfValueToRead--)
+      if (m_NrOfValueToRead == 0)
+        return nullptr;
+      while (m_NrOfValueToRead != 0)
       {
         IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
         if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
           return nullptr;
         LinAddr += MemVal.GetBitSize() / 8;
         m_Values.push_back(MemVal);
+        --m_NrOfValueToRead;
       }
     }
     else
