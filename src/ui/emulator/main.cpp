@@ -255,9 +255,11 @@ int main(int argc, char **argv)
   fs::path mod_path;
   fs::path script_path;
   fs::path dump_path;
-  std::string start_addr;
+  std::string start_addr = "start";
 
   bool auto_cfg = false;
+  bool analyze = false;
+  bool hook_imported_symbols = false;
 
   // TODO: implement database loading...
   namespace po = boost::program_options;
@@ -270,6 +272,8 @@ int main(int argc, char **argv)
     ("ep", po::value<std::string>(&start_addr), "entrypoint (could be either label or an address)")
     ("dump_path", po::value<fs::path>(&dump_path), "dump path")
     ("auto", "configure module automatically")
+    ("analyze", "analyze the executable")
+    ("hook", "hook all imported symbols")
     ;
   po::variables_map var_map;
 
@@ -297,6 +301,10 @@ int main(int argc, char **argv)
 
     if (var_map.count("auto"))
       auto_cfg = true;
+    if (var_map.count("analyze"))
+      analyze = true;
+    if (var_map.count("hook"))
+      hook_imported_symbols = true;
 
     Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
     Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;
@@ -306,7 +314,7 @@ int main(int argc, char **argv)
 
     Medusa m;
     if (!m.NewDocument(
-      std::make_shared<FileBinaryStream>(file_path), true,
+      std::make_shared<FileBinaryStream>(file_path), analyze,
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
     {
       rDatabasePath = db_path;
@@ -465,7 +473,7 @@ int main(int argc, char **argv)
       pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
     };
 
-    m.GetDocument().ForEachLabel([&](Address const& rAddress, Label const& rLabel)
+    if (hook_imported_symbols) m.GetDocument().ForEachLabel([&](Address const& rAddress, Label const& rLabel)
     {
       if (!(rLabel.GetType() & Label::Imported))
         return;

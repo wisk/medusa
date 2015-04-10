@@ -485,7 +485,8 @@ bool UnaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Express
 BinaryOperationExpression::BinaryOperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
   : OperationExpression(OpType), m_spLeftExpr(spLeftExpr), m_spRightExpr(spRightExpr)
 {
-
+  assert(spLeftExpr != nullptr);
+  assert(spRightExpr != nullptr);
 }
 
 BinaryOperationExpression::~BinaryOperationExpression(void)
