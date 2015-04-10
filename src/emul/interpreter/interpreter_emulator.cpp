@@ -188,7 +188,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
   if (auto spDstVecId = expr_cast<VectorIdentifierExpression>(spAssignExpr->GetDestinationExpression()))
     m_NrOfValueToRead = spDstVecId->GetVector().size();
   else
-    m_NrOfValueToRead = 1;
+    m_NrOfValueToRead = 0;
 
   State OldState = m_State;
 
@@ -569,7 +569,12 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
     if (spMemExpr->IsDereferencable())
     {
       if (m_NrOfValueToRead == 0)
-        return nullptr;
+      {
+        IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
+        if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
+          return nullptr;
+        m_Values.push_back(MemVal);
+      }
       while (m_NrOfValueToRead != 0)
       {
         IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
