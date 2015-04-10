@@ -296,8 +296,8 @@ semantic:
   nop: &nop
     [ program.id = program.id ]
 
-  xchg: &xchg
-    [ 'exchange(op0.val, op1.val)' ]
+  xchg: &xchg |
+    exchange(op0.val, op1.val);
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg

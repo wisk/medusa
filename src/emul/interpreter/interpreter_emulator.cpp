@@ -252,12 +252,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
     State OldState = m_State;
     m_State = Read;
     auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    m_State = Write;
-    auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
-    m_State = Read;
-    auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    m_State = Write;
     auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
+    m_State = Write;
+    auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+    auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
     m_State = OldState;
     return spBinOpExpr;
   }

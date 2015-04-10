@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 10 10:38:38 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 10 11:19:42 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -10632,7 +10632,8 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: xchg
  * operand: ['Eb', 'Gb']
  * opcode: 86
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
 **/
 bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -10660,7 +10661,8 @@ bool X86Architecture::Table_1_86(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: xchg
  * operand: ['Ev', 'Gv']
  * opcode: 87
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
 **/
 bool X86Architecture::Table_1_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -10968,7 +10970,8 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['r8', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11018,11 +11021,13 @@ bool X86Architecture::Table_1_90(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rCX', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r9', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11077,11 +11082,13 @@ bool X86Architecture::Table_1_91(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rDX', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r10', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11136,11 +11143,13 @@ bool X86Architecture::Table_1_92(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rBX', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r11', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11195,11 +11204,13 @@ bool X86Architecture::Table_1_93(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rSP', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r12', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11254,11 +11265,13 @@ bool X86Architecture::Table_1_94(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rBP', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r13', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11313,11 +11326,13 @@ bool X86Architecture::Table_1_95(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rSI', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r14', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
@@ -11372,11 +11387,13 @@ bool X86Architecture::Table_1_96(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: xchg
  * operand: ['rDI', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  *
  * mnemonic: xchg
  * operand: ['r15', 'rAX']
- * semantic: ['exchange(op0.val, op1.val)']
+ * semantic: exchange(op0.val, op1.val);
+
  * attr: ['rexb']
  *
 **/
