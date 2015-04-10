@@ -43,7 +43,8 @@ public:
     Database::SPType spDatabase,
     Loader::SPType spLoader,
     Architecture::VSPType spArchitectures,
-    OperatingSystem::SPType spOperatingSystem);
+    OperatingSystem::SPType spOperatingSystem,
+    bool StartAnalyzer = true);
 
   typedef std::tuple<std::string, std::string> Filter;
   typedef std::function<bool (
@@ -75,6 +76,7 @@ public:
 
   bool                            NewDocument(
     BinaryStream::SPType spBinStrm,
+    bool StartAnalyzer = true,
     AskDatabaseFunctionType AskDatabase = IgnoreDatabasePath,
     ModuleSelectorFunctionType ModuleSelector = DefaultModuleSelector,
     FunctionType BeforeStart = [](){ return true; },

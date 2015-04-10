@@ -17,13 +17,14 @@ MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  static bool Medusa_OpenExecutable(Medusa *pCore, bp::str pyExecutablePath, bp::str pyDatabasePath)
+  static bool Medusa_OpenExecutable(Medusa *pCore, bp::str pyExecutablePath, bp::str pyDatabasePath, bool StartAnalyzer)
   {
     Path ExePath = bp::extract<std::string>(pyExecutablePath)().c_str();
     Path DbPath  = bp::extract<std::string>(pyDatabasePath)().c_str();
 
     return pCore->NewDocument(
     std::make_shared<FileBinaryStream>(ExePath),
+    StartAnalyzer,
     [&](Path &rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = DbPath;

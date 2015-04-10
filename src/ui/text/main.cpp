@@ -297,7 +297,7 @@ int main(int argc, char **argv)
 
     Medusa m;
     if (!m.NewDocument(
-      std::make_shared<FileBinaryStream>(file_path),
+      std::make_shared<FileBinaryStream>(file_path), true,
       [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
     {
       rDatabasePath = db_path;

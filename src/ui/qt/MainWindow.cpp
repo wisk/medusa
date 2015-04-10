@@ -58,7 +58,7 @@ MainWindow::MainWindow(QString const& rFilePath, QString const& rDbPath)
   {
     _fileName = rFilePath;
 
-    _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()),
+    _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()), true,
         [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
         {
         auto DbPrDbPathath = QFileDialog::getSaveFileName(this,
@@ -175,7 +175,7 @@ bool MainWindow::openDocument()
   if (_fileName.isNull())
     return false;
 
-  return _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()),
+  return _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()), true,
     [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
   {
     auto DbPrDbPathath = QFileDialog::getSaveFileName(this,

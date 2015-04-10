@@ -60,7 +60,8 @@ bool Medusa::Start(
   Database::SPType spDatabase,
   Loader::SPType spLoader,
   Architecture::VSPType spArchitectures,
-  OperatingSystem::SPType spOperatingSystem)
+  OperatingSystem::SPType spOperatingSystem,
+  bool StartAnalyzer)
 {
   if (spArchitectures.empty())
     return false;
@@ -90,6 +91,9 @@ bool Medusa::Start(
     spDatabase->SetOperatingSystemName(spOperatingSystem->GetName());
     spOperatingSystem->ProvideDetails(m_Document);
   }
+
+  if (!StartAnalyzer)
+    return true;
 
   /* Disassemble the file with the default analyzer */
   AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
@@ -145,6 +149,7 @@ bool Medusa::DefaultModuleSelector(BinaryStream::SPType spBinStrm, Database::SPT
 
 bool Medusa::NewDocument(
   BinaryStream::SPType spBinStrm,
+  bool StartAnalyzer,
   Medusa::AskDatabaseFunctionType AskDatabase,
   Medusa::ModuleSelectorFunctionType ModuleSelector,
   Medusa::FunctionType BeforeStart,
@@ -214,7 +219,7 @@ bool Medusa::NewDocument(
 
     if (!BeforeStart())
       return false;
-    if (!Start(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
+    if (!Start(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs, StartAnalyzer))
       return false;
     if (!AfterStart())
       return false;

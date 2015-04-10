@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)
   {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
     BOOST_REQUIRE(Core.NewDocument(
-      spFileBinStrm,
+      spFileBinStrm, true,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = "call_reg.pe.x86-32_";
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(core_anlz_jmp_tbl_test_case)
   {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
     BOOST_REQUIRE(Core.NewDocument(
-      spFileBinStrm,
+      spFileBinStrm, true,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = "jmp_tbl.pe.x86-32_";

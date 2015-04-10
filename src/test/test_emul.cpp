@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
     BOOST_REQUIRE(Core.NewDocument(
-      spFileBinStrm,
+      spFileBinStrm, false,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
       rDbPath = "hello_world.elf.arm-7_";
