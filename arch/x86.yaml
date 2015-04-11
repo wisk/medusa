@@ -24,6 +24,20 @@ function:
     else:
       zf.id = int1(0)
 
+  parity_flag: &parity_flag |
+    alloc_var('pf_tmp', pf.bit);
+    pf_tmp = int1(1);
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1));
+    pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1));
+    pf.id = pf_tmp;
+    free_var('pf_tmp');
+
 ## Instruction semantic #######################################################
 
 semantic:
@@ -123,6 +137,9 @@ semantic:
     op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) );
     call('sign_flag');
     call('zero_flag');
+    call('parity_flag');
+    if op2.val != int(op2.bit, 1): # Overflow flag undefined state
+      of.id = int1(1);
 
   shl: &shl
     [
