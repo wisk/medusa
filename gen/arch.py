@@ -50,8 +50,9 @@ class ArchConvertion:
 
     def _ConvertSemanticToCode(self, opcd, sem, id_mapper):
         class SemVisitor(ast.NodeVisitor):
-            def __init__(self, id_mapper):
+            def __init__(self, arch, id_mapper):
                 ast.NodeVisitor.__init__(self)
+                self.arch = arch
                 self.id_mapper = id_mapper
                 self.var_expr = []
                 self.var_pool = []
@@ -160,6 +161,14 @@ class ArchConvertion:
                 if func_name == 'concat':
                     return ''.join(args_name)
 
+                if func_name == 'call':
+                    expr = self.arch['function'][args_name[0][1:-1]]
+                    v = SemVisitor(self.arch, self.id_mapper)
+                    v.reset()
+                    nodes = ast.parse(expr)
+                    v.visit(nodes)
+                    return v.res
+
                 if 'VariableExpression::Alloc' in func_name:
                     var_name = args_name[0][1:-1]
                     assert(not var_name in self.var_pool)
@@ -222,7 +231,7 @@ class ArchConvertion:
             def visit_Name(self, node):
                 node_name = node.id
 
-                if node_name in [ 'ignore', 'concat' ]:
+                if node_name in [ 'ignore', 'concat', 'call' ]:
                     return node_name
 
                 if node_name in self.id_mapper:
@@ -369,7 +378,7 @@ class ArchConvertion:
                 sem = sem.split(";")
                 if sem[-1] == "\n": del sem[-1]
 
-            v = SemVisitor(id_mapper)
+            v = SemVisitor(self.arch, id_mapper)
             for expr in sem:
                 #print 'DEBUG: %r' % expr
                 v.reset()

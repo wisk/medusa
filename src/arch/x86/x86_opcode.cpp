@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 10 11:19:42 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 11 17:47:33 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -29223,7 +29223,11 @@ bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv', 'Ib']
  * opcode: ac
  * cpu_model: >= X86_Arch_80386
- * semantic: ["expr('begin_update_flags')", 'op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) )', 'res = op0.val', "expr('end_update_flags')"]
+ * semantic: cf.id = bit_cast(op0.val >> op2.val, int16(1));
+op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) );
+call('sign_flag');
+call('zero_flag');
+
 **/
 bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -29238,9 +29242,16 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) ) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast(op0.val >> op2.val, int16(1)) */
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            rInsn.GetOperand(2)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: 
+        op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) ) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -29256,11 +29267,34 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(2)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 rInsn.GetOperand(2)))));
-        AllExpr.push_back(pExpr0);
-        /* Semantic: res = op0.val */
-        spResExpr = rInsn.GetOperand(0);
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: 
+        call('sign_flag') */
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        auto pExpr3 = /* Semantic: 
+        call('zero_flag') */
+        Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1))
+        ,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0))
+        );
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -29274,7 +29308,11 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv', 'CL']
  * opcode: ad
  * cpu_model: >= X86_Arch_80386
- * semantic: ["expr('begin_update_flags')", 'op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) )', 'res = op0.val', "expr('end_update_flags')"]
+ * semantic: cf.id = bit_cast(op0.val >> op2.val, int16(1));
+op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) );
+call('sign_flag');
+call('zero_flag');
+
 **/
 bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -29289,9 +29327,16 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        auto pExpr0 = /* Semantic: op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) ) */
+        auto pExpr0 = /* Semantic: cf.id = bit_cast(op0.val >> op2.val, int16(1)) */
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            rInsn.GetOperand(2)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr0);
+        auto pExpr1 = /* Semantic: 
+        op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) ) */
         Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -29307,11 +29352,34 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(2)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 rInsn.GetOperand(2)))));
-        AllExpr.push_back(pExpr0);
-        /* Semantic: res = op0.val */
-        spResExpr = rInsn.GetOperand(0);
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
+        AllExpr.push_back(pExpr1);
+        auto pExpr2 = /* Semantic: 
+        call('sign_flag') */
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        auto pExpr3 = /* Semantic: 
+        call('zero_flag') */
+        Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1))
+        ,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0))
+        );
+        AllExpr.push_back(pExpr3);
         rInsn.SetSemantic(AllExpr);
       }
       return true;

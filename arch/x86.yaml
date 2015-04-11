@@ -10,6 +10,20 @@ architecture_information:
   name: x86
   instruction_set_type: complex
 
+## Flag semantic #######################################################
+
+function:
+
+## Standard flags operations
+  sign_flag: &sign_flag |
+    sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+
+  zero_flag: &zero_flag |
+    if op0.val == int(op0.bit, 0):
+      zf.id = int1(1)
+    else:
+      zf.id = int1(0)
+
 ## Instruction semantic #######################################################
 
 semantic:
@@ -104,13 +118,11 @@ semantic:
       expr('end_update_flags')
      ]
 
-  shrd: &shrd
-    [
-      expr('begin_update_flags'),
-      'op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) )',
-      res = op0.val,
-      expr('end_update_flags')
-    ]
+  shrd: &shrd |
+    cf.id = bit_cast(op0.val >> op2.val, int16(1));
+    op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)) );
+    call('sign_flag');
+    call('zero_flag');
 
   shl: &shl
     [
