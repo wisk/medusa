@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 11 15:32:50 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 11 22:36:27 2015) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -8695,8 +8695,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0010_008d0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -8816,8 +8816,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00010_00800000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -11073,8 +11073,8 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0ff0_01a00000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -12795,8 +12795,8 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -12844,8 +12844,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -12897,8 +12897,8 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -13074,8 +13074,8 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -13322,8 +13322,8 @@ bool ArmArchitecture::Instruction_MOVT_A1_0ff00000_03400000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = (op0.val & int32(0xffff)) | (op1.val << int32(16)) */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = (op0.val & int32(0xffff)) | (op1.val << int32(16)) */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpOr,
@@ -13483,8 +13483,8 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -13599,21 +13599,21 @@ bool ArmArchitecture::Instruction_POP_A2_0fff0fff_049d0004(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = stack.mem */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = stack.mem */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.id += op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id += op0.size */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
@@ -13798,19 +13798,19 @@ bool ArmArchitecture::Instruction_PUSH_A2_0fff0fff_052d0004(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: stack.id -= op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id -= op0.size */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.mem = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: stack.mem = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -13851,8 +13851,8 @@ bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -13968,8 +13968,8 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -17289,8 +17289,8 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500010_06100000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -17500,21 +17500,21 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = stack.mem */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = stack.mem */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.id += op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id += op0.size */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
@@ -17644,19 +17644,19 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: stack.id -= op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id -= op0.size */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.mem = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: stack.mem = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -17876,8 +17876,8 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr0);
@@ -17909,8 +17909,8 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
-    Expr::MakeAssign(
+    /* Semantic: lr.id = (program.id - insn.size) */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
@@ -17919,9 +17919,8 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
           rInsn.GetLength())));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -19299,8 +19298,8 @@ bool ArmArchitecture::Instruction_MOVS_T2_0000ffc0_00000000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -19442,8 +19441,8 @@ bool ArmArchitecture::Instruction_ADDS_T1_0000fe00_00001800(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -19519,8 +19518,8 @@ bool ArmArchitecture::Instruction_ADDS_T1_0000fe00_00001c00(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -19590,8 +19589,8 @@ bool ArmArchitecture::Instruction_MOVS_T1_0000f800_00002000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -19652,8 +19651,8 @@ bool ArmArchitecture::Instruction_ADDS_T2_0000f800_00003000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -20180,8 +20179,8 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff87_00004485(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op0.val + op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op0.val + op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -20219,8 +20218,8 @@ bool ArmArchitecture::Instruction_ADD_T1_0000ff78_00004468(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op0.val + op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op0.val + op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -20259,8 +20258,8 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff00_00004400(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op0.val + op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op0.val + op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -20329,8 +20328,8 @@ bool ArmArchitecture::Instruction_MOV_T1_0000ff00_00004600(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20415,8 +20414,8 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00004800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20554,8 +20553,8 @@ bool ArmArchitecture::Instruction_LDR_T1_0000fe00_00005800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20697,8 +20696,8 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00006800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20864,8 +20863,8 @@ bool ArmArchitecture::Instruction_LDR_T2_0000f800_00009800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20902,8 +20901,8 @@ bool ArmArchitecture::Instruction_ADR_T1_0000f800_0000a000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -20944,8 +20943,8 @@ bool ArmArchitecture::Instruction_ADD_T1_0000f800_0000a800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -20986,8 +20985,8 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff80_0000b000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -21191,19 +21190,19 @@ bool ArmArchitecture::Instruction_PUSH_T1_0000fe00_0000b400(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: stack.id -= op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id -= op0.size */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.mem = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: stack.mem = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -21354,21 +21353,21 @@ bool ArmArchitecture::Instruction_POP_T1_0000fe00_0000bc00(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = stack.mem */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = stack.mem */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.id += op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id += op0.size */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
@@ -21631,8 +21630,8 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr0);
@@ -21661,8 +21660,8 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr0);
@@ -21758,19 +21757,19 @@ bool ArmArchitecture::Instruction_PUSH_T2_ffffa000_e8ad0000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: stack.id -= op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id -= op0.size */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.mem = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: stack.mem = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -21809,21 +21808,21 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = stack.mem */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = stack.mem */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.id += op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id += op0.size */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
@@ -22570,8 +22569,8 @@ bool ArmArchitecture::Instruction_MOV_T3_ffeff0f0_ea4f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -23249,8 +23248,8 @@ bool ArmArchitecture::Instruction_ADD_T3_ffef8000_eb0d0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -26252,8 +26251,8 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr0);
@@ -26282,8 +26281,8 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr0);
@@ -26336,8 +26335,8 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: lr.id = (program.id - insn.size) */
-    Expr::MakeAssign(
+    /* Semantic: lr.id = (program.id - insn.size) */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(ARM_RegLR, &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
@@ -26346,9 +26345,8 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
           rInsn.GetLength())));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    program.id = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: program.id = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -26500,8 +26498,8 @@ bool ArmArchitecture::Instruction_MOV_T2_fbef8000_f04f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -26804,8 +26802,8 @@ bool ArmArchitecture::Instruction_ADD_T3_fbe08000_f1000000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val + op2.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val + op2.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
@@ -27120,8 +27118,8 @@ bool ArmArchitecture::Instruction_ADR_T3_fbff8000_f20f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -27194,8 +27192,8 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -27339,8 +27337,8 @@ bool ArmArchitecture::Instruction_MOVT_T1_fbf08000_f2c00000(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = (op0.val & int32(0xffff)) | (op1.val << int32(16)) */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = (op0.val & int32(0xffff)) | (op1.val << int32(16)) */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeBinOp(
         OperationExpression::OpOr,
@@ -27804,19 +27802,19 @@ bool ArmArchitecture::Instruction_PUSH_T3_ffff0fff_f84d0d04(BinaryStream const& 
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: stack.id -= op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id -= op0.size */
+    auto pExpr0 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.mem = op0.val */
-    Expr::MakeAssign(
+    /* Semantic: stack.mem = op0.val */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
       rInsn.GetOperand(0));
     AllExpr.push_back(pExpr1);
@@ -27938,21 +27936,21 @@ bool ArmArchitecture::Instruction_POP_T3_ffff0fff_f85d0b04(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = stack.mem */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = stack.mem */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
     AllExpr.push_back(pExpr0);
-    auto pExpr1 = /* Semantic: 
-    stack.id += op0.size */
-    Expr::MakeAssign(
+    /* Semantic: stack.id += op0.size */
+    auto pExpr1 = Expr::MakeAssign(
       Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
         Expr::MakeConst(
           32,
-          (rInsn.GetOperand(0)->GetBitSize() / 8))));
+          (rInsn.GetOperand(0)->GetBitSize() / 8))))
+    ;
     AllExpr.push_back(pExpr1);
     rInsn.SetSemantic(AllExpr);
   }
@@ -27982,8 +27980,8 @@ bool ArmArchitecture::Instruction_LDR_T2_fff00fc0_f8500000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -28058,8 +28056,8 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -28265,8 +28263,8 @@ bool ArmArchitecture::Instruction_LDR_T3_fff00000_f8d00000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);
@@ -28385,8 +28383,8 @@ bool ArmArchitecture::Instruction_LDR_T2_ff7f0000_f85f0000(BinaryStream const& r
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
-    auto pExpr0 = /* Semantic: op0.val = op1.val */
-    Expr::MakeAssign(
+    /* Semantic: op0.val = op1.val */
+    auto pExpr0 = Expr::MakeAssign(
       rInsn.GetOperand(0),
       rInsn.GetOperand(1));
     AllExpr.push_back(pExpr0);

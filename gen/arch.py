@@ -56,10 +56,11 @@ class ArchConvertion:
                 self.id_mapper = id_mapper
                 self.var_expr = []
                 self.var_pool = []
+                self.res = []
 
             def reset(self):
                 self.var_expr = []
-                self.res = ''
+                self.res = []
 
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
@@ -67,7 +68,9 @@ class ArchConvertion:
 
             def visit_Module(self, node):
                 for b in node.body:
-                    self.res += self.visit(b)
+                    b_expr = self.visit(b)
+                    self.res.append(b_expr)
+                return self.res[-1]
 
             def visit_If(self, node):
                 test_name = self.visit(node.test)
@@ -89,7 +92,7 @@ class ArchConvertion:
                 # TODO: handle multiple statment for else
                 assert(len(node.orelse) == 1)
                 else_name = self.visit(node.orelse[0])
-                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)\n' % (Indent(test_name), Indent(body_name), Indent(else_name))
+                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(test_name), Indent(body_name), Indent(else_name))
 
             def visit_IfExp(self, node):
                 assert(0)
@@ -148,7 +151,6 @@ class ArchConvertion:
             def visit_Call(self, node):
                 func_name = self.visit(node.func)
                 if type(node.func).__name__ == 'Attribute':
-                    print func_name
                     return func_name
 
                 args_name = []
@@ -162,12 +164,18 @@ class ArchConvertion:
                     return ''.join(args_name)
 
                 if func_name == 'call':
-                    expr = self.arch['function'][args_name[0][1:-1]]
-                    v = SemVisitor(self.arch, self.id_mapper)
-                    v.reset()
-                    nodes = ast.parse(expr)
-                    v.visit(nodes)
-                    return v.res
+                    sem = self.arch['function'][args_name[0][1:-1]]
+                    if isinstance(sem, str):
+                        sem = sem.split(";")
+                    for expr in sem:
+                        if expr[0] == '\n':
+                            expr = expr[1:]
+                        if len(expr) == 0:
+                            continue
+                        self.res.append('/* Semantic: %s */\n' % expr)
+                        nodes = ast.parse(expr)
+                        self.visit(nodes)
+                    return ''
 
                 if 'VariableExpression::Alloc' in func_name:
                     var_name = args_name[0][1:-1]
@@ -181,7 +189,7 @@ class ArchConvertion:
                 if 'OperationExpression::OpXchg' in func_name:
                     if len(args_name) != 2:
                         assert(0)
-                    return 'Expr::MakeBinOp(\n%s,\n%s,\n%s);'\
+                    return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
                             % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
 
                 return func_name % tuple(args_name)
@@ -330,7 +338,7 @@ class ArchConvertion:
                     return 'spResExpr = %s' % value_name                
                 target_name = self.visit(node.targets[0])
 
-                return 'Expr::MakeAssign(\n%s,\n%s)\n'\
+                return 'Expr::MakeAssign(\n%s,\n%s)'\
                         % (Indent(target_name), Indent(value_name))
 
             def visit_AugAssign(self, node):
@@ -379,7 +387,11 @@ class ArchConvertion:
                 if sem[-1] == "\n": del sem[-1]
 
             v = SemVisitor(self.arch, id_mapper)
+            expr_res = []
             for expr in sem:
+                if expr[0] == '\n':
+                    expr = expr[1:]
+                expr_res.append('/* Semantic: %s */\n' % expr)
                 #print 'DEBUG: %r' % expr
                 v.reset()
                 nodes = ast.parse(expr)
@@ -388,19 +400,27 @@ class ArchConvertion:
                 for var in v.var_expr:
                     res += var
                 if len(v.var_expr): res += '\n'
-                expr_res = v.res
-                if expr_res[-1] == '\n':
-                    expr_res = expr_res[:-1]
-                all_expr.append('/* Semantic: %s */\n' % expr + expr_res + ';\n')
+                expr_res += v.res
+                if expr[0] == '\n':
+                    expr = expr[1:]
+
             sem_no = 0
-            for expr in all_expr:
-                if 'HandleExpression' in expr:
-                    res += expr
+            for expr in expr_res:
+                if len(expr) == 0:
                     continue
+                # Call HandleExpression
+                elif 'HandleExpression' in expr:
+                    res += '%s;\n;' % expr
+                    continue
+                # Result alias
                 elif 'spResExpr = ' in expr:
+                    res += '%s;\n' % expr
+                # Comment
+                elif expr.startswith('/*'):
                     res += expr
+                # Semantic part
                 else:
-                    res += 'auto pExpr%d = %s' % (sem_no, expr)
+                    res += 'auto pExpr%d = %s;\n' % (sem_no, expr)
                     res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
                     sem_no += 1
 
