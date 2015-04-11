@@ -137,7 +137,7 @@ encoding:
   - rotate: &rotate [ 'rotate','rotate' ]
   - size: &size [ 'i','i' ]
   - sz: &sz [ 'sz' ]
-  - c  mode: &cmode [ 'cmode','cmode','cmode','cmode' ]
+  - cmode: &cmode [ 'cmode','cmode','cmode','cmode' ]
   - sf: &sf [ 'sf' ]
   - sx: &sx [ 'sx' ]
   - align: &align [ 'align','align' ]
@@ -11417,7 +11417,8 @@ operand:
   '+/-<Rm>': [ reg('m') ]
   '[<Rn>, #+/-<imm>]': [ mem(reg('n') + disp('i')) ]
   '[<Rn>{,#+/-<imm>}]': [ mem(reg('n') + disp('i')) ]
-  '<Rm>{,<shift>}': [ register_shift('m') ]
+  '<Rm>{,<shift>}': [ "register_shift(reg('m'), 'tp', 'i')" ]
+  '<Rn>{,<shift>}': [ "register_shift(reg('n'), 'sh', 'i')" ]
 
 # TODO: ARMExpandImm{,_C} (A5-10), ThumbExpandImm{,_C} (A6-18)
 # TODO: DM/DN register <Rdm/Rdn>

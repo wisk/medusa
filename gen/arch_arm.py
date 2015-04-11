@@ -405,6 +405,46 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr.append(op_expr)
                             return op_expr
 
+                        if func_name == 'register_shift':
+                            # // DecodeImmShift()
+                            # // ================
+                            # (SRType, integer) DecodeImmShift(bits(2) type, bits(5) imm5)
+                            # case type of
+                            # when '00'
+                            #     shift_t = SRType_LSL; shift_n = UInt(imm5);
+                            # when '01'
+                            #     shift_t = SRType_LSR; shift_n = if imm5 == '00000' then 32 else UInt(imm5);
+                            # when '10'
+                            #     shift_t = SRType_ASR; shift_n = if imm5 == '00000' then 32 else UInt(imm5);
+                            # when '11'
+                            #     if imm5 == '00000' then
+                            #         shift_t = SRType_RRX; shift_n = 1;
+                            #     else
+                            #         shift_t = SRType_ROR; shift_n = UInt(imm5);
+                            # return (shift_t, shift_n);
+                            decode_reg   = func_args[0]
+                            self.var_expr.pop()
+                            decode_shift = self.parent._ARM_GenerateExtractBits(insn, func_args[1])
+                            if func_args[1] == 'sh':
+                                decode_shift += ' << 1'
+                            decode_imm   = self.parent._ARM_GenerateExtractBits(insn, func_args[2])
+                            self.var_expr.append('auto ShiftType = OperationExpression::OpUnk;\n')
+                            self.var_expr.append('u32 ShiftVal = 0;\n')
+                            self.var_expr.append(self.parent._GenerateSwitch(decode_shift,
+                                [
+                                (0, 'ShiftType = OperationExpression::OpLls;\nShiftVal = %s;\n' % decode_imm, True),
+                                (1, 'ShiftType = OperationExpression::OpLrs;\nShiftVal = (%s == 0x0) ? 32 : %s;\n' % (decode_imm, decode_imm), True),
+                                (2, 'ShiftType = OperationExpression::OpArs;\nShiftVal = (%s == 0x0) ? 32 : %s;\n' % (decode_imm, decode_imm), True),
+                                (3, 'return nullptr;/* UNHANDLED */\n', True),
+                                ],
+                                'return nullptr;\n'
+                                ))
+                            op_expr = 'Expr::MakeBinOp(ShiftType,\n%s,\n%s)' % (
+                                Indent(decode_reg),
+                                Indent('Expr::MakeConst(32, ShiftVal)'))
+                            self.var_expr.append(op_expr)
+                            return op_expr
+
                         raise Exception('call %s' % func_name)
 
                     def visit_Attribute(self, node):
@@ -416,7 +456,7 @@ class ArmArchConvertion(ArchConvertion):
                     def visit_Name(self, node):
                         node_name = node.id
 
-                        if node_name in [ 'id', 'imm', 'disp', 'reg', 'reg_list', 'mem', 'u_add_sub' ]:
+                        if node_name in [ 'id', 'imm', 'disp', 'reg', 'reg_list', 'mem', 'u_add_sub', 'register_shift' ]:
                             return node_name
 
                         if node_name.endswith('_branch'):

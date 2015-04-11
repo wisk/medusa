@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 10 14:35:07 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 11 15:32:50 2015) */
 #include "arm_architecture.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x29c] =
 {
@@ -1135,6 +1135,9 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
+  if ((Opcode32 & 0x0ff0f0f0) == 0x0780f010)
+    // USAD8<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 0, 1, 'n', 'n', 'n', 'n']
+    return Instruction_USAD8_A1_0ff0f0f0_0780f010(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xffb00f10)
   {
   case 0xf2000110:
@@ -1155,9 +1158,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode32 & 0x0ff0f0f0) == 0x0780f010)
-    // USAD8<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 0, 1, 'n', 'n', 'n', 'n']
-    return Instruction_USAD8_A1_0ff0f0f0_0780f010(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xff800fd0)
   {
   case 0xf2800810:
@@ -1305,6 +1305,20 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode32 & 0x0fe0f0f0) == 0x00000090)
     // MUL{S}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 0, 0, 0, 0, 'S', 'd', 'd', 'd', 'd', '(0)', '(0)', '(0)', '(0)', 'm', 'm', 'm', 'm', 1, 0, 0, 1, 'n', 'n', 'n', 'n']
     return Instruction_MUL_A1_0fe0f0f0_00000090(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0x0ff0f0d0)
+  {
+  case 0x0700f010:
+    // SMUAD{X}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 'M', 1, 'n', 'n', 'n', 'n']
+    return Instruction_SMUAD_A1_0ff0f0d0_0700f010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x0700f050:
+    // SMUSD{X}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 1, 'M', 1, 'n', 'n', 'n', 'n']
+    return Instruction_SMUSD_A1_0ff0f0d0_0700f050(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x0750f010:
+    // SMMUL{R}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 1, 0, 1, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 'R', 1, 'n', 'n', 'n', 'n']
+    return Instruction_SMMUL_A1_0ff0f0d0_0750f010(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xff800f50)
   {
   case 0xf2800400:
@@ -1325,20 +1339,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   case 0xf3800600:
     // VRSUBHN<c>.<dt> <Dd>, <Qn>, <Qm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VRSUBHN_A1_ff800f50_f3800600(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0x0ff0f0d0)
-  {
-  case 0x0700f010:
-    // SMUAD{X}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 'M', 1, 'n', 'n', 'n', 'n']
-    return Instruction_SMUAD_A1_0ff0f0d0_0700f010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x0700f050:
-    // SMUSD{X}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 0, 0, 0, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 1, 'M', 1, 'n', 'n', 'n', 'n']
-    return Instruction_SMUSD_A1_0ff0f0d0_0700f050(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x0750f010:
-    // SMMUL{R}<c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 0, 1, 0, 1, 'd', 'd', 'd', 'd', 1, 1, 1, 1, 'm', 'm', 'm', 'm', 0, 0, 'R', 1, 'n', 'n', 'n', 'n']
-    return Instruction_SMMUL_A1_0ff0f0d0_0750f010(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -1367,49 +1367,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode32 & 0xffb00c10) == 0xf3b00800)
-    // V<op><c>.8 <Dd>, <list>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'len', 'len', 'N', 'op', 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_V_A1_ffb00c10_f3b00800(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0x0ff0f090)
-  {
-  case 0x01100010:
-    // TST<c> <Rn>, <Rm>, <type> <Rs> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
-    return Instruction_TST_A1_0ff0f090_01100010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01300010:
-    // TEQ<c> <Rn>, <Rm>, <type> <Rs> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
-    return Instruction_TEQ_A1_0ff0f090_01300010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01500010:
-    // CMP<c> <Rn>, <Rm>, <type> <Rs> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
-    return Instruction_CMP_A1_0ff0f090_01500010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01700010:
-    // CMN<c> <Rn>, <Rm>, <type> <Rs> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
-    return Instruction_CMN_A1_0ff0f090_01700010(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0x0fef0070)
-  {
-  case 0x01a00000:
-    // LSL{S}<c> <Rd>, <Rm>, #<imm5> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 0, 0, 0, 'm', 'm', 'm', 'm']
-    return Instruction_LSL_A1_0fef0070_01a00000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01a00020:
-    // LSR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 0, 1, 0, 'm', 'm', 'm', 'm']
-    return Instruction_LSR_A1_0fef0070_01a00020(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01a00040:
-    // ASR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 1, 0, 0, 'm', 'm', 'm', 'm']
-    return Instruction_ASR_A1_0fef0070_01a00040(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01a00060:
-    // ROR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 1, 1, 0, 'm', 'm', 'm', 'm']
-    return Instruction_ROR_A1_0fef0070_01a00060(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode32 & 0x0fe0007f) == 0x07c0001f)
-    // BFC<c> <Rd>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 0, 'msb', 'msb', 'msb', 'msb', 'msb', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 0, 0, 1, 1, 1, 1, 1]
-    return Instruction_BFC_A1_0fe0007f_07c0001f(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode32 & 0x0fb00ef0) == 0x0eb00a00)
-    // VMOV<c>.F32 <Sd>, #<imm> - ['support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', '(0)', 0, '(0)', 0, 'i', 'i', 'i', 'i']
-    return Instruction_VMOV_A2_0fb00ef0_0eb00a00(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0x0ff003f0)
   {
   case 0x06800070:
@@ -1433,49 +1390,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  if ((Opcode32 & 0x0f100f1f) == 0x0e100b10)
-    // VMOV<c>.<dt> <Rt>, <Dn[x]> - [] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 'U', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 1, 0, 1, 1, 'N', 'opc2', 'opc2', 1, '(0)', '(0)', '(0)', '(0)']
-    return Instruction_VMOV_A1_0f100f1f_0e100b10(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0xfe800ed0)
-  {
-  case 0xf2800810:
-    // VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
-    return Instruction_VQSHR_A1_fe800ed0_f2800810(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800850:
-    // VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
-    return Instruction_VQRSHR_A1_fe800ed0_f2800850(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode32 & 0xff800d50) == 0xf2800900)
-    // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 0, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQD_A1_ff800d50_f2800900(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0xfe800f50)
-  {
-  case 0xf2800c40:
-    // VQDMULH<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULH_A2_fe800f50_f2800c40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800d40:
-    // VQRDMULH<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQRDMULH_A2_fe800f50_f2800d40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABAL_A2_fe800f50_f2800500(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABDL_A2_fe800f50_f2800700(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_A2_fe800f50_f2800a40(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode32 & 0xff30f000) == 0xf510f000)
-    // PLD{R} [<Rn>, #<disp>] - [] - [1, 1, 1, 1, 0, 1, 0, 1, 'U', 'R', 0, 1, 'n', 'n', 'n', 'n', '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_PLD_A1_ff30f000_f510f000(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode32 & 0x0fba0e50) == 0x0eba0a40)
-    // VCVT<c>.F32.<Td> <Sd>, <Sd>, #<fbits> - ['support_it_block', 'support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 1, 'op', 1, 'U', 'd', 'd', 'd', 'd', 1, 0, 1, 'sf', 'sx', 1, 'i', 0, 'i', 'i', 'i', 'i']
-    return Instruction_VCVT_A1_0fba0e50_0eba0a40(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xff800f10)
   {
   case 0xf2000800:
@@ -1526,6 +1440,92 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
+  if ((Opcode32 & 0xffb00c10) == 0xf3b00800)
+    // V<op><c>.8 <Dd>, <list>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 1, 1, 'D', 1, 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'len', 'len', 'N', 'op', 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_V_A1_ffb00c10_f3b00800(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0x0fef0070)
+  {
+  case 0x01a00000:
+    // LSL{S}<c> <Rd>, <Rm>, #<imm5> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 0, 0, 0, 'm', 'm', 'm', 'm']
+    return Instruction_LSL_A1_0fef0070_01a00000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01a00020:
+    // LSR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 0, 1, 0, 'm', 'm', 'm', 'm']
+    return Instruction_LSR_A1_0fef0070_01a00020(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01a00040:
+    // ASR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 1, 0, 0, 'm', 'm', 'm', 'm']
+    return Instruction_ASR_A1_0fef0070_01a00040(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01a00060:
+    // ROR{S}<c> <Rd>, <Rm>, #<imm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 0, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 1, 1, 0, 'm', 'm', 'm', 'm']
+    return Instruction_ROR_A1_0fef0070_01a00060(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0x0fe0007f) == 0x07c0001f)
+    // BFC<c> <Rd>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 0, 'msb', 'msb', 'msb', 'msb', 'msb', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 0, 0, 1, 1, 1, 1, 1]
+    return Instruction_BFC_A1_0fe0007f_07c0001f(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0x0fb00ef0) == 0x0eb00a00)
+    // VMOV<c>.F32 <Sd>, #<imm> - ['support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', '(0)', 0, '(0)', 0, 'i', 'i', 'i', 'i']
+    return Instruction_VMOV_A2_0fb00ef0_0eb00a00(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0x0f100f1f) == 0x0e100b10)
+    // VMOV<c>.<dt> <Rt>, <Dn[x]> - [] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 'U', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 1, 0, 1, 1, 'N', 'opc2', 'opc2', 1, '(0)', '(0)', '(0)', '(0)']
+    return Instruction_VMOV_A1_0f100f1f_0e100b10(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xfe800ed0)
+  {
+  case 0xf2800810:
+    // VQSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 0, 'M', 1, 'm', 'm', 'm', 'm']
+    return Instruction_VQSHR_A1_fe800ed0_f2800810(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800850:
+    // VQRSHR{op}N<c>.<type_4><size> <Dd>, <Qm>, #<imm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 0, 'op', 0, 1, 'M', 1, 'm', 'm', 'm', 'm']
+    return Instruction_VQRSHR_A1_fe800ed0_f2800850(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0xff800d50) == 0xf2800900)
+    // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 0, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQD_A1_ff800d50_f2800900(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0x0ff0f090)
+  {
+  case 0x01100010:
+    // TST<c> <Rn>, <Rm>, <type> <Rs> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
+    return Instruction_TST_A1_0ff0f090_01100010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01300010:
+    // TEQ<c> <Rn>, <Rm>, <type> <Rs> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
+    return Instruction_TEQ_A1_0ff0f090_01300010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01500010:
+    // CMP<c> <Rn>, <Rm>, <type> <Rs> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
+    return Instruction_CMP_A1_0ff0f090_01500010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01700010:
+    // CMN<c> <Rn>, <Rm>, <type> <Rs> - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
+    return Instruction_CMN_A1_0ff0f090_01700010(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0xfe800f50)
+  {
+  case 0xf2800c40:
+    // VQDMULH<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULH_A2_fe800f50_f2800c40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800d40:
+    // VQRDMULH<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQRDMULH_A2_fe800f50_f2800d40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABAL_A2_fe800f50_f2800500(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABDL_A2_fe800f50_f2800700(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_A2_fe800f50_f2800a40(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0xff30f000) == 0xf510f000)
+    // PLD{R} [<Rn>, #<disp>] - [] - [1, 1, 1, 1, 0, 1, 0, 1, 'U', 'R', 0, 1, 'n', 'n', 'n', 'n', '(1)', '(1)', '(1)', '(1)', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_PLD_A1_ff30f000_f510f000(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0x0fba0e50) == 0x0eba0a40)
+    // VCVT<c>.F32.<Td> <Sd>, <Sd>, #<fbits> - ['support_it_block', 'support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 1, 'op', 1, 'U', 'd', 'd', 'd', 'd', 1, 0, 1, 'sf', 'sx', 1, 'i', 0, 'i', 'i', 'i', 'i']
+    return Instruction_VCVT_A1_0fba0e50_0eba0a40(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff800b50) == 0xf2800340)
     // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm[x]> - [] - [1, 1, 1, 1, 0, 0, 1, 0, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQD_A2_ff800b50_f2800340(rBinStrm, Offset, Opcode32, rInsn);
@@ -1537,6 +1537,83 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   case 0xf4a00000:
     // VLD1<c>.<size> <list>, [<Rn>{@<align>}], <Rm> - ['support_it_block'] - [1, 1, 1, 1, 0, 1, 0, 0, 1, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 'i', 'i', 0, 0, 'index_align', 'index_align', 'index_align', 'index_align', 'm', 'm', 'm', 'm']
     return Instruction_VLD1_A1_ffb00300_f4a00000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0x0ff0f010)
+  {
+  case 0x01100000:
+    // TST<c> <Rn>, <Rm>{,<shift>} - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
+    return Instruction_TST_A1_0ff0f010_01100000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01300000:
+    // TEQ<c> <Rn>, <Rm>{,<shift>} - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
+    return Instruction_TEQ_A1_0ff0f010_01300000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01500000:
+    // CMP<c> <Rn>, <Rm>{,<shift>} - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
+    return Instruction_CMP_A1_0ff0f010_01500000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x01700000:
+    // CMN<c> <Rn>, <Rm>{,<shift>} - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
+    return Instruction_CMN_A1_0ff0f010_01700000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0xfe800e90) == 0xf2800e10)
+    // VCVT<c>.<Td>.<Tm> <Dd>, <Dm>, #<fbits> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 1, 1, 'op', 0, 'Q', 'M', 1, 'm', 'm', 'm', 'm']
+    return Instruction_VCVT_A1_fe800e90_f2800e10(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0x0e500ff0)
+  {
+  case 0x000000b0:
+    // STRH<c> <Rt>, [<Rn>],+/-<Rm> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
+    return Instruction_STRH_A1_0e500ff0_000000b0(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x000000d0:
+    // LDRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 0, 1, 'm', 'm', 'm', 'm']
+    return Instruction_LDRD_A1_0e500ff0_000000d0(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x000000f0:
+    // STRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 1, 1, 'm', 'm', 'm', 'm']
+    return Instruction_STRD_A1_0e500ff0_000000f0(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x001000b0:
+    // LDRH<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
+    return Instruction_LDRH_A1_0e500ff0_001000b0(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x001000d0:
+    // LDRSB<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 0, 1, 'm', 'm', 'm', 'm']
+    return Instruction_LDRSB_A1_0e500ff0_001000d0(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x001000f0:
+    // LDRSH<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 1, 1, 'm', 'm', 'm', 'm']
+    return Instruction_LDRSH_A1_0e500ff0_001000f0(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0x0fef0090) == 0x01e00010)
+    // MVN{S}<c> <Rd>, <Rm>, <type> <Rs> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
+    return Instruction_MVN_A1_0fef0090_01e00010(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xfe800d50)
+  {
+  case 0xf2800800:
+    // V<op>L<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_V_A2_fe800d50_f2800800(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800c00:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 'op', 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_A2_fe800d50_f2800c00(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  if ((Opcode32 & 0x0fb80e50) == 0x0eb80a40)
+    // VCVT<c>.F32.<Tm> <Sd>, <Sm> - ['support_it_block', 'support_it_block', 'support_it_block', 'support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 1, 'opc2', 'opc2', 'opc2', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', 'op', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VCVT_A1_0fb80e50_0eb80a40(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0xfe800b50) == 0xf2800240)
+    // V<op>L<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_V_A2_fe800b50_f2800240(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xfe800e50)
+  {
+  case 0xf2800840:
+    // VMUL<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 'F', 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMUL_A1_fe800e50_f2800840(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800000:
+    // VADDW<c>.<dt> <Qd>, <Qn>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 0, 'op', 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VADDW_A1_fe800e50_f2800000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf2800200:
+    // VSUBW<c>.<dt> {<Qd>,} <Qn>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 1, 'op', 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VSUBW_A1_fe800e50_f2800200(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -1599,83 +1676,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   if ((Opcode32 & 0xfeb80090) == 0xf2800010)
     // VMOV<c>.<dt> <Dd>, #<imm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'i', 1, 'D', 0, 0, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'cmode', 'cmode', 'cmode', 'cmode', 0, 'Q', 'op', 1, 'i', 'i', 'i', 'i']
     return Instruction_VMOV_A1_feb80090_f2800010(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode32 & 0xfe800e90) == 0xf2800e10)
-    // VCVT<c>.<Td>.<Tm> <Dd>, <Dm>, #<fbits> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 1, 1, 'op', 0, 'Q', 'M', 1, 'm', 'm', 'm', 'm']
-    return Instruction_VCVT_A1_fe800e90_f2800e10(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0x0e500ff0)
-  {
-  case 0x000000b0:
-    // STRH<c> <Rt>, [<Rn>],+/-<Rm> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
-    return Instruction_STRH_A1_0e500ff0_000000b0(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x000000d0:
-    // LDRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 0, 1, 'm', 'm', 'm', 'm']
-    return Instruction_LDRD_A1_0e500ff0_000000d0(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x000000f0:
-    // STRD<c> <Rt>, <Rt2>, [<Rn>],+/-<Rm> - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 0, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 1, 1, 'm', 'm', 'm', 'm']
-    return Instruction_STRD_A1_0e500ff0_000000f0(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x001000b0:
-    // LDRH<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 0, 1, 1, 'm', 'm', 'm', 'm']
-    return Instruction_LDRH_A1_0e500ff0_001000b0(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x001000d0:
-    // LDRSB<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 0, 1, 'm', 'm', 'm', 'm']
-    return Instruction_LDRSB_A1_0e500ff0_001000d0(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x001000f0:
-    // LDRSH<c> <Rt>, [<Rn>],+/-<Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 'P', 'U', 0, 'W', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', '(0)', '(0)', '(0)', '(0)', 1, 1, 1, 1, 'm', 'm', 'm', 'm']
-    return Instruction_LDRSH_A1_0e500ff0_001000f0(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode32 & 0x0fef0090) == 0x01e00010)
-    // MVN{S}<c> <Rd>, <Rm>, <type> <Rs> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 1, 1, 1, 'S', '(0)', '(0)', '(0)', '(0)', 'd', 'd', 'd', 'd', 's', 's', 's', 's', 0, 'tp', 'tp', 1, 'm', 'm', 'm', 'm']
-    return Instruction_MVN_A1_0fef0090_01e00010(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0xfe800d50)
-  {
-  case 0xf2800800:
-    // V<op>L<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_V_A2_fe800d50_f2800800(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800c00:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 'op', 0, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_A2_fe800d50_f2800c00(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0x0ff0f010)
-  {
-  case 0x01100000:
-    // TST<c> <Rn>, <Rm>{,<shift>} - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
-    return Instruction_TST_A1_0ff0f010_01100000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01300000:
-    // TEQ<c> <Rn>, <Rm>{,<shift>} - [] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 0, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
-    return Instruction_TEQ_A1_0ff0f010_01300000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01500000:
-    // CMP<c> <Rn>, <Rm>{,<shift>} - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 0, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
-    return Instruction_CMP_A1_0ff0f010_01500000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x01700000:
-    // CMN<c> <Rn>, <Rm>{,<shift>} - ['cond'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 1, 1, 'n', 'n', 'n', 'n', '(0)', '(0)', '(0)', '(0)', 'i', 'i', 'i', 'i', 'i', 'tp', 'tp', 0, 'm', 'm', 'm', 'm']
-    return Instruction_CMN_A1_0ff0f010_01700000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode32 & 0x0fb80e50) == 0x0eb80a40)
-    // VCVT<c>.F32.<Tm> <Sd>, <Sm> - ['support_it_block', 'support_it_block', 'support_it_block', 'support_it_block', 'support_it_block'] - ['c', 'c', 'c', 'c', 1, 1, 1, 0, 1, 'D', 1, 1, 1, 'opc2', 'opc2', 'opc2', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', 'op', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VCVT_A1_0fb80e50_0eb80a40(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode32 & 0xfe800b50) == 0xf2800240)
-    // V<op>L<c>.<dt> <Qd>, <Dn>, <Dm[x]> - [] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_V_A2_fe800b50_f2800240(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0xfe800e50)
-  {
-  case 0xf2800840:
-    // VMUL<c>.<dt> <Dd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'Q', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 0, 'F', 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMUL_A1_fe800e50_f2800840(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800000:
-    // VADDW<c>.<dt> <Qd>, <Qn>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 0, 'op', 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VADDW_A1_fe800e50_f2800000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf2800200:
-    // VSUBW<c>.<dt> {<Qd>,} <Qn>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 0, 0, 1, 'U', 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 0, 1, 'op', 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VSUBW_A1_fe800e50_f2800200(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   switch (Opcode32 & 0x0fff0000)
   {
   case 0x024f0000:
@@ -1939,20 +1939,6 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   default:
     break;
   }
-  switch (Opcode32 & 0x0fe00070)
-  {
-  case 0x07a00050:
-    // SBFX<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 0, 1, 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 1, 0, 1, 'n', 'n', 'n', 'n']
-    return Instruction_SBFX_A1_0fe00070_07a00050(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x07c00010:
-    // BFI<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 0, 'msb', 'msb', 'msb', 'msb', 'msb', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 0, 0, 1, 'n', 'n', 'n', 'n']
-    return Instruction_BFI_A1_0fe00070_07c00010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0x07e00050:
-    // UBFX<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 1, 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 1, 0, 1, 'n', 'n', 'n', 'n']
-    return Instruction_UBFX_A1_0fe00070_07e00050(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   switch (Opcode32 & 0x0ff00090)
   {
   case 0x01000080:
@@ -1964,6 +1950,20 @@ bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offse
   case 0x01600080:
     // SMUL<x><y><c> <Rd>, <Rn>, <Rm> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 0, 0, 1, 0, 1, 1, 0, 'd', 'd', 'd', 'd', 'sbz', 'sbz', 'sbz', 'sbz', 'm', 'm', 'm', 'm', 1, 'M', 'N', 0, 'n', 'n', 'n', 'n']
     return Instruction_SMUL_A1_0ff00090_01600080(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0x0fe00070)
+  {
+  case 0x07a00050:
+    // SBFX<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 0, 1, 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 1, 0, 1, 'n', 'n', 'n', 'n']
+    return Instruction_SBFX_A1_0fe00070_07a00050(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x07c00010:
+    // BFI<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 0, 'msb', 'msb', 'msb', 'msb', 'msb', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 0, 0, 1, 'n', 'n', 'n', 'n']
+    return Instruction_BFI_A1_0fe00070_07c00010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0x07e00050:
+    // UBFX<c> <Rd>, <Rn>, #<lsb>, #<width> - ['could_jmp'] - ['c', 'c', 'c', 'c', 0, 1, 1, 1, 1, 1, 1, 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'widthm1', 'd', 'd', 'd', 'd', 'lsb', 'lsb', 'lsb', 'lsb', 'lsb', 1, 0, 1, 'n', 'n', 'n', 'n']
+    return Instruction_UBFX_A1_0fe00070_07e00050(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -2665,6 +2665,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode32 & 0xffd0ff00) == 0xf810fc00)
+    // PLD{R}<c> [<Rn>, #-<imm>] - [] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 'R', 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_PLD_T2_ffd0ff00_f810fc00(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xffbf0f00)
   {
   case 0xecbd0a00:
@@ -2699,9 +2702,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xffd0ff00) == 0xf810fc00)
-    // PLD{R}<c> [<Rn>, #-<imm>] - [] - [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 'R', 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_PLD_T2_ffd0ff00_f810fc00(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xffb30ed0) == 0xffb20600)
     // VCVT<c>.F32.F16 <Qd>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'i', 'i', 1, 0, 'd', 'd', 'd', 'd', 0, 1, 1, 'op', 0, 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VCVT_T1_ffb30ed0_ffb20600(rBinStrm, Offset, Opcode32, rInsn);
@@ -2771,9 +2771,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xffffa000) == 0xe8ad0000)
-    // PUSH<c>.W <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
-    return Instruction_PUSH_T2_ffffa000_e8ad0000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xfff0f0c0)
   {
   case 0xfa00f080:
@@ -2877,6 +2874,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xffb00ef0) == 0xeeb00a00)
     // VMOV<c>.F64 <Dd>, #<imm> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 0, 1, 'D', 1, 1, 'i', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', '(0)', 0, '(0)', 0, 'i', 'i', 'i', 'i']
     return Instruction_VMOV_T2_ffb00ef0_eeb00a00(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0xffffa000) == 0xe8ad0000)
+    // PUSH<c>.W <registers> - [] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, '(0)', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    return Instruction_PUSH_T2_ffffa000_e8ad0000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff100f1f) == 0xee100b10)
     // VMOV<c>.<dt> <Rt>, <Dn[x]> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 0, 'U', 'opc1', 'opc1', 1, 'n', 'n', 'n', 'n', 't', 't', 't', 't', 1, 0, 1, 1, 'N', 'opc2', 'opc2', 1, '(0)', '(0)', '(0)', '(0)']
     return Instruction_VMOV_T1_ff100f1f_ee100b10(rBinStrm, Offset, Opcode32, rInsn);
@@ -3075,6 +3075,20 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xfff0f000) == 0xf990f000)
     // PLI<c> [<Rn>, #<disp>] - [] - [1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 'n', 'n', 'n', 'n', 1, 1, 1, 1, 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xffef8000)
+  {
+  case 0xea6f0000:
+    // MVN{S}<c>.W <Rd>, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 'S', 1, 1, 1, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_MVN_T2_ffef8000_ea6f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xeb0d0000:
+    // ADD{S}<c>.W <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_ADD_T3_ffef8000_eb0d0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xebad0000:
+    // SUB{S}<c> <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
+    return Instruction_SUB_T1_ffef8000_ebad0000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xffb00e50)
   {
   case 0xee200a00:
@@ -3109,20 +3123,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf2af0000:
     // SUB <Rd>, PC, #0 - ['could_jmp'] - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_SUB_T2_fbff8000_f2af0000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0xffef8000)
-  {
-  case 0xea6f0000:
-    // MVN{S}<c>.W <Rd>, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 'S', 1, 1, 1, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_MVN_T2_ffef8000_ea6f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xeb0d0000:
-    // ADD{S}<c>.W <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 'S', 1, 1, 0, 1, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_ADD_T3_ffef8000_eb0d0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xebad0000:
-    // SUB{S}<c> <Rd>, SP, <Rm>{,<shift>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 'S', 1, 1, 0, 1, '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tp', 'tp', 'm', 'm', 'm', 'm']
-    return Instruction_SUB_T1_ffef8000_ebad0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -3180,6 +3180,26 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xee100a00:
     // VNMLA<c>.F64 <Dd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 0, 0, 'D', 0, 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 'sz', 'N', 'op', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VNMLA_T1_ffb00e10_ee100a00(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0xff7f0000)
+  {
+  case 0xf81f0000:
+    // LDRB<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 0, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRB_T1_ff7f0000_f81f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf83f0000:
+    // LDRH<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 0, 1, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRH_T1_ff7f0000_f83f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf85f0000:
+    // LDR<c>.W <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 1, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDR_T2_ff7f0000_f85f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf91f0000:
+    // LDRSB<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 1, 'U', 0, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRSB_T1_ff7f0000_f91f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf93f0000:
+    // LDRSH<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 1, 'U', 0, 1, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRSH_T1_ff7f0000_f93f0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -3250,29 +3270,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xffb00f00) == 0xf9a00c00)
     // VLD1<c>.<size> <list>, [<Rn>{@<align>}]{!} - ['support_it_block'] - [1, 1, 1, 1, 1, 0, 0, 1, 1, 'D', 1, 0, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'i', 'i', 'T', 'A', 'm', 'm', 'm', 'm']
     return Instruction_VLD1_T1_ffb00f00_f9a00c00(rBinStrm, Offset, Opcode32, rInsn);
-  switch (Opcode32 & 0xff7f0000)
-  {
-  case 0xf81f0000:
-    // LDRB<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 0, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRB_T1_ff7f0000_f81f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf83f0000:
-    // LDRH<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 0, 1, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRH_T1_ff7f0000_f83f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf85f0000:
-    // LDR<c>.W <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 0, 'U', 1, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDR_T2_ff7f0000_f85f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf91f0000:
-    // LDRSB<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 1, 'U', 0, 0, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRSB_T1_ff7f0000_f91f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf93f0000:
-    // LDRSH<c> <Rt>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 1, 1, 0, 0, 1, 'U', 0, 1, 1, 1, 1, 1, 1, 't', 't', 't', 't', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRSH_T1_ff7f0000_f93f0000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
-    // SETEND <endian_specifier> - [] - [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, '(1)', 'E', '(0)', '(0)', '(0)']
-    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   switch (Opcode32 & 0xfbef8000)
   {
   case 0xf04f0000:
@@ -3290,6 +3287,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
+    // SETEND <endian_specifier> - [] - [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, '(1)', 'E', '(0)', '(0)', '(0)']
+    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   if ((Opcode32 & 0xfff08010) == 0xeac00000)
     // PKHTB<c> <Rd>, <Rn>, <Rm>{,ASR #<imm>} - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 'n', 'n', 'n', 'n', '(0)', 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'tb', 0, 'm', 'm', 'm', 'm']
     return Instruction_PKHTB_T1_fff08010_eac00000(rBinStrm, Offset, Opcode32, rInsn);
@@ -3307,23 +3307,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xefb800b0)
-  {
-  case 0xef800010:
-    // VORR<c>.<dt> <Qd>, #<imm> - ['support_it_block'] - [1, 1, 1, 'i', 1, 1, 1, 1, 1, 'D', 0, 0, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'cmode', 'cmode', 'cmode', 'cmode', 0, 'Q', 0, 1, 'i', 'i', 'i', 'i']
-    return Instruction_VORR_T1_efb800b0_ef800010(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800030:
-    // VBIC<c>.<dt> <Qd>, #<imm> - ['support_it_block'] - [1, 1, 1, 'i', 1, 1, 1, 1, 1, 'D', 0, 0, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'cmode', 'cmode', 'cmode', 'cmode', 0, 'Q', 1, 1, 'i', 'i', 'i', 'i']
-    return Instruction_VBIC_T1_efb800b0_ef800030(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   if ((Opcode32 & 0xffb00c10) == 0xffb00800)
     // V<op><c>.8 <Dd>, <list>, <Dm> - ['support_it_block'] - [1, 1, 1, 1, 1, 1, 1, 1, 1, 'D', 1, 1, 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'len', 'len', 'N', 'op', 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_V_T1_ffb00c10_ffb00800(rBinStrm, Offset, Opcode32, rInsn);
-  if ((Opcode32 & 0xfe7f0000) == 0xe85f0000)
-    // LDRD<c> <Rt>, <Rt2>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 'P', 'U', 1, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 't2', 't2', 't2', 't2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
-    return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xff300f00)
   {
   case 0xed000a00:
@@ -3363,23 +3349,14 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xef800f50)
+  switch (Opcode32 & 0xefb800b0)
   {
-  case 0xef800c40:
-    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800d40:
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
-    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800010:
+    // VORR<c>.<dt> <Qd>, #<imm> - ['support_it_block'] - [1, 1, 1, 'i', 1, 1, 1, 1, 1, 'D', 0, 0, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'cmode', 'cmode', 'cmode', 'cmode', 0, 'Q', 0, 1, 'i', 'i', 'i', 'i']
+    return Instruction_VORR_T1_efb800b0_ef800010(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800030:
+    // VBIC<c>.<dt> <Qd>, #<imm> - ['support_it_block'] - [1, 1, 1, 'i', 1, 1, 1, 1, 1, 'D', 0, 0, 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'cmode', 'cmode', 'cmode', 'cmode', 0, 'Q', 1, 1, 'i', 'i', 'i', 'i']
+    return Instruction_VBIC_T1_efb800b0_ef800030(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -3436,9 +3413,32 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xff800b50) == 0xef800340)
     // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 'op', 1, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQD_T2_ff800b50_ef800340(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0xfe7f0000) == 0xe85f0000)
+    // LDRD<c> <Rt>, <Rt2>, [PC,#-0] - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 'P', 'U', 1, '(0)', 1, 1, 1, 1, 1, 't', 't', 't', 't', 't2', 't2', 't2', 't2', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
+    return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff800d50) == 0xef800900)
     // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 0, 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 'op', 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
     return Instruction_VQD_T1_ff800d50_ef800900(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xef800f50)
+  {
+  case 0xef800c40:
+    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800d40:
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'Q', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 1, 0, 1, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 0, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 0, 1, 1, 1, 'N', 0, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support_it_block'] - [1, 1, 1, 'U', 1, 1, 1, 1, 1, 'D', 'i', 'i', 'n', 'n', 'n', 'n', 'd', 'd', 'd', 'd', 1, 0, 1, 0, 'N', 1, 'M', 0, 'm', 'm', 'm', 'm']
+    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xffb00300)
   {
   case 0xf9800000:
@@ -3693,17 +3693,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xffd02000)
-  {
-  case 0xe8900000:
-    // LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
-    return Instruction_LDM_T2_ffd02000_e8900000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xe9100000:
-    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
-    return Instruction_LDMDB_T1_ffd02000_e9100000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   switch (Opcode32 & 0xfbf08000)
   {
   case 0xf2000000:
@@ -3718,6 +3707,17 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf2c00000:
     // MOVT<c> <Rd>, #<imm> - ['could_jmp'] - [1, 1, 1, 1, 0, 'i', 1, 0, 1, 1, 0, 0, 'i', 'i', 'i', 'i', 0, 'i', 'i', 'i', 'd', 'd', 'd', 'd', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i']
     return Instruction_MOVT_T1_fbf08000_f2c00000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0xffd02000)
+  {
+  case 0xe8900000:
+    // LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    return Instruction_LDM_T2_ffd02000_e8900000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xe9100000:
+    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 'W', 1, 'n', 'n', 'n', 'n', 'P', 'M', '(0)', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    return Instruction_LDMDB_T1_ffd02000_e9100000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -7950,7 +7950,35 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00010_00000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8101,7 +8129,35 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00010_00200000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8237,7 +8293,35 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0010_004d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8279,7 +8363,35 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00010_00400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8426,7 +8538,35 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00010_00600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8523,7 +8663,35 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0010_008d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8616,7 +8784,35 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00010_00800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8765,7 +8961,35 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -8906,7 +9130,35 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00010_00c00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -9047,7 +9299,35 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00010_00e00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -9576,7 +9856,35 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f010_01100000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -9916,7 +10224,35 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f010_01300000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -10075,7 +10411,35 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f010_01500000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -10272,7 +10636,35 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -10473,7 +10865,35 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00010_01800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -11171,7 +11591,35 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00010_01c00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -11337,7 +11785,35 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0010_01e00000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<5, 6>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -15514,7 +15990,35 @@ bool ArmArchitecture::Instruction_SSAT_A1_0fe00030_06a00010(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: <Rn>{,<shift>}
-  /* unhandled field <Rn>{,<shift>} */
+  u32 RegN = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBit<6>(Opcode)) << 1)
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegN + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -15856,7 +16360,35 @@ bool ArmArchitecture::Instruction_USAT_A1_0fe00030_06e00010(BinaryStream const& 
   /* unhandled field imm5 */
 
   // field: <Rn>{,<shift>}
-  /* unhandled field <Rn>{,<shift>} */
+  u32 RegN = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBit<6>(Opcode)) << 1)
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<7, 11>(Opcode));
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<7, 11>(Opcode)) == 0x0) ? 32 : (ExtractBits<7, 11>(Opcode));
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegN + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -21836,7 +22368,35 @@ bool ArmArchitecture::Instruction_TST_T2_fff08f00_ea100f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -21875,7 +22435,35 @@ bool ArmArchitecture::Instruction_AND_T2_ffe08000_ea000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -21914,7 +22502,35 @@ bool ArmArchitecture::Instruction_BIC_T2_ffe08000_ea200000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22195,7 +22811,35 @@ bool ArmArchitecture::Instruction_ORR_T2_ffe08000_ea400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22227,7 +22871,35 @@ bool ArmArchitecture::Instruction_MVN_T2_ffef8000_ea6f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22266,7 +22938,35 @@ bool ArmArchitecture::Instruction_ORN_T1_ffe08000_ea600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22292,7 +22992,35 @@ bool ArmArchitecture::Instruction_TEQ_T1_fff08f00_ea900f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22331,7 +23059,35 @@ bool ArmArchitecture::Instruction_EOR_T2_ffe08000_ea800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22395,7 +23151,35 @@ bool ArmArchitecture::Instruction_CMN_T2_fff08f00_eb100f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22433,7 +23217,35 @@ bool ArmArchitecture::Instruction_ADD_T3_ffef8000_eb0d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22480,7 +23292,35 @@ bool ArmArchitecture::Instruction_ADD_T3_ffe08000_eb000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22519,7 +23359,35 @@ bool ArmArchitecture::Instruction_ADC_T2_ffe08000_eb400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22558,7 +23426,35 @@ bool ArmArchitecture::Instruction_SBC_T2_ffe08000_eb600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22629,7 +23525,35 @@ bool ArmArchitecture::Instruction_SUB_T1_ffef8000_ebad0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22668,7 +23592,35 @@ bool ArmArchitecture::Instruction_SUB_T2_ffe08000_eba00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -22707,7 +23659,35 @@ bool ArmArchitecture::Instruction_RSB_T1_ffe08000_ebc00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: <Rm>{,<shift>}
-  /* unhandled field <Rm>{,<shift>} */
+  u32 RegM = (ExtractBits<0, 3>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBits<4, 5>(Opcode)))
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegM + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -24973,7 +25953,35 @@ bool ArmArchitecture::Instruction_SSAT_T1_ffd08020_f3000000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: <Rn>{,<shift>}
-  /* unhandled field <Rn>{,<shift>} */
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBit<21>(Opcode)) << 1)
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd2 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegN + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
@@ -25146,7 +26154,35 @@ bool ArmArchitecture::Instruction_USAT_T1_ffd08020_f3800000(BinaryStream const& 
   /* unhandled field imm5 */
 
   // field: <Rn>{,<shift>}
-  /* unhandled field <Rn>{,<shift>} */
+  u32 RegN = (ExtractBits<16, 19>(Opcode));
+  auto ShiftType = OperationExpression::OpUnk;
+  u32 ShiftVal = 0;
+  switch ((ExtractBit<21>(Opcode)) << 1)
+  {
+  case 0:
+    ShiftType = OperationExpression::OpLls;
+    ShiftVal = (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 1:
+    ShiftType = OperationExpression::OpLrs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 2:
+    ShiftType = OperationExpression::OpArs;
+    ShiftVal = ((ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) == 0x0) ? 32 : (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2);
+    break;
+  case 3:
+    return nullptr;/* UNHANDLED */
+    break;
+  default:
+    return nullptr;
+  }
+  auto spOprd1 = Expr::MakeBinOp(ShiftType,
+    Expr::MakeId(RegN + 1, &m_CpuInfo),
+    Expr::MakeConst(32, ShiftVal));
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
   {
     Expression::LSPType AllExpr;
     Expression::SPType spResExpr;
