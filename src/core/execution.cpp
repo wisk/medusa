@@ -175,7 +175,8 @@ void Execution::Execute(Address const& rAddr)
       auto const& rCurSem = spCurInsn->GetSemantic();
       if (rCurSem.empty())
       {
-        Log::Write("exec").Level(LogWarning) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
+        Log::Write("exec").Level(LogError) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
+        Sems.push_back(Expr::MakeSys("stop", CurAddr));
       }
       std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
       {
