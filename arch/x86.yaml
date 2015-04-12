@@ -560,21 +560,21 @@ semantic:
 ## Bit manipulation
 
   bt: &bt |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op1.bit, op1.bit) - int(op1.bit, 1)))), int16(1));
+    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
 
   btc: &btc |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op1.bit, op1.bit) - int(op1.bit, 1)))), int16(1));
+    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
     op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)));
 
   bts: &bts |
     alloc_var('res', op0.bit);
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op1.bit, op1.bit) - int(op1.bit, 1)))), int16(1));
+    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
     res = (op0.val | ((int(op0.bit, 1) << op1.val)));
     op0.val = res
     free_var('res');
 
   btr: &btr |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op1.bit, op1.bit) - int(op1.bit, 1)))), int16(1));
+    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
     op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)));
 
   bsf: &bsf |
