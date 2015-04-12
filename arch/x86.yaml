@@ -164,10 +164,18 @@ semantic:
     op0.val = res;
     free_var('res');
 
-  # TODO(KS): update flags
   neg: &neg |
     alloc_var('res', op0.bit);
+    if op0.val == int(op0.bit, 0):
+      cf.id = int1(0)
+    else:
+      cf.id = int1(1);
     res = -op0.val;
+    of.id = bit_cast((res.val & op0.val) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    af.id = bit_cast((op0.val ^ res.val) >> (int(op0.bit, 4)), int16(1));
     op0.val = res;
     free_var('res');
 
@@ -251,30 +259,42 @@ semantic:
 
   shl: &shl |
     alloc_var('res', op0.bit);
+    cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - op1.val), int16(1));
     res = op0.val << op1.val
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
     op0.val = res;
     free_var('res');
 
   shr: &shr |
     alloc_var('res', op0.bit);
+    cf.id = bit_cast(op0.val >> (op1.val - int(op1.bit, 1)), int16(1));
     res = op0.val >> op1.val
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
     op0.val = res;
     free_var('res');
 
   sal: &sal |
     alloc_var('res', op0.bit);
+    cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - op1.val), int16(1));
     res = op0.val << op1.val;
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
     op0.val = res;
     free_var('res');
 
   sar: &sar |
     alloc_var('res', op0.bit);
+    cf.id = bit_cast(op0.val >> (op1.val - int(op1.bit, 1)), int16(1));
     res = ars(op0.val, op1.val);
     cf.id = bit_cast(res.val, int16(1));
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
-    call('adjust_flag');
     op0.val = res;
     free_var('res');
 
