@@ -41,6 +41,9 @@ function:
   oflag_add: &oflag_add |
     of.id = bit_cast(((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
+  cflag_add: &cflag_add |
+    cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1)))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+
 ## Instruction semantic #######################################################
 
 semantic:
@@ -50,10 +53,15 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
 
   adc: &adc |
-    expr('begin_update_flags');
-    res = op0.val + op1.val + bit_cast(cf.id, int16(op0.bit));
-    expr('end_update_flags');
-    op0.val = res;
+    alloc_var('res', op0.bit);
+    res.val = op0.val + op1.val + bit_cast(cf.id, int16(op0.bit));
+    call('oflag_add');
+    call('cflag_add');
+    op0.val = res.val;
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    free_var('res');
 
   inc: &inc |
     alloc_var('op1', op0.bit);
@@ -425,11 +433,11 @@ semantic:
     [ 'op0 = bsf(op1)' ]
 
   bsr: &bsr |
-    if op1.val != int(op0.bit, 0):
-      zf.id = int1(0)
-      op0.val = bsr(op1)
+    if op1.val == int(op0.bit, 0):
+      zf.id = int1(1)
     else:
-      zf.id = int1(1);
+      zf.id = int1(0)
+      op0.val = bsr(op1);
 
 ## Condition
 # o           → of = 1
