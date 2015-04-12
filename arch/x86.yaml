@@ -38,6 +38,9 @@ function:
     pf.id = pf_tmp;
     free_var('pf_tmp');
 
+  oflag_add: &oflag_add |
+    of.id = bit_cast(((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+
 ## Instruction semantic #######################################################
 
 semantic:
@@ -52,8 +55,18 @@ semantic:
     expr('end_update_flags');
     op0.val = res;
 
-  inc: &inc
-    [ expr('begin_update_flags'), 'res = op0.val + int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
+  inc: &inc |
+    alloc_var('op1', op0.bit);
+    alloc_var('res', op0.bit);
+    op1.val = int(op0.bit, 1);
+    res.val = op0.val + op1.val;
+    call('oflag_add');
+    op0.val = res.val;
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    free_var('op1');
+    free_var('res');
 
   and: &and
     [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), op0.val = res ]
