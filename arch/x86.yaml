@@ -544,6 +544,12 @@ semantic:
   cmp: &cmp |
     alloc_var('res', op0.bit);
     res = op0.val - op1.val;
+    call('overflow_flag_sub');
+    call('carry_flag_sub');
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    call('adjust_flag'); 
     free_var('res');
 
   test: &test |
