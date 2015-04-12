@@ -131,10 +131,7 @@ semantic:
     [ expr('begin_update_flags'), 'res = op0.val ^ int(op0.bit, -1)', expr('end_update_flags'), op0.val = res ]
 
   bswap: &bswap |
-    if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-      op0.val = int(op0.bit, 0)
-    else:
-      op0.val = swap(op0.val);
+    op0.val = swap(op0.val);
 
   # TODO(KS): update flags
   shld: &shld
@@ -151,8 +148,6 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
-    if op2.val != int(op2.bit, 1): # Overflow flag undefined state
-      of.id = int1(1);
 
   shl: &shl
     [
@@ -429,8 +424,12 @@ semantic:
   bsf: &bsf
     [ 'op0 = bsf(op1)' ]
 
-  bsr: &bsr
-    [ 'op0 = bsr(op1)' ]
+  bsr: &bsr |
+    if op1.val != int(op0.bit, 0):
+      zf.id = int1(0)
+      op0.val = bsr(op1)
+    else:
+      zf.id = int1(1);
 
 ## Condition
 # o           → of = 1

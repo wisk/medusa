@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 12 02:17:44 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 12 11:28:44 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -31096,8 +31096,6 @@ op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
-if op2.val != int(op2.bit, 1): # Overflow flag undefined state
-  of.id = int1(1);
 
 **/
 bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -31280,17 +31278,6 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
-        /* Semantic: if op2.val != int(op2.bit, 1): # Overflow flag undefined state
-          of.id = int1(1) */
-        auto pExpr16 = Expr::MakeIfElseCond(
-          ConditionExpression::CondNe,
-          rInsn.GetOperand(2),
-          Expr::MakeConst(rInsn.GetOperand(2)->GetBitSize(), 0x1),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlOf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)), nullptr)
-        ;
-        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -31309,8 +31296,6 @@ op0.val = ( (op0.val >> op2.val) | (op1.val << (int(op2.bit, op0.bit) - op2.val)
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
-if op2.val != int(op2.bit, 1): # Overflow flag undefined state
-  of.id = int1(1);
 
 **/
 bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -31493,17 +31478,6 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
-        /* Semantic: if op2.val != int(op2.bit, 1): # Overflow flag undefined state
-          of.id = int1(1) */
-        auto pExpr16 = Expr::MakeIfElseCond(
-          ConditionExpression::CondNe,
-          rInsn.GetOperand(2),
-          Expr::MakeConst(rInsn.GetOperand(2)->GetBitSize(), 0x1),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlOf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)), nullptr)
-        ;
-        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -32627,7 +32601,12 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bsr
  * operand: ['Gv', 'Ev']
- * semantic: ['op0 = bsr(op1)']
+ * semantic: if op1.val != int(op0.bit, 0):
+  zf.id = int1(0)
+  op0.val = bsr(op1)
+else:
+  zf.id = int1(1);
+
  * cpu_model: >= X86_Arch_80386
  *
  * mnemonic: lzcnt
@@ -32667,10 +32646,29 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: op0 = bsr(op1) */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Var Expr */
+        Expression::LSPType BodyExprs;
+        BodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+        BodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeUnOp(OperationExpression::OpBsr, rInsn.GetOperand(1)));
+          Expr::MakeUnOp(OperationExpression::OpBsr, rInsn.GetOperand(1))));
+        auto spBody = Expr::MakeBind(BodyExprs);
+
+        /* Semantic: if op1.val != int(op0.bit, 0):
+          zf.id = int1(0)
+          op0.val = bsr(op1)
+        else:
+          zf.id = int1(1) */
+        auto pExpr0 = Expr::MakeIfElseCond(
+          ConditionExpression::CondNe,
+          rInsn.GetOperand(1),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          spBody,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33185,19 +33183,13 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rAX']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r8']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33216,20 +33208,10 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33246,20 +33228,10 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33273,19 +33245,13 @@ bool X86Architecture::Table_2_c8(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rCX']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r9']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33304,20 +33270,10 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33334,20 +33290,10 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33361,19 +33307,13 @@ bool X86Architecture::Table_2_c9(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rDX']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r10']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33392,20 +33332,10 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33422,20 +33352,10 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33449,19 +33369,13 @@ bool X86Architecture::Table_2_ca(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rBX']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r11']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33480,20 +33394,10 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33510,20 +33414,10 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33537,19 +33431,13 @@ bool X86Architecture::Table_2_cb(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rSP']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r12']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33568,20 +33456,10 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33598,20 +33476,10 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33625,19 +33493,13 @@ bool X86Architecture::Table_2_cc(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rBP']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r13']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33656,20 +33518,10 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33686,20 +33538,10 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33713,19 +33555,13 @@ bool X86Architecture::Table_2_cd(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rSI']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r14']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33744,20 +33580,10 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33774,20 +33600,10 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33801,19 +33617,13 @@ bool X86Architecture::Table_2_ce(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bswap
  * operand: ['rDI']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * cpu_model: >= X86_Arch_80486
  *
  * mnemonic: bswap
  * operand: ['r15']
- * semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-  op0.val = int(op0.bit, 0)
-else:
-  op0.val = swap(op0.val);
+ * semantic: op0.val = swap(op0.val);
 
  * attr: ['rexb']
  * cpu_model: >= X86_Arch_80486
@@ -33832,20 +33642,10 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33862,20 +33662,10 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         Expression::LSPType AllExpr;
         Expression::SPType spResExpr;
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
-          op0.val = int(op0.bit, 0)
-        else:
-          op0.val = swap(op0.val) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)),
-          Expr::MakeAssign(
-            rInsn.GetOperand(0),
-            Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0))));
+        /* Semantic: op0.val = swap(op0.val) */
+        auto pExpr0 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeUnOp(OperationExpression::OpSwap, rInsn.GetOperand(0)));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
