@@ -177,8 +177,12 @@ semantic:
   sal: &sal
     [ op0.val = op0.val << op1.val ]
 
-  sar: &sar
-    [ op0.val = op0.val >> op1.val ]
+  sar: &sar |
+    op0.val = op0.val >> op1.val;
+    cf.id = bit_cast(op0.val, int16(1));
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
 
   rol: &rol
     [
