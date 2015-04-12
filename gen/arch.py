@@ -75,24 +75,30 @@ class ArchConvertion:
             def visit_If(self, node):
                 test_name = self.visit(node.test)
 
-                body_name = None
+                then_body_name = None
                 if len(node.body) == 1:
-                    body_name = self.visit(node.body[0])
+                    then_body_name = self.visit(node.body[0])
                 else:
-                    self.var_expr.append('Expression::LSPType BodyExprs;\n')
+                    self.var_expr.append('Expression::LSPType ThenBodyExprs;\n')
                     for statm in node.body:
-                        self.var_expr.append('BodyExprs.push_back(%s);\n' % (self.visit(statm)))
-                    statm_i = 0;
-                    self.var_expr.append('auto spBody = Expr::MakeBind(BodyExprs);\n')
-                    body_name = 'spBody'
+                        self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % self.visit(statm))
+                    self.var_expr.append('auto spThenBody = Expr::MakeBind(ThenBodyExprs);\n')
+                    then_body_name = 'spThenBody'
 
                 if len(node.orelse) == 0:
-                    return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(body_name))
+                    return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(then_body_name))
 
-                # TODO: handle multiple statment for else
-                assert(len(node.orelse) == 1)
-                else_name = self.visit(node.orelse[0])
-                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(test_name), Indent(body_name), Indent(else_name))
+                else_body_name = None
+                if len(node.orelse) == 1:
+                    else_body_name = self.visit(node.orelse[0])
+                else:
+                    self.var_expr.append('Expression::LSPType ElseBodyExprs;\n')
+                    for statm in node.orelse:
+                        self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % self.visit(statm))
+                    self.var_expr.append('auto spElseBody = Expr::MakeBind(ElseBodyExprs);\n')
+                    else_body_name = 'spElseBody'
+
+                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(test_name), Indent(then_body_name), Indent(else_body_name))
 
             def visit_IfExp(self, node):
                 assert(0)

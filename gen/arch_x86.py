@@ -544,7 +544,6 @@ class X86ArchConvertion(ArchConvertion):
                         'return nullptr;\n'
                         )
 
-
                 if func_name == 'call':
                     assert(len(func_args) == 1)
                     return 'return __%s(rBinStrm, Offset, rInsn, Mode);' % func_args[0]
