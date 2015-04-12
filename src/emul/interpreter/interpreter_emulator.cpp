@@ -33,6 +33,11 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType sp
       m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
       TestHook(Address(CurPc), Emulator::HookOnExecute);
     }
+
+    if (spSys->GetName() == "stop")
+    {
+      return false;
+    }
   }
 
   InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
@@ -66,6 +71,11 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
           return false;
         TestHook(Address(CurPc), Emulator::HookOnExecute);
         continue;
+      }
+
+      if (spSys->GetName() == "stop")
+      {
+        return false;
       }
     }
 
@@ -569,8 +579,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
 {
   State OldState = m_State;
   m_State = Read;
-  auto spBaseExpr = spMemExpr->GetBaseExpression() ? spMemExpr->GetBaseExpression()->Visit(this) : nullptr;
   auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
+  auto spBaseExpr = spMemExpr->GetBaseExpression() ? spMemExpr->GetBaseExpression()->Visit(this) : nullptr;
   m_State = OldState;
   if (spOffsetExpr == nullptr)
   {
@@ -640,15 +650,20 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
 
   case Write:
   {
-    if (!spMemExpr->IsDereferencable())
-    {
-      Log::Write("emul_interpreter").Level(LogError) << "unable to write in non-deferencable address" << LogEnd;
-      return nullptr;
-    }
     if (m_Values.empty())
     {
       Log::Write("emul_interpreter").Level(LogError) << "no value for address writing" << LogEnd;
       return nullptr;
+    }
+
+    // NOTE: Trying to write an non-deferencable address is like
+    // changing its offset.
+    if (!spMemExpr->IsDereferencable())
+    {
+      auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
+      if (spOffsetExpr == nullptr)
+        return nullptr;
+      break;
     }
 
     do

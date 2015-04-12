@@ -41,13 +41,32 @@ bool WindowsOperatingSystem::InitializeContext(
   std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
 {
   CpuInformation const& rCpuInfo = rCpuCtxt.GetCpuInformation();
-  auto IdFs = rCpuInfo.ConvertNameToIdentifier("fs");
-  if (IdFs == 0)
+
+  auto SetSeg = [&](char const* pSegRegName, u16 SegRegVal, u64 LinAddr) -> bool
+  {
+    auto IdSeg = rCpuInfo.ConvertNameToIdentifier(pSegRegName);
+    if (IdSeg == 0)
+      return false;
+    if (!rCpuCtxt.WriteRegister(IdSeg, SegRegVal))
+      return false;
+    if (!rCpuCtxt.AddMapping(Address(SegRegVal, 0x0), LinAddr))
+      return false;
+    return true;
+  };
+
+  // ref: https://code.google.com/p/corkami/wiki/InitialValues
+  u64 Teb32LinAddr = 0x7ffdf000;
+  u64 Teb64LinAddr = 0x77ffdf000000;
+
+  if (!SetSeg("cs", 0x23, 0x0))
     return false;
-  u16 Fs = 0x2b;
-  if (!rCpuCtxt.WriteRegister(IdFs, Fs))
+  if (!SetSeg("ds", 0x2b, 0x0))
     return false;
-  if (!rCpuCtxt.AddMapping(Address(Fs, 0x0), 0x7fdf0000))
+  if (!SetSeg("es", 0x2b, 0x0))
+    return false;
+  if (!SetSeg("fs", 0x63, Teb32LinAddr))
+    return false;
+  if (!SetSeg("gs", 0x6b, Teb64LinAddr))
     return false;
 
   auto StartAddr = rDoc.GetAddressFromLabelName("start");
@@ -57,7 +76,7 @@ bool WindowsOperatingSystem::InitializeContext(
     return false;
 
   // TODO: create a fake _TEB/_PEB
-  if (!rMemCtxt.AllocateMemory(0x7fdf0000, 0x1000, nullptr))
+  if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, nullptr))
     return false;
 
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
