@@ -103,6 +103,7 @@ InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
+  Log::Write("emul_interpreter").Level(LogError) << "not yet implemented system called" << LogEnd;
   return nullptr; // TODO
 }
 
@@ -239,6 +240,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnary
     break;
 
   default:
+    Log::Write("emul_interpreter").Level(LogError) << "unknown unary operator" << LogEnd;
     return nullptr;
   }
 
@@ -364,6 +366,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
     }
 
     default:
+      Log::Write("emul_interpreter").Level(LogError) << "unknown binary operator" << LogEnd;
       return nullptr;
   }
 
@@ -373,7 +376,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
 {
   if (m_State != Read)
+  {
+    Log::Write("emul_interpreter").Level(LogError) << "constant can only be read" << LogEnd;
     return nullptr;
+  }
   m_Values.push_back(spConstExpr->GetConstant());
   return spConstExpr;
 }
@@ -386,7 +392,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
   {
     IntType RegVal(spIdExpr->GetBitSize(), 0);
     if (!m_pCpuCtxt->ReadRegister(spIdExpr->GetId(), RegVal))
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "unable to read register" << LogEnd;
       return nullptr;
+    }
     m_Values.push_back(RegVal);
     break;
   }
@@ -397,7 +406,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
       return nullptr;
     IntType RegVal = m_Values.back();
     if (!m_pCpuCtxt->WriteRegister(spIdExpr->GetId(), RegVal))
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "unable to write register" << LogEnd;
       return nullptr;
+    }
     m_Values.pop_back();
     break;
   }
@@ -420,7 +432,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVecto
     {
       IntType RegVal(pCpuInfo->GetSizeOfRegisterInBit(Id), 0);
       if (!m_pCpuCtxt->ReadRegister(Id, RegVal))
+      {
+        Log::Write("emul_interpreter").Level(LogError) << "unable to read register" << LogEnd;
         return nullptr;
+      }
       m_Values.push_back(RegVal);
     }
     break;
@@ -432,9 +447,15 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVecto
     for (auto Id : VecId)
     {
       if (m_Values.empty())
+      {
+        Log::Write("emul_interpreter").Level(LogError) << "no value to write into register" << LogEnd;
         return nullptr;
+      }
       if (!m_pCpuCtxt->WriteRegister(Id, m_Values.back()))
+      {
+        Log::Write("emul_interpreter").Level(LogError) << "unable to write register" << LogEnd;
         return nullptr;
+      }
       m_Values.pop_back();
     }
     break;
@@ -455,16 +476,25 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrack
   {
     IntType RegVal(spTrkIdExpr->GetBitSize(), 0);
     if (!m_pCpuCtxt->ReadRegister(spTrkIdExpr->GetId(), RegVal))
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "unable to read tracked register" << LogEnd;
       return nullptr;
+    }
     m_Values.push_back(RegVal);
     break;
   }
 
   case Write:
     if (m_Values.empty())
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "no value to write into tracked register" << LogEnd;
       return nullptr;
+    }
     if (!m_pCpuCtxt->WriteRegister(spTrkIdExpr->GetId(), m_Values.back()))
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "unable to write into tracked register" << LogEnd;
       return nullptr;
+    }
     m_Values.pop_back();
     break;
 
@@ -491,6 +521,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
       break;
 
     default:
+      Log::Write("emul_interpreter").Level(LogError) << "unknown variable action" << LogEnd;
       return nullptr;
     }
     break;
@@ -506,7 +537,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
       break;
     }
     else
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "invalid state for variable reading" << LogEnd;
       return nullptr;
+    }
 
   case Write:
     if (spVarExpr->GetAction() == VariableExpression::Use)
@@ -519,7 +553,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
       break;
     }
     else
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "invalid state for variable writing" << LogEnd;
       return nullptr;
+    }
 
   default:
     return nullptr;
@@ -536,19 +573,28 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
   m_State = OldState;
   if (spOffsetExpr == nullptr)
+  {
+    Log::Write("emul_interpreter").Level(LogError) << "invalid offset" << LogEnd;
     return nullptr;
+  }
 
   TBase Base = 0;
   if (spBaseExpr != nullptr)
   {
     if (m_Values.size() < 2)
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "no value for address base" << LogEnd;
       return nullptr;
+    }
     Base = m_Values.back().ConvertTo<u16>();
     m_Values.pop_back();
   }
 
   if (m_Values.size() < 1)
+  {
+    Log::Write("emul_interpreter").Level(LogError) << "no value for address offset" << LogEnd;
     return nullptr;
+  }
   TOffset Offset = m_Values.back().ConvertTo<TOffset>();
   m_Values.pop_back();
 
@@ -560,7 +606,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
 
   switch (m_State)
   {
-  default: return nullptr;
+  default:
+    Log::Write("emul_interpreter").Level(LogError) << "unknown state for address" << LogEnd;
+    return nullptr;
 
   case Read:
   {
@@ -593,15 +641,24 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   case Write:
   {
     if (!spMemExpr->IsDereferencable())
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "unable to write in non-deferencable address" << LogEnd;
       return nullptr;
+    }
     if (m_Values.empty())
+    {
+      Log::Write("emul_interpreter").Level(LogError) << "no value for address writing" << LogEnd;
       return nullptr;
+    }
 
     do
     {
       auto MemVal = m_Values.back();
       if (!m_pMemCtxt->WriteMemory(LinAddr, MemVal))
+      {
+        Log::Write("emul_interpreter").Level(LogError) << "unable to write memory" << LogEnd;
         return nullptr;
+      }
       m_Values.pop_back();
       LinAddr += MemVal.GetBitSize() / 8;
     } while (!m_Values.empty());
@@ -622,7 +679,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitSymbo
 bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateComparison(u8 CondOp, bool& rRes)
 {
   if (m_Values.size() < 2)
+  {
+    Log::Write("emul_interpreter").Level(LogError) << "no enough values to do comparison" << LogEnd;
     return false;
+  }
 
   auto TestVal = m_Values.back();
   m_Values.pop_back();
@@ -672,6 +732,7 @@ bool InterpreterEmulator::InterpreterExpressionVisitor::_EvaluateComparison(u8 C
     break;
 
   default:
+    Log::Write("emul_interpreter") << "unknown comparison" << LogEnd;
     return false;
   }
 
