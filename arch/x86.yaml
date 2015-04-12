@@ -24,6 +24,9 @@ function:
     else:
       zf.id = int1(0)
 
+  adjust_flag: &adjust_flag |
+    af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1));
+
   parity_flag: &parity_flag |
     alloc_var('pf_tmp', pf.bit);
     pf_tmp = int1(1);
@@ -49,8 +52,17 @@ function:
 semantic:
 
 ## Arithmetic / Logical operations
-  add: &add
-    [ expr('begin_update_flags'), res = op0.val + op1.val, expr('end_update_flags'), op0.val = res ]
+  add: &add |
+    alloc_var('res', op0.bit);
+    res.val = op0.val + op1.val;
+    call('oflag_add');
+    call('cflag_add');
+    op0.val = res.val;
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    call('adjust_flag');
+    free_var('res');
 
   adc: &adc |
     alloc_var('res', op0.bit);
