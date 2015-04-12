@@ -1,9 +1,8 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/emulator)
-set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/emulator)
+set(INCROOT  ${CMAKE_SOURCE_DIR}/src/tools/emulator)
+set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/tools/emulator)
 
-# dummy ui source files
 set(SRC
   ${SRCROOT}/main.cpp
 )

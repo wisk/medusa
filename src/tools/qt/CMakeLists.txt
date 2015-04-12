@@ -15,10 +15,10 @@ if(WIN32)
   set(GUI_TYPE WIN32)
 endif(WIN32)
 
-set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt)
-set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/qt)
-set(UIROOT   ${CMAKE_SOURCE_DIR}/src/ui/qt)
-set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/ui/qt)
+set(INCROOT  ${CMAKE_SOURCE_DIR}/src/tools/qt)
+set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/tools/qt)
+set(UIROOT   ${CMAKE_SOURCE_DIR}/src/tools/qt)
+set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/tools/qt)
 
 set (SRC
   ${SRCROOT}/About.cpp

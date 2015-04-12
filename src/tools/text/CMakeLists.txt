@@ -1,9 +1,8 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(INCROOT  ${CMAKE_SOURCE_DIR}/src/ui/text)
-set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/ui/text)
+set(INCROOT  ${CMAKE_SOURCE_DIR}/src/tools/text)
+set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/tools/text)
 
-# dummy ui source files
 set(SRC
   ${SRCROOT}/main.cpp
 )
