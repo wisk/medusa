@@ -98,7 +98,7 @@ add_executable(qMedusa ${GUI_TYPE}
 
 qt5_use_modules(qMedusa Widgets)
 target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
-set_target_properties(qMedusa PROPERTIES FOLDER "User Interfaces")
+set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
 # I can't believe how hard it is to deploy qt5...
 # Inspired from http://pastebin.com/an3dyt51

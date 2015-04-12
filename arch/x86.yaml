@@ -41,16 +41,16 @@ function:
     pf.id = pf_tmp;
     free_var('pf_tmp');
 
-  oflag_add: &oflag_add |
+  overflow_flag_add: &overflow_flag_add |
     of.id = bit_cast(((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
-  cflag_add: &cflag_add |
+  carry_flag_add: &carry_flag_add |
     cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1)))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
-  oflag_sub: &oflag_sub |
+  overflow_flag_sub: &overflow_flag_sub |
     of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
-  cflag_sub: &cflag_sub |
+  carry_flag_sub: &carry_flag_sub |
     cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
 
@@ -62,24 +62,24 @@ semantic:
   add: &add |
     alloc_var('res', op0.bit);
     res.val = op0.val + op1.val;
-    call('oflag_add');
-    call('cflag_add');
-    op0.val = res.val;
+    call('overflow_flag_add');
+    call('carry_flag_add');
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
     call('adjust_flag');
+    op0.val = res.val;
     free_var('res');
 
   adc: &adc |
     alloc_var('res', op0.bit);
     res.val = op0.val + op1.val + bit_cast(cf.id, int16(op0.bit));
-    call('oflag_add');
-    call('cflag_add');
-    op0.val = res.val;
+    call('overflow_flag_add');
+    call('carry_flag_add');
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    op0.val = res.val;
     free_var('res');
 
   inc: &inc |
@@ -87,93 +87,155 @@ semantic:
     alloc_var('res', op0.bit);
     op1.val = int(op0.bit, 1);
     res.val = op0.val + op1.val;
-    call('oflag_add');
-    op0.val = res.val;
+    call('overflow_flag_add');
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    op0.val = res.val;
     free_var('op1');
     free_var('res');
 
-  and: &and
-    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags'), op0.val = res ]
+  and: &and |
+    alloc_var('res', op0.bit);
+    res = op0.val & op1.val;
+    of.id = int1(0)
+    cf.id = int1(0)
+    call('sign_flag')
+    call('zero_flag')
+    call('parity_flag')
+    op0.val = res;
+    free_var('res');
 
-  or: &or
-    [ expr('begin_update_flags'), res = op0.val | op1.val, expr('end_update_flags'), op0.val = res ]
+  or: &or |
+    alloc_var('res', op0.bit);
+    res = op0.val | op1.val;
+    of.id = int1(0)
+    cf.id = int1(0)
+    call('sign_flag')
+    call('zero_flag')
+    call('parity_flag')
+    op0.val = res;
+    free_var('res');
 
-  xor: &xor
-    [ expr('begin_update_flags'), res = op0.val ^ op1.val, expr('end_update_flags'), op0.val = res ]
+  xor: &xor |
+    alloc_var('res', op0.bit);
+    res = op0.val ^ op1.val;
+    of.id = int1(0)
+    cf.id = int1(0)
+    call('sign_flag')
+    call('zero_flag')
+    call('parity_flag')
+    op0.val = res;
+    free_var('res');
 
-  sub: &sub
-    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
+  sub: &sub |
+    alloc_var('res', op0.bit);
+    res = op0.val - op1.val;
+    call('overflow_flag_sub');
+    call('carry_flag_sub');
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    call('adjust_flag');    
+    op0.val = res;
+    free_var('res');
 
   sbb: &sbb |
     alloc_var('res', op0.bit);
     res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-    call('oflag_sub');
-    call('cflag_sub');
-    op0.val = res.val;
+    call('overflow_flag_sub');
+    call('carry_flag_sub');
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
     call('adjust_flag');
+    op0.val = res.val;
     free_var('res');
 
-  dec: &dec
-    [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
+  dec: &dec |
+    alloc_var('res', op0.bit);
+    alloc_var('op1', op0.bit);
+    op1 = int(op0.bit, 1);
+    res = op0.val - op1;
+    call('overflow_flag_sub');
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    call('adjust_flag');
+    op0.val = res;
+    free_var('res');
 
-  neg: &neg
-    [ expr('begin_update_flags'), 'res = int(op0.bit, 0) - op0.val', expr('end_update_flags'), op0.val = res ]
+  # TODO(KS): update flags
+  neg: &neg |
+    alloc_var('res', op0.bit);
+    res = -op0.val;
+    op0.val = res;
+    free_var('res');
 
-  imul1: &imul1
-    [ 'res = acc.id * op0.val', op0.val = res ]
+  # TODO(KS): update flags
+  imul1: &imul1 |
+    op0.val *= acc.id;
 
-  imul2: &imul2
-    [ 'res = op0.val * op1.val', op0.val = res ]
+  # TODO(KS): update flags
+  imul2: &imul2 |
+    op0.val *= op1.val;
 
   # http://x86.renejeschke.de/html/file_module_x86_id_138.html
-  imul3: &imul3
-    [ 'res = op1.val * op2.val', op0.val = res ]
+  imul3: &imul3 |
+    op0.val = op1.val * op2.val;
 
   mul: &mul
     [ ]
 
-  idiv: &idiv
-    [
-      'alloc_var("div_res", op0.bit)',
-      'alloc_var("rem_res", op0.bit)',
-      'alloc_var("dividend", concat(op0.bit, ignore(" * 2")))',
+  idiv: &idiv |
+    alloc_var("div_res", op0.bit);
+    alloc_var("rem_res", op0.bit);
+    alloc_var("dividend", concat(op0.bit, ignore(" * 2")));
 
-      'if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id',
-      'if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id )',
-      'if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id)',
-      'if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id)',
+    if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
+    if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
+    if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
+    if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
 
-      'div_res = sdiv(dividend, op0.val)',
-      'rem_res = smod(dividend, op0.val)',
+    div_res = sdiv(dividend, op0.val);
+    rem_res = smod(dividend, op0.val);
 
-      'free_var("dividend")',
-      'free_var("rem_res")',
-      'free_var("div_res")'
-    ]
+    free_var("dividend");
+    free_var("rem_res");
+    free_var("div_res");
 
-  div: &div
-    [ 'res = acc.id / op0.val', acc.id = res ]
+  div: &div |
+    alloc_var("div_res", op0.bit);
+    alloc_var("rem_res", op0.bit);
+    alloc_var("dividend", concat(op0.bit, ignore(" * 2")));
 
-  not: &not
-    [ expr('begin_update_flags'), 'res = op0.val ^ int(op0.bit, -1)', expr('end_update_flags'), op0.val = res ]
+    if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
+    if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
+    if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
+    if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
+
+    div_res = dividend / op0.val;
+    rem_res = dividend % op0.val;
+
+    free_var("dividend");
+    free_var("rem_res");
+    free_var("div_res");
+
+  not: &not |
+    alloc_var('res', op0.bit);
+    res = ~op0.val;
+    op0.val = res;
+    free_var('res');
 
   bswap: &bswap |
     op0.val = swap(op0.val);
 
   # TODO(KS): update flags
-  shld: &shld
-    [
-      expr('begin_update_flags'),
-      'op0.val = ( (op0.val << op2.val) | (op1.val >> (int(op0.bit, op0.bit) - op2.val) ) )',
-      res = op0.val,
-      expr('end_update_flags')
-     ]
+  shld: &shld |
+    alloc_var('res', op0.bit);
+    res = ( (op0.val << op2.val) | (op1.val >> (int(op0.bit, op0.bit) - op2.val) ) );
+    op0.val = res;
+    free_var('res');    
 
   shrd: &shrd |
     cf.id = bit_cast(op0.val >> op2.val, int16(1));
@@ -182,86 +244,78 @@ semantic:
     call('zero_flag');
     call('parity_flag');
 
-  shl: &shl
-    [
-      expr('begin_update_flags'),
-      res = op0.val << op1.val,
-      expr('end_update_flags'),
-      op0.val = res
-    ]
+  shl: &shl |
+    alloc_var('res', op0.bit);
+    res = op0.val << op1.val
+    op0.val = res;
+    free_var('res');
 
-  shr: &shr
-    [
-      expr('begin_update_flags'),
-      res = op0.val >> op1.val,
-      expr('end_update_flags'),
-      op0.val = res
-    ]
+  shr: &shr |
+    alloc_var('res', op0.bit);
+    res = op0.val >> op1.val
+    op0.val = res;
+    free_var('res');
 
-  # FIXME: Handle sign extension
-  sal: &sal
-    [ op0.val = op0.val << op1.val ]
+  sal: &sal |
+    alloc_var('res', op0.bit);
+    res = op0.val << op1.val;
+    op0.val = res;
+    free_var('res');
 
   sar: &sar |
-    op0.val = op0.val >> op1.val;
+    op0.val = ars(op0.val, op1.val);
     cf.id = bit_cast(op0.val, int16(1));
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
     call('adjust_flag');
 
-  rol: &rol
-    [
-      expr('begin_update_flags'),
-      'res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)))',
-      expr('end_update_flags'),
-      op0.val = res
-     ]
+  rol: &rol |
+    alloc_var('res', op0.bit);
+    res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)));
+    op0.val = res;
+    free_var('res');
 
-  ror: &ror
-    [
-      expr('begin_update_flags'),
-      'res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)))',
-      expr('end_update_flags'),
-      op0.val = res
-    ]
+  ror: &ror |
+    alloc_var('res', op0.bit);
+    res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)));
+    op0.val = res;
+    free_var('res');
 
   rcl: &rcl |
-    alloc_var("rcl_res", op0.bit);
     if op1.val != int(op1.bit, 0):
+      alloc_var('rcl_res', op0.bit)
       rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-      cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1));
-    op0.val = rcl_res;
-    free_var("rcl_res");
+      cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1))
+      op0.val = rcl_res
+      free_var('rcl_res');
 
   rcr: &rcr | 
-    alloc_var("rcr_res", op0.bit);
     if op1.val != int(op1.bit, 0):
+      alloc_var("rcr_res", op0.bit)
       rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-      cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1));
-    op0.val = rcr_res;
-    free_var("rcr_res");
+      cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
+      op0.val = rcr_res
+      free_var("rcr_res")
 
   # TODO(KS): update flags
-  xadd: &xadd
-    [
-      expr('begin_update_flags'),
-      'exchange(op0.val, op1.val)',
-      res = op1.val + op0.val,
-      expr('end_update_flags'),
-      op0.val = res
-      ]
+  xadd: &xadd |
+    alloc_var('res', op0.bit);
+    exchange(op0.val, op1.val);
+    res = op1.val + op0.val;
+    op0.val = res
+    free_var('res')
 
 ## Data transfer
 
-  mov: &mov
-    [ op0.val = op1.val ]
+  mov: &mov |
+    op0.val = op1.val;
 
-  movzx: &movzx
-    [ 'op0.val = zero_extend(op1.val, int(32, op0.bit))' ]
+  movzx: &movzx |
+    op0.val = zero_extend(op1.val, int(32, op0.bit));
 
-  movsx: &movsx
-    [ 'op0.val = sign_extend(op1.val, int(32, op0.bit))' ]
+  movsx: &movsx |
+    op0.val = sign_extend(op1.val, int(32, op0.bit));
 
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
@@ -275,8 +329,9 @@ semantic:
 
 ## Stack operations
 
-  push: &push
-    [ stack.id -= stack.size, stack.mem = op0.val ]
+  push: &push |
+    stack.id -= stack.size;
+    stack.mem = op0.val;
 
   # http://en.wikipedia.org/wiki/FLAGS_register
   # TODO(KS): interrupt flag
@@ -285,127 +340,144 @@ semantic:
       stack.mem =\
         (  bit_cast(cf.id, int16(stack.bit))
         | (int64(1)                          << int(stack.bit, 1))
+        | (bit_cast(pf.id, int16(stack.bit)) << int(stack.bit, 2))
         | (bit_cast(af.id, int16(stack.bit)) << int(stack.bit, 4))
         | (bit_cast(zf.id, int16(stack.bit)) << int(stack.bit, 6))
         | (bit_cast(sf.id, int16(stack.bit)) << int(stack.bit, 7))
-        | (bit_cast(pf.id, int16(stack.bit)) << int(stack.bit, 2))
         | (bit_cast(tf.id, int16(stack.bit)) << int(stack.bit, 8))
         | (int64(1)                          << int(stack.bit, 9))
         | (bit_cast(df.id, int16(stack.bit)) << int(stack.bit, 10))
         | (bit_cast(of.id, int16(stack.bit)) << int(stack.bit, 11)));
 
-  pusha: &pusha
-    [
-      'stack.id -= int(16, 2)', 'stack.mem = ax.id',
-      'stack.id -= int(16, 2)', 'stack.mem = cx.id',
-      'stack.id -= int(16, 2)', 'stack.mem = dx.id',
-      'stack.id -= int(16, 2)', 'stack.mem = bx.id',
-      'stack.id -= int(16, 2)', 'stack.mem = sp.id + int(16, 8)',
-      'stack.id -= int(16, 2)', 'stack.mem = bp.id',
-      'stack.id -= int(16, 2)', 'stack.mem = si.id',
-      'stack.id -= int(16, 2)', 'stack.mem = di.id',
-    ]
+  pusha: &pusha |
+    stack.id -= int16(2);stack.mem = ax.id;
+    stack.id -= int16(2);stack.mem = cx.id;
+    stack.id -= int16(2);stack.mem = dx.id;
+    stack.id -= int16(2);stack.mem = bx.id;
+    stack.id -= int16(2);stack.mem = sp.id + int16(8);
+    stack.id -= int16(2);stack.mem = bp.id;
+    stack.id -= int16(2);stack.mem = si.id;
+    stack.id -= int16(2);stack.mem = di.id;
 
-  pushad: &pushad
-    [
-      'stack.id -= int(32, 4)', 'stack.mem = eax.id',
-      'stack.id -= int(32, 4)', 'stack.mem = ecx.id',
-      'stack.id -= int(32, 4)', 'stack.mem = edx.id',
-      'stack.id -= int(32, 4)', 'stack.mem = ebx.id',
-      'stack.id -= int(32, 4)', 'stack.mem = esp.id + int(32, 16)',
-      'stack.id -= int(32, 4)', 'stack.mem = ebp.id',
-      'stack.id -= int(32, 4)', 'stack.mem = esi.id',
-      'stack.id -= int(32, 4)', 'stack.mem = edi.id',
-    ]
+  pushad: &pushad |
+    stack.id -= int32(4);stack.mem = eax.id;
+    stack.id -= int32(4);stack.mem = ecx.id;
+    stack.id -= int32(4);stack.mem = edx.id;
+    stack.id -= int32(4);stack.mem = ebx.id;
+    stack.id -= int32(4);stack.mem = esp.id + int32(16);
+    stack.id -= int32(4);stack.mem = ebp.id;
+    stack.id -= int32(4);stack.mem = esi.id;
+    stack.id -= int32(4);stack.mem = edi.id;
 
 
-  pop: &pop
-    [ op0.val = stack.mem, stack.id += stack.size ]
+  pop: &pop |
+    op0.val = stack.mem;
+    stack.id += stack.size;
 
   # TODO(KS): see pushf
-  popf: &popf
-    [
-      stack.id += stack.size,
-      res = stack.mem,
-      'cf.id = res & int1(1)',
-      'pf.id = (res >> int(stack.bit, 2)) & int1(1)',
-    ]
+  popf: &popf |
+    alloc_var('flags', stack.bit);
+    stack.id += stack.size;
+    flags = stack.mem;
+    cf.id = bit_cast(flags, int16(1));
+    pf.id = bit_cast((flags >> int(stack.bit,  2)), int16(1));
+    af.id = bit_cast((flags >> int(stack.bit,  4)), int16(1));
+    zf.id = bit_cast((flags >> int(stack.bit,  6)), int16(1));
+    sf.id = bit_cast((flags >> int(stack.bit,  7)), int16(1));
+    tf.id = bit_cast((flags >> int(stack.bit,  8)), int16(1));
+    df.id = bit_cast((flags >> int(stack.bit, 10)), int16(1));
+    of.id = bit_cast((flags >> int(stack.bit, 11)), int16(1));
+    free_var('flags');
 
-  popa: &popa
-    [
-      'di.id = stack.mem', 'stack.id += int(16, 2)',
-      'si.id = stack.mem', 'stack.id += int(16, 2)',
-      'bp.id = stack.mem', 'stack.id += int(16, 2)',
-      'sp.id = stack.mem', 'stack.id += int(16, 2)',
-      'bx.id = stack.mem', 'stack.id += int(16, 2)',
-      'dx.id = stack.mem', 'stack.id += int(16, 2)',
-      'cx.id = stack.mem', 'stack.id += int(16, 2)',
-      'ax.id = stack.mem', 'stack.id += int(16, 2)',
-    ]
+  popa: &popa |
+    di.id = stack.mem;stack.id += int16(2);
+    si.id = stack.mem;stack.id += int16(2);
+    bp.id = stack.mem;stack.id += int16(2);
+    sp.id = stack.mem;stack.id += int16(2);
+    bx.id = stack.mem;stack.id += int16(2);
+    dx.id = stack.mem;stack.id += int16(2);
+    cx.id = stack.mem;stack.id += int16(2);
+    ax.id = stack.mem;stack.id += int16(2);
 
-  popad: &popad
-    [
-      'edi.id = stack.mem', 'stack.id += int(32, 4)',
-      'esi.id = stack.mem', 'stack.id += int(32, 4)',
-      'ebp.id = stack.mem', 'stack.id += int(32, 4)',
-      'esp.id = stack.mem', 'stack.id += int(32, 4)',
-      'ebx.id = stack.mem', 'stack.id += int(32, 4)',
-      'edx.id = stack.mem', 'stack.id += int(32, 4)',
-      'ecx.id = stack.mem', 'stack.id += int(32, 4)',
-      'eax.id = stack.mem', 'stack.id += int(32, 4)',
-    ]
+  popad: &popad |
+    edi.id = stack.mem;stack.id += int32(4);
+    esi.id = stack.mem;stack.id += int32(4);
+    ebp.id = stack.mem;stack.id += int32(4);
+    esp.id = stack.mem;stack.id += int32(4);
+    ebx.id = stack.mem;stack.id += int32(4);
+    edx.id = stack.mem;stack.id += int32(4);
+    ecx.id = stack.mem;stack.id += int32(4);
+    eax.id = stack.mem;stack.id += int32(4);
 
 ## Control flow operations
 
-  jmp: &jmp
-    [ program.id = op0.val ]
+  jmp: &jmp |
+    program.id = op0.val;
 
-  call: &call
-    [ stack.id -= stack.size, stack.mem = program.id, program.id = op0.val ]
+  call: &call |
+    stack.id -= stack.size;
+    stack.mem = program.id;
+    program.id = op0.val;
 
-  ret: &ret
-    [ program.id = stack.mem, stack.id += stack.size ]
+  ret: &ret |
+    program.id = stack.mem;
+    stack.id += stack.size;
 
   # NOTE: we must save op1 in a temporary space, it could be used while computing op0
 
-  nop: &nop
-    [ program.id = program.id ]
+  nop: &nop |
+    program.id = program.id;
 
   xchg: &xchg |
     exchange(op0.val, op1.val);
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
-  cmpxchg: &cmpxchg
-    [
-      "if op0.val == acc.id: zf.id = int1(1)\nelse: zf.id = int1(0)",
-      'if zf.id == int1(1): op0.val = op1.val'
-    ]
+  cmpxchg: &cmpxchg |
+    if op0.val == acc.id:
+      zf.id = int1(1)
+    else:
+      zf.id = int1(0);
 
-  loop: &loop
-    [ 'cnt.id -= int(cnt.bit, 1)', 'if cnt.id != int(cnt.bit, 0): program.id = op0.val' ]
+    if zf.id == int1(1):
+      op0.val = op1.val;
 
-  loopz: &loopz
-    [ 'cnt.id -= int(cnt.bit, 1)', 'if (cnt.id | zf.id) != int(cnt.bit, 0): program.id = op0.val' ]
+  loop: &loop |
+    cnt.id -= int(cnt.bit, 1);
+    if cnt.id != int(cnt.bit, 0):
+      program.id = op0.val;
 
-  loopnz: &loopnz
-    [ 'cnt.id -= int(cnt.bit, 1)', 'if (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0): program.id = op0.val' ]
+  loopz: &loopz |
+    cnt.id -= int(cnt.bit, 1);
+    if (cnt.id | zf.id) != int(cnt.bit, 0):
+      program.id = op0.val;
 
-  jcntz: &jcntz
-    [ 'if cnt.id == int(cnt.bit, 0): program.id = op0.val' ]
+  loopnz: &loopnz |
+    cnt.id -= int(cnt.bit, 1);
+    if (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0):
+      program.id = op0.val;
+
+  jcntz: &jcntz |
+    if cnt.id == int(cnt.bit, 0):
+      program.id = op0.val;
 
 ## String operations
 
-  scas: &scas
-    [
-      "if op0.val == op1.val: zf.id = int1(1)\nelse: zf.id = int1(0)",
-      "if df.id == int1(1): op0.addr -= op0.size\nelse: op0.addr += op0.size"
-    ]
+  scas: &scas |
+    if op0.val == op1.val:
+      zf.id = int1(1)
+    else:
+      zf.id = int1(0);
+    if df.id == int1(1):
+      op0.addr -= op0.size
+    else:
+      op0.addr += op0.size;
 
-  stos: &stos
-    [
-      'op0.val = op1.val',
-      "if df.id == int1(1): op0.addr -= op0.size\nelse:op0.addr += op0.size"
-    ]
+  stos: &stos |
+    op0.val = op1.val;
+    if df.id == int1(1):
+      op0.addr -= op0.size
+    else:
+      op0.addr += op0.size;
 
   movs: &movs
     [ ]
@@ -415,14 +487,14 @@ semantic:
 
 ## Flags manipulation
 
-  clc: &clc
-    [ cf.id = int1(0) ]
+  clc: &clc |
+    cf.id = int1(0);
 
-  stc: &stc
-    [ cf.id = int1(1) ]
+  stc: &stc |
+    cf.id = int1(1);
 
-  cmc: &cmc
-    [ cf.id = cf.id ^ int1(1) ]
+  cmc: &cmc |
+    cf.id = cf.id ^ int1(1);
 
   cli: &cli
     [ ]
@@ -430,17 +502,21 @@ semantic:
   sti: &sti
     [ ]
 
-  cld: &cld
-    [ df.id = int1(0) ]
+  cld: &cld |
+    df.id = int1(0);
 
-  std: &std
-    [ df.id = int1(1) ]
+  std: &std |
+    df.id = int1(1);
 
-  cmp: &cmp
-    [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags') ]
+  cmp: &cmp |
+    alloc_var('res', op0.bit);
+    res = op0.val - op1.val;
+    free_var('res');
 
-  test: &test
-    [ expr('begin_update_flags'), res = op0.val & op1.val, expr('end_update_flags') ]
+  test: &test |
+    alloc_var('res', op0.bit);
+    res = op0.val & op1.val;
+    free_var('res');
 
 ## Bit manipulation
 
@@ -459,8 +535,8 @@ semantic:
     cf.id = bit_cast((op0.val >> op1.val) & int1(1), int16(1));
     op0.val = (op0.val & ((int(op0.bit, 1) << op1.val) ^ int(op0.bit, -1)));
 
-  bsf: &bsf
-    [ 'op0 = bsf(op1)' ]
+  bsf: &bsf |
+    op0 = bsf(op1);
 
   bsr: &bsr |
     if op1.val == int(op0.bit, 0):
@@ -487,104 +563,132 @@ semantic:
 # le / ng     → ((sf xor of) or zf) = 1
 # nle / g     → ((sf xor of) or zf) = 0
 
-  jmpo: &jmpo
-    [ 'if of.id == int1(1): program.id = op0.val' ]
-  jmpno: &jmpno
-    [ 'if of.id == int1(0): program.id = op0.val' ]
-  jmpc: &jmpc
-    [ 'if cf.id == int1(1): program.id = op0.val' ]
-  jmpnc: &jmpnc
-    [ 'if cf.id == int1(0): program.id = op0.val' ]
-  jmpz: &jmpz
-    [ 'if zf.id == int1(1): program.id = op0.val' ]
-  jmpnz: &jmpnz
-    [ 'if zf.id == int1(0): program.id = op0.val' ]
-  jmps: &jmps
-    [ 'if sf.id == int1(1): program.id = op0.val' ]
-  jmpns: &jmpns
-    [ 'if sf.id == int1(0): program.id = op0.val' ]
-  jmpp: &jmpp
-    [ 'if pf.id == int1(1): program.id = op0.val' ]
-  jmpnp: &jmpnp
-    [ 'if pf.id == int1(0): program.id = op0.val' ]
-  jmpbe: &jmpbe
-    [ 'if (cf.id | zf.id) != int1(0): program.id = op0.val' ]
-  jmpa: &jmpa
-    [ 'if (cf.id | zf.id) == int1(0): program.id = op0.val' ]
-  jmpl: &jmpl
-    [ 'if (sf.id ^ of.id) != int1(0): program.id = op0.val' ]
-  jmpge: &jmpge
-    [ 'if (sf.id ^ of.id) == int1(0): program.id = op0.val' ]
-  jmple: &jmple
-    [ 'if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val' ]
-  jmpg: &jmpg
-    [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val' ]
+  jmpo: &jmpo |
+    if of.id == int1(1): program.id = op0.val;
+  jmpno: &jmpno |
+    if of.id == int1(0): program.id = op0.val;
+  jmpc: &jmpc |
+    if cf.id == int1(1): program.id = op0.val;
+  jmpnc: &jmpnc |
+    if cf.id == int1(0): program.id = op0.val;
+  jmpz: &jmpz |
+    if zf.id == int1(1): program.id = op0.val;
+  jmpnz: &jmpnz |
+    if zf.id == int1(0): program.id = op0.val;
+  jmps: &jmps |
+    if sf.id == int1(1): program.id = op0.val;
+  jmpns: &jmpns |
+    if sf.id == int1(0): program.id = op0.val;
+  jmpp: &jmpp |
+    if pf.id == int1(1): program.id = op0.val;
+  jmpnp: &jmpnp |
+    if pf.id == int1(0): program.id = op0.val;
+  jmpbe: &jmpbe |
+    if (cf.id | zf.id) != int1(0): program.id = op0.val;
+  jmpa: &jmpa |
+    if (cf.id | zf.id) == int1(0): program.id = op0.val;
+  jmpl: &jmpl |
+    if (sf.id ^ of.id) != int1(0): program.id = op0.val;
+  jmpge: &jmpge |
+    if (sf.id ^ of.id) == int1(0): program.id = op0.val;
+  jmple: &jmple |
+    if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val;
+  jmpg: &jmpg |
+    if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val;
 
-  seto: &seto
-    [ "if of.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setno: &setno
-    [ "if of.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setc: &setc
-    [ "if cf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setnc: &setnc
-    [ "if cf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setz: &setz
-    [ "if zf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setnz: &setnz
-    [ "if zf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  sets: &sets
-    [ "if sf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setns: &setns
-    [ "if sf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setp: &setp
-    [ "if pf.id == int1(1): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setnp: &setnp
-    [ "if pf.id == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setbe: &setbe
-    [ "if (cf.id | zf.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  seta: &seta
-    [ "if (cf.id | zf.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setl: &setl
-    [ "if (sf.id ^ of.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setge: &setge
-    [ "if (sf.id ^ of.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setle: &setle
-    [ "if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
-  setg: &setg
-    [ "if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)\nelse: op0.val = int8(0)" ]
+  seto: &seto |
+    if of.id == int1(1): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setno: &setno |
+    if of.id == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setc: &setc |
+    if cf.id == int1(1): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setnc: &setnc |
+    if cf.id == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setz: &setz |
+    if zf.id == int1(1): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setnz: &setnz |
+    if zf.id == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  sets: &sets |
+    if sf.id == int1(1): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setns: &setns |
+    if sf.id == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setp: &setp |
+    if pf.id == int1(1): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setnp: &setnp |
+    if pf.id == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setbe: &setbe |
+    if (cf.id | zf.id) != int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  seta: &seta |
+    if (cf.id | zf.id) == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setl: &setl |
+    if (sf.id ^ of.id) != int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setge: &setge |
+    if (sf.id ^ of.id) == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setle: &setle |
+    if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
+  setg: &setg |
+    if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)
+    else: op0.val = int8(0);
 
-  cmovo: &cmovo
-    [ 'if of.id == int1(1): op0.val = op1.val' ]
-  cmovno: &cmovno
-    [ 'if of.id == int1(0): op0.val = op1.val' ]
-  cmovc: &cmovc
-    [ 'if cf.id == int1(1): op0.val = op1.val' ]
-  cmovnc: &cmovnc
-    [ 'if cf.id == int1(0): op0.val = op1.val' ]
-  cmovz: &cmovz
-    [ 'if zf.id == int1(1): op0.val = op1.val' ]
-  cmovnz: &cmovnz
-    [ 'if zf.id == int1(0): op0.val = op1.val' ]
-  cmovs: &cmovs
-    [ 'if sf.id == int1(1): op0.val = op1.val' ]
-  cmovns: &cmovns
-    [ 'if sf.id == int1(0): op0.val = op1.val' ]
-  cmovp: &cmovp
-    [ 'if pf.id == int1(1): op0.val = op1.val' ]
-  cmovnp: &cmovnp
-    [ 'if pf.id == int1(0): op0.val = op1.val' ]
-  cmovbe: &cmovbe
-    [ 'if (cf.id | zf.id) != int1(0): op0.val = op1.val' ]
-  cmova: &cmova
-    [ 'if (cf.id | zf.id) == int1(0): op0.val = op1.val' ]
-  cmovl: &cmovl
-    [ 'if (sf.id ^ of.id) != int1(0): op0.val = op1.val' ]
-  cmovge: &cmovge
-    [ 'if (sf.id ^ of.id) == int1(0): op0.val = op1.val' ]
-  cmovle: &cmovle
-    [ 'if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val' ]
-  cmovg: &cmovg
-    [ 'if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val' ]
+  cmovo: &cmovo |
+    if of.id == int1(1): op0.val = op1.val;
+  cmovno: &cmovno |
+    if of.id == int1(0): op0.val = op1.val;
+  cmovc: &cmovc |
+    if cf.id == int1(1): op0.val = op1.val;
+  cmovnc: &cmovnc |
+    if cf.id == int1(0): op0.val = op1.val;
+  cmovz: &cmovz |
+    if zf.id == int1(1): op0.val = op1.val;
+  cmovnz: &cmovnz |
+    if zf.id == int1(0): op0.val = op1.val;
+  cmovs: &cmovs |
+    if sf.id == int1(1): op0.val = op1.val;
+  cmovns: &cmovns |
+    if sf.id == int1(0): op0.val = op1.val;
+  cmovp: &cmovp |
+    if pf.id == int1(1): op0.val = op1.val;
+  cmovnp: &cmovnp |
+    if pf.id == int1(0): op0.val = op1.val;
+  cmovbe: &cmovbe |
+    if (cf.id | zf.id) != int1(0): op0.val = op1.val;
+  cmova: &cmova |
+    if (cf.id | zf.id) == int1(0): op0.val = op1.val;
+  cmovl: &cmovl |
+    if (sf.id ^ of.id) != int1(0): op0.val = op1.val;
+  cmovge: &cmovge |
+    if (sf.id ^ of.id) == int1(0): op0.val = op1.val;
+  cmovle: &cmovle |
+    if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val;
+  cmovg: &cmovg |
+    if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val;
+
+## System
+
+  sysenter: &sysenter |
+
+  sysexit: &sysexit |
+
+  syscall: &syscall |
+
+  sysret: &sysret |
+
+  rdtsc: &rdtsc |
 
 ## Instruction definition #####################################################
 
@@ -2465,7 +2569,7 @@ instruction:
 
           - mnemonic: syscall
             cpu_model: ">= X86_Arch_K6_2"
-            semantic: [ expr('syscall') ]
+            semantic: *syscall
 
       - opcode: 0x06
         mnemonic: clts
@@ -2477,6 +2581,7 @@ instruction:
 
           - mnemonic: sysret
             cpu_model: ">= X86_Arch_K6_2"
+            semantic: *sysret
 
       - opcode: 0x08
         mnemonic: invd
@@ -2903,7 +3008,7 @@ instruction:
 
       - opcode: 0x31
         mnemonic: rdtsc
-        semantic: [ expr('read_timestamp') ]
+        semantic: *rdtsc
 
       - opcode: 0x32
         mnemonic: rdmsr
@@ -2914,11 +3019,12 @@ instruction:
       - opcode: 0x34
         mnemonic: sysenter
         attr: [ intel ]
-        semantic: [ expr('syscall') ]
+        semantic: *sysenter
 
       - opcode: 0x35
         mnemonic: sysexit
         attr: [ intel ]
+        semantic: *sysexit
 
       - opcode: 0x36
         sub_opcodes:

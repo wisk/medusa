@@ -70,6 +70,8 @@ class ArchConvertion:
                 for b in node.body:
                     b_expr = self.visit(b)
                     self.res.append(b_expr)
+                if len(self.res) == 0:
+                    return self.res
                 return self.res[-1]
 
             def visit_If(self, node):
@@ -117,6 +119,26 @@ class ArchConvertion:
             def visit_NotEq(self, node):
                 return 'ConditionExpression::CondNe'
 
+            def visit_UnaryOp(self, node):
+                oper_name = self.visit(node.op)
+                oprd_name = self.visit(node.operand)
+
+                return 'Expr::MakeUnOp(\n%s,\n%s)'\
+                        % (Indent(oper_name), Indent(oprd_name))
+
+            def visit_Invert(self, node):
+                return 'OperationExpression::OpNot'
+
+            def visit_USub(self, node):
+                return 'OperationExpression::OpNeg'
+
+            def visit_BinOp(self, node):
+                oper_name  = self.visit(node.op)
+                left_name  = self.visit(node.left)
+                right_name = self.visit(node.right)
+                return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
+                        % (Indent(oper_name), Indent(left_name), Indent(right_name))
+
             def visit_Add(self, node):
                 return 'OperationExpression::OpAdd'
 
@@ -141,18 +163,11 @@ class ArchConvertion:
             def visit_Mult(self, node):
                 return 'OperationExpression::OpMul'
 
-            def visit_Div(self, mode):
+            def visit_Div(self, node):
                 return 'OperationExpression::OpUDiv'
 
-            def visit_Mod(self, mode):
+            def visit_Mod(self, node):
                 return 'OperationExpression::OpUMod'
-
-            def visit_BinOp(self, node):
-                oper_name  = self.visit(node.op)
-                left_name  = self.visit(node.left)
-                right_name = self.visit(node.right)
-                return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
-                        % (Indent(oper_name), Indent(left_name), Indent(right_name))
 
             def visit_Call(self, node):
                 func_name = self.visit(node.func)
@@ -296,8 +311,6 @@ class ArchConvertion:
                     return 'm_CpuInfo.GetRegisterByType(CpuInformation::RemainderRegister, rInsn.GetMode())'
                 elif node_name == 'insn':
                     return 'rInsn'
-                elif node_name == 'res':
-                    return 'spResExpr->Clone()'
 
                 # Fonction name
                 elif node_name == 'exchange':
@@ -320,8 +333,6 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
                 elif node_name == 'bit_cast':
                     return 'Expr::MakeBinOp(OperationExpression::OpBcast, %s, %s)'
-                elif node_name == 'expr':
-                    return 'HandleExpression(AllExpr, %s, rInsn, spResExpr)'
 
                 assert(0)
 
@@ -338,10 +349,7 @@ class ArchConvertion:
             def visit_Assign(self, node):
                 assert(len(node.targets) == 1)
 
-                value_name  = self.visit(node.value)
-
-                if hasattr(node.targets[0], 'id') and node.targets[0].id == 'res':
-                    return 'spResExpr = %s' % value_name                
+                value_name  = self.visit(node.value)              
                 target_name = self.visit(node.targets[0])
 
                 return 'Expr::MakeAssign(\n%s,\n%s)'\
@@ -362,8 +370,7 @@ class ArchConvertion:
             def __str__(self):
                 return self.res
 
-        res = 'Expression::SPType spResExpr;\n'
-
+        res = ''
         if 'test_flags' in opcd:
             res += 'rInsn.SetTestedFlags(%s);\n' % ' | '.join(self.id_mapper[x] for x in opcd['test_flags'])
         if 'update_flags' in opcd:
@@ -395,6 +402,8 @@ class ArchConvertion:
             v = SemVisitor(self.arch, id_mapper)
             expr_res = []
             for expr in sem:
+                if len(expr) == 0:
+                    continue
                 if expr[0] == '\n':
                     expr = expr[1:]
                 expr_res.append('/* Semantic: %s */\n' % expr)
@@ -414,13 +423,6 @@ class ArchConvertion:
             for expr in expr_res:
                 if len(expr) == 0:
                     continue
-                # Call HandleExpression
-                elif 'HandleExpression' in expr:
-                    res += '%s;\n;' % expr
-                    continue
-                # Result alias
-                elif 'spResExpr = ' in expr:
-                    res += '%s;\n' % expr
                 # Comment
                 elif expr.startswith('/*'):
                     res += expr

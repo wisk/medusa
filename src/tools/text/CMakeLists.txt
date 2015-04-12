@@ -18,6 +18,6 @@ add_executable(medusa_text
 
 find_package(Threads REQUIRED)
 target_link_libraries(medusa_text Medusa ${CMAKE_THREAD_LIBS_INIT})
-set_target_properties(medusa_text PROPERTIES FOLDER "User Interfaces")
+set_target_properties(medusa_text PROPERTIES FOLDER "Tools")
 
 install(TARGETS medusa_text RUNTIME DESTINATION .)
