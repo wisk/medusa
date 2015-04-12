@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 12 14:30:08 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 12 15:43:19 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -6588,10 +6588,16 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['Eb', 'Gb']
  * opcode: 18
@@ -6610,9 +6616,10 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6620,13 +6627,216 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -6635,10 +6845,16 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['Ev', 'Gv']
  * opcode: 19
@@ -6657,9 +6873,10 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6667,13 +6884,216 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -6682,10 +7102,16 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['Gb', 'Eb']
  * opcode: 1a
@@ -6704,9 +7130,10 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6714,13 +7141,216 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -6729,10 +7359,16 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['Gv', 'Ev']
  * opcode: 1b
@@ -6751,9 +7387,10 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6761,13 +7398,216 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -6776,10 +7616,16 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['AL', 'Ib']
  * opcode: 1c
@@ -6798,9 +7644,10 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6808,13 +7655,216 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -6823,10 +7873,16 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sbb
  * test_flags: ['cf']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * operand: ['rAX', 'Iz']
  * opcode: 1d
@@ -6845,9 +7901,10 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
       Expression::SPType spResExpr;
       rInsn.SetTestedFlags(X86_FlCf);
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-      /* Semantic: expr('begin_update_flags') */
-      HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-      ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+      /* Semantic: alloc_var('res', op0.bit) */
+      auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+      AllExpr.push_back(pExpr0);
+      /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
       spResExpr = Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeBinOp(
@@ -6855,13 +7912,216 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
           rInsn.GetOperand(0),
           rInsn.GetOperand(1)),
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-      /* Semantic: expr('end_update_flags') */
-      HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-      ;/* Semantic: op0.val = res */
-      auto pExpr0 = Expr::MakeAssign(
+      /* Semantic: call('oflag_sub') */
+      /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlOf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              rInsn.GetOperand(0),
+              rInsn.GetOperand(1))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: call('cflag_sub') */
+      /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)),
+              Expr::MakeVar("res", VariableExpression::Use)),
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1)))),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: op0.val = res.val */
+      auto pExpr3 = Expr::MakeAssign(
         rInsn.GetOperand(0),
-        spResExpr->Clone());
-      AllExpr.push_back(pExpr0);
+        Expr::MakeVar("res", VariableExpression::Use));
+      AllExpr.push_back(pExpr3);
+      /* Semantic: call('sign_flag') */
+      /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+      auto pExpr4 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlSf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr4);
+      /* Semantic: call('zero_flag') */
+      /* Semantic: if op0.val == int(op0.bit, 0):
+        zf.id = int1(1)
+      else:
+        zf.id = int1(0)
+       */
+      auto pExpr5 = Expr::MakeIfElseCond(
+        ConditionExpression::CondEq,
+        rInsn.GetOperand(0),
+        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)),
+        Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+      AllExpr.push_back(pExpr5);
+      /* Semantic: call('parity_flag') */
+      /* Semantic: alloc_var('pf_tmp', pf.bit) */
+      auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+      AllExpr.push_back(pExpr6);
+      /* Semantic: pf_tmp = int1(1) */
+      auto pExpr7 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeConst(1, 0x1));
+      AllExpr.push_back(pExpr7);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+      auto pExpr8 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr8);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+      auto pExpr9 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr9);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+      auto pExpr10 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr10);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+      auto pExpr11 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr11);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+      auto pExpr12 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr12);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+      auto pExpr13 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr13);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+      auto pExpr14 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr14);
+      /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+      auto pExpr15 = Expr::MakeAssign(
+        Expr::MakeVar("pf_tmp", VariableExpression::Use),
+        Expr::MakeBinOp(
+          OperationExpression::OpXor,
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+      ;
+      AllExpr.push_back(pExpr15);
+      /* Semantic: pf.id = pf_tmp */
+      auto pExpr16 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlPf, &m_CpuInfo),
+        Expr::MakeVar("pf_tmp", VariableExpression::Use));
+      AllExpr.push_back(pExpr16);
+      /* Semantic: free_var('pf_tmp') */
+      auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+      AllExpr.push_back(pExpr17);
+      /* Semantic: call('adjust_flag') */
+      /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+      auto pExpr18 = Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+          OperationExpression::OpLrs,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+      AllExpr.push_back(pExpr18);
+      /* Semantic: free_var('res') */
+      auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+      AllExpr.push_back(pExpr19);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -13490,10 +14750,16 @@ free_var('res');
  * opcode: 03
  * test_flags: ['cf']
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  *
  * mnemonic: and
@@ -14049,9 +15315,10 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+        /* Semantic: alloc_var('res', op0.bit) */
+        auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+        AllExpr.push_back(pExpr0);
+        /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
         spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeBinOp(
@@ -14059,13 +15326,216 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-        ;/* Semantic: op0.val = res */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Semantic: call('oflag_sub') */
+        /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: call('cflag_sub') */
+        /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpAnd,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  Expr::MakeVar("res", VariableExpression::Use)),
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res.val */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
-          spResExpr->Clone());
-        AllExpr.push_back(pExpr0);
+          Expr::MakeVar("res", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: call('sign_flag') */
+        /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: call('zero_flag') */
+        /* Semantic: if op0.val == int(op0.bit, 0):
+          zf.id = int1(1)
+        else:
+          zf.id = int1(0)
+         */
+        auto pExpr5 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: call('parity_flag') */
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: pf_tmp = int1(1) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+        auto pExpr8 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+        auto pExpr9 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+        auto pExpr10 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr10);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr11);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+        auto pExpr12 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+        auto pExpr13 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+        auto pExpr14 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+        auto pExpr15 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr15);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr17);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr18 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr18);
+        /* Semantic: free_var('res') */
+        auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr19);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14230,10 +15700,16 @@ free_var('res');
  * operand: ['Eb', 'Ib']
  *
  * mnemonic: sbb
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * test_flags: ['cf']
@@ -14797,9 +16273,10 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+        /* Semantic: alloc_var('res', op0.bit) */
+        auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+        AllExpr.push_back(pExpr0);
+        /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
         spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeBinOp(
@@ -14807,13 +16284,216 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-        ;/* Semantic: op0.val = res */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Semantic: call('oflag_sub') */
+        /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: call('cflag_sub') */
+        /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpAnd,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  Expr::MakeVar("res", VariableExpression::Use)),
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res.val */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
-          spResExpr->Clone());
-        AllExpr.push_back(pExpr0);
+          Expr::MakeVar("res", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: call('sign_flag') */
+        /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: call('zero_flag') */
+        /* Semantic: if op0.val == int(op0.bit, 0):
+          zf.id = int1(1)
+        else:
+          zf.id = int1(0)
+         */
+        auto pExpr5 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: call('parity_flag') */
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: pf_tmp = int1(1) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+        auto pExpr8 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+        auto pExpr9 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+        auto pExpr10 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr10);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr11);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+        auto pExpr12 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+        auto pExpr13 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+        auto pExpr14 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+        auto pExpr15 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr15);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr17);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr18 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr18);
+        /* Semantic: free_var('res') */
+        auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr19);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -14978,10 +16658,16 @@ free_var('res');
  * operand: ['Ev', 'Iz']
  *
  * mnemonic: sbb
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * test_flags: ['cf']
@@ -15545,9 +17231,10 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+        /* Semantic: alloc_var('res', op0.bit) */
+        auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+        AllExpr.push_back(pExpr0);
+        /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
         spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeBinOp(
@@ -15555,13 +17242,216 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-        ;/* Semantic: op0.val = res */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Semantic: call('oflag_sub') */
+        /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: call('cflag_sub') */
+        /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpAnd,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  Expr::MakeVar("res", VariableExpression::Use)),
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res.val */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
-          spResExpr->Clone());
-        AllExpr.push_back(pExpr0);
+          Expr::MakeVar("res", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: call('sign_flag') */
+        /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: call('zero_flag') */
+        /* Semantic: if op0.val == int(op0.bit, 0):
+          zf.id = int1(1)
+        else:
+          zf.id = int1(0)
+         */
+        auto pExpr5 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: call('parity_flag') */
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: pf_tmp = int1(1) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+        auto pExpr8 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+        auto pExpr9 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+        auto pExpr10 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr10);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr11);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+        auto pExpr12 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+        auto pExpr13 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+        auto pExpr14 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+        auto pExpr15 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr15);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr17);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr18 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr18);
+        /* Semantic: free_var('res') */
+        auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr19);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -15726,10 +17616,16 @@ free_var('res');
  * operand: ['Eb', 'Ib']
  *
  * mnemonic: sbb
- * semantic: expr('begin_update_flags');
+ * semantic: alloc_var('res', op0.bit);
 res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-expr('end_update_flags');
-op0.val = res;
+call('oflag_sub');
+call('cflag_sub');
+op0.val = res.val;
+call('sign_flag');
+call('zero_flag');
+call('parity_flag');
+call('adjust_flag');
+free_var('res');
 
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
  * test_flags: ['cf']
@@ -16293,9 +18189,10 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::SPType spResExpr;
         rInsn.SetTestedFlags(X86_FlCf);
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
-        /* Semantic: expr('begin_update_flags') */
-        HandleExpression(AllExpr, "begin_update_flags", rInsn, spResExpr);
-        ;/* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
+        /* Semantic: alloc_var('res', op0.bit) */
+        auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+        AllExpr.push_back(pExpr0);
+        /* Semantic: res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit)) */
         spResExpr = Expr::MakeBinOp(
           OperationExpression::OpSub,
           Expr::MakeBinOp(
@@ -16303,13 +18200,216 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
             rInsn.GetOperand(0),
             rInsn.GetOperand(1)),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize())));
-        /* Semantic: expr('end_update_flags') */
-        HandleExpression(AllExpr, "end_update_flags", rInsn, spResExpr);
-        ;/* Semantic: op0.val = res */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Semantic: call('oflag_sub') */
+        /* Semantic: of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlOf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpAnd,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                rInsn.GetOperand(0),
+                rInsn.GetOperand(1))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: call('cflag_sub') */
+        /* Semantic: cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeBinOp(
+              OperationExpression::OpXor,
+              Expr::MakeBinOp(
+                OperationExpression::OpXor,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)),
+                Expr::MakeVar("res", VariableExpression::Use)),
+              Expr::MakeBinOp(
+                OperationExpression::OpAnd,
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  Expr::MakeVar("res", VariableExpression::Use)),
+                Expr::MakeBinOp(
+                  OperationExpression::OpXor,
+                  rInsn.GetOperand(0),
+                  rInsn.GetOperand(1)))),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res.val */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
-          spResExpr->Clone());
-        AllExpr.push_back(pExpr0);
+          Expr::MakeVar("res", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: call('sign_flag') */
+        /* Semantic: sf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: call('zero_flag') */
+        /* Semantic: if op0.val == int(op0.bit, 0):
+          zf.id = int1(1)
+        else:
+          zf.id = int1(0)
+         */
+        auto pExpr5 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(0),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: call('parity_flag') */
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr6 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: pf_tmp = int1(1) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 0), int16(1)) */
+        auto pExpr8 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 1), int16(1)) */
+        auto pExpr9 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 2), int16(1)) */
+        auto pExpr10 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x2)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr10);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 3), int16(1)) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x3)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr11);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 4), int16(1)) */
+        auto pExpr12 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 5), int16(1)) */
+        auto pExpr13 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x5)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 6), int16(1)) */
+        auto pExpr14 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x6)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: pf_tmp ^= bit_cast(op0.val >> int(op0.bit, 7), int16(1)) */
+        auto pExpr15 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x7)), Expr::MakeConst(16, 0x1))))
+        ;
+        AllExpr.push_back(pExpr15);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr17);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr18 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr18);
+        /* Semantic: free_var('res') */
+        auto pExpr19 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr19);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19322,6 +21422,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -19812,6 +21913,15 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -19876,6 +21986,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -20366,6 +22477,15 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20944,6 +23064,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -21434,6 +23555,15 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -21498,6 +23628,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -21988,6 +24119,15 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22052,6 +24192,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -22542,6 +24683,15 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -22606,6 +24756,7 @@ cf.id = bit_cast(op0.val, int16(1));
 call('sign_flag');
 call('zero_flag');
 call('parity_flag');
+call('adjust_flag');
 
  *
 **/
@@ -23096,6 +25247,15 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: free_var('pf_tmp') */
         auto pExpr15 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
         AllExpr.push_back(pExpr15);
+        /* Semantic: call('adjust_flag') */
+        /* Semantic: af.id = bit_cast(op0.val >> (int(op0.bit, 4)), int16(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x4)), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr16);
         rInsn.SetSemantic(AllExpr);
       }
       return true;

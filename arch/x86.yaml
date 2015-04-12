@@ -47,6 +47,13 @@ function:
   cflag_add: &cflag_add |
     cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & ((op0.val ^ op1.val) ^ int(op0.bit, -1)))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
+  oflag_sub: &oflag_sub |
+    of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+
+  cflag_sub: &cflag_sub |
+    cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+
+
 ## Instruction semantic #######################################################
 
 semantic:
@@ -101,10 +108,16 @@ semantic:
     [ expr('begin_update_flags'), res = op0.val - op1.val, expr('end_update_flags'), op0.val = res ]
 
   sbb: &sbb |
-    expr('begin_update_flags');
+    alloc_var('res', op0.bit);
     res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
-    expr('end_update_flags');
-    op0.val = res;
+    call('oflag_sub');
+    call('cflag_sub');
+    op0.val = res.val;
+    call('sign_flag');
+    call('zero_flag');
+    call('parity_flag');
+    call('adjust_flag');
+    free_var('res');
 
   dec: &dec
     [ expr('begin_update_flags'), 'res = op0.val - int(op0.bit, 1)', expr('end_update_flags'), op0.val = res ]
@@ -195,6 +208,7 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    call('adjust_flag');
 
   rol: &rol
     [
