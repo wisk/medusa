@@ -315,6 +315,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       m_Values.push_back(LeftVal.Ars(RightVal));
       break;
 
+    case OperationExpression::OpRol:
+      m_Values.push_back(LeftVal.Rol(RightVal));
+      break;
+
+    case OperationExpression::OpRor:
+      m_Values.push_back(LeftVal.Ror(RightVal));
+      break;
+
     case OperationExpression::OpAdd:
       m_Values.push_back(LeftVal.Add(RightVal));
       break;

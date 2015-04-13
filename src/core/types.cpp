@@ -362,6 +362,38 @@ IntType& IntType::ArsAssign(IntType const& rVal)
   return *this;
 }
 
+IntType IntType::Rol(IntType const& rVal) const
+{
+  //assert(m_BitSize == rVal.GetBitSize());
+  IntType Tmp(m_BitSize, (m_Value << rVal.ConvertTo<u32>()) | (m_Value >> (m_BitSize - rVal.ConvertTo<u32>())));
+  Tmp._Adjust();
+  return Tmp;
+}
+
+IntType& IntType::RolAssign(IntType const& rVal)
+{
+  IntType Tmp = Rol(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
+IntType IntType::Ror(IntType const& rVal) const
+{
+  //assert(m_BitSize == rVal.GetBitSize());
+  IntType Tmp(m_BitSize, (m_Value >> rVal.ConvertTo<u32>()) | (m_Value << (m_BitSize - rVal.ConvertTo<u32>())));
+  Tmp._Adjust();
+  return Tmp;
+}
+
+IntType& IntType::RorAssign(IntType const& rVal)
+{
+  IntType Tmp = Ror(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
 void IntType::_Adjust(void)
 {
   ap_int Mask = (ap_int(1) << m_BitSize) - 1;

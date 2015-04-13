@@ -416,6 +416,7 @@ std::string OperationExpression::ToString(void) const
   case OpLls:  return "<<";
   case OpLrs:  return ">>{u}";
   case OpArs:  return ">>{s}";
+  case OpRol: return "rol";
   case OpAdd:  return "+";
   case OpSub:  return "-";
   case OpMul:  return "*";

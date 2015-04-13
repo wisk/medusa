@@ -300,13 +300,13 @@ semantic:
 
   rol: &rol |
     alloc_var('res', op0.bit);
-    res = ((op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val)));
+    res = rol(op0.val, op1.val);
     op0.val = res;
     free_var('res');
 
   ror: &ror |
     alloc_var('res', op0.bit);
-    res = ((op0.val >> op1.val) | (op0.val << (int(op0.bit, op0.bit) - op1.val)));
+    res = ror(op0.val, op1.val);
     op0.val = res;
     free_var('res');
 

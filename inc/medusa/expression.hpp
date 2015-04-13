@@ -314,6 +314,8 @@ public:
     OpLls, /* Logical Left Shift */
     OpLrs, /* Logical Right Shift */
     OpArs, /* Arithmetic Right Shift */
+    OpRol, /* Logical Left Rotate */
+    OpRor, /* Logical Right Rotate */
     OpAdd,
     OpSub,
     OpMul,

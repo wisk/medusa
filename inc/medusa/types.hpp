@@ -216,6 +216,11 @@ public:
   IntType  Ars(IntType const& rVal) const;
   IntType& ArsAssign(IntType const& rVal);
 
+  IntType  Rol(IntType const& rVal) const;
+  IntType& RolAssign(IntType const& rVal);
+  IntType  Ror(IntType const& rVal) const;
+  IntType& RorAssign(IntType const& rVal);
+
 private:
   void _Adjust(void);
 

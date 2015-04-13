@@ -327,6 +327,10 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
                 elif node_name == 'ars':
                     return 'Expr::MakeBinOp(OperationExpression::OpArs, %s, %s)'
+                elif node_name == 'rol':
+                    return 'Expr::MakeBinOp(OperationExpression::OpRol, %s, %s)'
+                elif node_name == 'ror':
+                    return 'Expr::MakeBinOp(OperationExpression::OpRor, %s, %s)'
                 elif node_name == 'sdiv':
                     return 'Expr::MakeBinOp(OperationExpression::OpSDiv, %s, %s)'
                 elif node_name == 'smod':
