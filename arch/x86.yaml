@@ -90,6 +90,7 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    call('adjust_flag');
     op0.val = res.val;
     free_var('op1');
     free_var('res');
