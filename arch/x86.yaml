@@ -301,12 +301,14 @@ semantic:
   rol: &rol |
     alloc_var('res', op0.bit);
     res = rol(op0.val, op1.val);
+    cf.id = bit_cast(res, int16(1));
     op0.val = res;
     free_var('res');
 
   ror: &ror |
     alloc_var('res', op0.bit);
     res = ror(op0.val, op1.val);
+    cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
     op0.val = res;
     free_var('res');
 

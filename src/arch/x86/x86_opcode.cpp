@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 15:11:05 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 15:31:12 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -33264,6 +33264,7 @@ bool X86Architecture::Table_1_bf(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 00
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -33272,6 +33273,7 @@ free_var('res');
  * opcode: 01
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -33382,14 +33384,19 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -33410,14 +33417,25 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34302,6 +34320,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Ib']
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -34311,6 +34330,7 @@ free_var('res');
  * operand: ['Eb', 'Ib']
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -34427,14 +34447,19 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -34455,14 +34480,25 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35815,6 +35851,7 @@ bool X86Architecture::Table_1_cf(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Ib']
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -35824,6 +35861,7 @@ free_var('res');
  * operand: ['Ev', 'Ib']
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -35940,14 +35978,19 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -35968,14 +36011,25 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -36860,6 +36914,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', '1']
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -36869,6 +36924,7 @@ free_var('res');
  * operand: ['Eb', '1']
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -36985,14 +37041,19 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37013,14 +37074,25 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -37905,6 +37977,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', '1']
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -37914,6 +37987,7 @@ free_var('res');
  * operand: ['Ev', '1']
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -38030,14 +38104,19 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38058,14 +38137,25 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -38950,6 +39040,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'CL']
  * semantic: alloc_var('res', op0.bit);
 res = rol(op0.val, op1.val);
+cf.id = bit_cast(res, int16(1));
 op0.val = res;
 free_var('res');
 
@@ -38959,6 +39050,7 @@ free_var('res');
  * operand: ['Eb', 'CL']
  * semantic: alloc_var('res', op0.bit);
 res = ror(op0.val, op1.val);
+cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 op0.val = res;
 free_var('res');
 
@@ -39075,14 +39167,19 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRol, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res, int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -39103,14 +39200,25 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpRor, rInsn.GetOperand(0), rInsn.GetOperand(1)));
         AllExpr.push_back(pExpr1);
-        /* Semantic: op0.val = res */
+        /* Semantic: cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1)) */
         auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeVar("res", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1)));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = res */
+        auto pExpr3 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr2);
-        /* Semantic: free_var('res') */
-        auto pExpr3 = Expr::MakeVar("res", VariableExpression::Free);
         AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('res') */
+        auto pExpr4 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
