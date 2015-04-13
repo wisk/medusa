@@ -35,7 +35,7 @@ class ArmArchitecture : public Architecture
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
-    virtual u32 GetSizeOfRegisterInBit(u32 Id) const { return 32; }
+    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
   } m_CpuInfo;
 
@@ -59,15 +59,6 @@ class ArmArchitecture : public Architecture
     virtual void  GetRegisters(RegisterList& RegList) const;
 
   private:
-    enum CSPR_Flags
-    {
-      ARM_CSPR_T = 1 << 5,  //! State bit (Thumb)
-      ARM_CSPR_O = 1 << 28, //! Overflow
-      ARM_CSPR_C = 1 << 29, //! Carry or borrow or extend
-      ARM_CSPR_Z = 1 << 30, //! Zero
-      ARM_CSPR_N = 1 << 31, //! Negative or less than
-    };
-
     struct
     {
       u32 Registers[16];

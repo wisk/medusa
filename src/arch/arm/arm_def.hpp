@@ -36,6 +36,12 @@ enum ARM_Condition
 enum ARM_Register
 {
   ARM_RegUnknown,
+
+  ARM_FlNf,
+  ARM_FlCf,
+  ARM_FlVf,
+  ARM_FlZf,
+
   ARM_RegR0,
   ARM_RegR1,
   ARM_RegR2,
@@ -59,13 +65,13 @@ enum ARM_Register
   ARM_RegPC = ARM_RegR15,
 };
 
-enum ARM_Flag
+enum CSPR_Flags
 {
-  ARM_FlNone,
-  ARM_FlNf = 1 << 0,
-  ARM_FlCf = 1 << 1,
-  ARM_FlVf = 1 << 2,
-  ARM_FlZf = 1 << 3
+  ARM_CSPR_T = 1 << 5,  //! State bit (Thumb)
+  ARM_CSPR_V = 1 << 28, //! Overflow
+  ARM_CSPR_C = 1 << 29, //! Carry or borrow or extend
+  ARM_CSPR_Z = 1 << 30, //! Zero
+  ARM_CSPR_N = 1 << 31, //! Negative or less than
 };
 
 enum ARM_Prefix

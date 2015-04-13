@@ -12,6 +12,7 @@ class ArmArchConvertion(ArchConvertion):
         self.all_mnemo = set()
 
         self.id_mapper = {
+        'nf':'ARM_FlNf','cf':'ARM_FlCf','vf':'ARM_FlVf','zf':'ARM_FlZf',
         'r0':'ARM_Reg0','r1':'ARM_Reg1','r2':'ARM_Reg2','r3':'ARM_Reg3',
         'r4':'ARM_Reg4','r5':'ARM_Reg5','r6':'ARM_Reg6','r7':'ARM_Reg7',
         'r8':'ARM_Reg8','r9':'ARM_Reg9','r10':'ARM_Reg10','r11':'ARM_Reg11',
@@ -296,15 +297,26 @@ class ArmArchConvertion(ArchConvertion):
                         self.insn = insn
                         ast.NodeVisitor.__init__(self)
                         self.var_expr = []
+                        self.res = []
+
+                    def _ARM_GetAccessBitSizeFromMnemonic(self):
+                        mnem = self.parent._ARM_GetMnemonic(self.insn).lower()
+                        if mnem[-1] == 't': # Translation
+                            mnem = mnem[:-1]
+                        if mnem[-1] == 'b':
+                            return 8
+                        if mnem[-1] == 'h':
+                            return 16
+                        if mnem[-1] == 'd':
+                            return 64
+                        return 32
 
                     def generic_visit(self, node):
                         raise Exception('generic:', type(node).__name__)
 
                     def visit_Module(self, node):
-                        res = ''
                         for b in node.body:
-                            res += self.visit(b)
-                        return res
+                            self.visit(b)
 
                     def visit_Call(self, node):
                         res = ''
@@ -318,41 +330,42 @@ class ArmArchConvertion(ArchConvertion):
                             assert(len(func_args) == 1)
                             id_expr = 'Expr::MakeId(%s, &m_CpuInfo)' % func_args[0]
                             res += id_expr
-                            self.var_expr.append(id_expr)
+                            self.res.append(id_expr)
                             return res
 
                         if func_name in [ 'arm_expand_imm', 'arm_expand_imm_c' ]:
                             imm_expr = 'Expr::MakeConst(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1))'
                             res += imm_expr
-                            self.var_expr.append(imm_expr)
+                            self.res.append(imm_expr)
                             return res
 
                         if func_name == 'imm':
                             assert(len(func_args) == 1)
                             imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
                             res += imm_expr
-                            self.var_expr.append(imm_expr)
+                            self.res.append(imm_expr)
                             return res
 
                         if func_name == 'disp':
                             assert(len(func_args) == 1)
-                            imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            disp = func_args[0]
+                            imm_expr = 'Expr::MakeConst(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, disp)
                             res += imm_expr
-                            self.var_expr.append(imm_expr)
+                            self.res.append(imm_expr)
                             return res
 
                         if func_name == 'arm_branch':
                             assert(len(func_args) == 1)
                             branch_expr = 'Expr::MakeConst(32, %s << 2)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += branch_expr
-                            self.var_expr.append(branch_expr)
+                            self.res.append(branch_expr)
                             return res
 
                         if func_name == 'thumb_branch':
                             assert(len(func_args) == 1)
                             branch_expr = 'Expr::MakeConst(32, %s << 1)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += branch_expr
-                            self.var_expr.append(branch_expr)
+                            self.res.append(branch_expr)
                             return res
 
                         if func_name == 'reg':
@@ -360,11 +373,11 @@ class ArmArchConvertion(ArchConvertion):
                             reg_name = func_args[0].capitalize()
                             self.var_expr.append('u32 Reg%s = %s;\n' % (reg_name, self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])))
                             if 'could_jmp' in self.insn['attribute'] and reg_name[0].lower() in [ 'd', 't' ]:
-                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + 1 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::JumpType;'))
+                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + ARM_RegR0 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::JumpType;'))
                             if 'could_ret' in self.insn['attribute'] and reg_name[0].lower() in [ 'd', 't' ]:
-                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + 1 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::ReturnType;'))
-                            reg_expr = 'Expr::MakeId(Reg%s + 1, &m_CpuInfo)' % reg_name
-                            self.var_expr.append(reg_expr)
+                                self.var_expr.append(self.parent._GenerateCondition('if', 'Reg%s + ARM_RegR0 == ARM_RegPC' % reg_name, 'rInsn.SubType() |= Instruction::ReturnType;'))
+                            reg_expr = 'Expr::MakeId(Reg%s + ARM_RegR0, &m_CpuInfo)' % reg_name
+                            self.res.append(reg_expr)
                             return reg_expr
 
                         if func_name == 'reg_list':
@@ -374,22 +387,25 @@ class ArmArchConvertion(ArchConvertion):
                             self.var_expr.append('std::vector<u32> VecId;\n')
                             self.var_expr.append('for (u8 RegIdx = 0; RegIdx < 16; ++RegIdx)\n')
                             self.var_expr.append('{\n')
-                            if_stmt = [ 'VecId.push_back(RegIdx + 1);' ]
+                            if_stmt = [ 'VecId.push_back(RegIdx + ARM_RegR0);' ]
                             if 'could_jmp' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
-                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;'))
+                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + ARM_RegR0 == ARM_RegPC', 'rInsn.SubType() |= Instruction::JumpType;'))
                             if 'could_ret' in self.insn['attribute'] and func_args[0][0] in [ 'd', 'r' ]:
-                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + 1 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;'))
+                                if_stmt.append(self.parent._GenerateCondition('if', 'RegIdx + ARM_RegR0 == ARM_RegPC', 'rInsn.SubType() |= Instruction::ReturnType;'))
                             self.var_expr.append(Indent(self.parent._GenerateCondition('if', 'RegList & (1 << RegIdx)', '\n'.join(if_stmt))))
                             self.var_expr.append('}\n')
-                            self.var_expr.append('Expr::MakeVecId(VecId, &m_CpuInfo);\n')
-                            res += self.var_expr[-1]
-                            return res
+                            vec_reg_expr = 'Expr::MakeVecId(VecId, &m_CpuInfo);\n'
+                            self.res.append(vec_reg_expr)
+                            return vec_reg_expr
 
                         if func_name == 'mem':
                             assert(len(func_args) == 1)
+                            offset = func_args[0]
+                            self.res.pop()
+
                             mem_expr = 'Expr::MakeMem(%d, %s, %s, %s)' %\
-                            (32, 'nullptr', func_args[0], 'true')
-                            self.var_expr[-1] = mem_expr
+                            (self._ARM_GetAccessBitSizeFromMnemonic(), 'nullptr', offset, 'true')
+                            self.res.append(mem_expr)
                             return mem_expr
 
                         if func_name == 'u_add_sub':
@@ -397,12 +413,12 @@ class ArmArchConvertion(ArchConvertion):
 
                             left = func_args[0]
                             right = func_args[1]
-                            self.var_expr.pop()
-                            self.var_expr.pop()
+                            self.res.pop()
+                            self.res.pop()
 
                             self.var_expr.append('auto OpType = (%s) ? OperationExpression::OpAdd : OperationExpression::OpSub;\n' % self.parent._ARM_GenerateExtractBits(insn, 'U'))
                             op_expr = 'Expr::MakeBinOp(OpType,\n%s,\n%s)' % (Indent(left), Indent(right))
-                            self.var_expr.append(op_expr)
+                            self.res.append(op_expr)
                             return op_expr
 
                         if func_name == 'register_shift':
@@ -422,8 +438,9 @@ class ArmArchConvertion(ArchConvertion):
                             #     else
                             #         shift_t = SRType_ROR; shift_n = UInt(imm5);
                             # return (shift_t, shift_n);
+                            # RRX is tedious to implement: http://reverseengineering.stackexchange.com/questions/6065/semantics-of-the-rrx-shift-instruction-in-arm-and-carry-flag-updates
                             decode_reg   = func_args[0]
-                            self.var_expr.pop()
+                            self.res.pop()
                             decode_shift = self.parent._ARM_GenerateExtractBits(insn, func_args[1])
                             if func_args[1] == 'sh':
                                 decode_shift += ' << 1'
@@ -435,14 +452,15 @@ class ArmArchConvertion(ArchConvertion):
                                 (0, 'ShiftType = OperationExpression::OpLls;\nShiftVal = %s;\n' % decode_imm, True),
                                 (1, 'ShiftType = OperationExpression::OpLrs;\nShiftVal = (%s == 0x0) ? 32 : %s;\n' % (decode_imm, decode_imm), True),
                                 (2, 'ShiftType = OperationExpression::OpArs;\nShiftVal = (%s == 0x0) ? 32 : %s;\n' % (decode_imm, decode_imm), True),
-                                (3, 'return nullptr;/* UNHANDLED */\n', True),
+                                (3, self.parent._GenerateCondition('if', '%s == 0' % decode_imm, 'ShiftType = OperationExpression::OpRor;\nShiftVal = 1;\n') +
+                                    self.parent._GenerateCondition('else', None, 'ShiftType = OperationExpression::OpRor;\nShiftVal = %s;\n' % decode_imm), True),
                                 ],
                                 'return nullptr;\n'
                                 ))
                             op_expr = 'Expr::MakeBinOp(ShiftType,\n%s,\n%s)' % (
                                 Indent(decode_reg),
                                 Indent('Expr::MakeConst(32, ShiftVal)'))
-                            self.var_expr.append(op_expr)
+                            self.res.append(op_expr)
                             return op_expr
 
                         raise Exception('call %s' % func_name)
@@ -497,12 +515,12 @@ class ArmArchConvertion(ArchConvertion):
                     def visit_BinOp(self, node):
                         op = self.visit(node.op)
                         left = self.visit(node.left)
-                        self.var_expr.pop()
                         right = self.visit(node.right)
-                        self.var_expr.pop()
+                        self.res.pop()
+                        self.res.pop()
 
                         op_expr = 'Expr::MakeBinOp(%s,\n%s,\n%s)' % (op, Indent(left), Indent(right))
-                        self.var_expr.append(op_expr)
+                        self.res.append(op_expr)
                         return op_expr
 
                     def visit_Add(self, node):
@@ -517,9 +535,19 @@ class ArmArchConvertion(ArchConvertion):
                     nodes = ast.parse(oprd_sem)
                     v.visit(nodes)
 
-                    for expr in v.var_expr[:-1]:
-                        res += expr
-                res += 'auto spOprd%s = %s;\n' % (oprd_no, v.var_expr[-1])
+                    # Generate used variables
+                    if len(v.var_expr) != 0:
+                        res += '/* Variables expression */\n'
+                    for var in v.var_expr:
+                        res += var
+
+                    if len(v.res) == 0:
+                        res += '/* unhandled operand %s */\n' % field
+                        v.res.append('Expr::MakeSys("stop", 0)')
+
+                    assert(len(v.res) == 1)
+
+                res += 'auto spOprd%d = %s;\n' % (oprd_no, v.res[0])
                 res += self._GenerateCondition('if', 'spOprd%d == nullptr' % oprd_no, 'return false;')
                 res += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
 
@@ -527,6 +555,10 @@ class ArmArchConvertion(ArchConvertion):
 
             else:
                 res += '/* unhandled field %s */\n' % field
+                res += 'auto spOprd%d = %s;\n' % (oprd_no, 'Expr::MakeSys("stop", 0)')
+                res += self._GenerateCondition('if', 'spOprd%d == nullptr' % oprd_no, 'return false;')
+                res += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
+                oprd_no += 1
 
 
         if 'semantic' in insn:

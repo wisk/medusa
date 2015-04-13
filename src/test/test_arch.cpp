@@ -34,6 +34,17 @@ BOOST_AUTO_TEST_CASE(arch_arm_test_case)
     BOOST_TEST_MESSAGE("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
   }
 
+  {
+    // e710019f ldr r1, [pc,r1]
+    medusa::MemoryBinaryStream MemBinStrm("\x01\x10\x9f\xe7", 4);
+    medusa::Instruction Insn;
+    BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
+    medusa::PrintData Data;
+    BOOST_CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
+    std::cout << Data.GetTexts() << std::endl;
+    BOOST_TEST_MESSAGE("e710019f is ldr r1, [pc,r1], decoded as: " << Data.GetTexts());
+  }
+
   delete pArmDisasm;
 }
 
