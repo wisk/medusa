@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 12 23:33:30 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 08:32:44 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -54134,11 +54134,13 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bsr
  * operand: ['Gv', 'Ev']
- * semantic: if op1.val == int(op0.bit, 0):
+ * semantic: alloc_var('res', op0.bit);
+if op1.val == int(op0.bit, 0):
   zf.id = int1(1)
 else:
   zf.id = int1(0)
   op0.val = bsr(op1);
+free_var('res');
 
  * cpu_model: >= X86_Arch_80386
  *
@@ -54183,12 +54185,15 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeUnOp(OperationExpression::OpBsr, rInsn.GetOperand(1))));
         auto spElseBody = Expr::MakeBind(ElseBodyExprs);
 
+        /* Semantic: alloc_var('res', op0.bit) */
+        auto pExpr0 = Expr::MakeVar("res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
+        AllExpr.push_back(pExpr0);
         /* Semantic: if op1.val == int(op0.bit, 0):
           zf.id = int1(1)
         else:
           zf.id = int1(0)
           op0.val = bsr(op1) */
-        auto pExpr0 = Expr::MakeIfElseCond(
+        auto pExpr1 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           rInsn.GetOperand(1),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
@@ -54196,7 +54201,10 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlZf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1)),
           spElseBody);
-        AllExpr.push_back(pExpr0);
+        AllExpr.push_back(pExpr1);
+        /* Semantic: free_var('res') */
+        auto pExpr2 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr2);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
