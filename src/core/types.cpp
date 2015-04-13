@@ -133,30 +133,33 @@ IntType IntType::Swap(void) const
 {
   switch (m_BitSize)
   {
-  case 16:
+    case 16:
     {
       auto Res = ConvertTo<u16>();
       EndianSwap(Res);
       IntType Tmp(m_BitSize, Res);
+      return Tmp;
     }
 
-  case 32:
-  {
-    auto Res = ConvertTo<u32>();
-    EndianSwap(Res);
-    IntType Tmp(m_BitSize, Res);
-  }
+    case 32:
+    {
+      auto Res = ConvertTo<u32>();
+      EndianSwap(Res);
+      IntType Tmp(m_BitSize, Res);
+      return Tmp;
+    }
 
-  case 64:
-  {
-    auto Res = ConvertTo<u64>();
-    EndianSwap(Res);
-    IntType Tmp(m_BitSize, Res);
-  }
+    case 64:
+    {
+      auto Res = ConvertTo<u64>();
+      EndianSwap(Res);
+      IntType Tmp(m_BitSize, Res);
+      return Tmp;
+    }
 
-  // TODO(KS):
-  default:
-    return *this;
+    // TODO(KS):
+    default:
+      return *this;
   }
 }
 
