@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 15:01:17 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 15:11:05 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -33294,11 +33294,16 @@ free_var('res');
  * mnemonic: rcr
  * opcode: 03
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -33493,67 +33498,51 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -34346,11 +34335,16 @@ free_var('res');
  * opcode: 03
  * operand: ['Eb', 'Ib']
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -34549,67 +34543,51 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -35870,11 +35848,16 @@ free_var('res');
  * opcode: 03
  * operand: ['Ev', 'Ib']
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -36073,67 +36056,51 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -36926,11 +36893,16 @@ free_var('res');
  * opcode: 03
  * operand: ['Eb', '1']
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -37129,67 +37101,51 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -37982,11 +37938,16 @@ free_var('res');
  * opcode: 03
  * operand: ['Ev', '1']
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -38185,67 +38146,51 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
@@ -39038,11 +38983,16 @@ free_var('res');
  * opcode: 03
  * operand: ['Eb', 'CL']
  * semantic: if op1.val != int(op1.bit, 0):
-  alloc_var('rcr_res', op0.bit)
-  rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-  cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-  op0.val = rcr_res
-  free_var('rcr_res');
+  alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+  alloc_var('ror_sz', 16)
+  ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+  ror_val = bit_cast(op0.val, ror_sz)
+  ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+  ror_val = ror(ror_val, op1.val)
+  cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+  op0.val = bit_cast(ror_val, int16(op0.bit))
+  free_var('ror_sz')
+  free_var('ror_val');
 
  *
  * mnemonic: shl
@@ -39241,67 +39191,51 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* Var Expr */
         Expression::LSPType ThenBodyExprs;
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() + 1));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Alloc, 0x10));
         ThenBodyExprs.push_back(Expr::MakeAssign(
-          Expr::MakeVar("rcr_res", VariableExpression::Use),
+          Expr::MakeVar("ror_sz", VariableExpression::Use),
+          Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("ror_sz", VariableExpression::Use))));
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLrs,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                rInsn.GetOperand(0),
-                Expr::MakeBinOp(
-                  OperationExpression::OpAdd,
-                  Expr::MakeBinOp(
-                    OperationExpression::OpSub,
-                    Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                    Expr::MakeBinOp(
-                      OperationExpression::OpUMod,
-                      rInsn.GetOperand(1),
-                      Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))),
+            Expr::MakeVar("ror_val", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeId(X86_FlCf, &m_CpuInfo),
-              Expr::MakeBinOp(
-                OperationExpression::OpSub,
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-                Expr::MakeBinOp(
-                  OperationExpression::OpUMod,
-                  rInsn.GetOperand(1),
-                  Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))))));
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeVar("ror_sz", VariableExpression::Use)),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() + 1, rInsn.GetOperand(0)->GetBitSize()))))
+        );
+        ThenBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeVar("ror_val", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpRor, Expr::MakeVar("ror_val", VariableExpression::Use), rInsn.GetOperand(1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlCf, &m_CpuInfo),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
             OperationExpression::OpLrs,
-            rInsn.GetOperand(0),
-            Expr::MakeBinOp(
-              OperationExpression::OpSub,
-              Expr::MakeBinOp(
-                OperationExpression::OpUMod,
-                rInsn.GetOperand(1),
-                Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())),
-              Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x1))), Expr::MakeConst(16, 0x1))));
+            Expr::MakeVar("ror_val", VariableExpression::Use),
+            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())), Expr::MakeConst(16, 0x1))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeVar("rcr_res", VariableExpression::Use)));
-        ThenBodyExprs.push_back(Expr::MakeVar("rcr_res", VariableExpression::Free));
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("ror_val", VariableExpression::Use), Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize()))));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_sz", VariableExpression::Free));
+        ThenBodyExprs.push_back(Expr::MakeVar("ror_val", VariableExpression::Free));
         auto spThenBody = Expr::MakeBind(ThenBodyExprs);
 
         /* Semantic: if op1.val != int(op1.bit, 0):
-          alloc_var('rcr_res', op0.bit)
-          rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
-          cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
-          op0.val = rcr_res
-          free_var('rcr_res') */
+          alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
+          alloc_var('ror_sz', 16)
+          ror_sz = int16(concat(op0.bit, ignore(' + 1')))
+          ror_val = bit_cast(op0.val, ror_sz)
+          ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+          ror_val = ror(ror_val, op1.val)
+          cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
+          op0.val = bit_cast(ror_val, int16(op0.bit))
+          free_var('ror_sz')
+          free_var('ror_val') */
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           rInsn.GetOperand(1),
