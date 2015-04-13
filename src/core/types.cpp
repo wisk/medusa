@@ -368,7 +368,8 @@ IntType& IntType::ArsAssign(IntType const& rVal)
 IntType IntType::Rol(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, (m_Value << rVal.ConvertTo<u32>()) | (m_Value >> (m_BitSize - rVal.ConvertTo<u32>())));
+  u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
+  IntType Tmp(m_BitSize, (m_Value << Count) | (m_Value >> (m_BitSize - Count)));
   Tmp._Adjust();
   return Tmp;
 }
@@ -384,7 +385,8 @@ IntType& IntType::RolAssign(IntType const& rVal)
 IntType IntType::Ror(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, (m_Value >> rVal.ConvertTo<u32>()) | (m_Value << (m_BitSize - rVal.ConvertTo<u32>())));
+  u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
+  IntType Tmp(m_BitSize, (m_Value >> Count) | (m_Value << (m_BitSize - Count)));
   Tmp._Adjust();
   return Tmp;
 }
