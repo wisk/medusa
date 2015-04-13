@@ -17,10 +17,15 @@ std::string IntType::ToString(u16 Base) const
 
 void IntType::SignExtend(u16 NewBitSize)
 {
-  //assert(NewBitSize > m_BitSize);
-  ap_int Mask = (ap_int(1) << NewBitSize) - 1;
-  m_Value = Mask & m_Value;
-  m_BitSize = NewBitSize;
+  u16 Pos = m_BitSize - 1;
+  if (Msb().ConvertTo<u16>() != Pos)
+  {
+    m_BitSize = NewBitSize; 
+    return;
+  }
+  ap_int InsertedBits = ((ap_int(1) << NewBitSize) - 1) - ((ap_int(1) << Pos) - 1);
+  m_Value |= InsertedBits;
+  m_BitSize = NewBitSize; 
 }
 
 void IntType::ZeroExtend(u16 NewBitSize)

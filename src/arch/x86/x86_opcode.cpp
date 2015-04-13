@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 17:39:24 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Apr 13 18:14:29 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -31048,7 +31048,8 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
  * attr: ['op_size']
  *
  * mnemonic: cdqe
- * semantic: ['if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)']
+ * semantic: rax.id = sign_extend(eax.id, int(32, rax.bit));
+
  * attr: ['rexw']
  *
 **/
@@ -31060,29 +31061,10 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cdqe);
       {
         Expression::LSPType AllExpr;
-        /* Semantic: if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)
-        else: rax.id |= int64(0xffffffff00000000) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeBinOp(
-            OperationExpression::OpAnd,
-            Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeConst(32, 0x80000000)),
-          Expr::MakeConst(32, 0x80000000),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpAnd,
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-              Expr::MakeConst(64, 0xffffffff)))
-        ,
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-              Expr::MakeConst(64, 0xffffffff00000000)))
-        );
+        /* Semantic: rax.id = sign_extend(eax.id, int(32, rax.bit)) */
+        auto pExpr0 = Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(0x20, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Rax))));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -33412,7 +33394,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -33584,7 +33566,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -33615,7 +33597,7 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -34464,7 +34446,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -34641,7 +34623,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -34672,7 +34654,7 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -35989,7 +35971,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -36166,7 +36148,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -36197,7 +36179,7 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -37046,7 +37028,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -37223,7 +37205,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -37254,7 +37236,7 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -38103,7 +38085,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -38280,7 +38262,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -38311,7 +38293,7 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -39160,7 +39142,7 @@ free_var('res');
   alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
   alloc_var('rol_sz', 16)
   rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-  rol_val = zero_extend(op0.val, rol_sz)
+  rol_val = bit_cast(op0.val, rol_sz)
   rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
   rol_val = rol(rol_val, op1.val)
   cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
@@ -39337,7 +39319,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(16, rInsn.GetOperand(0)->GetBitSize() + 1)));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpZext, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeVar("rol_sz", VariableExpression::Use))));
         ThenBodyExprs.push_back(Expr::MakeAssign(
           Expr::MakeVar("rol_val", VariableExpression::Use),
           Expr::MakeBinOp(
@@ -39368,7 +39350,7 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
           alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
           alloc_var('rol_sz', 16)
           rol_sz = int16(concat(op0.bit, ignore(' + 1')))
-          rol_val = zero_extend(op0.val, rol_sz)
+          rol_val = bit_cast(op0.val, rol_sz)
           rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
           rol_val = rol(rol_val, op1.val)
           cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))

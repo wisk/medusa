@@ -354,6 +354,9 @@ semantic:
     op0.val = res
     free_var('res')
 
+  cdqe: &cdqe |
+    rax.id = sign_extend(eax.id, int(32, rax.bit));
+
 ## Data transfer
 
   mov: &mov |
@@ -1979,7 +1982,7 @@ instruction:
 
           - mnemonic: cdqe
             attr: [ rexw ]
-            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0x80000000): rax.id &= int64(0x00000000ffffffff)\nelse: rax.id |= int64(0xffffffff00000000)" ]
+            semantic: *cdqe
 
       - opcode: 0x99
         sub_opcodes:
