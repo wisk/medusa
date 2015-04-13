@@ -312,11 +312,16 @@ semantic:
 
   rcl: &rcl |
     if op1.val != int(op1.bit, 0):
-      alloc_var('rcl_res', op0.bit)
-      rcl_res = ( (op0.val << op1.val) | (op0.val >> (int(op0.bit, op0.bit) - op1.val + int(op0.bit, 1))) | (cf.id << (op1 - int(op0.bit, 1))) )
-      cf.id = bit_cast(((op0.val << (op1.val - int(op1.bit, 1))) >> (int(op1.bit, op0.bit) - int(op1.bit, 1))), int16(1))
-      op0.val = rcl_res
-      free_var('rcl_res');
+      alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
+      alloc_var('rol_sz', 16)
+      rol_sz = int16(concat(op0.bit, ignore(' + 1')))
+      rol_val = bit_cast(op0.val, rol_sz)
+      rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
+      rol_val = rol(rol_val, op1.val)
+      cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
+      op0.val = bit_cast(rol_val, int16(op0.bit))
+      free_var('rol_sz')
+      free_var('rol_val');
 
   rcr: &rcr | 
     if op1.val != int(op1.bit, 0):
@@ -324,7 +329,7 @@ semantic:
       rcr_res = ( (op0.val >> (op1.val % (int(op0.bit, op0.bit)) )) | ( op0.val << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ) + int(op0.bit, 1)) ) | (cf.id << (int(op0.bit, op0.bit) - (op1.val % (int(op0.bit, op0.bit)) ))) )
       cf.id = bit_cast(op0.val >> ((op1.val % (int(op0.bit, op0.bit)) ) - int(op1.bit, 1)), int16(1))
       op0.val = rcr_res
-      free_var('rcr_res')
+      free_var('rcr_res');
 
   xadd: &xadd |
     alloc_var('res', op0.bit);
