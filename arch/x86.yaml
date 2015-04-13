@@ -560,6 +560,11 @@ semantic:
   test: &test |
     alloc_var('res', op0.bit);
     res = op0.val & op1.val;
+    of.id = int1(0)
+    cf.id = int1(0)
+    call('sign_flag')
+    call('zero_flag')
+    call('parity_flag')
     free_var('res');
 
 ## Bit manipulation
