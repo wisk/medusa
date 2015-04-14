@@ -362,6 +362,9 @@ semantic:
   cwde: &cwde |
     eax.id = sign_extend(ax.id, int(32, eax.bit));
 
+  cbw: &cbw |
+    ax.id = sign_extend(al.id, int(32, ax.bit));
+
 ## Data transfer
 
   mov: &mov |
@@ -1984,7 +1987,7 @@ instruction:
           - mnemonic: cbw
             cpu_model: ">= X86_Arch_8088"
             attr: [ op_size ]
-            semantic: [ "if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)" ]
+            semantic: *cbw
 
           - mnemonic: cdqe
             attr: [ rexw ]

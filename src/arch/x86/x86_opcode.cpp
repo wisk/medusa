@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 16:46:29 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 17:01:46 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -30956,7 +30956,8 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_80386
  *
  * mnemonic: cbw
- * semantic: ['if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)\nelse: ax.id |= int16(0xff00)']
+ * semantic: ax.id = sign_extend(al.id, int(32, ax.bit));
+
  * cpu_model: >= X86_Arch_8088
  * attr: ['op_size']
  *
@@ -30989,29 +30990,10 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cbw);
       {
         Expression::LSPType AllExpr;
-        /* Semantic: if (al.id & int8(0x80)) == int8(0x80): ax.id &= int16(0x00ff)
-        else: ax.id |= int16(0xff00) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeBinOp(
-            OperationExpression::OpAnd,
-            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-            Expr::MakeConst(8, 0x80)),
-          Expr::MakeConst(8, 0x80),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpAnd,
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-              Expr::MakeConst(16, 0xff)))
-        ,
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-              Expr::MakeConst(16, 0xff00)))
-        );
+        /* Semantic: ax.id = sign_extend(al.id, int(32, ax.bit)) */
+        auto pExpr0 = Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(0x20, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ax))));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
