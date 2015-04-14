@@ -606,7 +606,7 @@ semantic:
 
   btr: &btr |
     cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-    op0.val = (op0.val & (~(int(op0.bit, 1) << op1.val)));
+    op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit)))));
 
   bsf: &bsf |
     op0 = bsf(op1);

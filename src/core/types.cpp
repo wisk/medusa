@@ -57,7 +57,9 @@ ap_uint IntType::GetUnsignedValue(void) const
 {
   // If the value is positive, we don't need to do anything
   if (!m_Value.backend().sign())
+  {
     return m_Value;
+  }
 
   // ... otherwise we need to re-encode it
   ap_uint InsertMask = (ap_int(1) << m_BitSize) - 1;

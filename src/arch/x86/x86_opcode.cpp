@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 17:01:46 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 21:14:13 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -54798,7 +54798,7 @@ bool X86Architecture::Table_2_b2(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: b3
  * cpu_model: >= X86_Arch_80386
  * semantic: cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-op0.val = (op0.val & (~(int(op0.bit, 1) << op1.val)));
+op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit)))));
 
 **/
 bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -54827,7 +54827,7 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        /* Semantic: op0.val = (op0.val & (~(int(op0.bit, 1) << op1.val))) */
+        /* Semantic: op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit))))) */
         auto pExpr1 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -54838,7 +54838,10 @@ bool X86Architecture::Table_2_b3(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeBinOp(
                 OperationExpression::OpLls,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1),
-                rInsn.GetOperand(1)))));
+                Expr::MakeBinOp(
+                  OperationExpression::OpUMod,
+                  rInsn.GetOperand(1),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -55104,7 +55107,7 @@ free_var('res');
  * operand: ['Ev', 'Ib']
  * opcode: 06
  * semantic: cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-op0.val = (op0.val & (~(int(op0.bit, 1) << op1.val)));
+op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit)))));
 
  *
  * mnemonic: btc
@@ -55229,7 +55232,7 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)))), Expr::MakeConst(16, 0x1)));
         AllExpr.push_back(pExpr0);
-        /* Semantic: op0.val = (op0.val & (~(int(op0.bit, 1) << op1.val))) */
+        /* Semantic: op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit))))) */
         auto pExpr1 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
@@ -55240,7 +55243,10 @@ bool X86Architecture::Table_2_ba(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeBinOp(
                 OperationExpression::OpLls,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1),
-                rInsn.GetOperand(1)))));
+                Expr::MakeBinOp(
+                  OperationExpression::OpUMod,
+                  rInsn.GetOperand(1),
+                  Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
