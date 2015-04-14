@@ -63,7 +63,7 @@ ap_uint IntType::GetUnsignedValue(void) const
 
   // ... otherwise we need to re-encode it
   ap_uint InsertMask = (ap_int(1) << m_BitSize) - 1;
-  ap_uint NegValue = boost::multiprecision::abs((m_Value ^ InsertMask) + 1);
+  ap_uint NegValue = (boost::multiprecision::abs(m_Value) ^ InsertMask) + 1;
   return NegValue;
 }
 
