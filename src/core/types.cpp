@@ -357,7 +357,9 @@ IntType& IntType::LrsAssign(IntType const& rVal)
 IntType IntType::Ars(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value >> rVal.ConvertTo<u32>());
+  u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
+  IntType Tmp(m_BitSize - Count, m_Value >> Count);
+  Tmp.SignExtend(m_BitSize);
   Tmp._Adjust();
   return Tmp;
 }
