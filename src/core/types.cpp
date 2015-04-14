@@ -18,7 +18,8 @@ std::string IntType::ToString(u16 Base) const
 void IntType::SignExtend(u16 NewBitSize)
 {
   u16 Pos = m_BitSize - 1;
-  if (Msb().ConvertTo<u16>() != Pos)
+
+  if ((Pos <= 1) || (!((GetUnsignedValue() >> Pos) & 1)))
   {
     m_BitSize = NewBitSize; 
     return;
@@ -357,7 +358,9 @@ IntType& IntType::LrsAssign(IntType const& rVal)
 IntType IntType::Ars(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
+  u32 Count = rVal.ConvertTo<u32>();
+  if (Count > m_BitSize) 
+    Count = m_BitSize;
   IntType Tmp(m_BitSize - Count, m_Value >> Count);
   Tmp.SignExtend(m_BitSize);
   Tmp._Adjust();

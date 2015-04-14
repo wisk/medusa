@@ -359,6 +359,9 @@ semantic:
   cdqe: &cdqe |
     rax.id = sign_extend(eax.id, int(32, rax.bit));
 
+  cwde: &cwde |
+    eax.id = sign_extend(ax.id, int(32, eax.bit));
+
 ## Data transfer
 
   mov: &mov |
@@ -1971,11 +1974,12 @@ instruction:
             attr: [ rexb ]
             semantic: *xchg
 
+      # TODO(gg): Recode convert instructions
       - opcode: 0x98
         sub_opcodes:
           - mnemonic: cwde
             cpu_model: ">= X86_Arch_80386"
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)" ]
+            semantic: *cwde
 
           - mnemonic: cbw
             cpu_model: ">= X86_Arch_8088"

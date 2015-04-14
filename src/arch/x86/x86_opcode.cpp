@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 15:41:40 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 14 16:46:29 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -30951,7 +30951,8 @@ bool X86Architecture::Table_1_97(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 98
  *
  * mnemonic: cwde
- * semantic: ['if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)\nelse: eax.id |= int32(0xffff0000)']
+ * semantic: eax.id = sign_extend(ax.id, int(32, eax.bit));
+
  * cpu_model: >= X86_Arch_80386
  *
  * mnemonic: cbw
@@ -31022,29 +31023,10 @@ bool X86Architecture::Table_1_98(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetOpcode(X86_Opcode_Cwde);
       {
         Expression::LSPType AllExpr;
-        /* Semantic: if (ax.id & int16(0x8000)) == int16(0x8000): eax.id &= int32(0x0000ffff)
-        else: eax.id |= int32(0xffff0000) */
-        auto pExpr0 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeBinOp(
-            OperationExpression::OpAnd,
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeConst(16, 0x8000)),
-          Expr::MakeConst(16, 0x8000),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpAnd,
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-              Expr::MakeConst(32, 0xffff)))
-        ,
-          Expr::MakeAssign(
-            Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-              Expr::MakeConst(32, 0xffff0000)))
-        );
+        /* Semantic: eax.id = sign_extend(ax.id, int(32, eax.bit)) */
+        auto pExpr0 = Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(0x20, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Eax))));
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
