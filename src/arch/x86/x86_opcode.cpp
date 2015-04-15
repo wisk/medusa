@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Apr 15 23:32:55 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Apr 15 23:51:23 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -56743,7 +56743,11 @@ bool X86Architecture::Table_2_bb(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bsf
  * operand: ['Gv', 'Ev']
- * semantic: op0 = bsf(op1);
+ * semantic: if op1.val == int(op1.bit, 0):
+  zf.id = int1(1)
+else:
+  zf.id = int1(0)
+  op0.val = bsf(op1.val);
 
  * cpu_model: >= X86_Arch_80386
  *
@@ -56778,10 +56782,29 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0 = bsf(op1) */
-        auto pExpr0 = Expr::MakeAssign(
+        /* Var Expr */
+        Expression::LSPType ElseBodyExprs;
+        ElseBodyExprs.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0)));
+        ElseBodyExprs.push_back(Expr::MakeAssign(
           rInsn.GetOperand(0),
-          Expr::MakeUnOp(OperationExpression::OpBsf, rInsn.GetOperand(1)));
+          Expr::MakeUnOp(OperationExpression::OpBsf, rInsn.GetOperand(1))));
+        auto spElseBody = Expr::MakeBind(ElseBodyExprs);
+
+        /* Semantic: if op1.val == int(op1.bit, 0):
+          zf.id = int1(1)
+        else:
+          zf.id = int1(0)
+          op0.val = bsf(op1.val) */
+        auto pExpr0 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          rInsn.GetOperand(1),
+          Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          spElseBody);
         AllExpr.push_back(pExpr0);
         rInsn.SetSemantic(AllExpr);
       }
@@ -56795,7 +56818,7 @@ bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: bsr
  * operand: ['Gv', 'Ev']
- * semantic: if op1.val == int(op0.bit, 0):
+ * semantic: if op1.val == int(op1.bit, 0):
   zf.id = int1(1)
 else:
   zf.id = int1(0)
@@ -56844,7 +56867,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeUnOp(OperationExpression::OpBsr, rInsn.GetOperand(1))));
         auto spElseBody = Expr::MakeBind(ElseBodyExprs);
 
-        /* Semantic: if op1.val == int(op0.bit, 0):
+        /* Semantic: if op1.val == int(op1.bit, 0):
           zf.id = int1(1)
         else:
           zf.id = int1(0)
@@ -56852,7 +56875,7 @@ bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr0 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           rInsn.GetOperand(1),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+          Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), 0x0),
           Expr::MakeAssign(
             Expr::MakeId(X86_FlZf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1)),
