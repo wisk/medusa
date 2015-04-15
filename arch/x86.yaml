@@ -311,45 +311,69 @@ semantic:
 
   rol: &rol |
     alloc_var('res', op0.bit);
-    res = rol(op0.val, op1.val);
+    alloc_var('count_mask', op1.bit);
+    if int(op1.bit, op1.bit) == int(op1.bit, 64):
+      count_mask = int(op1.bit, 0x3f)
+    else:
+      count_mask = int(op1.bit, 0x1f);
+    res = rol(op0.val, op1.val & count_mask);
     cf.id = bit_cast(res, int16(1));
     op0.val = res;
+    free_var('count_mask');
     free_var('res');
 
   ror: &ror |
     alloc_var('res', op0.bit);
-    res = ror(op0.val, op1.val);
+    alloc_var('count_mask', op1.bit);
+    if int(op1.bit, op1.bit) == int(op1.bit, 64):
+      count_mask = int(op1.bit, 0x3f)
+    else:
+      count_mask = int(op1.bit, 0x1f);
+    res = ror(op0.val, op1.val & count_mask);
     cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
     op0.val = res;
     if op1.val == int(op1.bit, 1):
       of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
+    free_var('count_mask');
     free_var('res');
 
   rcl: &rcl |
+    alloc_var('count_mask', op1.bit);
+    if int(op1.bit, op1.bit) == int(op1.bit, 64):
+      count_mask = int(op1.bit, 0x3f)
+    else:
+      count_mask = int(op1.bit, 0x1f);
     if op1.val != int(op1.bit, 0):
       alloc_var('rol_val', concat(op0.bit, ignore(' + 1')))
       alloc_var('rol_sz', 16)
       rol_sz = int16(concat(op0.bit, ignore(' + 1')))
       rol_val = bit_cast(op0.val, rol_sz)
       rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
-      rol_val = rol(rol_val, op1.val)
+      rol_val = rol(rol_val, op1.val & count_mask)
       cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1))
       op0.val = bit_cast(rol_val, int16(op0.bit))
       free_var('rol_sz')
       free_var('rol_val');
+    free_var('count_mask');
 
   rcr: &rcr | 
+    alloc_var('count_mask', op1.bit);
+    if int(op1.bit, op1.bit) == int(op1.bit, 64):
+      count_mask = int(op1.bit, 0x3f)
+    else:
+      count_mask = int(op1.bit, 0x1f);
     if op1.val != int(op1.bit, 0):
       alloc_var('ror_val', concat(op0.bit, ignore(' + 1')))
       alloc_var('ror_sz', 16)
       ror_sz = int16(concat(op0.bit, ignore(' + 1')))
       ror_val = bit_cast(op0.val, ror_sz)
       ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit))
-      ror_val = ror(ror_val, op1.val)
+      ror_val = ror(ror_val, op1.val & count_mask)
       cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1))
       op0.val = bit_cast(ror_val, int16(op0.bit))
       free_var('ror_sz')
       free_var('ror_val');
+    free_var('count_mask');
 
   xadd: &xadd |
     alloc_var('res', op0.bit);
@@ -595,6 +619,17 @@ semantic:
     call('zero_flag')
     call('parity_flag')
     free_var('res');
+
+  lahf: &lahf |
+    ah.id =\
+        (  bit_cast(cf.id, int16(ah.bit))
+        | (int64(1)                       << int(ah.bit, 1))
+        | (bit_cast(pf.id, int16(ah.bit)) << int(ah.bit, 2))
+        | (int64(0)                       << int(ah.bit, 3))
+        | (bit_cast(af.id, int16(ah.bit)) << int(ah.bit, 4))
+        | (int64(0)                       << int(ah.bit, 5))
+        | (bit_cast(zf.id, int16(ah.bit)) << int(ah.bit, 6))
+        | (bit_cast(sf.id, int16(ah.bit)) << int(ah.bit, 7)));
 
 ## Bit manipulation
 
@@ -2053,6 +2088,7 @@ instruction:
       - opcode: 0x9f
         mnemonic: lahf
         test_flags: [ sf, zf, af, pf, cf ]
+        semantic: *lahf
 
       - opcode: 0xa0
         mnemonic: mov
