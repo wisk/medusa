@@ -119,6 +119,9 @@ class ArchConvertion:
             def visit_NotEq(self, node):
                 return 'ConditionExpression::CondNe'
 
+            def visit_Gt(self, node):
+                return 'ConditionExpression::CondUgt'
+
             def visit_UnaryOp(self, node):
                 oper_name = self.visit(node.op)
                 oprd_name = self.visit(node.operand)

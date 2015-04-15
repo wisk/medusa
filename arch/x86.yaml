@@ -268,6 +268,8 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    if op1.val == int(op1.bit, 1):
+      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
     op0.val = res;
     free_var('res');
 
@@ -278,6 +280,8 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    if op1.val == int(op1.bit, 1):
+      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))), int16(1));
     op0.val = res;
     free_var('res');
 
@@ -288,6 +292,8 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    if op1.val == int(op1.bit, 1):
+      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
     op0.val = res;
     free_var('res');
 
@@ -298,6 +304,8 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
+    if op1.val == int(op1.bit, 1):
+      of.id = int1(0);
     op0.val = res;
     free_var('res');
 
@@ -436,8 +444,8 @@ semantic:
   # TODO(KS): see pushf
   popf: &popf |
     alloc_var('flags', stack.bit);
-    stack.id += stack.size;
     flags = stack.mem;
+    stack.id += stack.size;
     cf.id = bit_cast(flags, int16(1));
     pf.id = bit_cast((flags >> int(stack.bit,  2)), int16(1));
     af.id = bit_cast((flags >> int(stack.bit,  4)), int16(1));
@@ -594,19 +602,28 @@ semantic:
     cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
 
   btc: &btc |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-    op0.val = (op0.val ^ ((int(op0.bit, 1) << op1.val)));
+    alloc_var('bit_set', 16);
+    bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
+    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    op0.val = (op0.val ^ ((int(op0.bit, 1) << bit_set)));
+    free_var('bit_set');
 
   bts: &bts |
     alloc_var('res', op0.bit);
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-    res = (op0.val | ((int(op0.bit, 1) << op1.val)));
+    alloc_var('bit_set', 16);
+    bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
+    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    res = (op0.val | ((int(op0.bit, 1) << bit_set)));
     op0.val = res
+    free_var('bit_set');
     free_var('res');
 
   btr: &btr |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
-    op0.val = (op0.val & (~(int(op0.bit, 1) << (op1.val % int(op1.bit, op0.bit)))));
+    alloc_var('bit_set', 16);
+    bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
+    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    op0.val = (op0.val & (~(int(op0.bit, 1) << bit_set)));
+    free_var('bit_set');
 
   bsf: &bsf |
     op0 = bsf(op1);
