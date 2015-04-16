@@ -48,6 +48,7 @@ private:
         Architecture::VSPType const& rArchs,
         Tag& rArchTag, u8& rArchMode) const;
 
+    u32            m_HeaderOffset;
     u32            m_Machine;
     bool           m_Arch64;
     EEndianness    m_Endian;

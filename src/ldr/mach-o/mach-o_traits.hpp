@@ -13,6 +13,8 @@ template<>
 struct MachOTraits<32>
 {
     typedef mach_header          MachOHeader;
+    typedef fat_header           FatHeader;
+    typedef fat_arch             FatArch;
     typedef load_command         LoadCmd;
     typedef segment_command      Segment;
     typedef section              Section;
@@ -181,12 +183,37 @@ struct MachOTraits<32>
         ::EndianSwap(Header.sizeofcmds);
         ::EndianSwap(Header.flags);
     }
+
+    static void EndianSwap(FatHeader& rFatHeader, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(rFatHeader.magic);
+      ::EndianSwap(rFatHeader.nfat_arch);
+    }
+
+    static void EndianSwap(FatArch& rFatArch, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(rFatArch.align);
+      ::EndianSwap(rFatArch.cpusubtype);
+      ::EndianSwap(rFatArch.cputype);
+      ::EndianSwap(rFatArch.offset);
+      ::EndianSwap(rFatArch.size);
+    }
 };
 
 template<>
 struct MachOTraits<64>
 {
     typedef mach_header_64       MachOHeader;
+    typedef fat_header           FatHeader;
+    typedef fat_arch             FatArch;
     typedef load_command         LoadCmd;
     typedef segment_command_64   Segment;
     typedef section_64           Section;
@@ -360,6 +387,29 @@ struct MachOTraits<64>
         ::EndianSwap(Header.sizeofcmds);
         ::EndianSwap(Header.flags);
         ::EndianSwap(Header.reserved);
+    }
+
+    static void EndianSwap(FatHeader& rFatHeader, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(rFatHeader.magic);
+      ::EndianSwap(rFatHeader.nfat_arch);
+    }
+
+    static void EndianSwap(FatArch& rFatArch, EEndianness Endianness)
+    {
+      if (!TestEndian(Endianness)) {
+        return;
+      }
+
+      ::EndianSwap(rFatArch.align);
+      ::EndianSwap(rFatArch.cpusubtype);
+      ::EndianSwap(rFatArch.cputype);
+      ::EndianSwap(rFatArch.offset);
+      ::EndianSwap(rFatArch.size);
     }
 };
 

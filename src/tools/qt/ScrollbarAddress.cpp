@@ -100,6 +100,8 @@ void ScrollbarAddress::paintEvent(QPaintEvent * evt)
 {
   if (_img.isNull())
     return;
+  if (_maxPos == 0)
+    return;
 
   _mutex.lock();
   QPainter painter(this);
