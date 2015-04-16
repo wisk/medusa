@@ -19,7 +19,7 @@ void IntType::SignExtend(u16 NewBitSize)
 {
   u16 Pos = m_BitSize - 1;
 
-  if ((Pos <= 1) || (!((GetUnsignedValue() >> Pos) & 1)))
+  if (!((GetUnsignedValue() >> Pos) & 1))
   {
     m_BitSize = NewBitSize; 
     return;
@@ -362,7 +362,12 @@ IntType IntType::Ars(IntType const& rVal) const
   //assert(m_BitSize == rVal.GetBitSize());
   u32 Count = rVal.ConvertTo<u32>();
   u32 ShiftedBitSize = Count > m_BitSize ? 1 : m_BitSize - Count;
-  IntType Tmp(ShiftedBitSize, m_Value >> Count);
+  ap_int ShiftedValue = m_Value;
+  if (Count > m_BitSize)
+    ShiftedValue >>= m_BitSize - 1;
+  else
+    ShiftedValue >>= Count;
+  IntType Tmp(ShiftedBitSize, ShiftedValue);
   Tmp.SignExtend(m_BitSize);
   Tmp._Adjust();
   return Tmp;
