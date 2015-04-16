@@ -361,9 +361,8 @@ IntType IntType::Ars(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
   u32 Count = rVal.ConvertTo<u32>();
-  if (Count > m_BitSize) 
-    Count = m_BitSize;
-  IntType Tmp(m_BitSize - Count, m_Value >> Count);
+  u32 ShiftedBitSize = Count > m_BitSize ? 1 : m_BitSize - Count;
+  IntType Tmp(ShiftedBitSize, m_Value >> Count);
   Tmp.SignExtend(m_BitSize);
   Tmp._Adjust();
   return Tmp;
