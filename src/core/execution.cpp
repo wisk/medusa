@@ -222,19 +222,19 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
   auto const& rAddr   = m_rDoc.GetAddressFromLabelName(rFuncName);
   auto const& rLbl    = m_rDoc.GetLabelFromAddress(rAddr);
 
-  if (!(rLbl.GetType() & (Label::Imported | Label::Function)))
-    return false;
+  if (rLbl.GetType() & (Label::Imported | Label::Function))
+  {
+    auto const* pCpuInfo = m_spArch->GetCpuInformation();
+    if (pCpuInfo == nullptr)
+      return false;
 
-  auto const* pCpuInfo = m_spArch->GetCpuInformation();
-  if (pCpuInfo == nullptr)
-    return false;
+    auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
+    if (PcSize == 0)
+      return false;
 
-  auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
-  if (PcSize == 0)
-    return false;
-
-  if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
-    return false;
+    if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
+      return false;
+  }
 
   {
     std::lock_guard<std::mutex> Lock(m_HookMutex);
@@ -283,6 +283,15 @@ std::string Execution::GetHookName(void) const
   if (itHookPair == std::end(m_HookName))
     return "";
   return itHookPair->second;
+}
+
+Address Execution::GetHookAddress(std::string const& rHkFuncName) const
+{
+  std::lock_guard<std::mutex> Lock(m_HookMutex);
+  for (auto const& rHkPr : m_HookName)
+    if (rHkPr.second == rHkFuncName)
+      return rHkPr.first;
+  return Address();
 }
 
 MEDUSA_NAMESPACE_END
