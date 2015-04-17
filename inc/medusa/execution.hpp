@@ -29,6 +29,7 @@ public:
   bool Hook(Address const& rAddress, u32 Type, Emulator::HookCallback Callback);
   bool Hook(std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback);
   std::string GetHookName(void) const;
+  Address GetHookAddress(std::string const& rHkFuncName) const;
 
   MemoryContext* GetMemoryContext(void) { return m_pMemCtxt; }
   // LATER: implement thread instead of cpu context

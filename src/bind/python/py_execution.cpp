@@ -73,6 +73,7 @@ void PydusaExecution(void)
     .def("hook_fn", pydusa::Execution_HookFunction)
     .def("hook_addr", pydusa::Execution_HookAddr)
     .def("get_hook_name", &Execution::GetHookName)
+    .def("get_hook_addr", &Execution::GetHookAddress)
     .add_property("cpu", bp::make_function(&Execution::GetCpuContext, bp::return_internal_reference<>()))
     .add_property("mem", bp::make_function(&Execution::GetMemoryContext, bp::return_internal_reference<>()))
     ;

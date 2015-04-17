@@ -37,6 +37,6 @@ void PydusaDocument(void)
     .add_property("memory_areas", pydusa::Document_MemoryAreas)
     .add_property("labels", pydusa::Document_Labels)
     .def("get_label", &Document::GetLabelFromAddress)
-    .def("get_label_address", &Document::GetAddressFromLabelName)
+    .def("get_label_addr", &Document::GetAddressFromLabelName)
   ;
 }
