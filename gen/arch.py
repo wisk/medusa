@@ -77,28 +77,46 @@ class ArchConvertion:
             def visit_If(self, node):
                 test_name = self.visit(node.test)
 
+                old_res = self.res
+                self.res = []
+
                 then_body_name = None
-                if len(node.body) == 1:
-                    then_body_name = self.visit(node.body[0])
+                for statm in node.body:
+                    statm_expr = self.visit(statm)
+                    if len(statm_expr) != 0:
+                        self.res.append(statm_expr)
+                if len(self.res) == 1:
+                    then_body_name = self.res[0]
                 else:
                     self.var_expr.append('Expression::LSPType ThenBodyExprs;\n')
-                    for statm in node.body:
-                        self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % self.visit(statm))
+                    for expr in self.res:
+                        self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % expr)
                     self.var_expr.append('auto spThenBody = Expr::MakeBind(ThenBodyExprs);\n')
                     then_body_name = 'spThenBody'
+
+                self.res = old_res
 
                 if len(node.orelse) == 0:
                     return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(then_body_name))
 
+
+                old_res = self.res
+                self.res = []
+
                 else_body_name = None
-                if len(node.orelse) == 1:
-                    else_body_name = self.visit(node.orelse[0])
+                for statm in node.orelse:
+                    statm_expr = self.visit(statm)
+                    if len(statm_expr) != 0:
+                        self.res.append(statm_expr)
+                if len(self.res) == 1:
+                    else_body_name = self.res[0]
                 else:
-                    self.var_expr.append('Expression::LSPType ElseBodyExprs;\n')
-                    for statm in node.orelse:
-                        self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % self.visit(statm))
+                    for expr in self.res:
+                        self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % expr)
                     self.var_expr.append('auto spElseBody = Expr::MakeBind(ElseBodyExprs);\n')
                     else_body_name = 'spElseBody'
+
+                self.res = old_res
 
                 return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(test_name), Indent(then_body_name), Indent(else_body_name))
 
