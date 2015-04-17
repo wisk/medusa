@@ -111,6 +111,7 @@ class ArchConvertion:
                 if len(self.res) == 1:
                     else_body_name = self.res[0]
                 else:
+                    self.var_expr.append('Expression::LSPType ElseBodyExprs;\n')
                     for expr in self.res:
                         self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % expr)
                     self.var_expr.append('auto spElseBody = Expr::MakeBind(ElseBodyExprs);\n')
