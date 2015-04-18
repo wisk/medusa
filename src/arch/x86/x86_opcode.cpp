@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 18 13:48:35 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Apr 18 14:14:22 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x371] =
 {
@@ -4566,7 +4566,7 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 06
  * attr: ['nm64']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
 **/
 bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -4592,10 +4592,10 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -5904,7 +5904,7 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 0e
  * attr: ['nm64']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
 **/
 bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -5930,10 +5930,10 @@ bool X86Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -7568,7 +7568,7 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 16
  * attr: ['nm64']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
 **/
 bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -7594,10 +7594,10 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -9248,7 +9248,7 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: 1e
  * attr: ['nm64']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
 **/
 bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -9274,10 +9274,10 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19199,14 +19199,14 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rAX']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r8']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  *
@@ -19234,10 +19234,10 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19268,10 +19268,10 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19285,14 +19285,14 @@ bool X86Architecture::Table_1_50(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rCX']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r9']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  *
@@ -19320,10 +19320,10 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19354,10 +19354,10 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19371,14 +19371,14 @@ bool X86Architecture::Table_1_51(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rDX']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r10']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  *
@@ -19406,10 +19406,10 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19440,10 +19440,10 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19457,14 +19457,14 @@ bool X86Architecture::Table_1_52(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rBX']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r11']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  *
@@ -19492,10 +19492,10 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19526,10 +19526,10 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19543,14 +19543,14 @@ bool X86Architecture::Table_1_53(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rSP']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r12']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  *
@@ -19578,10 +19578,10 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19612,10 +19612,10 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19629,14 +19629,14 @@ bool X86Architecture::Table_1_54(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rBP']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r13']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -19669,10 +19669,10 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19703,10 +19703,10 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19720,14 +19720,14 @@ bool X86Architecture::Table_1_55(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rSI']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r14']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -19760,10 +19760,10 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19794,10 +19794,10 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19811,14 +19811,14 @@ bool X86Architecture::Table_1_56(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: push
  * operand: ['d64_rDI']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
  * mnemonic: push
  * operand: ['d64_r15']
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -19851,10 +19851,10 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -19885,10 +19885,10 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -21347,7 +21347,7 @@ bool X86Architecture::Table_1_67(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: push
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  * operand: ['Iz']
@@ -21381,10 +21381,10 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -21441,7 +21441,7 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: push
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  * operand: ['Ib']
@@ -21475,10 +21475,10 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -47410,7 +47410,7 @@ program.id = op0.val;
  * operand: ['Ev']
  * opcode: 06
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  *
@@ -47979,10 +47979,10 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -56151,7 +56151,7 @@ bool X86Architecture::Table_2_9f(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: push
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: df64
  * operand: ['FS']
@@ -56185,10 +56185,10 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }
@@ -56878,7 +56878,7 @@ bool X86Architecture::Table_2_a7(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: push
  * semantic: stack.id -= stack.size;
-stack.mem = op0.val;
+stack.mem = sign_extend(op0.val, int16(stack.bit));
 
  * constraint: d64
  * operand: ['GS']
@@ -56912,10 +56912,10 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.mem = op0.val */
+        /* Semantic: stack.mem = sign_extend(op0.val, int16(stack.bit)) */
         auto pExpr1 = Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
-          rInsn.GetOperand(0));
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(16, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())))));
         AllExpr.push_back(pExpr1);
         rInsn.SetSemantic(AllExpr);
       }

@@ -450,7 +450,7 @@ semantic:
 
   push: &push |
     stack.id -= stack.size;
-    stack.mem = op0.val;
+    stack.mem = sign_extend(op0.val, int16(stack.bit));
 
   # http://en.wikipedia.org/wiki/FLAGS_register
   # TODO(KS): interrupt flag
