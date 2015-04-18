@@ -90,7 +90,10 @@ class ArchConvertion:
                 else:
                     self.var_expr.append('Expression::LSPType ThenBodyExprs;\n')
                     for expr in self.res:
-                        self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % expr)
+                        if expr.startswith('/*'):
+                            self.var_expr.append(expr)
+                        else:
+                            self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % expr)
                     self.var_expr.append('auto spThenBody = Expr::MakeBind(ThenBodyExprs);\n')
                     then_body_name = 'spThenBody'
 
@@ -113,7 +116,10 @@ class ArchConvertion:
                 else:
                     self.var_expr.append('Expression::LSPType ElseBodyExprs;\n')
                     for expr in self.res:
-                        self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % expr)
+                        if expr.startswith('/*'):
+                            self.var_expr.append(expr)
+                        else:
+                            self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % expr)
                     self.var_expr.append('auto spElseBody = Expr::MakeBind(ElseBodyExprs);\n')
                     else_body_name = 'spElseBody'
 
