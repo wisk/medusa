@@ -46,8 +46,8 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual bool Execute(Address const& rAddress, Expression const& rExpr);
-  virtual bool Execute(Address const& rAddress, Expression::List const& rExprList);
+  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr);
+  virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList);
 
 private:
   typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pCpuCtxtObj, u8* pMemCtxtObj);
@@ -64,43 +64,9 @@ private:
   BasicBlockCacheType           m_BasicBlockCache;
   FunctionCacheType             m_FunctionCache;
 
-  class LlvmVariableContext : public VariableContext
-  {
-  public:
-    LlvmVariableContext(llvm::IRBuilder<>& rBuilder);
-
-    virtual bool ReadVariable(std::string const& rVariableName, u64& rValue) const;
-    virtual bool WriteVariable(std::string const& rVariableName, u64 Value, bool SignExtend = false);
-
-    virtual bool AllocateVariable(u32 Type, std::string const& rVariableName);
-
-    virtual std::string ToString(void) const;
-
-  private:
-    llvm::IRBuilder<>& m_rBuilder;
-  };
-
-
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
-    LlvmExpressionVisitor(
-      HookAddressHashMap const& Hooks,
-      CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VariableContext* pVarCtxt,
-      llvm::IRBuilder<>& rBulder, llvm::Value* pCpuCtxtParam, llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam);
-    virtual Expression* VisitBind(Expression::List const& rExprList);
-    virtual Expression* VisitCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr);
-    virtual Expression* VisitIfCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr);
-    virtual Expression* VisitIfElseCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pThenExpr, Expression const* pElseExpr);
-    virtual Expression* VisitWhileCondition(u32 Type, Expression const* pRefExpr, Expression const* pTestExpr, Expression const* pBodyExpr);
-    virtual Expression* VisitOperation(u32 Type, Expression const* pLeftExpr, Expression const* pRightExpr);
-    virtual Expression* VisitConstant(u32 Type, u64 Value);
-    virtual Expression* VisitIdentifier(u32 Id, CpuInformation const* pCpuInfo);
-    virtual Expression* VisitMemory(u32 AccessSizeInBit, Expression const* pBaseExpr, Expression const* pOffsetExpr, bool Deref);
-    virtual Expression* VisitVariable(u32 SizeInBit, std::string const& rName);
-
-    void ClearValues(void);
-
   protected:
     llvm::Value* MakeInteger(u32 Bits, u64 Value) const;
     llvm::Value* MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
@@ -109,7 +75,6 @@ private:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
-    VariableContext*          m_pVarCtxt;
     llvm::IRBuilder<>&        m_rBuilder;
 
     std::stack<std::tuple<llvm::Value*, llvm::Value*>>  m_ValueStack;
