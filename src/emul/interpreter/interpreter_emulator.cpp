@@ -411,7 +411,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
     IntType RegVal(spIdExpr->GetBitSize(), 0);
     if (!m_pCpuCtxt->ReadRegister(spIdExpr->GetId(), RegVal))
     {
-      Log::Write("emul_interpreter").Level(LogError) << "unable to read register" << LogEnd;
+      Log::Write("emul_interpreter").Level(LogError) << "unable to read register " << m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(spIdExpr->GetId()) << LogEnd;
       return nullptr;
     }
     m_Values.push_back(RegVal);
@@ -425,7 +425,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
     IntType RegVal = m_Values.back();
     if (!m_pCpuCtxt->WriteRegister(spIdExpr->GetId(), RegVal))
     {
-      Log::Write("emul_interpreter").Level(LogError) << "unable to write register" << LogEnd;
+      Log::Write("emul_interpreter").Level(LogError) << "unable to write register " << m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(spIdExpr->GetId()) << LogEnd;
       return nullptr;
     }
     m_Values.pop_back();
