@@ -51,7 +51,7 @@ public:
     return WriteMemory(rAddr, &rMemVal, sizeof(rMemVal));
   }
 
-  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr) = 0;
+  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr);
   virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList) = 0;
 
   enum HookType

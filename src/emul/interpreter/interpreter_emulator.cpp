@@ -14,41 +14,6 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression::SPType spExpr)
-{
-  if (auto spSys = expr_cast<SystemExpression>(spExpr))
-  {
-    if (spSys->GetName() == "dump_insn")
-    {
-      if (m_InsnCb)
-        m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
-      return true;
-    }
-
-    if (spSys->GetName() == "check_exec_hook")
-    {
-      auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-      auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
-      u64 CurPc = 0;
-      m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz);
-      TestHook(Address(CurPc), Emulator::HookOnExecute);
-    }
-
-    if (spSys->GetName() == "stop")
-    {
-      return false;
-    }
-  }
-
-  InterpreterExpressionVisitor Visitor(m_Hooks, m_pCpuCtxt, m_pMemCtxt, m_Vars);
-  auto spCurExpr = spExpr->Visit(&Visitor);
-
-  if (spCurExpr == nullptr)
-    return false;
-
-  return true;
-}
-
 bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
   for (Expression::SPType spExpr : rExprList)

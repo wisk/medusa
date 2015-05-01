@@ -7,7 +7,8 @@ set(SRC
   ${INCROOT}/llvm_emulator.hpp
   )
 
-set(MEDUSA_LLVM_LIBS support core mc option)
+# TODO(KS): Probably not the optimal solution, but it works, so who cares?
+set(MEDUSA_LLVM_LIBS all)
 
 add_library(emul_llvm SHARED ${SRC})
 

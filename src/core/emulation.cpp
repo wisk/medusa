@@ -49,6 +49,11 @@ bool Emulator::WriteMemory(Address const& rAddr, void const* pVal, u32 Size)
   return m_pMemCtxt->WriteMemory(LinAddr, pVal, Size);
 }
 
+bool Emulator::Execute(Address const& rAddress, Expression::SPType spExpr)
+{
+  return Execute(rAddress, Expression::LSPType({ spExpr }));
+}
+
 bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
 {
   auto itHook = m_Hooks.find(rAddress);

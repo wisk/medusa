@@ -1,5 +1,5 @@
-#ifndef _EMUL_LLVM_
-#define _EMUL_LLVM_
+#ifndef EMUL_LLVM_HPP
+#define EMUL_LLVM_HPP
 
 #include <medusa/emulation.hpp>
 
@@ -22,6 +22,8 @@
 #include <llvm/Analysis/Passes.h>
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Target/TargetMachine.h>
+
+#include <llvm/IR/Intrinsics.h>
 
 #if defined(_WIN32) || defined(WIN32)
 # ifdef emul_llvm_EXPORTS
@@ -46,7 +48,6 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr);
   virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList);
 
 private:
@@ -56,6 +57,8 @@ private:
   static llvm::Module*          sm_pModule;
   static llvm::ExecutionEngine* sm_pExecutionEngine;
   static llvm::DataLayout*      sm_pDataLayout;
+
+  std::unordered_map<std::string, llvm::Value*> m_Vars;
 
   // TODO: Implement InvalidCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
@@ -67,22 +70,58 @@ private:
   class LlvmExpressionVisitor : public ExpressionVisitor
   {
   public:
+    LlvmExpressionVisitor(
+      HookAddressHashMap const& Hooks,
+      CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
+      llvm::IRBuilder<>& rBuilder);
+
+    virtual ~LlvmExpressionVisitor(void);
+
+    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
+    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+    virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
+    virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
+    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+
   protected:
-    llvm::Value* MakeInteger(u32 Bits, u64 Value) const;
-    llvm::Value* MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
-    llvm::Value* MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
+    llvm::Value* _MakeInteger(IntType const& rInt) const;
+    llvm::Value* _MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
+    llvm::Value* _MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
+    llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;
+    llvm::Value* _EmitComparison(u8 CondOp);
 
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
+    std::unordered_map<std::string, llvm::Value*>& m_rVars;
     llvm::IRBuilder<>&        m_rBuilder;
 
-    std::stack<std::tuple<llvm::Value*, llvm::Value*>>  m_ValueStack;
-    std::map<std::string, llvm::Value*>                 m_Variables;
-    llvm::Value*                                        m_pCpuCtxtParam;
-    llvm::Value*                                        m_pCpuCtxtObjParam;
-    llvm::Value*                                        m_pMemCtxtObjParam;
+    std::stack<llvm::Value*> m_ValueStack;
+    llvm::Value*             m_pCpuCtxtParam;
+    llvm::Value*             m_pCpuCtxtObjParam;
+    llvm::Value*             m_pMemCtxtObjParam;
+
+    size_t m_NrOfValueToRead;
+
+    enum State
+    {
+      Unknown,
+      Read,
+      Write,
+    };
+
+    State m_State;
   };
 };
 
-#endif // !_EMUL_LLVM_
+#endif // !EMUL_LLVM_HPP
