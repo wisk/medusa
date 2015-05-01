@@ -51,7 +51,7 @@ public:
   virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList);
 
 private:
-  typedef void (*BasicBlockCode)(u8* pCpuCtxt, u8* pCpuCtxtObj, u8* pMemCtxtObj);
+  typedef void (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
   llvm::IRBuilder<>             m_Builder;
   static llvm::Module*          sm_pModule;
@@ -71,9 +71,11 @@ private:
   {
   public:
     LlvmExpressionVisitor(
+      llvm::Module* pMod,
       HookAddressHashMap const& Hooks,
       CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
-      llvm::IRBuilder<>& rBuilder);
+      llvm::IRBuilder<>& rBuilder,
+      llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam);
 
     virtual ~LlvmExpressionVisitor(void);
 
@@ -97,9 +99,17 @@ private:
     llvm::Value* _MakeInteger(IntType const& rInt) const;
     llvm::Value* _MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
     llvm::Value* _MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
-    llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;
-    llvm::Value* _EmitComparison(u8 CondOp);
 
+    llvm::Type*  _IntTypeToLlvmType(IntType const& rInt) const;
+    llvm::Type*  _BitSizeToLlvmType(u16 BitSize) const;
+
+    llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;
+
+    llvm::Value* _EmitComparison(u8 CondOp);
+    llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
+    bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
+
+    llvm::Module*             m_pMod;
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
@@ -107,7 +117,6 @@ private:
     llvm::IRBuilder<>&        m_rBuilder;
 
     std::stack<llvm::Value*> m_ValueStack;
-    llvm::Value*             m_pCpuCtxtParam;
     llvm::Value*             m_pCpuCtxtObjParam;
     llvm::Value*             m_pMemCtxtObjParam;
 
