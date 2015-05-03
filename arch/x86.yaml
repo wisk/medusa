@@ -462,8 +462,11 @@ semantic:
 ## Stack operations
 
   push: &push |
+    alloc_var('pushed_value', stack.bit); 
+    pushed_value = sign_extend(op0.val, int(stack.bit, stack.bit)); 
     stack.id -= stack.size;
-    stack.mem = sign_extend(op0.val, int16(stack.bit));
+    stack.mem = pushed_value; 
+    free_var('pushed_value');
 
   # http://en.wikipedia.org/wiki/FLAGS_register
   # TODO(KS): interrupt flag
