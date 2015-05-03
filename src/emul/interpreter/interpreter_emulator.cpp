@@ -601,14 +601,20 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
       {
         IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
         if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
+        {
+          Log::Write("emul_interpreter").Level(LogError) << "unable to read memory at address: " << LinAddr << LogEnd;
           return nullptr;
+        }
         m_Values.push_back(MemVal);
       }
       while (m_NrOfValueToRead != 0)
       {
         IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
         if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
+        {
+          Log::Write("emul_interpreter").Level(LogError) << "unable to read memory at address: " << LinAddr << LogEnd;
           return nullptr;
+        }
         LinAddr += MemVal.GetBitSize() / 8;
         m_Values.push_back(MemVal);
         --m_NrOfValueToRead;
@@ -625,7 +631,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
   {
     if (m_Values.empty())
     {
-      Log::Write("emul_interpreter").Level(LogError) << "no value for address writing" << LogEnd;
+      Log::Write("emul_interpreter").Level(LogError) << "unable to write memory at address: " << LinAddr << LogEnd;
       return nullptr;
     }
 
@@ -644,7 +650,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
       auto MemVal = m_Values.back();
       if (!m_pMemCtxt->WriteMemory(LinAddr, MemVal))
       {
-        Log::Write("emul_interpreter").Level(LogError) << "unable to write memory" << LogEnd;
+        Log::Write("emul_interpreter").Level(LogError) << "unable to write memory at address: " << LinAddr << LogEnd;
         return nullptr;
       }
       m_Values.pop_back();
