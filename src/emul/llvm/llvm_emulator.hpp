@@ -18,12 +18,14 @@
 #include <llvm/IR/DataLayout.h>
 
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
+#include <llvm/ExecutionEngine/JITEventListener.h>
 #include <llvm/PassManager.h>
 #include <llvm/Analysis/Passes.h>
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Target/TargetMachine.h>
 
 #include <llvm/IR/Intrinsics.h>
+
 
 #if defined(_WIN32) || defined(WIN32)
 # ifdef emul_llvm_EXPORTS
@@ -66,6 +68,15 @@ private:
   typedef std::unordered_map<u64, llvm::Function*>   FunctionCacheType;
   BasicBlockCacheType           m_BasicBlockCache;
   FunctionCacheType             m_FunctionCache;
+
+  class EventListener : public llvm::JITEventListener
+  {
+  public:
+    EventListener(void);
+    virtual ~EventListener(void);
+    virtual void NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo);
+    virtual void NotifyFreeingObject(llvm::object::ObjectFile const& rObj);
+  };
 
   class LlvmExpressionVisitor : public ExpressionVisitor
   {

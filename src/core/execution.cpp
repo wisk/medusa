@@ -139,9 +139,9 @@ void Execution::Execute(Address const& rAddr)
   if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
     return;
 
-  Address BlkAddr = CurAddr;
   while (true)
   {
+    Address BlkAddr = CurAddr;
     Expression::LSPType Sems;
     while (true)
     {
@@ -183,7 +183,7 @@ void Execution::Execute(Address const& rAddr)
         Sems.push_back(spExpr->Clone());
       });
 
-      Sems.push_back(Expr::MakeSys("check_exec_hook", Address()));
+      Sems.push_back(Expr::MakeSys("check_exec_hook", PcAddr));
 
       if (spCurInsn->GetSubType() != Instruction::NoneType)
         break;

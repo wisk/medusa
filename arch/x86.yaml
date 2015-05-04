@@ -16,7 +16,7 @@ function:
 
 ## Standard flags operations
   sign_flag: &sign_flag |
-    sf.id = bit_cast(res.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    sf.id = bit_cast(res.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
   zero_flag: &zero_flag |
     if res.val == int(op0.bit, 0):
@@ -25,33 +25,33 @@ function:
       zf.id = int1(0);
 
   adjust_flag: &adjust_flag |
-    af.id = bit_cast((op0.val ^ op1.val ^ res.val) >> (int(op0.bit, 4)), int16(1));
+    af.id = bit_cast((op0.val ^ op1.val ^ res.val) >> (int(op0.bit, 4)), int1(1));
 
   parity_flag: &parity_flag |
     alloc_var('pf_tmp', pf.bit);
     pf_tmp = int1(1);
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 0), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 1), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 2), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 3), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 4), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 5), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 6), int16(1));
-    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 7), int16(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 0), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 1), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 2), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 3), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 4), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 5), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 6), int1(1));
+    pf_tmp ^= bit_cast(res.val >> int(op0.bit, 7), int1(1));
     pf.id = pf_tmp;
     free_var('pf_tmp');
 
   overflow_flag_add: &overflow_flag_add |
-    of.id = bit_cast(((op0.val ^ res.val) & (~(op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    of.id = bit_cast(((op0.val ^ res.val) & (~(op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
   carry_flag_add: &carry_flag_add |
-    cf.id = bit_cast(((op0.val & op1.val) ^ ((op0.val ^ op1.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    cf.id = bit_cast(((op0.val & op1.val) ^ ((op0.val ^ op1.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
   overflow_flag_sub: &overflow_flag_sub |
-    of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    of.id = bit_cast(((op0.val ^ res.val) & (op0.val ^ op1.val)) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
   carry_flag_sub: &carry_flag_sub |
-    cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    cf.id = bit_cast(((op0.val ^ op1.val ^ res.val) ^ ((op0.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
 ## Useful functions
   count_mask: &count_mask |
@@ -79,7 +79,7 @@ semantic:
 
   adc: &adc |
     alloc_var('res', op0.bit);
-    res.val = op0.val + op1.val + bit_cast(cf.id, int16(op0.bit));
+    res.val = op0.val + op1.val + bit_cast(cf.id, int(op0.bit, op0.bit));
     call('overflow_flag_add');
     call('carry_flag_add');
     call('sign_flag');
@@ -144,13 +144,13 @@ semantic:
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
-    call('adjust_flag');    
+    call('adjust_flag');
     op0.val = res;
     free_var('res');
 
   sbb: &sbb |
     alloc_var('res', op0.bit);
-    res = op0.val - op1.val - bit_cast(cf.id, int16(op0.bit));
+    res = op0.val - op1.val - bit_cast(cf.id, int(op0.bit, op0.bit));
     call('overflow_flag_sub');
     call('carry_flag_sub');
     call('sign_flag');
@@ -180,11 +180,11 @@ semantic:
     else:
       cf.id = int1(1);
     res = -op0.val;
-    of.id = bit_cast((res.val & op0.val) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
+    of.id = bit_cast((res.val & op0.val) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
-    af.id = bit_cast((op0.val ^ res.val) >> (int(op0.bit, 4)), int16(1));
+    af.id = bit_cast((op0.val ^ res.val) >> (int(op0.bit, 4)), int1(1));
     op0.val = res;
     free_var('res');
 
@@ -250,7 +250,7 @@ semantic:
     call('count_mask');
     res = ((op0.val << count) | (op1.val >> (int(op0.bit, op0.bit) - count)));
     if count != int(op2.bit, 0):
-      cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int16(1))
+      cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
@@ -267,7 +267,7 @@ semantic:
     call('count_mask');
     res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
     if count != int(op2.bit, 0):
-      cf.id = bit_cast(op0.val >> (count - int(op2.bit, 1)), int16(1))
+      cf.id = bit_cast(op0.val >> (count - int(op2.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
@@ -302,12 +302,12 @@ semantic:
     call('count_mask');
     res = op0.val >> count;
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(op0.val >> (count - int(op1.bit, 1)), int16(1))
+      cf.id = bit_cast(op0.val >> (count - int(op1.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
     if count == int(op1.bit, 1):
-      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))), int16(1));
+      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -319,12 +319,12 @@ semantic:
     call('count_mask');
     res = op0.val << count;
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int16(1))
+      cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
     if count == int(op1.bit, 1):
-      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
+      of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -336,8 +336,8 @@ semantic:
     call('count_mask');
     res = ars(op0.val, count);
     if count != int(op1.bit, 0):
-      if count > int(op1.bit, op0.bit): cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1))
-      else: cf.id = bit_cast(op0.val >> (count - int(op1.bit, 1)), int16(1))
+      if count > int(op1.bit, op0.bit): cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1))
+      else: cf.id = bit_cast(op0.val >> (count - int(op1.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
@@ -354,9 +354,9 @@ semantic:
     call('count_mask');
     res = rol(op0.val, count);
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(res, int16(1));
+      cf.id = bit_cast(res, int1(1));
     if count == int(op1.bit, 1):
-      of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int16(1));
+      of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -368,8 +368,8 @@ semantic:
     call('count_mask');
     res = ror(op0.val, count);
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
-    if count == int(op1.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
+      cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
+    if count == int(op1.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -387,8 +387,8 @@ semantic:
     rol_val = rol(rol_val, count);
     res = bit_cast(rol_val, int16(op0.bit));
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int16(1));
-    if count == int(op1.bit, 1): of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int16(1));
+      cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int1(1));
+    if count == int(op1.bit, 1): of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('rol_sz');
     free_var('rol_val');
@@ -408,8 +408,8 @@ semantic:
     ror_val = ror(ror_val, count);
     res = bit_cast(ror_val, int16(op0.bit));
     if count != int(op1.bit, 0):
-      cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int16(1));
-    if count == int(op1.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int16(1));
+      cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int1(1));
+    if count == int(op1.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('ror_sz');
     free_var('ror_val');
@@ -430,13 +430,13 @@ semantic:
     free_var('res')
 
   cdqe: &cdqe |
-    rax.id = sign_extend(eax.id, int(32, rax.bit));
+    rax.id = sign_extend(eax.id, int(rax.bit, rax.bit));
 
   cwde: &cwde |
-    eax.id = sign_extend(ax.id, int(32, eax.bit));
+    eax.id = sign_extend(ax.id, int(eax.bit, eax.bit));
 
   cbw: &cbw |
-    ax.id = sign_extend(al.id, int(32, ax.bit));
+    ax.id = sign_extend(al.id, int(ax.bit, ax.bit));
 
 ## Data transfer
 
@@ -444,10 +444,10 @@ semantic:
     op0.val = op1.val;
 
   movzx: &movzx |
-    op0.val = zero_extend(op1.val, int(32, op0.bit));
+    op0.val = zero_extend(op1.val, int(op0.bit, op0.bit));
 
   movsx: &movsx |
-    op0.val = sign_extend(op1.val, int(32, op0.bit));
+    op0.val = sign_extend(op1.val, int(op0.bit, op0.bit));
 
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
@@ -462,10 +462,10 @@ semantic:
 ## Stack operations
 
   push: &push |
-    alloc_var('pushed_value', stack.bit); 
-    pushed_value = sign_extend(op0.val, int(stack.bit, stack.bit)); 
+    alloc_var('pushed_value', stack.bit);
+    pushed_value = sign_extend(op0.val, int(stack.bit, stack.bit));
     stack.id -= stack.size;
-    stack.mem = pushed_value; 
+    stack.mem = pushed_value;
     free_var('pushed_value');
 
   # http://en.wikipedia.org/wiki/FLAGS_register
@@ -473,16 +473,16 @@ semantic:
   pushf: &pushf |
       stack.id -= stack.size;
       stack.mem =\
-        (  bit_cast(cf.id, int16(stack.bit))
-        | (int64(1)                          << int(stack.bit, 1))
-        | (bit_cast(pf.id, int16(stack.bit)) << int(stack.bit, 2))
-        | (bit_cast(af.id, int16(stack.bit)) << int(stack.bit, 4))
-        | (bit_cast(zf.id, int16(stack.bit)) << int(stack.bit, 6))
-        | (bit_cast(sf.id, int16(stack.bit)) << int(stack.bit, 7))
-        | (bit_cast(tf.id, int16(stack.bit)) << int(stack.bit, 8))
-        | (int64(1)                          << int(stack.bit, 9))
-        | (bit_cast(df.id, int16(stack.bit)) << int(stack.bit, 10))
-        | (bit_cast(of.id, int16(stack.bit)) << int(stack.bit, 11)));
+        (  bit_cast(cf.id, int(stack.bit, stack.bit))
+        | (int64(1)                                   << int(stack.bit, 1))
+        | (bit_cast(pf.id, int(stack.bit, stack.bit)) << int(stack.bit, 2))
+        | (bit_cast(af.id, int(stack.bit, stack.bit)) << int(stack.bit, 4))
+        | (bit_cast(zf.id, int(stack.bit, stack.bit)) << int(stack.bit, 6))
+        | (bit_cast(sf.id, int(stack.bit, stack.bit)) << int(stack.bit, 7))
+        | (bit_cast(tf.id, int(stack.bit, stack.bit)) << int(stack.bit, 8))
+        | (int64(1)                                   << int(stack.bit, 9))
+        | (bit_cast(df.id, int(stack.bit, stack.bit)) << int(stack.bit, 10))
+        | (bit_cast(of.id, int(stack.bit, stack.bit)) << int(stack.bit, 11)));
 
   pusha: &pusha |
     stack.id -= int16(2);stack.mem = ax.id;
@@ -514,14 +514,14 @@ semantic:
     alloc_var('flags', stack.bit);
     flags = stack.mem;
     stack.id += stack.size;
-    cf.id = bit_cast(flags, int16(1));
-    pf.id = bit_cast((flags >> int(stack.bit,  2)), int16(1));
-    af.id = bit_cast((flags >> int(stack.bit,  4)), int16(1));
-    zf.id = bit_cast((flags >> int(stack.bit,  6)), int16(1));
-    sf.id = bit_cast((flags >> int(stack.bit,  7)), int16(1));
-    tf.id = bit_cast((flags >> int(stack.bit,  8)), int16(1));
-    df.id = bit_cast((flags >> int(stack.bit, 10)), int16(1));
-    of.id = bit_cast((flags >> int(stack.bit, 11)), int16(1));
+    cf.id = bit_cast(flags, int1(1));
+    pf.id = bit_cast((flags >> int(stack.bit,  2)), int1(1));
+    af.id = bit_cast((flags >> int(stack.bit,  4)), int1(1));
+    zf.id = bit_cast((flags >> int(stack.bit,  6)), int1(1));
+    sf.id = bit_cast((flags >> int(stack.bit,  7)), int1(1));
+    tf.id = bit_cast((flags >> int(stack.bit,  8)), int1(1));
+    df.id = bit_cast((flags >> int(stack.bit, 10)), int1(1));
+    of.id = bit_cast((flags >> int(stack.bit, 11)), int1(1));
     free_var('flags');
 
   popa: &popa |
@@ -666,24 +666,24 @@ semantic:
 
   lahf: &lahf |
     ah.id =\
-        (  bit_cast(cf.id, int16(ah.bit))
-        | (int64(1)                       << int(ah.bit, 1))
-        | (bit_cast(pf.id, int16(ah.bit)) << int(ah.bit, 2))
-        | (int64(0)                       << int(ah.bit, 3))
-        | (bit_cast(af.id, int16(ah.bit)) << int(ah.bit, 4))
-        | (int64(0)                       << int(ah.bit, 5))
-        | (bit_cast(zf.id, int16(ah.bit)) << int(ah.bit, 6))
-        | (bit_cast(sf.id, int16(ah.bit)) << int(ah.bit, 7)));
+        (  bit_cast(cf.id, int8(ah.bit))
+        | (int64(1)                      << int(ah.bit, 1))
+        | (bit_cast(pf.id, int8(ah.bit)) << int(ah.bit, 2))
+        | (int64(0)                      << int(ah.bit, 3))
+        | (bit_cast(af.id, int8(ah.bit)) << int(ah.bit, 4))
+        | (int64(0)                      << int(ah.bit, 5))
+        | (bit_cast(zf.id, int8(ah.bit)) << int(ah.bit, 6))
+        | (bit_cast(sf.id, int8(ah.bit)) << int(ah.bit, 7)));
 
 ## Bit manipulation
 
   bt: &bt |
-    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int16(1));
+    cf.id = bit_cast((op0.val >> (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int1(1));
 
   btc: &btc |
     alloc_var('bit_set', 16);
     bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
-    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    cf.id = bit_cast((op0.val >> bit_set), int1(1));
     op0.val = (op0.val ^ ((int(op0.bit, 1) << bit_set)));
     free_var('bit_set');
 
@@ -691,7 +691,7 @@ semantic:
     alloc_var('res', op0.bit);
     alloc_var('bit_set', 16);
     bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
-    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    cf.id = bit_cast((op0.val >> bit_set), int1(1));
     res = (op0.val | ((int(op0.bit, 1) << bit_set)));
     op0.val = res
     free_var('bit_set');
@@ -700,7 +700,7 @@ semantic:
   btr: &btr |
     alloc_var('bit_set', 16);
     bit_set = (op1.val & (int(op0.bit, op0.bit) - int(op0.bit, 1)));
-    cf.id = bit_cast((op0.val >> bit_set), int16(1));
+    cf.id = bit_cast((op0.val >> bit_set), int1(1));
     op0.val = (op0.val & (~(int(op0.bit, 1) << bit_set)));
     free_var('bit_set');
 

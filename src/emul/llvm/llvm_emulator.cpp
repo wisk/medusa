@@ -8,6 +8,7 @@
 
 #include <llvm/ExecutionEngine/MCJIT.h>
 
+#include <llvm/Object/ObjectFile.h> // NOTE: Needed to avoid incomplete type llvm::object::ObjectFile
 
 MEDUSA_NAMESPACE_USE
 
@@ -16,7 +17,7 @@ llvm::ExecutionEngine*  LlvmEmulator::sm_pExecutionEngine = nullptr;
 llvm::DataLayout*       LlvmEmulator::sm_pDataLayout      = nullptr;
 
 // This function allows the JIT'ed code to read from a register
-static bool ReadRegisterWrapper(CpuContext* pCpuCtxt, u32 Reg, void* pVal, u32 BitSize)
+extern "C" EMUL_LLVM_EXPORT bool JitReadRegister(CpuContext* pCpuCtxt, u32 Reg, void* pVal, u32 BitSize)
 {
   if (!pCpuCtxt->ReadRegister(Reg, pVal, BitSize))
   {
@@ -29,7 +30,7 @@ static bool ReadRegisterWrapper(CpuContext* pCpuCtxt, u32 Reg, void* pVal, u32 B
 static llvm::Function* s_pReadRegisterFunc;
 
 // This function allows the JIT'ed code to write into a register
-static bool WriteRegisterWrapper(CpuContext* pCpuCtxt, u32 Reg, void const* pVal, u32 BitSize)
+extern "C" EMUL_LLVM_EXPORT bool JitWriteRegister(CpuContext* pCpuCtxt, u32 Reg, void const* pVal, u32 BitSize)
 {
   if (!pCpuCtxt->WriteRegister(Reg, pVal, BitSize))
   {
@@ -42,7 +43,7 @@ static bool WriteRegisterWrapper(CpuContext* pCpuCtxt, u32 Reg, void const* pVal
 static llvm::Function* s_pWriteRegisterFunc;
 
 // This function allows the JIT'ed code to access to memory
-static void* GetMemoryWrapper(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 BitSize)
+extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 BitSize)
 {
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
   auto pMemCtxt = reinterpret_cast<MemoryContext*>(pMemCtxtObj);
@@ -92,6 +93,9 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
       .setErrorStr(&ErrStr)
       .create();
 
+    static EventListener s_EvtLst;
+    sm_pExecutionEngine->RegisterJITEventListener(&s_EvtLst);
+
     //auto pChkStkType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), false);
     //llvm::IRBuilder<> ChkStkBld(llvm::getGlobalContext());
     //auto pChkStk = llvm::Function::Create(pChkStkType, llvm::GlobalValue::ExternalLinkage, "__chkstk", sm_pModule);
@@ -112,8 +116,8 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
       llvm::Type::getInt32Ty(rCtxt)   // BitSize
     };
     auto pReadRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(rCtxt), Params, false);
-    s_pReadRegisterFunc = llvm::Function::Create(pReadRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "ReadRegister", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pReadRegisterFunc, (void*)ReadRegisterWrapper);
+    s_pReadRegisterFunc = llvm::Function::Create(pReadRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitReadRegister", sm_pModule);
+    sm_pExecutionEngine->addGlobalMapping(s_pReadRegisterFunc, (void*)JitReadRegister);
   }
 
   // Initialize WriteRegister function type
@@ -126,8 +130,8 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
       llvm::Type::getInt32Ty(rCtxt)   // BitSize
     };
     auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
-    s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "WriteRegister", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pWriteRegisterFunc, (void*)WriteRegisterWrapper);
+    s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitWriteRegister", sm_pModule);
+    sm_pExecutionEngine->addGlobalMapping(s_pWriteRegisterFunc, (void*)JitWriteRegister);
   }
 
   // Initialize GetMemory function type
@@ -140,8 +144,8 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
     Params.push_back(llvm::Type::getInt64Ty(rCtxt));
     Params.push_back(llvm::Type::getInt32Ty(rCtxt));
     auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
-    s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "GetMemory", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, (void*)GetMemoryWrapper);
+    s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "JitGetMemory", sm_pModule);
+    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, (void*)JitGetMemory);
   }
 
   // Add passes to optimize the generated code
@@ -182,7 +186,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
   if (pExecFunc == nullptr)
   {
     // Create a new LLVM function
-    pExecFunc = llvm::Function::Create(s_pExecFuncType, llvm::GlobalValue::ExternalLinkage, std::string("fn_") + rAddress.ToString(), sm_pModule);
+    pExecFunc = llvm::Function::Create(s_pExecFuncType, llvm::GlobalValue::InternalLinkage, std::string("fn_") + rAddress.ToString(), sm_pModule);
 
     // Expose its parameters: CpuCtxt and MemCtxt
     auto itParam = pExecFunc->arg_begin();
@@ -221,11 +225,36 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
   pExecFunc->dump();
 
   // Call the JIT'ed code
-  auto pCode = (BasicBlockCode)sm_pExecutionEngine->getPointerToFunction(pExecFunc);
-  // TODO(KS): Change pages permissions...
+  // NOTE: We must call this method explicitly since it seems getFunctionAddress won't call it
+  // -elf windows hack?
+  sm_pExecutionEngine->finalizeObject();
+  auto pCode = (BasicBlockCode)sm_pExecutionEngine->getFunctionAddress(pExecFunc->getName());
+  if (pCode == nullptr)
+  {
+    Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
+    return false;
+  }
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
 
   return true;
+}
+
+LlvmEmulator::EventListener::EventListener(void)
+{
+}
+
+LlvmEmulator::EventListener::~EventListener(void)
+{
+}
+
+void LlvmEmulator::EventListener::NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo)
+{
+  Log::Write("emul_llvm").Level(LogDebug) << "object emitted" << LogEnd;
+}
+
+void LlvmEmulator::EventListener::NotifyFreeingObject(llvm::object::ObjectFile const& rObj)
+{
+  Log::Write("emul_llvm").Level(LogDebug) << "object freed" << LogEnd;
 }
 
 LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
@@ -270,7 +299,49 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTernaryCondition(Te
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  return nullptr;
+  // _Emit test and ref
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
+  auto pCondVal = _EmitComparison(spIfElseExpr->GetType());
+  m_State = OldState;
+
+  auto pBbOrig = m_rBuilder.GetInsertBlock();
+  auto& rCtxt = llvm::getGlobalContext();
+  auto pFunc = pBbOrig->getParent();
+
+  auto pBbThen = llvm::BasicBlock::Create(rCtxt, "then", pFunc);
+  auto pBbElse = llvm::BasicBlock::Create(rCtxt, "else", pFunc);
+  auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merged", pFunc);
+
+  // Emit the then branch
+  auto spThenExpr = spIfElseExpr->GetThenExpression();
+  m_rBuilder.SetInsertPoint(pBbThen);
+  OldState = m_State;
+  m_State = Unknown;
+  if (spThenExpr->Visit(this) == nullptr)
+    return nullptr;
+  m_State = OldState;
+  m_rBuilder.CreateBr(pBbMerg);
+
+  // Emit the else branch
+  auto spElseExpr = spIfElseExpr->GetElseExpression();
+  m_rBuilder.SetInsertPoint(pBbElse);
+  OldState = m_State;
+  m_State = Unknown;
+  if (spElseExpr != nullptr)
+    if (spElseExpr->Visit(this) == nullptr)
+      return nullptr;
+  m_State = OldState;
+  m_rBuilder.CreateBr(pBbMerg);
+
+  // Emit the condition
+  m_rBuilder.SetInsertPoint(pBbOrig);
+  m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbElse);
+
+  m_rBuilder.SetInsertPoint(pBbMerg);
+  return spIfElseExpr;
 }
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
@@ -326,7 +397,6 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
       pUnOpVal = m_rBuilder.CreateNeg(pVal);
       break;
 
-    // TODO(KS)
     case OperationExpression::OpSwap:
       pUnOpVal = _CallIntrinsic(llvm::Intrinsic::bswap, {}, { pVal });
       break;
@@ -443,22 +513,21 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpSext:
-    // TODO(KS):
-    //pBinOpVal = m_rBuilder.CreateSExt(LeftVal, ..., "sext");
+    pBinOpVal = m_rBuilder.CreateSExt(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "sext");
     break;
 
   case OperationExpression::OpZext:
-    // TODO(KS):
-    //pBinOpVal = m_rBuilder.CreateZExt(LeftVal, ..., "zext");
+    pBinOpVal = m_rBuilder.CreateZExt(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "zext");
+    break;
+
+  case OperationExpression::OpBcast:
+    pBinOpVal = m_rBuilder.CreateTruncOrBitCast(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     break;
 
   case OperationExpression::OpInsertBits:
     break;
 
   case OperationExpression::OpExtractBits:
-    break;
-
-  case OperationExpression::OpBcast:
     break;
   }
 
@@ -497,10 +566,12 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIdentifier(Identifi
 
   case Write:
   {
+    if (m_ValueStack.empty())
+      return nullptr;
     auto pRegVal = m_ValueStack.top();
+    m_ValueStack.pop();
     if (!_EmitWriteRegister(spIdExpr->GetId(), *spIdExpr->GetCpuInformation(), pRegVal))
       return nullptr;
-    m_ValueStack.pop();
     break;
   }
 
@@ -520,13 +591,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVectorIdentifier(Ve
     auto VecId = spVecIdExpr->GetVector();
     for (auto Id : VecId)
     {
-      //IntType RegVal(pCpuInfo->GetSizeOfRegisterInBit(Id), 0);
-      //if (!m_pCpuCtxt->ReadRegister(Id, RegVal))
-      //{
-      //  Log::Write("emul_llvm").Level(LogError) << "unable to read register" << LogEnd;
-      //  return nullptr;
-      //}
-      //m_Values.push_back(RegVal);
+      auto pRegVal = _EmitReadRegister(Id, *spVecIdExpr->GetCpuInformation());
+      if (pRegVal == nullptr)
+        return nullptr;
+      m_ValueStack.push(pRegVal);
     }
     break;
   }
@@ -536,17 +604,12 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVectorIdentifier(Ve
     auto VecId = spVecIdExpr->GetVector();
     for (auto Id : VecId)
     {
-      //if (m_Values.empty())
-      //{
-      //  Log::Write("emul_llvm").Level(LogError) << "no value to write into register" << LogEnd;
-      //  return nullptr;
-      //}
-      //if (!m_pCpuCtxt->WriteRegister(Id, m_Values.back()))
-      //{
-      //  Log::Write("emul_llvm").Level(LogError) << "unable to write register" << LogEnd;
-      //  return nullptr;
-      //}
-      //m_Values.pop_back();
+      if (m_ValueStack.empty())
+        return nullptr;
+      auto pRegVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      if (!_EmitWriteRegister(Id, *spVecIdExpr->GetCpuInformation(), pRegVal))
+        return nullptr;
     }
     break;
   }
@@ -564,29 +627,23 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTrackedIdentifier(T
   {
   case Read:
   {
-    //IntType RegVal(spTrkIdExpr->GetBitSize(), 0);
-    //if (!m_pCpuCtxt->ReadRegister(spTrkIdExpr->GetId(), RegVal))
-    //{
-    //  Log::Write("emul_llvm").Level(LogError) << "unable to read tracked register" << LogEnd;
-    //  return nullptr;
-    //}
-    //m_Values.push_back(RegVal);
+    auto pRegVal = _EmitReadRegister(spTrkIdExpr->GetId(), *spTrkIdExpr->GetCpuInformation());
+    if (pRegVal == nullptr)
+      return nullptr;
+    m_ValueStack.push(pRegVal);
     break;
   }
 
   case Write:
-    //if (m_Values.empty())
-    //{
-    //  Log::Write("emul_llvm").Level(LogError) << "no value to write into tracked register" << LogEnd;
-    //  return nullptr;
-    //}
-    //if (!m_pCpuCtxt->WriteRegister(spTrkIdExpr->GetId(), m_Values.back()))
-    //{
-    //  Log::Write("emul_llvm").Level(LogError) << "unable to write into tracked register" << LogEnd;
-    //  return nullptr;
-    //}
-    //m_Values.pop_back();
+  {
+    if (m_ValueStack.empty())
+      return nullptr;
+    auto pRegVal = m_ValueStack.top();
+    m_ValueStack.pop();
+    if (!_EmitWriteRegister(spTrkIdExpr->GetId(), *spTrkIdExpr->GetCpuInformation(), pRegVal))
+      return nullptr;
     break;
+  }
 
   default:
     return nullptr;
@@ -623,7 +680,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
         return nullptr;
-      m_ValueStack.push(itVar->second);
+      m_ValueStack.push(m_rBuilder.CreateLoad(itVar->second, "read_var"));
       break;
     }
     else
@@ -638,7 +695,11 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
         return nullptr;
-      m_ValueStack.push(itVar->second);
+      if (m_ValueStack.empty())
+        return nullptr;
+      auto pVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      m_rBuilder.CreateStore(pVal, itVar->second);
       break;
     }
     else
@@ -658,108 +719,93 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
 {
   State OldState = m_State;
   m_State = Read;
-  auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
-  auto spBaseExpr = spMemExpr->GetBaseExpression() ? spMemExpr->GetBaseExpression()->Visit(this) : nullptr;
+
+  auto spOffsetExpr = spMemExpr->GetOffsetExpression();
+  auto spBaseExpr = spMemExpr->GetBaseExpression();
+
+  if (spBaseExpr == nullptr)
+    m_ValueStack.push(_MakeInteger(IntType(16, 0x0)));
+  else if (spBaseExpr->Visit(this) == nullptr)
+    return nullptr;
+
+  if (spOffsetExpr->Visit(this) == nullptr)
+    return nullptr;
   m_State = OldState;
-  //if (spOffsetExpr == nullptr)
-  //{
-  //  Log::Write("emul_llvm").Level(LogError) << "invalid offset" << LogEnd;
-  //  return nullptr;
-  //}
 
-  //TBase Base = 0;
-  //if (spBaseExpr != nullptr)
-  //{
-  //  if (m_ValueStack.size() < 2)
-  //  {
-  //    Log::Write("emul_llvm").Level(LogError) << "no value for address base" << LogEnd;
-  //    return nullptr;
-  //  }
-  //  Base = m_Values.back().ConvertTo<u16>();
-  //  m_Values.pop_back();
-  //}
+  if (m_ValueStack.size() < 2)
+  {
+    Log::Write("emul_llvm").Level(LogError) << "no value for address" << LogEnd;
+    return nullptr;
+  }
 
-  //if (m_ValueStack.size() < 1)
-  //{
-  //  Log::Write("emul_llvm").Level(LogError) << "no value for address offset" << LogEnd;
-  //  return nullptr;
-  //}
-  //TOffset Offset = m_Values.back().ConvertTo<TOffset>();
-  //m_Values.pop_back();
+  auto pOffVal = m_rBuilder.CreateZExtOrBitCast(m_ValueStack.top(), _BitSizeToLlvmType(64));
+  m_ValueStack.pop();
+  auto pBaseVal = m_ValueStack.top();
+  m_ValueStack.pop();
+  auto AccBitSize = spMemExpr->GetAccessSizeInBit();
+  auto pAccBitSizeVal = _MakeInteger(IntType(32, AccBitSize));
 
-  //Address Addr(Base, Offset);
+  auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
+  auto pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
 
-  //u64 LinAddr = 0;
-  //if (!m_pCpuCtxt->Translate(Addr, LinAddr))
-  //  LinAddr = Offset;
+  switch (m_State)
+  {
+  default:
+    Log::Write("emul_llvm").Level(LogError) << "unknown state for address" << LogEnd;
+    return nullptr;
 
-  //switch (m_State)
-  //{
-  //default:
-  //  Log::Write("emul_llvm").Level(LogError) << "unknown state for address" << LogEnd;
-  //  return nullptr;
+  case Read:
+  {
+    if (!spMemExpr->IsDereferencable())
+    {
+      return nullptr;
+    }
 
-  //case Read:
-  //{
-  //  if (spMemExpr->IsDereferencable())
-  //  {
-  //    if (m_NrOfValueToRead == 0)
-  //    {
-  //      IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
-  //      if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
-  //        return nullptr;
-  //      m_Values.push_back(MemVal);
-  //    }
-  //    while (m_NrOfValueToRead != 0)
-  //    {
-  //      IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
-  //      if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
-  //        return nullptr;
-  //      LinAddr += MemVal.GetBitSize() / 8;
-  //      m_Values.push_back(MemVal);
-  //      --m_NrOfValueToRead;
-  //    }
-  //  }
-  //  else
-  //  {
-  //    m_Values.push_back(IntType(spMemExpr->GetAccessSizeInBit(), LinAddr));
-  //  }
-  //  break;
-  //}
+    if (m_NrOfValueToRead == 0)
+    {
+      auto pVal = m_rBuilder.CreateLoad(pPtrVal, "read_mem");
+      m_ValueStack.push(pVal);
+    }
+    while (m_NrOfValueToRead != 0)
+    {
+      auto pVal = m_rBuilder.CreateLoad(pPtrVal, "read_mem");
+      m_ValueStack.push(pVal);
+      // FIXME(KS):
+      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(IntType(AccBitSize, AccBitSize / 8)), "inc_ptr");
+      --m_NrOfValueToRead;
+    }
+    break;
+  }
 
-  //case Write:
-  //{
-  //  if (m_Values.empty())
-  //  {
-  //    Log::Write("emul_llvm").Level(LogError) << "no value for address writing" << LogEnd;
-  //    return nullptr;
-  //  }
+  case Write:
+  {
+    if (m_ValueStack.empty())
+    {
+      Log::Write("emul_llvm").Level(LogError) << "no value for address writing" << LogEnd;
+      return nullptr;
+    }
 
-  //  // NOTE: Trying to write an non-deferencable address is like
-  //  // changing its offset.
-  //  if (!spMemExpr->IsDereferencable())
-  //  {
-  //    auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
-  //    if (spOffsetExpr == nullptr)
-  //      return nullptr;
-  //    break;
-  //  }
+    //  // NOTE: Trying to write an non-deferencable address is like
+    //  // changing its offset.
+    //  if (!spMemExpr->IsDereferencable())
+    //  {
+    //    auto spOffsetExpr = spMemExpr->GetOffsetExpression()->Visit(this);
+    //    if (spOffsetExpr == nullptr)
+    //      return nullptr;
+    //    break;
+    //  }
 
-  //  do
-  //  {
-  //    auto MemVal = m_Values.back();
-  //    if (!m_pMemCtxt->WriteMemory(LinAddr, MemVal))
-  //    {
-  //      Log::Write("emul_llvm").Level(LogError) << "unable to write memory" << LogEnd;
-  //      return nullptr;
-  //    }
-  //    m_Values.pop_back();
-  //    LinAddr += MemVal.GetBitSize() / 8;
-  //  } while (!m_Values.empty());
-
-  //  break;
-  //}
-  //}
+    do
+    {
+      auto pCurVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      m_rBuilder.CreateStore(pCurVal, pPtrVal);
+      // FIXME(KS):
+      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(IntType(AccBitSize, AccBitSize / 8)), "inc_ptr");
+    } while (!m_ValueStack.empty());
+    break;
+  }
+  }
 
   return spMemExpr;
 }
@@ -891,6 +937,8 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitComparison(u8 CondOp)
 
 llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo)
 {
+  auto RegName = llvm::StringRef(rCpuInfo.ConvertIdentifierToName(Reg));
+
   // We need the register bit size to declare its type
   auto RegBitSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
 
@@ -899,19 +947,21 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitReadRegister(u32 Reg, Cpu
   auto pBitSize = _MakeInteger(IntType(32, RegBitSize));
 
   // Allocate the result on the stack
-  auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, "read_reg_alloca");
+  auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, RegName + "_alloc");
   auto pRegPtrVal = m_rBuilder.CreateBitCast(pRegAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), 8));
 
   // Call ReadRegister wrapper
-  auto pCallVal = m_rBuilder.CreateCall4(s_pReadRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize);
+  auto pCallVal = m_rBuilder.CreateCall4(s_pReadRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize, RegName + "_read");
 
   // Return the result
-  auto pRegResVal = m_rBuilder.CreateLoad(pRegAlloca, "read_reg_res");
+  auto pRegResVal = m_rBuilder.CreateLoad(pRegAlloca, RegName + "_val");
   return pRegResVal;
 }
 
 bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal)
 {
+  auto RegName = llvm::StringRef(rCpuInfo.ConvertIdentifierToName(Reg));
+
   // We need the register bit size to declare its type
   auto RegBitSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
 
@@ -920,12 +970,12 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   auto pBitSize = _MakeInteger(IntType(32, RegBitSize));
 
   // Allocate the new value on the stack
-  auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, "write_reg_alloca");
+  auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, RegName + "_alloc");
   auto pStoreReg = m_rBuilder.CreateStore(pVal, pRegAlloca);
-  auto pRegPtrVal = m_rBuilder.CreateBitCast(pRegAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), 8));
+  auto pRegPtrVal = m_rBuilder.CreateBitCast(pRegAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), 8), RegName + "_ptr");
 
   // Call WriteRegister wrapper
-  auto pCallVal = m_rBuilder.CreateCall4(s_pWriteRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize);
+  auto pCallVal = m_rBuilder.CreateCall4(s_pWriteRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize, RegName + "_write");
 
   return true;
 }
