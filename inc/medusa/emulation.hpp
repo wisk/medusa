@@ -65,6 +65,7 @@ public:
   typedef std::function<void(CpuContext*, MemoryContext*, Address const&)> HookCallback;
 
   virtual bool AddHookOnInstruction(HookCallback InsnCb);
+  virtual void CallInstructionHook(void);
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);

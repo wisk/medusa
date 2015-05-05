@@ -405,7 +405,7 @@ Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, 
 Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset)
 {
   Address NewAddr = m_Document.MakeAddress(Base, Offset);
-  if (NewAddr.GetAddressingType() == Address::UnknownType)
+  if (NewAddr.GetAddressingType() != Address::UnknownType)
     return NewAddr;
 
   return Address(Base, Offset);

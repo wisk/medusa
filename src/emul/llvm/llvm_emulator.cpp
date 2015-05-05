@@ -12,10 +12,6 @@
 
 MEDUSA_NAMESPACE_USE
 
-llvm::Module*           LlvmEmulator::sm_pModule          = nullptr;
-llvm::ExecutionEngine*  LlvmEmulator::sm_pExecutionEngine = nullptr;
-llvm::DataLayout*       LlvmEmulator::sm_pDataLayout      = nullptr;
-
 // This function allows the JIT'ed code to read from a register
 extern "C" EMUL_LLVM_EXPORT bool JitReadRegister(CpuContext* pCpuCtxt, u32 Reg, void* pVal, u32 BitSize)
 {
@@ -41,6 +37,19 @@ extern "C" EMUL_LLVM_EXPORT bool JitWriteRegister(CpuContext* pCpuCtxt, u32 Reg,
 }
 
 static llvm::Function* s_pWriteRegisterFunc;
+
+// This function allows the JIT'ed code to convert logical address to linear address
+extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, TBase Base, TOffset Offset)
+{
+  auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
+  u64 LinAddr;
+  if (!pCpuCtxt->Translate(Address(Base, Offset), LinAddr))
+    return Offset;
+
+  return LinAddr;
+}
+
+static llvm::Function* s_pTranslateAddressFunc;
 
 // This function allows the JIT'ed code to access to memory
 extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 BitSize)
@@ -68,96 +77,21 @@ extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj,
 
 static llvm::Function* s_pGetMemoryFunc = nullptr;
 
+// This function allows the JIT'ed code to call instruction hook
+extern "C" EMUL_LLVM_EXPORT void JitCallInstructionHook(u8* pEmulObj)
+{
+  auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
+  pEmul->CallInstructionHook();
+}
+
+static llvm::Function* s_pCallInstructionHookFunc = nullptr;
+
 LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
   : Emulator(pCpuInfo, pCpuCtxt, pMemCtxt)
   , m_Builder(llvm::getGlobalContext())
 {
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
-  auto& rCtxt = llvm::getGlobalContext();
-  std::string ErrStr;
-
-  if (sm_pModule == nullptr)
-  {
-    sm_pModule = new llvm::Module("medusa-emulator-llvm", rCtxt);
-
-  // c'mon... https://the-ravi-programming-language.readthedocs.org/en/latest/llvm-notes.html
-#ifdef _WIN32
-    auto Triple = llvm::sys::getProcessTriple();
-    sm_pModule->setTargetTriple(Triple + "-elf");
-#endif
-  }
-  if (sm_pExecutionEngine == nullptr)
-  {
-    sm_pExecutionEngine = llvm::EngineBuilder(std::unique_ptr<llvm::Module>(sm_pModule))
-      .setErrorStr(&ErrStr)
-      .create();
-
-    static EventListener s_EvtLst;
-    sm_pExecutionEngine->RegisterJITEventListener(&s_EvtLst);
-
-    //auto pChkStkType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), false);
-    //llvm::IRBuilder<> ChkStkBld(llvm::getGlobalContext());
-    //auto pChkStk = llvm::Function::Create(pChkStkType, llvm::GlobalValue::ExternalLinkage, "__chkstk", sm_pModule);
-    //sm_pExecutionEngine->addGlobalMapping(pChkStk, (void*)0x1337);
-  }
-  if (sm_pExecutionEngine == nullptr)
-    Log::Write("emul_llvm") << "Error: " << ErrStr << LogEnd;
-  if (sm_pDataLayout == nullptr)
-    sm_pDataLayout = new llvm::DataLayout(sm_pModule);
-
-  // Initialize ReadRegister function type
-  if (s_pReadRegisterFunc == nullptr)
-  {
-    std::vector<llvm::Type*> Params{
-      llvm::Type::getInt8PtrTy(rCtxt),   // pCpuCtxt
-      llvm::Type::getInt32Ty(rCtxt),    // Reg
-      llvm::Type::getInt8PtrTy(rCtxt), // pVal
-      llvm::Type::getInt32Ty(rCtxt)   // BitSize
-    };
-    auto pReadRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(rCtxt), Params, false);
-    s_pReadRegisterFunc = llvm::Function::Create(pReadRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitReadRegister", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pReadRegisterFunc, (void*)JitReadRegister);
-  }
-
-  // Initialize WriteRegister function type
-  if (s_pWriteRegisterFunc == nullptr)
-  {
-    std::vector<llvm::Type*> Params{
-      llvm::Type::getInt8PtrTy(rCtxt),   // pCpuCtxt
-      llvm::Type::getInt32Ty(rCtxt),    // Reg
-      llvm::Type::getInt8PtrTy(rCtxt), // pVal
-      llvm::Type::getInt32Ty(rCtxt)   // BitSize
-    };
-    auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
-    s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitWriteRegister", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pWriteRegisterFunc, (void*)JitWriteRegister);
-  }
-
-  // Initialize GetMemory function type
-  if (s_pGetMemoryFunc == nullptr)
-  {
-    std::vector<llvm::Type*> Params;
-    Params.push_back(llvm::Type::getInt8PtrTy(rCtxt));
-    Params.push_back(llvm::Type::getInt8PtrTy(rCtxt));
-    Params.push_back(llvm::Type::getInt16Ty(rCtxt));
-    Params.push_back(llvm::Type::getInt64Ty(rCtxt));
-    Params.push_back(llvm::Type::getInt32Ty(rCtxt));
-    auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
-    s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "JitGetMemory", sm_pModule);
-    sm_pExecutionEngine->addGlobalMapping(s_pGetMemoryFunc, (void*)JitGetMemory);
-  }
-
-  // Add passes to optimize the generated code
-  llvm::FunctionPassManager FuncPassMgr(sm_pModule);
-  FuncPassMgr.add(llvm::createBasicAliasAnalysisPass());
-  FuncPassMgr.add(llvm::createInstructionCombiningPass());
-  FuncPassMgr.add(llvm::createReassociatePass());
-  FuncPassMgr.add(llvm::createGVNPass());
-  FuncPassMgr.add(llvm::createCFGSimplificationPass());
-  FuncPassMgr.add(llvm::createPromoteMemoryToRegisterPass());
-  FuncPassMgr.add(llvm::createDeadCodeEliminationPass());
-  FuncPassMgr.doInitialization();
 }
 
 LlvmEmulator::~LlvmEmulator(void)
@@ -166,17 +100,6 @@ LlvmEmulator::~LlvmEmulator(void)
 
 bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
 {
-  // Define method(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
-  static llvm::FunctionType* s_pExecFuncType = nullptr;
-  if (s_pExecFuncType == nullptr)
-  {
-    auto pBytePtrType = llvm::Type::getInt8PtrTy(llvm::getGlobalContext());
-    std::vector<llvm::Type*> Params;
-    Params.push_back(pBytePtrType);
-    Params.push_back(pBytePtrType);
-    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
-  }
-
   u64 LinAddr;
   if (!m_pCpuCtxt->Translate(rAddress, LinAddr))
     return nullptr;
@@ -186,7 +109,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
   if (pExecFunc == nullptr)
   {
     // Create a new LLVM function
-    pExecFunc = llvm::Function::Create(s_pExecFuncType, llvm::GlobalValue::InternalLinkage, std::string("fn_") + rAddress.ToString(), sm_pModule);
+    pExecFunc = m_JitHelper.CreateFunction(rAddress.ToString());
 
     // Expose its parameters: CpuCtxt and MemCtxt
     auto itParam = pExecFunc->arg_begin();
@@ -194,12 +117,11 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     auto pMemCtxtObjParam = itParam;
 
     // Insert a new basic block
-    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), "bb", pExecFunc);
+    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + rAddress.ToString(), pExecFunc);
     m_Builder.SetInsertPoint(pBscBlk);
 
     // This visitor will now emit code into the basic block using the LLVM builder
     LlvmExpressionVisitor Visitor(
-      sm_pModule,
       m_Hooks,
       m_pCpuCtxt, m_pMemCtxt,
       m_Vars,
@@ -224,19 +146,177 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
 
   pExecFunc->dump();
 
-  // Call the JIT'ed code
-  // NOTE: We must call this method explicitly since it seems getFunctionAddress won't call it
-  // -elf windows hack?
-  sm_pExecutionEngine->finalizeObject();
-  auto pCode = (BasicBlockCode)sm_pExecutionEngine->getFunctionAddress(pExecFunc->getName());
+  auto pCode = m_JitHelper.GetFunctionCode(rAddress.ToString());
   if (pCode == nullptr)
   {
     Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
     return false;
   }
+
+  std::cout << "----------------------------------------------" << std::endl;
+
+  std::cout << m_pCpuCtxt->ToString() << std::endl;
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
+  std::cout << m_pCpuCtxt->ToString() << std::endl;
 
   return true;
+}
+
+LlvmEmulator::LlvmJitHelper::LlvmJitHelper(void)
+: m_pCurMod(nullptr)
+{
+
+}
+
+LlvmEmulator::LlvmJitHelper::~LlvmJitHelper(void)
+{
+  for (auto& rModEE : m_ModuleExecEngineMap)
+  {
+    delete rModEE.second;
+  }
+}
+
+llvm::Function* LlvmEmulator::LlvmJitHelper::CreateFunction(std::string const& rFnName)
+{
+  for (auto const* pMod : m_Modules)
+  {
+    auto pFunc = pMod->getFunction(std::string("fn_") + rFnName);
+    if (pFunc != nullptr)
+      return pFunc;
+  }
+
+  // Define method(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  static llvm::FunctionType* s_pExecFuncType = nullptr;
+  if (s_pExecFuncType == nullptr)
+  {
+    auto pBytePtrType = llvm::Type::getInt8PtrTy(llvm::getGlobalContext());
+    std::vector<llvm::Type*> Params;
+    Params.push_back(pBytePtrType);
+    Params.push_back(pBytePtrType);
+    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
+  }
+
+  if (m_pCurMod == nullptr)
+    _CreateModule(rFnName);
+  auto pExecFunc = llvm::Function::Create(s_pExecFuncType, llvm::GlobalValue::InternalLinkage, llvm::StringRef("fn_") + rFnName, m_pCurMod);
+  return pExecFunc;
+}
+
+LlvmEmulator::BasicBlockCode LlvmEmulator::LlvmJitHelper::GetFunctionCode(std::string const& rFnName)
+{
+  // We need a fresh module here
+  if (m_pCurMod == nullptr)
+    return nullptr;
+
+  auto FPM = new llvm::FunctionPassManager(m_pCurMod);
+  
+  // Set up the optimizer pipeline.  Start with registering info about how the
+  // target lays out data structures.
+  //FPM->add(new llvm::DataLayout(*EE->getDataLayout()));
+  // Provide basic AliasAnalysis support for GVN.
+  FPM->add(llvm::createBasicAliasAnalysisPass());
+  // Promote allocas to registers.
+  FPM->add(llvm::createPromoteMemoryToRegisterPass());
+  // Do simple "peephole" optimizations and bit-twiddling optzns.
+  FPM->add(llvm::createInstructionCombiningPass());
+  // Reassociate expressions.
+  FPM->add(llvm::createReassociatePass());
+  // Eliminate Common SubExpressions.
+  FPM->add(llvm::createGVNPass());
+  // Simplify the control flow graph (deleting unreachable blocks, etc).
+  FPM->add(llvm::createCFGSimplificationPass());
+
+  FPM->doInitialization();
+
+  for (auto& rFunc : *m_pCurMod)
+    FPM->run(rFunc);
+
+  auto EE = m_ModuleExecEngineMap[m_pCurMod];
+  EE->finalizeObject();
+  auto pFuncCode = (BasicBlockCode)EE->getFunctionAddress("fn_" + rFnName);
+  m_pCurMod = nullptr;
+  return pFuncCode;
+}
+
+void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
+{
+  m_pCurMod = new llvm::Module("medusa-llvm-emulator-module-" + rModName, llvm::getGlobalContext());
+  // LLVM doesn't support COFF format https://the-ravi-programming-language.readthedocs.org/en/latest/llvm-notes.html
+#ifdef _WIN32
+  auto Triple = llvm::sys::getProcessTriple();
+  m_pCurMod->setTargetTriple(Triple + "-elf");
+#endif
+
+  // Create the engine builder
+  std::string ErrStr;
+  auto EE = llvm::EngineBuilder(std::unique_ptr<llvm::Module>(m_pCurMod)).setErrorStr(&ErrStr).create();
+  m_ModuleExecEngineMap[m_pCurMod] = EE;
+
+  auto& rCtxt = llvm::getGlobalContext();
+
+  // Initialize ReadRegister function type
+  {
+    static std::vector<llvm::Type*> Params{
+      llvm::Type::getInt8PtrTy(rCtxt),   // pCpuCtxt
+      llvm::Type::getInt32Ty(rCtxt),    // Reg
+      llvm::Type::getInt8PtrTy(rCtxt), // pVal
+      llvm::Type::getInt32Ty(rCtxt)   // BitSize
+    };
+    static auto pReadRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(rCtxt), Params, false);
+    s_pReadRegisterFunc = llvm::Function::Create(pReadRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitReadRegister", m_pCurMod);
+    EE->addGlobalMapping(s_pReadRegisterFunc, (void*)JitReadRegister);
+  }
+
+  // Initialize WriteRegister function type
+  {
+    static std::vector<llvm::Type*> Params{
+      llvm::Type::getInt8PtrTy(rCtxt),   // pCpuCtxt
+      llvm::Type::getInt32Ty(rCtxt),    // Reg
+      llvm::Type::getInt8PtrTy(rCtxt), // pVal
+      llvm::Type::getInt32Ty(rCtxt)   // BitSize
+    };
+    static auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
+    s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitWriteRegister", m_pCurMod);
+    EE->addGlobalMapping(s_pWriteRegisterFunc, (void*)JitWriteRegister);
+  }
+
+  // Initialize TranslateMemory function type
+  {
+    static std::vector<llvm::Type*> Params{
+      llvm::Type::getInt8PtrTy(rCtxt),    // pCpuCtxt
+      llvm::Type::getInt16Ty(rCtxt),     // Base
+      llvm::Type::getInt64Ty(rCtxt),    // Offset
+    };
+    static auto pTranslateAddressFuncType = llvm::FunctionType::get(llvm::Type::getInt64Ty(rCtxt), Params, false);
+    s_pTranslateAddressFunc = llvm::Function::Create(pTranslateAddressFuncType, llvm::GlobalValue::ExternalLinkage, "JitTranslateAddress", m_pCurMod);
+    EE->addGlobalMapping(s_pTranslateAddressFunc, (void*)JitTranslateAddress);
+  }
+
+  // Initialize GetMemory function type
+  {
+    static std::vector<llvm::Type*> Params{
+      llvm::Type::getInt8PtrTy(rCtxt),   // pCpuCtxt
+      llvm::Type::getInt8PtrTy(rCtxt),  // pMemCtxt
+      llvm::Type::getInt16Ty(rCtxt),   // Base
+      llvm::Type::getInt64Ty(rCtxt),  // Offset
+      llvm::Type::getInt32Ty(rCtxt), // AccessBitSize
+    };
+    static auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
+    s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "JitGetMemory", m_pCurMod);
+    EE->addGlobalMapping(s_pGetMemoryFunc, (void*)JitGetMemory);
+  }
+
+  // Initialize CallInstructionHook function type
+  {
+    static std::vector<llvm::Type*> Params{
+      llvm::Type::getInt8PtrTy(rCtxt) // pEmul
+    };
+    static auto pCallInstructionHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
+    s_pCallInstructionHookFunc = llvm::Function::Create(pCallInstructionHookType, llvm::GlobalValue::ExternalLinkage, "JitCallInstructionHook", m_pCurMod);
+    EE->addGlobalMapping(s_pCallInstructionHookFunc, (void*)JitCallInstructionHook);
+  }
+
+  m_Modules.push_back(m_pCurMod);
 }
 
 LlvmEmulator::EventListener::EventListener(void)
@@ -258,13 +338,11 @@ void LlvmEmulator::EventListener::NotifyFreeingObject(llvm::object::ObjectFile c
 }
 
 LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
-  llvm::Module* pMod,
   HookAddressHashMap const& rHooks,
   CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
   llvm::IRBuilder<>& rBuilder,
   llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam)
-  : m_pMod(pMod)
-  , m_rHooks(rHooks)
+  : m_rHooks(rHooks)
   , m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars)
   , m_rBuilder(rBuilder)
   , m_NrOfValueToRead(), m_State(Unknown)
@@ -284,6 +362,9 @@ LlvmEmulator::LlvmExpressionVisitor::~LlvmExpressionVisitor(void)
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
+  //if (spSysExpr->GetName() == "dump_insn")
+    //m_rBuilder.CreateCall(s_pCallInstructionHookFunc, _MakePointer(8, this));
+
   return spSysExpr;
 }
 
@@ -418,12 +499,40 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
+  //if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
+  //{
+  //  State OldState = m_State;
+  //  m_State = Read;
+  //  auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+  //  auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
+  //  m_State = Write;
+  //  auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+  //  auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
+  //  m_State = OldState;
+  //  return spBinOpExpr;
+  //}
+
   if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
   {
     State OldState = m_State;
     m_State = Read;
+
     auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
+    auto pLeftVal = m_ValueStack.top();
+    m_ValueStack.pop();
+    auto pLeftAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spReadLeft->GetBitSize()), nullptr, "xchg_tmp_left");
+    m_rBuilder.CreateStore(pLeftVal, pLeftAlloca);
+    auto pCopyLeftVal = m_rBuilder.CreateLoad(pLeftAlloca);
+    m_ValueStack.push(pCopyLeftVal);
+
     auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
+    auto pRightVal = m_ValueStack.top();
+    m_ValueStack.pop();
+    auto pRightAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spReadRight->GetBitSize()), nullptr, "xchg_tmp_right");
+    m_rBuilder.CreateStore(pRightVal, pRightAlloca);
+    auto pCopyRightVal = m_rBuilder.CreateLoad(pRightAlloca);
+    m_ValueStack.push(pCopyRightVal);
+
     m_State = Write;
     auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
     auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
@@ -521,7 +630,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpBcast:
-    pBinOpVal = m_rBuilder.CreateTruncOrBitCast(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
+    if (spLeft->GetBitSize() == spRight->GetBitSize())
+      pBinOpVal = LeftVal;
+    else
+      pBinOpVal = m_rBuilder.CreateZExtOrTrunc(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     break;
 
   case OperationExpression::OpInsertBits:
@@ -745,8 +857,13 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   auto AccBitSize = spMemExpr->GetAccessSizeInBit();
   auto pAccBitSizeVal = _MakeInteger(IntType(32, AccBitSize));
 
-  auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
-  auto pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
+
+  llvm::Value* pPtrVal = nullptr;
+  if (m_State != Read || spMemExpr->IsDereferencable())
+  {
+    auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
+    pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
+  }
 
   switch (m_State)
   {
@@ -758,7 +875,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   {
     if (!spMemExpr->IsDereferencable())
     {
-      return nullptr;
+      auto pTransAddrRes = m_rBuilder.CreateCall3(s_pTranslateAddressFunc, m_pCpuCtxtObjParam, pBaseVal, pOffVal, "translate_memory");
+      auto pTransAddrResCast = m_rBuilder.CreateTruncOrBitCast(pTransAddrRes, _BitSizeToLlvmType(AccBitSize));
+      m_ValueStack.push(pTransAddrResCast);
+      break;
     }
 
     if (m_NrOfValueToRead == 0)

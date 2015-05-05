@@ -74,6 +74,17 @@ bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
   return true;
 }
 
+void Emulator::CallInstructionHook(void)
+{
+  Address CurAddr;
+  if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
+  {
+    Log::Write("core").Level(LogError) << "failed to get execution address" << LogEnd;
+    return;
+  }
+  m_InsnCb(m_pCpuCtxt, m_pMemCtxt, CurAddr);
+}
+
 bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback)
 {
   auto Addr = rDoc.GetAddressFromLabelName(rLabelName);

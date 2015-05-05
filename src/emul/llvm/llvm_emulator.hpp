@@ -56,9 +56,6 @@ private:
   typedef void (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
   llvm::IRBuilder<>             m_Builder;
-  static llvm::Module*          sm_pModule;
-  static llvm::ExecutionEngine* sm_pExecutionEngine;
-  static llvm::DataLayout*      sm_pDataLayout;
 
   std::unordered_map<std::string, llvm::Value*> m_Vars;
 
@@ -68,6 +65,24 @@ private:
   typedef std::unordered_map<u64, llvm::Function*>   FunctionCacheType;
   BasicBlockCacheType           m_BasicBlockCache;
   FunctionCacheType             m_FunctionCache;
+
+  class LlvmJitHelper
+  {
+  public:
+    LlvmJitHelper(void);
+    ~LlvmJitHelper(void);
+
+    llvm::Function* CreateFunction(std::string const& rFnName);
+    BasicBlockCode GetFunctionCode(std::string const& rFnName);
+
+  private:
+    void _CreateModule(std::string const& rModName);
+
+    std::vector<llvm::Module*> m_Modules;
+    std::map<llvm::Module*, llvm::ExecutionEngine*> m_ModuleExecEngineMap;
+    llvm::Module* m_pCurMod;
+
+  } m_JitHelper;
 
   class EventListener : public llvm::JITEventListener
   {
@@ -82,7 +97,6 @@ private:
   {
   public:
     LlvmExpressionVisitor(
-      llvm::Module* pMod,
       HookAddressHashMap const& Hooks,
       CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
       llvm::IRBuilder<>& rBuilder,
@@ -120,7 +134,6 @@ private:
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
 
-    llvm::Module*             m_pMod;
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;

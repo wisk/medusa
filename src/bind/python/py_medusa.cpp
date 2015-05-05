@@ -49,6 +49,11 @@ namespace pydusa
     return pCore->GetDocument();
   }
 
+  static Address Medusa_MakeAddress(Medusa* pCore, u64 Offset)
+  {
+    return pCore->MakeAddress(Offset);
+  }
+
   static Cell::SPType Medusa_GetCell(Medusa* pCore, Address const& rAddress)
   {
     return pCore->GetCell(rAddress);
@@ -94,6 +99,8 @@ void PydusaMedusa(void)
 
     .add_property("document", bp::make_function(pydusa::Medusa_GetDocument,
       bp::return_value_policy<bp::reference_existing_object>()))
+
+    .def("mk_addr", pydusa::Medusa_MakeAddress)
 
     .def("get_cell", pydusa::Medusa_GetCell)
     .def("fmt_cell", pydusa::Medusa_FormatCell)
