@@ -107,7 +107,7 @@ public:
     return WriteMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rSize) const;
+  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize) const;
 
   virtual bool AllocateMemory(u64 LinAddr, u32 Size, void** ppRawMemory);
   virtual bool FreeMemory(u64 LinAddr);

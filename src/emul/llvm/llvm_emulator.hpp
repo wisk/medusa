@@ -61,9 +61,7 @@ private:
 
   // TODO: Implement InvalidCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
-  typedef std::unordered_map<u64, llvm::BasicBlock*> BasicBlockCacheType;
-  typedef std::unordered_map<u64, llvm::Function*>   FunctionCacheType;
-  BasicBlockCacheType           m_BasicBlockCache;
+  typedef std::unordered_map<u64, BasicBlockCode>   FunctionCacheType;
   FunctionCacheType             m_FunctionCache;
 
   class LlvmJitHelper
@@ -97,6 +95,7 @@ private:
   {
   public:
     LlvmExpressionVisitor(
+      Emulator* pEmul,
       HookAddressHashMap const& Hooks,
       CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
       llvm::IRBuilder<>& rBuilder,
@@ -134,6 +133,7 @@ private:
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
 
+    Emulator*                 m_pEmul;
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;

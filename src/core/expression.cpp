@@ -805,7 +805,7 @@ std::string VariableExpression::ToString(void) const
   default: return "<invalid variable>";
   }
 
-  return (boost::format("Var%d[%s]") % m_BitSize % ActStr).str();
+  return (boost::format("Var%d[%s] %s") % m_BitSize % ActStr % m_Name).str();
 }
 
 Expression::SPType VariableExpression::Clone(void) const

@@ -197,17 +197,19 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
   return true;
 }
 
-bool MemoryContext::FindMemory(u64 LinearAddress, void*& prAddress, u32& rSize) const
+bool MemoryContext::FindMemory(u64 LinearAddress, void*& prAddress, u32& rOffset, u32& rSize) const
 {
   MemoryChunk MemChk;
 
   prAddress = nullptr;
+  rOffset = 0;
   rSize = 0;
 
   if (FindMemoryChunk(LinearAddress, MemChk) == false)
     return false;
 
   prAddress = MemChk.m_Buffer;
+  rOffset = LinearAddress - MemChk.m_LinearAddress;
   rSize = MemChk.m_Size;
   return true;
 }

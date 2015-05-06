@@ -69,6 +69,7 @@ public:
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
+  virtual bool TestHook(Address const& rAddress, u32 Type) const;
 
 protected:
   Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
@@ -79,8 +80,6 @@ protected:
     u32          m_Type;
     HookCallback m_Callback;
   };
-
-  bool TestHook(Address const& rAddress, u32 Type) const;
 
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;

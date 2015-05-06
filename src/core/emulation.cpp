@@ -76,6 +76,8 @@ bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
 
 void Emulator::CallInstructionHook(void)
 {
+  if (!m_InsnCb)
+    return;
   Address CurAddr;
   if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
   {
