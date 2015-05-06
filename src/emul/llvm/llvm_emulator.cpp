@@ -89,10 +89,19 @@ extern "C" EMUL_LLVM_EXPORT void JitCallInstructionHook(u8* pEmulObj)
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT void JitHandleHook(u8* pEmulObj, TBase Base, TOffset Offset, u32 HookType)
+extern "C" EMUL_LLVM_EXPORT void JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, u32 HookType)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
-  pEmul->TestHook(Address(Base, Offset), HookType);
+  auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
+
+  Address CurAddr;
+  if (!pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
+  {
+    Log::Write("emul_llvm").Level(LogError) << "unable to get execution address in handle hook" << LogEnd;
+    return;
+  }
+  CurAddr.SetBase(0x0); // HACK(KS)
+  pEmul->TestHook(CurAddr, HookType);
 }
 
 static llvm::Function* s_pHandleHookFunc = nullptr;
@@ -143,7 +152,15 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     // Emit the code for each expression
     for (auto spExpr : rExprList)
     {
-      Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
+      if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
+      {
+        if (spSysExpr->GetName() == "stop")
+        {
+          Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+          return false;
+        }
+      }
+      //Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
       if (spExpr->Visit(&Visitor) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << rAddress << LogEnd;
@@ -329,9 +346,8 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
   {
     static std::vector<llvm::Type*> Params{
       llvm::Type::getInt8PtrTy(rCtxt),  // pEmul
-      llvm::Type::getInt16Ty(rCtxt),   // Base
-      llvm::Type::getInt64Ty(rCtxt),  // Offset
-      llvm::Type::getInt32Ty(rCtxt), // HookType
+      llvm::Type::getInt8PtrTy(rCtxt), // pCpuCtxt
+      llvm::Type::getInt32Ty(rCtxt),  // HookType
     };
     static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
@@ -396,9 +412,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
   if (rSysName == "check_exec_hook")
   {
     Address CurAddr = spSysExpr->GetAddress();
-    m_rBuilder.CreateCall4(
-      s_pHandleHookFunc, _MakePointer(8, m_pEmul),
-      _MakeInteger(IntType(16, CurAddr.GetBase())), _MakeInteger(IntType(64, CurAddr.GetOffset())),
+    m_rBuilder.CreateCall3(
+      s_pHandleHookFunc,
+      _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
       _MakeInteger(IntType(32, Emulator::HookOnExecute)));
     return spSysExpr;
   }
@@ -676,7 +692,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
 
   case OperationExpression::OpBcast:
     if (spLeft->GetBitSize() == spRight->GetBitSize())
-      pBinOpVal = LeftVal;
+      pBinOpVal = m_rBuilder.CreateBitCast(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     else
       pBinOpVal = m_rBuilder.CreateZExtOrTrunc(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     break;
@@ -985,6 +1001,7 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakeInteger(IntType const& rI
   // TODO(KS): Handle integer larger than 64-bit
   if (rInt.GetBitSize() > 64)
   {
+    return llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(rInt.GetBitSize(), rInt.ToString(), 16));
     Log::Write("emul_llvm").Level(LogError) << "unsupported int size " << rInt.GetBitSize() << LogEnd;
     return nullptr;
   }
