@@ -57,6 +57,7 @@ class ArchConvertion:
                 self.var_expr = []
                 self.var_pool = []
                 self.res = []
+                self.cnt = 0
 
             def reset(self):
                 self.var_expr = []
@@ -88,14 +89,15 @@ class ArchConvertion:
                 if len(self.res) == 1:
                     then_body_name = self.res[0]
                 else:
-                    self.var_expr.append('Expression::LSPType ThenBodyExprs;\n')
+                    self.var_expr.append('Expression::LSPType ThenBodyExprs%d;\n' % self.cnt)
                     for expr in self.res:
                         if expr.startswith('/*'):
                             self.var_expr.append(expr)
                         else:
-                            self.var_expr.append('ThenBodyExprs.push_back(%s);\n' % expr)
-                    self.var_expr.append('auto spThenBody = Expr::MakeBind(ThenBodyExprs);\n')
-                    then_body_name = 'spThenBody'
+                            self.var_expr.append('ThenBodyExprs%d.push_back(%s);\n' % (self.cnt, expr))
+                    self.var_expr.append('auto spThenBody%d = Expr::MakeBind(ThenBodyExprs%d);\n' % (self.cnt, self.cnt))
+                    then_body_name = 'spThenBody%d' % self.cnt
+                    self.cnt += 1
 
                 self.res = old_res
 
