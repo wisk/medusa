@@ -57,7 +57,8 @@ private:
 
   llvm::IRBuilder<>             m_Builder;
 
-  std::unordered_map<std::string, llvm::Value*> m_Vars;
+  typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
+  VarMapType m_Vars;
 
   // TODO: Implement InvalidCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
@@ -97,7 +98,7 @@ private:
     LlvmExpressionVisitor(
       Emulator* pEmul,
       HookAddressHashMap const& Hooks,
-      CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
+      CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VarMapType& rVars,
       llvm::IRBuilder<>& rBuilder,
       llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam);
 
@@ -137,7 +138,7 @@ private:
     HookAddressHashMap const& m_rHooks;
     CpuContext*               m_pCpuCtxt;
     MemoryContext*            m_pMemCtxt;
-    std::unordered_map<std::string, llvm::Value*>& m_rVars;
+    LlvmEmulator::VarMapType& m_rVars;
     llvm::IRBuilder<>&        m_rBuilder;
 
     std::stack<llvm::Value*> m_ValueStack;

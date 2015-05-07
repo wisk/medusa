@@ -517,7 +517,7 @@ public:
     Use,
   };
 
-  VariableExpression(std::string const& rVarName, ActionType VarType, u16 BitSize = 0);
+  VariableExpression(std::string const& rVarName, ActionType VarType, u32 BitSize = 0);
 
   virtual ~VariableExpression(void);
 
@@ -530,10 +530,12 @@ public:
   std::string const& GetName(void) const { return m_Name; }
   ActionType         GetAction(void) const { return m_Action; }
 
+  void SetBitSize(u32 BitSize) { m_BitSize = BitSize; }
+
 protected:
   std::string m_Name;
   ActionType m_Action;
-  u16 m_BitSize;
+  u32 m_BitSize;
 };
 
 // memory expression //////////////////////////////////////////////////////////

@@ -156,6 +156,16 @@ protected:
   u8 m_Mode;
 };
 
+class Medusa_EXPORT IdentifierToVariable : public CloneVisitor
+{
+public:
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  std::set<u32> const& GetUsedId(void) { return m_UsedId; }
+
+private:
+  std::set<u32> m_UsedId;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !MEDUSA_EXPRESSION_VISITOR_HPP

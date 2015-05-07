@@ -139,55 +139,73 @@ void Execution::Execute(Address const& rAddr)
   if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
     return;
 
+  static std::unordered_map<Address, Expression::LSPType> s_Cache;
+
   while (true)
   {
     Address BlkAddr = CurAddr;
-    Expression::LSPType Sems;
-    while (true)
+    Expression::LSPType& Sems = s_Cache[BlkAddr];
+    if (Sems.empty())
     {
-      auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
-      if (spCurInsn == nullptr)
-      {
-        DisassembleInstruction(m_rDoc, m_spArch, m_pCpuCtxt->GetMode(), CurAddr);
-      }
-
-      spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
-      if (spCurInsn == nullptr)
+      while (true)
       {
 
-        Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
-        Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
-        return;
-      }
+        auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+        if (spCurInsn == nullptr)
+        {
+          DisassembleInstruction(m_rDoc, m_spArch, m_pCpuCtxt->GetMode(), CurAddr);
+        }
 
-      Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
+        spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
+        if (spCurInsn == nullptr)
+        {
 
-      Sems.push_back(Expr::MakeSys("dump_insn", CurAddr));
+          Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
+          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
+          return;
+        }
 
-      // TODO: I'm not really satisfied with this method
-      // it's not enough generic
-      Sems.push_back(Expr::MakeAssign(
-        Expr::MakeId(ProgPtrReg, m_pCpuInfo),
-        Expr::MakeConst(IntType(PcAddr.GetOffsetSize(), PcAddr.GetOffset()))));
+        Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
 
-      CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
+        Sems.push_back(Expr::MakeSys("dump_insn", CurAddr));
 
-      auto const& rCurSem = spCurInsn->GetSemantic();
-      if (rCurSem.empty())
-      {
-        Log::Write("exec").Level(LogError) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
-        Sems.push_back(Expr::MakeSys("stop", CurAddr));
-      }
-      std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
-      {
-        Sems.push_back(spExpr->Clone());
-      });
+        // TODO: I'm not really satisfied with this method
+        // it's not enough generic
+        Sems.push_back(Expr::MakeAssign(
+          Expr::MakeId(ProgPtrReg, m_pCpuInfo),
+          Expr::MakeConst(IntType(PcAddr.GetOffsetSize(), PcAddr.GetOffset()))));
 
-      Sems.push_back(Expr::MakeSys("check_exec_hook", PcAddr));
+        CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
 
-      if (spCurInsn->GetSubType() != Instruction::NoneType)
+        auto const& rCurSem = spCurInsn->GetSemantic();
+        if (rCurSem.empty())
+        {
+          Log::Write("exec").Level(LogError) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
+          Sems.push_back(Expr::MakeSys("stop", CurAddr));
+        }
+        std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
+        {
+          Sems.push_back(spExpr->Clone());
+        });
+
+        Sems.push_back(Expr::MakeSys("check_exec_hook", PcAddr));
+
+        if (spCurInsn->GetSubType() == Instruction::NoneType)
+          continue;
+        if (spCurInsn->GetSubType() & Instruction::JumpType
+          && !(spCurInsn->GetSubType() & Instruction::ConditionalType)
+          && expr_cast<ConstantExpression>(spCurInsn->GetOperand(0)) != nullptr)
+          continue;
+        if (spCurInsn->GetSubType() & Instruction::CallType
+          && !(spCurInsn->GetSubType() & Instruction::ConditionalType)
+          && expr_cast<ConstantExpression>(spCurInsn->GetOperand(0)) != nullptr)
+          continue;
+
         break;
-    };
+      };
+
+      s_Cache[BlkAddr] = Sems;
+    }
 
     bool Res = m_spEmul->Execute(BlkAddr, Sems);
 

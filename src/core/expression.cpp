@@ -780,7 +780,7 @@ Expression::SPType TrackedIdentifierExpression::Visit(ExpressionVisitor* pVisito
 
 // variable ///////////////////////////////////////////////////////////////////
 
-VariableExpression::VariableExpression(std::string const& rVarName, ActionType VarAct, u16 BitSize)
+VariableExpression::VariableExpression(std::string const& rVarName, ActionType VarAct, u32 BitSize)
   : m_Name(rVarName), m_Action(VarAct), m_BitSize(BitSize)
 {
   if (BitSize != 0 && VarAct != Alloc)

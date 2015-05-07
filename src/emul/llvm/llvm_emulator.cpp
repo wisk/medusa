@@ -1,6 +1,7 @@
 #include "llvm_emulator.hpp"
 
-#include "medusa/log.hpp"
+#include <medusa/log.hpp>
+#include <medusa/expression_visitor.hpp>
 
 #ifdef WIN32
 # include "llvm/Support/Host.h"
@@ -140,8 +141,14 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + rAddress.ToString(), pExecFunc);
     m_Builder.SetInsertPoint(pBscBlk);
 
+    // This visitor will normalize id if needed
+    NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
+
+    // This visitor will replace id to variable
+    IdentifierToVariable Id2Var;
+
     // This visitor will now emit code into the basic block using the LLVM builder
-    LlvmExpressionVisitor Visitor(
+    LlvmExpressionVisitor EmitLlvm(
       this,
       m_Hooks,
       m_pCpuCtxt, m_pMemCtxt,
@@ -149,19 +156,82 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
       m_Builder,
       pCpuCtxtObjParam, pMemCtxtObjParam);
 
-    // Emit the code for each expression
+    bool DumpInsn = false;
+    Expression::LSPType rJitExpr;
+    // Change the code to make it more JIT friendly
     for (auto spExpr : rExprList)
     {
+      // Don't bother to continue if a "stop" is asked
       if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
       {
-        if (spSysExpr->GetName() == "stop")
+        auto const& rSysName = spSysExpr->GetName();
+        if (rSysName == "stop")
         {
           Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
           return false;
         }
+        if (rSysName == "dump_insn")
+        {
+          DumpInsn = true;
+          continue;
+        }
+        if (rSysName == "check_exec_hook")
+          continue; // ignore hook for now...
       }
-      //Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
-      if (spExpr->Visit(&Visitor) == nullptr)
+
+      // Normalize Id (e.g. al → eax in 32-bit, al → rax in 64-bit)
+      auto spNrmExpr = spExpr->Visit(&NrmId);
+      if (spNrmExpr == nullptr)
+      {
+        Log::Write("emul_llvm") << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
+        return false;
+      }
+
+      // Id to var
+      auto spId2Var = spNrmExpr->Visit(&Id2Var);
+      if (spId2Var == nullptr)
+      {
+        Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
+        return false;
+      }
+
+      rJitExpr.push_back(spId2Var);
+    }
+
+    // For each used id, we must allocate and free a variable
+    auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+    for (auto Id : Id2Var.GetUsedId())
+    {
+      auto IdName = rCpuInfo.ConvertIdentifierToName(Id);
+      auto IdBitSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+
+      // Copy id value to register (2)
+      rJitExpr.push_front(Expr::MakeAssign(
+        Expr::MakeVar(IdName, VariableExpression::Use),
+        Expr::MakeId(Id, &rCpuInfo)));
+
+      // Allocate variable (1)
+      rJitExpr.push_front(Expr::MakeVar(IdName, VariableExpression::Alloc, IdBitSize));
+
+      // Copy variable to id (3)
+      rJitExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(Id, &rCpuInfo),
+        Expr::MakeVar(IdName, VariableExpression::Use)));
+
+      // Free variable (4)
+      rJitExpr.push_back(Expr::MakeVar(IdName, VariableExpression::Free));
+    }
+
+    // Dump instruction (actually it's more a kind of basic block) if required
+    if (DumpInsn && m_InsnCb)
+      rJitExpr.push_back(Expr::MakeSys("dump_insn", rAddress));
+
+
+    // Emit the code for each expression
+    for (auto spExpr : rJitExpr)
+    {
+      //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
+      if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << rAddress << LogEnd;
         return false;
@@ -184,6 +254,11 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
   }
 
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
+
+  Address NextAddr;
+  m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr);
+  NextAddr.SetBase(0x0); // HACK(KS)
+  TestHook(NextAddr, Emulator::HookOnExecute);
 
   return true;
 }
@@ -378,7 +453,7 @@ void LlvmEmulator::EventListener::NotifyFreeingObject(llvm::object::ObjectFile c
 LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
   Emulator* pEmul,
   HookAddressHashMap const& rHooks,
-  CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, llvm::Value*>& rVars,
+  CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, VarMapType& rVars,
   llvm::IRBuilder<>& rBuilder,
   llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam)
   : m_pEmul(pEmul)
@@ -691,17 +766,32 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpBcast:
-    if (spLeft->GetBitSize() == spRight->GetBitSize())
-      pBinOpVal = m_rBuilder.CreateBitCast(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
-    else
       pBinOpVal = m_rBuilder.CreateZExtOrTrunc(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     break;
 
   case OperationExpression::OpInsertBits:
+  {
+    auto spRConst = expr_cast<ConstantExpression>(spRight);
+    if (spRConst == nullptr)
+      break;
+    auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
+    auto pMask = _MakeInteger(spRConst->GetConstant());
+    auto pShiftedVal = m_rBuilder.CreateShl(LeftVal, pShift, "insert_bits0");
+    pBinOpVal = m_rBuilder.CreateAnd(pShiftedVal, pMask, "insert_bits1");
     break;
+  }
 
   case OperationExpression::OpExtractBits:
+  {
+    auto spRConst = expr_cast<ConstantExpression>(spRight);
+    if (spRConst == nullptr)
+      break;
+    auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
+    auto pMask = _MakeInteger(spRConst->GetConstant());
+    auto pMaskedVal = m_rBuilder.CreateAnd(LeftVal, pMask, "extract_bits0");
+    pBinOpVal = m_rBuilder.CreateLShr(pMaskedVal, pShift, "extract_bits1");
     break;
+  }
   }
 
   if (pBinOpVal == nullptr)
@@ -833,7 +923,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
     switch (spVarExpr->GetAction())
     {
     case VariableExpression::Alloc:
-      m_rVars[spVarExpr->GetName()] = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spVarExpr->GetBitSize()), nullptr, spVarExpr->GetName());
+      m_rVars[spVarExpr->GetName()] = std::make_tuple(spVarExpr->GetBitSize(), m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spVarExpr->GetBitSize()), nullptr, spVarExpr->GetName()));
       break;
 
     case VariableExpression::Free:
@@ -853,7 +943,8 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
         return nullptr;
-      m_ValueStack.push(m_rBuilder.CreateLoad(itVar->second, "read_var"));
+      spVarExpr->SetBitSize(std::get<0>(itVar->second));
+      m_ValueStack.push(m_rBuilder.CreateLoad(std::get<1>(itVar->second), "read_var"));
       break;
     }
     else
@@ -868,11 +959,12 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
         return nullptr;
+      spVarExpr->SetBitSize(std::get<0>(itVar->second));
       if (m_ValueStack.empty())
         return nullptr;
       auto pVal = m_ValueStack.top();
       m_ValueStack.pop();
-      m_rBuilder.CreateStore(pVal, itVar->second);
+      m_rBuilder.CreateStore(pVal, std::get<1>(itVar->second));
       break;
     }
     else

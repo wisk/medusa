@@ -841,11 +841,15 @@ Expression::SPType NormalizeIdentifier::VisitAssignment(AssignmentExpression::SP
 
     if (m_rCpuInfo.NormalizeRegister(Id, m_Mode, NrmId, Mask))
     {
-      // ExtDstId = (ExtDstId & ~Mask) | InsertBits(ExtSrc)
-      auto spExtDstId = Expr::MakeId(NrmId, spDstId->GetCpuInformation());
-      auto spMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), Mask);
-      auto spNotMask = Expr::MakeConst(spDstId->GetCpuInformation()->GetSizeOfRegisterInBit(NrmId), ~Mask);
-      auto spInsertBits = Expr::MakeBinOp(OperationExpression::OpInsertBits, spNrmSrc, spMask);
+      auto const* pCpuInfo = spDstId->GetCpuInformation();
+      u32 NrmIdBitSize = pCpuInfo->GetSizeOfRegisterInBit(NrmId);
+
+      // ExtDstId = (ExtDstId & ~Mask) | InsertBits(bit_cast(ExtSrc, NrmIdBitSize))
+      auto spExtDstId = Expr::MakeId(NrmId, pCpuInfo);
+      auto spMask = Expr::MakeConst(NrmIdBitSize, Mask);
+      auto spNotMask = Expr::MakeConst(NrmIdBitSize, ~Mask);
+      auto spBitCastSrc = Expr::MakeBinOp(OperationExpression::OpBcast, spNrmSrc, Expr::MakeConst(NrmIdBitSize, NrmIdBitSize));
+      auto spInsertBits = Expr::MakeBinOp(OperationExpression::OpInsertBits, spBitCastSrc, spMask);
       auto spClearBits = Expr::MakeBinOp(OperationExpression::OpAnd, spExtDstId, spNotMask);
       auto spExtSrc = Expr::MakeBinOp(OperationExpression::OpOr, spClearBits, spInsertBits);
 
@@ -864,11 +868,23 @@ Expression::SPType NormalizeIdentifier::VisitIdentifier(IdentifierExpression::SP
 
   if (!m_rCpuInfo.NormalizeRegister(Id, m_Mode, NrmId, Mask))
     return spIdExpr;
+  u32 IdBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Id);
+  u32 NrmIdBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(NrmId);
 
-  return Expr::MakeBinOp(
+  auto spExtractBits = Expr::MakeBinOp(
     OperationExpression::OpExtractBits,
     Expr::MakeId(NrmId, spIdExpr->GetCpuInformation()),
-    Expr::MakeConst(m_rCpuInfo.GetSizeOfRegisterInBit(NrmId), Mask));
+    Expr::MakeConst(NrmIdBitSize, Mask));
+  return Expr::MakeBinOp(OperationExpression::OpBcast,
+    spExtractBits, Expr::MakeConst(IdBitSize, IdBitSize));
+}
+
+Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
+{
+  auto pCpuInfo = spIdExpr->GetCpuInformation();
+  auto Id = spIdExpr->GetId();
+  m_UsedId.insert(Id);
+  return Expr::MakeVar(pCpuInfo->ConvertIdentifierToName(Id), VariableExpression::Use);
 }
 
 MEDUSA_NAMESPACE_END
