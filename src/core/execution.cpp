@@ -81,19 +81,19 @@ static bool DisassembleInstruction(Document& rDoc, Architecture::SPType spArch, 
   TOffset CurOff;
   if (!rDoc.ConvertAddressToFileOffset(rAddr, CurOff))
   {
-    Log::Write("exec") << "instruction at " << rAddr.ToString() << " is not contained in file" << LogEnd;
+    Log::Write("exec").Level(LogError) << "instruction at " << rAddr.ToString() << " is not contained in file" << LogEnd;
     return false;
   }
   auto spInsn = std::make_shared<Instruction>();
   if (!spArch->Disassemble(rDoc.GetBinaryStream(), CurOff, *spInsn, Mode))
   {
-    Log::Write("exec") << "unable to disassemble instruction at " << rAddr.ToString() << LogEnd;
+    Log::Write("exec").Level(LogError) << "unable to disassemble instruction at " << rAddr.ToString() << LogEnd;
     return false;
   }
 
   if (!rDoc.SetCell(rAddr, spInsn, true))
   {
-    Log::Write("exec") << "unable to set a instruction at " << rAddr.ToString() << LogEnd;
+    Log::Write("exec").Level(LogError) << "unable to set a instruction at " << rAddr.ToString() << LogEnd;
     return false;
   }
   return true;

@@ -289,6 +289,12 @@ bool X86Architecture::X86CpuInformation::NormalizeRegister(u32 Id, u8 Mode, u32&
   // KS: Flag registers are already normalized since they can't be extended.
   if (CurRegSize == 1)
     return false;
+  // KS: We ignore segment registers
+  switch (Id)
+  {
+  case X86_Reg_Cs: case X86_Reg_Ds: case X86_Reg_Es: case X86_Reg_Ss: case X86_Reg_Fs: case X86_Reg_Gs:
+    return false;
+  }
   // KS: For now, we assume that SIMD registers can't be normalized (which is false).
   if (CurRegSize > 64)
     return false;

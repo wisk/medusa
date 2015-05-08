@@ -202,24 +202,29 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
     for (auto Id : Id2Var.GetUsedId())
     {
-      auto IdName = rCpuInfo.ConvertIdentifierToName(Id);
+      auto pIdName = rCpuInfo.ConvertIdentifierToName(Id);
       auto IdBitSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+      if (pIdName == nullptr || IdBitSize == 0)
+      {
+        Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
+        return false;
+      }
 
       // Copy id value to register (2)
       rJitExpr.push_front(Expr::MakeAssign(
-        Expr::MakeVar(IdName, VariableExpression::Use),
+        Expr::MakeVar(pIdName, VariableExpression::Use),
         Expr::MakeId(Id, &rCpuInfo)));
 
       // Allocate variable (1)
-      rJitExpr.push_front(Expr::MakeVar(IdName, VariableExpression::Alloc, IdBitSize));
+      rJitExpr.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
 
       // Copy variable to id (3)
       rJitExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(Id, &rCpuInfo),
-        Expr::MakeVar(IdName, VariableExpression::Use)));
+        Expr::MakeVar(pIdName, VariableExpression::Use)));
 
       // Free variable (4)
-      rJitExpr.push_back(Expr::MakeVar(IdName, VariableExpression::Free));
+      rJitExpr.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
     }
 
     // Dump instruction (actually it's more a kind of basic block) if required
