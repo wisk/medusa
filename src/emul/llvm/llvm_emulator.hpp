@@ -83,14 +83,14 @@ private:
 
   } m_JitHelper;
 
-  class EventListener : public llvm::JITEventListener
-  {
-  public:
-    EventListener(void);
-    virtual ~EventListener(void);
-    virtual void NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo);
-    virtual void NotifyFreeingObject(llvm::object::ObjectFile const& rObj);
-  };
+//  class EventListener : public llvm::JITEventListener
+//  {
+//  public:
+//    EventListener(void);
+//    virtual ~EventListener(void);
+//    virtual void NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo);
+//    virtual void NotifyFreeingObject(llvm::object::ObjectFile const& rObj);
+//  };
 
   class LlvmExpressionVisitor : public ExpressionVisitor
   {

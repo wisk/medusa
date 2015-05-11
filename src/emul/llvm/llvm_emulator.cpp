@@ -11,6 +11,8 @@
 
 #include <llvm/Object/ObjectFile.h> // NOTE: Needed to avoid incomplete type llvm::object::ObjectFile
 
+#include <llvm/Support/DynamicLibrary.h>
+
 MEDUSA_NAMESPACE_USE
 
 // This function allows the JIT'ed code to read from a register
@@ -371,6 +373,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pReadRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(rCtxt), Params, false);
     s_pReadRegisterFunc = llvm::Function::Create(pReadRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitReadRegister", m_pCurMod);
     EE->addGlobalMapping(s_pReadRegisterFunc, (void*)JitReadRegister);
+    llvm::sys::DynamicLibrary::AddSymbol("JitReadRegister", (void*)JitReadRegister);
   }
 
   // Initialize WriteRegister function type
@@ -384,6 +387,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
     s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitWriteRegister", m_pCurMod);
     EE->addGlobalMapping(s_pWriteRegisterFunc, (void*)JitWriteRegister);
+    llvm::sys::DynamicLibrary::AddSymbol("JitWriteRegister", (void*)JitWriteRegister);
   }
 
   // Initialize TranslateMemory function type
@@ -396,6 +400,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pTranslateAddressFuncType = llvm::FunctionType::get(llvm::Type::getInt64Ty(rCtxt), Params, false);
     s_pTranslateAddressFunc = llvm::Function::Create(pTranslateAddressFuncType, llvm::GlobalValue::ExternalLinkage, "JitTranslateAddress", m_pCurMod);
     EE->addGlobalMapping(s_pTranslateAddressFunc, (void*)JitTranslateAddress);
+    llvm::sys::DynamicLibrary::AddSymbol("JitTranslateAddress", (void*)JitTranslateAddress);
   }
 
   // Initialize GetMemory function type
@@ -410,6 +415,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pGetMemoryFuncType = llvm::FunctionType::get(llvm::Type::getInt8PtrTy(rCtxt), Params, false);
     s_pGetMemoryFunc = llvm::Function::Create(pGetMemoryFuncType, llvm::GlobalValue::ExternalLinkage, "JitGetMemory", m_pCurMod);
     EE->addGlobalMapping(s_pGetMemoryFunc, (void*)JitGetMemory);
+    llvm::sys::DynamicLibrary::AddSymbol("JitGetMemory", (void*)JitGetMemory);
   }
 
   // Initialize CallInstructionHook function type
@@ -420,6 +426,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pCallInstructionHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
     s_pCallInstructionHookFunc = llvm::Function::Create(pCallInstructionHookType, llvm::GlobalValue::ExternalLinkage, "JitCallInstructionHook", m_pCurMod);
     EE->addGlobalMapping(s_pCallInstructionHookFunc, (void*)JitCallInstructionHook);
+    llvm::sys::DynamicLibrary::AddSymbol("JitCallInstructionHook", (void*)JitCallInstructionHook);
   }
 
   // Initialize HandleHook function type
@@ -432,28 +439,29 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
     EE->addGlobalMapping(s_pHandleHookFunc, (void*)JitHandleHook);
+    llvm::sys::DynamicLibrary::AddSymbol("JitHandleHook", (void*)JitHandleHook);
   }
 
   m_Modules.push_back(m_pCurMod);
 }
 
-LlvmEmulator::EventListener::EventListener(void)
-{
-}
-
-LlvmEmulator::EventListener::~EventListener(void)
-{
-}
-
-void LlvmEmulator::EventListener::NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo)
-{
-  Log::Write("emul_llvm").Level(LogDebug) << "object emitted" << LogEnd;
-}
-
-void LlvmEmulator::EventListener::NotifyFreeingObject(llvm::object::ObjectFile const& rObj)
-{
-  Log::Write("emul_llvm").Level(LogDebug) << "object freed" << LogEnd;
-}
+//LlvmEmulator::EventListener::EventListener(void)
+//{
+//}
+//
+//LlvmEmulator::EventListener::~EventListener(void)
+//{
+//}
+//
+//void LlvmEmulator::EventListener::NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo)
+//{
+//  Log::Write("emul_llvm").Level(LogDebug) << "object emitted" << LogEnd;
+//}
+//
+//void LlvmEmulator::EventListener::NotifyFreeingObject(llvm::object::ObjectFile const& rObj)
+//{
+//  Log::Write("emul_llvm").Level(LogDebug) << "object freed" << LogEnd;
+//}
 
 LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
   Emulator* pEmul,
