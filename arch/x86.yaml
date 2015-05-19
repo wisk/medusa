@@ -77,6 +77,17 @@ semantic:
     op0.val = res.val;
     free_var('res');
 
+  # TODO gg: support OR condition to add missing AF test.
+  aaa: &aaa |
+    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+      ax.id += int(ax.bit, 0x106)
+      af.id = int1(1)
+      cf.id = int1(1)
+    else:
+      af.id = int1(0)
+      cf.id = int1(0);
+    al.id &= int(al.bit, 0x0f);
+
   adc: &adc |
     alloc_var('res', op0.bit);
     res.val = op0.val + op1.val + bit_cast(cf.id, int(op0.bit, op0.bit));
@@ -1286,6 +1297,7 @@ instruction:
         test_flags: [ af, cf ]
         update_flags: [ cf, pf, af, zf, sf, of ]
         clear_flags: [ of ]
+        semantic: *aaa
 
       - opcode: 0x38
         mnemonic: cmp

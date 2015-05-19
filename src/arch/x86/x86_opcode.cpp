@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed May 06 17:14:58 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May 19 21:41:07 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -13499,8 +13499,17 @@ bool X86Architecture::Table_1_36(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: aaa
  * clear_flags: ['of']
  * test_flags: ['af', 'cf']
- * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
+ * semantic: if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+  ax.id += int(ax.bit, 0x106)
+  af.id = int1(1)
+  cf.id = int1(1)
+else:
+  af.id = int1(0)
+  cf.id = int1(0);
+al.id &= int(al.bit, 0x0f);
+
  * opcode: 37
+ * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -13512,6 +13521,57 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
       rInsn.SetClearedFlags(X86_FlOf);
       AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeBoolean(false)));
+      /* Var Expr */
+      Expression::LSPType ThenBodyExprs0;
+      ThenBodyExprs0.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+        Expr::MakeBinOp(
+          OperationExpression::OpAdd,
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ax), 0x106)))
+      );
+      ThenBodyExprs0.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeConst(1, 0x1)));
+      ThenBodyExprs0.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeConst(1, 0x1)));
+      auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+      Expression::LSPType ElseBodyExprs;
+      ElseBodyExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlAf, &m_CpuInfo),
+        Expr::MakeConst(1, 0x0)));
+      ElseBodyExprs.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlCf, &m_CpuInfo),
+        Expr::MakeConst(1, 0x0)));
+      auto spElseBody = Expr::MakeBind(ElseBodyExprs);
+
+      /* Semantic: if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+        ax.id += int(ax.bit, 0x106)
+        af.id = int1(1)
+        cf.id = int1(1)
+      else:
+        af.id = int1(0)
+        cf.id = int1(0) */
+      auto pExpr0 = Expr::MakeIfElseCond(
+        ConditionExpression::CondUgt,
+        Expr::MakeBinOp(
+          OperationExpression::OpAnd,
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0xf)),
+        Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x9),
+        spThenBody0,
+        spElseBody);
+      AllExpr.push_back(pExpr0);
+      /* Semantic: al.id &= int(al.bit, 0x0f) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+        Expr::MakeBinOp(
+          OperationExpression::OpAnd,
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0xf)))
+      ;
+      AllExpr.push_back(pExpr1);
       rInsn.SetSemantic(AllExpr);
     }
     return true;
