@@ -88,6 +88,18 @@ semantic:
       cf.id = int1(0);
     al.id &= int(al.bit, 0x0f);
 
+    # TODO gg: support OR condition to add missing AF test.
+  aas: &aas |
+    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+      ax.id -= int(ax.bit, 0x6)
+      ah.id -= int(ah.bit, 1)
+      af.id = int1(1)
+      cf.id = int1(1)
+    else:
+      cf.id = int1(0)
+      af.id = int1(0);
+    al.id &= int(al.bit, 0x0f);
+
   adc: &adc |
     alloc_var('res', op0.bit);
     res.val = op0.val + op1.val + bit_cast(cf.id, int(op0.bit, op0.bit));
@@ -1356,6 +1368,7 @@ instruction:
         update_flags: [ cf, pf, af, zf, sf, of ]
         clear_flags: [ of, sf, zf, pf ]
         attr: [ nm64 ]
+        semantic: *aas
 
       - opcode: 0x40
         sub_opcodes:
