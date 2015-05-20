@@ -921,7 +921,10 @@ semantic:
 
   sysret: &sysret |
 
+  # TODO gg: support 64-bit and support global incremented variable for counter
   rdtsc: &rdtsc |
+    eax.id = int32(0);
+    edx.id = int32(0);
 
 ## Instruction definition #####################################################
 

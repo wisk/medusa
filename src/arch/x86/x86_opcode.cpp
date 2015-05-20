@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May 19 21:41:07 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 21 00:58:26 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -52200,12 +52200,28 @@ bool X86Architecture::Table_2_30(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: rdtsc
  * opcode: 31
- * semantic: 
+ * semantic: eax.id = int32(0);
+edx.id = int32(0);
+
 **/
 bool X86Architecture::Table_2_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Rdtsc);
+    {
+      Expression::LSPType AllExpr;
+      /* Semantic: eax.id = int32(0) */
+      auto pExpr0 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+        Expr::MakeConst(32, 0x0));
+      AllExpr.push_back(pExpr0);
+      /* Semantic: edx.id = int32(0) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+        Expr::MakeConst(32, 0x0));
+      AllExpr.push_back(pExpr1);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
