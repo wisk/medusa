@@ -115,4 +115,26 @@ bool Emulator::TestHook(Address const& rAddress, u32 Type) const
   return true;
 }
 
+bool Emulator::_IsSemanticCached(Address const& rAddress) const
+{
+  return m_SemCache.find(rAddress) != std::end(m_SemCache);
+}
+
+bool Emulator::_CacheSemantic(Address const& rAddress, Expression::VSPType& rExprs)
+{
+  if (_IsSemanticCached(rAddress))
+    return false;
+  m_SemCache[rAddress] = rExprs;
+  return true;
+}
+
+bool Emulator::_InvalidSemantic(Address const& rAddress)
+{
+  auto itCache = m_SemCache.find(rAddress);
+  if (itCache == std::end(m_SemCache))
+    return false;
+  m_SemCache.erase(itCache);
+  return true;
+}
+
 MEDUSA_NAMESPACE_END

@@ -8,7 +8,7 @@
 #include "medusa/document.hpp"
 #include "medusa/information.hpp"
 
-#include <set>
+#include <vector>
 #include <string>
 #include <unordered_map>
 #include <functional>
@@ -58,6 +58,9 @@ public:
   virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const = 0;
   virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr) = 0;
 
+  virtual u32  GetException(void) const { return m_Exception; }
+  virtual void SetException(u32 Excpt) { m_Exception = Excpt; }
+
   virtual std::string ToString(void) const = 0;
 
   CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
@@ -66,6 +69,7 @@ protected:
   CpuInformation const& m_rCpuInfo;
   typedef std::unordered_map<Address, u64> AddressMap;
   AddressMap m_AddressMap;
+  u32 m_Exception;
 };
 
 template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
@@ -80,14 +84,20 @@ public:
   struct MemoryChunk
   {
     u64   m_LinearAddress;
-    u32   m_Size;
-    void* m_Buffer;
+    u32   m_Flags;
+    MemoryBinaryStream::SPType m_spMemStrm;
 
-    MemoryChunk(u64 Address = 0, u32 Size = 0x0, void* Buffer = nullptr)
-      : m_LinearAddress(Address), m_Size(Size), m_Buffer(Buffer) {}
+    MemoryChunk(u64 LinAddr = 0x0, void* Buffer = nullptr, u32 Size = 0x0, u32 Flags = 0x0)
+      : m_LinearAddress(LinAddr), m_spMemStrm(std::make_shared<MemoryBinaryStream>(Buffer, Size)), m_Flags(Flags) {}
 
     bool operator<(MemoryChunk const& rMemChunk) const
     { return m_LinearAddress < rMemChunk.m_LinearAddress; }
+
+    bool operator==(MemoryChunk const& rMemChunk) const
+    { return m_LinearAddress == rMemChunk.m_LinearAddress; }
+
+    bool operator==(u64 LinAddr) const
+    { return m_LinearAddress == LinAddr; }
   };
 
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
@@ -107,9 +117,9 @@ public:
     return WriteMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize) const;
+  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, u32& rFlags) const;
 
-  virtual bool AllocateMemory(u64 LinAddr, u32 Size, void** ppRawMemory);
+  virtual bool AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory);
   virtual bool FreeMemory(u64 LinAddr);
   virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 
@@ -120,8 +130,8 @@ protected:
 
   CpuInformation const& m_rCpuInfo;
 
-  typedef std::set<MemoryChunk> MemoryChunkSet;
-  MemoryChunkSet m_Memories;
+  typedef std::vector<MemoryChunk> MemoryChunksType;
+  MemoryChunksType m_Memories;
 
 private:
   MemoryContext(MemoryContext const&);

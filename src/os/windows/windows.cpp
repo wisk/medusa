@@ -77,14 +77,16 @@ bool WindowsOperatingSystem::InitializeContext(
   if (!rCpuCtxt.WriteRegister(IdD, StartAddrVal))
     return false;
 
+  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+
   // TODO: create a fake _TEB/_PEB
-  if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, nullptr))
+  if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, ReadWrite, nullptr))
     return false;
   // Init TIB::Self
   if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x18, static_cast<u32>(Teb32LinAddr)))
     return false;
   // Allocate fake _PEB
-  if (!rMemCtxt.AllocateMemory(Peb32LinAddr, 0x1000, nullptr))
+  if (!rMemCtxt.AllocateMemory(Peb32LinAddr, 0x1000, ReadWrite, nullptr))
     return false;
   // Write _TEB::Peb
   if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x30, static_cast<u32>(Peb32LinAddr)))
@@ -99,7 +101,7 @@ bool WindowsOperatingSystem::InitializeContext(
   u32 StkRegBitSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
   u64 StkAddr = 0x200000;
   u32 StkSize = 0x10000;
-  if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, nullptr))
+  if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, ReadWrite, nullptr))
     return false;
   StkAddr += StkSize;
   StkAddr -= 0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/

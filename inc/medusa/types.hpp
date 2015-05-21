@@ -13,7 +13,9 @@
 MEDUSA_NAMESPACE_BEGIN
 
 typedef HANDLE            TFileHandle;
+#define INVALID_FILE_VALUE (HANDLE)-1;
 typedef HANDLE            TMapHandle;
+#define INVALID_MAP_VALUE (HANDLE)nullptr;
 
 MEDUSA_NAMESPACE_END
 
@@ -21,10 +23,10 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-
-
 typedef int               TFileHandle;
+#define INVALID_FILE_VALUE (int)-1;
 typedef void*             TMapHandle;
+#define INVALID_MAP_VALUE (void*)-1; // MAP_ERROR
 
 MEDUSA_NAMESPACE_END
 

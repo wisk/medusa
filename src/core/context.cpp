@@ -166,7 +166,7 @@ bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, IntType const& rVal)
 MemoryContext::~MemoryContext(void)
 {
   for (auto& rMemChunk : m_Memories)
-    ::free(rMemChunk.m_Buffer);
+    rMemChunk.m_spMemStrm->Close();
 }
 
 bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) const
@@ -177,11 +177,7 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
 
   // LATER: Check boundary!
   auto Offset = LinearAddress - MemChnk.m_LinearAddress;
-  //std::cout << "read: ";
-  //for (size_t i = 0; i < ValueSize; ++i)
-  //  std::cout << std::hex << static_cast<int>(*(reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset + i)) << " ";
-  //std::cout << std::endl;
-  memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_Buffer) + Offset, ValueSize);
+  memcpy(pValue, reinterpret_cast<u8 const*>(MemChnk.m_spMemStrm->GetBuffer()) + Offset, ValueSize);
   return true;
 }
 
@@ -193,48 +189,49 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
 
   // LATER: Check boundary!
   auto Offset = LinearAddress - MemChnk.m_LinearAddress;
-  memcpy(reinterpret_cast<u8 *>(MemChnk.m_Buffer) + Offset, pValue, ValueSize);
+  memcpy(reinterpret_cast<u8 *>(MemChnk.m_spMemStrm->GetBuffer()) + Offset, pValue, ValueSize);
   return true;
 }
 
-bool MemoryContext::FindMemory(u64 LinearAddress, void*& prAddress, u32& rOffset, u32& rSize) const
+bool MemoryContext::FindMemory(u64 LinearAddress, void*& prAddress, u32& rOffset, u32& rSize, u32& rFlags) const
 {
   MemoryChunk MemChk;
 
   prAddress = nullptr;
   rOffset = 0;
   rSize = 0;
+  rFlags = 0;
 
-  if (FindMemoryChunk(LinearAddress, MemChk) == false)
+  if (!FindMemoryChunk(LinearAddress, MemChk))
     return false;
 
-  prAddress = MemChk.m_Buffer;
+  prAddress = MemChk.m_spMemStrm->GetBuffer();
   rOffset = LinearAddress - MemChk.m_LinearAddress;
-  rSize = MemChk.m_Size;
+  rSize = MemChk.m_spMemStrm->GetSize();
+  rFlags = MemChk.m_Flags;
   return true;
 }
 
-bool MemoryContext::AllocateMemory(u64 Address, u32 Size, void** ppRawMemory)
+bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory)
 {
   if (ppRawMemory)
     *ppRawMemory = nullptr;
-  void *pRawMemory = ::malloc(Size);
-  if (pRawMemory == nullptr)
-    return false;
-  memset(pRawMemory, 0xfa, Size);
-  m_Memories.insert(MemoryChunk(Address, Size, pRawMemory));
-  if (ppRawMemory)
-    *ppRawMemory = pRawMemory;
+
+  m_Memories.emplace_back(LinAddr, nullptr, Size, Flags);
+  if (ppRawMemory != nullptr)
+    *ppRawMemory = m_Memories.back().m_spMemStrm->GetBuffer();
+  m_Memories.back().m_spMemStrm->Write(0x0, 0xfa, Size);
+  std::sort(std::begin(m_Memories), std::end(m_Memories));
   return true;
 }
 
-bool MemoryContext::FreeMemory(u64 Address)
+bool MemoryContext::FreeMemory(u64 LinAddr)
 {
-  auto itMemChunk = m_Memories.find(MemoryChunk(Address));
-  if (itMemChunk == std::end(m_Memories))
+  auto itMemChnk = std::find(std::begin(m_Memories), std::end(m_Memories), LinAddr);
+  if (itMemChnk == std::end(m_Memories))
     return false;
-  ::free(itMemChunk->m_Buffer);
-  m_Memories.erase(itMemChunk);
+  itMemChnk->m_spMemStrm->Close();
+  m_Memories.erase(itMemChnk);
   return true;
 }
 
@@ -247,13 +244,14 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     u32 MemAreaSize             = rMemArea.GetSize();
     u32 MemAreaFileSize         = rMemArea.GetFileSize();
     u32 Size                    = std::max(MemAreaSize, MemAreaFileSize); // TODO: be more careful with that
+    u32 Flags                   = rMemArea.GetAccess();
 
     void* pRawMemory;
     u64 LinearAddress;
     if (pCpuCtxt->Translate(rMemAreaAddr, LinearAddress) == false)
       LinearAddress = rMemAreaAddr.GetOffset();
 
-    if (AllocateMemory(LinearAddress, Size, &pRawMemory) == false)
+    if (AllocateMemory(LinearAddress, Size, Flags, &pRawMemory) == false)
     {
       Res = false;
       return;
@@ -287,8 +285,12 @@ std::string MemoryContext::ToString(void) const
   std::ostringstream oss;
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
-    oss << std::setfill('0') << "laddr: " << std::hex << std::setw(16) << rMemChnk.m_LinearAddress << ", size: " << std::hex << std::setw(8) << std::setfill('0') << rMemChnk.m_Size << ", rawb: " << rMemChnk.m_Buffer << std::endl;
-    HexDump(oss, rMemChnk.m_Buffer, static_cast<u16>(rMemChnk.m_Size), rMemChnk.m_LinearAddress);
+    oss
+      << "laddr: "  << std::hex << std::setw(16) << std::setfill('0') << rMemChnk.m_LinearAddress
+      << ", size: " << std::hex << std::setw(8)  << std::setfill('0') << rMemChnk.m_spMemStrm->GetSize()
+      << ", flags:" << std::hex << std::setw(8)  << std::setfill('0') << rMemChnk.m_Flags
+      << ", rawb: " << rMemChnk.m_spMemStrm->GetBuffer() << std::endl;
+    HexDump(oss, rMemChnk.m_spMemStrm->GetBuffer(), static_cast<u16>(rMemChnk.m_spMemStrm->GetSize()), rMemChnk.m_LinearAddress);
   }
   return oss.str();
 }
@@ -297,7 +299,7 @@ bool MemoryContext::FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemChn
 {
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
-    if (LinearAddress >= rMemChnk.m_LinearAddress && LinearAddress < (rMemChnk.m_LinearAddress + rMemChnk.m_Size))
+    if (LinearAddress >= rMemChnk.m_LinearAddress && LinearAddress < (rMemChnk.m_LinearAddress + rMemChnk.m_spMemStrm->GetSize()))
     {
       rFoundMemChnk = rMemChnk;
       return true;

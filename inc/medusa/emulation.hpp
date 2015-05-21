@@ -8,6 +8,7 @@
 #include "medusa/expression.hpp"
 #include "medusa/context.hpp"
 #include "medusa/document.hpp"
+#include "medusa/instruction.hpp"
 
 #include <unordered_map>
 #include <functional>
@@ -74,6 +75,13 @@ public:
 protected:
   Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
+  bool _Disassemble(Address const& rAddress, std::vector<Instruction>& rInsns);
+  
+  // Semantic cache
+  bool _IsSemanticCached(Address const& rAddress) const;
+  bool _CacheSemantic(Address const& rAddress, Expression::VSPType& rExprs);
+  bool _InvalidSemantic(Address const& rAddress);
+
   struct HookInformation
   {
     HookInformation(u32 Type = HookUnknown, HookCallback Callback = nullptr) : m_Type(Type), m_Callback(Callback) {}
@@ -87,6 +95,9 @@ protected:
   typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
   HookAddressHashMap    m_Hooks;
   HookCallback          m_InsnCb;
+
+  typedef std::unordered_map<Address, Expression::VSPType> SemanticCacheType;
+  SemanticCacheType m_SemCache;
 };
 
 typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);

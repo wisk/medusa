@@ -28,6 +28,36 @@ public:
   BinaryStream(void);
   virtual ~BinaryStream(void);
 
+  BinaryStream(BinaryStream const&) = delete;
+  BinaryStream& operator=(BinaryStream const&) = delete;
+
+  BinaryStream(BinaryStream&& mBinStrm)
+  {
+    *this = std::move(mBinStrm);
+  }
+
+  BinaryStream& operator=(BinaryStream&& mBinStrm)
+  {
+    if (this != &mBinStrm)
+    {
+      m_Path = std::move(mBinStrm.m_Path);
+
+      m_pBuffer = mBinStrm.m_pBuffer;
+      mBinStrm.m_pBuffer = nullptr;
+
+      m_Size = mBinStrm.m_Size;
+      mBinStrm.m_Size = 0x0;
+
+      m_Endianness = mBinStrm.m_Endianness;
+      mBinStrm.m_Endianness = EndianUnknown;
+
+      m_Sha1 = std::move(mBinStrm.m_Sha1);
+    }
+    return *this;
+  }
+
+  virtual void Close(void) = 0;
+
   //! This method returns a path for the binary stream (for memory binary stream it redirects to a tmp file)
   Path GetPath(void) const { return m_Path; }
 
@@ -199,11 +229,25 @@ public:
       return false;
 
     u8* pDataPosition = reinterpret_cast<u8*>(m_pBuffer) + Position;
-    memcpy(pDataPosition, pData, Length);
+    ::memcpy(pDataPosition, pData, Length);
+    return true;
+  }
+
+  bool Write(TOffset Position, int Val, size_t Length)
+  {
+    if (m_pBuffer == nullptr)
+      return false;
+
+    if (Position + Length < Position || Position + Length > m_Size)
+      return false;
+
+    u8* pDataPosition = reinterpret_cast<u8*>(m_pBuffer)+Position;
+    ::memset(pDataPosition, Val, Length);
     return true;
   }
 
   u32         GetSize(void)   const { return m_Size;    }
+  void*       GetBuffer(void)       { return m_pBuffer; }
   void const* GetBuffer(void) const { return m_pBuffer; }
 
   std::string const &GetSha1(void) const
@@ -254,10 +298,6 @@ protected:
   u32                 m_Size;
   EEndianness         m_Endianness;
   mutable std::string m_Sha1;
-
-private:
-  BinaryStream(BinaryStream const&);
-  BinaryStream& operator=(BinaryStream const&);
 };
 
 //! FileBinaryStream is a generic class for file access.
@@ -267,6 +307,37 @@ public:
   FileBinaryStream(Path const& rFilePath = Path());
   virtual ~FileBinaryStream(void);
 
+  FileBinaryStream(FileBinaryStream&& mBinStrm)
+  {
+    *this = std::move(mBinStrm);
+  }
+
+  FileBinaryStream& operator=(FileBinaryStream&& mBinStrm)
+  {
+    if (this != &mBinStrm)
+    {
+      m_Path = std::move(mBinStrm.m_Path);
+
+      m_pBuffer = mBinStrm.m_pBuffer;
+      mBinStrm.m_pBuffer = nullptr;
+
+      m_Size = mBinStrm.m_Size;
+      mBinStrm.m_Size = 0x0;
+
+      m_Endianness = mBinStrm.m_Endianness;
+      mBinStrm.m_Endianness = EndianUnknown;
+
+      m_Sha1 = std::move(mBinStrm.m_Sha1);
+
+      m_FileHandle = mBinStrm.m_FileHandle;
+      mBinStrm.m_FileHandle = INVALID_FILE_VALUE;
+
+      m_MapHandle = mBinStrm.m_MapHandle;
+      mBinStrm.m_MapHandle = INVALID_MAP_VALUE;
+    }
+    return *this;
+  }
+
   void Open(boost::filesystem::path const& rFilePath);
   void Close(void);
 
@@ -275,12 +346,37 @@ protected:
   TMapHandle              m_MapHandle;
 };
 
-//! MemoryBinaryStream is similar to BinaryStream.
+//! MemoryBinaryStream handle memory from a raw pointer but its duplicated first.
 class Medusa_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
   MemoryBinaryStream(void const* pMem = nullptr, u32 MemSize = 0);
   virtual ~MemoryBinaryStream(void);
+
+  MemoryBinaryStream(MemoryBinaryStream&& mBinStrm)
+  {
+    *this = std::move(mBinStrm);
+  }
+
+  MemoryBinaryStream& operator=(MemoryBinaryStream&& mBinStrm)
+  {
+    if (this != &mBinStrm)
+    {
+      m_Path = std::move(mBinStrm.m_Path);
+
+      m_pBuffer = mBinStrm.m_pBuffer;
+      mBinStrm.m_pBuffer = nullptr;
+
+      m_Size = mBinStrm.m_Size;
+      mBinStrm.m_Size = 0x0;
+
+      m_Endianness = mBinStrm.m_Endianness;
+      mBinStrm.m_Endianness = EndianUnknown;
+
+      m_Sha1 = std::move(mBinStrm.m_Sha1);
+    }
+    return *this;
+  }
 
   void Open(void const* pMem, u32 MemSize);
   void Close(void);

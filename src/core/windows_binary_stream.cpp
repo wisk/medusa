@@ -126,7 +126,8 @@ void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
   if (m_pBuffer == nullptr)
    throw Exception_System("malloc");
   m_Size = MemSize;
-  memcpy(m_pBuffer, pMem, MemSize);
+  if (pMem != nullptr)
+    ::memcpy(m_pBuffer, pMem, MemSize);
 }
 
 void MemoryBinaryStream::Close(void)

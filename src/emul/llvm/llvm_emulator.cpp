@@ -71,7 +71,8 @@ extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj,
 
   u32 MemOff;
   u32 MemSize;
-  if (!pMemCtxt->FindMemory(LinAddr, pMemory, MemOff, MemSize))
+  u32 Flags;
+  if (!pMemCtxt->FindMemory(LinAddr, pMemory, MemOff, MemSize, Flags))
   {
     Log::Write("emul_llvm").Level(LogWarning) << "invalid memory access: linear address: " << LinAddr << LogEnd;
     return nullptr;

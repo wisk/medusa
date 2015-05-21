@@ -96,7 +96,8 @@ void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
     throw Exception_System("open");
 
   m_Size = MemSize;
-  ::memcpy(m_pBuffer, pMem, MemSize);
+  if (pMem != nullptr)
+    ::memcpy(m_pBuffer, pMem, MemSize);
 }
 
 void MemoryBinaryStream::Close(void)

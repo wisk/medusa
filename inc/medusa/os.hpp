@@ -41,6 +41,8 @@ public:
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress) = 0;
   virtual Expression::LSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr) = 0;
 
+  virtual bool HandleException(CpuContext& rCpuCtxt) { return false; }
+
   virtual bool ProvideDetails(Document& rDoc) const = 0;
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const = 0;
   virtual bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const = 0;

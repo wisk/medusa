@@ -117,14 +117,13 @@ namespace pydusa
     return bp::object(LinAddr);
   }
 
-  bp::object MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
+  bp::object MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size, u32 Flags)
   {
     void* pRawMem = nullptr;
-    if (!pMemCtxt->AllocateMemory(LinAddr, Size, &pRawMem))
+    if (!pMemCtxt->AllocateMemory(LinAddr, Size, Flags, &pRawMem))
       return bp::object();
     return bp::str(reinterpret_cast<char const*>(pRawMem), Size);
   }
-
 
   bp::object MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
   {

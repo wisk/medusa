@@ -282,7 +282,6 @@ bool Execution::Hook(std::string const& rLabelName, u32 Type, Emulator::HookCall
   m_spEmul->AddHook(m_rDoc, rLabelName, Type, Callback);
   return true;
 }
-  
 
 std::string Execution::GetHookName(void) const
 {

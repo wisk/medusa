@@ -35,9 +35,10 @@ bool UnixOperatingSystem::InitializeContext(
   auto const& rCpuInfo = rCpuCtxt.GetCpuInformation();
   u64 const StkPtr = 0xbedb4000;
   u64 const StkLen = 0x21000;
+  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
 
   void* pStkMem;
-  if (!rMemCtxt.AllocateMemory(StkPtr, StkLen, &pStkMem))
+  if (!rMemCtxt.AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem))
     return false;
 
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
