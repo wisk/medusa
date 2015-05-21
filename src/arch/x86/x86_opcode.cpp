@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 21 22:44:44 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 21 22:59:05 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -44515,9 +44515,33 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: aam
  * clear_flags: ['of', 'af', 'cf']
- * opcode: d4
+ * semantic: alloc_var('tmp_al', al.bit);
+alloc_var('pf_tmp', pf.bit);
+tmp_al = al.id;
+ah.id = tmp_al / op0.val;
+al.id = tmp_al % op0.val;
+# Start updating ZF
+if al.id == int(al.bit, 0): zf.id = int1(1)
+else: zf.id = int1(0);
+# Start updating SF
+sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
+# Start updating PF
+pf_tmp = int1(1);
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1));
+pf.id = pf_tmp;
+free_var('pf_tmp');
+free_var('tmp_al');
+
  * attr: ['nm64']
  * operand: ['Ib']
+ * opcode: d4
  * update_flags: ['sf', 'zf', 'pf']
 **/
 bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -44537,6 +44561,172 @@ bool X86Architecture::Table_1_d4(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeBoolean(false)));
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlAf, &m_CpuInfo), Expr::MakeBoolean(false)));
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeBoolean(false)));
+        /* Semantic: alloc_var('tmp_al', al.bit) */
+        auto pExpr0 = Expr::MakeVar("tmp_al", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al));
+        AllExpr.push_back(pExpr0);
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr1 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: tmp_al = al.id */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeVar("tmp_al", VariableExpression::Use),
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo));
+        AllExpr.push_back(pExpr2);
+        /* Semantic: ah.id = tmp_al / op0.val */
+        auto pExpr3 = Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("tmp_al", VariableExpression::Use),
+            rInsn.GetOperand(0)));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: al.id = tmp_al % op0.val */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("tmp_al", VariableExpression::Use),
+            rInsn.GetOperand(0)));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: # Start updating ZF
+        if al.id == int(al.bit, 0): zf.id = int1(1)
+        else: zf.id = int1(0) */
+        auto pExpr5 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: # Start updating SF
+        sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1)) */
+        auto pExpr6 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al)),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x1))), Expr::MakeConst(1, 0x1)));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: # Start updating PF
+        pf_tmp = int1(1) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1)) */
+        auto pExpr8 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x0)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1)) */
+        auto pExpr9 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x1)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1)) */
+        auto pExpr10 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x2)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr10);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1)) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x3)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr11);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1)) */
+        auto pExpr12 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x4)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1)) */
+        auto pExpr13 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x5)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1)) */
+        auto pExpr14 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1)) */
+        auto pExpr15 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x7)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr15);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr17 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr17);
+        /* Semantic: free_var('tmp_al') */
+        auto pExpr18 = Expr::MakeVar("tmp_al", VariableExpression::Free);
+        AllExpr.push_back(pExpr18);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
