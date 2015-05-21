@@ -77,9 +77,12 @@ semantic:
     op0.val = res.val;
     free_var('res');
 
-  # TODO(gg): support OR condition to add missing AF test.
   aaa: &aaa |
-    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+    alloc_var('cond', 1);
+    cond = int1(0);
+    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
+    if af.id == int1(1): cond |= int1(1);
+    if cond == int1(1):
       ax.id += int(ax.bit, 0x106)
       af.id = int1(1)
       cf.id = int1(1)
@@ -87,10 +90,14 @@ semantic:
       af.id = int1(0)
       cf.id = int1(0);
     al.id &= int(al.bit, 0x0f);
+    free_var('cond');
 
-  # TODO(gg): support OR condition to add missing AF test.
   aas: &aas |
-    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
+    alloc_var('cond', 1);
+    cond = int1(0);
+    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
+    if af.id == int1(1): cond |= int1(1);
+    if cond == int1(1):
       ax.id -= int(ax.bit, 0x6)
       ah.id -= int(ah.bit, 1)
       af.id = int1(1)
@@ -99,6 +106,7 @@ semantic:
       cf.id = int1(0)
       af.id = int1(0);
     al.id &= int(al.bit, 0x0f);
+    free_var('cond');
 
   adc: &adc |
     alloc_var('res', op0.bit);
@@ -111,6 +119,53 @@ semantic:
     call('adjust_flag');
     op0.val = res.val;
     free_var('res');
+
+  daa: &daa |
+    alloc_var('old_al', al.bit);
+    alloc_var('old_cf', 1);
+    alloc_var('cond', 1);
+    alloc_var('pf_tmp', pf.bit);
+    old_cf = cf.id;
+    old_al = al.id;
+    cf.id = int1(0);
+    cond = int1(0);
+    if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
+    if af.id == int1(1): cond |= int1(1);
+    if cond == int1(1):
+      al.id += int(al.bit, 0x6)
+      if al.id > int(al.bit, 0xf9): cf.id = int1(1)
+      else: cf.id = old_cf
+      af.id = int1(1)
+    else:
+      af.id = int1(0);
+    cond = int1(0);
+    if old_al > int(al.bit, 0x99): cond |= int1(1);
+    if old_cf == int1(1): cond |= int1(1);
+    if cond == int1(1):
+      al.id += int(al.bit, 0x60)
+      cf.id = int1(1)
+    else:
+      cf.id = int1(0);
+    # Start updating ZF
+    if al.id == int(al.bit, 0): zf.id = int1(1)
+    else: zf.id = int1(0);
+    # Start updating SF
+    sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
+    # Start updating PF
+    pf_tmp = int1(1);
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1));
+    pf.id = pf_tmp;
+    free_var('pf_tmp');
+    free_var('cond');
+    free_var('old_cf');
+    free_var('old_al');
 
   inc: &inc |
     alloc_var('op1', op0.bit);
@@ -1207,6 +1262,7 @@ instruction:
         update_flags: [ cf, pf, af, zf, sf, of ]
         clear_flags: [ of ]
         attr: [ nm64 ]
+        semantic: *daa
 
       - opcode: 0x28
         mnemonic: sub
