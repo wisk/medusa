@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 21 01:30:05 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 21 18:10:05 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -4619,8 +4619,11 @@ bool X86Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['ES']
  * opcode: 07
  * attr: ['nm64']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
 **/
 bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -4635,13 +4638,16 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -4650,7 +4656,15 @@ bool X86Architecture::Table_1_07(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -7637,8 +7651,11 @@ bool X86Architecture::Table_1_16(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['SS']
  * opcode: 17
  * attr: ['nm64']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
 **/
 bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -7653,13 +7670,16 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -7668,7 +7688,15 @@ bool X86Architecture::Table_1_17(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -9325,8 +9353,11 @@ bool X86Architecture::Table_1_1e(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['DS']
  * opcode: 1f
  * attr: ['nm64']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
 **/
 bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -9341,13 +9372,16 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -9356,7 +9390,15 @@ bool X86Architecture::Table_1_1f(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -13508,8 +13550,6 @@ else:
   cf.id = int1(0);
 al.id &= int(al.bit, 0x0f);
 
-# TODO gg: support OR condition to add missing AF test.
-
  * opcode: 37
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
@@ -13574,9 +13614,6 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0xf)))
       ;
       AllExpr.push_back(pExpr1);
-      /* Semantic: 
-      # TODO gg: support OR condition to add missing AF test.
-       */
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -20246,15 +20283,21 @@ bool X86Architecture::Table_1_57(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rAX']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r8']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20276,13 +20319,16 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20291,7 +20337,15 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20310,13 +20364,16 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20325,7 +20382,15 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20337,15 +20402,21 @@ bool X86Architecture::Table_1_58(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rCX']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r9']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20367,13 +20438,16 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20382,7 +20456,15 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20401,13 +20483,16 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20416,7 +20501,15 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20428,15 +20521,21 @@ bool X86Architecture::Table_1_59(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rDX']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r10']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20458,13 +20557,16 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20473,7 +20575,15 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20492,13 +20602,16 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20507,7 +20620,15 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20519,15 +20640,21 @@ bool X86Architecture::Table_1_5a(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rBX']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r11']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20549,13 +20676,16 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20564,7 +20694,15 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20583,13 +20721,16 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20598,7 +20739,15 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20610,15 +20759,21 @@ bool X86Architecture::Table_1_5b(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rSP']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r12']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20640,13 +20795,16 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20655,7 +20813,15 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20674,13 +20840,16 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20689,7 +20858,15 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20701,15 +20878,21 @@ bool X86Architecture::Table_1_5c(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rBP']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r13']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20731,13 +20914,16 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20746,7 +20932,15 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20765,13 +20959,16 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20780,7 +20977,15 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20792,15 +20997,21 @@ bool X86Architecture::Table_1_5d(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rSI']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r14']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20822,13 +21033,16 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20837,7 +21051,15 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20856,13 +21078,16 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20871,7 +21096,15 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20883,15 +21116,21 @@ bool X86Architecture::Table_1_5e(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: pop
  * operand: ['d64_rDI']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
  * mnemonic: pop
  * operand: ['d64_r15']
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * attr: ['rexb', 'm64']
  * constraint: d64
@@ -20913,13 +21152,16 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20928,7 +21170,15 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -20947,13 +21197,16 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -20962,7 +21215,15 @@ bool X86Architecture::Table_1_5f(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -30891,8 +31152,11 @@ bool X86Architecture::Table_1_8e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: pop
  * operand: ['Ev']
  * opcode: 00
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  *
@@ -30938,13 +31202,16 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -30953,7 +31220,15 @@ bool X86Architecture::Table_1_8f(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -56950,8 +57225,11 @@ bool X86Architecture::Table_2_a0(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: df64
  * operand: ['FS']
@@ -56974,13 +57252,16 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -56989,7 +57270,15 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -57693,8 +57982,11 @@ bool X86Architecture::Table_2_a8(BinaryStream const& rBinStrm, TOffset Offset, I
 
 /** instruction
  * mnemonic: pop
- * semantic: op0.val = stack.mem;
+ * semantic: alloc_var('popped_value', stack.bit);
+popped_value = stack.mem;
 stack.id += stack.size;
+op0.val = popped_value;
+free_var('popped_value');
 
  * constraint: d64
  * operand: ['GS']
@@ -57717,13 +58009,16 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: op0.val = stack.mem */
-        auto pExpr0 = Expr::MakeAssign(
-          rInsn.GetOperand(0),
-          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        /* Semantic: alloc_var('popped_value', stack.bit) */
+        auto pExpr0 = Expr::MakeVar("popped_value", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())));
         AllExpr.push_back(pExpr0);
-        /* Semantic: stack.id += stack.size */
+        /* Semantic: popped_value = stack.mem */
         auto pExpr1 = Expr::MakeAssign(
+          Expr::MakeVar("popped_value", VariableExpression::Use),
+          Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+        AllExpr.push_back(pExpr1);
+        /* Semantic: stack.id += stack.size */
+        auto pExpr2 = Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
@@ -57732,7 +58027,15 @@ bool X86Architecture::Table_2_a9(BinaryStream const& rBinStrm, TOffset Offset, I
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())),
               m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())) / 8)))
         ;
-        AllExpr.push_back(pExpr1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: op0.val = popped_value */
+        auto pExpr3 = Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("popped_value", VariableExpression::Use));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: free_var('popped_value') */
+        auto pExpr4 = Expr::MakeVar("popped_value", VariableExpression::Free);
+        AllExpr.push_back(pExpr4);
         rInsn.SetSemantic(AllExpr);
       }
       return true;

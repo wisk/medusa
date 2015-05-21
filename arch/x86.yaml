@@ -77,7 +77,7 @@ semantic:
     op0.val = res.val;
     free_var('res');
 
-  # TODO gg: support OR condition to add missing AF test.
+  # TODO(gg): support OR condition to add missing AF test.
   aaa: &aaa |
     if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
       ax.id += int(ax.bit, 0x106)
@@ -88,7 +88,7 @@ semantic:
       cf.id = int1(0);
     al.id &= int(al.bit, 0x0f);
 
-    # TODO gg: support OR condition to add missing AF test.
+  # TODO(gg): support OR condition to add missing AF test.
   aas: &aas |
     if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)):
       ax.id -= int(ax.bit, 0x6)
@@ -571,10 +571,12 @@ semantic:
     stack.id -= int32(4);stack.mem = esi.id;
     stack.id -= int32(4);stack.mem = edi.id;
 
-
   pop: &pop |
-    op0.val = stack.mem;
+    alloc_var('popped_value', stack.bit);
+    popped_value = stack.mem;
     stack.id += stack.size;
+    op0.val = popped_value;
+    free_var('popped_value');
 
   # TODO(KS): see pushf
   popf: &popf |
@@ -933,7 +935,7 @@ semantic:
 
   sysret: &sysret |
 
-  # TODO gg: support 64-bit and support global incremented variable for counter
+  # TODO(gg): support 64-bit and support global incremented variable for counter
   rdtsc: &rdtsc |
     eax.id = int32(0);
     edx.id = int32(0);
