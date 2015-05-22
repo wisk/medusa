@@ -92,6 +92,34 @@ semantic:
     al.id &= int(al.bit, 0x0f);
     free_var('cond');
 
+  aad: &aad |
+    alloc_var('tmp_al', al.bit);
+    alloc_var('tmp_ah', ah.bit);
+    alloc_var('pf_tmp', pf.bit);
+    tmp_al = al.id;
+    tmp_ah = ah.id;
+    al.id = (tmp_al + (tmp_ah * op0.val)) & int(al.bit, 0xff);
+    ah.id = int(ah.bit, 0);
+    # Start updating ZF
+    if al.id == int(al.bit, 0): zf.id = int1(1)
+    else: zf.id = int1(0);
+    # Start updating SF
+    sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
+    # Start updating PF
+    pf_tmp = int1(1);
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1));
+    pf.id = pf_tmp;
+    free_var('pf_tmp');
+    free_var('tmp_ah');
+    free_var('tmp_al');
+
   aam: &aam |
     alloc_var('tmp_al', al.bit);
     alloc_var('pf_tmp', pf.bit);
@@ -2740,6 +2768,7 @@ instruction:
         update_flags: [ sf, zf, pf ]
         clear_flags: [ of, af, cf ]
         attr: [ nm64 ]
+        semantic: *aad
 
       - opcode: 0xd6
         mnemonic: salc
