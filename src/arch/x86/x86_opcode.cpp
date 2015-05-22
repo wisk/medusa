@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 22 18:23:10 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 22 19:02:09 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -58595,11 +58595,40 @@ bool X86Architecture::Table_2_a1(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: cpuid
  * opcode: a2
+ * semantic: eax.id = int32(0x11111111);
+ecx.id = int32(0x22222222);
+edx.id = int32(0x33333333);
+ebx.id = int32(0x44444444);
+
 **/
 bool X86Architecture::Table_2_a2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(X86_Opcode_Cpuid);
+    {
+      Expression::LSPType AllExpr;
+      /* Semantic: eax.id = int32(0x11111111) */
+      auto pExpr0 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+        Expr::MakeConst(32, 0x11111111));
+      AllExpr.push_back(pExpr0);
+      /* Semantic: ecx.id = int32(0x22222222) */
+      auto pExpr1 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Ecx, &m_CpuInfo),
+        Expr::MakeConst(32, 0x22222222));
+      AllExpr.push_back(pExpr1);
+      /* Semantic: edx.id = int32(0x33333333) */
+      auto pExpr2 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+        Expr::MakeConst(32, 0x33333333));
+      AllExpr.push_back(pExpr2);
+      /* Semantic: ebx.id = int32(0x44444444) */
+      auto pExpr3 = Expr::MakeAssign(
+        Expr::MakeId(X86_Reg_Ebx, &m_CpuInfo),
+        Expr::MakeConst(32, 0x44444444));
+      AllExpr.push_back(pExpr3);
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 

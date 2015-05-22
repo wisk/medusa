@@ -1070,6 +1070,13 @@ semantic:
     eax.id = int32(0);
     edx.id = int32(0);
 
+  # TODO:(gg): support EAX input value to return more "real" information
+  cpuid: &cpuid |
+    eax.id = int32(0x11111111);
+    ecx.id = int32(0x22222222);
+    edx.id = int32(0x33333333);
+    ebx.id = int32(0x44444444);
+
 ## Instruction definition #####################################################
 
 instruction:
@@ -4470,6 +4477,7 @@ instruction:
 
       - opcode: 0xa2
         mnemonic: cpuid
+        semantic: *cpuid
 
       - opcode: 0xa3
         mnemonic: bt
