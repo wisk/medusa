@@ -192,6 +192,51 @@ semantic:
     free_var('old_cf');
     free_var('old_al');
 
+  das: &das |
+    alloc_var('old_al', al.bit);
+    alloc_var('old_cf', 1);
+    alloc_var('cond', 1);
+    alloc_var('pf_tmp', pf.bit);
+    old_cf = cf.id;
+    old_al = al.id;
+    cf.id = int1(0);
+    cond = int1(0);
+    if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
+    if af.id == int1(1): cond |= int1(1);
+    if cond == int1(1):
+      al.id -= int(al.bit, 0x6)
+      if int(al.bit, 0x6) > al.id: cf.id = int1(1)
+      else: cf.id = old_cf
+      af.id = int1(1)
+    else:
+      af.id = int1(0);
+    cond = int1(0);
+    if old_al > int(al.bit, 0x99): cond |= int1(1);
+    if old_cf == int1(1): cond |= int1(1);
+    if cond == int1(1):
+      al.id -= int(al.bit, 0x60)
+      cf.id = int1(1);
+    # Start updating ZF
+    if al.id == int(al.bit, 0): zf.id = int1(1)
+    else: zf.id = int1(0);
+    # Start updating SF
+    sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
+    # Start updating PF
+    pf_tmp = int1(1);
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1));
+    pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1));
+    pf.id = pf_tmp;
+    free_var('pf_tmp');
+    free_var('cond');
+    free_var('old_cf');
+    free_var('old_al');
+
   inc: &inc |
     alloc_var('op1', op0.bit);
     alloc_var('res', op0.bit);
@@ -407,10 +452,9 @@ semantic:
   shrd: &shrd |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
-    count = bit_cast(op2.val, int(op0.bit, op0.bit));
     alloc_var('sign_saved', sf.bit);
     sign_saved = sf.id;
-    count = op2.val;
+    count = bit_cast(op2.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
     if count != int(op0.bit, 0):
@@ -1349,6 +1393,7 @@ instruction:
         update_flags: [ cf, pf, af, zf, sf, of ]
         clear_flags: [ of ]
         attr: [ nm64 ]
+        semantic: *das
 
       - opcode: 0x30
         mnemonic: xor

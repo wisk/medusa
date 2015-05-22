@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 22 14:41:05 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 22 18:23:10 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -12614,8 +12614,52 @@ bool X86Architecture::Table_1_2e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: das
  * clear_flags: ['of']
  * test_flags: ['af', 'cf']
- * opcode: 2f
+ * semantic: alloc_var('old_al', al.bit);
+alloc_var('old_cf', 1);
+alloc_var('cond', 1);
+alloc_var('pf_tmp', pf.bit);
+old_cf = cf.id;
+old_al = al.id;
+cf.id = int1(0);
+cond = int1(0);
+if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
+if af.id == int1(1): cond |= int1(1);
+if cond == int1(1):
+  al.id -= int(al.bit, 0x6)
+  if int(al.bit, 0x6) > al.id: cf.id = int1(1)
+  else: cf.id = old_cf
+  af.id = int1(1)
+else:
+  af.id = int1(0);
+cond = int1(0);
+if old_al > int(al.bit, 0x99): cond |= int1(1);
+if old_cf == int1(1): cond |= int1(1);
+if cond == int1(1):
+  al.id -= int(al.bit, 0x60)
+  cf.id = int1(1);
+# Start updating ZF
+if al.id == int(al.bit, 0): zf.id = int1(1)
+else: zf.id = int1(0);
+# Start updating SF
+sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
+# Start updating PF
+pf_tmp = int1(1);
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1));
+pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1));
+pf.id = pf_tmp;
+free_var('pf_tmp');
+free_var('cond');
+free_var('old_cf');
+free_var('old_al');
+
  * attr: ['nm64']
+ * opcode: 2f
  * update_flags: ['cf', 'pf', 'af', 'zf', 'sf', 'of']
 **/
 bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -12630,6 +12674,311 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
         rInsn.SetUpdatedFlags(X86_FlCf | X86_FlPf | X86_FlAf | X86_FlZf | X86_FlSf | X86_FlOf);
         rInsn.SetClearedFlags(X86_FlOf);
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeBoolean(false)));
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs0;
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)))
+        );
+        ThenBodyExprs0.push_back(Expr::MakeIfElseCond(
+          ConditionExpression::CondUgt,
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6),
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlCf, &m_CpuInfo),
+            Expr::MakeVar("old_cf", VariableExpression::Use))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)));
+        auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs1;
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x60)))
+        );
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1)));
+        auto spThenBody1 = Expr::MakeBind(ThenBodyExprs1);
+
+        /* Semantic: alloc_var('old_al', al.bit) */
+        auto pExpr0 = Expr::MakeVar("old_al", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al));
+        AllExpr.push_back(pExpr0);
+        /* Semantic: alloc_var('old_cf', 1) */
+        auto pExpr1 = Expr::MakeVar("old_cf", VariableExpression::Alloc, 0x1);
+        AllExpr.push_back(pExpr1);
+        /* Semantic: alloc_var('cond', 1) */
+        auto pExpr2 = Expr::MakeVar("cond", VariableExpression::Alloc, 0x1);
+        AllExpr.push_back(pExpr2);
+        /* Semantic: alloc_var('pf_tmp', pf.bit) */
+        auto pExpr3 = Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf));
+        AllExpr.push_back(pExpr3);
+        /* Semantic: old_cf = cf.id */
+        auto pExpr4 = Expr::MakeAssign(
+          Expr::MakeVar("old_cf", VariableExpression::Use),
+          Expr::MakeId(X86_FlCf, &m_CpuInfo));
+        AllExpr.push_back(pExpr4);
+        /* Semantic: old_al = al.id */
+        auto pExpr5 = Expr::MakeAssign(
+          Expr::MakeVar("old_al", VariableExpression::Use),
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo));
+        AllExpr.push_back(pExpr5);
+        /* Semantic: cf.id = int1(0) */
+        auto pExpr6 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlCf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x0));
+        AllExpr.push_back(pExpr6);
+        /* Semantic: cond = int1(0) */
+        auto pExpr7 = Expr::MakeAssign(
+          Expr::MakeVar("cond", VariableExpression::Use),
+          Expr::MakeConst(1, 0x0));
+        AllExpr.push_back(pExpr7);
+        /* Semantic: if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1) */
+        auto pExpr8 = Expr::MakeIfElseCond(
+          ConditionExpression::CondUgt,
+          Expr::MakeBinOp(
+            OperationExpression::OpAnd,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0xf)),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x9),
+          Expr::MakeAssign(
+            Expr::MakeVar("cond", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpOr,
+              Expr::MakeVar("cond", VariableExpression::Use),
+              Expr::MakeConst(1, 0x1)))
+        , nullptr)
+        ;
+        AllExpr.push_back(pExpr8);
+        /* Semantic: if af.id == int1(1): cond |= int1(1) */
+        auto pExpr9 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeId(X86_FlAf, &m_CpuInfo),
+          Expr::MakeConst(1, 0x1),
+          Expr::MakeAssign(
+            Expr::MakeVar("cond", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpOr,
+              Expr::MakeVar("cond", VariableExpression::Use),
+              Expr::MakeConst(1, 0x1)))
+        , nullptr)
+        ;
+        AllExpr.push_back(pExpr9);
+        /* Semantic: if cond == int1(1):
+          al.id -= int(al.bit, 0x6)
+          if int(al.bit, 0x6) > al.id: cf.id = int1(1)
+          else: cf.id = old_cf
+          af.id = int1(1)
+        else:
+          af.id = int1(0) */
+        auto pExpr10 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeVar("cond", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1),
+          spThenBody0,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlAf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr10);
+        /* Semantic: cond = int1(0) */
+        auto pExpr11 = Expr::MakeAssign(
+          Expr::MakeVar("cond", VariableExpression::Use),
+          Expr::MakeConst(1, 0x0));
+        AllExpr.push_back(pExpr11);
+        /* Semantic: if old_al > int(al.bit, 0x99): cond |= int1(1) */
+        auto pExpr12 = Expr::MakeIfElseCond(
+          ConditionExpression::CondUgt,
+          Expr::MakeVar("old_al", VariableExpression::Use),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x99),
+          Expr::MakeAssign(
+            Expr::MakeVar("cond", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpOr,
+              Expr::MakeVar("cond", VariableExpression::Use),
+              Expr::MakeConst(1, 0x1)))
+        , nullptr)
+        ;
+        AllExpr.push_back(pExpr12);
+        /* Semantic: if old_cf == int1(1): cond |= int1(1) */
+        auto pExpr13 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeVar("old_cf", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1),
+          Expr::MakeAssign(
+            Expr::MakeVar("cond", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpOr,
+              Expr::MakeVar("cond", VariableExpression::Use),
+              Expr::MakeConst(1, 0x1)))
+        , nullptr)
+        ;
+        AllExpr.push_back(pExpr13);
+        /* Semantic: if cond == int1(1):
+          al.id -= int(al.bit, 0x60)
+          cf.id = int1(1) */
+        auto pExpr14 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeVar("cond", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1),
+          spThenBody1, nullptr)
+        ;
+        AllExpr.push_back(pExpr14);
+        /* Semantic: # Start updating ZF
+        if al.id == int(al.bit, 0): zf.id = int1(1)
+        else: zf.id = int1(0) */
+        auto pExpr15 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x0),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x1)),
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeConst(1, 0x0)));
+        AllExpr.push_back(pExpr15);
+        /* Semantic: # Start updating SF
+        sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1)) */
+        auto pExpr16 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlSf, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al)),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x1))), Expr::MakeConst(1, 0x1)));
+        AllExpr.push_back(pExpr16);
+        /* Semantic: # Start updating PF
+        pf_tmp = int1(1) */
+        auto pExpr17 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeConst(1, 0x1));
+        AllExpr.push_back(pExpr17);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 0), int1(1)) */
+        auto pExpr18 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x0)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr18);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 1), int1(1)) */
+        auto pExpr19 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x1)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr19);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 2), int1(1)) */
+        auto pExpr20 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x2)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr20);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 3), int1(1)) */
+        auto pExpr21 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x3)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr21);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 4), int1(1)) */
+        auto pExpr22 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x4)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr22);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 5), int1(1)) */
+        auto pExpr23 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x5)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr23);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 6), int1(1)) */
+        auto pExpr24 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr24);
+        /* Semantic: pf_tmp ^= bit_cast(al.id >> int(al.bit, 7), int1(1)) */
+        auto pExpr25 = Expr::MakeAssign(
+          Expr::MakeVar("pf_tmp", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            Expr::MakeVar("pf_tmp", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x7)), Expr::MakeConst(1, 0x1))))
+        ;
+        AllExpr.push_back(pExpr25);
+        /* Semantic: pf.id = pf_tmp */
+        auto pExpr26 = Expr::MakeAssign(
+          Expr::MakeId(X86_FlPf, &m_CpuInfo),
+          Expr::MakeVar("pf_tmp", VariableExpression::Use));
+        AllExpr.push_back(pExpr26);
+        /* Semantic: free_var('pf_tmp') */
+        auto pExpr27 = Expr::MakeVar("pf_tmp", VariableExpression::Free);
+        AllExpr.push_back(pExpr27);
+        /* Semantic: free_var('cond') */
+        auto pExpr28 = Expr::MakeVar("cond", VariableExpression::Free);
+        AllExpr.push_back(pExpr28);
+        /* Semantic: free_var('old_cf') */
+        auto pExpr29 = Expr::MakeVar("old_cf", VariableExpression::Free);
+        AllExpr.push_back(pExpr29);
+        /* Semantic: free_var('old_al') */
+        auto pExpr30 = Expr::MakeVar("old_al", VariableExpression::Free);
+        AllExpr.push_back(pExpr30);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -59106,10 +59455,9 @@ bool X86Architecture::Table_2_ab(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_80386
  * semantic: alloc_var('res', op0.bit);
 alloc_var('count', op0.bit);
-count = bit_cast(op2.val, int(op0.bit, op0.bit));
 alloc_var('sign_saved', sf.bit);
 sign_saved = sf.id;
-count = op2.val;
+count = bit_cast(op2.val, int(op0.bit, op0.bit));
 call('count_mask');
 res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
 if count != int(op0.bit, 0):
@@ -59280,30 +59628,25 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: alloc_var('count', op0.bit) */
         auto pExpr1 = Expr::MakeVar("count", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
         AllExpr.push_back(pExpr1);
-        /* Semantic: count = bit_cast(op2.val, int(op0.bit, op0.bit)) */
-        auto pExpr2 = Expr::MakeAssign(
-          Expr::MakeVar("count", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())));
-        AllExpr.push_back(pExpr2);
         /* Semantic: alloc_var('sign_saved', sf.bit) */
-        auto pExpr3 = Expr::MakeVar("sign_saved", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlSf));
-        AllExpr.push_back(pExpr3);
+        auto pExpr2 = Expr::MakeVar("sign_saved", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlSf));
+        AllExpr.push_back(pExpr2);
         /* Semantic: sign_saved = sf.id */
-        auto pExpr4 = Expr::MakeAssign(
+        auto pExpr3 = Expr::MakeAssign(
           Expr::MakeVar("sign_saved", VariableExpression::Use),
           Expr::MakeId(X86_FlSf, &m_CpuInfo));
-        AllExpr.push_back(pExpr4);
-        /* Semantic: count = op2.val */
-        auto pExpr5 = Expr::MakeAssign(
+        AllExpr.push_back(pExpr3);
+        /* Semantic: count = bit_cast(op2.val, int(op0.bit, op0.bit)) */
+        auto pExpr4 = Expr::MakeAssign(
           Expr::MakeVar("count", VariableExpression::Use),
-          rInsn.GetOperand(2));
-        AllExpr.push_back(pExpr5);
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())));
+        AllExpr.push_back(pExpr4);
         /* Semantic: call('count_mask') */
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
           count = count & int(op0.bit, 0x3f)
         else:
           count = count & int(op0.bit, 0x1f) */
-        auto pExpr6 = Expr::MakeIfElseCond(
+        auto pExpr5 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
@@ -59319,9 +59662,9 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAnd,
               Expr::MakeVar("count", VariableExpression::Use),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1f))));
-        AllExpr.push_back(pExpr6);
+        AllExpr.push_back(pExpr5);
         /* Semantic: res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count))) */
-        auto pExpr7 = Expr::MakeAssign(
+        auto pExpr6 = Expr::MakeAssign(
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
@@ -59336,22 +59679,22 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeVar("count", VariableExpression::Use)))));
-        AllExpr.push_back(pExpr7);
+        AllExpr.push_back(pExpr6);
         /* Semantic: if count != int(op0.bit, 0):
           cf.id = bit_cast(op0.val >> (count - int(op0.bit, 1)), int1(1))
           call('sign_flag')
           call('zero_flag')
           call('parity_flag') */
-        auto pExpr8 = Expr::MakeIfElseCond(
+        auto pExpr7 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           Expr::MakeVar("count", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
           spThenBody0, nullptr)
         ;
-        AllExpr.push_back(pExpr8);
+        AllExpr.push_back(pExpr7);
         /* Semantic: if count == int(op0.bit, 1):
           of.id = sf.id ^ sign_saved */
-        auto pExpr9 = Expr::MakeIfElseCond(
+        auto pExpr8 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeVar("count", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1),
@@ -59362,21 +59705,21 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeVar("sign_saved", VariableExpression::Use))), nullptr)
         ;
-        AllExpr.push_back(pExpr9);
+        AllExpr.push_back(pExpr8);
         /* Semantic: op0.val = res */
-        auto pExpr10 = Expr::MakeAssign(
+        auto pExpr9 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr10);
+        AllExpr.push_back(pExpr9);
         /* Semantic: free_var('sign_saved') */
-        auto pExpr11 = Expr::MakeVar("sign_saved", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr10 = Expr::MakeVar("sign_saved", VariableExpression::Free);
+        AllExpr.push_back(pExpr10);
         /* Semantic: free_var('count') */
-        auto pExpr12 = Expr::MakeVar("count", VariableExpression::Free);
-        AllExpr.push_back(pExpr12);
+        auto pExpr11 = Expr::MakeVar("count", VariableExpression::Free);
+        AllExpr.push_back(pExpr11);
         /* Semantic: free_var('res') */
-        auto pExpr13 = Expr::MakeVar("res", VariableExpression::Free);
-        AllExpr.push_back(pExpr13);
+        auto pExpr12 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr12);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -59392,10 +59735,9 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_80386
  * semantic: alloc_var('res', op0.bit);
 alloc_var('count', op0.bit);
-count = bit_cast(op2.val, int(op0.bit, op0.bit));
 alloc_var('sign_saved', sf.bit);
 sign_saved = sf.id;
-count = op2.val;
+count = bit_cast(op2.val, int(op0.bit, op0.bit));
 call('count_mask');
 res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
 if count != int(op0.bit, 0):
@@ -59566,30 +59908,25 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: alloc_var('count', op0.bit) */
         auto pExpr1 = Expr::MakeVar("count", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
         AllExpr.push_back(pExpr1);
-        /* Semantic: count = bit_cast(op2.val, int(op0.bit, op0.bit)) */
-        auto pExpr2 = Expr::MakeAssign(
-          Expr::MakeVar("count", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())));
-        AllExpr.push_back(pExpr2);
         /* Semantic: alloc_var('sign_saved', sf.bit) */
-        auto pExpr3 = Expr::MakeVar("sign_saved", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlSf));
-        AllExpr.push_back(pExpr3);
+        auto pExpr2 = Expr::MakeVar("sign_saved", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlSf));
+        AllExpr.push_back(pExpr2);
         /* Semantic: sign_saved = sf.id */
-        auto pExpr4 = Expr::MakeAssign(
+        auto pExpr3 = Expr::MakeAssign(
           Expr::MakeVar("sign_saved", VariableExpression::Use),
           Expr::MakeId(X86_FlSf, &m_CpuInfo));
-        AllExpr.push_back(pExpr4);
-        /* Semantic: count = op2.val */
-        auto pExpr5 = Expr::MakeAssign(
+        AllExpr.push_back(pExpr3);
+        /* Semantic: count = bit_cast(op2.val, int(op0.bit, op0.bit)) */
+        auto pExpr4 = Expr::MakeAssign(
           Expr::MakeVar("count", VariableExpression::Use),
-          rInsn.GetOperand(2));
-        AllExpr.push_back(pExpr5);
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())));
+        AllExpr.push_back(pExpr4);
         /* Semantic: call('count_mask') */
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
           count = count & int(op0.bit, 0x3f)
         else:
           count = count & int(op0.bit, 0x1f) */
-        auto pExpr6 = Expr::MakeIfElseCond(
+        auto pExpr5 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
@@ -59605,9 +59942,9 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAnd,
               Expr::MakeVar("count", VariableExpression::Use),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1f))));
-        AllExpr.push_back(pExpr6);
+        AllExpr.push_back(pExpr5);
         /* Semantic: res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count))) */
-        auto pExpr7 = Expr::MakeAssign(
+        auto pExpr6 = Expr::MakeAssign(
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpOr,
@@ -59622,22 +59959,22 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeVar("count", VariableExpression::Use)))));
-        AllExpr.push_back(pExpr7);
+        AllExpr.push_back(pExpr6);
         /* Semantic: if count != int(op0.bit, 0):
           cf.id = bit_cast(op0.val >> (count - int(op0.bit, 1)), int1(1))
           call('sign_flag')
           call('zero_flag')
           call('parity_flag') */
-        auto pExpr8 = Expr::MakeIfElseCond(
+        auto pExpr7 = Expr::MakeIfElseCond(
           ConditionExpression::CondNe,
           Expr::MakeVar("count", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
           spThenBody0, nullptr)
         ;
-        AllExpr.push_back(pExpr8);
+        AllExpr.push_back(pExpr7);
         /* Semantic: if count == int(op0.bit, 1):
           of.id = sf.id ^ sign_saved */
-        auto pExpr9 = Expr::MakeIfElseCond(
+        auto pExpr8 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeVar("count", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1),
@@ -59648,21 +59985,21 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeId(X86_FlSf, &m_CpuInfo),
               Expr::MakeVar("sign_saved", VariableExpression::Use))), nullptr)
         ;
-        AllExpr.push_back(pExpr9);
+        AllExpr.push_back(pExpr8);
         /* Semantic: op0.val = res */
-        auto pExpr10 = Expr::MakeAssign(
+        auto pExpr9 = Expr::MakeAssign(
           rInsn.GetOperand(0),
           Expr::MakeVar("res", VariableExpression::Use));
-        AllExpr.push_back(pExpr10);
+        AllExpr.push_back(pExpr9);
         /* Semantic: free_var('sign_saved') */
-        auto pExpr11 = Expr::MakeVar("sign_saved", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr10 = Expr::MakeVar("sign_saved", VariableExpression::Free);
+        AllExpr.push_back(pExpr10);
         /* Semantic: free_var('count') */
-        auto pExpr12 = Expr::MakeVar("count", VariableExpression::Free);
-        AllExpr.push_back(pExpr12);
+        auto pExpr11 = Expr::MakeVar("count", VariableExpression::Free);
+        AllExpr.push_back(pExpr11);
         /* Semantic: free_var('res') */
-        auto pExpr13 = Expr::MakeVar("res", VariableExpression::Free);
-        AllExpr.push_back(pExpr13);
+        auto pExpr12 = Expr::MakeVar("res", VariableExpression::Free);
+        AllExpr.push_back(pExpr12);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
