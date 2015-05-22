@@ -565,7 +565,10 @@ semantic:
 
   xadd: &xadd |
     alloc_var('res', op0.bit);
-    exchange(op0.val, op1.val);
+    alloc_var('tmp_val', op0.bit);
+    tmp_val = op0.val;
+    op0.val = op1.val;
+    op1.val = tmp_val;
     res = op1.val + op0.val;
     call('overflow_flag_add');
     call('carry_flag_add');
@@ -573,8 +576,9 @@ semantic:
     call('zero_flag');
     call('parity_flag');
     call('adjust_flag');
-    op0.val = res
-    free_var('res')
+    op0.val = res;
+    free_var('res');
+    free_var('tmp_val');
 
   cdqe: &cdqe |
     rax.id = sign_extend(eax.id, int(rax.bit, rax.bit));
@@ -712,13 +716,15 @@ semantic:
     stack.id += stack.size;
     stack.id += bit_cast(op0.val, int(stack.bit, stack.bit));
 
-  # NOTE: we must save op1 in a temporary space, it could be used while computing op0
-
   nop: &nop |
     program.id = program.id;
 
   xchg: &xchg |
-    exchange(op0.val, op1.val);
+    alloc_var('tmp_val', op0.bit);
+    tmp_val = op0.val;
+    op0.val = op1.val;
+    op1.val = tmp_val;
+    free_var('tmp_val');
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg |
