@@ -364,9 +364,40 @@ semantic:
     op0.val = res;
     free_var('res');
 
-  # TODO(KS): update flags
   imul1: &imul1 |
-    op0.val *= acc.id;
+    alloc_var('ext_res', op0.bit);
+    alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
+    if int(op0.bit, op0.bit) == int(op0.bit,  8): 
+      mul_res = sign_extend(al.id, int8(16)) * sign_extend(op0.val, int8(16))
+      ax.id = bit_cast(mul_res, int16(16))
+      sf.id = bit_cast(mul_res >> int16(7), int1(1))
+      ext_res = sign_extend(bit_cast(mul_res, int16(8)), int8(16));
+    if int(op0.bit, op0.bit) == int(op0.bit, 16):
+      mul_res = sign_extend(ax.id, int16(32)) * sign_extend(op0.val, int16(32))
+      ax.id = bit_cast(mul_res, int32(16))
+      dx.id = bit_cast(mul_res >> int32(16), int32(16))
+      sf.id = bit_cast(mul_res >> int32(15), int1(1))
+      ext_res = sign_extend(bit_cast(mul_res, int32(16)), int16(32));
+    if int(op0.bit, op0.bit) == int(op0.bit, 32):
+      mul_res = sign_extend(eax.id, int32(64)) * sign_extend(op0.val, int32(64))
+      eax.id = bit_cast(mul_res, int64(32))
+      edx.id = bit_cast(mul_res >> int64(32), int64(32))
+      sf.id = bit_cast(mul_res >> int64(31), int1(1))
+      ext_res = sign_extend(bit_cast(mul_res, int64(32)), int32(64));
+    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+      mul_res = sign_extend(rax.id, int64(128)) * sign_extend(op0.val, int64(128))
+      rax.id = bit_cast(mul_res, int128(64))
+      rdx.id = bit_cast(mul_res >> int128(64), int128(64))
+      sf.id = bit_cast(mul_res >> int128(63), int1(1))
+      ext_res = sign_extend(bit_cast(mul_res, int128(64)), int64(128));
+    if ext_res == mul_res:
+      of.id = int1(0)
+      cf.id = int1(0)
+    else:
+      of.id = int1(1)
+      cf.id = int1(1);
+    free_var('mul_res');
+    free_var('ext_res');
 
   imul2: &imul2 |
     alloc_var('res', op0.bit);
@@ -376,43 +407,58 @@ semantic:
     res = bit_cast(mul_res, int(op0.bit, op0.bit));
     call('sign_flag');
     extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
-    if extended != mul_res:
-      of.id = int1(1)
-      cf.id = int1(1)
-    else:
+    if extended == mul_res:
       of.id = int1(0)
-      cf.id = int1(0);
+      cf.id = int1(0)
+    else:
+      of.id = int1(1)
+      cf.id = int1(1);
     op0.val = res;
     free_var('extended');
     free_var('mul_res');
     free_var('res');
 
-  # http://x86.renejeschke.de/html/file_module_x86_id_138.html
   imul3: &imul3 |
-    op0.val = op1.val * op2.val;
+    alloc_var('res', op0.bit);
+    alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
+    alloc_var('extended', concat(op0.bit, ignore(' * 2')));
+    mul_res = bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op2.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+    res = bit_cast(mul_res, int(op0.bit, op0.bit));
+    call('sign_flag');
+    extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+    if extended == mul_res:
+      of.id = int1(0)
+      cf.id = int1(0)
+    else:
+      of.id = int1(1)
+      cf.id = int1(1);
+    op0.val = res;
+    free_var('extended');
+    free_var('mul_res');
+    free_var('res');
 
   mul: &mul |
     alloc_var('upper_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
     if int(op0.bit, op0.bit) == int(op0.bit,  8): 
-      mul_res = zero_extend(al.id, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))))
+      mul_res = zero_extend(al.id, int8(16)) * bit_cast(op0.val, int8(16))
       ax.id = bit_cast(mul_res, int16(16))
-      upper_res = bit_cast(ah.id, int(op0.bit, op0.bit));
+      upper_res = ah.id;
     if int(op0.bit, op0.bit) == int(op0.bit, 16):
-      mul_res = zero_extend(ax.id, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))))
-      ax.id = bit_cast(mul_res, int16(16))
-      dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int16(16))
-      upper_res = bit_cast(dx.id, int(op0.bit, op0.bit));
+      mul_res = zero_extend(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
+      ax.id = bit_cast(mul_res, int32(16))
+      dx.id = bit_cast(mul_res >> int32(16), int32(16))
+      upper_res = dx.id;
     if int(op0.bit, op0.bit) == int(op0.bit, 32):
-      mul_res = zero_extend(eax.id, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))))
-      eax.id = bit_cast(mul_res, int32(32))
-      edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int32(32))
-      upper_res = bit_cast(edx.id, int(op0.bit, op0.bit));
+      mul_res = zero_extend(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
+      eax.id = bit_cast(mul_res, int64(32))
+      edx.id = bit_cast(mul_res >> int64(32), int64(32))
+      upper_res = edx.id;
     if int(op0.bit, op0.bit) == int(op0.bit, 64):
-      mul_res = zero_extend(rax.id, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))))
-      rax.id = bit_cast(mul_res, int64(64))
-      rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int64(64))
-      upper_res = bit_cast(rdx.id, int(op0.bit, op0.bit));
+      mul_res = zero_extend(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
+      rax.id = bit_cast(mul_res, int128(64))
+      rdx.id = bit_cast(mul_res >> int128(64), int128(64))
+      upper_res = rdx.id;
     if upper_res == int(op0.bit, 0):
       of.id = int1(0)
       cf.id = int1(0)
@@ -12367,6 +12413,7 @@ instruction:
     - opcode: 0x04
       mnemonic: mul
       operand: [ Eb ]
+      semantic: *mul
 
     - opcode: 0x05
       mnemonic: imul
@@ -13633,8 +13680,8 @@ operand:
   Gv_Eb: [ op0 = decode_Gv, op1 = decode_Eb ]
   Gv_Ed: [ op0 = decode_Gv, op1 = decode_Ed ]
   Gv_Ev: [ op0 = decode_Gv, op1 = decode_Ev ]
-  Gv_Ev_Ibs: [ op0 = decode_Gv, op1 = decode_Ev, op2 = decode_Ibs ]
-  Gv_Ev_Iz: [ op0 = decode_Gv, op1 = decode_Ev, op2 = decode_Iz ]
+  Gv_Ev_Ibs: [ last_len, op0 = decode_Gv, op1 = decode_Ev, move_decode_offset(next_operand), op2 = decode_Ibs ]
+  Gv_Ev_Iz: [ last_len, op0 = decode_Gv, op1 = decode_Ev, move_decode_offset(next_operand), op2 = decode_Iz ]
   Gv_Ew: [ op0 = decode_Gv, op1 = decode_Ew ]
   Gv_M: [ op0 = decode_Gv, op1 = decode_M ]
   Gv_Ma: [ op0 = decode_Gv, op1 = decode_Ma ]
