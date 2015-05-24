@@ -45,7 +45,7 @@ void IntType::BitCast(u16 NewBitSize)
 ap_int IntType::GetSignedValue(void) const
 {
   // If the value is positive, we don't need to do anything
-  if (!m_Value.sign())
+  if (!((GetUnsignedValue() >> (m_BitSize - 1)) & 1))
     return m_Value;
 
   // ... otherwise we need to re-encode it
@@ -57,9 +57,7 @@ ap_uint IntType::GetUnsignedValue(void) const
 {
   // If the value is positive, we don't need to do anything
   if (!m_Value.backend().sign())
-  {
     return m_Value;
-  }
 
   // ... otherwise we need to re-encode it
   ap_uint InsertMask = (ap_int(1) << m_BitSize) - 1;
@@ -235,14 +233,14 @@ IntType& IntType::UDivAssign(IntType const& rVal)
 IntType IntType::SDiv(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value / rVal.GetSignedValue());
+  IntType Tmp(m_BitSize, GetSignedValue() / rVal.GetSignedValue());
   Tmp._Adjust();
   return Tmp;
 }
 
 IntType& IntType::SDivAssign(IntType const& rVal)
 {
-  IntType Tmp = UDiv(rVal);
+  IntType Tmp = SDiv(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
@@ -267,7 +265,7 @@ IntType& IntType::UModAssign(IntType const& rVal)
 IntType IntType::SMod(IntType const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value % rVal.GetSignedValue());
+  IntType Tmp(m_BitSize, GetSignedValue() % rVal.GetSignedValue());
   Tmp._Adjust();
   return Tmp;
 }

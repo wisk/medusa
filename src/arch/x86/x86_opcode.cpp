@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat May 23 17:19:06 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun May 24 11:34:13 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -22812,10 +22812,10 @@ bool X86Architecture::Table_1_68(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var('res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
 alloc_var('extended', concat(op0.bit, ignore(' * 2')));
-mul_res = bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op2.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+mul_res = sign_extend(op1.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
 res = bit_cast(mul_res, int(op0.bit, op0.bit));
 call('sign_flag');
-extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
 if extended == mul_res:
   of.id = int1(0)
   cf.id = int1(0)
@@ -22877,13 +22877,13 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: alloc_var('extended', concat(op0.bit, ignore(' * 2'))) */
         auto pExpr2 = Expr::MakeVar("extended", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
         AllExpr.push_back(pExpr2);
-        /* Semantic: mul_res = bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op2.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: mul_res = sign_extend(op1.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr3 = Expr::MakeAssign(
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)),
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)),
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2))));
         AllExpr.push_back(pExpr3);
         /* Semantic: res = bit_cast(mul_res, int(op0.bit, op0.bit)) */
         auto pExpr4 = Expr::MakeAssign(
@@ -22902,10 +22902,10 @@ bool X86Architecture::Table_1_69(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1)));
         AllExpr.push_back(pExpr5);
-        /* Semantic: extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr6 = Expr::MakeAssign(
           Expr::MakeVar("extended", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)));
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)));
         AllExpr.push_back(pExpr6);
         /* Semantic: if extended == mul_res:
           of.id = int1(0)
@@ -23012,10 +23012,10 @@ bool X86Architecture::Table_1_6a(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var('res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
 alloc_var('extended', concat(op0.bit, ignore(' * 2')));
-mul_res = bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op2.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+mul_res = sign_extend(op1.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
 res = bit_cast(mul_res, int(op0.bit, op0.bit));
 call('sign_flag');
-extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
 if extended == mul_res:
   of.id = int1(0)
   cf.id = int1(0)
@@ -23077,13 +23077,13 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: alloc_var('extended', concat(op0.bit, ignore(' * 2'))) */
         auto pExpr2 = Expr::MakeVar("extended", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
         AllExpr.push_back(pExpr2);
-        /* Semantic: mul_res = bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op2.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: mul_res = sign_extend(op1.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr3 = Expr::MakeAssign(
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)),
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)),
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(2), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2))));
         AllExpr.push_back(pExpr3);
         /* Semantic: res = bit_cast(mul_res, int(op0.bit, op0.bit)) */
         auto pExpr4 = Expr::MakeAssign(
@@ -23102,10 +23102,10 @@ bool X86Architecture::Table_1_6b(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1)));
         AllExpr.push_back(pExpr5);
-        /* Semantic: extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr6 = Expr::MakeAssign(
           Expr::MakeVar("extended", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)));
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)));
         AllExpr.push_back(pExpr6);
         /* Semantic: if extended == mul_res:
           of.id = int1(0)
@@ -47322,21 +47322,21 @@ free_var('res');
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
 if int(op0.bit, op0.bit) == int(op0.bit,  8): 
-  mul_res = zero_extend(al.id, int8(16)) * bit_cast(op0.val, int8(16))
+  mul_res = bit_cast(al.id, int8(16)) * bit_cast(op0.val, int8(16))
   ax.id = bit_cast(mul_res, int16(16))
   upper_res = ah.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 16):
-  mul_res = zero_extend(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
+  mul_res = bit_cast(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
   ax.id = bit_cast(mul_res, int32(16))
   dx.id = bit_cast(mul_res >> int32(16), int32(16))
   upper_res = dx.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 32):
-  mul_res = zero_extend(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
+  mul_res = bit_cast(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
   eax.id = bit_cast(mul_res, int64(32))
   edx.id = bit_cast(mul_res >> int64(32), int64(32))
   upper_res = edx.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 64):
-  mul_res = zero_extend(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
+  mul_res = bit_cast(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
   rax.id = bit_cast(mul_res, int128(64))
   rdx.id = bit_cast(mul_res >> int128(64), int128(64))
   upper_res = rdx.id;
@@ -47391,35 +47391,50 @@ free_var('ext_res');
  * mnemonic: div
  * operand: ['Eb']
  * opcode: 06
- * semantic: alloc_var('div_res', op0.bit);
-alloc_var('rem_res', op0.bit);
-alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
-if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
-if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
-if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
-div_res = dividend / op0.val;
-rem_res = dividend % op0.val;
+ * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
+if int(op0.bit, op0.bit) == int(op0.bit,  8):
+  dividend = bit_cast(ax.id, int16(16))
+  al.id = dividend / op0.val
+  ah.id = dividend % op0.val;
+if int(op0.bit, op0.bit) == int(op0.bit, 16):
+  dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
+  ax.id = bit_cast(dividend / op0.val, int32(16))
+  dx.id = bit_cast(dividend % op0.val, int32(16));
+if int(op0.bit, op0.bit) == int(op0.bit, 32):
+  dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
+  eax.id = bit_cast(dividend / op0.val, int64(32))
+  edx.id = bit_cast(dividend % op0.val, int64(32));
+if int(op0.bit, op0.bit) == int(op0.bit, 64):
+  dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
+  rax.id = bit_cast(dividend / op0.val, int128(64))
+  rdx.id = bit_cast(dividend % op0.val, int128(64));
 free_var('dividend');
-free_var('rem_res');
-free_var('div_res');
 
  *
  * mnemonic: idiv
  * operand: ['Eb']
  * opcode: 07
- * semantic: alloc_var('div_res', op0.bit);
-alloc_var('rem_res', op0.bit);
-alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
-if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
-if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
-if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
-div_res = sdiv(dividend, op0.val);
-rem_res = smod(dividend, op0.val);
+ * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
+alloc_var('extended', concat(op0.bit, ignore(' * 2')));
+extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+if int(op0.bit, op0.bit) == int(op0.bit,  8):
+  dividend = sign_extend(ax.id, int16(16))
+  al.id = bit_cast(sdiv(dividend, extended), int16(8))
+  ah.id = bit_cast(smod(dividend, extended), int16(8));
+if int(op0.bit, op0.bit) == int(op0.bit, 16):
+  dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
+  ax.id = bit_cast(sdiv(dividend, extended), int32(16))
+  dx.id = bit_cast(smod(dividend, extended), int32(16));
+if int(op0.bit, op0.bit) == int(op0.bit, 32):
+  dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
+  eax.id = bit_cast(sdiv(dividend, extended), int64(32))
+  edx.id = bit_cast(smod(dividend, extended), int64(32));
+if int(op0.bit, op0.bit) == int(op0.bit, 64):
+  dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
+  rax.id = bit_cast(sdiv(dividend, extended), int128(64))
+  rdx.id = bit_cast(smod(dividend, extended), int128(64));
+free_var('extended');
 free_var('dividend');
-free_var('rem_res');
-free_var('div_res');
 
  *
 **/
@@ -48048,7 +48063,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(8, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(8, 0x10)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(8, 0x10)))));
         ThenBodyExprs0.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
@@ -48064,7 +48079,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 0x20)))));
         ThenBodyExprs1.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
@@ -48086,7 +48101,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 0x40)))));
         ThenBodyExprs2.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
@@ -48108,7 +48123,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 0x80)))));
         ThenBodyExprs3.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
@@ -48149,7 +48164,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
         AllExpr.push_back(pExpr1);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): 
-          mul_res = zero_extend(al.id, int8(16)) * bit_cast(op0.val, int8(16))
+          mul_res = bit_cast(al.id, int8(16)) * bit_cast(op0.val, int8(16))
           ax.id = bit_cast(mul_res, int16(16))
           upper_res = ah.id */
         auto pExpr2 = Expr::MakeIfElseCond(
@@ -48160,7 +48175,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr2);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
-          mul_res = zero_extend(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
+          mul_res = bit_cast(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
           ax.id = bit_cast(mul_res, int32(16))
           dx.id = bit_cast(mul_res >> int32(16), int32(16))
           upper_res = dx.id */
@@ -48172,7 +48187,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr3);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
-          mul_res = zero_extend(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
+          mul_res = bit_cast(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
           eax.id = bit_cast(mul_res, int64(32))
           edx.id = bit_cast(mul_res >> int64(32), int64(32))
           upper_res = edx.id */
@@ -48184,7 +48199,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr4);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
-          mul_res = zero_extend(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
+          mul_res = bit_cast(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
           rax.id = bit_cast(mul_res, int128(64))
           rdx.id = bit_cast(mul_res >> int128(64), int128(64))
           upper_res = rdx.id */
@@ -48438,98 +48453,150 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: alloc_var('div_res', op0.bit) */
-        auto pExpr0 = Expr::MakeVar("div_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr0);
-        /* Semantic: alloc_var('rem_res', op0.bit) */
-        auto pExpr1 = Expr::MakeVar("rem_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr1);
-        /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
-        auto pExpr2 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
-        AllExpr.push_back(pExpr2);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id */
-        auto pExpr3 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo)), nullptr)
-        ;
-        AllExpr.push_back(pExpr3);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id ) */
-        auto pExpr4 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x10)),
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr4);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id) */
-        auto pExpr5 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x20)),
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr5);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id) */
-        auto pExpr6 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x40)),
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr6);
-        /* Semantic: div_res = dividend / op0.val */
-        auto pExpr7 = Expr::MakeAssign(
-          Expr::MakeVar("div_res", VariableExpression::Use),
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs0;
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x10))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpUDiv,
             Expr::MakeVar("dividend", VariableExpression::Use),
-            rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr7);
-        /* Semantic: rem_res = dividend % op0.val */
-        auto pExpr8 = Expr::MakeAssign(
-          Expr::MakeVar("rem_res", VariableExpression::Use),
+            rInsn.GetOperand(0))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpUMod,
             Expr::MakeVar("dividend", VariableExpression::Use),
-            rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr8);
+            rInsn.GetOperand(0))));
+        auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs1;
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+              Expr::MakeConst(32, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(32, 0x10))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(32, 0x10))));
+        auto spThenBody1 = Expr::MakeBind(ThenBodyExprs1);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs2;
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+              Expr::MakeConst(64, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(64, 0x20))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(64, 0x20))));
+        auto spThenBody2 = Expr::MakeBind(ThenBodyExprs2);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs3;
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+              Expr::MakeConst(128, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(128, 0x40))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(128, 0x40))));
+        auto spThenBody3 = Expr::MakeBind(ThenBodyExprs3);
+
+        /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
+        auto pExpr0 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr0);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8):
+          dividend = bit_cast(ax.id, int16(16))
+          al.id = dividend / op0.val
+          ah.id = dividend % op0.val */
+        auto pExpr1 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
+          spThenBody0, nullptr)
+        ;
+        AllExpr.push_back(pExpr1);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
+          dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
+          ax.id = bit_cast(dividend / op0.val, int32(16))
+          dx.id = bit_cast(dividend % op0.val, int32(16)) */
+        auto pExpr2 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
+          spThenBody1, nullptr)
+        ;
+        AllExpr.push_back(pExpr2);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
+          dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
+          eax.id = bit_cast(dividend / op0.val, int64(32))
+          edx.id = bit_cast(dividend % op0.val, int64(32)) */
+        auto pExpr3 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
+          spThenBody2, nullptr)
+        ;
+        AllExpr.push_back(pExpr3);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
+          dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
+          rax.id = bit_cast(dividend / op0.val, int128(64))
+          rdx.id = bit_cast(dividend % op0.val, int128(64)) */
+        auto pExpr4 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
+          spThenBody3, nullptr)
+        ;
+        AllExpr.push_back(pExpr4);
         /* Semantic: free_var('dividend') */
-        auto pExpr9 = Expr::MakeVar("dividend", VariableExpression::Free);
-        AllExpr.push_back(pExpr9);
-        /* Semantic: free_var('rem_res') */
-        auto pExpr10 = Expr::MakeVar("rem_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr10);
-        /* Semantic: free_var('div_res') */
-        auto pExpr11 = Expr::MakeVar("div_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr5 = Expr::MakeVar("dividend", VariableExpression::Free);
+        AllExpr.push_back(pExpr5);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -48542,92 +48609,137 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: alloc_var('div_res', op0.bit) */
-        auto pExpr0 = Expr::MakeVar("div_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr0);
-        /* Semantic: alloc_var('rem_res', op0.bit) */
-        auto pExpr1 = Expr::MakeVar("rem_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr1);
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs0;
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x10))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 0x8))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 0x8))));
+        auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs1;
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+              Expr::MakeConst(32, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 0x10))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 0x10))));
+        auto spThenBody1 = Expr::MakeBind(ThenBodyExprs1);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs2;
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+              Expr::MakeConst(64, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 0x20))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 0x20))));
+        auto spThenBody2 = Expr::MakeBind(ThenBodyExprs2);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs3;
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+              Expr::MakeConst(128, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(128, 0x40))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(128, 0x40))));
+        auto spThenBody3 = Expr::MakeBind(ThenBodyExprs3);
+
         /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
-        auto pExpr2 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        auto pExpr0 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr0);
+        /* Semantic: alloc_var('extended', concat(op0.bit, ignore(' * 2'))) */
+        auto pExpr1 = Expr::MakeVar("extended", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr1);
+        /* Semantic: extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeVar("extended", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)));
         AllExpr.push_back(pExpr2);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8):
+          dividend = sign_extend(ax.id, int16(16))
+          al.id = bit_cast(sdiv(dividend, extended), int16(8))
+          ah.id = bit_cast(smod(dividend, extended), int16(8)) */
         auto pExpr3 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo)), nullptr)
+          spThenBody0, nullptr)
         ;
         AllExpr.push_back(pExpr3);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id ) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
+          dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
+          ax.id = bit_cast(sdiv(dividend, extended), int32(16))
+          dx.id = bit_cast(smod(dividend, extended), int32(16)) */
         auto pExpr4 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x10)),
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo))), nullptr)
+          spThenBody1, nullptr)
         ;
         AllExpr.push_back(pExpr4);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
+          dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
+          eax.id = bit_cast(sdiv(dividend, extended), int64(32))
+          edx.id = bit_cast(smod(dividend, extended), int64(32)) */
         auto pExpr5 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x20)),
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo))), nullptr)
+          spThenBody2, nullptr)
         ;
         AllExpr.push_back(pExpr5);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
+          dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
+          rax.id = bit_cast(sdiv(dividend, extended), int128(64))
+          rdx.id = bit_cast(smod(dividend, extended), int128(64)) */
         auto pExpr6 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x40)),
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo))), nullptr)
+          spThenBody3, nullptr)
         ;
         AllExpr.push_back(pExpr6);
-        /* Semantic: div_res = sdiv(dividend, op0.val) */
-        auto pExpr7 = Expr::MakeAssign(
-          Expr::MakeVar("div_res", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), rInsn.GetOperand(0)));
+        /* Semantic: free_var('extended') */
+        auto pExpr7 = Expr::MakeVar("extended", VariableExpression::Free);
         AllExpr.push_back(pExpr7);
-        /* Semantic: rem_res = smod(dividend, op0.val) */
-        auto pExpr8 = Expr::MakeAssign(
-          Expr::MakeVar("rem_res", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr8);
         /* Semantic: free_var('dividend') */
-        auto pExpr9 = Expr::MakeVar("dividend", VariableExpression::Free);
-        AllExpr.push_back(pExpr9);
-        /* Semantic: free_var('rem_res') */
-        auto pExpr10 = Expr::MakeVar("rem_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr10);
-        /* Semantic: free_var('div_res') */
-        auto pExpr11 = Expr::MakeVar("div_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr8 = Expr::MakeVar("dividend", VariableExpression::Free);
+        AllExpr.push_back(pExpr8);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -48700,21 +48812,21 @@ free_var('res');
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
 if int(op0.bit, op0.bit) == int(op0.bit,  8): 
-  mul_res = zero_extend(al.id, int8(16)) * bit_cast(op0.val, int8(16))
+  mul_res = bit_cast(al.id, int8(16)) * bit_cast(op0.val, int8(16))
   ax.id = bit_cast(mul_res, int16(16))
   upper_res = ah.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 16):
-  mul_res = zero_extend(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
+  mul_res = bit_cast(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
   ax.id = bit_cast(mul_res, int32(16))
   dx.id = bit_cast(mul_res >> int32(16), int32(16))
   upper_res = dx.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 32):
-  mul_res = zero_extend(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
+  mul_res = bit_cast(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
   eax.id = bit_cast(mul_res, int64(32))
   edx.id = bit_cast(mul_res >> int64(32), int64(32))
   upper_res = edx.id;
 if int(op0.bit, op0.bit) == int(op0.bit, 64):
-  mul_res = zero_extend(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
+  mul_res = bit_cast(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
   rax.id = bit_cast(mul_res, int128(64))
   rdx.id = bit_cast(mul_res >> int128(64), int128(64))
   upper_res = rdx.id;
@@ -48769,35 +48881,50 @@ free_var('ext_res');
  * mnemonic: div
  * operand: ['Ev']
  * opcode: 06
- * semantic: alloc_var('div_res', op0.bit);
-alloc_var('rem_res', op0.bit);
-alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
-if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
-if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
-if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
-div_res = dividend / op0.val;
-rem_res = dividend % op0.val;
+ * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
+if int(op0.bit, op0.bit) == int(op0.bit,  8):
+  dividend = bit_cast(ax.id, int16(16))
+  al.id = dividend / op0.val
+  ah.id = dividend % op0.val;
+if int(op0.bit, op0.bit) == int(op0.bit, 16):
+  dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
+  ax.id = bit_cast(dividend / op0.val, int32(16))
+  dx.id = bit_cast(dividend % op0.val, int32(16));
+if int(op0.bit, op0.bit) == int(op0.bit, 32):
+  dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
+  eax.id = bit_cast(dividend / op0.val, int64(32))
+  edx.id = bit_cast(dividend % op0.val, int64(32));
+if int(op0.bit, op0.bit) == int(op0.bit, 64):
+  dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
+  rax.id = bit_cast(dividend / op0.val, int128(64))
+  rdx.id = bit_cast(dividend % op0.val, int128(64));
 free_var('dividend');
-free_var('rem_res');
-free_var('div_res');
 
  *
  * mnemonic: idiv
  * operand: ['Ev']
  * opcode: 07
- * semantic: alloc_var('div_res', op0.bit);
-alloc_var('rem_res', op0.bit);
-alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id;
-if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id );
-if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id);
-if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id);
-div_res = sdiv(dividend, op0.val);
-rem_res = smod(dividend, op0.val);
+ * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
+alloc_var('extended', concat(op0.bit, ignore(' * 2')));
+extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+if int(op0.bit, op0.bit) == int(op0.bit,  8):
+  dividend = sign_extend(ax.id, int16(16))
+  al.id = bit_cast(sdiv(dividend, extended), int16(8))
+  ah.id = bit_cast(smod(dividend, extended), int16(8));
+if int(op0.bit, op0.bit) == int(op0.bit, 16):
+  dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
+  ax.id = bit_cast(sdiv(dividend, extended), int32(16))
+  dx.id = bit_cast(smod(dividend, extended), int32(16));
+if int(op0.bit, op0.bit) == int(op0.bit, 32):
+  dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
+  eax.id = bit_cast(sdiv(dividend, extended), int64(32))
+  edx.id = bit_cast(smod(dividend, extended), int64(32));
+if int(op0.bit, op0.bit) == int(op0.bit, 64):
+  dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
+  rax.id = bit_cast(sdiv(dividend, extended), int128(64))
+  rdx.id = bit_cast(smod(dividend, extended), int128(64));
+free_var('extended');
 free_var('dividend');
-free_var('rem_res');
-free_var('div_res');
 
  *
 **/
@@ -49426,7 +49553,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(8, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(8, 0x10)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(8, 0x10)))));
         ThenBodyExprs0.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
@@ -49442,7 +49569,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 0x20)))));
         ThenBodyExprs1.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
@@ -49464,7 +49591,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 0x40)))));
         ThenBodyExprs2.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
@@ -49486,7 +49613,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 0x80)))));
         ThenBodyExprs3.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
@@ -49527,7 +49654,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         auto pExpr1 = Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
         AllExpr.push_back(pExpr1);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): 
-          mul_res = zero_extend(al.id, int8(16)) * bit_cast(op0.val, int8(16))
+          mul_res = bit_cast(al.id, int8(16)) * bit_cast(op0.val, int8(16))
           ax.id = bit_cast(mul_res, int16(16))
           upper_res = ah.id */
         auto pExpr2 = Expr::MakeIfElseCond(
@@ -49538,7 +49665,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr2);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
-          mul_res = zero_extend(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
+          mul_res = bit_cast(ax.id, int16(32)) * bit_cast(op0.val, int16(32))
           ax.id = bit_cast(mul_res, int32(16))
           dx.id = bit_cast(mul_res >> int32(16), int32(16))
           upper_res = dx.id */
@@ -49550,7 +49677,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr3);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
-          mul_res = zero_extend(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
+          mul_res = bit_cast(eax.id, int32(64)) * bit_cast(op0.val, int32(64))
           eax.id = bit_cast(mul_res, int64(32))
           edx.id = bit_cast(mul_res >> int64(32), int64(32))
           upper_res = edx.id */
@@ -49562,7 +49689,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr4);
         /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
-          mul_res = zero_extend(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
+          mul_res = bit_cast(rax.id, int64(128)) * bit_cast(op0.val, int64(128))
           rax.id = bit_cast(mul_res, int128(64))
           rdx.id = bit_cast(mul_res >> int128(64), int128(64))
           upper_res = rdx.id */
@@ -49816,98 +49943,150 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: alloc_var('div_res', op0.bit) */
-        auto pExpr0 = Expr::MakeVar("div_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr0);
-        /* Semantic: alloc_var('rem_res', op0.bit) */
-        auto pExpr1 = Expr::MakeVar("rem_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr1);
-        /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
-        auto pExpr2 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
-        AllExpr.push_back(pExpr2);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id */
-        auto pExpr3 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo)), nullptr)
-        ;
-        AllExpr.push_back(pExpr3);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id ) */
-        auto pExpr4 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x10)),
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr4);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id) */
-        auto pExpr5 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x20)),
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr5);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id) */
-        auto pExpr6 = Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x40)),
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo))), nullptr)
-        ;
-        AllExpr.push_back(pExpr6);
-        /* Semantic: div_res = dividend / op0.val */
-        auto pExpr7 = Expr::MakeAssign(
-          Expr::MakeVar("div_res", VariableExpression::Use),
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs0;
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x10))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpUDiv,
             Expr::MakeVar("dividend", VariableExpression::Use),
-            rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr7);
-        /* Semantic: rem_res = dividend % op0.val */
-        auto pExpr8 = Expr::MakeAssign(
-          Expr::MakeVar("rem_res", VariableExpression::Use),
+            rInsn.GetOperand(0))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
           Expr::MakeBinOp(
             OperationExpression::OpUMod,
             Expr::MakeVar("dividend", VariableExpression::Use),
-            rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr8);
+            rInsn.GetOperand(0))));
+        auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs1;
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+              Expr::MakeConst(32, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(32, 0x10))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(32, 0x10))));
+        auto spThenBody1 = Expr::MakeBind(ThenBodyExprs1);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs2;
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+              Expr::MakeConst(64, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(64, 0x20))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(64, 0x20))));
+        auto spThenBody2 = Expr::MakeBind(ThenBodyExprs2);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs3;
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+              Expr::MakeConst(128, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUDiv,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(128, 0x40))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
+            OperationExpression::OpUMod,
+            Expr::MakeVar("dividend", VariableExpression::Use),
+            rInsn.GetOperand(0)), Expr::MakeConst(128, 0x40))));
+        auto spThenBody3 = Expr::MakeBind(ThenBodyExprs3);
+
+        /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
+        auto pExpr0 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr0);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8):
+          dividend = bit_cast(ax.id, int16(16))
+          al.id = dividend / op0.val
+          ah.id = dividend % op0.val */
+        auto pExpr1 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
+          spThenBody0, nullptr)
+        ;
+        AllExpr.push_back(pExpr1);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
+          dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
+          ax.id = bit_cast(dividend / op0.val, int32(16))
+          dx.id = bit_cast(dividend % op0.val, int32(16)) */
+        auto pExpr2 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
+          spThenBody1, nullptr)
+        ;
+        AllExpr.push_back(pExpr2);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
+          dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
+          eax.id = bit_cast(dividend / op0.val, int64(32))
+          edx.id = bit_cast(dividend % op0.val, int64(32)) */
+        auto pExpr3 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
+          spThenBody2, nullptr)
+        ;
+        AllExpr.push_back(pExpr3);
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
+          dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
+          rax.id = bit_cast(dividend / op0.val, int128(64))
+          rdx.id = bit_cast(dividend % op0.val, int128(64)) */
+        auto pExpr4 = Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
+          spThenBody3, nullptr)
+        ;
+        AllExpr.push_back(pExpr4);
         /* Semantic: free_var('dividend') */
-        auto pExpr9 = Expr::MakeVar("dividend", VariableExpression::Free);
-        AllExpr.push_back(pExpr9);
-        /* Semantic: free_var('rem_res') */
-        auto pExpr10 = Expr::MakeVar("rem_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr10);
-        /* Semantic: free_var('div_res') */
-        auto pExpr11 = Expr::MakeVar("div_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr5 = Expr::MakeVar("dividend", VariableExpression::Free);
+        AllExpr.push_back(pExpr5);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -49920,92 +50099,137 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* Semantic: alloc_var('div_res', op0.bit) */
-        auto pExpr0 = Expr::MakeVar("div_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr0);
-        /* Semantic: alloc_var('rem_res', op0.bit) */
-        auto pExpr1 = Expr::MakeVar("rem_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize());
-        AllExpr.push_back(pExpr1);
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs0;
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x10))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 0x8))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 0x8))));
+        auto spThenBody0 = Expr::MakeBind(ThenBodyExprs0);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs1;
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(16, 0x20)),
+              Expr::MakeConst(32, 0x10)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 0x20)))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 0x10))));
+        ThenBodyExprs1.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 0x10))));
+        auto spThenBody1 = Expr::MakeBind(ThenBodyExprs1);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs2;
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(32, 0x40)),
+              Expr::MakeConst(64, 0x20)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(32, 0x40)))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 0x20))));
+        ThenBodyExprs2.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 0x20))));
+        auto spThenBody2 = Expr::MakeBind(ThenBodyExprs2);
+
+        /* Var Expr */
+        Expression::LSPType ThenBodyExprs3;
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeVar("dividend", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpOr,
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(64, 0x80)),
+              Expr::MakeConst(128, 0x40)),
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(64, 0x80)))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(128, 0x40))));
+        ThenBodyExprs3.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
+          Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(128, 0x40))));
+        auto spThenBody3 = Expr::MakeBind(ThenBodyExprs3);
+
         /* Semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
-        auto pExpr2 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        auto pExpr0 = Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr0);
+        /* Semantic: alloc_var('extended', concat(op0.bit, ignore(' * 2'))) */
+        auto pExpr1 = Expr::MakeVar("extended", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
+        AllExpr.push_back(pExpr1);
+        /* Semantic: extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        auto pExpr2 = Expr::MakeAssign(
+          Expr::MakeVar("extended", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)));
         AllExpr.push_back(pExpr2);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8): dividend = ax.id */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit,  8):
+          dividend = sign_extend(ax.id, int16(16))
+          al.id = bit_cast(sdiv(dividend, extended), int16(8))
+          ah.id = bit_cast(smod(dividend, extended), int16(8)) */
         auto pExpr3 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeId(X86_Reg_Ax, &m_CpuInfo)), nullptr)
+          spThenBody0, nullptr)
         ;
         AllExpr.push_back(pExpr3);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16): dividend = (dx.id  << int32(16) | ax.id ) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 16):
+          dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
+          ax.id = bit_cast(sdiv(dividend, extended), int32(16))
+          dx.id = bit_cast(smod(dividend, extended), int32(16)) */
         auto pExpr4 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x10)),
-              Expr::MakeId(X86_Reg_Ax, &m_CpuInfo))), nullptr)
+          spThenBody1, nullptr)
         ;
         AllExpr.push_back(pExpr4);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32): dividend = (edx.id << int32(32) | eax.id) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 32):
+          dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
+          eax.id = bit_cast(sdiv(dividend, extended), int64(32))
+          edx.id = bit_cast(smod(dividend, extended), int64(32)) */
         auto pExpr5 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x20)),
-              Expr::MakeId(X86_Reg_Eax, &m_CpuInfo))), nullptr)
+          spThenBody2, nullptr)
         ;
         AllExpr.push_back(pExpr5);
-        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64): dividend = (rdx.id << int32(64) | rax.id) */
+        /* Semantic: if int(op0.bit, op0.bit) == int(op0.bit, 64):
+          dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
+          rax.id = bit_cast(sdiv(dividend, extended), int128(64))
+          rdx.id = bit_cast(smod(dividend, extended), int128(64)) */
         auto pExpr6 = Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeAssign(
-            Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(
-              OperationExpression::OpOr,
-              Expr::MakeBinOp(
-                OperationExpression::OpLls,
-                Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-                Expr::MakeConst(32, 0x40)),
-              Expr::MakeId(X86_Reg_Rax, &m_CpuInfo))), nullptr)
+          spThenBody3, nullptr)
         ;
         AllExpr.push_back(pExpr6);
-        /* Semantic: div_res = sdiv(dividend, op0.val) */
-        auto pExpr7 = Expr::MakeAssign(
-          Expr::MakeVar("div_res", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), rInsn.GetOperand(0)));
+        /* Semantic: free_var('extended') */
+        auto pExpr7 = Expr::MakeVar("extended", VariableExpression::Free);
         AllExpr.push_back(pExpr7);
-        /* Semantic: rem_res = smod(dividend, op0.val) */
-        auto pExpr8 = Expr::MakeAssign(
-          Expr::MakeVar("rem_res", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), rInsn.GetOperand(0)));
-        AllExpr.push_back(pExpr8);
         /* Semantic: free_var('dividend') */
-        auto pExpr9 = Expr::MakeVar("dividend", VariableExpression::Free);
-        AllExpr.push_back(pExpr9);
-        /* Semantic: free_var('rem_res') */
-        auto pExpr10 = Expr::MakeVar("rem_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr10);
-        /* Semantic: free_var('div_res') */
-        auto pExpr11 = Expr::MakeVar("div_res", VariableExpression::Free);
-        AllExpr.push_back(pExpr11);
+        auto pExpr8 = Expr::MakeVar("dividend", VariableExpression::Free);
+        AllExpr.push_back(pExpr8);
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -61314,10 +61538,10 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
  * semantic: alloc_var('res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
 alloc_var('extended', concat(op0.bit, ignore(' * 2')));
-mul_res = bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+mul_res = sign_extend(op0.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op1.val, int(op1.bit, concat(op0.bit, ignore(' * 2'))));
 res = bit_cast(mul_res, int(op0.bit, op0.bit));
 call('sign_flag');
-extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
 if extended == mul_res:
   of.id = int1(0)
   cf.id = int1(0)
@@ -61369,13 +61593,13 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
         /* Semantic: alloc_var('extended', concat(op0.bit, ignore(' * 2'))) */
         auto pExpr2 = Expr::MakeVar("extended", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2);
         AllExpr.push_back(pExpr2);
-        /* Semantic: mul_res = bit_cast(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) * bit_cast(op1.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: mul_res = sign_extend(op0.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op1.val, int(op1.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr3 = Expr::MakeAssign(
           Expr::MakeVar("mul_res", VariableExpression::Use),
           Expr::MakeBinOp(
             OperationExpression::OpMul,
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)),
-            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)),
+            Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(1), Expr::MakeConst(rInsn.GetOperand(1)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2))));
         AllExpr.push_back(pExpr3);
         /* Semantic: res = bit_cast(mul_res, int(op0.bit, op0.bit)) */
         auto pExpr4 = Expr::MakeAssign(
@@ -61394,10 +61618,10 @@ bool X86Architecture::Table_2_af(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1)));
         AllExpr.push_back(pExpr5);
-        /* Semantic: extended = sign_extend(res, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2')))) */
+        /* Semantic: extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2')))) */
         auto pExpr6 = Expr::MakeAssign(
           Expr::MakeVar("extended", VariableExpression::Use),
-          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2)));
+          Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeVar("res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() * 2)));
         AllExpr.push_back(pExpr6);
         /* Semantic: if extended == mul_res:
           of.id = int1(0)
