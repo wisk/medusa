@@ -37,10 +37,10 @@ class Medusa_EXPORT Architecture : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<Architecture> SPType;
-  typedef std::vector<SPType>          VSPType;
-  typedef std::map<Tag, SPType>        TagMap;
-  typedef std::tuple<const char*, u8>     NamedMode;
-  typedef std::vector<NamedMode>          NamedModeVector;
+  typedef std::vector<SPType>           VSPType;
+  typedef std::map<Tag, SPType>         TagMap;
+  typedef std::tuple<const char*, u8>   NamedMode;
+  typedef std::vector<NamedMode>        NamedModeVector;
 
   Architecture(Tag ArchTag);
 
@@ -70,7 +70,8 @@ public:
   virtual CpuContext*           MakeCpuContext(void)    const = 0;
   virtual MemoryContext*        MakeMemoryContext(void) const = 0;
 
-  virtual bool HandleExpression(Expression::LSPType& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr) { return true; }
+  virtual bool HandleExpression(Expression::LSPType& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
+  virtual bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
 
   void UpdateId(u8 Id) { m_Tag |= Id; }
   Tag  GetTag(void) const { return m_Tag; }

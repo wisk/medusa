@@ -65,6 +65,13 @@ namespace pydusa
 
 void PydusaExecution(void)
 {
+  bp::enum_<u32>("Hook")
+    .value("UNKNOWN", Emulator::HookUnknown)
+    .value("READ",    Emulator::HookOnRead)
+    .value("WRITE",   Emulator::HookOnWrite)
+    .value("EXECUTE", Emulator::HookOnExecute)
+    ;
+
   bp::class_<Execution, boost::noncopyable>("Execution", bp::init<Document&>())
     .def("init", pydusa::Execution_Initialize)
     .def("set_emulator", &Execution::SetEmulator)

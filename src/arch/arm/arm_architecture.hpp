@@ -32,6 +32,7 @@ class ArmArchitecture : public Architecture
   class ARMCpuInformation : public CpuInformation
   {
   public:
+    ARMCpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;

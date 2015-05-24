@@ -14,9 +14,9 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
+bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
 {
-  for (Expression::SPType spExpr : rExprList)
+  for (Expression::SPType spExpr : rExprs)
   {
     if (auto spSys = expr_cast<SystemExpression>(spExpr))
     {
@@ -52,13 +52,6 @@ bool InterpreterEmulator::Execute(Address const& rAddress, Expression::LSPType c
       std::cout << spExpr->ToString() << std::endl;
       return false;
     }
-
-//#ifdef _DEBUG
-//    // DEBUG
-//    std::cout << "cur: " << spExpr->ToString() << std::endl;
-//    std::cout << "res: " << spCurExpr->ToString() << std::endl;
-//    std::cout << m_pCpuCtxt->ToString() << std::endl;
-//#endif
   }
 
   return true;

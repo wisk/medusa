@@ -25,7 +25,7 @@ public:
 
   virtual std::string GetName(void) const { return "interpreter"; }
 
-  virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList);
+  virtual bool Execute(Expression::VSPType const& rExprs);
 
 protected:
   std::unordered_map<std::string, IntType> m_Vars;

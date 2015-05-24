@@ -50,7 +50,7 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList);
+  virtual bool Execute(Expression::VSPType const& rExprs);
 
 private:
   typedef void (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);

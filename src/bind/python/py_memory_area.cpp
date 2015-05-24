@@ -23,9 +23,9 @@ namespace pydusa
 void PydusaMemoryArea(void)
 {
   bp::enum_<u32>("MemoryAccess")
-    .value("read",  MemoryArea::Read)
-    .value("write", MemoryArea::Write)
-    .value("exec",  MemoryArea::Execute)
+    .value("READ",    MemoryArea::Read)
+    .value("WRITE",   MemoryArea::Write)
+    .value("EXECUTE", MemoryArea::Execute)
     ;
 
   bp::class_<MemoryArea, boost::noncopyable>("MemoryArea",  bp::no_init)

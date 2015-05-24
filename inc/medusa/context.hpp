@@ -70,6 +70,7 @@ protected:
   typedef std::unordered_map<Address, u64> AddressMap;
   AddressMap m_AddressMap;
   u32 m_Exception;
+  mutable std::mutex m_CpuLock;
 };
 
 template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
@@ -117,21 +118,24 @@ public:
     return WriteMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
+  virtual bool FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, u32& rFlags) const;
   virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, u32& rFlags) const;
 
   virtual bool AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory);
+  virtual bool ProtectMemory(u64 LinAddr, u32 Flags); // TODO: add protection by pages
   virtual bool FreeMemory(u64 LinAddr);
   virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 
   virtual std::string ToString(void) const;
 
 protected:
-  virtual bool FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
+  virtual bool _FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
 
   CpuInformation const& m_rCpuInfo;
 
   typedef std::vector<MemoryChunk> MemoryChunksType;
   MemoryChunksType m_Memories;
+  mutable std::mutex m_MemoryLock;
 
 private:
   MemoryContext(MemoryContext const&);

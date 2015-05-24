@@ -1,4 +1,5 @@
 #include "medusa/emulation.hpp"
+#include "medusa/module.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -49,9 +50,48 @@ bool Emulator::WriteMemory(Address const& rAddr, void const* pVal, u32 Size)
   return m_pMemCtxt->WriteMemory(LinAddr, pVal, Size);
 }
 
-bool Emulator::Execute(Address const& rAddress, Expression::SPType spExpr)
+bool Emulator::Execute(Expression::SPType spExpr)
 {
-  return Execute(rAddress, Expression::LSPType({ spExpr }));
+  return Execute(Expression::VSPType({ spExpr }));
+}
+
+bool Emulator::Execute(Address const& rAddress)
+{
+  if (_IsSemanticCached(rAddress))
+  {
+    auto const& rExprs = m_SemCache[rAddress];
+    return Execute(rExprs);
+  }
+
+  Expression::VSPType Exprs;
+  _Disassemble(rAddress, [&](Address const& rAddr, Instruction& rInsn, Architecture& rArch, u8 Mode) -> bool
+  {
+    // Set the current IP/PC address
+    if (!rArch.EmitSetExecutionAddress(Exprs, rAddr, Mode))
+      return false;
+
+    for (auto spExpr : rInsn.GetSemantic())
+      Exprs.push_back(spExpr);
+
+    // Return type finishes the block
+    if (rInsn.GetSubType() & Instruction::ReturnType)
+      return false;
+    // We assume that direct unconditional jump doesn't break a block
+    if (rInsn.GetSubType() & Instruction::JumpType)
+    {
+      if (rInsn.GetSubType() & Instruction::ConditionalType)
+        return false;
+      if (expr_cast<ConstantExpression>(rInsn.GetOperand(0)) == nullptr)
+        return false;
+    }
+
+    return true;
+  });
+
+  if (!_CacheSemantic(rAddress, Exprs))
+    return false;
+
+  return Execute(Exprs);
 }
 
 bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
@@ -112,6 +152,66 @@ bool Emulator::TestHook(Address const& rAddress, u32 Type) const
     return false;
 
   itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, rAddress);
+  return true;
+}
+
+bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
+{
+  Address CurAddr = rAddress;
+  while (true)
+  {
+    // Try to translate logical address to linear address
+    u64 LinAddr;
+    if (!m_pCpuCtxt->Translate(CurAddr, LinAddr))
+    {
+      Log::Write("core").Level(LogError) << "unable to translate address: " << CurAddr << LogEnd;
+      return false;
+    }
+
+    // To disassemble instruction, we need both a binary stream and offset
+    BinaryStream::SPType spBinStrm;
+    u32 Off;
+    u32 Flags;
+    if (!m_pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
+    {
+      Log::Write("core").Level(LogError) << "unable to find memory for: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      return false;
+    }
+
+    // Make sure the memory is executable
+    if (!(Flags & MemoryArea::Execute))
+    {
+      Log::Write("core").Level(LogError) << "memory is not executable: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      return false;
+    }
+
+    // Retrieve the current mode and architecture module
+    auto ArchTag = m_pCpuCtxt->GetCpuInformation().GetArchitectureTag();
+    // FIXME(KS): it may not work with thumb mode...
+    auto ArchMode = m_pCpuCtxt->GetMode();
+    auto& rModMgr = ModuleManager::Instance();
+    auto spArch = rModMgr.GetArchitecture(ArchTag);
+    if (spArch == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to find architecture module for: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      return false;
+    }
+
+    // Disassemble the current instruction and store the result
+    auto spCurInsn = std::make_shared<Instruction>();
+    if (!spArch->Disassemble(*spBinStrm, Off, *spCurInsn, ArchMode))
+    {
+      Log::Write("core").Level(LogError) << "unable to disassemble instruction at: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      return false;
+    }
+
+    if (!Cb(CurAddr, *spCurInsn, *spArch, ArchMode))
+      break;
+
+    // Go to the next instruction
+    CurAddr = spArch->CurrentAddress(CurAddr, *spCurInsn);
+  }
+
   return true;
 }
 

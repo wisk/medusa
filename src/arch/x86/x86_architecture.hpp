@@ -35,6 +35,7 @@ private:
   class X86CpuInformation : public CpuInformation
   {
   public:
+    X86CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('x', '8', '6')) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
@@ -115,6 +116,7 @@ public:
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
 
   virtual bool                  HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
+  virtual bool                  EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
 
 private:
 #include "x86_operand.ipp"

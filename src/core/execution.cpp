@@ -101,126 +101,15 @@ static bool DisassembleInstruction(Document& rDoc, Architecture::SPType spArch, 
 
 void Execution::Execute(Address const& rAddr)
 {
-  if (m_spArch == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "architecture is null for execution" << LogEnd;
-    return;
-  }
   if (m_spEmul == nullptr)
   {
     Log::Write("core").Level(LogError) << "emulator is null for execution" << LogEnd;
     return;
   }
 
-  if (!DisassembleInstruction(m_rDoc, m_spArch, m_rDoc.GetMode(rAddr), rAddr))
-  {
-    Log::Write("core").Level(LogError) << "unable to disassemble instruction at " << rAddr << LogEnd;
-    return;
-  }
-
-  auto spCell = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rAddr));
-  if (spCell == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "unable to retrieve cell at " << rAddr << LogEnd;
-    return;
-  }
-  m_pCpuCtxt->SetMode(spCell->GetMode());
-
-  Address CurAddr = rAddr;
-
-  u32 ProgPtrReg = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-  if (ProgPtrReg == CpuInformation::InvalidRegister)
-    return;
-  u32 ProgPtrRegSize = m_pCpuInfo->GetSizeOfRegisterInBit(ProgPtrReg);
-  if (ProgPtrRegSize < 8)
-    return;
-
-  u64 CurInsn = rAddr.GetOffset();
-  if (m_pCpuCtxt->WriteRegister(ProgPtrReg, &CurInsn, ProgPtrRegSize) == false)
-    return;
-
-  static std::unordered_map<Address, Expression::LSPType> s_Cache;
-
-  while (true)
-  {
-    Address BlkAddr = CurAddr;
-    Expression::LSPType& Sems = s_Cache[BlkAddr];
-    if (Sems.empty())
-    {
-      while (true)
-      {
-
-        auto spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
-        if (spCurInsn == nullptr)
-        {
-          DisassembleInstruction(m_rDoc, m_spArch, m_pCpuCtxt->GetMode(), CurAddr);
-        }
-
-        spCurInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(CurAddr));
-        if (spCurInsn == nullptr)
-        {
-
-          Log::Write("exec") << "unable to get instruction at " << CurAddr << LogEnd;
-          Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << "\n" << /*m_pMemCtxt->ToString() <<*/ LogEnd;
-          return;
-        }
-
-        Address PcAddr = m_spArch->CurrentAddress(CurAddr, *spCurInsn);
-
-        Sems.push_back(Expr::MakeSys("dump_insn", CurAddr));
-
-        // TODO: I'm not really satisfied with this method
-        // it's not enough generic
-        Sems.push_back(Expr::MakeAssign(
-          Expr::MakeId(ProgPtrReg, m_pCpuInfo),
-          Expr::MakeConst(IntType(PcAddr.GetOffsetSize(), PcAddr.GetOffset()))));
-
-        CurAddr.SetOffset(CurAddr.GetOffset() + spCurInsn->GetLength());
-
-        auto const& rCurSem = spCurInsn->GetSemantic();
-        if (rCurSem.empty())
-        {
-          Log::Write("exec").Level(LogError) << "no semantic available: " << spCurInsn->ToString() << LogEnd;
-          Sems.push_back(Expr::MakeSys("stop", CurAddr));
-        }
-        std::for_each(std::begin(rCurSem), std::end(rCurSem), [&](Expression::SPType spExpr)
-        {
-          Sems.push_back(spExpr->Clone());
-        });
-
-        Sems.push_back(Expr::MakeSys("check_exec_hook", PcAddr));
-
-        if (spCurInsn->GetSubType() == Instruction::NoneType)
-          continue;
-        if (spCurInsn->GetSubType() & Instruction::JumpType
-          && !(spCurInsn->GetSubType() & Instruction::ConditionalType)
-          && expr_cast<ConstantExpression>(spCurInsn->GetOperand(0)) != nullptr)
-          continue;
-        if (spCurInsn->GetSubType() & Instruction::CallType
-          && !(spCurInsn->GetSubType() & Instruction::ConditionalType)
-          && expr_cast<ConstantExpression>(spCurInsn->GetOperand(0)) != nullptr)
-          continue;
-
-        break;
-      };
-
-      s_Cache[BlkAddr] = Sems;
-    }
-
-    bool Res = m_spEmul->Execute(BlkAddr, Sems);
-
-    if (Res == false)
-    {
-      Log::Write("exec") << "failed to execute block " << BlkAddr << LogEnd;
-      Log::Write("exec") << "execution finished\n" << m_pCpuCtxt->ToString() << /*"\n" << m_pMemCtxt->ToString() <<*/ LogEnd;
-      break;
-    }
-
-    u64 NextInsn = 0;
-    if (!m_pCpuCtxt->ReadRegister(ProgPtrReg, &NextInsn, ProgPtrRegSize))
-      break;
-    CurAddr.SetOffset(NextInsn);
-  }
+  Address CurAddr;
+  while (m_spEmul->Execute(CurAddr))
+    CurAddr = m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr);
 }
 
 bool Execution::HookInstruction(Emulator::HookCallback HkCb)

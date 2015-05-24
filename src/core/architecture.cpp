@@ -31,6 +31,16 @@ bool Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Ins
   return false;
 };
 
+bool Architecture::HandleExpression(Expression::LSPType& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
+{
+  return true;
+}
+
+bool Architecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode)
+{
+  return false;
+}
+
 u8 Architecture::GetModeByName(std::string const& rModeName) const
 {
   auto const& rModes = GetModes();

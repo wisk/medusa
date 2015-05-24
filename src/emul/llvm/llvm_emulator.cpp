@@ -122,10 +122,13 @@ LlvmEmulator::~LlvmEmulator(void)
 {
 }
 
-bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& rExprList)
+bool LlvmEmulator::Execute(Expression::VSPType const& rExprs)
 {
+  Address ExecAddr;
+  if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, ExecAddr))
+    return false;
   u64 LinAddr;
-  if (!m_pCpuCtxt->Translate(rAddress, LinAddr))
+  if (!m_pCpuCtxt->Translate(ExecAddr, LinAddr))
     return nullptr;
 
   // Check if the code to be executed is already JIT'ed
@@ -133,7 +136,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
   if (pCode == nullptr)
   {
     // Create a new LLVM function
-    auto pExecFunc = m_JitHelper.CreateFunction(rAddress.ToString());
+    auto pExecFunc = m_JitHelper.CreateFunction(ExecAddr.ToString());
 
     // Expose its parameters: CpuCtxt and MemCtxt
     auto itParam = pExecFunc->arg_begin();
@@ -141,7 +144,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     auto pMemCtxtObjParam = itParam;
 
     // Insert a new basic block
-    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + rAddress.ToString(), pExecFunc);
+    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + ExecAddr.ToString(), pExecFunc);
     m_Builder.SetInsertPoint(pBscBlk);
 
     // This visitor will normalize id if needed
@@ -162,7 +165,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
     bool DumpInsn = false;
     Expression::LSPType rJitExpr;
     // Change the code to make it more JIT friendly
-    for (auto spExpr : rExprList)
+    for (auto spExpr : rExprs)
     {
       // Don't bother to continue if a "stop" is asked
       if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
@@ -232,7 +235,7 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
 
     // Dump instruction (actually it's more a kind of basic block) if required
     if (DumpInsn && m_InsnCb)
-      rJitExpr.push_back(Expr::MakeSys("dump_insn", rAddress));
+      rJitExpr.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
 
     // Emit the code for each expression
@@ -241,20 +244,20 @@ bool LlvmEmulator::Execute(Address const& rAddress, Expression::LSPType const& r
       //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
-        Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << rAddress << LogEnd;
+        Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
         return false;
       }
     }
 
     m_Builder.CreateRetVoid();
     //pExecFunc->dump();
-    pCode = m_JitHelper.GetFunctionCode(rAddress.ToString());
+    pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
     if (pCode == nullptr)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
-      if (rExprList.empty())
+      if (rExprs.empty())
         Log::Write("emul_llvm").Level(LogError) << "no semantic" << LogEnd;
-      for (auto spExpr : rExprList)
+      for (auto spExpr : rExprs)
         Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
       return false;
     }

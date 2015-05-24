@@ -29,6 +29,7 @@ private:
   class Z80CpuInformation : public CpuInformation
   {
   public:
+    Z80CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('z', '8', '0')) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;

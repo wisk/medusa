@@ -9,6 +9,7 @@
 #include "medusa/context.hpp"
 #include "medusa/document.hpp"
 #include "medusa/instruction.hpp"
+#include "medusa/architecture.hpp"
 
 #include <unordered_map>
 #include <functional>
@@ -52,8 +53,9 @@ public:
     return WriteMemory(rAddr, &rMemVal, sizeof(rMemVal));
   }
 
-  virtual bool Execute(Address const& rAddress, Expression::SPType spExpr);
-  virtual bool Execute(Address const& rAddress, Expression::LSPType const& rExprList) = 0;
+  virtual bool Execute(Expression::SPType spExpr);   
+  virtual bool Execute(Expression::VSPType const& rExprs) = 0;
+  virtual bool Execute(Address const& rAddress);
 
   enum HookType
   {
@@ -75,7 +77,8 @@ public:
 protected:
   Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
-  bool _Disassemble(Address const& rAddress, std::vector<Instruction>& rInsns);
+  typedef std::function<bool (Address const&, Instruction&, Architecture&, u8)> DisasmCbType;
+  bool _Disassemble(Address const& rAddress, DisasmCbType Cb);
   
   // Semantic cache
   bool _IsSemanticCached(Address const& rAddress) const;
