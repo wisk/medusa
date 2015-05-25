@@ -51,6 +51,7 @@ public:
   virtual std::string GetName(void) const { return "llvm"; }
 
   virtual bool Execute(Expression::VSPType const& rExprs);
+  virtual bool Execute(Address const& rAddress);
 
 private:
   typedef void (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);

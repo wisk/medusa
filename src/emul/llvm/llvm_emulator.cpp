@@ -274,6 +274,185 @@ bool LlvmEmulator::Execute(Expression::VSPType const& rExprs)
   return true;
 }
 
+bool LlvmEmulator::Execute(Address const& rAddress)
+{
+  Address ExecAddr = rAddress;
+  if (!m_pCpuCtxt->SetAddress(CpuContext::AddressExecution, ExecAddr))
+    return false;
+  u64 LinAddr;
+  if (!m_pCpuCtxt->Translate(ExecAddr, LinAddr))
+    return nullptr;
+
+  // Check if the code to be executed is already JIT'ed
+  auto pCode = m_FunctionCache[LinAddr];
+  if (pCode == nullptr)
+  {
+    // Create a new LLVM function
+    auto pExecFunc = m_JitHelper.CreateFunction(ExecAddr.ToString());
+
+    // Expose its parameters: CpuCtxt and MemCtxt
+    auto itParam = pExecFunc->arg_begin();
+    auto pCpuCtxtObjParam = itParam++;
+    auto pMemCtxtObjParam = itParam;
+
+    // Insert a new basic block
+    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + ExecAddr.ToString(), pExecFunc);
+    m_Builder.SetInsertPoint(pBscBlk);
+
+    // This visitor will normalize id if needed
+    NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
+
+    // This visitor will replace id to variable
+    IdentifierToVariable Id2Var;
+
+    // This visitor will now emit code into the basic block using the LLVM builder
+    LlvmExpressionVisitor EmitLlvm(
+      this,
+      m_Hooks,
+      m_pCpuCtxt, m_pMemCtxt,
+      m_Vars,
+      m_Builder,
+      pCpuCtxtObjParam, pMemCtxtObjParam);
+
+    bool DumpInsn = false;
+    Expression::VSPType Exprs;
+    Expression::LSPType rJitExpr;
+
+    // Disassemble code and retrieve semantic
+    _Disassemble(ExecAddr, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode)
+    {
+      // Set the current IP/PC address
+      if (!rCurArch.EmitSetExecutionAddress(Exprs, rCurAddr, CurMode))
+        return false;
+
+      for (auto spExpr : rCurInsn.GetSemantic())
+        Exprs.push_back(spExpr);
+
+      // Return type finishes the block
+      if (rCurInsn.GetSubType() & Instruction::ReturnType)
+        return false;
+      // We assume that direct unconditional jump doesn't break a block
+      if (rCurInsn.GetSubType() & Instruction::JumpType)
+      {
+        if (rCurInsn.GetSubType() & Instruction::ConditionalType)
+          return false;
+        if (expr_cast<ConstantExpression>(rCurInsn.GetOperand(0)) == nullptr)
+          return false;
+      }
+
+      return true;
+    });
+
+    // Change the code to make it more JIT friendly
+    for (auto spExpr : Exprs)
+    {
+      // Don't bother to continue if a "stop" is asked
+      if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
+      {
+        auto const& rSysName = spSysExpr->GetName();
+        if (rSysName == "stop")
+        {
+          Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+          return false;
+        }
+        if (rSysName == "dump_insn")
+        {
+          DumpInsn = true;
+          continue;
+        }
+        if (rSysName == "check_exec_hook")
+          continue; // ignore hook for now...
+      }
+
+      // Normalize Id (e.g. al → eax in 32-bit, al → rax in 64-bit)
+      auto spNrmExpr = spExpr->Visit(&NrmId);
+      if (spNrmExpr == nullptr)
+      {
+        Log::Write("emul_llvm") << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
+        return false;
+      }
+
+      // Id to var
+      auto spId2Var = spNrmExpr->Visit(&Id2Var);
+      if (spId2Var == nullptr)
+      {
+        Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
+        return false;
+      }
+
+      rJitExpr.push_back(spId2Var);
+    }
+
+    // For each used id, we must allocate and free a variable
+    auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+    for (auto Id : Id2Var.GetUsedId())
+    {
+      auto pIdName = rCpuInfo.ConvertIdentifierToName(Id);
+      auto IdBitSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+      if (pIdName == nullptr || IdBitSize == 0)
+      {
+        Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
+        return false;
+      }
+
+      // Copy id value to register (2)
+      rJitExpr.push_front(Expr::MakeAssign(
+        Expr::MakeVar(pIdName, VariableExpression::Use),
+        Expr::MakeId(Id, &rCpuInfo)));
+
+      // Allocate variable (1)
+      rJitExpr.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
+
+      // Copy variable to id (3)
+      rJitExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(Id, &rCpuInfo),
+        Expr::MakeVar(pIdName, VariableExpression::Use)));
+
+      // Free variable (4)
+      rJitExpr.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
+    }
+
+    // Dump instruction (actually it's more a kind of basic block) if required
+    if (DumpInsn && m_InsnCb)
+      rJitExpr.push_back(Expr::MakeSys("dump_insn", ExecAddr));
+
+
+    // Emit the code for each expression
+    for (auto spExpr : rJitExpr)
+    {
+      //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
+      if (spExpr->Visit(&EmitLlvm) == nullptr)
+      {
+        Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
+        return false;
+      }
+    }
+
+    m_Builder.CreateRetVoid();
+    pExecFunc->dump();
+    pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
+    if (pCode == nullptr)
+    {
+      Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
+      if (Exprs.empty())
+        Log::Write("emul_llvm").Level(LogError) << "no semantic" << LogEnd;
+      for (auto spExpr : Exprs)
+        Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
+      return false;
+    }
+    m_FunctionCache[LinAddr] = pCode;
+  }
+
+  pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
+
+  Address NextAddr;
+  m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr);
+  NextAddr.SetBase(0x0); // HACK(KS)
+  TestHook(NextAddr, Emulator::HookOnExecute);
+
+  return true;
+}
+
 LlvmEmulator::LlvmJitHelper::LlvmJitHelper(void)
 : m_pCurMod(nullptr)
 {
