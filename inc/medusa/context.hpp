@@ -135,7 +135,7 @@ protected:
 
   typedef std::vector<MemoryChunk> MemoryChunksType;
   MemoryChunksType m_Memories;
-  mutable std::mutex m_MemoryLock;
+  mutable std::recursive_mutex m_MemoryLock;
 
 private:
   MemoryContext(MemoryContext const&);

@@ -65,7 +65,7 @@ namespace pydusa
 
 void PydusaExecution(void)
 {
-  bp::enum_<u32>("Hook")
+  bp::enum_<Emulator::HookType>("Hook")
     .value("UNKNOWN", Emulator::HookUnknown)
     .value("READ",    Emulator::HookOnRead)
     .value("WRITE",   Emulator::HookOnWrite)
