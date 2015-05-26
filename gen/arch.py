@@ -228,6 +228,10 @@ class ArchConvertion:
                         self.visit(nodes)
                     return ''
 
+                if func_name == 'int_type':
+                    assert(len(args_name) == 1)
+                    return 'Expr::MakeConst(%s, %s)' % (args_name[0], args_name[0])
+
                 if 'VariableExpression::Alloc' in func_name:
                     var_name = args_name[0][1:-1]
                     assert(not var_name in self.var_pool)
@@ -306,6 +310,13 @@ class ArchConvertion:
                 # Identifier (register)
                 elif node_name == 'id':
                     return 'Expr::MakeId(%s, &m_CpuInfo)'
+
+                # Type
+                elif node_name == 'int_type':
+                    return node_name
+                elif node_name.startswith('int_type'):
+                    int_size = int(node_name[8:])
+                    return 'Expr::MakeConst(%d, %d)' % (int_size, int_size)
 
                 # Integer
                 elif node_name == 'int':
