@@ -185,9 +185,9 @@ semantic:
     if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
     if af.id == int1(1): cond |= int1(1);
     if cond == int1(1):
-      al.id += int(al.bit, 0x6)
       if al.id > int(al.bit, 0xf9): cf.id = int1(1)
       else: cf.id = old_cf
+      al.id += int(al.bit, 0x6)
       af.id = int1(1)
     else:
       af.id = int1(0);
@@ -232,9 +232,9 @@ semantic:
     if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
     if af.id == int1(1): cond |= int1(1);
     if cond == int1(1):
-      al.id -= int(al.bit, 0x6)
       if int(al.bit, 0x6) > al.id: cf.id = int1(1)
       else: cf.id = old_cf
+      al.id -= int(al.bit, 0x6)
       af.id = int1(1)
     else:
       af.id = int1(0);

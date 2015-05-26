@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May 26 18:55:51 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue May 26 21:55:59 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -10676,9 +10676,9 @@ cond = int1(0);
 if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
 if af.id == int1(1): cond |= int1(1);
 if cond == int1(1):
-  al.id += int(al.bit, 0x6)
   if al.id > int(al.bit, 0xf9): cf.id = int1(1)
   else: cf.id = old_cf
+  al.id += int(al.bit, 0x6)
   af.id = int1(1)
 else:
   af.id = int1(0);
@@ -10729,13 +10729,6 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeBoolean(false)));
         /* Var Expr */
         Expression::LSPType ThenBodyExprs0;
-        ThenBodyExprs0.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-          Expr::MakeBinOp(
-            OperationExpression::OpAdd,
-            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)))
-        );
         ThenBodyExprs0.push_back(Expr::MakeIfElseCond(
           ConditionExpression::CondUgt,
           Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
@@ -10746,6 +10739,13 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeAssign(
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeVar("old_cf", VariableExpression::Use))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpAdd,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)))
+        );
         ThenBodyExprs0.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlAf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1)));
@@ -10829,9 +10829,9 @@ bool X86Architecture::Table_1_27(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr9);
         /* Semantic: if cond == int1(1):
-          al.id += int(al.bit, 0x6)
           if al.id > int(al.bit, 0xf9): cf.id = int1(1)
           else: cf.id = old_cf
+          al.id += int(al.bit, 0x6)
           af.id = int1(1)
         else:
           af.id = int1(0) */
@@ -12625,9 +12625,9 @@ cond = int1(0);
 if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
 if af.id == int1(1): cond |= int1(1);
 if cond == int1(1):
-  al.id -= int(al.bit, 0x6)
   if int(al.bit, 0x6) > al.id: cf.id = int1(1)
   else: cf.id = old_cf
+  al.id -= int(al.bit, 0x6)
   af.id = int1(1)
 else:
   af.id = int1(0);
@@ -12676,13 +12676,6 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(X86_FlOf, &m_CpuInfo), Expr::MakeBoolean(false)));
         /* Var Expr */
         Expression::LSPType ThenBodyExprs0;
-        ThenBodyExprs0.push_back(Expr::MakeAssign(
-          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-          Expr::MakeBinOp(
-            OperationExpression::OpSub,
-            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)))
-        );
         ThenBodyExprs0.push_back(Expr::MakeIfElseCond(
           ConditionExpression::CondUgt,
           Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6),
@@ -12693,6 +12686,13 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeAssign(
             Expr::MakeId(X86_FlCf, &m_CpuInfo),
             Expr::MakeVar("old_cf", VariableExpression::Use))));
+        ThenBodyExprs0.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+          Expr::MakeBinOp(
+            OperationExpression::OpSub,
+            Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
+            Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Al), 0x6)))
+        );
         ThenBodyExprs0.push_back(Expr::MakeAssign(
           Expr::MakeId(X86_FlAf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1)));
@@ -12776,9 +12776,9 @@ bool X86Architecture::Table_1_2f(BinaryStream const& rBinStrm, TOffset Offset, I
         ;
         AllExpr.push_back(pExpr9);
         /* Semantic: if cond == int1(1):
-          al.id -= int(al.bit, 0x6)
           if int(al.bit, 0x6) > al.id: cf.id = int1(1)
           else: cf.id = old_cf
+          al.id -= int(al.bit, 0x6)
           af.id = int1(1)
         else:
           af.id = int1(0) */
