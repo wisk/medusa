@@ -328,20 +328,18 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       for (auto spExpr : rCurInsn.GetSemantic())
         Exprs.push_back(spExpr);
 
-      // Return type finishes the block
-      if (rCurInsn.GetSubType() & Instruction::ReturnType)
+      // Jump, Call, Return types finish the block
+      if (rCurInsn.GetSubType() & (Instruction::JumpType | Instruction::CallType | Instruction::ReturnType))
         return false;
-      // We assume that direct unconditional jump doesn't break a block
-      if (rCurInsn.GetSubType() & Instruction::JumpType)
-      {
-        if (rCurInsn.GetSubType() & Instruction::ConditionalType)
-          return false;
-        if (expr_cast<ConstantExpression>(rCurInsn.GetOperand(0)) == nullptr)
-          return false;
-      }
 
       return true;
     });
+
+    if (Exprs.empty())
+    {
+      Log::Write("emul_llvm") << "failed to disassemble code at " << ExecAddr << LogEnd;
+      return false;
+    }
 
     // Change the code to make it more JIT friendly
     for (auto spExpr : Exprs)
@@ -416,11 +414,10 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     if (DumpInsn && m_InsnCb)
       rJitExpr.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
-
     // Emit the code for each expression
     for (auto spExpr : rJitExpr)
     {
-      //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
+      Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
@@ -446,7 +443,8 @@ bool LlvmEmulator::Execute(Address const& rAddress)
   pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
 
   Address NextAddr;
-  m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr);
+  if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr))
+    return false;
   NextAddr.SetBase(0x0); // HACK(KS)
   TestHook(NextAddr, Emulator::HookOnExecute);
 
@@ -831,45 +829,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  //if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
-  //{
-  //  State OldState = m_State;
-  //  m_State = Read;
-  //  auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-  //  auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
-  //  m_State = Write;
-  //  auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-  //  auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
-  //  m_State = OldState;
-  //  return spBinOpExpr;
-  //}
-
   if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
   {
-    State OldState = m_State;
-    m_State = Read;
-
-    auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    auto pLeftVal = m_ValueStack.top();
-    m_ValueStack.pop();
-    auto pLeftAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spReadLeft->GetBitSize()), nullptr, "xchg_tmp_left");
-    m_rBuilder.CreateStore(pLeftVal, pLeftAlloca);
-    auto pCopyLeftVal = m_rBuilder.CreateLoad(pLeftAlloca);
-    m_ValueStack.push(pCopyLeftVal);
-
-    auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
-    auto pRightVal = m_ValueStack.top();
-    m_ValueStack.pop();
-    auto pRightAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spReadRight->GetBitSize()), nullptr, "xchg_tmp_right");
-    m_rBuilder.CreateStore(pRightVal, pRightAlloca);
-    auto pCopyRightVal = m_rBuilder.CreateLoad(pRightAlloca);
-    m_ValueStack.push(pCopyRightVal);
-
-    m_State = Write;
-    auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
-    m_State = OldState;
-    return spBinOpExpr;
+    Log::Write("emul_llvm") << "operation exchange is deprecated" << LogEnd;
+    return nullptr;
   }
 
   auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);

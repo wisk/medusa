@@ -107,9 +107,10 @@ void Execution::Execute(Address const& rAddr)
     return;
   }
 
-  Address CurAddr;
+  Address CurAddr = rAddr;
   while (m_spEmul->Execute(CurAddr))
-    CurAddr = m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr);
+    if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
+      break;
 }
 
 bool Execution::HookInstruction(Emulator::HookCallback HkCb)

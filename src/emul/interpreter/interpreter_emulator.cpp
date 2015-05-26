@@ -219,15 +219,8 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 {
   if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
   {
-    State OldState = m_State;
-    m_State = Read;
-    auto spReadLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    auto spReadRight = spBinOpExpr->GetRightExpression()->Visit(this);
-    m_State = Write;
-    auto spWriteLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
-    auto spWriteRight = spBinOpExpr->GetRightExpression()->Visit(this);
-    m_State = OldState;
-    return spBinOpExpr;
+    Log::Write("emul_interpreter") << "operation exchange is deprecated" << LogEnd;
+    return nullptr;
   }
 
   auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);

@@ -560,10 +560,13 @@ bool X86Architecture::X86CpuContext::GetAddress(CpuContext::AddressKind AddrKind
     case 64: rAddr = Address(Address::VirtualType,            0, m_Context.ip.r,  0, 64); return true;
     default: return false;
     }
+    break;
 
   default:
     return false;
   }
+
+  return true;
 }
 
 bool X86Architecture::X86CpuContext::SetAddress(CpuContext::AddressKind AddrKind, Address const& rAddr)
@@ -578,10 +581,13 @@ bool X86Architecture::X86CpuContext::SetAddress(CpuContext::AddressKind AddrKind
     case 64: m_Context.ip.r = rAddr.GetOffset(); break;
     default: return false;
     }
+    break;
 
   default:
     return false;
   }
+
+  return true;
 }
 
 std::string X86Architecture::X86CpuContext::ToString(void) const

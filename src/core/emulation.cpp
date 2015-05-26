@@ -64,26 +64,18 @@ bool Emulator::Execute(Address const& rAddress)
   }
 
   Expression::VSPType Exprs;
-  _Disassemble(rAddress, [&](Address const& rAddr, Instruction& rInsn, Architecture& rArch, u8 Mode) -> bool
+  _Disassemble(rAddress, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode) -> bool
   {
     // Set the current IP/PC address
-    if (!rArch.EmitSetExecutionAddress(Exprs, rAddr, Mode))
+    if (!rCurArch.EmitSetExecutionAddress(Exprs, rCurAddr, CurMode))
       return false;
 
-    for (auto spExpr : rInsn.GetSemantic())
+    for (auto spExpr : rCurInsn.GetSemantic())
       Exprs.push_back(spExpr);
 
-    // Return type finishes the block
-    if (rInsn.GetSubType() & Instruction::ReturnType)
+    // Jump, Call, Return types finish the block
+    if (rCurInsn.GetSubType() & (Instruction::JumpType | Instruction::CallType | Instruction::ReturnType))
       return false;
-    // We assume that direct unconditional jump doesn't break a block
-    if (rInsn.GetSubType() & Instruction::JumpType)
-    {
-      if (rInsn.GetSubType() & Instruction::ConditionalType)
-        return false;
-      if (expr_cast<ConstantExpression>(rInsn.GetOperand(0)) == nullptr)
-        return false;
-    }
 
     return true;
   });
@@ -157,14 +149,14 @@ bool Emulator::TestHook(Address const& rAddress, u32 Type) const
 
 bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
 {
-  Address CurAddr = rAddress;
+  Address InsnAddr = rAddress;
   while (true)
   {
     // Try to translate logical address to linear address
     u64 LinAddr;
-    if (!m_pCpuCtxt->Translate(CurAddr, LinAddr))
+    if (!m_pCpuCtxt->Translate(InsnAddr, LinAddr))
     {
-      Log::Write("core").Level(LogError) << "unable to translate address: " << CurAddr << LogEnd;
+      Log::Write("core").Level(LogError) << "unable to translate address: " << InsnAddr << LogEnd;
       return false;
     }
 
@@ -174,14 +166,14 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
     u32 Flags;
     if (!m_pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
     {
-      Log::Write("core").Level(LogError) << "unable to find memory for: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      Log::Write("core").Level(LogError) << "unable to find memory for: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;
       return false;
     }
 
     // Make sure the memory is executable
     if (!(Flags & MemoryArea::Execute))
     {
-      Log::Write("core").Level(LogError) << "memory is not executable: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      Log::Write("core").Level(LogError) << "memory is not executable: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;
       return false;
     }
 
@@ -193,7 +185,7 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
     auto spArch = rModMgr.GetArchitecture(ArchTag);
     if (spArch == nullptr)
     {
-      Log::Write("core").Level(LogError) << "unable to find architecture module for: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      Log::Write("core").Level(LogError) << "unable to find architecture module for: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;
       return false;
     }
 
@@ -201,15 +193,16 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
     auto spCurInsn = std::make_shared<Instruction>();
     if (!spArch->Disassemble(*spBinStrm, Off, *spCurInsn, ArchMode))
     {
-      Log::Write("core").Level(LogError) << "unable to disassemble instruction at: " << CurAddr << ", linear address: " << LinAddr << LogEnd;
+      Log::Write("core").Level(LogError) << "unable to disassemble instruction at: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;
       return false;
     }
 
+    Address CurAddr = spArch->CurrentAddress(InsnAddr, *spCurInsn);
     if (!Cb(CurAddr, *spCurInsn, *spArch, ArchMode))
       break;
 
     // Go to the next instruction
-    CurAddr = spArch->CurrentAddress(CurAddr, *spCurInsn);
+    InsnAddr = CurAddr;
   }
 
   return true;
