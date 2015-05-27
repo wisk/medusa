@@ -19,7 +19,7 @@ function:
     sf.id = bit_cast(res.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
 
   zero_flag: &zero_flag |
-    if res.val == int(op0.bit, 0):
+    if __expr and res.val == int(op0.bit, 0):
       zf.id = int1(1)
     else:
       zf.id = int1(0);
@@ -55,7 +55,7 @@ function:
 
 ## Useful functions
   count_mask: &count_mask |
-    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
       count = count & int(op0.bit, 0x3f)
     else:
       count = count & int(op0.bit, 0x1f);
@@ -80,9 +80,9 @@ semantic:
   aaa: &aaa |
     alloc_var('cond', 1);
     cond = int1(0);
-    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
-    if af.id == int1(1): cond |= int1(1);
-    if cond == int1(1):
+    if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
+    if __expr and af.id == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
       ax.id += int(ax.bit, 0x106)
       af.id = int1(1)
       cf.id = int1(1)
@@ -101,7 +101,7 @@ semantic:
     al.id = (tmp_al + (tmp_ah * op0.val)) & int(al.bit, 0xff);
     ah.id = int(ah.bit, 0);
     # Start updating ZF
-    if al.id == int(al.bit, 0): zf.id = int1(1)
+    if __expr and al.id == int(al.bit, 0): zf.id = int1(1)
     else: zf.id = int1(0);
     # Start updating SF
     sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
@@ -127,7 +127,7 @@ semantic:
     ah.id = tmp_al / op0.val;
     al.id = tmp_al % op0.val;
     # Start updating ZF
-    if al.id == int(al.bit, 0): zf.id = int1(1)
+    if __expr and al.id == int(al.bit, 0): zf.id = int1(1)
     else: zf.id = int1(0);
     # Start updating SF
     sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
@@ -148,9 +148,9 @@ semantic:
   aas: &aas |
     alloc_var('cond', 1);
     cond = int1(0);
-    if ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
-    if af.id == int1(1): cond |= int1(1);
-    if cond == int1(1):
+    if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
+    if __expr and af.id == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
       ax.id -= int(ax.bit, 0x6)
       ah.id -= int(ah.bit, 1)
       af.id = int1(1)
@@ -182,25 +182,25 @@ semantic:
     old_al = al.id;
     cf.id = int1(0);
     cond = int1(0);
-    if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
-    if af.id == int1(1): cond |= int1(1);
-    if cond == int1(1):
-      if al.id > int(al.bit, 0xf9): cf.id = int1(1)
+    if __expr and (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
+    if __expr and af.id == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
+      if __expr and al.id > int(al.bit, 0xf9): cf.id = int1(1)
       else: cf.id = old_cf
       al.id += int(al.bit, 0x6)
       af.id = int1(1)
     else:
       af.id = int1(0);
     cond = int1(0);
-    if old_al > int(al.bit, 0x99): cond |= int1(1);
-    if old_cf == int1(1): cond |= int1(1);
-    if cond == int1(1):
+    if __expr and old_al > int(al.bit, 0x99): cond |= int1(1);
+    if __expr and old_cf == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
       al.id += int(al.bit, 0x60)
       cf.id = int1(1)
     else:
       cf.id = int1(0);
     # Start updating ZF
-    if al.id == int(al.bit, 0): zf.id = int1(1)
+    if __expr and al.id == int(al.bit, 0): zf.id = int1(1)
     else: zf.id = int1(0);
     # Start updating SF
     sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
@@ -229,23 +229,23 @@ semantic:
     old_al = al.id;
     cf.id = int1(0);
     cond = int1(0);
-    if (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
-    if af.id == int1(1): cond |= int1(1);
-    if cond == int1(1):
-      if int(al.bit, 0x6) > al.id: cf.id = int1(1)
+    if __expr and (al.id & int(al.bit, 0x0f)) > int(al.bit, 9): cond |= int1(1);
+    if __expr and af.id == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
+      if __expr and int(al.bit, 0x6) > al.id: cf.id = int1(1)
       else: cf.id = old_cf
       al.id -= int(al.bit, 0x6)
       af.id = int1(1)
     else:
       af.id = int1(0);
     cond = int1(0);
-    if old_al > int(al.bit, 0x99): cond |= int1(1);
-    if old_cf == int1(1): cond |= int1(1);
-    if cond == int1(1):
+    if __expr and old_al > int(al.bit, 0x99): cond |= int1(1);
+    if __expr and old_cf == int1(1): cond |= int1(1);
+    if __expr and cond == int1(1):
       al.id -= int(al.bit, 0x60)
       cf.id = int1(1);
     # Start updating ZF
-    if al.id == int(al.bit, 0): zf.id = int1(1)
+    if __expr and al.id == int(al.bit, 0): zf.id = int1(1)
     else: zf.id = int1(0);
     # Start updating SF
     sf.id = bit_cast(al.id >> (int(al.bit, al.bit) - int(al.bit, 1)), int1(1));
@@ -351,7 +351,7 @@ semantic:
 
   neg: &neg |
     alloc_var('res', op0.bit);
-    if op0.val == int(op0.bit, 0):
+    if __expr and op0.val == int(op0.bit, 0):
       cf.id = int1(0)
     else:
       cf.id = int1(1);
@@ -367,30 +367,30 @@ semantic:
   imul1: &imul1 |
     alloc_var('ext_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-    if int(op0.bit, op0.bit) == int(op0.bit,  8): 
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
       mul_res = bit_cast(sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 7), int_type1)
       ext_res = sign_extend(bit_cast(mul_res, int_type8), int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 16):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
       mul_res = bit_cast(sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
       sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 15), int_type1)
       ext_res = sign_extend(bit_cast(mul_res, int_type16), int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 32):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
       mul_res = bit_cast(sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
       eax.id = bit_cast(mul_res, int_type32)
       edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
       sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 31), int_type1)
       ext_res = sign_extend(bit_cast(mul_res, int_type32), int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
       mul_res = bit_cast(sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
       rax.id = bit_cast(mul_res, int_type64)
       rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
       sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 63), int_type1)
       ext_res = sign_extend(bit_cast(mul_res, int_type64), int_type(op0.bit));
-    if ext_res == bit_cast(mul_res, int_type(concat(op0.bit, ignore(' * 2')))):
+    if __expr and ext_res == bit_cast(mul_res, int_type(concat(op0.bit, ignore(' * 2')))):
       of.id = int1(0)
       cf.id = int1(0)
     else:
@@ -407,7 +407,7 @@ semantic:
     res = bit_cast(mul_res, int_type(op0.bit));
     call('sign_flag');
     extended = sign_extend(res, int_type(concat(op0.bit, ignore(' * 2'))));
-    if extended == mul_res:
+    if __expr and extended == mul_res:
       of.id = int1(0)
       cf.id = int1(0)
     else:
@@ -426,7 +426,7 @@ semantic:
     res = bit_cast(mul_res, int(op0.bit, op0.bit));
     call('sign_flag');
     extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
-    if extended == mul_res:
+    if __expr and extended == mul_res:
       of.id = int1(0)
       cf.id = int1(0)
     else:
@@ -440,26 +440,26 @@ semantic:
   mul: &mul |
     alloc_var('upper_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-    if int(op0.bit, op0.bit) == int(op0.bit,  8): 
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
       mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       upper_res = bit_cast(ah.id, int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 16):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
       mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
       upper_res = bit_cast(dx.id, int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 32):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
       mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
       eax.id = bit_cast(mul_res, int_type32)
       edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
       upper_res = bit_cast(edx.id, int_type(op0.bit));
-    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
       mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
       rax.id = bit_cast(mul_res, int_type64)
       rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
       upper_res = bit_cast(rdx.id, int_type(op0.bit));
-    if upper_res == int(op0.bit, 0):
+    if __expr and upper_res == int(op0.bit, 0):
       of.id = int1(0)
       cf.id = int1(0)
     else:
@@ -472,19 +472,19 @@ semantic:
     alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
     alloc_var('extended', concat(op0.bit, ignore(' * 2')));
     extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
-    if int(op0.bit, op0.bit) == int(op0.bit,  8):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
       dividend = sign_extend(ax.id, int16(16))
       al.id = bit_cast(sdiv(dividend, extended), int16(8))
       ah.id = bit_cast(smod(dividend, extended), int16(8));
-    if int(op0.bit, op0.bit) == int(op0.bit, 16):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
       dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
       ax.id = bit_cast(sdiv(dividend, extended), int32(16))
       dx.id = bit_cast(smod(dividend, extended), int32(16));
-    if int(op0.bit, op0.bit) == int(op0.bit, 32):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
       dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
       eax.id = bit_cast(sdiv(dividend, extended), int64(32))
       edx.id = bit_cast(smod(dividend, extended), int64(32));
-    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
       dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
       rax.id = bit_cast(sdiv(dividend, extended), int128(64))
       rdx.id = bit_cast(smod(dividend, extended), int128(64));
@@ -493,19 +493,19 @@ semantic:
 
   div: &div |
     alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-    if int(op0.bit, op0.bit) == int(op0.bit,  8):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
       dividend = bit_cast(ax.id, int16(16))
       al.id = dividend / op0.val
       ah.id = dividend % op0.val;
-    if int(op0.bit, op0.bit) == int(op0.bit, 16):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
       dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
       ax.id = bit_cast(dividend / op0.val, int32(16))
       dx.id = bit_cast(dividend % op0.val, int32(16));
-    if int(op0.bit, op0.bit) == int(op0.bit, 32):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
       dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
       eax.id = bit_cast(dividend / op0.val, int64(32))
       edx.id = bit_cast(dividend % op0.val, int64(32));
-    if int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
       dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
       rax.id = bit_cast(dividend / op0.val, int128(64))
       rdx.id = bit_cast(dividend % op0.val, int128(64));
@@ -518,7 +518,7 @@ semantic:
     free_var('res');
 
   bswap: &bswap |
-    if int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
+    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16): # Handle undefined processor state on 16-bit
       op0.val = int(op0.bit, 0)
     else:
       op0.val = swap(op0.val);
@@ -529,7 +529,7 @@ semantic:
     count = bit_cast(op2.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ((op0.val << count) | (op1.val >> (int(op0.bit, op0.bit) - count)));
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int1(1))
       call('sign_flag')
       call('zero_flag')
@@ -546,12 +546,12 @@ semantic:
     count = bit_cast(op2.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(op0.val >> (count - int(op0.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = sf.id ^ sign_saved;
     op0.val = res;
     free_var('sign_saved');
@@ -564,12 +564,12 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = op0.val << count;
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('count');
@@ -581,12 +581,12 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = op0.val >> count;
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(op0.val >> (count - int(op0.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('count');
@@ -598,12 +598,12 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = op0.val << count;
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - count), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = bit_cast((op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('count');
@@ -615,13 +615,13 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ars(op0.val, count);
-    if count != int(op0.bit, 0):
-      if count > int(op0.bit, op0.bit): cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1))
+    if __expr and count != int(op0.bit, 0):
+      if __expr and count > int(op0.bit, op0.bit): cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1))
       else: cf.id = bit_cast(op0.val >> (count - int(op0.bit, 1)), int1(1))
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = int1(0);
     op0.val = res;
     free_var('count');
@@ -633,9 +633,9 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = rol(op0.val, count);
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(res, int1(1));
-    if count == int(op0.bit, 1):
+    if __expr and count == int(op0.bit, 1):
       of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('count');
@@ -647,9 +647,9 @@ semantic:
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ror(op0.val, count);
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
-    if count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
+    if __expr and count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -666,9 +666,9 @@ semantic:
     rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
     rol_val = rol(rol_val, count);
     res = bit_cast(rol_val, int16(op0.bit));
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int1(1));
-    if count == int(op0.bit, 1): of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
+    if __expr and count == int(op0.bit, 1): of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
     op0.val = res;
     free_var('rol_sz');
     free_var('rol_val');
@@ -687,9 +687,9 @@ semantic:
     ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
     ror_val = ror(ror_val, count);
     res = bit_cast(ror_val, int16(op0.bit));
-    if count != int(op0.bit, 0):
+    if __expr and count != int(op0.bit, 0):
       cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int1(1));
-    if count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
+    if __expr and count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
     op0.val = res;
     free_var('ror_sz');
     free_var('ror_val');
@@ -861,48 +861,48 @@ semantic:
 
   # FIXME: not done http://faydoc.tripod.com/cpu/cmpxchg.htm
   cmpxchg: &cmpxchg |
-    if op0.val == acc.id:
+    if __expr and op0.val == acc.id:
       zf.id = int1(1)
     else:
       zf.id = int1(0);
 
-    if zf.id == int1(1):
+    if __expr and zf.id == int1(1):
       op0.val = op1.val;
 
   loop: &loop |
     cnt.id -= int(cnt.bit, 1);
-    if cnt.id != int(cnt.bit, 0):
+    if __expr and cnt.id != int(cnt.bit, 0):
       program.id = op0.val;
 
   loopz: &loopz |
     cnt.id -= int(cnt.bit, 1);
-    if (cnt.id | zf.id) != int(cnt.bit, 0):
+    if __expr and (cnt.id | zf.id) != int(cnt.bit, 0):
       program.id = op0.val;
 
   loopnz: &loopnz |
     cnt.id -= int(cnt.bit, 1);
-    if (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0):
+    if __expr and (zf.id ^ int(cnt.bit, 1) & cnt.id) != int(cnt.bit, 0):
       program.id = op0.val;
 
   jcntz: &jcntz |
-    if cnt.id == int(cnt.bit, 0):
+    if __expr and cnt.id == int(cnt.bit, 0):
       program.id = op0.val;
 
 ## String operations
 
   scas: &scas |
-    if op0.val == op1.val:
+    if __expr and op0.val == op1.val:
       zf.id = int1(1)
     else:
       zf.id = int1(0);
-    if df.id == int1(1):
+    if __expr and df.id == int1(1):
       op0.addr -= op0.size
     else:
       op0.addr += op0.size;
 
   stos: &stos |
     op0.val = op1.val;
-    if df.id == int1(1):
+    if __expr and df.id == int1(1):
       op0.addr -= op0.size
     else:
       op0.addr += op0.size;
@@ -998,14 +998,14 @@ semantic:
     free_var('bit_set');
 
   bsf: &bsf |
-    if op1.val == int(op1.bit, 0):
+    if __expr and op1.val == int(op1.bit, 0):
       zf.id = int1(1)
     else:
       zf.id = int1(0)
       op0.val = bsf(op1.val);
 
   bsr: &bsr |
-    if op1.val == int(op1.bit, 0):
+    if __expr and op1.val == int(op1.bit, 0):
       zf.id = int1(1)
     else:
       zf.id = int1(0)
@@ -1030,119 +1030,119 @@ semantic:
 # nle / g     → ((sf xor of) or zf) = 0
 
   jmpo: &jmpo |
-    if of.id == int1(1): program.id = op0.val;
+    if __expr and of.id == int1(1): program.id = op0.val;
   jmpno: &jmpno |
-    if of.id == int1(0): program.id = op0.val;
+    if __expr and of.id == int1(0): program.id = op0.val;
   jmpc: &jmpc |
-    if cf.id == int1(1): program.id = op0.val;
+    if __expr and cf.id == int1(1): program.id = op0.val;
   jmpnc: &jmpnc |
-    if cf.id == int1(0): program.id = op0.val;
+    if __expr and cf.id == int1(0): program.id = op0.val;
   jmpz: &jmpz |
-    if zf.id == int1(1): program.id = op0.val;
+    if __expr and zf.id == int1(1): program.id = op0.val;
   jmpnz: &jmpnz |
-    if zf.id == int1(0): program.id = op0.val;
+    if __expr and zf.id == int1(0): program.id = op0.val;
   jmps: &jmps |
-    if sf.id == int1(1): program.id = op0.val;
+    if __expr and sf.id == int1(1): program.id = op0.val;
   jmpns: &jmpns |
-    if sf.id == int1(0): program.id = op0.val;
+    if __expr and sf.id == int1(0): program.id = op0.val;
   jmpp: &jmpp |
-    if pf.id == int1(1): program.id = op0.val;
+    if __expr and pf.id == int1(1): program.id = op0.val;
   jmpnp: &jmpnp |
-    if pf.id == int1(0): program.id = op0.val;
+    if __expr and pf.id == int1(0): program.id = op0.val;
   jmpbe: &jmpbe |
-    if (cf.id | zf.id) != int1(0): program.id = op0.val;
+    if __expr and (cf.id | zf.id) != int1(0): program.id = op0.val;
   jmpa: &jmpa |
-    if (cf.id | zf.id) == int1(0): program.id = op0.val;
+    if __expr and (cf.id | zf.id) == int1(0): program.id = op0.val;
   jmpl: &jmpl |
-    if (sf.id ^ of.id) != int1(0): program.id = op0.val;
+    if __expr and (sf.id ^ of.id) != int1(0): program.id = op0.val;
   jmpge: &jmpge |
-    if (sf.id ^ of.id) == int1(0): program.id = op0.val;
+    if __expr and (sf.id ^ of.id) == int1(0): program.id = op0.val;
   jmple: &jmple |
-    if ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val;
+    if __expr and ((sf.id ^ of.id) | zf.id) != int1(0): program.id = op0.val;
   jmpg: &jmpg |
-    if ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val;
+    if __expr and ((sf.id ^ of.id) | zf.id) == int1(0): program.id = op0.val;
 
   seto: &seto |
-    if of.id == int1(1): op0.val = int8(1)
+    if __expr and of.id == int1(1): op0.val = int8(1)
     else: op0.val = int8(0);
   setno: &setno |
-    if of.id == int1(0): op0.val = int8(1)
+    if __expr and of.id == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setc: &setc |
-    if cf.id == int1(1): op0.val = int8(1)
+    if __expr and cf.id == int1(1): op0.val = int8(1)
     else: op0.val = int8(0);
   setnc: &setnc |
-    if cf.id == int1(0): op0.val = int8(1)
+    if __expr and cf.id == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setz: &setz |
-    if zf.id == int1(1): op0.val = int8(1)
+    if __expr and zf.id == int1(1): op0.val = int8(1)
     else: op0.val = int8(0);
   setnz: &setnz |
-    if zf.id == int1(0): op0.val = int8(1)
+    if __expr and zf.id == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   sets: &sets |
-    if sf.id == int1(1): op0.val = int8(1)
+    if __expr and sf.id == int1(1): op0.val = int8(1)
     else: op0.val = int8(0);
   setns: &setns |
-    if sf.id == int1(0): op0.val = int8(1)
+    if __expr and sf.id == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setp: &setp |
-    if pf.id == int1(1): op0.val = int8(1)
+    if __expr and pf.id == int1(1): op0.val = int8(1)
     else: op0.val = int8(0);
   setnp: &setnp |
-    if pf.id == int1(0): op0.val = int8(1)
+    if __expr and pf.id == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setbe: &setbe |
-    if (cf.id | zf.id) != int1(0): op0.val = int8(1)
+    if __expr and (cf.id | zf.id) != int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   seta: &seta |
-    if (cf.id | zf.id) == int1(0): op0.val = int8(1)
+    if __expr and (cf.id | zf.id) == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setl: &setl |
-    if (sf.id ^ of.id) != int1(0): op0.val = int8(1)
+    if __expr and (sf.id ^ of.id) != int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setge: &setge |
-    if (sf.id ^ of.id) == int1(0): op0.val = int8(1)
+    if __expr and (sf.id ^ of.id) == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setle: &setle |
-    if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)
+    if __expr and ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
   setg: &setg |
-    if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)
+    if __expr and ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = int8(1)
     else: op0.val = int8(0);
 
   cmovo: &cmovo |
-    if of.id == int1(1): op0.val = op1.val;
+    if __expr and of.id == int1(1): op0.val = op1.val;
   cmovno: &cmovno |
-    if of.id == int1(0): op0.val = op1.val;
+    if __expr and of.id == int1(0): op0.val = op1.val;
   cmovc: &cmovc |
-    if cf.id == int1(1): op0.val = op1.val;
+    if __expr and cf.id == int1(1): op0.val = op1.val;
   cmovnc: &cmovnc |
-    if cf.id == int1(0): op0.val = op1.val;
+    if __expr and cf.id == int1(0): op0.val = op1.val;
   cmovz: &cmovz |
-    if zf.id == int1(1): op0.val = op1.val;
+    if __expr and zf.id == int1(1): op0.val = op1.val;
   cmovnz: &cmovnz |
-    if zf.id == int1(0): op0.val = op1.val;
+    if __expr and zf.id == int1(0): op0.val = op1.val;
   cmovs: &cmovs |
-    if sf.id == int1(1): op0.val = op1.val;
+    if __expr and sf.id == int1(1): op0.val = op1.val;
   cmovns: &cmovns |
-    if sf.id == int1(0): op0.val = op1.val;
+    if __expr and sf.id == int1(0): op0.val = op1.val;
   cmovp: &cmovp |
-    if pf.id == int1(1): op0.val = op1.val;
+    if __expr and pf.id == int1(1): op0.val = op1.val;
   cmovnp: &cmovnp |
-    if pf.id == int1(0): op0.val = op1.val;
+    if __expr and pf.id == int1(0): op0.val = op1.val;
   cmovbe: &cmovbe |
-    if (cf.id | zf.id) != int1(0): op0.val = op1.val;
+    if __expr and (cf.id | zf.id) != int1(0): op0.val = op1.val;
   cmova: &cmova |
-    if (cf.id | zf.id) == int1(0): op0.val = op1.val;
+    if __expr and (cf.id | zf.id) == int1(0): op0.val = op1.val;
   cmovl: &cmovl |
-    if (sf.id ^ of.id) != int1(0): op0.val = op1.val;
+    if __expr and (sf.id ^ of.id) != int1(0): op0.val = op1.val;
   cmovge: &cmovge |
-    if (sf.id ^ of.id) == int1(0): op0.val = op1.val;
+    if __expr and (sf.id ^ of.id) == int1(0): op0.val = op1.val;
   cmovle: &cmovle |
-    if ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val;
+    if __expr and ((sf.id ^ of.id) | zf.id) != int1(0): op0.val = op1.val;
   cmovg: &cmovg |
-    if ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val;
+    if __expr and ((sf.id ^ of.id) | zf.id) == int1(0): op0.val = op1.val;
 
 ## System
 
@@ -2404,16 +2404,16 @@ instruction:
         sub_opcodes:
           - mnemonic: cdq
             cpu_model: ">= X86_Arch_80386"
-            semantic: [ "if (eax.id & int32(0x80000000)) == int32(0x80000000): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
+            semantic: [ "if __expr and (eax.id & int32(0x80000000)) == int32(0x80000000): edx.id = int32(0xffffffff)\nelse: edx.id = int32(0)" ]
 
           - mnemonic: cwd
             cpu_model: ">= X86_Arch_8088"
             attr: [ op_size ]
-            semantic: [ "if (ax.id & int16(0x8000)) == int16(0x8000): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
+            semantic: [ "if __expr and (ax.id & int16(0x8000)) == int16(0x8000): dx.id = int16(0xffff)\nelse: dx.id = int16(0)" ]
 
           - mnemonic: cqo
             attr: [ rexw ]
-            semantic: [ "if (rax.id & int64(0x8000000000000000)) == int64(0x8000000000000000): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)" ]
+            semantic: [ "if __expr and (rax.id & int64(0x8000000000000000)) == int64(0x8000000000000000): rdx.id = int64(0xffffffffffffffff)\nelse: rdx.id = int64(0)" ]
 
       - opcode: 0x9a
         mnemonic: call

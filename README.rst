@@ -21,7 +21,7 @@ Prerequisites
 =============
 
 Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (included), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
-You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2013 on Windows).
+You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2013 update 4 on Windows).
 
 Feature
 =======

@@ -50,8 +50,9 @@ Expression::SPType SystemExpression::Visit(ExpressionVisitor* pVisitor)
 // bind expression ////////////////////////////////////////////////////////////
 
 BindExpression::BindExpression(Expression::LSPType const& rExprs)
-: m_Expressions(rExprs)
 {
+  for (auto spExpr : rExprs)
+    m_Expressions.push_back(spExpr);
 }
 
 BindExpression::~BindExpression(void)

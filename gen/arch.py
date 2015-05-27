@@ -49,88 +49,190 @@ class ArchConvertion:
         return 'u%d %s;\nif (!rBinStrm.Read(%s, %s))\n  return false;\n\n' % (sz, var_name, addr, var_name)
 
     def _ConvertSemanticToCode(self, opcd, sem, id_mapper):
+        class CodeBlock:
+            CMT_TYPE = 0
+            EXPR_TYPE = 1
+            IF_CODE_TYPE = 2
+            IF_EXPR_TYPE = 3
+
+            def __init__(self, blk_type):
+                self.blk_type = blk_type
+                self.cmt = None
+                self.cond = None
+                self.expr_decl = []
+                self.sub_exprs = []
+                self.glb_exprs = []
+
+            def SetComment(self, cmt):
+                self.cmt = cmt
+
+            def SetCondition(self, cond):
+                self.cond = cond
+
+            def AddDeclaration(self, expr):
+                self.expr_decl.append(expr)
+
+            def AddSubExpr(self, expr):
+                self.sub_exprs.append(expr)
+
+            def AddGlbExpr(self, expr):
+                self.glb_exprs.append(expr)
+
+            def Format(self, expr_container):
+                if self.blk_type == self.CMT_TYPE:
+                    if not self.cmt:
+                        raise Exception('invalid code block comment')
+                    return self.cmt
+
+                if self.blk_type == self.EXPR_TYPE or self.blk_type == self.IF_EXPR_TYPE:
+                    res = ''
+                    if len(self.expr_decl):
+                        # res += '/* block declarations */\n'
+                        res += ';\n'.join(self.expr_decl)
+                    if len(self.sub_exprs):
+                        # res += '/* block sub expressions */\n'
+                        res += ';\n'.join(self.sub_exprs)
+                    if len(self.glb_exprs):
+                        # res += '/* block glb expressions */\n'
+                        if expr_container:
+                            for expr in self.glb_exprs:
+                                res += '%s.push_back(%s);\n' % (expr_container, expr)
+                        else:
+                            res += ',\n'.join(self.glb_exprs)
+                    return res
+
+                if blk_type == self.IF_CODE_TYPE:
+                    if not self.cond:
+                        raise Exception('invalid code block')
+                    res = ''
+                    res += 'if (%s)' % self.cond
+                    res += '{\n'
+                    if len(self.expr_decl):
+                        res += Indent('/* block declarations */\n')
+                        res += Indent(';\n'.join(self.expr_decl))
+                    if len(self.sub_exprs):
+                        res += Indent('/* block sub expressions */\n')
+                        res += Indent(';\n'.join(self.sub_exprs))
+                    if len(self.glb_exprs):
+                        res += Indent('/* block glb expressions */\n')
+                        for expr in self.glb_exprs:
+                            res += Indent('%s.push_back(%s);\n' % (expr_container, expr))
+                    res += '}\n'
+                    return res
+
+                raise Exception('unknown code block type')
+
         class SemVisitor(ast.NodeVisitor):
             def __init__(self, arch, id_mapper):
                 ast.NodeVisitor.__init__(self)
                 self.arch = arch
                 self.id_mapper = id_mapper
-                self.var_expr = []
-                self.var_pool = []
-                self.res = []
                 self.cnt = 0
+                self.var_pool = []
+                self.expr_container = 'AllExpr' # TODO(KS): don't hardcode this
+                self.res = []
 
             def reset(self):
-                self.var_expr = []
                 self.res = []
 
             def generic_visit(self, node):
                 print('generic:', type(node).__name__)
                 assert(0)
 
+            # Main visitors
+
             def visit_Module(self, node):
+                res = []
                 for b in node.body:
-                    b_expr = self.visit(b)
-                    self.res.append(b_expr)
-                if len(self.res) == 0:
-                    return self.res
-                return self.res[-1]
+                    cb = self.visit(b)
+                    if not cb: continue
+                    if isinstance(cb, list):
+                        res += cb
+                    else:
+                        res.append(cb)
+                return res
+
+            def visit_Assign(self, node):
+                assert(len(node.targets) == 1)
+
+                value_name  = self.visit(node.value)              
+                target_name = self.visit(node.targets[0])
+
+                cb = CodeBlock(CodeBlock.EXPR_TYPE)
+                cb.AddGlbExpr('Expr::MakeAssign(\n%s,\n%s)'\
+                        % (Indent(target_name), Indent(value_name)))
+                return cb
+
+            def visit_AugAssign(self, node):
+                oper_name   = self.visit(node.op)
+                target_name = self.visit(node.target)
+                value_name  = self.visit(node.value)
+                sub_expr = 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
+                        % (Indent(oper_name), Indent(target_name), Indent(value_name))
+
+                cb = CodeBlock(CodeBlock.EXPR_TYPE)
+                cb.AddGlbExpr('Expr::MakeAssign(\n%s,\n%s)\n'\
+                        % (Indent(target_name), Indent(sub_expr)))
+                return cb
 
             def visit_If(self, node):
-                test_name = self.visit(node.test)
+                vst_test = self.visit(node.test)
+                code_blk_type = vst_test[0]
+                test = vst_test[1]
+                code_blk = CodeBlock(code_blk_type)
 
-                old_res = self.res
-                self.res = []
+                vst_test = self.visit(test)
+                vst_then_stmt = []
+                vst_else_stmt = []
 
                 then_body_name = None
                 for statm in node.body:
                     statm_expr = self.visit(statm)
-                    if len(statm_expr) != 0:
-                        self.res.append(statm_expr)
-                if len(self.res) == 1:
-                    then_body_name = self.res[0]
+                    if isinstance(statm_expr, list):
+                        vst_then_stmt += [ x.Format(None) for x in statm_expr ]
+                    else:
+                        vst_then_stmt.append(statm_expr.Format(None))
+                assert(len(vst_then_stmt) != 0)
+                if len(vst_then_stmt) == 1:
+                    then_body_name = vst_then_stmt[0]
                 else:
-                    self.var_expr.append('Expression::LSPType ThenBodyExprs%d;\n' % self.cnt)
-                    for expr in self.res:
-                        if expr.startswith('/*'):
-                            self.var_expr.append(expr)
-                        else:
-                            self.var_expr.append('ThenBodyExprs%d.push_back(%s);\n' % (self.cnt, expr))
-                    self.var_expr.append('auto spThenBody%d = Expr::MakeBind(ThenBodyExprs%d);\n' % (self.cnt, self.cnt))
-                    then_body_name = 'spThenBody%d' % self.cnt
-                    self.cnt += 1
-
-                self.res = old_res
+                    then_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_then_stmt)
 
                 if len(node.orelse) == 0:
-                    return 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(test_name), Indent(then_body_name))
-
-
-                old_res = self.res
-                self.res = []
+                    res = 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(vst_test), Indent(then_body_name))
+                    code_blk.AddGlbExpr(res)
+                    return code_blk
 
                 else_body_name = None
                 for statm in node.orelse:
                     statm_expr = self.visit(statm)
-                    if len(statm_expr) != 0:
-                        self.res.append(statm_expr)
-                if len(self.res) == 1:
-                    else_body_name = self.res[0]
+                    if isinstance(statm_expr, list):
+                        vst_else_stmt += [ x.Format(None) for x in statm_expr ]
+                    else:
+                        vst_else_stmt.append(statm_expr.Format(None))
+                assert(len(vst_else_stmt) != 0)
+                if len(vst_else_stmt) == 1:
+                    else_body_name = vst_else_stmt[0]
                 else:
-                    self.var_expr.append('Expression::LSPType ElseBodyExprs;\n')
-                    for expr in self.res:
-                        if expr.startswith('/*'):
-                            self.var_expr.append(expr)
-                        else:
-                            self.var_expr.append('ElseBodyExprs.push_back(%s);\n' % expr)
-                    self.var_expr.append('auto spElseBody = Expr::MakeBind(ElseBodyExprs);\n')
-                    else_body_name = 'spElseBody'
+                    else_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_else_stmt)
 
-                self.res = old_res
-
-                return 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(test_name), Indent(then_body_name), Indent(else_body_name))
+                res = 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(vst_test), Indent(then_body_name), Indent(else_body_name))
+                code_blk.AddGlbExpr(res)
+                return code_blk
 
             def visit_IfExp(self, node):
                 assert(0)
+
+            # Leaf visitors
+
+            # TODO(KS): make sure node.op is _ast.And
+            def visit_BoolOp(self, node):
+                if_type = node.values[0].id
+                if if_type == '__expr':
+                    return (CodeBlock.EXPR_TYPE, node.values[1])
+                if if_type == '__code':
+                    return (CodeBlock.EXPR_TYPE, node.values[1])
+                raise Exception('Please specify the type of if in first position')
 
             def visit_Compare(self, node):
                 assert(len(node.ops) == 1)
@@ -215,6 +317,7 @@ class ArchConvertion:
                     return ''.join(args_name)
 
                 if func_name == 'call':
+                    res = []
                     sem = self.arch['function'][args_name[0][1:-1]]
                     if isinstance(sem, str):
                         sem = sem.split(";")
@@ -223,10 +326,19 @@ class ArchConvertion:
                             expr = expr[1:]
                         if len(expr) == 0:
                             continue
-                        self.res.append('/* Semantic: %s */\n' % expr)
+
+                        # cb = CodeBlock(CodeBlock.CMT_TYPE)
+                        # cb.SetComment('/* call semantic: %s */\n' % expr)
+                        # res.append(cb)
+
                         nodes = ast.parse(expr)
-                        self.visit(nodes)
-                    return ''
+                        func_expr = self.visit(nodes)
+                        if isinstance(func_expr, list):
+                            res += func_expr
+                        else:
+                            res.append(func_expr)
+
+                    return res
 
                 if func_name == 'int_type':
                     assert(len(args_name) == 1)
@@ -241,13 +353,12 @@ class ArchConvertion:
                     assert(var_name in self.var_pool)
                     self.var_pool.remove(args_name[0][1:-1])
 
-                if 'OperationExpression::OpXchg' in func_name:
-                    if len(args_name) != 2:
-                        assert(0)
-                    return 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
-                            % (Indent(func_name), Indent(args_name[0]), Indent(args_name[1]))
-
-                return func_name % tuple(args_name)
+                if 'VariableExpression' in func_name:
+                    cb = CodeBlock(CodeBlock.EXPR_TYPE)
+                    cb.AddGlbExpr(func_name % tuple(args_name))
+                    return cb
+                else:
+                    return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
                 attr_name  = node.attr
@@ -354,8 +465,6 @@ class ArchConvertion:
                     return 'rInsn'
 
                 # Fonction name
-                elif node_name == 'exchange':
-                    return 'OperationExpression::OpXchg'
                 elif node_name == 'swap':
                     return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
                 elif node_name == 'bsf':
@@ -390,24 +499,6 @@ class ArchConvertion:
 
             def visit_Print(self, node):
                 assert(0)
-
-            def visit_Assign(self, node):
-                assert(len(node.targets) == 1)
-
-                value_name  = self.visit(node.value)              
-                target_name = self.visit(node.targets[0])
-
-                return 'Expr::MakeAssign(\n%s,\n%s)'\
-                        % (Indent(target_name), Indent(value_name))
-
-            def visit_AugAssign(self, node):
-                oper_name   = self.visit(node.op)
-                target_name = self.visit(node.target)
-                value_name  = self.visit(node.value)
-                sub_expr = 'Expr::MakeBinOp(\n%s,\n%s,\n%s)'\
-                        % (Indent(oper_name), Indent(target_name), Indent(value_name))
-                return 'Expr::MakeAssign(\n%s,\n%s)\n'\
-                        % (Indent(target_name), Indent(sub_expr))
 
             def visit_Expr(self, node):
                 return self.visit(node.value)
@@ -451,31 +542,17 @@ class ArchConvertion:
                     continue
                 if expr[0] == '\n':
                     expr = expr[1:]
-                expr_res.append('/* Semantic: %s */\n' % expr)
                 #print 'DEBUG: %r' % expr
                 v.reset()
                 nodes = ast.parse(expr)
-                v.visit(nodes)
-                if len(v.var_expr): res += '/* Var Expr */\n'
-                for var in v.var_expr:
-                    res += var
-                if len(v.var_expr): res += '\n'
-                expr_res += v.res
-                if expr[0] == '\n':
-                    expr = expr[1:]
+                cb = CodeBlock(CodeBlock.CMT_TYPE)
+                cb.SetComment('/* semantic: %s */\n' % expr)
+                expr_res.append(cb)
+                expr_res += v.visit(nodes)
 
             sem_no = 0
             for expr in expr_res:
-                if len(expr) == 0:
-                    continue
-                # Comment
-                elif expr.startswith('/*'):
-                    res += expr
-                # Semantic part
-                else:
-                    res += 'auto pExpr%d = %s;\n' % (sem_no, expr)
-                    res += 'AllExpr.push_back(pExpr%d);\n' % sem_no
-                    sem_no += 1
+                res += expr.Format('AllExpr')
 
         if len(res) == 0:
             return ''
