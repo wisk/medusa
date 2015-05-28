@@ -78,6 +78,48 @@ namespace pydusa
     return bp::str(PD.GetTexts());
   }
 
+  static bp::object Medusa_DisassembleCurrentInstruction(Medusa* pCore, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  {
+    // We need the good architecture
+    auto const& rModMgr = ModuleManager::Instance();
+    auto spArch = rModMgr.GetArchitecture(pCpuCtxt->GetCpuInformation().GetArchitectureTag());
+    if (spArch == nullptr)
+      return bp::object();
+
+    // and its current mode
+    auto ArchMode = pCpuCtxt->GetMode();
+
+    // Now we can retrieve the current address
+    Address CurAddr;
+    if (!pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
+      return bp::object();
+
+    // We must convert it to a linear address
+    u64 LinAddr;
+    if (!pCpuCtxt->Translate(CurAddr, LinAddr))
+      return bp::object();
+
+    // ... to retrieve its data
+    BinaryStream::SPType spBinStrm;
+    u32 Off;
+    u32 Flags;
+    if (!pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
+      return bp::object();
+
+    // we can finally disassemble it
+    auto spInsn = std::make_shared<Instruction>();
+    if (!spArch->Disassemble(*spBinStrm, Off, *spInsn, ArchMode))
+      return bp::object();
+
+    // and format it
+    PrintData PD;
+    PD.PrependAddress(false);
+    if (!spArch->FormatCell(pCore->GetDocument(), CurAddr, *spInsn, PD))
+      return bp::object();
+
+    return bp::str(PD.GetTexts());
+  }
+
   static Instruction::SPType Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
   {
     auto spCell = pCore->GetCell(rAddress);
@@ -102,8 +144,9 @@ void PydusaMedusa(void)
 
     .def("mk_addr", pydusa::Medusa_MakeAddress)
 
-    .def("get_cell", pydusa::Medusa_GetCell)
-    .def("fmt_cell", pydusa::Medusa_FormatCell)
-    .def("get_insn", pydusa::Medusa_GetInstruction)
+    .def("get_cell",        pydusa::Medusa_GetCell)
+    .def("fmt_cell",        pydusa::Medusa_FormatCell)
+    .def("get_insn",        pydusa::Medusa_GetInstruction)
+    .def("disasm_cur_insn", pydusa::Medusa_DisassembleCurrentInstruction)
     ;
 }

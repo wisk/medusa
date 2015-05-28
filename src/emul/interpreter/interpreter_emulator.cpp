@@ -29,12 +29,12 @@ bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
 
       if (spSys->GetName() == "check_exec_hook")
       {
-        auto RegPc = m_pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
-        auto RegSz = m_pCpuInfo->GetSizeOfRegisterInBit(RegPc);
-        u64 CurPc = 0;
-        if (!m_pCpuCtxt->ReadRegister(RegPc, &CurPc, RegSz))
+        Address CurAddr;
+        if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
           return false;
-        TestHook(Address(CurPc), Emulator::HookOnExecute);
+        // HACK(KS):
+        CurAddr.SetBase(0x0);
+        TestHook(CurAddr, Emulator::HookOnExecute);
         continue;
       }
 

@@ -224,21 +224,19 @@ bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u3
 bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32& rSize, u32& rFlags) const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
-  MemoryChunk MemChk;
 
-  prAddress = nullptr;
-  rOffset = 0;
-  rSize = 0;
-  rFlags = 0;
-
-  if (!_FindMemoryChunk(LinAddr, MemChk))
-    return false;
-
-  prAddress = MemChk.m_spMemStrm->GetBuffer();
-  rOffset = LinAddr - MemChk.m_LinearAddress;
-  rSize = MemChk.m_spMemStrm->GetSize();
-  rFlags = MemChk.m_Flags;
-  return true;
+  for (MemoryChunk const& rMemChnk : m_Memories)
+  {
+    if (LinAddr >= rMemChnk.m_LinearAddress && LinAddr < (rMemChnk.m_LinearAddress + rMemChnk.m_spMemStrm->GetSize()))
+    {
+      prAddress = rMemChnk.m_spMemStrm->GetBuffer();
+      rOffset = LinAddr - rMemChnk.m_LinearAddress;
+      rSize = rMemChnk.m_spMemStrm->GetSize();
+      rFlags = rMemChnk.m_Flags;
+      return true;
+    }
+  }
+  return false;
 }
 
 bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory)

@@ -66,12 +66,16 @@ bool Emulator::Execute(Address const& rAddress)
   Expression::VSPType Exprs;
   _Disassemble(rAddress, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode) -> bool
   {
+    Exprs.push_back(Expr::MakeSys("dump_insn", rCurAddr));
+
     // Set the current IP/PC address
     if (!rCurArch.EmitSetExecutionAddress(Exprs, rCurAddr, CurMode))
       return false;
 
     for (auto spExpr : rCurInsn.GetSemantic())
       Exprs.push_back(spExpr);
+
+    Exprs.push_back(Expr::MakeSys("check_exec_hook", rCurAddr));
 
     // Jump, Call, Return types finish the block
     if (rCurInsn.GetSubType() & (Instruction::JumpType | Instruction::CallType | Instruction::ReturnType))
@@ -215,6 +219,8 @@ bool Emulator::_IsSemanticCached(Address const& rAddress) const
 
 bool Emulator::_CacheSemantic(Address const& rAddress, Expression::VSPType& rExprs)
 {
+  if (rExprs.empty())
+    return false;
   if (_IsSemanticCached(rAddress))
     return false;
   m_SemCache[rAddress] = rExprs;
