@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed May 27 17:10:34 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu May 28 18:25:23 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -41469,21 +41469,21 @@ free_var('res');
  * opcode: 04
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
+if __code and is_byte_operation: 
   mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
   ax.id = bit_cast(mul_res, int_type16)
   upper_res = bit_cast(ah.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
   ax.id = bit_cast(mul_res, int_type16)
   dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
   upper_res = bit_cast(dx.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
   eax.id = bit_cast(mul_res, int_type32)
   edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
   upper_res = bit_cast(edx.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
   rax.id = bit_cast(mul_res, int_type64)
   rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
@@ -42095,119 +42095,107 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeVar("upper_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
         /* semantic: alloc_var('mul_res', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
+        /* semantic: if __code and is_byte_operation: 
           mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
           ax.id = bit_cast(mul_res, int_type16)
           upper_res = bit_cast(ah.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 16))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 16))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ah, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ah, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_word_operation:
           mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
           ax.id = bit_cast(mul_res, int_type16)
           dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
           upper_res = bit_cast(dx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 32))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 32))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x10)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x10)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_dword_operation:
           mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
           eax.id = bit_cast(mul_res, int_type32)
           edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
           upper_res = bit_cast(edx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 64))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 64))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x20)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x20)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_qword_operation:
           mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
           rax.id = bit_cast(mul_res, int_type64)
           rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
           upper_res = bit_cast(rdx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(128, 128))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(128, 128))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x40)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x40)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
         /* semantic: if __expr and upper_res == int(op0.bit, 0):
           of.id = int1(0)
           cf.id = int1(0)
@@ -42756,21 +42744,21 @@ free_var('res');
  * opcode: 04
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
+if __code and is_byte_operation: 
   mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
   ax.id = bit_cast(mul_res, int_type16)
   upper_res = bit_cast(ah.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
   ax.id = bit_cast(mul_res, int_type16)
   dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
   upper_res = bit_cast(dx.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
   eax.id = bit_cast(mul_res, int_type32)
   edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
   upper_res = bit_cast(edx.id, int_type(op0.bit));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
   rax.id = bit_cast(mul_res, int_type64)
   rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
@@ -43382,119 +43370,107 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeVar("upper_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
         /* semantic: alloc_var('mul_res', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
+        /* semantic: if __code and is_byte_operation: 
           mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
           ax.id = bit_cast(mul_res, int_type16)
           upper_res = bit_cast(ah.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Al, &m_CpuInfo), Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 16))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(16, 16))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ah, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ah, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_word_operation:
           mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
           ax.id = bit_cast(mul_res, int_type16)
           dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
           upper_res = bit_cast(dx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 32))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(32, 32))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x10)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x10)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_dword_operation:
           mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
           eax.id = bit_cast(mul_res, int_type32)
           edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
           upper_res = bit_cast(edx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 64))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(64, 64))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x20)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x20)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
+        /* semantic: if __code and is_qword_operation:
           mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
           rax.id = bit_cast(mul_res, int_type64)
           rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
           upper_res = bit_cast(rdx.id, int_type(op0.bit)) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("mul_res", VariableExpression::Use),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpMul,
               Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(128, 128))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConst(128, 128))), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x40)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, 0x40)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("upper_res", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize())))})
-        , nullptr)
-        );
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
+        }
         /* semantic: if __expr and upper_res == int(op0.bit, 0):
           of.id = int1(0)
           cf.id = int1(0)

@@ -101,11 +101,9 @@ class ArchConvertion:
                             res += ',\n'.join(self.glb_exprs)
                     return res
 
-                if blk_type == self.IF_CODE_TYPE:
-                    if not self.cond:
-                        raise Exception('invalid code block')
+                if self.blk_type == self.IF_CODE_TYPE:
                     res = ''
-                    res += 'if (%s)' % self.cond
+                    res += 'if (%s)\n' % self.cond
                     res += '{\n'
                     if len(self.expr_decl):
                         res += Indent('/* block declarations */\n')
@@ -185,40 +183,53 @@ class ArchConvertion:
                 vst_then_stmt = []
                 vst_else_stmt = []
 
-                then_body_name = None
-                for statm in node.body:
-                    statm_expr = self.visit(statm)
-                    if isinstance(statm_expr, list):
-                        vst_then_stmt += [ x.Format(None) for x in statm_expr ]
-                    else:
-                        vst_then_stmt.append(statm_expr.Format(None))
-                assert(len(vst_then_stmt) != 0)
-                if len(vst_then_stmt) == 1:
-                    then_body_name = vst_then_stmt[0]
-                else:
-                    then_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_then_stmt)
-
-                if len(node.orelse) == 0:
-                    res = 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(vst_test), Indent(then_body_name))
-                    code_blk.AddGlbExpr(res)
+                if code_blk_type == CodeBlock.IF_CODE_TYPE:
+                    code_blk.SetCondition(vst_test)
+                    for statm in node.body:
+                        statm_expr = self.visit(statm)
+                        if isinstance(statm_expr, list):
+                            vst_then_stmt += [ x.Format(None) for x in statm_expr ]
+                        else:
+                            vst_then_stmt.append(statm_expr.Format(None))
+                    for expr in vst_then_stmt:
+                        code_blk.AddGlbExpr(expr)
                     return code_blk
 
-                else_body_name = None
-                for statm in node.orelse:
-                    statm_expr = self.visit(statm)
-                    if isinstance(statm_expr, list):
-                        vst_else_stmt += [ x.Format(None) for x in statm_expr ]
-                    else:
-                        vst_else_stmt.append(statm_expr.Format(None))
-                assert(len(vst_else_stmt) != 0)
-                if len(vst_else_stmt) == 1:
-                    else_body_name = vst_else_stmt[0]
                 else:
-                    else_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_else_stmt)
+                    then_body_name = None
+                    for statm in node.body:
+                        statm_expr = self.visit(statm)
+                        if isinstance(statm_expr, list):
+                            vst_then_stmt += [ x.Format(None) for x in statm_expr ]
+                        else:
+                            vst_then_stmt.append(statm_expr.Format(None))
+                    assert(len(vst_then_stmt) != 0)
+                    if len(vst_then_stmt) == 1:
+                        then_body_name = vst_then_stmt[0]
+                    else:
+                        then_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_then_stmt)
 
-                res = 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(vst_test), Indent(then_body_name), Indent(else_body_name))
-                code_blk.AddGlbExpr(res)
-                return code_blk
+                    if len(node.orelse) == 0:
+                        res = 'Expr::MakeIfElseCond(\n%s,\n%s, nullptr)\n' % (Indent(vst_test), Indent(then_body_name))
+                        code_blk.AddGlbExpr(res)
+                        return code_blk
+
+                    else_body_name = None
+                    for statm in node.orelse:
+                        statm_expr = self.visit(statm)
+                        if isinstance(statm_expr, list):
+                            vst_else_stmt += [ x.Format(None) for x in statm_expr ]
+                        else:
+                            vst_else_stmt.append(statm_expr.Format(None))
+                    assert(len(vst_else_stmt) != 0)
+                    if len(vst_else_stmt) == 1:
+                        else_body_name = vst_else_stmt[0]
+                    else:
+                        else_body_name = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_else_stmt)
+
+                    res = 'Expr::MakeIfElseCond(\n%s,\n%s,\n%s)' % (Indent(vst_test), Indent(then_body_name), Indent(else_body_name))
+                    code_blk.AddGlbExpr(res)
+                    return code_blk
 
             def visit_IfExp(self, node):
                 assert(0)
@@ -229,9 +240,9 @@ class ArchConvertion:
             def visit_BoolOp(self, node):
                 if_type = node.values[0].id
                 if if_type == '__expr':
-                    return (CodeBlock.EXPR_TYPE, node.values[1])
+                    return (CodeBlock.IF_EXPR_TYPE, node.values[1])
                 if if_type == '__code':
-                    return (CodeBlock.EXPR_TYPE, node.values[1])
+                    return (CodeBlock.IF_CODE_TYPE, node.values[1])
                 raise Exception('Please specify the type of if in first position')
 
             def visit_Compare(self, node):
@@ -487,6 +498,16 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
                 elif node_name == 'bit_cast':
                     return 'Expr::MakeBinOp(OperationExpression::OpBcast, %s, %s)'
+
+                # TODO(KS): this code is architecture specific, move it to arch_<arch>.py
+                elif node_name == 'is_byte_operation':
+                    return 'rInsn.GetOperand(0)->GetBitSize() == 8'
+                elif node_name == 'is_word_operation':
+                    return 'rInsn.GetOperand(0)->GetBitSize() == 16'
+                elif node_name == 'is_dword_operation':
+                    return 'rInsn.GetOperand(0)->GetBitSize() == 32'
+                elif node_name == 'is_qword_operation':
+                    return 'rInsn.GetOperand(0)->GetBitSize() == 64'
 
                 assert(0)
 

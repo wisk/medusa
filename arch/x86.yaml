@@ -440,21 +440,21 @@ semantic:
   mul: &mul |
     alloc_var('upper_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
+    if __code and is_byte_operation: 
       mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       upper_res = bit_cast(ah.id, int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+    if __code and is_word_operation:
       mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
       ax.id = bit_cast(mul_res, int_type16)
       dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
       upper_res = bit_cast(dx.id, int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+    if __code and is_dword_operation:
       mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
       eax.id = bit_cast(mul_res, int_type32)
       edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
       upper_res = bit_cast(edx.id, int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+    if __code and is_qword_operation:
       mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
       rax.id = bit_cast(mul_res, int_type64)
       rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)

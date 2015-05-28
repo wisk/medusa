@@ -264,7 +264,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     }
 
     // Dump instruction (actually it's more a kind of basic block) if required
-    if (DumpInsn && m_InsnCb)
+    if (/*DumpInsn && */m_InsnCb)
       rJitExpr.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
     // Emit the code for each expression
