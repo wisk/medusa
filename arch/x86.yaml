@@ -473,42 +473,42 @@ semantic:
     alloc_var('extended', concat(op0.bit, ignore(' * 2')));
     extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
     if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
-      dividend = sign_extend(ax.id, int16(16))
-      al.id = bit_cast(sdiv(dividend, extended), int16(8))
-      ah.id = bit_cast(smod(dividend, extended), int16(8));
+      dividend = sign_extend(ax.id, int_type16)
+      al.id = bit_cast(sdiv(dividend, extended), int_type8)
+      ah.id = bit_cast(smod(dividend, extended), int_type8);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
-      dividend = sign_extend(dx.id, int16(32)) << int32(16) | sign_extend(ax.id, int16(32))
-      ax.id = bit_cast(sdiv(dividend, extended), int32(16))
-      dx.id = bit_cast(smod(dividend, extended), int32(16));
+      dividend = sign_extend(dx.id, int_type32) << int_type16 | sign_extend(ax.id, int_type32)
+      ax.id = bit_cast(sdiv(dividend, extended), int_type16)
+      dx.id = bit_cast(smod(dividend, extended), int_type16);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
-      dividend = sign_extend(edx.id, int32(64)) << int64(32) | sign_extend(eax.id, int32(64))
-      eax.id = bit_cast(sdiv(dividend, extended), int64(32))
-      edx.id = bit_cast(smod(dividend, extended), int64(32));
+      dividend = sign_extend(edx.id, int_type64) << int_type32 | sign_extend(eax.id, int_type64)
+      eax.id = bit_cast(sdiv(dividend, extended), int_type32)
+      edx.id = bit_cast(smod(dividend, extended), int_type32);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
-      dividend = sign_extend(rdx.id, int64(128)) << int128(64) | sign_extend(rax.id, int64(128))
-      rax.id = bit_cast(sdiv(dividend, extended), int128(64))
-      rdx.id = bit_cast(smod(dividend, extended), int128(64));
+      dividend = sign_extend(rdx.id, int_type128) << int_type64 | sign_extend(rax.id, int_type128)
+      rax.id = bit_cast(sdiv(dividend, extended), int_type64)
+      rdx.id = bit_cast(smod(dividend, extended), int_type64);
     free_var('extended');
     free_var('dividend');
 
   div: &div |
     alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
     if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
-      dividend = bit_cast(ax.id, int16(16))
-      al.id = dividend / op0.val
-      ah.id = dividend % op0.val;
+      dividend = bit_cast(ax.id, int_type16)
+      al.id = bit_cast(dividend / op0.val, int_type8)
+      ah.id = bit_cast(dividend % op0.val, int_type8);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
-      dividend = bit_cast(dx.id, int16(32)) << int32(16) | bit_cast(ax.id, int16(32))
-      ax.id = bit_cast(dividend / op0.val, int32(16))
-      dx.id = bit_cast(dividend % op0.val, int32(16));
+      dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
+      ax.id = bit_cast(dividend / op0.val, int_type16)
+      dx.id = bit_cast(dividend % op0.val, int_type16);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
-      dividend = bit_cast(edx.id, int32(64)) << int64(32) | bit_cast(eax.id, int32(64))
-      eax.id = bit_cast(dividend / op0.val, int64(32))
-      edx.id = bit_cast(dividend % op0.val, int64(32));
+      dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
+      eax.id = bit_cast(dividend / op0.val, int_type32)
+      edx.id = bit_cast(dividend % op0.val, int_type32);
     if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
-      dividend = bit_cast(rdx.id, int64(128)) << int128(64) | bit_cast(rax.id, int64(128))
-      rax.id = bit_cast(dividend / op0.val, int128(64))
-      rdx.id = bit_cast(dividend % op0.val, int128(64));
+      dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
+      rax.id = bit_cast(dividend / op0.val, int_type64)
+      rdx.id = bit_cast(dividend % op0.val, int_type64);
     free_var('dividend');
 
   not: &not |
