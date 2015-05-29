@@ -575,9 +575,12 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
   auto& rCtxt = llvm::getGlobalContext();
   auto pFunc = pBbOrig->getParent();
 
+  auto pBbCond = llvm::BasicBlock::Create(rCtxt, "cond", pFunc);
   auto pBbThen = llvm::BasicBlock::Create(rCtxt, "then", pFunc);
   auto pBbElse = llvm::BasicBlock::Create(rCtxt, "else", pFunc);
   auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merg", pFunc);
+
+  m_rBuilder.CreateBr(pBbCond);
 
   // Emit the then branch
   auto spThenExpr = spIfElseExpr->GetThenExpression();
@@ -601,7 +604,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
   m_rBuilder.CreateBr(pBbMerg);
 
   // Emit the condition
-  m_rBuilder.SetInsertPoint(pBbOrig);
+  m_rBuilder.SetInsertPoint(pBbCond);
   m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbElse);
 
   m_rBuilder.SetInsertPoint(pBbMerg);
@@ -610,14 +613,6 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
-  // _Emit test and ref
-  State OldState = m_State;
-  m_State = Read;
-  auto spRefExpr = spWhileExpr->GetReferenceExpression()->Visit(this);
-  auto spTestExpr = spWhileExpr->GetTestExpression()->Visit(this);
-  auto pCondVal = _EmitComparison(spWhileExpr->GetType());
-  m_State = OldState;
-
   auto pBbOrig = m_rBuilder.GetInsertBlock();
   auto& rCtxt = llvm::getGlobalContext();
   auto pFunc = pBbOrig->getParent();
@@ -628,6 +623,19 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(Whil
 
   m_rBuilder.CreateBr(pBbCond);
 
+  m_rBuilder.SetInsertPoint(pBbCond);
+
+  // _Emit test and ref
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spWhileExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spWhileExpr->GetTestExpression()->Visit(this);
+  auto pCondVal = _EmitComparison(spWhileExpr->GetType());
+  m_State = OldState;
+
+  // Emit the condition
+  m_rBuilder.CreateCondBr(pCondVal, pBbBody, pBbNext);
+
   // Emit the body branch
   auto spBodyExpr = spWhileExpr->GetBodyExpression();
   m_rBuilder.SetInsertPoint(pBbBody);
@@ -637,10 +645,6 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(Whil
     return nullptr;
   m_State = OldState;
   m_rBuilder.CreateBr(pBbCond);
-
-  // Emit the condition
-  m_rBuilder.SetInsertPoint(pBbCond);
-  m_rBuilder.CreateCondBr(pCondVal, pBbBody, pBbNext);
 
   m_rBuilder.SetInsertPoint(pBbNext);
 
