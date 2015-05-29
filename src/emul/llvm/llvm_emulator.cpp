@@ -610,7 +610,37 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
-  return nullptr;
+  // _Emit test and ref
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spWhileExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spWhileExpr->GetTestExpression()->Visit(this);
+  auto pCondVal = _EmitComparison(spWhileExpr->GetType());
+  m_State = OldState;
+
+  auto pBbOrig = m_rBuilder.GetInsertBlock();
+  auto& rCtxt = llvm::getGlobalContext();
+  auto pFunc = pBbOrig->getParent();
+
+  auto pBbThen = llvm::BasicBlock::Create(rCtxt, "body", pFunc);
+  auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merged", pFunc);
+
+  // Emit the body branch
+  auto spThenExpr = spWhileExpr->GetBodyExpression();
+  m_rBuilder.SetInsertPoint(pBbThen);
+  OldState = m_State;
+  m_State = Unknown;
+  if (spThenExpr->Visit(this) == nullptr)
+    return nullptr;
+  m_State = OldState;
+  m_rBuilder.CreateBr(pBbOrig);
+
+  // Emit the condition
+  m_rBuilder.SetInsertPoint(pBbOrig);
+  m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbMerg);
+
+  m_rBuilder.SetInsertPoint(pBbMerg);
+  return spWhileExpr;
 }
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)

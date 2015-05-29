@@ -146,10 +146,32 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIfEls
   return spIfElseExpr;
 }
 
-// FIXME:
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
-  return nullptr;
+  while (true)
+  {
+    State OldState = m_State;
+    m_State = Read;
+    auto spRefExpr = spWhileExpr->GetReferenceExpression()->Visit(this);
+    auto spTestExpr = spWhileExpr->GetTestExpression()->Visit(this);
+    m_State = OldState;
+
+    if (spRefExpr == nullptr || spTestExpr == nullptr)
+      return nullptr;
+
+    bool Cond;
+    if (!_EvaluateComparison(spWhileExpr->GetType(), Cond))
+      return nullptr;
+
+    if (!Cond)
+      break;
+
+    auto spBodyExpr = spWhileExpr->GetBodyExpression()->Visit(this);
+    if (spBodyExpr == nullptr)
+      return nullptr;
+  }
+
+  return spWhileExpr;
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
