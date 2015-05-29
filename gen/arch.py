@@ -420,9 +420,10 @@ class ArchConvertion:
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
                     elif value_name.startswith('rInsn.GetOperand'):
-                        get_insn_size_bit = '(%s->GetBitSize() / 8)' % value_name
+                        get_insn_size_bit = '(%s->GetBitSize())' % value_name
+                        get_insn_size_byte = '(%s->GetBitSize() / 8)' % value_name
                         return 'Expr::MakeConst(\n%s,\n%s)'\
-                                % (Indent('32'), Indent(get_insn_size_bit))
+                                % (Indent(get_insn_size_bit), Indent(get_insn_size_byte))
 
                     else:
                         get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name

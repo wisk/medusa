@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 29 10:53:37 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 29 13:29:26 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -29229,7 +29229,8 @@ bool X86Architecture::Table_1_a3(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: a4
  * semantic: if __code and instruction_has_prefix(rep):
   while cnt.id != int(cnt.bit, 0):
-    call('move_string');
+    call('move_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(rep):
   call('move_string');
 
@@ -29247,7 +29248,8 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlDf);
       /* semantic: if __code and instruction_has_prefix(rep):
         while cnt.id != int(cnt.bit, 0):
-          call('move_string') */
+          call('move_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -29270,7 +29272,7 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -29279,10 +29281,17 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
+          ,
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
           })
         ));
       }
@@ -29305,7 +29314,7 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
           Expr::MakeAssign(
@@ -29314,7 +29323,7 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(1)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(1)->GetBitSize()),
                 (rInsn.GetOperand(1)->GetBitSize() / 8))))
           })
         , nullptr)
@@ -29332,7 +29341,8 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: a5
  * semantic: if __code and instruction_has_prefix(rep):
   while cnt.id != int(cnt.bit, 0):
-    call('move_string');
+    call('move_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(rep):
   call('move_string');
 
@@ -29350,7 +29360,8 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlDf);
       /* semantic: if __code and instruction_has_prefix(rep):
         while cnt.id != int(cnt.bit, 0):
-          call('move_string') */
+          call('move_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -29373,7 +29384,7 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -29382,10 +29393,17 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
+          ,
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
           })
         ));
       }
@@ -29408,7 +29426,7 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
           Expr::MakeAssign(
@@ -29417,7 +29435,7 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(1)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(1)->GetBitSize()),
                 (rInsn.GetOperand(1)->GetBitSize() / 8))))
           })
         , nullptr)
@@ -29433,10 +29451,12 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
  * test_flags: ['df']
  * semantic: if __code and instruction_has_prefix(repz):
   while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('compare_string');
+    call('compare_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_prefix(repnz):
   while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('compare_string');
+    call('compare_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(repz, repnz):
   call('compare_string');
 
@@ -29458,7 +29478,8 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       /* semantic: if __code and instruction_has_prefix(repz):
         while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('compare_string') */
+          call('compare_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -29654,7 +29675,7 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -29663,17 +29684,25 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
           ,
-          Expr::MakeVar("res", VariableExpression::Free)})
+          Expr::MakeVar("res", VariableExpression::Free),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_prefix(repnz):
         while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('compare_string') */
+          call('compare_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_RepNz))
       {
         /* block glb expressions */
@@ -29867,7 +29896,7 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -29876,12 +29905,19 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
           ,
-          Expr::MakeVar("res", VariableExpression::Free)})
+          Expr::MakeVar("res", VariableExpression::Free),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(repz, repnz):
@@ -30071,7 +30107,7 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
           Expr::MakeAssign(
@@ -30080,7 +30116,7 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(1)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(1)->GetBitSize()),
                 (rInsn.GetOperand(1)->GetBitSize() / 8))))
           })
         , nullptr)
@@ -30097,10 +30133,12 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
  * test_flags: ['df']
  * semantic: if __code and instruction_has_prefix(repz):
   while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('compare_string');
+    call('compare_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_prefix(repnz):
   while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('compare_string');
+    call('compare_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(repz, repnz):
   call('compare_string');
 
@@ -30122,7 +30160,8 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       /* semantic: if __code and instruction_has_prefix(repz):
         while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('compare_string') */
+          call('compare_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -30318,7 +30357,7 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -30327,17 +30366,25 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
           ,
-          Expr::MakeVar("res", VariableExpression::Free)})
+          Expr::MakeVar("res", VariableExpression::Free),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_prefix(repnz):
         while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('compare_string') */
+          call('compare_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_RepNz))
       {
         /* block glb expressions */
@@ -30531,7 +30578,7 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
             ,
             Expr::MakeAssign(
@@ -30540,12 +30587,19 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(1)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(1)->GetBitSize()),
                   (rInsn.GetOperand(1)->GetBitSize() / 8))))
             })
           , nullptr)
           ,
-          Expr::MakeVar("res", VariableExpression::Free)})
+          Expr::MakeVar("res", VariableExpression::Free),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(repz, repnz):
@@ -30735,7 +30789,7 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
           Expr::MakeAssign(
@@ -30744,7 +30798,7 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(1)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(1)->GetBitSize()),
                 (rInsn.GetOperand(1)->GetBitSize() / 8))))
           })
         , nullptr)
@@ -31089,7 +31143,8 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: aa
  * semantic: if __code and instruction_has_prefix(rep):
   while cnt.id != int(cnt.bit, 0):
-    call('store_string');
+    call('store_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(rep):
   call('store_string');
 
@@ -31107,7 +31162,8 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlDf);
       /* semantic: if __code and instruction_has_prefix(rep):
         while cnt.id != int(cnt.bit, 0):
-          call('store_string') */
+          call('store_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -31129,7 +31185,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31138,9 +31194,16 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(rep):
@@ -31161,7 +31224,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ,
           Expr::MakeAssign(
@@ -31170,7 +31233,7 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAdd,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ));
       }
@@ -31186,7 +31249,8 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
  * opcode: ab
  * semantic: if __code and instruction_has_prefix(rep):
   while cnt.id != int(cnt.bit, 0):
-    call('store_string');
+    call('store_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(rep):
   call('store_string');
 
@@ -31204,7 +31268,8 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetTestedFlags(X86_FlDf);
       /* semantic: if __code and instruction_has_prefix(rep):
         while cnt.id != int(cnt.bit, 0):
-          call('store_string') */
+          call('store_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -31226,7 +31291,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31235,9 +31300,16 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(rep):
@@ -31258,7 +31330,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ,
           Expr::MakeAssign(
@@ -31267,7 +31339,7 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAdd,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ));
       }
@@ -31325,10 +31397,12 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
  * test_flags: ['df']
  * semantic: if __code and instruction_has_prefix(repz):
   while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('scan_string');
+    call('scan_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_prefix(repnz):
   while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('scan_string');
+    call('scan_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(repz, repnz):
   call('scan_string');
 
@@ -31350,7 +31424,8 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       /* semantic: if __code and instruction_has_prefix(repz):
         while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('scan_string') */
+          call('scan_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -31384,7 +31459,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31393,14 +31468,22 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_prefix(repnz):
         while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('scan_string') */
+          call('scan_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_RepNz))
       {
         /* block glb expressions */
@@ -31432,7 +31515,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31441,9 +31524,16 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(repz, repnz):
@@ -31471,7 +31561,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ,
           Expr::MakeAssign(
@@ -31480,7 +31570,7 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAdd,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ));
       }
@@ -31494,10 +31584,12 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
  * test_flags: ['df']
  * semantic: if __code and instruction_has_prefix(repz):
   while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('scan_string');
+    call('scan_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_prefix(repnz):
   while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-    call('scan_string');
+    call('scan_string')
+    cnt.id -= int(cnt.bit, 1);
 if __code and instruction_has_no_prefix(repz, repnz):
   call('scan_string');
 
@@ -31519,7 +31611,8 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
       rInsn.SetUpdatedFlags(X86_FlOf | X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       /* semantic: if __code and instruction_has_prefix(repz):
         while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('scan_string') */
+          call('scan_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_Rep))
       {
         /* block glb expressions */
@@ -31553,7 +31646,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31562,14 +31655,22 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_prefix(repnz):
         while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-          call('scan_string') */
+          call('scan_string')
+          cnt.id -= int(cnt.bit, 1) */
       if (rInsn.GetPrefix() & (X86_Prefix_RepNz))
       {
         /* block glb expressions */
@@ -31601,7 +31702,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
           ,
             Expr::MakeAssign(
@@ -31610,9 +31711,16 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpAdd,
                 rInsn.GetOperand(0)->ToAddress(),
                 Expr::MakeConst(
-                  32,
+                  (rInsn.GetOperand(0)->GetBitSize()),
                   (rInsn.GetOperand(0)->GetBitSize() / 8))))
-          )})
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeConst(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
         ));
       }
       /* semantic: if __code and instruction_has_no_prefix(repz, repnz):
@@ -31640,7 +31748,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ,
           Expr::MakeAssign(
@@ -31649,7 +31757,7 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpAdd,
               rInsn.GetOperand(0)->ToAddress(),
               Expr::MakeConst(
-                32,
+                (rInsn.GetOperand(0)->GetBitSize()),
                 (rInsn.GetOperand(0)->GetBitSize() / 8))))
         ));
       }

@@ -932,34 +932,40 @@ semantic:
   scas: &scas |
     if __code and instruction_has_prefix(repz):
       while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-        call('scan_string');
+        call('scan_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_prefix(repnz):
       while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-        call('scan_string');
+        call('scan_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_no_prefix(repz, repnz):
       call('scan_string');
 
   cmps: &cmps |
     if __code and instruction_has_prefix(repz):
       while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-        call('compare_string');
+        call('compare_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_prefix(repnz):
       while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
-        call('compare_string');
+        call('compare_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_no_prefix(repz, repnz):
       call('compare_string');
 
   stos: &stos |
     if __code and instruction_has_prefix(rep):
       while cnt.id != int(cnt.bit, 0):
-        call('store_string');
+        call('store_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_no_prefix(rep):
       call('store_string');
 
   movs: &movs |
     if __code and instruction_has_prefix(rep):
       while cnt.id != int(cnt.bit, 0):
-        call('move_string');
+        call('move_string')
+        cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_no_prefix(rep):
       call('move_string');
 

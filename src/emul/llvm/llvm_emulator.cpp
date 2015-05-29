@@ -169,7 +169,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
 
     bool DumpInsn = false;
     Expression::VSPType Exprs;
-    Expression::LSPType rJitExpr;
+    Expression::LSPType JitExprs;
 
     // Disassemble code and retrieve semantic
     _Disassemble(ExecAddr, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode)
@@ -231,7 +231,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         return false;
       }
 
-      rJitExpr.push_back(spId2Var);
+      JitExprs.push_back(spId2Var);
     }
 
     // For each used id, we must allocate and free a variable
@@ -247,30 +247,30 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       }
 
       // Copy id value to register (2)
-      rJitExpr.push_front(Expr::MakeAssign(
+      JitExprs.push_front(Expr::MakeAssign(
         Expr::MakeVar(pIdName, VariableExpression::Use),
         Expr::MakeId(Id, &rCpuInfo)));
 
       // Allocate variable (1)
-      rJitExpr.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
+      JitExprs.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
 
       // Copy variable to id (3)
-      rJitExpr.push_back(Expr::MakeAssign(
+      JitExprs.push_back(Expr::MakeAssign(
         Expr::MakeId(Id, &rCpuInfo),
         Expr::MakeVar(pIdName, VariableExpression::Use)));
 
       // Free variable (4)
-      rJitExpr.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
+      JitExprs.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
     }
 
     // Dump instruction (actually it's more a kind of basic block) if required
     if (/*DumpInsn && */m_InsnCb)
-      rJitExpr.push_back(Expr::MakeSys("dump_insn", ExecAddr));
+      JitExprs.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
     // Emit the code for each expression
-    for (auto spExpr : rJitExpr)
+    for (auto spExpr : JitExprs)
     {
-      //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
+      Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;

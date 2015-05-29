@@ -6,33 +6,38 @@ import sys
 def stdcall_ret(cpu, mem, param_no):
   ret_addr = mem.read_u32(cpu.esp)
   cpu.eip = ret_addr
-  cpu.esp += (4 + param_no * 4)
+  # cpu.esp += (4 + param_no * 4)
 
 def on_symbol(cpu, mem, ad):
   global emul
   print 'function %s called' % emul.get_hook_name()
 
+def on_ExitProcess(cpu, mem, ad):
+  ExitCode = cpu.rcx
+  print '[!] kernel32.dll!ExitProcess(%08x)' % ExitCode
+  cpu.rip = 0xdeaddead
+
 def on_MessageBoxA(cpu, mem, ad):
-  hWnd = mem.read_u32(cpu.esp + 4)
-  lpCaption = mem.read_u32(cpu.esp + 8)
-  lpText = mem.read_u32(cpu.esp + 0xc)
-  MsgType = mem.read_u32(cpu.esp + 0x10)
+  hWnd = cpu.rcx
+  lpCaption = cpu.rdx
+  lpText = cpu.r8
+  MsgType = cpu.r9
 
   caption = mem.read_utf8(lpCaption)
   text = mem.read_utf8(lpText)
 
   if not caption:
-    caption = '%08x' % lpCaption
+    caption = '%016x' % lpCaption
   else:
     caption = '"%s"' % caption
   if not text:
-    text = '%08x' % lpText
+    text = '%016x' % lpText
   else:
     text = '"%s"' % text
 
   cpu.eax = 0
 
-  print '[!] kernel32.dll!MessageBoxA(%08x, %s, %s %08x) -> %08x' % (hWnd, caption, text, MsgType, cpu.eax)
+  print '[!] user32.dll!MessageBoxA(%08x, %s, %s %08x) -> %08x' % (hWnd, caption, text, MsgType, cpu.eax)
 
   stdcall_ret(cpu, mem, 4)
 
@@ -68,6 +73,7 @@ def main(argv):
     print 'hook %s at %s' % (lbl.name, lbl_addr)
     emul.hook_fn(lbl.name, on_symbol)
 
+  emul.hook_fn('kernel32.dll!ExitProcess', on_ExitProcess)
   emul.hook_fn('user32.dll!MessageBoxA', on_MessageBoxA)
   emul.hook_fn('msvcr120.dll!rand', on_rand)
 
