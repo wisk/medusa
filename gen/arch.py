@@ -412,6 +412,12 @@ class ArchConvertion:
                 elif attr_name == 'addr':
                     return '%s->ToAddress()' % value_name
 
+                elif attr_name == 'base':
+                    return 'expr_cast<MemoryExpression>(%s)->GetBaseExpression()' % value_name
+
+                elif attr_name == 'offset':
+                    return 'expr_cast<MemoryExpression>(%s)->GetOffsetExpression()' % value_name
+
                 elif attr_name == 'size':
 
                     if value_name == 'rInsn':
@@ -419,7 +425,7 @@ class ArchConvertion:
                         return 'Expr::MakeConst(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
-                    elif value_name.startswith('rInsn.GetOperand'):
+                    elif value_name.startswith('rInsn.GetOperand') or value_name.startswith('expr_cast<MemoryExpression>(rInsn.GetOperand'):
                         get_insn_size_bit = '(%s->GetBitSize())' % value_name
                         get_insn_size_byte = '(%s->GetBitSize() / 8)' % value_name
                         return 'Expr::MakeConst(\n%s,\n%s)'\
@@ -431,8 +437,14 @@ class ArchConvertion:
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
                 elif attr_name == 'bit':
-                    if value_name.startswith('rInsn.GetOperand'):
+                    if value_name.startswith('rInsn.GetOperand') or value_name.startswith('expr_cast<MemoryExpression>(rInsn.GetOperand'):
                         return '%s->GetBitSize()' % value_name
+                    else:
+                        return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
+
+                elif attr_name == 'byte':
+                    if value_name.startswith('rInsn.GetOperand') or value_name.startswith('expr_cast<MemoryExpression>(rInsn.GetOperand'):
+                        return '%s->GetBitSize() / 8' % value_name
                     else:
                         return 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
 

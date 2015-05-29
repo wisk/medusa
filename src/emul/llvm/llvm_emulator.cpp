@@ -279,7 +279,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     }
 
     m_Builder.CreateRetVoid();
-    //pExecFunc->dump();
+    pExecFunc->dump();
     pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
     if (pCode == nullptr)
     {
@@ -577,7 +577,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
 
   auto pBbThen = llvm::BasicBlock::Create(rCtxt, "then", pFunc);
   auto pBbElse = llvm::BasicBlock::Create(rCtxt, "else", pFunc);
-  auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merged", pFunc);
+  auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merg", pFunc);
 
   // Emit the then branch
   auto spThenExpr = spIfElseExpr->GetThenExpression();
@@ -622,24 +622,28 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(Whil
   auto& rCtxt = llvm::getGlobalContext();
   auto pFunc = pBbOrig->getParent();
 
-  auto pBbThen = llvm::BasicBlock::Create(rCtxt, "body", pFunc);
-  auto pBbMerg = llvm::BasicBlock::Create(rCtxt, "merged", pFunc);
+  auto pBbCond = llvm::BasicBlock::Create(rCtxt, "cond", pFunc);
+  auto pBbBody = llvm::BasicBlock::Create(rCtxt, "body", pFunc);
+  auto pBbNext = llvm::BasicBlock::Create(rCtxt, "next", pFunc);
+
+  m_rBuilder.CreateBr(pBbCond);
 
   // Emit the body branch
-  auto spThenExpr = spWhileExpr->GetBodyExpression();
-  m_rBuilder.SetInsertPoint(pBbThen);
+  auto spBodyExpr = spWhileExpr->GetBodyExpression();
+  m_rBuilder.SetInsertPoint(pBbBody);
   OldState = m_State;
   m_State = Unknown;
-  if (spThenExpr->Visit(this) == nullptr)
+  if (spBodyExpr->Visit(this) == nullptr)
     return nullptr;
   m_State = OldState;
-  m_rBuilder.CreateBr(pBbOrig);
+  m_rBuilder.CreateBr(pBbCond);
 
   // Emit the condition
-  m_rBuilder.SetInsertPoint(pBbOrig);
-  m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbMerg);
+  m_rBuilder.SetInsertPoint(pBbCond);
+  m_rBuilder.CreateCondBr(pCondVal, pBbBody, pBbNext);
 
-  m_rBuilder.SetInsertPoint(pBbMerg);
+  m_rBuilder.SetInsertPoint(pBbNext);
+
   return spWhileExpr;
 }
 
@@ -1058,6 +1062,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   {
     auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
     pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
+    _EmitReturnIfNull(pPtrVal);
   }
 
   switch (m_State)
@@ -1295,4 +1300,24 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   auto pCallVal = m_rBuilder.CreateCall4(s_pWriteRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize, RegName + "_write");
 
   return true;
+}
+
+void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal)
+{
+  auto pBbOrig = m_rBuilder.GetInsertBlock();
+  auto& rCtxt = llvm::getGlobalContext();
+  auto pFunc = pBbOrig->getParent();
+
+  auto pBbRet  = llvm::BasicBlock::Create(rCtxt, "ret", pFunc);
+  auto pBbCont = llvm::BasicBlock::Create(rCtxt, "continue", pFunc);
+
+  auto pChkValInt = m_rBuilder.CreatePtrToInt(pChkVal, llvm::Type::getIntNTy(rCtxt, sizeof(void*) * 8));
+  auto pNullPtrInt = _MakeInteger(IntType(sizeof(void*) * 8, 0));
+  auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt);
+  m_rBuilder.CreateCondBr(pCmpPtr, pBbRet, pBbCont);
+
+  m_rBuilder.SetInsertPoint(pBbRet);
+  m_rBuilder.CreateRetVoid();
+
+  m_rBuilder.SetInsertPoint(pBbCont);
 }

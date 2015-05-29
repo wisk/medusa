@@ -141,9 +141,9 @@ Expression::SPType CloneVisitor::VisitWhileCondition(WhileConditionExpression::S
 {
   return Expr::MakeWhileCond(
     spWhileExpr->GetType(),
-    spWhileExpr->GetReferenceExpression(),
-    spWhileExpr->GetTestExpression(),
-    spWhileExpr->GetBodyExpression());
+    spWhileExpr->GetReferenceExpression()->Visit(this),
+    spWhileExpr->GetTestExpression()->Visit(this),
+    spWhileExpr->GetBodyExpression()->Visit(this));
 }
 
 Expression::SPType CloneVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 29 13:29:26 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri May 29 15:47:43 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -29267,25 +29267,36 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeBinOp(
@@ -29309,25 +29320,36 @@ bool X86Architecture::Table_1_a4(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(1, 0x1),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
           Expr::MakeAssign(
-            rInsn.GetOperand(1)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(1)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(1)->GetBitSize()),
-                (rInsn.GetOperand(1)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
           })
-        , nullptr)
-        );
+        ,
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+          ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          })
+        ));
       }
       rInsn.SetSemantic(AllExpr);
     }
@@ -29379,25 +29401,36 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
             Expr::MakeBinOp(
@@ -29421,25 +29454,36 @@ bool X86Architecture::Table_1_a5(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(1, 0x1),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
           Expr::MakeAssign(
-            rInsn.GetOperand(1)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(1)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(1)->GetBitSize()),
-                (rInsn.GetOperand(1)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
           })
-        , nullptr)
-        );
+        ,
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+          ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          })
+        ));
       }
       rInsn.SetSemantic(AllExpr);
     }
@@ -29670,25 +29714,36 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeVar("res", VariableExpression::Free),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -29891,25 +29946,36 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeVar("res", VariableExpression::Free),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -30102,25 +30168,36 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(1, 0x1),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
           Expr::MakeAssign(
-            rInsn.GetOperand(1)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(1)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(1)->GetBitSize()),
-                (rInsn.GetOperand(1)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
           })
-        , nullptr)
-        );
+        ,
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+          ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          })
+        ));
         AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       }
       rInsn.SetSemantic(AllExpr);
@@ -30352,25 +30429,36 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeVar("res", VariableExpression::Free),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -30573,25 +30661,36 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1),
             Expr::MakeBind({
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
             ,
             Expr::MakeAssign(
-              rInsn.GetOperand(1)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(1)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(1)->GetBitSize()),
-                  (rInsn.GetOperand(1)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
             })
-          , nullptr)
           ,
+            Expr::MakeBind({
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+            ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+            })
+          ),
           Expr::MakeVar("res", VariableExpression::Free),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -30784,25 +30883,36 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeConst(1, 0x1),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
           Expr::MakeAssign(
-            rInsn.GetOperand(1)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(1)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(1)->GetBitSize()),
-                (rInsn.GetOperand(1)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
           })
-        , nullptr)
-        );
+        ,
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
+          ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          })
+        ));
         AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       }
       rInsn.SetSemantic(AllExpr);
@@ -31180,22 +31290,18 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31219,22 +31325,18 @@ bool X86Architecture::Table_1_aa(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeId(X86_FlDf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1),
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ,
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpAdd,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ));
       }
       rInsn.SetSemantic(AllExpr);
@@ -31286,22 +31388,18 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31325,22 +31423,18 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeId(X86_FlDf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1),
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ,
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpAdd,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ));
       }
       rInsn.SetSemantic(AllExpr);
@@ -31454,22 +31548,18 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31510,22 +31600,18 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31556,22 +31642,18 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeId(X86_FlDf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1),
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ,
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpAdd,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ));
       }
       rInsn.SetSemantic(AllExpr);
@@ -31641,22 +31723,18 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31697,22 +31775,18 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
             Expr::MakeConst(1, 0x1),
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpSub,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ,
             Expr::MakeAssign(
-              rInsn.GetOperand(0)->ToAddress(),
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
               Expr::MakeBinOp(
                 OperationExpression::OpAdd,
-                rInsn.GetOperand(0)->ToAddress(),
-                Expr::MakeConst(
-                  (rInsn.GetOperand(0)->GetBitSize()),
-                  (rInsn.GetOperand(0)->GetBitSize() / 8))))
+                expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+                Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
           ),
           Expr::MakeAssign(
             Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -31743,22 +31817,18 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeId(X86_FlDf, &m_CpuInfo),
           Expr::MakeConst(1, 0x1),
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpSub,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ,
           Expr::MakeAssign(
-            rInsn.GetOperand(0)->ToAddress(),
+            expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
             Expr::MakeBinOp(
               OperationExpression::OpAdd,
-              rInsn.GetOperand(0)->ToAddress(),
-              Expr::MakeConst(
-                (rInsn.GetOperand(0)->GetBitSize()),
-                (rInsn.GetOperand(0)->GetBitSize() / 8))))
+              expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression(),
+              Expr::MakeConst(expr_cast<MemoryExpression>(rInsn.GetOperand(0))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(0)->GetBitSize() / 8)))
         ));
       }
       rInsn.SetSemantic(AllExpr);
@@ -89448,108 +89518,108 @@ Expression::SPType X86Architecture::Decode_Wy(BinaryStream const& rBinStrm, TOff
   return __Decode_Wy(rBinStrm, Offset, rInsn, Mode);
 }
 
-/* decoder ['addr_b(decode_DS, decode_rSI)'] */
+/* decoder ['addr_b(decode_DS, decode_d64_rSI)'] */
 Expression::SPType X86Architecture::Decode_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_b(decode_DS, decode_rSI)
-  return Expr::MakeMem(8, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+  // operand0: addr_b(decode_DS, decode_d64_rSI)
+  return Expr::MakeMem(8, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
 }
 
-/* decoder ['addr_v(decode_DS, decode_rSI)'] */
+/* decoder ['addr_v(decode_DS, decode_d64_rSI)'] */
 Expression::SPType X86Architecture::Decode_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_v(decode_DS, decode_rSI)
+  // operand0: addr_v(decode_DS, decode_d64_rSI)
   switch (Mode)
   {
   case X86_Bit_16:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_64:
     if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
-      return Expr::MakeMem(64, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(64, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_32:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
   default:
     return nullptr;
   }
 
 }
 
-/* decoder ['addr_z(decode_DS, decode_rSI)'] */
+/* decoder ['addr_z(decode_DS, decode_d64_rSI)'] */
 Expression::SPType X86Architecture::Decode_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_z(decode_DS, decode_rSI)
+  // operand0: addr_z(decode_DS, decode_d64_rSI)
   switch (Mode)
   {
   case X86_Bit_16:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_32:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_rSI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_DS(rBinStrm, Offset, rInsn, Mode), Decode_d64_rSI(rBinStrm, Offset, rInsn, Mode), true);
   default:
     return nullptr;
   }
 
 }
 
-/* decoder ['addr_b(decode_ES, decode_rDI)'] */
+/* decoder ['addr_b(decode_ES, decode_d64_rDI)'] */
 Expression::SPType X86Architecture::Decode_Yb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_b(decode_ES, decode_rDI)
-  return Expr::MakeMem(8, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+  // operand0: addr_b(decode_ES, decode_d64_rDI)
+  return Expr::MakeMem(8, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
 }
 
-/* decoder ['addr_v(decode_ES, decode_rDI)'] */
+/* decoder ['addr_v(decode_ES, decode_d64_rDI)'] */
 Expression::SPType X86Architecture::Decode_Yv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_v(decode_ES, decode_rDI)
+  // operand0: addr_v(decode_ES, decode_d64_rDI)
   switch (Mode)
   {
   case X86_Bit_16:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_64:
     if ((rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w)
-      return Expr::MakeMem(64, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(64, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_32:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
   default:
     return nullptr;
   }
 
 }
 
-/* decoder ['addr_z(decode_ES, decode_rDI)'] */
+/* decoder ['addr_z(decode_ES, decode_d64_rDI)'] */
 Expression::SPType X86Architecture::Decode_Yz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: addr_z(decode_ES, decode_rDI)
+  // operand0: addr_z(decode_ES, decode_d64_rDI)
   switch (Mode)
   {
   case X86_Bit_16:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
   case X86_Bit_32:
     if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
-      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(16, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
     else
-      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_rDI(rBinStrm, Offset, rInsn, Mode), true);
+      return Expr::MakeMem(32, Decode_ES(rBinStrm, Offset, rInsn, Mode), Decode_d64_rDI(rBinStrm, Offset, rInsn, Mode), true);
   default:
     return nullptr;
   }

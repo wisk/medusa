@@ -68,35 +68,44 @@ function:
     else:
       zf.id = int1(0);
     if __expr and df.id == int1(1):
-      op0.addr -= op0.size
+      op0.offset -= int(op0.offset.bit, op0.byte)
     else:
-      op0.addr += op0.size;
+      op0.offset += int(op0.offset.bit, op0.byte);
 
   store_string: &store_string |
     op0.val = op1.val;
     if __expr and df.id == int1(1):
-      op0.addr -= op0.size
+      op0.offset -= int(op0.offset.bit, op0.byte)
     else:
-      op0.addr += op0.size;
+      op0.offset += int(op0.offset.bit, op0.byte);
 
   move_string: &move_string |
-      op0.val = op1.val;
-      if __expr and df.id == int1(1):
-        op0.addr -= op0.size
-        op1.addr -= op1.size;
+    op0.val = op1.val;
+    if __expr and df.id == int1(1):
+      op0.offset -= int(op0.offset.bit, op0.byte)
+      op1.offset -= int(op1.offset.bit, op1.byte)
+    else:
+      op0.offset += int(op0.offset.bit, op0.byte)
+      op1.offset += int(op1.offset.bit, op1.byte);
 
   compare_string: &compare_string |
     alloc_var('res', op0.bit);
     res = op0.val - op1.val;
+
     call('overflow_flag_sub');
     call('carry_flag_sub');
     call('sign_flag');
     call('zero_flag');
     call('parity_flag');
     call('adjust_flag');
+
     if __expr and df.id == int1(1):
-      op0.addr -= op0.size
-      op1.addr -= op1.size;
+      op0.offset -= int(op0.offset.bit, op0.byte)
+      op1.offset -= int(op1.offset.bit, op1.byte)
+    else:
+      op0.offset += int(op0.offset.bit, op0.byte)
+      op1.offset += int(op1.offset.bit, op1.byte);
+
     free_var('res')
 
 ## Instruction semantic #######################################################
@@ -13630,12 +13639,12 @@ operand:
   decode_Wq: [ call('Decode_Wq') ]
   decode_Wx: [ call('Decode_Wx') ]
   decode_Wy: [ call('Decode_Wy') ]
-  decode_Xb: [ "addr_b(decode_DS, decode_rSI)" ]
-  decode_Xv: [ "addr_v(decode_DS, decode_rSI)" ]
-  decode_Xz: [ "addr_z(decode_DS, decode_rSI)" ]
-  decode_Yb: [ "addr_b(decode_ES, decode_rDI)" ]
-  decode_Yv: [ "addr_v(decode_ES, decode_rDI)" ]
-  decode_Yz: [ "addr_z(decode_ES, decode_rDI)" ]
+  decode_Xb: [ "addr_b(decode_DS, decode_d64_rSI)" ]
+  decode_Xv: [ "addr_v(decode_DS, decode_d64_rSI)" ]
+  decode_Xz: [ "addr_z(decode_DS, decode_d64_rSI)" ]
+  decode_Yb: [ "addr_b(decode_ES, decode_d64_rDI)" ]
+  decode_Yv: [ "addr_v(decode_ES, decode_d64_rDI)" ]
+  decode_Yz: [ "addr_z(decode_ES, decode_d64_rDI)" ]
   decode_b: [ call('Decode_b') ]
   decode_eAX: [ "reg_z('ax', 'eax')" ]
   decode_eBP: [ "reg_z('bp', 'ebp')" ]

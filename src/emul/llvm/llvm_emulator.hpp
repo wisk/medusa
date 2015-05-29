@@ -134,6 +134,7 @@ private:
     llvm::Value* _EmitComparison(u8 CondOp);
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
+    void         _EmitReturnIfNull(llvm::Value* pChkVal);
 
     Emulator*                 m_pEmul;
     HookAddressHashMap const& m_rHooks;
