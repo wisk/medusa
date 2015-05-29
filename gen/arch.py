@@ -54,6 +54,7 @@ class ArchConvertion:
             EXPR_TYPE = 1
             IF_CODE_TYPE = 2
             IF_EXPR_TYPE = 3
+            WHILE_EXPR_TYPE = 4
 
             def __init__(self, blk_type):
                 self.blk_type = blk_type
@@ -84,7 +85,7 @@ class ArchConvertion:
                         raise Exception('invalid code block comment')
                     return self.cmt
 
-                if self.blk_type == self.EXPR_TYPE or self.blk_type == self.IF_EXPR_TYPE:
+                if self.blk_type == self.EXPR_TYPE or self.blk_type == self.IF_EXPR_TYPE or self.blk_type == self.WHILE_EXPR_TYPE:
                     res = ''
                     if len(self.expr_decl):
                         # res += '/* block declarations */\n'
@@ -231,6 +232,29 @@ class ArchConvertion:
                     code_blk.AddGlbExpr(res)
                     return code_blk
 
+            def visit_While(self, node):
+                vst_test = self.visit(node.test)
+                vst_body = []
+                for statm in node.body:
+                    statm_expr = self.visit(statm)
+                    if isinstance(statm_expr, list):
+                        vst_body += [ x.Format(None) for x in statm_expr ]
+                    else:
+                        vst_body.append(statm_expr.Format(None))
+
+                body_expr = None
+                if len(vst_body) == 1:
+                    body_expr = vst_body[0]
+                else:
+                    body_expr = 'Expr::MakeBind({\n%s})\n' % ',\n'.join(vst_body)
+
+                res = 'Expr::MakeWhileCond(\n%s,\n%s)' % (Indent(vst_test), Indent(body_expr))
+
+                code_blk = CodeBlock(CodeBlock.WHILE_EXPR_TYPE)
+                code_blk.SetCondition(vst_test)
+                code_blk.AddGlbExpr(res)
+                return code_blk
+
             def visit_IfExp(self, node):
                 assert(0)
 
@@ -368,8 +392,12 @@ class ArchConvertion:
                     cb = CodeBlock(CodeBlock.EXPR_TYPE)
                     cb.AddGlbExpr(func_name % tuple(args_name))
                     return cb
-                else:
-                    return func_name % tuple(args_name)
+
+                if 'GetPrefix' in func_name:
+                    mask = ' | '.join(args_name)
+                    return '%s & (%s)' % (func_name, mask)
+                
+                return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
                 attr_name  = node.attr
@@ -508,6 +536,16 @@ class ArchConvertion:
                     return 'rInsn.GetOperand(0)->GetBitSize() == 32'
                 elif node_name == 'is_qword_operation':
                     return 'rInsn.GetOperand(0)->GetBitSize() == 64'
+
+                elif node_name == 'instruction_has_prefix':
+                    return 'rInsn.GetPrefix()'
+                elif node_name == 'instruction_has_no_prefix':
+                    return '(~rInsn.GetPrefix())'
+
+                # TODO(KS): prefixes are arch dependent
+                pfx = { 'rep': 'X86_Prefix_Rep', 'repz': 'X86_Prefix_Rep', 'repnz': 'X86_Prefix_RepNz' }
+                if node_name in pfx:
+                    return pfx[node_name]
 
                 assert(0)
 
