@@ -174,13 +174,6 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
       return false;
     }
 
-    // Make sure the memory is executable
-    if (!(Flags & MemoryArea::Execute))
-    {
-      Log::Write("core").Level(LogError) << "memory is not executable: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;
-      return false;
-    }
-
     // Retrieve the current mode and architecture module
     auto ArchTag = m_pCpuCtxt->GetCpuInformation().GetArchitectureTag();
     // FIXME(KS): it may not work with thumb mode...

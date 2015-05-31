@@ -134,39 +134,25 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     return false;
   u64 LinAddr;
   if (!m_pCpuCtxt->Translate(ExecAddr, LinAddr))
-    return nullptr;
+    return false;
+
+  BinaryStream::SPType spBinStrm;
+  u32 Off;
+  u32 Flags;
+
+  if (!m_pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
+    return false;
+
+  if ((!Flags & MemoryArea::Execute))
+  {
+    Log::Write("emul_llvm").Level(LogError) << "memory at " << ExecAddr << " is not executable" << LogEnd;
+    return false;
+  }
 
   // Check if the code to be executed is already JIT'ed
   auto pCode = m_FunctionCache[LinAddr];
   if (pCode == nullptr)
   {
-    // Create a new LLVM function
-    auto pExecFunc = m_JitHelper.CreateFunction(ExecAddr.ToString());
-
-    // Expose its parameters: CpuCtxt and MemCtxt
-    auto itParam = pExecFunc->arg_begin();
-    auto pCpuCtxtObjParam = itParam++;
-    auto pMemCtxtObjParam = itParam;
-
-    // Insert a new basic block
-    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + ExecAddr.ToString(), pExecFunc);
-    m_Builder.SetInsertPoint(pBscBlk);
-
-    // This visitor will normalize id if needed
-    NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
-
-    // This visitor will replace id to variable
-    IdentifierToVariable Id2Var;
-
-    // This visitor will now emit code into the basic block using the LLVM builder
-    LlvmExpressionVisitor EmitLlvm(
-      this,
-      m_Hooks,
-      m_pCpuCtxt, m_pMemCtxt,
-      m_Vars,
-      m_Builder,
-      pCpuCtxtObjParam, pMemCtxtObjParam);
-
     bool DumpInsn = false;
     Expression::VSPType Exprs;
     Expression::LSPType JitExprs;
@@ -193,6 +179,12 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       Log::Write("emul_llvm") << "failed to disassemble code at " << ExecAddr << LogEnd;
       return false;
     }
+
+    // This visitor will normalize id if needed
+    NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
+
+    // This visitor will replace id to variable
+    IdentifierToVariable Id2Var;
 
     // Change the code to make it more JIT friendly
     for (auto spExpr : Exprs)
@@ -267,27 +259,44 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     if (/*DumpInsn && */m_InsnCb)
       JitExprs.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
+    // Create a new LLVM function
+    auto pExecFunc = m_JitHelper.CreateFunction(ExecAddr.ToString());
+
+    // Expose its parameters: CpuCtxt and MemCtxt
+    auto itParam = pExecFunc->arg_begin();
+    auto pCpuCtxtObjParam = itParam++;
+    auto pMemCtxtObjParam = itParam;
+
+    // Insert a new basic block
+    auto pBscBlk = llvm::BasicBlock::Create(llvm::getGlobalContext(), llvm::StringRef("entry_") + ExecAddr.ToString(), pExecFunc);
+    m_Builder.SetInsertPoint(pBscBlk);
+
+    // This visitor will now emit code into the basic block using the LLVM builder
+    LlvmExpressionVisitor EmitLlvm(
+      this,
+      m_Hooks,
+      m_pCpuCtxt, m_pMemCtxt,
+      m_Vars,
+      m_Builder,
+      pCpuCtxtObjParam, pMemCtxtObjParam);
+
     // Emit the code for each expression
     for (auto spExpr : JitExprs)
     {
-      Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
+      //Log::Write("emul_llvm") << "compile expression: " << spExpr->ToString() << LogEnd;
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
-        return false;
       }
     }
 
     m_Builder.CreateRetVoid();
-    pExecFunc->dump();
+    //pExecFunc->dump();
     pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
     if (pCode == nullptr)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
       if (Exprs.empty())
-        Log::Write("emul_llvm").Level(LogError) << "no semantic" << LogEnd;
-      for (auto spExpr : Exprs)
-        Log::Write("emul_llvm").Level(LogError) << "expr: " << spExpr->ToString() << LogEnd;
       return false;
     }
     m_FunctionCache[LinAddr] = pCode;
@@ -563,17 +572,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTernaryCondition(Te
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  // _Emit test and ref
-  State OldState = m_State;
-  m_State = Read;
-  auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
-  auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
-  auto pCondVal = _EmitComparison(spIfElseExpr->GetType());
-  m_State = OldState;
-
   auto pBbOrig = m_rBuilder.GetInsertBlock();
-  auto& rCtxt = llvm::getGlobalContext();
-  auto pFunc = pBbOrig->getParent();
+  auto& rCtxt  = llvm::getGlobalContext();
+  auto pFunc   = pBbOrig->getParent();
 
   auto pBbCond = llvm::BasicBlock::Create(rCtxt, "cond", pFunc);
   auto pBbThen = llvm::BasicBlock::Create(rCtxt, "then", pFunc);
@@ -582,9 +583,20 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
 
   m_rBuilder.CreateBr(pBbCond);
 
+  // _Emit test and ref
+  m_rBuilder.SetInsertPoint(pBbCond);
+
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
+  auto pCondVal = _EmitComparison(spIfElseExpr->GetType());
+  m_State = OldState;
+
   // Emit the then branch
-  auto spThenExpr = spIfElseExpr->GetThenExpression();
   m_rBuilder.SetInsertPoint(pBbThen);
+
+  auto spThenExpr = spIfElseExpr->GetThenExpression();
   OldState = m_State;
   m_State = Unknown;
   if (spThenExpr->Visit(this) == nullptr)
@@ -593,8 +605,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
   m_rBuilder.CreateBr(pBbMerg);
 
   // Emit the else branch
-  auto spElseExpr = spIfElseExpr->GetElseExpression();
   m_rBuilder.SetInsertPoint(pBbElse);
+
+  auto spElseExpr = spIfElseExpr->GetElseExpression();
   OldState = m_State;
   m_State = Unknown;
   if (spElseExpr != nullptr)
