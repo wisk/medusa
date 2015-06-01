@@ -73,37 +73,17 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
   return true;
 }
 
-static bool DisassembleInstruction(Document& rDoc, Architecture::SPType spArch, u8 Mode, Address const& rAddr)
-{
-  if (std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rAddr)) != nullptr)
-    return true;
-  Log::Write("exec").Level(LogDebug) << "not an instruction, try to disassemble it: " << rAddr << LogEnd;
-  TOffset CurOff;
-  if (!rDoc.ConvertAddressToFileOffset(rAddr, CurOff))
-  {
-    Log::Write("exec").Level(LogError) << "instruction at " << rAddr.ToString() << " is not contained in file" << LogEnd;
-    return false;
-  }
-  auto spInsn = std::make_shared<Instruction>();
-  if (!spArch->Disassemble(rDoc.GetBinaryStream(), CurOff, *spInsn, Mode))
-  {
-    Log::Write("exec").Level(LogError) << "unable to disassemble instruction at " << rAddr.ToString() << LogEnd;
-    return false;
-  }
-
-  if (!rDoc.SetCell(rAddr, spInsn, true))
-  {
-    Log::Write("exec").Level(LogError) << "unable to set a instruction at " << rAddr.ToString() << LogEnd;
-    return false;
-  }
-  return true;
-}
-
 void Execution::Execute(Address const& rAddr)
 {
   if (m_spEmul == nullptr)
   {
     Log::Write("core").Level(LogError) << "emulator is null for execution" << LogEnd;
+    return;
+  }
+
+  if (!m_pCpuCtxt->SetAddress(CpuContext::AddressExecution, rAddr))
+  {
+    Log::Write("core").Level(LogError) << "failed to set address " << rAddr << LogEnd;
     return;
   }
 

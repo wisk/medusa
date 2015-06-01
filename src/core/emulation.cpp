@@ -64,18 +64,19 @@ bool Emulator::Execute(Address const& rAddress)
   }
 
   Expression::VSPType Exprs;
-  _Disassemble(rAddress, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode) -> bool
+  _Disassemble(rAddress, [&](Address const& rInsnAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode) -> bool
   {
-    Exprs.push_back(Expr::MakeSys("dump_insn", rCurAddr));
+    auto CurAddr = rCurArch.CurrentAddress(rInsnAddr, rCurInsn);
+    Exprs.push_back(Expr::MakeSys("dump_insn", rInsnAddr));
 
     // Set the current IP/PC address
-    if (!rCurArch.EmitSetExecutionAddress(Exprs, rCurAddr, CurMode))
+    if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))
       return false;
 
     for (auto spExpr : rCurInsn.GetSemantic())
       Exprs.push_back(spExpr);
 
-    Exprs.push_back(Expr::MakeSys("check_exec_hook", rCurAddr));
+    Exprs.push_back(Expr::MakeSys("check_exec_hook", rInsnAddr));
 
     // Jump, Call, Return types finish the block
     if (rCurInsn.GetSubType() & (Instruction::JumpType | Instruction::CallType | Instruction::ReturnType))
@@ -194,12 +195,11 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
       return false;
     }
 
-    Address CurAddr = spArch->CurrentAddress(InsnAddr, *spCurInsn);
-    if (!Cb(CurAddr, *spCurInsn, *spArch, ArchMode))
+    if (!Cb(InsnAddr, *spCurInsn, *spArch, ArchMode))
       break;
 
     // Go to the next instruction
-    InsnAddr = CurAddr;
+    InsnAddr = spArch->CurrentAddress(InsnAddr, *spCurInsn);
   }
 
   return true;

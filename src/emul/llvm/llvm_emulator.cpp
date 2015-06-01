@@ -93,19 +93,11 @@ extern "C" EMUL_LLVM_EXPORT void JitCallInstructionHook(u8* pEmulObj)
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT void JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, u32 HookType)
+extern "C" EMUL_LLVM_EXPORT void JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset, u32 HookType)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
-
-  Address CurAddr;
-  if (!pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
-  {
-    Log::Write("emul_llvm").Level(LogError) << "unable to get execution address in handle hook" << LogEnd;
-    return;
-  }
-  CurAddr.SetBase(0x0); // HACK(KS)
-  pEmul->TestHook(CurAddr, HookType);
+  pEmul->TestHook(Address(Base, Offset), HookType);
 }
 
 static llvm::Function* s_pHandleHookFunc = nullptr;
@@ -136,19 +128,6 @@ bool LlvmEmulator::Execute(Address const& rAddress)
   if (!m_pCpuCtxt->Translate(ExecAddr, LinAddr))
     return false;
 
-  BinaryStream::SPType spBinStrm;
-  u32 Off;
-  u32 Flags;
-
-  if (!m_pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
-    return false;
-
-  if ((!Flags & MemoryArea::Execute))
-  {
-    Log::Write("emul_llvm").Level(LogError) << "memory at " << ExecAddr << " is not executable" << LogEnd;
-    return false;
-  }
-
   // Check if the code to be executed is already JIT'ed
   auto pCode = m_FunctionCache[LinAddr];
   if (pCode == nullptr)
@@ -158,10 +137,18 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     Expression::LSPType JitExprs;
 
     // Disassemble code and retrieve semantic
-    _Disassemble(ExecAddr, [&](Address const& rCurAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode)
+    _Disassemble(ExecAddr, [&](Address const& rInsnAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode)
     {
+      // Check if we have a hook before updating the current address
+      if (m_Hooks.find(rInsnAddr) != std::end(m_Hooks))
+      {
+        Exprs.push_back(Expr::MakeSys("jit_restore_ctxt", rInsnAddr));
+        Exprs.push_back(Expr::MakeSys("check_exec_hook", rInsnAddr));
+      }
+
       // Set the current IP/PC address
-      if (!rCurArch.EmitSetExecutionAddress(Exprs, rCurAddr, CurMode))
+      auto CurAddr = rCurArch.CurrentAddress(rInsnAddr, rCurInsn);
+      if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))
         return false;
 
       for (auto spExpr : rCurInsn.GetSemantic())
@@ -189,6 +176,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     // Change the code to make it more JIT friendly
     for (auto spExpr : Exprs)
     {
+
       // Don't bother to continue if a "stop" is asked
       if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
       {
@@ -203,8 +191,18 @@ bool LlvmEmulator::Execute(Address const& rAddress)
           DumpInsn = true;
           continue;
         }
-        if (rSysName == "check_exec_hook")
-          continue; // ignore hook for now...
+        if (rSysName == "jit_restore_ctxt")
+        {
+          for (auto Id : Id2Var.GetUsedId())
+          {
+            auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+            auto IdName = rCpuInfo.ConvertIdentifierToName(Id);
+            JitExprs.push_back(Expr::MakeAssign(
+              Expr::MakeId(Id, &rCpuInfo),
+              Expr::MakeVar(IdName, VariableExpression::Use)));
+          }
+          continue;
+        }
       }
 
       // Normalize Id (e.g. al → eax in 32-bit, al → rax in 64-bit)
@@ -222,7 +220,6 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
         return false;
       }
-
       JitExprs.push_back(spId2Var);
     }
 
@@ -475,9 +472,11 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
   // Initialize HandleHook function type
   {
     static std::vector<llvm::Type*> Params{
-      llvm::Type::getInt8PtrTy(rCtxt),  // pEmul
-      llvm::Type::getInt8PtrTy(rCtxt), // pCpuCtxt
-      llvm::Type::getInt32Ty(rCtxt),  // HookType
+      llvm::Type::getInt8PtrTy(rCtxt),   // pEmul
+      llvm::Type::getInt8PtrTy(rCtxt),  // pCpuCtxt
+      llvm::Type::getInt16Ty(rCtxt),   // Base
+      llvm::Type::getInt64Ty(rCtxt),  // Offset
+      llvm::Type::getInt32Ty(rCtxt), // HookType
     };
     static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
@@ -543,9 +542,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
   if (rSysName == "check_exec_hook")
   {
     Address CurAddr = spSysExpr->GetAddress();
-    m_rBuilder.CreateCall3(
+    m_rBuilder.CreateCall5(
       s_pHandleHookFunc,
       _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
+      _MakeInteger(IntType(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(IntType(64, spSysExpr->GetAddress().GetOffset())),
       _MakeInteger(IntType(32, Emulator::HookOnExecute)));
     return spSysExpr;
   }
