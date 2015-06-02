@@ -713,15 +713,15 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
       break;
 
     case OperationExpression::OpSwap:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::bswap, {}, { pVal });
+      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::bswap, { pVal->getType() }, { pVal });
       break;
 
     case OperationExpression::OpBsf:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz, {}, { pVal });
+      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz, { pVal->getType() }, { pVal });
       break;
 
     case OperationExpression::OpBsr:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::ctlz, {}, { pVal });
+      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::ctlz, { pVal->getType() }, { pVal });
       break;
   }
 
@@ -1204,7 +1204,7 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_CallIntrinsic(
   std::vector<llvm::Value*> const& rArgs) const
 {
   auto pModule   = m_rBuilder.GetInsertBlock()->getParent()->getParent();
-  auto pIntrFunc = llvm::Intrinsic::getDeclaration(pModule, IntrId);
+  auto pIntrFunc = llvm::Intrinsic::getDeclaration(pModule, IntrId, rTypes);
   auto pCallIntr = m_rBuilder.CreateCall(pIntrFunc, rArgs);
   return pCallIntr;
 }
