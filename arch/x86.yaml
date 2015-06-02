@@ -574,6 +574,8 @@ semantic:
   shld: &shld |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
+    alloc_var('sign_saved', 1);
+    sign_saved = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
     count = bit_cast(op2.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ((op0.val << count) | (op1.val >> (int(op0.bit, op0.bit) - count)));
@@ -582,15 +584,18 @@ semantic:
       call('sign_flag')
       call('zero_flag')
       call('parity_flag');
+    if __expr and count == int(op0.bit, 1):
+      of.id = sf.id ^ sign_saved;
     op0.val = res;
+    free_var('sign_saved');
     free_var('count');
     free_var('res');
 
   shrd: &shrd |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
-    alloc_var('sign_saved', sf.bit);
-    sign_saved = sf.id;
+    alloc_var('sign_saved', 1);
+    sign_saved = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
     count = bit_cast(op2.val, int(op0.bit, op0.bit));
     call('count_mask');
     res = ((op0.val >> count) | (op1.val << (int(op0.bit, op0.bit) - count)));
