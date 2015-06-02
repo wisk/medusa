@@ -187,7 +187,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u16 Disp16;
       rBinStrm.Read(Offset + 1, Disp16);
       OprdLen += sizeof(Disp16);
-      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(8, Disp16));
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeConst(16, Disp16));
       break;
     }
   default:
@@ -439,7 +439,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
   rOprdLen += sizeof(Sib);
 
   auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
-  auto spScale = Expr::MakeConst(32, aScale[Sib.Scale()]);
+  auto spScale = Expr::MakeConst(64, aScale[Sib.Scale()]);
 
   if (spReg == nullptr && spSecReg == nullptr && spDisp != nullptr)
     return spDisp;
@@ -480,7 +480,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     u32 Disp32;
     rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
     rOprdLen += sizeof(Disp32);
-    return Expr::MakeConst(32, Disp32);
+    return Expr::MakeConst(64, Disp32);
   }
 
   auto spReg = Expr::MakeId((rInsn.GetPrefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? RegRexB[ModRm.Rm()] : Reg[ModRm.Rm()], pCpuInfo);
