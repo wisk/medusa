@@ -299,7 +299,8 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     m_FunctionCache[LinAddr] = pCode;
   }
 
-  pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt));
+  if (!pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt)))
+    return false;
 
   Address NextAddr;
   if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr))
@@ -341,7 +342,7 @@ llvm::Function* LlvmEmulator::LlvmJitHelper::CreateFunction(std::string const& r
     std::vector<llvm::Type*> Params;
     Params.push_back(pBytePtrType);
     Params.push_back(pBytePtrType);
-    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(llvm::getGlobalContext()), Params, false);
+    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(llvm::getGlobalContext()), Params, false);
   }
 
   if (m_pCurMod == nullptr)
@@ -1073,13 +1074,13 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   auto AccBitSize = spMemExpr->GetAccessSizeInBit();
   auto pAccBitSizeVal = _MakeInteger(IntType(32, AccBitSize));
 
-
   llvm::Value* pPtrVal = nullptr;
   if (m_State != Read || spMemExpr->IsDereferencable())
   {
     auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
     pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
-    _EmitReturnIfNull(pPtrVal);
+    auto pFalseVal = _MakeInteger(IntType(1, 0));
+    _EmitReturnIfNull(pPtrVal, pFalseVal);
   }
 
   switch (m_State)
@@ -1319,7 +1320,7 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   return true;
 }
 
-void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal)
+void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal)
 {
   auto pBbOrig = m_rBuilder.GetInsertBlock();
   auto& rCtxt = llvm::getGlobalContext();
@@ -1334,7 +1335,7 @@ void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal
   m_rBuilder.CreateCondBr(pCmpPtr, pBbRet, pBbCont);
 
   m_rBuilder.SetInsertPoint(pBbRet);
-  m_rBuilder.CreateRetVoid();
+  m_rBuilder.CreateRet(pRetVal);
 
   m_rBuilder.SetInsertPoint(pBbCont);
 }

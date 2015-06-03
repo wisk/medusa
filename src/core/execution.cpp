@@ -63,6 +63,10 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
 
 bool Execution::SetEmulator(std::string const& rEmulatorName)
 {
+  if (m_spArch == nullptr)
+    return false;
+  if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
+    return false;
   auto pGetEmulator = ModuleManager::Instance().GetEmulator(rEmulatorName);
   if (pGetEmulator == nullptr)
     return false;

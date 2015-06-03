@@ -54,7 +54,7 @@ public:
   virtual bool Execute(Address const& rAddress);
 
 private:
-  typedef void (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
+  typedef bool (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
   llvm::IRBuilder<>             m_Builder;
 
@@ -134,7 +134,7 @@ private:
     llvm::Value* _EmitComparison(u8 CondOp);
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
-    void         _EmitReturnIfNull(llvm::Value* pChkVal);
+    void         _EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal);
 
     Emulator*                 m_pEmul;
     HookAddressHashMap const& m_rHooks;
