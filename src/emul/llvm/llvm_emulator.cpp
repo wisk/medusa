@@ -786,12 +786,32 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpRol:
-    // TODO(KS):
-    break;
+  {
+    auto pLeftType = LeftVal->getType();
+    auto LeftBits  = pLeftType->getScalarSizeInBits();
+    if (LeftBits == 0)
+      break;
+
+    auto pRol0   = m_rBuilder.CreateShl(LeftVal, RightVal, "rol_0");
+    auto pRolSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), RightVal, "rol_sub");
+    auto pRol1   = m_rBuilder.CreateLShr(LeftVal, pRolSub, "rol_1");
+    pBinOpVal    = m_rBuilder.CreateOr(pRol0, pRol1, "rol");
+  }
+  break;
 
   case OperationExpression::OpRor:
-    // TODO(KS):
-    break;
+  {
+    auto pLeftType = LeftVal->getType();
+    auto LeftBits  = pLeftType->getScalarSizeInBits();
+    if (LeftBits == 0)
+      break;
+
+    auto pRor0   = m_rBuilder.CreateLShr(LeftVal, RightVal, "ror_0");
+    auto pRorSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), RightVal, "rol_sub");
+    auto pRor1   = m_rBuilder.CreateShl(LeftVal, pRorSub, "ror_1");
+    pBinOpVal    = m_rBuilder.CreateOr(pRor0, pRor1, "ror");
+  }
+  break;
 
   case OperationExpression::OpAdd:
     pBinOpVal = m_rBuilder.CreateAdd(LeftVal, RightVal, "add");
