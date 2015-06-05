@@ -687,9 +687,9 @@ semantic:
     call('count_mask');
     res = rol(op0.val, count);
     if __expr and count != int(op0.bit, 0):
-      cf.id = bit_cast(res, int1(1));
+      cf.id = bit_cast(res, int_type1);
     if __expr and count == int(op0.bit, 1):
-      of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
+      of.id = bit_cast(bit_cast(cf.id, int_type(op0.bit)) ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int_type1);
     op0.val = res;
     free_var('count');
     free_var('res');
@@ -697,12 +697,13 @@ semantic:
   ror: &ror |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
-    count = bit_cast(op1.val, int(op0.bit, op0.bit));
+    count = bit_cast(op1.val, int_type(op0.bit));
     call('count_mask');
     res = ror(op0.val, count);
     if __expr and count != int(op0.bit, 0):
-      cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
-    if __expr and count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
+      cf.id = bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type1);
+    if __expr and count == int(op0.bit, 1):
+      of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int_type1);
     op0.val = res;
     free_var('count');
     free_var('res');
