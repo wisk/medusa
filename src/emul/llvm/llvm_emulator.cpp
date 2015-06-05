@@ -718,11 +718,15 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
       break;
 
     case OperationExpression::OpBsf:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz, { pVal->getType() }, { pVal });
+      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz,
+        { pVal->getType(), llvm::Type::getInt1Ty(llvm::getGlobalContext()) },
+        { pVal, _MakeInteger(IntType(1, 1)) });
       break;
 
     case OperationExpression::OpBsr:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::ctlz, { pVal->getType() }, { pVal });
+      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::ctlz,
+        { pVal->getType(), llvm::Type::getInt1Ty(llvm::getGlobalContext()) },
+        { pVal, _MakeInteger(IntType(1, 1)) });
       break;
   }
 
