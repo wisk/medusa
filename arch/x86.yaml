@@ -710,41 +710,37 @@ semantic:
   rcl: &rcl |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
-    count = bit_cast(op1.val, int(op0.bit, op0.bit));
+    count = bit_cast(op1.val, int_type(op0.bit));
     call('count_mask');
     alloc_var('rol_val', concat(op0.bit, ignore(' + 1')));
-    alloc_var('rol_sz', 16);
-    rol_sz = int16(concat(op0.bit, ignore(' + 1')));
-    rol_val = bit_cast(op0.val, rol_sz);
-    rol_val |= (bit_cast(cf.id, rol_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
-    rol_val = rol(rol_val, count);
-    res = bit_cast(rol_val, int16(op0.bit));
+    rol_val = bit_cast(op0.val, int_type(concat(op0.bit, ignore(' + 1'))));
+    rol_val |= (bit_cast(cf.id, int_type(concat(op0.bit, ignore(' + 1')))) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
+    rol_val = rol(rol_val, bit_cast(count, int_type(concat(op0.bit, ignore(' + 1')))));
+    res = bit_cast(rol_val, int_type(op0.bit));
     if __expr and count != int(op0.bit, 0):
-      cf.id = bit_cast(rol_val >> (int(op0.bit, op0.bit)), int1(1));
-    if __expr and count == int(op0.bit, 1): of.id = bit_cast(cf.id ^ (res >> (int(op0.bit,op0.bit) - int(op0.bit, 1))), int1(1));
+      cf.id = bit_cast(rol_val >> int(concat(op0.bit, ignore(' + 1')), op0.bit), int_type1);
+    if __expr and count == int(op0.bit, 1):
+      of.id = bit_cast(cf.id ^ bit_cast(res >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type1), int_type1);
     op0.val = res;
-    free_var('rol_sz');
     free_var('rol_val');
     free_var('count');
     free_var('res');
 
-  rcr: &rcr | 
+  rcr: &rcr |
     alloc_var('res', op0.bit);
     alloc_var('count', op0.bit);
     count = bit_cast(op1.val, int(op0.bit, op0.bit));
     call('count_mask');
     alloc_var('ror_val', concat(op0.bit, ignore(' + 1')));
-    alloc_var('ror_sz', 16);
-    ror_sz = int16(concat(op0.bit, ignore(' + 1')));
-    ror_val = bit_cast(op0.val, ror_sz);
-    ror_val |= (bit_cast(cf.id, ror_sz) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
-    ror_val = ror(ror_val, count);
-    res = bit_cast(ror_val, int16(op0.bit));
+    ror_val = bit_cast(op0.val, int_type(concat(op0.bit, ignore(' + 1'))));
+    ror_val |= (bit_cast(cf.id, int_type(concat(op0.bit, ignore(' + 1')))) << int(concat(op0.bit, ignore(' + 1')), op0.bit));
+    ror_val = ror(ror_val, bit_cast(count, int_type(concat(op0.bit, ignore(' + 1')))));
+    res = bit_cast(ror_val, int_type(op0.bit));
     if __expr and count != int(op0.bit, 0):
-      cf.id = bit_cast(ror_val >> (int(op0.bit, op0.bit)), int1(1));
-    if __expr and count == int(op0.bit, 1): of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int1(1));
+      cf.id = bit_cast(ror_val >> int(concat(op0.bit, ignore(' + 1')), op0.bit), int_type1);
+    if __expr and count == int(op0.bit, 1):
+      of.id = bit_cast((res >> (int(op0.bit, op0.bit) - int(op0.bit, 1))) ^ (res >> (int(op0.bit, op0.bit) - int(op0.bit, 2))), int_type1);
     op0.val = res;
-    free_var('ror_sz');
     free_var('ror_val');
     free_var('count');
     free_var('res');
