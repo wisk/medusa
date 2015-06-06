@@ -415,29 +415,29 @@ semantic:
   imul1: &imul1 |
     alloc_var('ext_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8): 
-      mul_res = bit_cast(sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
+    if __code and is_byte_operation:
+      mul_res = sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16)
       ax.id = bit_cast(mul_res, int_type16)
-      sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 7), int_type1)
-      ext_res = sign_extend(bit_cast(mul_res, int_type8), int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
-      mul_res = bit_cast(sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
+      sf.id = bit_cast(mul_res >> int(16, 7), int_type1)
+      ext_res = bit_cast(mul_res, int_type8);
+    if __code and is_word_operation:
+      mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
       ax.id = bit_cast(mul_res, int_type16)
-      dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
-      sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 15), int_type1)
-      ext_res = sign_extend(bit_cast(mul_res, int_type16), int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
-      mul_res = bit_cast(sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
+      dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
+      sf.id = bit_cast(mul_res >> int(32, 15), int_type1)
+      ext_res = bit_cast(mul_res, int_type16);
+    if __code and is_dword_operation:
+      mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
       eax.id = bit_cast(mul_res, int_type32)
-      edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
-      sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 31), int_type1)
-      ext_res = sign_extend(bit_cast(mul_res, int_type32), int_type(op0.bit));
-    if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
-      mul_res = bit_cast(sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
+      edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
+      sf.id = bit_cast(mul_res >> int(64, 31), int_type1)
+      ext_res = bit_cast(mul_res, int_type32);
+    if __code and is_qword_operation:
+      mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
       rax.id = bit_cast(mul_res, int_type64)
-      rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
-      sf.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 63), int_type1)
-      ext_res = sign_extend(bit_cast(mul_res, int_type64), int_type(op0.bit));
+      rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
+      sf.id = bit_cast(mul_res >> int(128, 63), int_type1)
+      ext_res = bit_cast(mul_res, int_type64);
     if __expr and ext_res == bit_cast(mul_res, int_type(concat(op0.bit, ignore(' * 2')))):
       of.id = int1(0)
       cf.id = int1(0)

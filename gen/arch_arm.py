@@ -455,7 +455,7 @@ class ArmArchConvertion(ArchConvertion):
                                 (3, self.parent._GenerateCondition('if', '%s == 0' % decode_imm, 'ShiftType = OperationExpression::OpRor;\nShiftVal = 1;\n') +
                                     self.parent._GenerateCondition('else', None, 'ShiftType = OperationExpression::OpRor;\nShiftVal = %s;\n' % decode_imm), True),
                                 ],
-                                'return nullptr;\n'
+                                'return false;\n'
                                 ))
                             op_expr = 'Expr::MakeBinOp(ShiftType,\n%s,\n%s)' % (
                                 Indent(decode_reg),
