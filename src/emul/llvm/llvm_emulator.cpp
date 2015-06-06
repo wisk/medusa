@@ -287,7 +287,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       }
     }
 
-    m_Builder.CreateRetVoid();
+    m_Builder.CreateRet(llvm::ConstantInt::getTrue(llvm::Type::getInt1Ty(llvm::getGlobalContext())));
     //pExecFunc->dump();
     pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
     if (pCode == nullptr)
