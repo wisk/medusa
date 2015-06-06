@@ -9,7 +9,7 @@ function:
     nf.id = bit_cast(res.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int16(1));
 
   zero_flag: &zero_flag |
-    if res.val == int(op0.bit, 0):
+    if __expr and res.val == int(op0.bit, 0):
       zf.id = int1(1)
     else:
       zf.id = int1(0);
@@ -38,19 +38,19 @@ semantic:
     op0.val = op1.val;
 
   ldrb: &ldrb |
-    op0.val = (op0.val & int32(0xffffff00)) | bit_cast(op1.val, int16(8))
+    op0.val = (op0.val & int32(0xffffff00)) | bit_cast(op1.val, int16(8));
 
   ldrh: &ldrh |
-    op0.val = (op0.val & int32(0xffff0000)) | bit_cast(op1.val, int16(16))
+    op0.val = (op0.val & int32(0xffff0000)) | bit_cast(op1.val, int16(16));
 
   ldr: &ldr |
     op0.val = op1.val;
-    
+
   strb: &strb |
-    op1.val = (op1.val & int32(0xffffff00)) | bit_cast(op0.val, int16(8))
+    op1.val = (op1.val & int32(0xffffff00)) | bit_cast(op0.val, int16(8));
 
   strh: &strh |
-    op1.val = (op1.val & int32(0xffff0000)) | bit_cast(op0.val, int16(16))
+    op1.val = (op1.val & int32(0xffff0000)) | bit_cast(op0.val, int16(16));
 
   str: &str |
     op1.val = op0.val
@@ -62,7 +62,7 @@ semantic:
     op0.val = (op0.val & int32(0x0000ffff)) | (op1.val << int32(16));
 
   movw: &movw |
-    op0.val = (op0.val & int32(0xffff0000)) | (op1.val & int32(0x0000ffff))
+    op0.val = (op0.val & int32(0xffff0000)) | (op1.val & int32(0x0000ffff));
 
 ## Control flow operations
 
@@ -85,13 +85,13 @@ semantic:
 ## Flags manipulation
 
   cmn: &cmn |
-    alloc_var('res', op0.bit)
-    res = op0.val + op1.val
-    call('negate_flag')
-    call('zero_flag')
-    call('carry_flag_add')
-    call('overflow_flag_add')
-    free_var('res')
+    alloc_var('res', op0.bit);
+    res = op0.val + op1.val;
+    call('negate_flag');
+    call('zero_flag');
+    call('carry_flag_add');
+    call('overflow_flag_add');
+    free_var('res');
 
 encoding:
   - cond: &cond [ 'c','c','c','c' ]
