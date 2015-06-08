@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Jun  7 02:04:31 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jun  8 22:51:04 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -43320,19 +43320,19 @@ free_var('res');
  * operand: ['Eb']
  * opcode: 06
  * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+if __code and is_byte_operation:
   dividend = bit_cast(ax.id, int_type16)
   al.id = bit_cast(dividend / op0.val, int_type8)
   ah.id = bit_cast(dividend % op0.val, int_type8);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
   ax.id = bit_cast(dividend / op0.val, int_type16)
   dx.id = bit_cast(dividend % op0.val, int_type16);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
   eax.id = bit_cast(dividend / op0.val, int_type32)
   edx.id = bit_cast(dividend % op0.val, int_type32);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
   rax.id = bit_cast(dividend / op0.val, int_type64)
   rdx.id = bit_cast(dividend % op0.val, int_type64);
@@ -43345,19 +43345,19 @@ free_var('dividend');
  * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
 alloc_var('extended', concat(op0.bit, ignore(' * 2')));
 extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+if __code and is_byte_operation:
   dividend = sign_extend(ax.id, int_type16)
   al.id = bit_cast(sdiv(dividend, extended), int_type8)
   ah.id = bit_cast(smod(dividend, extended), int_type8);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   dividend = sign_extend(dx.id, int_type32) << int_type16 | sign_extend(ax.id, int_type32)
   ax.id = bit_cast(sdiv(dividend, extended), int_type16)
   dx.id = bit_cast(smod(dividend, extended), int_type16);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   dividend = sign_extend(edx.id, int_type64) << int_type32 | sign_extend(eax.id, int_type64)
   eax.id = bit_cast(sdiv(dividend, extended), int_type32)
   edx.id = bit_cast(smod(dividend, extended), int_type32);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   dividend = sign_extend(rdx.id, int_type128) << int_type64 | sign_extend(rax.id, int_type128)
   rax.id = bit_cast(sdiv(dividend, extended), int_type64)
   rdx.id = bit_cast(smod(dividend, extended), int_type64);
@@ -44191,42 +44191,37 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+        /* semantic: if __code and is_byte_operation:
           dividend = bit_cast(ax.id, int_type16)
           al.id = bit_cast(dividend / op0.val, int_type8)
           ah.id = bit_cast(dividend % op0.val, int_type8) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(8, 8)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))));
+        }
+        /* semantic: if __code and is_word_operation:
           dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
           ax.id = bit_cast(dividend / op0.val, int_type16)
           dx.id = bit_cast(dividend % op0.val, int_type16) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44234,31 +44229,28 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(32, 32)),
                 Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(16, 16)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))));
+        }
+        /* semantic: if __code and is_dword_operation:
           dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
           eax.id = bit_cast(dividend / op0.val, int_type32)
           edx.id = bit_cast(dividend % op0.val, int_type32) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44266,31 +44258,28 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(64, 64)),
                 Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(32, 32)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))));
+        }
+        /* semantic: if __code and is_qword_operation:
           dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
           rax.id = bit_cast(dividend / op0.val, int_type64)
           rdx.id = bit_cast(dividend % op0.val, int_type64) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44298,21 +44287,20 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(128, 128)),
                 Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(64, 64)))})
-        , nullptr)
-        );
+              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))));
+        }
         /* semantic: free_var('dividend') */
         AllExpr.push_back(Expr::MakeVar("dividend", VariableExpression::Free));
         rInsn.SetSemantic(AllExpr);
@@ -44335,36 +44323,31 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("extended", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+        /* semantic: if __code and is_byte_operation:
           dividend = sign_extend(ax.id, int_type16)
           al.id = bit_cast(sdiv(dividend, extended), int_type8)
           ah.id = bit_cast(smod(dividend, extended), int_type8) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))));
+        }
+        /* semantic: if __code and is_word_operation:
           dividend = sign_extend(dx.id, int_type32) << int_type16 | sign_extend(ax.id, int_type32)
           ax.id = bit_cast(sdiv(dividend, extended), int_type16)
           dx.id = bit_cast(smod(dividend, extended), int_type16) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44372,25 +44355,22 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(32, 32)),
                 Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))));
+        }
+        /* semantic: if __code and is_dword_operation:
           dividend = sign_extend(edx.id, int_type64) << int_type32 | sign_extend(eax.id, int_type64)
           eax.id = bit_cast(sdiv(dividend, extended), int_type32)
           edx.id = bit_cast(smod(dividend, extended), int_type32) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44398,25 +44378,22 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(64, 64)),
                 Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))));
+        }
+        /* semantic: if __code and is_qword_operation:
           dividend = sign_extend(rdx.id, int_type128) << int_type64 | sign_extend(rax.id, int_type128)
           rax.id = bit_cast(sdiv(dividend, extended), int_type64)
           rdx.id = bit_cast(smod(dividend, extended), int_type64) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -44424,15 +44401,14 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(128, 128)),
                 Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64)))})
-        , nullptr)
-        );
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))));
+        }
         /* semantic: free_var('extended') */
         AllExpr.push_back(Expr::MakeVar("extended", VariableExpression::Free));
         /* semantic: free_var('dividend') */
@@ -44579,19 +44555,19 @@ free_var('res');
  * operand: ['Ev']
  * opcode: 06
  * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+if __code and is_byte_operation:
   dividend = bit_cast(ax.id, int_type16)
   al.id = bit_cast(dividend / op0.val, int_type8)
   ah.id = bit_cast(dividend % op0.val, int_type8);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
   ax.id = bit_cast(dividend / op0.val, int_type16)
   dx.id = bit_cast(dividend % op0.val, int_type16);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
   eax.id = bit_cast(dividend / op0.val, int_type32)
   edx.id = bit_cast(dividend % op0.val, int_type32);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
   rax.id = bit_cast(dividend / op0.val, int_type64)
   rdx.id = bit_cast(dividend % op0.val, int_type64);
@@ -44604,19 +44580,19 @@ free_var('dividend');
  * semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
 alloc_var('extended', concat(op0.bit, ignore(' * 2')));
 extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
-if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+if __code and is_byte_operation:
   dividend = sign_extend(ax.id, int_type16)
   al.id = bit_cast(sdiv(dividend, extended), int_type8)
   ah.id = bit_cast(smod(dividend, extended), int_type8);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+if __code and is_word_operation:
   dividend = sign_extend(dx.id, int_type32) << int_type16 | sign_extend(ax.id, int_type32)
   ax.id = bit_cast(sdiv(dividend, extended), int_type16)
   dx.id = bit_cast(smod(dividend, extended), int_type16);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+if __code and is_dword_operation:
   dividend = sign_extend(edx.id, int_type64) << int_type32 | sign_extend(eax.id, int_type64)
   eax.id = bit_cast(sdiv(dividend, extended), int_type32)
   edx.id = bit_cast(smod(dividend, extended), int_type32);
-if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+if __code and is_qword_operation:
   dividend = sign_extend(rdx.id, int_type128) << int_type64 | sign_extend(rax.id, int_type128)
   rax.id = bit_cast(sdiv(dividend, extended), int_type64)
   rdx.id = bit_cast(smod(dividend, extended), int_type64);
@@ -45450,42 +45426,37 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         Expression::LSPType AllExpr;
         /* semantic: alloc_var('dividend', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("dividend", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+        /* semantic: if __code and is_byte_operation:
           dividend = bit_cast(ax.id, int_type16)
           al.id = bit_cast(dividend / op0.val, int_type8)
           ah.id = bit_cast(dividend % op0.val, int_type8) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(8, 8)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+              rInsn.GetOperand(0)), Expr::MakeConst(8, 8))));
+        }
+        /* semantic: if __code and is_word_operation:
           dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
           ax.id = bit_cast(dividend / op0.val, int_type16)
           dx.id = bit_cast(dividend % op0.val, int_type16) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45493,31 +45464,28 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(32, 32)),
                 Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(16, 16)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+              rInsn.GetOperand(0)), Expr::MakeConst(16, 16))));
+        }
+        /* semantic: if __code and is_dword_operation:
           dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
           eax.id = bit_cast(dividend / op0.val, int_type32)
           edx.id = bit_cast(dividend % op0.val, int_type32) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45525,31 +45493,28 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(64, 64)),
                 Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(32, 32)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+              rInsn.GetOperand(0)), Expr::MakeConst(32, 32))));
+        }
+        /* semantic: if __code and is_qword_operation:
           dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
           rax.id = bit_cast(dividend / op0.val, int_type64)
           rdx.id = bit_cast(dividend % op0.val, int_type64) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45557,21 +45522,20 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(128, 128)),
                 Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUDiv,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpUMod,
               Expr::MakeVar("dividend", VariableExpression::Use),
-              rInsn.GetOperand(0)), Expr::MakeConst(64, 64)))})
-        , nullptr)
-        );
+              rInsn.GetOperand(0)), Expr::MakeConst(64, 64))));
+        }
         /* semantic: free_var('dividend') */
         AllExpr.push_back(Expr::MakeVar("dividend", VariableExpression::Free));
         rInsn.SetSemantic(AllExpr);
@@ -45594,36 +45558,31 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("extended", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpSext, rInsn.GetOperand(0), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize() * 2, rInsn.GetOperand(0)->GetBitSize() * 2))));
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit,  8):
+        /* semantic: if __code and is_byte_operation:
           dividend = sign_extend(ax.id, int_type16)
           al.id = bit_cast(sdiv(dividend, extended), int_type8)
           ah.id = bit_cast(smod(dividend, extended), int_type8) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x8),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 8)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
-            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Al, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ah, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 16):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(8, 8))));
+        }
+        /* semantic: if __code and is_word_operation:
           dividend = sign_extend(dx.id, int_type32) << int_type16 | sign_extend(ax.id, int_type32)
           ax.id = bit_cast(sdiv(dividend, extended), int_type16)
           dx.id = bit_cast(smod(dividend, extended), int_type16) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x10),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 16)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45631,25 +45590,22 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Dx, &m_CpuInfo), Expr::MakeConst(32, 32)),
                 Expr::MakeConst(16, 16)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Ax, &m_CpuInfo), Expr::MakeConst(32, 32)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Ax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Dx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 32):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(16, 16))));
+        }
+        /* semantic: if __code and is_dword_operation:
           dividend = sign_extend(edx.id, int_type64) << int_type32 | sign_extend(eax.id, int_type64)
           eax.id = bit_cast(sdiv(dividend, extended), int_type32)
           edx.id = bit_cast(smod(dividend, extended), int_type32) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x20),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45657,25 +45613,22 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Edx, &m_CpuInfo), Expr::MakeConst(64, 64)),
                 Expr::MakeConst(32, 32)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Eax, &m_CpuInfo), Expr::MakeConst(64, 64)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Eax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Edx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32)))})
-        , nullptr)
-        );
-        /* semantic: if __expr and int(op0.bit, op0.bit) == int(op0.bit, 64):
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(32, 32))));
+        }
+        /* semantic: if __code and is_qword_operation:
           dividend = sign_extend(rdx.id, int_type128) << int_type64 | sign_extend(rax.id, int_type128)
           rax.id = bit_cast(sdiv(dividend, extended), int_type64)
           rdx.id = bit_cast(smod(dividend, extended), int_type64) */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40),
-          Expr::MakeBind({
-          Expr::MakeAssign(
+        if (rInsn.GetOperand(0)->GetBitSize() == 64)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeVar("dividend", VariableExpression::Use),
             Expr::MakeBinOp(
               OperationExpression::OpOr,
@@ -45683,15 +45636,14 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpLls,
                 Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo), Expr::MakeConst(128, 128)),
                 Expr::MakeConst(64, 64)),
-              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))),
-          Expr::MakeAssign(
+              Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeId(X86_Reg_Rax, &m_CpuInfo), Expr::MakeConst(128, 128)))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rax, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))),
-          Expr::MakeAssign(
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSDiv, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))));
+          AllExpr.push_back(Expr::MakeAssign(
             Expr::MakeId(X86_Reg_Rdx, &m_CpuInfo),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64)))})
-        , nullptr)
-        );
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(OperationExpression::OpSMod, Expr::MakeVar("dividend", VariableExpression::Use), Expr::MakeVar("extended", VariableExpression::Use)), Expr::MakeConst(64, 64))));
+        }
         /* semantic: free_var('extended') */
         AllExpr.push_back(Expr::MakeVar("extended", VariableExpression::Free));
         /* semantic: free_var('dividend') */
