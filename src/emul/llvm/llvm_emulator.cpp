@@ -736,15 +736,21 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
 
     case OperationExpression::OpBsf:
       pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz,
-        { pVal->getType(), llvm::Type::getInt1Ty(llvm::getGlobalContext()) },
+        { pVal->getType() },
         { pVal, _MakeInteger(IntType(1, 1)) });
       break;
 
     case OperationExpression::OpBsr:
-      pUnOpVal = _CallIntrinsic(llvm::Intrinsic::ctlz,
-        { pVal->getType(), llvm::Type::getInt1Ty(llvm::getGlobalContext()) },
+    {
+      auto pCtlz = _CallIntrinsic(llvm::Intrinsic::ctlz,
+        { pVal->getType() },
         { pVal, _MakeInteger(IntType(1, 1)) });
-      break;
+      // NOTE(wisk): LLVM operation ctlz gives the result from the beginning (in x86 it emits bsr op0, op1 ; xor op0, op1.bitsize - 1)
+      // we have to reverse the last xor to avoid invalid result
+      auto ValBitSize = pVal->getType()->getScalarSizeInBits();
+      pUnOpVal = m_rBuilder.CreateXor(pCtlz, _MakeInteger(IntType(ValBitSize, ValBitSize - 1)));
+    }
+    break;
   }
 
   if (pUnOpVal == nullptr)
