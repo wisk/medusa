@@ -67,7 +67,7 @@ bool Emulator::Execute(Address const& rAddress)
   _Disassemble(rAddress, [&](Address const& rInsnAddr, Instruction& rCurInsn, Architecture& rCurArch, u8 CurMode) -> bool
   {
     auto CurAddr = rCurArch.CurrentAddress(rInsnAddr, rCurInsn);
-    Exprs.push_back(Expr::MakeSys("dump_insn", rInsnAddr));
+    Exprs.push_back(Expr::MakeSys("call_insn_cb", rInsnAddr));
 
     // Set the current IP/PC address
     if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))

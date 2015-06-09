@@ -132,7 +132,6 @@ bool LlvmEmulator::Execute(Address const& rAddress)
   auto pCode = m_FunctionCache[LinAddr];
   if (pCode == nullptr)
   {
-    bool DumpInsn = false;
     Expression::VSPType Exprs;
     Expression::LSPType JitExprs;
 
@@ -146,13 +145,31 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         Exprs.push_back(Expr::MakeSys("check_exec_hook", rInsnAddr));
       }
 
+      if (m_InsnCb)
+      {
+        Exprs.push_back(Expr::MakeSys("call_insn_cb", rInsnAddr));
+      }
+
       // Set the current IP/PC address
       auto CurAddr = rCurArch.CurrentAddress(rInsnAddr, rCurInsn);
       if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))
         return false;
 
       for (auto spExpr : rCurInsn.GetSemantic())
+      {
+        if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
+        {
+          auto const& rSysName = spSysExpr->GetName();
+          // Don't bother to continue if a "stop" is asked
+          if (rSysName == "stop")
+          {
+            Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+            return false;
+          }
+        }
+
         Exprs.push_back(spExpr);
+      }
 
       // Jump, Call, Return types finish the block
       if (rCurInsn.GetSubType() & (Instruction::JumpType | Instruction::CallType | Instruction::ReturnType))
@@ -167,94 +184,94 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       return false;
     }
 
-    // This visitor will normalize id if needed
-    NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
-
-    // This visitor will replace id to variable
-    IdentifierToVariable Id2Var;
-
-    // Change the code to make it more JIT friendly
-    for (auto spExpr : Exprs)
+    // Instruction callback must be called. To do so, we have to disable JIT optimization
+    if (m_InsnCb)
     {
+      Log::Write("emul_llvm").Level(LogDebug) << "instruction hook detected, disable optimization" << LogEnd;
 
-      // Don't bother to continue if a "stop" is asked
-      if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
+      for (auto spExpr : Exprs)
+        JitExprs.push_back(spExpr);
+    }
+
+    // ...if not, we can freely make expressions more JIT friendly
+    else
+    {
+      Log::Write("emul_llvm").Level(LogDebug) << "no instruction hook detected, enable optimization" << LogEnd;
+
+      // This visitor will normalize id if needed
+      NormalizeIdentifier NrmId(m_pCpuCtxt->GetCpuInformation(), m_pCpuCtxt->GetMode());
+
+      // This visitor will replace id to variable
+      IdentifierToVariable Id2Var;
+
+      // Change the code to make it more JIT friendly
+      for (auto spExpr : Exprs)
       {
-        auto const& rSysName = spSysExpr->GetName();
-        if (rSysName == "stop")
+        if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
         {
-          Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+          auto const& rSysName = spSysExpr->GetName();
+          // jit_restore_ctxt forces id in variable to be write back in context
+          if (rSysName == "jit_restore_ctxt")
+          {
+            for (auto Id : Id2Var.GetUsedId())
+            {
+              auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+              auto IdName = rCpuInfo.ConvertIdentifierToName(Id);
+              JitExprs.push_back(Expr::MakeAssign(
+                Expr::MakeId(Id, &rCpuInfo),
+                Expr::MakeVar(IdName, VariableExpression::Use)));
+            }
+            continue;
+          }
+        }
+
+        // Normalize Id (e.g. al → eax in 32-bit, al → rax in 64-bit)
+        auto spNrmExpr = spExpr->Visit(&NrmId);
+        if (spNrmExpr == nullptr)
+        {
+          Log::Write("emul_llvm") << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
           return false;
         }
-        if (rSysName == "dump_insn")
+
+        // Id to var
+        auto spId2Var = spNrmExpr->Visit(&Id2Var);
+        if (spId2Var == nullptr)
         {
-          DumpInsn = true;
-          continue;
+          Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
+          return false;
         }
-        if (rSysName == "jit_restore_ctxt")
+        JitExprs.push_back(spId2Var);
+      }
+
+      // For each used id, we must allocate and free a variable
+      auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+      for (auto Id : Id2Var.GetUsedId())
+      {
+        auto pIdName = rCpuInfo.ConvertIdentifierToName(Id);
+        auto IdBitSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
+        if (pIdName == nullptr || IdBitSize == 0)
         {
-          for (auto Id : Id2Var.GetUsedId())
-          {
-            auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
-            auto IdName = rCpuInfo.ConvertIdentifierToName(Id);
-            JitExprs.push_back(Expr::MakeAssign(
-              Expr::MakeId(Id, &rCpuInfo),
-              Expr::MakeVar(IdName, VariableExpression::Use)));
-          }
-          continue;
+          Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
+          return false;
         }
-      }
 
-      // Normalize Id (e.g. al → eax in 32-bit, al → rax in 64-bit)
-      auto spNrmExpr = spExpr->Visit(&NrmId);
-      if (spNrmExpr == nullptr)
-      {
-        Log::Write("emul_llvm") << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
-        return false;
-      }
+        // Copy id value to register (2)
+        JitExprs.push_front(Expr::MakeAssign(
+          Expr::MakeVar(pIdName, VariableExpression::Use),
+          Expr::MakeId(Id, &rCpuInfo)));
 
-      // Id to var
-      auto spId2Var = spNrmExpr->Visit(&Id2Var);
-      if (spId2Var == nullptr)
-      {
-        Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
-        return false;
+        // Allocate variable (1)
+        JitExprs.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
+
+        // Copy variable to id (3)
+        JitExprs.push_back(Expr::MakeAssign(
+          Expr::MakeId(Id, &rCpuInfo),
+          Expr::MakeVar(pIdName, VariableExpression::Use)));
+
+        // Free variable (4)
+        JitExprs.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
       }
-      JitExprs.push_back(spId2Var);
     }
-
-    // For each used id, we must allocate and free a variable
-    auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
-    for (auto Id : Id2Var.GetUsedId())
-    {
-      auto pIdName = rCpuInfo.ConvertIdentifierToName(Id);
-      auto IdBitSize = rCpuInfo.GetSizeOfRegisterInBit(Id);
-      if (pIdName == nullptr || IdBitSize == 0)
-      {
-        Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
-        return false;
-      }
-
-      // Copy id value to register (2)
-      JitExprs.push_front(Expr::MakeAssign(
-        Expr::MakeVar(pIdName, VariableExpression::Use),
-        Expr::MakeId(Id, &rCpuInfo)));
-
-      // Allocate variable (1)
-      JitExprs.push_front(Expr::MakeVar(pIdName, VariableExpression::Alloc, IdBitSize));
-
-      // Copy variable to id (3)
-      JitExprs.push_back(Expr::MakeAssign(
-        Expr::MakeId(Id, &rCpuInfo),
-        Expr::MakeVar(pIdName, VariableExpression::Use)));
-
-      // Free variable (4)
-      JitExprs.push_back(Expr::MakeVar(pIdName, VariableExpression::Free));
-    }
-
-    // Dump instruction (actually it's more a kind of basic block) if required
-    if (/*DumpInsn && */m_InsnCb)
-      JitExprs.push_back(Expr::MakeSys("dump_insn", ExecAddr));
 
     // Create a new LLVM function
     auto pExecFunc = m_JitHelper.CreateFunction(ExecAddr.ToString());
@@ -284,6 +301,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
+        return false;
       }
     }
 
@@ -293,7 +311,6 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     if (pCode == nullptr)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
-      if (Exprs.empty())
       return false;
     }
     m_FunctionCache[LinAddr] = pCode;
@@ -535,7 +552,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
 {
   auto const& rSysName = spSysExpr->GetName();
 
-  if (rSysName == "dump_insn")
+  if (rSysName == "call_insn_cb")
   {
     m_rBuilder.CreateCall(s_pCallInstructionHookFunc, _MakePointer(8, m_pEmul));
     return spSysExpr;

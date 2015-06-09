@@ -20,7 +20,7 @@ bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
   {
     if (auto spSys = expr_cast<SystemExpression>(spExpr))
     {
-      if (spSys->GetName() == "dump_insn")
+      if (spSys->GetName() == "call_insn_cb")
       {
         if (m_InsnCb)
           m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
