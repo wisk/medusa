@@ -470,10 +470,10 @@ semantic:
     alloc_var('res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
     alloc_var('extended', concat(op0.bit, ignore(' * 2')));
-    mul_res = sign_extend(op1.val, int(op0.bit, concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
-    res = bit_cast(mul_res, int(op0.bit, op0.bit));
+    mul_res = sign_extend(op1.val, int_type(concat(op0.bit, ignore(' * 2')))) * sign_extend(op2.val, int_type(concat(op0.bit, ignore(' * 2'))));
+    res = bit_cast(mul_res, int_type(op0.bit));
     call('sign_flag');
-    extended = sign_extend(res, int(op0.bit, concat(op0.bit, ignore(' * 2'))));
+    extended = sign_extend(res, int_type(concat(op0.bit, ignore(' * 2'))));
     if __expr and extended == mul_res:
       of.id = int1(0)
       cf.id = int1(0)
@@ -489,24 +489,23 @@ semantic:
     alloc_var('upper_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
     if __code and is_byte_operation: 
-      mul_res = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type(concat(op0.bit, ignore(' * 2'))))
-      ax.id = bit_cast(mul_res, int_type16)
-      upper_res = bit_cast(ah.id, int_type(op0.bit));
+      ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
+      upper_res = ah.id;
     if __code and is_word_operation:
-      mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type(concat(op0.bit, ignore(' * 2'))))
+      mul_res = bit_cast(bit_cast(ax.id, int_type32) * bit_cast(op0.val, int_type32), int_type32)
       ax.id = bit_cast(mul_res, int_type16)
-      dx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 16), int_type16)
-      upper_res = bit_cast(dx.id, int_type(op0.bit));
+      dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
+      upper_res = dx.id;
     if __code and is_dword_operation:
-      mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type(concat(op0.bit, ignore(' * 2'))))
+      mul_res = bit_cast(bit_cast(eax.id, int_type64) * bit_cast(op0.val, int_type64), int_type64)
       eax.id = bit_cast(mul_res, int_type32)
-      edx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 32), int_type32)
-      upper_res = bit_cast(edx.id, int_type(op0.bit));
+      edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
+      upper_res = edx.id;
     if __code and is_qword_operation:
-      mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type(concat(op0.bit, ignore(' * 2'))))
+      mul_res = bit_cast(bit_cast(rax.id, int_type128) * bit_cast(op0.val, int_type128), int_type128)
       rax.id = bit_cast(mul_res, int_type64)
-      rdx.id = bit_cast(mul_res >> int(concat(op0.bit, ignore(' * 2')), 64), int_type64)
-      upper_res = bit_cast(rdx.id, int_type(op0.bit));
+      rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
+      upper_res = rdx.id;
     if __expr and upper_res == int(op0.bit, 0):
       of.id = int1(0)
       cf.id = int1(0)
@@ -519,7 +518,7 @@ semantic:
   idiv: &idiv |
     alloc_var('dividend', concat(op0.bit, ignore(' * 2')));
     alloc_var('extended', concat(op0.bit, ignore(' * 2')));
-    extended = sign_extend(op0.val, int(concat(op0.bit, ignore(' * 2')), concat(op0.bit, ignore(' * 2'))));
+    extended = sign_extend(op0.val, int_type(concat(op0.bit, ignore(' * 2'))));
     if __code and is_byte_operation:
       dividend = sign_extend(ax.id, int_type16)
       al.id = bit_cast(sdiv(dividend, extended), int_type8)
@@ -546,15 +545,15 @@ semantic:
       al.id = bit_cast(dividend / zero_extend(op0.val, int_type16), int_type8)
       ah.id = bit_cast(dividend % zero_extend(op0.val, int_type16), int_type8);
     if __code and is_word_operation:
-      dividend = bit_cast(dx.id, int_type32) << int_type16 | bit_cast(ax.id, int_type32)
+      dividend = bit_cast(dx.id, int_type32) << int(32, 16) | bit_cast(ax.id, int_type32)
       ax.id = bit_cast(dividend / zero_extend(op0.val, int_type32), int_type16)
       dx.id = bit_cast(dividend % zero_extend(op0.val, int_type32), int_type16);
     if __code and is_dword_operation:
-      dividend = bit_cast(edx.id, int_type64) << int_type32 | bit_cast(eax.id, int_type64)
+      dividend = bit_cast(edx.id, int_type64) << int(64, 32) | bit_cast(eax.id, int_type64)
       eax.id = bit_cast(dividend / zero_extend(op0.val, int_type64), int_type32)
       edx.id = bit_cast(dividend % zero_extend(op0.val, int_type64), int_type32);
     if __code and is_qword_operation:
-      dividend = bit_cast(rdx.id, int_type128) << int_type64 | bit_cast(rax.id, int_type128)
+      dividend = bit_cast(rdx.id, int_type128) << int(128, 64) | bit_cast(rax.id, int_type128)
       rax.id = bit_cast(dividend / zero_extend(op0.val, int_type128), int_type64)
       rdx.id = bit_cast(dividend % zero_extend(op0.val, int_type128), int_type64);
     free_var('dividend');
