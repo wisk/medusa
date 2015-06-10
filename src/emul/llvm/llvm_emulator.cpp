@@ -1265,9 +1265,9 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitComparison(u8 CondOp)
     return false;
   }
 
-  auto TestVal = m_ValueStack.top();
-  m_ValueStack.pop();
   auto RefVal = m_ValueStack.top();
+  m_ValueStack.pop();
+  auto TestVal = m_ValueStack.top();
   m_ValueStack.pop();
 
   llvm::Value* pCmpVal = nullptr;
