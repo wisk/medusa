@@ -131,15 +131,33 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   Exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
   {
     std::cout << pCpuCtxt->ToString() << std::endl;
-    auto spInsn = std::dynamic_pointer_cast<Instruction>(Core.GetCell(rAddr));
-    auto const& rModMgr = ModuleManager::Instance();
-    auto spArch = rModMgr.GetArchitecture(spInsn->GetArchitectureTag());
+    
+    /* TODO(wisk): make a helper for this... */
+    u64 LinAddr;
+    BOOST_CHECK(pCpuCtxt->Translate(rAddr, LinAddr));
+
+    BinaryStream::SPType spBinStrm;
+    u32 Off;
+    u32 Flags;
+    BOOST_CHECK(pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags));
+
+    auto ArchTag = pCpuCtxt->GetCpuInformation().GetArchitectureTag();
+    // FIXME(KS): it may not work with thumb mode...
+    auto ArchMode = pCpuCtxt->GetMode();
+    auto& rModMgr = ModuleManager::Instance();
+    auto spArch = rModMgr.GetArchitecture(ArchTag);
+    BOOST_CHECK(spArch != nullptr);
+
+    auto spCurInsn = std::make_shared<Instruction>();
+    BOOST_CHECK(spArch->Disassemble(*spBinStrm, Off, *spCurInsn, ArchMode));
+
     PrintData PD;
     PD(rAddr);
-    spArch->FormatCell(rDoc, rAddr, *spInsn, PD);
+    BOOST_CHECK(spArch->FormatCell(rDoc, rAddr, *spCurInsn, PD));
     std::cout << PD.GetTexts() << std::endl;
-    for (auto e : spInsn->GetSemantic())
+    for (auto e : spCurInsn->GetSemantic())
       std::cout << e->ToString() << std::endl;
+
   });
 
   Exec.Execute(StartAddr);
