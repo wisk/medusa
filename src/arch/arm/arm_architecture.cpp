@@ -525,3 +525,20 @@ bool ArmArchitecture::FormatInstruction(
 
   return true;
 }
+
+bool ArmArchitecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
+{
+  return false;
+}
+
+bool ArmArchitecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode)
+{
+  u32 Id = m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode);
+  if (Id == 0)
+    return false;
+  u32 IdSz = m_CpuInfo.GetSizeOfRegisterInBit(Id);
+  if (IdSz == 0)
+    return false;
+  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConst(IdSz, rAddr.GetOffset())));
+  return true;
+}
