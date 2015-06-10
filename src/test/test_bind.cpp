@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(bind_python_test_case)
   BOOST_REQUIRE(spPython->Execute("assert(str(a0) == '0000000011223344')"));
   BOOST_REQUIRE(spPython->Execute("assert(str(a1) == '1122:33445566778899aa')"));
 
-  BOOST_REQUIRE(spPython->Execute("start_addr = doc.get_label_address('start')"));
+  BOOST_REQUIRE(spPython->Execute("start_addr = doc.get_label_addr('start')"));
   BOOST_REQUIRE(spPython->Execute("start_lbl  = doc.get_label(start_addr)"));
   BOOST_REQUIRE(spPython->Execute("start_insn = pydusa.core.get_insn(start_addr)"));
   BOOST_REQUIRE(spPython->Execute("print start_addr, start_lbl, start_insn"));
