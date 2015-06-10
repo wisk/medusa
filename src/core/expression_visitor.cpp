@@ -679,6 +679,11 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     Result = (Left & Right) >> Right.Lsb();
     break;
 
+  case OperationExpression::OpBcast:
+    Result = Left;
+    Result.BitCast(Right.ConvertTo<u16>());
+    break;
+
   default:
     return nullptr;
   }
