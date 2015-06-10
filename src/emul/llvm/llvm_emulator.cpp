@@ -819,8 +819,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     if (LeftBits == 0)
       break;
 
-    auto pRol0   = m_rBuilder.CreateShl(LeftVal, RightVal, "rol_0");
-    auto pRolSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), RightVal, "rol_sub");
+    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(IntType(LeftBits, LeftBits)));
+    auto pRol0   = m_rBuilder.CreateShl(LeftVal, pCnt, "rol_0");
+    auto pRolSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), pCnt, "rol_sub");
     auto pRol1   = m_rBuilder.CreateLShr(LeftVal, pRolSub, "rol_1");
     pBinOpVal    = m_rBuilder.CreateOr(pRol0, pRol1, "rol");
   }
@@ -833,8 +834,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     if (LeftBits == 0)
       break;
 
-    auto pRor0   = m_rBuilder.CreateLShr(LeftVal, RightVal, "ror_0");
-    auto pRorSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), RightVal, "rol_sub");
+    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(IntType(LeftBits, LeftBits)));
+    auto pRor0   = m_rBuilder.CreateLShr(LeftVal, pCnt, "ror_0");
+    auto pRorSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), pCnt, "rol_sub");
     auto pRor1   = m_rBuilder.CreateShl(LeftVal, pRorSub, "ror_1");
     pBinOpVal    = m_rBuilder.CreateOr(pRor0, pRor1, "ror");
   }
