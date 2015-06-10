@@ -71,7 +71,10 @@ bool Emulator::Execute(Address const& rAddress)
 
     // Set the current IP/PC address
     if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))
+    {
+      Log::Write("core").Level(LogError) << "unable to emit set execution address to " << CurAddr << LogEnd;
       return false;
+    }
 
     for (auto spExpr : rCurInsn.GetSemantic())
       Exprs.push_back(spExpr);
@@ -199,7 +202,7 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
       break;
 
     // Go to the next instruction
-    InsnAddr = spArch->CurrentAddress(InsnAddr, *spCurInsn);
+    InsnAddr += spCurInsn->GetLength();
   }
 
   return true;
