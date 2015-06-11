@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Jun 10 15:19:13 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jun 11 10:55:24 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -12488,7 +12488,7 @@ bool X86Architecture::Table_1_36(BinaryStream const& rBinStrm, TOffset Offset, I
  * test_flags: ['af', 'cf']
  * semantic: alloc_var('cond', 1);
 cond = int1(0);
-if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
+if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1);
 if __expr and af.id == int1(1): cond |= int1(1);
 if __expr and cond == int1(1):
   ax.id += int(ax.bit, 0x106)
@@ -12519,8 +12519,7 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("cond", VariableExpression::Use),
         Expr::MakeConst(1, 0x0)));
-      /* semantic: if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1)
-      if __expr and af.id == int1(1): cond |= int1(1) */
+      /* semantic: if __expr and ((al.id & int(al.bit, 0x0f)) > int(al.bit, 9)): cond |= int1(1) */
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondUgt,
         Expr::MakeBinOp(
@@ -12536,6 +12535,7 @@ bool X86Architecture::Table_1_37(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(1, 0x1)))
       , nullptr)
       );
+      /* semantic: if __expr and af.id == int1(1): cond |= int1(1) */
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(X86_FlAf, &m_CpuInfo),
@@ -43286,22 +43286,22 @@ alloc_var('extended', concat(op0.bit, ignore(' * 2')));
 if __code and is_byte_operation:
   mul_res = sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16)
   ax.id = bit_cast(mul_res, int_type16)
-  sf.id = bit_cast(mul_res >> int(16, 7), int_type1)
+  sf.id = bit_cast(mul_res >> int(16, 7), int_type1);
 if __code and is_word_operation:
   mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
   ax.id = bit_cast(mul_res, int_type16)
   dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
-  sf.id = bit_cast(mul_res >> int(32, 15), int_type1)
+  sf.id = bit_cast(mul_res >> int(32, 15), int_type1);
 if __code and is_dword_operation:
   mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
   eax.id = bit_cast(mul_res, int_type32)
   edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
-  sf.id = bit_cast(mul_res >> int(64, 31), int_type1)
+  sf.id = bit_cast(mul_res >> int(64, 32), int_type1);
 if __code and is_qword_operation:
   mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
   rax.id = bit_cast(mul_res, int_type64)
   rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
-  sf.id = bit_cast(mul_res >> int(128, 63), int_type1)
+  sf.id = bit_cast(mul_res >> int(128, 63), int_type1);
 res = bit_cast(mul_res, int_type(op0.bit));
 extended = sign_extend(res, int_type(concat(op0.bit, ignore(' * 2'))));
 if __expr and extended == mul_res:
@@ -44022,23 +44022,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         /* semantic: if __code and is_byte_operation:
           mul_res = sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16)
           ax.id = bit_cast(mul_res, int_type16)
-          sf.id = bit_cast(mul_res >> int(16, 7), int_type1)
-        if __code and is_word_operation:
-          mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
-          ax.id = bit_cast(mul_res, int_type16)
-          dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
-          sf.id = bit_cast(mul_res >> int(32, 15), int_type1)
-        if __code and is_dword_operation:
-          mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
-          eax.id = bit_cast(mul_res, int_type32)
-          edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
-          sf.id = bit_cast(mul_res >> int(64, 31), int_type1)
-        if __code and is_qword_operation:
-          mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
-          rax.id = bit_cast(mul_res, int_type64)
-          rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
-          sf.id = bit_cast(mul_res >> int(128, 63), int_type1)
-        res = bit_cast(mul_res, int_type(op0.bit)) */
+          sf.id = bit_cast(mul_res >> int(16, 7), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 8)
         {
           /* block glb expressions */
@@ -44058,6 +44042,11 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x10, 0x7)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_word_operation:
+          mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
+          ax.id = bit_cast(mul_res, int_type16)
+          dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
+          sf.id = bit_cast(mul_res >> int(32, 15), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 16)
         {
           /* block glb expressions */
@@ -44083,6 +44072,11 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x20, 0xf)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_dword_operation:
+          mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
+          eax.id = bit_cast(mul_res, int_type32)
+          edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
+          sf.id = bit_cast(mul_res >> int(64, 32), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 32)
         {
           /* block glb expressions */
@@ -44106,8 +44100,13 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(0x40, 0x1f)), Expr::MakeConst(1, 1))));
+              Expr::MakeConst(0x40, 0x20)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_qword_operation:
+          mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
+          rax.id = bit_cast(mul_res, int_type64)
+          rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
+          sf.id = bit_cast(mul_res >> int(128, 63), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 64)
         {
           /* block glb expressions */
@@ -44133,6 +44132,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x80, 0x3f)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: res = bit_cast(mul_res, int_type(op0.bit)) */
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
@@ -44516,22 +44516,22 @@ alloc_var('extended', concat(op0.bit, ignore(' * 2')));
 if __code and is_byte_operation:
   mul_res = sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16)
   ax.id = bit_cast(mul_res, int_type16)
-  sf.id = bit_cast(mul_res >> int(16, 7), int_type1)
+  sf.id = bit_cast(mul_res >> int(16, 7), int_type1);
 if __code and is_word_operation:
   mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
   ax.id = bit_cast(mul_res, int_type16)
   dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
-  sf.id = bit_cast(mul_res >> int(32, 15), int_type1)
+  sf.id = bit_cast(mul_res >> int(32, 15), int_type1);
 if __code and is_dword_operation:
   mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
   eax.id = bit_cast(mul_res, int_type32)
   edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
-  sf.id = bit_cast(mul_res >> int(64, 31), int_type1)
+  sf.id = bit_cast(mul_res >> int(64, 32), int_type1);
 if __code and is_qword_operation:
   mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
   rax.id = bit_cast(mul_res, int_type64)
   rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
-  sf.id = bit_cast(mul_res >> int(128, 63), int_type1)
+  sf.id = bit_cast(mul_res >> int(128, 63), int_type1);
 res = bit_cast(mul_res, int_type(op0.bit));
 extended = sign_extend(res, int_type(concat(op0.bit, ignore(' * 2'))));
 if __expr and extended == mul_res:
@@ -45252,23 +45252,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         /* semantic: if __code and is_byte_operation:
           mul_res = sign_extend(al.id, int_type16) * sign_extend(op0.val, int_type16)
           ax.id = bit_cast(mul_res, int_type16)
-          sf.id = bit_cast(mul_res >> int(16, 7), int_type1)
-        if __code and is_word_operation:
-          mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
-          ax.id = bit_cast(mul_res, int_type16)
-          dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
-          sf.id = bit_cast(mul_res >> int(32, 15), int_type1)
-        if __code and is_dword_operation:
-          mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
-          eax.id = bit_cast(mul_res, int_type32)
-          edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
-          sf.id = bit_cast(mul_res >> int(64, 31), int_type1)
-        if __code and is_qword_operation:
-          mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
-          rax.id = bit_cast(mul_res, int_type64)
-          rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
-          sf.id = bit_cast(mul_res >> int(128, 63), int_type1)
-        res = bit_cast(mul_res, int_type(op0.bit)) */
+          sf.id = bit_cast(mul_res >> int(16, 7), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 8)
         {
           /* block glb expressions */
@@ -45288,6 +45272,11 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x10, 0x7)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_word_operation:
+          mul_res = sign_extend(ax.id, int_type32) * sign_extend(op0.val, int_type32)
+          ax.id = bit_cast(mul_res, int_type16)
+          dx.id = bit_cast(mul_res >> int(32, 16), int_type16)
+          sf.id = bit_cast(mul_res >> int(32, 15), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 16)
         {
           /* block glb expressions */
@@ -45313,6 +45302,11 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x20, 0xf)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_dword_operation:
+          mul_res = sign_extend(eax.id, int_type64) * sign_extend(op0.val, int_type64)
+          eax.id = bit_cast(mul_res, int_type32)
+          edx.id = bit_cast(mul_res >> int(64, 32), int_type32)
+          sf.id = bit_cast(mul_res >> int(64, 32), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 32)
         {
           /* block glb expressions */
@@ -45336,8 +45330,13 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
               OperationExpression::OpLrs,
               Expr::MakeVar("mul_res", VariableExpression::Use),
-              Expr::MakeConst(0x40, 0x1f)), Expr::MakeConst(1, 1))));
+              Expr::MakeConst(0x40, 0x20)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: if __code and is_qword_operation:
+          mul_res = sign_extend(rax.id, int_type128) * sign_extend(op0.val, int_type128)
+          rax.id = bit_cast(mul_res, int_type64)
+          rdx.id = bit_cast(mul_res >> int(128, 64), int_type64)
+          sf.id = bit_cast(mul_res >> int(128, 63), int_type1) */
         if (rInsn.GetOperand(0)->GetBitSize() == 64)
         {
           /* block glb expressions */
@@ -45363,6 +45362,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeVar("mul_res", VariableExpression::Use),
               Expr::MakeConst(0x80, 0x3f)), Expr::MakeConst(1, 1))));
         }
+        /* semantic: res = bit_cast(mul_res, int_type(op0.bit)) */
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeVar("mul_res", VariableExpression::Use), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))));
