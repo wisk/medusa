@@ -199,40 +199,37 @@ bool MappedMemoryArea::MoveAddressBackward(Address const& rAddress, Address& rMo
   TOffset MovedOff      = rAddress.GetOffset();
   TOffset PrevOff;
   TOffset MemAreaBegOff = m_VirtualBase.GetOffset();
-  while (true)
+  CellData::SPType spLastCellData;
+
+  for (PrevOff = MovedOff - 1; PrevOff >= MemAreaBegOff; --PrevOff)
   {
-    s32 SkippedOff = 0;
+    auto spCellData = GetCellData(PrevOff);
+    if (spCellData == spLastCellData)
+      continue;
+    spLastCellData = spCellData;
 
-    for (PrevOff = MovedOff - 1; PrevOff >= MemAreaBegOff; --PrevOff)
-    {
-      auto spCellData = GetCellData(PrevOff);
-      if (spCellData != nullptr)
-      {
-        SkippedOff -= spCellData->GetLength();
-        break;
-      }
-      ++SkippedOff;
-    }
-
-    if (SkippedOff < 0)
-      SkippedOff = 0;
-
-    if (SkippedOff == 0)
-      --Offset;
-
-    if (SkippedOff > Offset)
-      Offset = 0;
-
-    MovedOff = PrevOff;
-
+    --Offset;
     if (Offset == 0)
     {
-      rMovedAddress = MakeAddress(MovedOff);
+      if (PrevOff == 0)
+      {
+        rMovedAddress = MakeAddress(0x0);
+        return true;
+      }
+
+      while (GetCellData(PrevOff - 1) == spCellData)
+      {
+        --PrevOff;
+
+        if (PrevOff == 0)
+        {
+          rMovedAddress = MakeAddress(0x0);
+          return true;
+        }
+      }
+      rMovedAddress = MakeAddress(PrevOff);
       return true;
     }
-
-    if (MovedOff == MemAreaBegOff)
-      return false;
   }
 
   return false;
