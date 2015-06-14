@@ -1,5 +1,5 @@
-#ifndef MEDUSA_CPU_HPP
-#define MEDUSA_CPU_HPP
+#ifndef MEDUSA_CONTEXT_HPP
+#define MEDUSA_CONTEXT_HPP
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
@@ -7,6 +7,7 @@
 #include "medusa/address.hpp"
 #include "medusa/document.hpp"
 #include "medusa/information.hpp"
+#include "medusa/serialization.hpp"
 
 #include <vector>
 #include <string>
@@ -15,7 +16,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CpuContext
+class Medusa_EXPORT CpuContext : public IsSerializable
 {
 public:
   typedef std::list<u32> RegisterList;
@@ -65,6 +66,9 @@ public:
 
   CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
 
+  virtual bool Load(Serializer& rSrlz);
+  virtual bool Save(Serializer& rSrlz);
+
 protected:
   CpuInformation const& m_rCpuInfo;
   typedef std::unordered_map<Address, u64> AddressMap;
@@ -79,7 +83,7 @@ template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool cons
 template<> Medusa_EXPORT bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const;
 template<> Medusa_EXPORT bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal);
 
-class Medusa_EXPORT MemoryContext
+class Medusa_EXPORT MemoryContext : public IsSerializable
 {
 public:
   struct MemoryChunk
@@ -128,6 +132,9 @@ public:
 
   virtual std::string ToString(void) const;
 
+  virtual bool Load(Serializer& rSrlz);
+  virtual bool Save(Serializer& rSrlz);
+
 protected:
   virtual bool _FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
 
@@ -147,4 +154,4 @@ template<> Medusa_EXPORT bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, I
 
 MEDUSA_NAMESPACE_END
 
-#endif // !MEDUSA_CPU_HPP
+#endif // !MEDUSA_CONTEXT_HPP

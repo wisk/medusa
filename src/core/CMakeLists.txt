@@ -47,6 +47,8 @@ set(SRC
   ${INCROOT}/namespace.hpp
   ${INCROOT}/os.hpp
   ${INCROOT}/plugin.hpp
+  ${INCROOT}/serialization.hpp
+  ${INCROOT}/snapshot.hpp
   ${INCROOT}/string.hpp
   ${INCROOT}/structure.hpp
   ${INCROOT}/symbolic.hpp
@@ -94,6 +96,7 @@ set(SRC
   ${SRCROOT}/module.cpp
   ${SRCROOT}/multicell.cpp
   ${SRCROOT}/os.cpp
+  ${SRCROOT}/snapshot.cpp
   ${SRCROOT}/string.cpp
   ${SRCROOT}/structure.cpp
   ${SRCROOT}/symbolic.cpp

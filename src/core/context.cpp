@@ -115,6 +115,16 @@ bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
   return true;
 }
 
+bool CpuContext::Load(Serializer& rSrlz)
+{
+  return false;
+}
+
+bool CpuContext::Save(Serializer& rSrlz)
+{
+  return false;
+}
+
 namespace
 {
   template<typename _Ty>
@@ -347,6 +357,16 @@ bool MemoryContext::_FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemCh
       return true;
     }
   }
+  return false;
+}
+
+bool MemoryContext::Load(Serializer& rSrlz)
+{
+  return false;
+}
+
+bool MemoryContext::Save(Serializer& rSrlz)
+{
   return false;
 }
 
