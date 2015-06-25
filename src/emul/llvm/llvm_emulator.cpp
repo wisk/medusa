@@ -7,6 +7,8 @@
 # include "llvm/Support/Host.h"
 #endif
 
+#include <llvm/IR/Verifier.h>
+
 #include <llvm/ExecutionEngine/MCJIT.h>
 
 #include <llvm/Object/ObjectFile.h> // NOTE: Needed to avoid incomplete type llvm::object::ObjectFile
@@ -375,7 +377,10 @@ LlvmEmulator::BasicBlockCode LlvmEmulator::LlvmJitHelper::GetFunctionCode(std::s
     return nullptr;
 
   auto FPM = new llvm::FunctionPassManager(m_pCurMod);
-  
+
+#ifndef DEBUG
+  FPM->add(llvm::createVerifierPass());
+#endif
   // Set up the optimizer pipeline.  Start with registering info about how the
   // target lays out data structures.
   //FPM->add(new llvm::DataLayout(*EE->getDataLayout()));
@@ -391,6 +396,7 @@ LlvmEmulator::BasicBlockCode LlvmEmulator::LlvmJitHelper::GetFunctionCode(std::s
   FPM->add(llvm::createGVNPass());
   // Simplify the control flow graph (deleting unreachable blocks, etc).
   FPM->add(llvm::createCFGSimplificationPass());
+
 
   FPM->doInitialization();
 
@@ -608,8 +614,13 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
   m_State = Read;
   auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
   auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
-  auto pCondVal = _EmitComparison(spIfElseExpr->GetType());
+
+  // Emit the condition
+  auto pCondVal = _EmitComparison(spIfElseExpr->GetType(), "emit_if_else_cmp");
+  if (pCondVal == nullptr)
+    return nullptr;
   m_State = OldState;
+  m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbElse);
 
   // Emit the then branch
   m_rBuilder.SetInsertPoint(pBbThen);
@@ -634,10 +645,6 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfE
   m_State = OldState;
   m_rBuilder.CreateBr(pBbMerg);
 
-  // Emit the condition
-  m_rBuilder.SetInsertPoint(pBbCond);
-  m_rBuilder.CreateCondBr(pCondVal, pBbThen, pBbElse);
-
   m_rBuilder.SetInsertPoint(pBbMerg);
   return spIfElseExpr;
 }
@@ -661,7 +668,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitWhileCondition(Whil
   m_State = Read;
   auto spRefExpr = spWhileExpr->GetReferenceExpression()->Visit(this);
   auto spTestExpr = spWhileExpr->GetTestExpression()->Visit(this);
-  auto pCondVal = _EmitComparison(spWhileExpr->GetType());
+  auto pCondVal = _EmitComparison(spWhileExpr->GetType(), "emit_while_cmp");
+  if (pCondVal == nullptr)
+    return nullptr;
   m_State = OldState;
 
   // Emit the condition
@@ -1259,12 +1268,12 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_CallIntrinsic(
   return pCallIntr;
 }
 
-llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitComparison(u8 CondOp)
+llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitComparison(u8 CondOp, char const* pCmpName)
 {
   if (m_ValueStack.size() < 2)
   {
     Log::Write("emul_llvm").Level(LogError) << "no enough values to do comparison" << LogEnd;
-    return false;
+    return nullptr;
   }
 
   auto RefVal = m_ValueStack.top();
@@ -1277,43 +1286,43 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitComparison(u8 CondOp)
   switch (CondOp)
   {
   case ConditionExpression::CondEq:
-    pCmpVal = m_rBuilder.CreateICmpEQ(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpEQ(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondNe:
-    pCmpVal = m_rBuilder.CreateICmpNE(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpNE(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondUgt:
-    pCmpVal = m_rBuilder.CreateICmpUGT(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpUGT(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondUge:
-    pCmpVal = m_rBuilder.CreateICmpUGE(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpUGE(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondUlt:
-    pCmpVal = m_rBuilder.CreateICmpULT(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpULT(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondUle:
-    pCmpVal = m_rBuilder.CreateICmpULE(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpULE(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondSgt:
-    pCmpVal = m_rBuilder.CreateICmpSGT(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpSGT(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondSge:
-    pCmpVal = m_rBuilder.CreateICmpSGE(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpSGE(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondSlt:
-    pCmpVal = m_rBuilder.CreateICmpSLT(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpSLT(TestVal, RefVal, pCmpName);
     break;
 
   case ConditionExpression::CondSle:
-    pCmpVal = m_rBuilder.CreateICmpSLE(TestVal, RefVal);
+    pCmpVal = m_rBuilder.CreateICmpSLE(TestVal, RefVal, pCmpName);
     break;
 
   default:
@@ -1371,6 +1380,7 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
 
 void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal)
 {
+  assert(pRetVal != nullptr);
   auto pBbOrig = m_rBuilder.GetInsertBlock();
   auto& rCtxt = llvm::getGlobalContext();
   auto pFunc = pBbOrig->getParent();
@@ -1380,7 +1390,7 @@ void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal
 
   auto pChkValInt = m_rBuilder.CreatePtrToInt(pChkVal, llvm::Type::getIntNTy(rCtxt, sizeof(void*) * 8));
   auto pNullPtrInt = _MakeInteger(IntType(sizeof(void*) * 8, 0));
-  auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt);
+  auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt, "ret_if_null_cmp");
   m_rBuilder.CreateCondBr(pCmpPtr, pBbRet, pBbCont);
 
   m_rBuilder.SetInsertPoint(pBbRet);

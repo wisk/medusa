@@ -131,7 +131,7 @@ private:
 
     llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;
 
-    llvm::Value* _EmitComparison(u8 CondOp);
+    llvm::Value* _EmitComparison(u8 CondOp, char const* pCmpName);
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
     void         _EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal);
