@@ -71,6 +71,7 @@ void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) co
     break;
 
   case PE_FILE_MACHINE_ARM:
+  case PE_FILE_MACHINE_ARMT:
     ArchName = "ARM";
     break;
 
@@ -102,6 +103,7 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
     break;
 
   case PE_FILE_MACHINE_ARM:
+  case PE_FILE_MACHINE_ARMT:
     ArchName = "ARM";
     break;
 
