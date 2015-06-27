@@ -72,20 +72,20 @@ function:
     call('parity_flag');
     call('adjust_flag');
     if __expr and df.id == int1(1):
-      op0.offset -= int(op0.offset.bit, op0.byte)
+      op1.offset -= int(op1.offset.bit, op1.byte)
     else:
-      op0.offset += int(op0.offset.bit, op0.byte);
+      op1.offset += int(op1.offset.bit, op1.byte);
     free_var('res');
 
   store_string: &store_string |
-    op0.val = op1.val;
+    op1.val = op0.val;
     if __expr and df.id == int1(1):
-      op0.offset -= int(op0.offset.bit, op0.byte)
+      op1.offset -= int(op1.offset.bit, op1.byte)
     else:
-      op0.offset += int(op0.offset.bit, op0.byte);
+      op1.offset += int(op1.offset.bit, op1.byte);
 
   move_string: &move_string |
-    op0.val = op1.val;
+    op1.val = op0.val;
     if __expr and df.id == int1(1):
       op0.offset -= int(op0.offset.bit, op0.byte)
       op1.offset -= int(op1.offset.bit, op1.byte)
@@ -942,28 +942,46 @@ semantic:
 ## String operations
 
   scas: &scas |
+    alloc_var('loop', 1);
+    loop = int1(1);
     if __code and instruction_has_prefix(repz):
-      while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
+      if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+      while loop == int1(1):
         call('scan_string')
-        cnt.id -= int(cnt.bit, 1);
+        cnt.id -= int(cnt.bit, 1)
+        if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+        if __expr and zf.id == int1(0): loop = int1(0);
     if __code and instruction_has_prefix(repnz):
-      while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
+      if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+      while loop == int1(1):
         call('scan_string')
-        cnt.id -= int(cnt.bit, 1);
+        cnt.id -= int(cnt.bit, 1)
+        if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+        if __expr and zf.id == int1(1): loop = int1(0);
     if __code and instruction_has_no_prefix(repz, repnz):
       call('scan_string');
+    free_var('loop');
 
   cmps: &cmps |
+    alloc_var('loop', 1);
+    loop = int1(1);
     if __code and instruction_has_prefix(repz):
-      while (cnt.id | bit_cast(~zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
+      if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+      while loop == int1(1):
         call('compare_string')
-        cnt.id -= int(cnt.bit, 1);
+        cnt.id -= int(cnt.bit, 1)
+        if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+        if __expr and zf.id == int1(0): loop = int1(0);
     if __code and instruction_has_prefix(repnz):
-      while (cnt.id | bit_cast(zf.id, int_type(cnt.bit))) == int(cnt.bit, 0):
+      if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+      while loop == int1(1):
         call('compare_string')
-        cnt.id -= int(cnt.bit, 1);
+        cnt.id -= int(cnt.bit, 1)
+        if __expr and cnt.id == int(cnt.bit, 0): loop = int1(0)
+        if __expr and zf.id == int1(1): loop = int1(0);
     if __code and instruction_has_no_prefix(repz, repnz):
       call('compare_string');
+    free_var('loop');
 
   stos: &stos |
     if __code and instruction_has_prefix(rep):
@@ -2535,26 +2553,26 @@ instruction:
 
       - opcode: 0xa4
         mnemonic: movs
-        operand: [ Yb, Xb ]
+        operand: [ Xb, Yb ] # Inversion needed here!
         test_flags: [ df ]
         semantic: *movs
 
       - opcode: 0xa5
         mnemonic: movs
-        operand: [ Yv, Xv ]
+        operand: [ Xv, Yv ] # Inversion needed here!
         test_flags: [ df ]
         semantic: *movs
 
       - opcode: 0xa6
         mnemonic: cmps
-        operand: [ Yb, Xb ]
+        operand: [ Xb, Yb ] # Inversion needed here!
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
         semantic: *cmps
 
       - opcode: 0xa7
         mnemonic: cmps
-        operand: [ Yb, Xb ]
+        operand: [ Xv, Yv ] # Inversion needed here!
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
         semantic: *cmps
@@ -2575,13 +2593,13 @@ instruction:
 
       - opcode: 0xaa
         mnemonic: stos
-        operand: [ Yb, AL ]
+        operand: [ AL, Yb ] # Inversion needed here!
         test_flags: [ df ]
         semantic: *stos
 
       - opcode: 0xab
         mnemonic: stos
-        operand: [ Yv, rAX ]
+        operand: [ rAX, Yv ] # Inversion needed here!
         test_flags: [ df ]
         semantic: *stos
 
@@ -2597,14 +2615,14 @@ instruction:
 
       - opcode: 0xae
         mnemonic: scas
-        operand: [ Yb, AL ]
+        operand: [ AL, Yb ] # Inversion needed here!
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
         semantic: *scas
 
       - opcode: 0xaf
         mnemonic: scas
-        operand: [ Yv, rAX ]
+        operand: [ rAX, Yv ] # Inversion needed here!
         test_flags: [ df ]
         update_flags: [ of, sf, zf, af, pf, cf ]
         semantic: *scas
@@ -13915,11 +13933,11 @@ operand:
   Woqo_Vx_Ib: [ op0 = decode_Woqo, op1 = decode_Vx, op2 = decode_Ib ]
   Wow_Vo_Ib: [ op0 = decode_Wow, op1 = decode_Vo, op2 = decode_Ib ]
   Wx_Vx: [ op0 = decode_Wx, op1 = decode_Vx ]
-  Yb_AL: [ op0 = decode_Yb, op1 = decode_AL ]
+  AL_Yb: [ op0 = decode_AL, op1 = decode_Yb ] # Inversion needed here!
   Yb_DX: [ op0 = decode_Yb, op1 = decode_DX ]
-  Yb_Xb: [ op0 = decode_Yb, op1 = decode_Xb ]
-  Yv_Xv: [ op0 = decode_Yv, op1 = decode_Xv ]
-  Yv_rAX: [ op0 = decode_Yv, op1 = decode_rAX ]
+  Xb_Yb: [ op0 = decode_Xb, op1 = decode_Yb ] # Inversion needed here!
+  Xv_Yv: [ op0 = decode_Xv, op1 = decode_Yv ] # Inversion needed here!
+  rAX_Yv: [ op0 = decode_rAX, op1 = decode_Yv ] # Inversion needed here!
   Yz_DX: [ op0 = decode_Yz, op1 = decode_DX ]
   eAX: [ op0 = decode_eAX ]
   eAX_DX: [ op0 = decode_eAX, op1 = decode_DX ]

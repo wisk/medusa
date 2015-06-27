@@ -395,6 +395,8 @@ class ArchConvertion:
 
                 if 'GetPrefix' in func_name:
                     mask = ' | '.join(args_name)
+                    if '!' in func_name:
+                        return '!(rInsn.GetPrefix() & (%s))' % mask
                     return '%s & (%s)' % (func_name, mask)
                 
                 return func_name % tuple(args_name)
@@ -553,7 +555,7 @@ class ArchConvertion:
                 elif node_name == 'instruction_has_prefix':
                     return 'rInsn.GetPrefix()'
                 elif node_name == 'instruction_has_no_prefix':
-                    return '(~rInsn.GetPrefix())'
+                    return '!rInsn.GetPrefix()'
 
                 # TODO(KS): prefixes are arch dependent
                 pfx = { 'rep': 'X86_Prefix_Rep', 'repz': 'X86_Prefix_Rep', 'repnz': 'X86_Prefix_RepNz' }
