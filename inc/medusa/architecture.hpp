@@ -10,6 +10,7 @@
 #include "medusa/address.hpp"
 #include "medusa/binary_stream.hpp"
 #include "medusa/context.hpp"
+#include "medusa/calling_convention.hpp"
 #include "medusa/expression.hpp"
 
 #include "medusa/character.hpp"
@@ -66,9 +67,12 @@ public:
   //! This method returns the architecture endianness.
   virtual EEndianness GetEndianness(void) = 0;
 
-  virtual CpuInformation const* GetCpuInformation(void) const = 0;
-  virtual CpuContext*           MakeCpuContext(void)    const = 0;
-  virtual MemoryContext*        MakeMemoryContext(void) const = 0;
+  virtual CpuInformation    const* GetCpuInformation(void) const { return nullptr; }
+  virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const { return nullptr; }
+
+  virtual CpuContext*    MakeCpuContext(void)    const { return nullptr; }
+  virtual MemoryContext* MakeMemoryContext(void) const { return nullptr; }
+
 
   virtual bool HandleExpression(Expression::LSPType& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
   virtual bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);

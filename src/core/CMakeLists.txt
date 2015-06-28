@@ -15,6 +15,7 @@ set(SRC
   ${INCROOT}/cell_action.hpp
   ${INCROOT}/cell_data.hpp
   ${INCROOT}/cell_text.hpp
+  ${INCROOT}/calling_convention.hpp
   ${INCROOT}/character.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/control_flow_graph.hpp
@@ -64,6 +65,7 @@ set(SRC
   ${SRCROOT}/array.cpp
   ${SRCROOT}/basic_block.cpp
   ${SRCROOT}/binding.cpp
+  ${SRCROOT}/calling_convention.cpp
   ${SRCROOT}/cell.cpp
   ${SRCROOT}/cell_action.cpp
   ${SRCROOT}/cell_data.cpp
