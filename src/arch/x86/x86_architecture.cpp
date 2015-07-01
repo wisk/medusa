@@ -370,7 +370,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
     public:
       CdeclCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr)
+      virtual Expression::SPType GetParameter(u16 ParamNr) const
       {
         switch (m_Mode)
         {
@@ -382,12 +382,12 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
         }
       }
 
-      virtual StackCleanerType StackCleanupBy(void)
+      virtual StackCleanerType StackCleanupBy(void) const
       {
         return StackCleanedByCaller;
       }
 
-      virtual RegisterType GetRegisterType(u32 Id)
+      virtual RegisterType GetRegisterType(u32 Id) const
       {
         switch (m_Mode)
         {
@@ -435,7 +435,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
     public:
       StdCallCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr)
+      virtual Expression::SPType GetParameter(u16 ParamNr) const
       {
         switch (m_Mode)
         {
@@ -447,12 +447,12 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
         }
       }
 
-      virtual StackCleanerType StackCleanupBy(void)
+      virtual StackCleanerType StackCleanupBy(void) const
       {
         return StackCleanedByCallee;
       }
 
-      virtual RegisterType GetRegisterType(u32 Id)
+      virtual RegisterType GetRegisterType(u32 Id) const
       {
         switch (m_Mode)
         {
@@ -502,7 +502,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
     public:
       MsX64CallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr)
+      virtual Expression::SPType GetParameter(u16 ParamNr) const
       {
         u32 Reg = 0;
         switch (ParamNr)
@@ -516,13 +516,13 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
         return Expr::MakeId(Reg, &m_rCpuInfo);
       }
 
-      virtual StackCleanerType StackCleanupBy(void)
+      virtual StackCleanerType StackCleanupBy(void) const
       {
         return StackCleanedByCallee;
       }
 
       // src: https://msdn.microsoft.com/en-us/library/6t169e9c.aspx
-      virtual RegisterType GetRegisterType(u32 Id)
+      virtual RegisterType GetRegisterType(u32 Id) const
       {
         switch (Id)
         {
@@ -551,7 +551,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
     public:
       SystemVCallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr)
+      virtual Expression::SPType GetParameter(u16 ParamNr) const
       {
         u32 Reg = 0;
         switch (ParamNr)
@@ -565,12 +565,12 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
         return Expr::MakeId(Reg, &m_rCpuInfo);
       }
 
-      virtual StackCleanerType StackCleanupBy(void)
+      virtual StackCleanerType StackCleanupBy(void) const
       {
         return StackCleanedByCallee;
       }
 
-      virtual RegisterType GetRegisterType(u32 Id)
+      virtual RegisterType GetRegisterType(u32 Id) const
       {
         switch (Id)
         {
@@ -589,6 +589,8 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
     static SystemVCallingConvention s_SystemVCallConv(m_CpuInfo);
     return &s_SystemVCallConv;
   }
+
+  return nullptr;
 }
 
 bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)

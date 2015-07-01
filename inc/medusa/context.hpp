@@ -39,7 +39,7 @@ public:
   template<typename _RegTy>
   bool WriteRegister(u32 Reg, _RegTy const& rVal)
   {
-    return WriteRegister(Reg, &rVal, sizeof(rVal)* 8);
+    return WriteRegister(Reg, &rVal, sizeof(rVal) * 8);
   }
 
   virtual void* GetRegisterAddress(u32 Register) = 0;

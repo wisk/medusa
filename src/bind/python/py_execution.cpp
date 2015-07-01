@@ -61,6 +61,14 @@ namespace pydusa
       Proxy);
   }
 
+  bp::object Execution_GetFunctionParameter(Execution* pExecution, bp::str CallConv, u16 ParamNo)
+  {
+    IntType ParamValue;
+    if (!pExecution->GetFunctionParameter(bp::extract<std::string>(CallConv), ParamNo, ParamValue))
+      return bp::object();
+    // TODO(wisk): handle type larger than 64-bit...
+    return bp::object(ParamValue.ConvertTo<u64>());
+  }
 }
 
 void PydusaExecution(void)
@@ -81,6 +89,8 @@ void PydusaExecution(void)
     .def("hook_addr", pydusa::Execution_HookAddr)
     .def("get_hook_name", &Execution::GetHookName)
     .def("get_hook_addr", &Execution::GetHookAddress)
+    .def("get_func_param", pydusa::Execution_GetFunctionParameter)
+    .def("ret_from_func", &Execution::ReturnFromFunction)
     .add_property("cpu", bp::make_function(&Execution::GetCpuContext, bp::return_internal_reference<>()))
     .add_property("mem", bp::make_function(&Execution::GetMemoryContext, bp::return_internal_reference<>()))
     ;

@@ -24,9 +24,11 @@ public:
     NonVolatileRegister,
   };
 
-  virtual Expression::SPType GetParameter(u16 ParamNr) { return nullptr; }
-  virtual StackCleanerType   StackCleanupBy(void)      { return StackCleanedByUnknown; }
-  virtual RegisterType       GetRegisterType(u32 Id)   { return UnknownRegister; }
+  // TODO(wisk): handle the difference between int and float parameter (e.g. MS x64 param0 could be either rcx or xmm0)
+  // TODO(wisk): add return value and write return address methods
+  virtual Expression::SPType GetParameter(u16 ParamNr) const { return nullptr; }
+  virtual StackCleanerType   StackCleanupBy(void)      const { return StackCleanedByUnknown; }
+  virtual RegisterType       GetRegisterType(u32 Id)   const { return UnknownRegister; }
 };
 
 MEDUSA_NAMESPACE_END
