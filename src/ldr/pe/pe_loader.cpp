@@ -186,7 +186,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   rDoc.AddMemoryArea(new MappedMemoryArea(
     "hdr",
     0x0, HdrLen,
-    ImageBase, HdrLen,
+    Address(Address::FlatType, 0x0, ImageBase, 0x10, bit), HdrLen,
     MemoryArea::Read | MemoryArea::Write,
     ArchTag, ArchMode
     ));
