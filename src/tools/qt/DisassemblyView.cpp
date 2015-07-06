@@ -172,6 +172,18 @@ void DisassemblyView::paintSelection(QPainter& p)
   if (m_SelectionBegin == m_SelectionEnd)
     return;
 
+  // Check if the selection is visible
+  medusa::Address FirstAddr;
+  if (!m_PrintData.GetFirstAddress(FirstAddr))
+    return;
+  if (m_SelectionEnd.m_Address < FirstAddr)
+    return;
+  medusa::Address LastAddr;
+  if (!m_PrintData.GetLastAddress(LastAddr))
+    return;
+  if (m_SelectionBegin.m_Address > LastAddr)
+    return;
+
   medusa::UserConfiguration UserCfg;
   QColor slctColor = QColor(QString::fromStdString(UserCfg.GetOption("color.selection")));
 
