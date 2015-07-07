@@ -35,8 +35,9 @@ public:
   // LATER: implement thread instead of cpu context
   CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
 
-  bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, IntType& rParamValue) const;
+  bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, IntType& rParamVal) const;
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
+  bool ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, IntType const& rRetVal) const;
 
 private:
   Execution(Execution const&);

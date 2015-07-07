@@ -1,4 +1,5 @@
 #include "x86_architecture.hpp"
+#include "x86_calling_convention.hpp"
 
 X86Architecture::X86Architecture(void)
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
@@ -365,59 +366,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
 {
   if (rCallConvName == "cdecl")
   {
-    class CdeclCallingConvention : public CallingConvention
-    {
-    public:
-      CdeclCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr) const
-      {
-        switch (m_Mode)
-        {
-        case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-          Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeConst(IntType(16, ParamNr * 2))));
-        case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-          Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeConst(IntType(32, ParamNr * 4))));
-        default: return nullptr;
-        }
-      }
-
-      virtual StackCleanerType StackCleanupBy(void) const
-      {
-        return StackCleanedByCaller;
-      }
-
-      virtual RegisterType GetRegisterType(u32 Id) const
-      {
-        switch (m_Mode)
-        {
-        case X86_Bit_16:
-          switch (Id)
-          {
-          case X86_Reg_Ax: case X86_Reg_Cx: case X86_Reg_Dx:
-            return CallingConvention::VolatileRegister;
-          case X86_Reg_Bx: case X86_Reg_Si: case X86_Reg_Di:
-          case X86_Reg_Sp: case X86_Reg_Bp: return CallingConvention::NonVolatileRegister;
-          default: return CallingConvention::UnknownRegister;
-          }
-        case X86_Bit_32:
-          switch (Id)
-          {
-          case X86_Reg_Eax: case X86_Reg_Ecx: case X86_Reg_Edx:
-            return CallingConvention::VolatileRegister;
-          case X86_Reg_Ebx: case X86_Reg_Esi: case X86_Reg_Edi:
-          case X86_Reg_Esp: case X86_Reg_Ebp:
-            return CallingConvention::NonVolatileRegister;
-          default: return CallingConvention::UnknownRegister;
-          }
-        default: return CallingConvention::UnknownRegister;
-        }
-      }
-
-    private:
-      u8 m_Mode;
-      CpuInformation const& m_rCpuInfo;
-    };
     static CdeclCallingConvention s_CdeclCallConv16(static_cast<u8>(X86_Bit_16), m_CpuInfo);
     static CdeclCallingConvention s_CdeclCallConv32(static_cast<u8>(X86_Bit_32), m_CpuInfo);
     switch (Mode)
@@ -430,59 +379,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
 
   if (rCallConvName == "stdcall")
   {
-    class StdCallCallingConvention : public CallingConvention
-    {
-    public:
-      StdCallCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr) const
-      {
-        switch (m_Mode)
-        {
-        case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-          Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeConst(IntType(16, ParamNr * 2))));
-        case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-          Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeConst(IntType(32, ParamNr * 4))));
-        default: return nullptr;
-        }
-      }
-
-      virtual StackCleanerType StackCleanupBy(void) const
-      {
-        return StackCleanedByCallee;
-      }
-
-      virtual RegisterType GetRegisterType(u32 Id) const
-      {
-        switch (m_Mode)
-        {
-        case X86_Bit_16:
-          switch (Id)
-          {
-          case X86_Reg_Ax: case X86_Reg_Cx: case X86_Reg_Dx:
-            return CallingConvention::VolatileRegister;
-          case X86_Reg_Bx: case X86_Reg_Si: case X86_Reg_Di:
-          case X86_Reg_Sp: case X86_Reg_Bp: return CallingConvention::NonVolatileRegister;
-          default: return CallingConvention::UnknownRegister;
-          }
-        case X86_Bit_32:
-          switch (Id)
-          {
-          case X86_Reg_Eax: case X86_Reg_Ecx: case X86_Reg_Edx:
-            return CallingConvention::VolatileRegister;
-          case X86_Reg_Ebx: case X86_Reg_Esi: case X86_Reg_Edi:
-          case X86_Reg_Esp: case X86_Reg_Ebp:
-            return CallingConvention::NonVolatileRegister;
-          default: return CallingConvention::UnknownRegister;
-          }
-        default: return CallingConvention::UnknownRegister;
-        }
-      }
-
-    private:
-      u8 m_Mode;
-      CpuInformation const& m_rCpuInfo;
-    };
     static StdCallCallingConvention s_StdCallCallConv16(static_cast<u8>(X86_Bit_16), m_CpuInfo);
     static StdCallCallingConvention s_StdCallCallConv32(static_cast<u8>(X86_Bit_32), m_CpuInfo);
     switch (Mode)
@@ -497,47 +394,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
   {
     if (Mode != X86_Bit_64)
       return nullptr;
-    class MsX64CallingConvention : public CallingConvention
-    {
-    public:
-      MsX64CallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr) const
-      {
-        u32 Reg = 0;
-        switch (ParamNr)
-        {
-        case 0: Reg = X86_Reg_Rcx; break;
-        case 1: Reg = X86_Reg_Rdx; break;
-        case 2: Reg = X86_Reg_R8; break;
-        case 3: Reg = X86_Reg_R9; break;
-        default: return nullptr; // TODO(wisk): handle stack based parameter
-        }
-        return Expr::MakeId(Reg, &m_rCpuInfo);
-      }
-
-      virtual StackCleanerType StackCleanupBy(void) const
-      {
-        return StackCleanedByCallee;
-      }
-
-      // src: https://msdn.microsoft.com/en-us/library/6t169e9c.aspx
-      virtual RegisterType GetRegisterType(u32 Id) const
-      {
-        switch (Id)
-        {
-        case X86_Reg_Rax: case X86_Reg_Rcx: case X86_Reg_Rdx: case X86_Reg_R8: case X86_Reg_R9: case X86_Reg_R10: case X86_Reg_R11:
-          return CallingConvention::VolatileRegister;
-        case X86_Reg_Rbx: case X86_Reg_Rbp: case X86_Reg_Rdi: case X86_Reg_Rsi: case X86_Reg_Rsp: case X86_Reg_R12: case X86_Reg_R13: case X86_Reg_R14: case X86_Reg_R15:
-          return CallingConvention::NonVolatileRegister;
-        default:
-          return CallingConvention::UnknownRegister;
-        }
-      }
-
-    private:
-      CpuInformation const& m_rCpuInfo;
-    };
     static MsX64CallingConvention s_MsX64CallConv(m_CpuInfo);
     return &s_MsX64CallConv;
   }
@@ -546,46 +403,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
   {
     if (Mode != X86_Bit_64)
       return nullptr;
-    class SystemVCallingConvention : public CallingConvention
-    {
-    public:
-      SystemVCallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-      virtual Expression::SPType GetParameter(u16 ParamNr) const
-      {
-        u32 Reg = 0;
-        switch (ParamNr)
-        {
-        case 0: Reg = X86_Reg_Rcx; break;
-        case 1: Reg = X86_Reg_Rdx; break;
-        case 2: Reg = X86_Reg_R8; break;
-        case 3: Reg = X86_Reg_R9; break;
-        default: return nullptr; // TODO(wisk): handle stack based parameter
-        }
-        return Expr::MakeId(Reg, &m_rCpuInfo);
-      }
-
-      virtual StackCleanerType StackCleanupBy(void) const
-      {
-        return StackCleanedByCallee;
-      }
-
-      virtual RegisterType GetRegisterType(u32 Id) const
-      {
-        switch (Id)
-        {
-        case X86_Reg_Rax: case X86_Reg_Rcx: case X86_Reg_Rdx: case X86_Reg_Rdi: case X86_Reg_Rsi: case X86_Reg_R8: case X86_Reg_R9: case X86_Reg_R10: case X86_Reg_R11:
-          return CallingConvention::VolatileRegister;
-        case X86_Reg_Rbx: case X86_Reg_Rbp: case X86_Reg_Rsp: case X86_Reg_R12: case X86_Reg_R13: case X86_Reg_R14: case X86_Reg_R15:
-          return CallingConvention::NonVolatileRegister;
-        default:
-          return CallingConvention::UnknownRegister;
-        }
-      }
-
-    private:
-      CpuInformation const& m_rCpuInfo;
-    };
     static SystemVCallingConvention s_SystemVCallConv(m_CpuInfo);
     return &s_SystemVCallConv;
   }

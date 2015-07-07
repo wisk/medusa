@@ -194,67 +194,31 @@ bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, 
     return false;
   }
 
-  auto spParamExpr = pCallConv->GetParameter(ParamNo);
-  if (spParamExpr == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "unable to get parameter expression" << LogEnd;
-    return false;
-  }
-
-  // TODO(wisk): find something better than hardcoding possible expression...
-  if (auto spIdExpr = expr_cast<IdentifierExpression>(spParamExpr))
-  {
-    rParamValue = IntType(spIdExpr->GetBitSize(), 0x0);
-    return m_pCpuCtxt->ReadRegister(spIdExpr->GetId(), rParamValue);
-  }
-
-  if (auto spMemExpr = expr_cast<MemoryExpression>(spParamExpr))
-  {
-    auto spOffExpr = spMemExpr->GetOffsetExpression();
-    if (auto spConstExpr = expr_cast<ConstantExpression>(spOffExpr))
-    {
-      rParamValue = IntType(spMemExpr->GetAccessSizeInBit(), 0x0);
-      return m_pMemCtxt->ReadMemory(spConstExpr->GetConstant().ConvertTo<u64>(), rParamValue);
-    }
-    if (auto spBinOpExpr = expr_cast<BinaryOperationExpression>(spOffExpr))
-    {
-      auto spIdExpr = expr_cast<IdentifierExpression>(spBinOpExpr->GetLeftExpression());
-      if (spIdExpr == nullptr)
-        return false;
-      IntType RegVal(spIdExpr->GetBitSize(), 0x0);
-      if (!m_pCpuCtxt->ReadRegister(spIdExpr->GetId(), RegVal))
-        return false;
-      auto spConstExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetRightExpression());
-      if (spConstExpr == nullptr)
-        return false;
-      // TODO(wisk): handle base field in address
-      u64 LinAddr;
-      switch (spBinOpExpr->GetOperation())
-      {
-      case OperationExpression::OpAdd:
-        LinAddr = (RegVal + spConstExpr->GetConstant()).ConvertTo<u64>();
-        break;
-
-      case OperationExpression::OpSub:
-        LinAddr = (RegVal - spConstExpr->GetConstant()).ConvertTo<u64>();
-        break;
-
-      default:
-        return false;
-      }
-      rParamValue = IntType(spMemExpr->GetAccessSizeInBit(), 0x0);
-      return m_pMemCtxt->ReadMemory(LinAddr, rParamValue);
-    }
-    return false;
-  }
-
-  return false;
+  return pCallConv->GetIntParameter(m_pCpuCtxt, m_pMemCtxt, ParamNo, rParamValue);
 }
 
 bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const
 {
-  // TODO(wisk):
-  return false;
+  auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
+  if (pCallConv == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to find callinv convention: " << rCallConv << LogEnd;
+    return false;
+  }
+
+  return pCallConv->ReturnFromFunction(m_pCpuCtxt, m_pMemCtxt, ParamNo);
+}
+
+bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, IntType const& rRetVal) const
+{
+  auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
+  if (pCallConv == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to find callinv convention: " << rCallConv << LogEnd;
+    return false;
+  }
+
+  return pCallConv->ReturnValueFromFunction(m_pCpuCtxt, m_pMemCtxt, ParamNo, rRetVal);
 }
 
 MEDUSA_NAMESPACE_END
