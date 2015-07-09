@@ -2,6 +2,7 @@
 #include <QTreeWidgetItem>
 #include <medusa/log.hpp>
 #include <medusa/module.hpp>
+#include <medusa/user_configuration.hpp>
 #include <QLabel>
 #include <QComboBox>
 #include <QCheckBox>
@@ -124,9 +125,10 @@ void ConfigureDialog::_GetModulesByLoader(void)
 void ConfigureDialog::_GetDefaultModules(void)
 {
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
+  medusa::UserConfiguration UserCfg;
 
   rModMgr.UnloadModules();
-  rModMgr.LoadModules(m_ModulePath.toStdWString(), *m_spBinaryStream);
+  rModMgr.LoadModules(UserCfg.GetOption("core.modules_path"), *m_spBinaryStream);
 
   // Database
   auto const& rDbs = rModMgr.GetDatabases();
