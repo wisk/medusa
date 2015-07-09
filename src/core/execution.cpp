@@ -194,7 +194,7 @@ bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, 
     return false;
   }
 
-  return pCallConv->GetIntParameter(m_pCpuCtxt, m_pMemCtxt, ParamNo, rParamValue);
+  return pCallConv->GetParameter(m_pCpuCtxt, m_pMemCtxt, ParamNo, rParamValue);
 }
 
 bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const
