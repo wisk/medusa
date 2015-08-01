@@ -69,6 +69,7 @@ public:
 
   virtual CpuInformation    const* GetCpuInformation(void) const { return nullptr; }
   virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const { return nullptr; }
+  virtual std::vector<std::string> GetCallingConventionNames(void) const { return{}; }
 
   virtual CpuContext*    MakeCpuContext(void)    const { return nullptr; }
   virtual MemoryContext* MakeMemoryContext(void) const { return nullptr; }

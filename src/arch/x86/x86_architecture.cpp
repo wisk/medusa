@@ -411,6 +411,11 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
   return nullptr;
 }
 
+std::vector<std::string> X86Architecture::GetCallingConventionNames(void) const
+{
+  return{ "cdecl", "stdcall", "ms_x64", "system_v" };
+}
+
 bool X86Architecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)
 {
   return false;

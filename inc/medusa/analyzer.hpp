@@ -16,6 +16,68 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+class AnalyzerPass
+{
+public:
+  AnalyzerPass(std::string const& rName, Document& rDoc, Address const& rAddr)
+    : m_Name(rName), m_rDoc(rDoc), m_rAddr(rAddr)
+  {}
+
+  std::string const& GetName(void) const { return m_Name; }
+
+protected:
+  std::string m_Name;
+  Document& m_rDoc;
+  Address const& m_rAddr;
+};
+
+class AnalyzerDisassemble : public AnalyzerPass
+{
+public:
+  AnalyzerDisassemble(Document& rDoc, Address const& rAddr) : AnalyzerPass("disassemble", rDoc, rAddr) {}
+
+  bool Disassemble(void);
+  bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock);
+
+  bool BuildControlFlowGraph(ControlFlowGraph& rCfg);
+};
+
+class AnalyzerInstruction : public AnalyzerPass
+{
+public:
+  AnalyzerInstruction(Document& rDoc, Address const& rAddr) : AnalyzerPass("instruction", rDoc, rAddr) {}
+
+  bool FindCrossReference(void);
+  bool FindString(void);
+};
+
+class AnalyzerBasicBlock : public AnalyzerPass
+{
+public:
+  AnalyzerBasicBlock(Document& rDoc, Address const& rAddr) : AnalyzerPass("basic block", rDoc, rAddr) {}
+};
+
+class AnalyzerFunction : public AnalyzerPass
+{
+public:
+  AnalyzerFunction(Document& rDoc, Address const& rAddr) : AnalyzerPass("function", rDoc, rAddr) {}
+
+  bool CreateFunction(void);
+  bool ComputeFunctionLength(u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold = 0x10000);
+  //bool DetermineCallingConvention();
+  //bool AnalyzeStack();
+};
+
+class AnalyzerString : public AnalyzerPass
+{
+public:
+  AnalyzerString(Document& rDoc, Address const& rAddr) : AnalyzerPass("string", rDoc, rAddr) {}
+
+  bool CreateUtf8String(void);
+  bool CreateUtf16String(void);
+  //bool DetermineStringType();
+};
+
 //! Analyzer handles all analysis operations.
 class Medusa_EXPORT Analyzer
 {
@@ -42,6 +104,8 @@ private:
     * \return Returns true if the size of the function can be computed, otherwise it returns false.
     */
     bool ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const;
+    bool DetermineCallingConvention(Address const& rFuncAddr, std::string& rCallConvName) const;
+    bool BuildControlFlowGraph(Document const& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const;
 
     Document& m_rDoc;
     Address   m_Addr;

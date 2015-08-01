@@ -23,9 +23,11 @@ public:
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
   virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
 
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
+  virtual bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
+  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual StackCleanerType   StackCleanupBy(void)                                             const;
 
 private:
@@ -49,9 +51,11 @@ public:
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
   virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
 
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
+  virtual bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
+  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual StackCleanerType   StackCleanupBy(void)                                             const;
 
 private:
@@ -75,9 +79,11 @@ public:
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
   virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
 
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
+  virtual bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
+  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual StackCleanerType   StackCleanupBy(void)                                             const;
 
 private:
@@ -100,9 +106,11 @@ public:
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
   virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
 
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
+  virtual bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
+  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
   virtual StackCleanerType   StackCleanupBy(void)                                             const;
 
 private:

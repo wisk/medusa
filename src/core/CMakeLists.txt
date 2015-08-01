@@ -61,6 +61,11 @@ set(SRC
 
   ${SRCROOT}/address.cpp
   ${SRCROOT}/analyzer.cpp
+  ${SRCROOT}/analyzer_disassemble.cpp
+  ${SRCROOT}/analyzer_instruction.cpp
+  ${SRCROOT}/analyzer_basic_block.cpp
+  ${SRCROOT}/analyzer_function.cpp
+  ${SRCROOT}/analyzer_string.cpp
   ${SRCROOT}/architecture.cpp
   ${SRCROOT}/array.cpp
   ${SRCROOT}/basic_block.cpp

@@ -138,6 +138,65 @@ Expression::SPType CdeclCallingConvention::EmitReturnValueFromFunction(u16 Param
   return nullptr;
 }
 
+bool CdeclCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
+bool CdeclCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rParamNr, CallingConvention::ValueType& rParamTy) const
+{
+  auto spMemExpr = expr_cast<MemoryExpression>(spExpr);
+  if (spMemExpr == nullptr)
+    return false;
+  auto spBinOp = expr_cast<BinaryOperationExpression>(spMemExpr->GetOffsetExpression());
+  if (spBinOp == nullptr)
+    return false;
+  if (spBinOp->GetOperation() != OperationExpression::OpAdd)
+    return false;
+  auto spSpId = expr_cast<IdentifierExpression>(spBinOp->GetLeftExpression());
+  if (spSpId == nullptr)
+    return false;
+  auto spStkOff = expr_cast<ConstantExpression>(spBinOp->GetRightExpression());
+  if (spStkOff == nullptr)
+    return false;
+  auto StkOff = spStkOff->GetConstant().ConvertTo<s32>();
+
+  switch (m_Mode)
+  {
+  case X86_Bit_16:
+  {
+    if (spSpId->GetId() != X86_Reg_Sp)
+      return false;
+    if (StkOff < 2)
+      return false;
+    if ((StkOff & 0x1) != 0x0)
+      return false;
+    rParamNr = StkOff >> 1;
+    rParamTy = IntegerType;
+    break;
+  }
+
+  case X86_Bit_32:
+  {
+    if (spSpId->GetId() != X86_Reg_Esp)
+      return false;
+    if (StkOff < 4)
+      return false;
+    if ((StkOff & 0x2) != 0x0)
+      return false;
+    rParamNr = StkOff >> 2;
+    rParamTy = IntegerType;
+    break;
+  }
+
+  default:
+    return false;
+  }
+
+  return true;
+}
+
 CallingConvention::RegisterType CdeclCallingConvention::GetRegisterType(u32 Id) const
 {
   switch (m_Mode)
@@ -163,12 +222,6 @@ CallingConvention::RegisterType CdeclCallingConvention::GetRegisterType(u32 Id) 
     }
   default: return CallingConvention::UnknownRegister;
   }
-}
-
-bool CdeclCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
-{
-  // TODO(wisk)
-  return false;
 }
 
 CallingConvention::StackCleanerType CdeclCallingConvention::StackCleanupBy(void) const
@@ -312,6 +365,65 @@ Expression::SPType StdCallCallingConvention::EmitReturnValueFromFunction(u16 Par
   return nullptr;
 }
 
+bool StdCallCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
+bool StdCallCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rParamNr, CallingConvention::ValueType& rParamTy) const
+{
+  auto spMemExpr = expr_cast<MemoryExpression>(spExpr);
+  if (spMemExpr == nullptr)
+    return false;
+  auto spBinOp = expr_cast<BinaryOperationExpression>(spMemExpr->GetOffsetExpression());
+  if (spBinOp == nullptr)
+    return false;
+  if (spBinOp->GetOperation() != OperationExpression::OpAdd)
+    return false;
+  auto spSpId = expr_cast<IdentifierExpression>(spBinOp->GetLeftExpression());
+  if (spSpId == nullptr)
+    return false;
+  auto spStkOff = expr_cast<ConstantExpression>(spBinOp->GetRightExpression());
+  if (spStkOff == nullptr)
+    return false;
+  auto StkOff = spStkOff->GetConstant().ConvertTo<s32>();
+
+  switch (m_Mode)
+  {
+  case X86_Bit_16:
+  {
+    if (spSpId->GetId() != X86_Reg_Sp)
+      return false;
+    if (StkOff < 2)
+      return false;
+    if ((StkOff & 0x1) != 0x0)
+      return false;
+    rParamNr = StkOff >> 1;
+    rParamTy = IntegerType;
+    break;
+  }
+
+  case X86_Bit_32:
+  {
+    if (spSpId->GetId() != X86_Reg_Esp)
+      return false;
+    if (StkOff < 4)
+      return false;
+    if ((StkOff & 0x2) != 0x0)
+      return false;
+    rParamNr = StkOff >> 2;
+    rParamTy = IntegerType;
+    break;
+  }
+
+  default:
+    return false;
+  }
+
+  return true;
+}
+
 CallingConvention::RegisterType StdCallCallingConvention::GetRegisterType(u32 Id) const
 {
   switch (m_Mode)
@@ -337,12 +449,6 @@ CallingConvention::RegisterType StdCallCallingConvention::GetRegisterType(u32 Id
     }
   default: return CallingConvention::UnknownRegister;
   }
-}
-
-bool StdCallCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
-{
-  // TODO(wisk)
-  return false;
 }
 
 CallingConvention::StackCleanerType StdCallCallingConvention::StackCleanupBy(void) const
@@ -439,6 +545,18 @@ Expression::SPType MsX64CallingConvention::EmitReturnValueFromFunction(u16 Param
   return nullptr;
 }
 
+bool MsX64CallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
+bool MsX64CallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rParamNr, CallingConvention::ValueType& rParamTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
 // src: https://msdn.microsoft.com/en-us/library/6t169e9c.aspx
 CallingConvention::RegisterType MsX64CallingConvention::GetRegisterType(u32 Id) const
 {
@@ -451,12 +569,6 @@ CallingConvention::RegisterType MsX64CallingConvention::GetRegisterType(u32 Id) 
   default:
     return CallingConvention::UnknownRegister;
   }
-}
-
-bool MsX64CallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
-{
-  // TODO(wisk)
-  return false;
 }
 
 CallingConvention::StackCleanerType MsX64CallingConvention::StackCleanupBy(void) const
@@ -547,6 +659,18 @@ Expression::SPType SystemVCallingConvention::EmitReturnValueFromFunction(u16 Par
   return nullptr;
 }
 
+bool SystemVCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
+bool SystemVCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rParamNr, CallingConvention::ValueType& rParamTy) const
+{
+  // TODO(wisk)
+  return false;
+}
+
 CallingConvention::RegisterType SystemVCallingConvention::GetRegisterType(u32 Id) const
 {
   switch (Id)
@@ -558,12 +682,6 @@ CallingConvention::RegisterType SystemVCallingConvention::GetRegisterType(u32 Id
   default:
     return CallingConvention::UnknownRegister;
   }
-}
-
-bool SystemVCallingConvention::AnalyzeArgument(Expression::SPType spExpr, u16& rArgNr, CallingConvention::ValueType& rArgTy) const
-{
-  // TODO(wisk)
-  return false;
 }
 
 CallingConvention::StackCleanerType SystemVCallingConvention::StackCleanupBy(void) const

@@ -252,8 +252,8 @@ bool StructureDetail::_DetermineNextOffset(u32& rNextOffset) const
   return true;
 }
 
-FunctionDetail::FunctionDetail(std::string const& rName, TypeDetail const& rReturnType, TypedValueDetail::List const& rParameters)
-  : Detail(Detail::Function, nullptr, rName), m_ReturnType(rReturnType), m_Parameters(rParameters)
+FunctionDetail::FunctionDetail(std::string const& rName, TypeDetail const& rReturnType, TypedValueDetail::List const& rParameters, std::string const& rCallConvName)
+  : Detail(Detail::Function, nullptr, rName), m_ReturnType(rReturnType), m_Parameters(rParameters), m_CallingConventionName(rCallConvName)
 {
 }
 
@@ -270,4 +270,9 @@ TypeDetail const& FunctionDetail::GetReturnType(void) const
 std::list<TypedValueDetail> const& FunctionDetail::GetParameters(void) const
 {
   return m_Parameters;
+}
+
+std::string const& FunctionDetail::GetCallingConventionName(void) const
+{
+  return m_CallingConventionName;
 }

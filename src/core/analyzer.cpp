@@ -33,7 +33,13 @@ std::string Analyzer::MakeFunctionTask::GetName(void) const
 
 void Analyzer::MakeFunctionTask::Run(void)
 {
-  CreateFunction(m_Addr);
+  if (!CreateFunction(m_Addr))
+    return;
+  std::string CallConv;
+  if (!DetermineCallingConvention(m_Addr, CallConv))
+    return;
+
+  Log::Write("core") << "function: " << m_Addr << ", calling convention: " << CallConv << LogEnd;
 }
 
 bool Analyzer::MakeFunctionTask::CreateFunction(Address const& rAddr)
@@ -104,6 +110,7 @@ bool Analyzer::MakeFunctionTask::CreateFunction(Address const& rAddr)
   return true;
 }
 
+// FIXME(wisk): code dup
 bool Analyzer::MakeFunctionTask::ComputeFunctionLength(Address const& rFuncAddr, Address& rEndAddress, u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold) const
 {
   std::stack<Address> CallStack;
@@ -196,6 +203,210 @@ bool Analyzer::MakeFunctionTask::ComputeFunctionLength(Address const& rFuncAddr,
   return RetReached;
 }
 
+bool Analyzer::MakeFunctionTask::DetermineCallingConvention(Address const& rFuncAddr, std::string& rCallConvName) const
+{
+  auto const& rFuncLbl = m_rDoc.GetLabelFromAddress(rFuncAddr);
+
+  do
+  {
+    FunctionDetail FuncDtl;
+    Id FuncId;
+    if (!m_rDoc.RetrieveDetailId(rFuncAddr, 0, FuncId))
+      break;
+
+    if (!m_rDoc.GetFunctionDetail(FuncId, FuncDtl))
+      break;
+    auto const& rCCName = FuncDtl.GetCallingConventionName();
+    if (rCCName.empty())
+      break;
+
+    rCallConvName = rCCName;
+    return true;
+  } while (0);
+
+  auto FuncArchTag = m_rDoc.GetArchitectureTag(rFuncAddr);
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spFuncArch = rModMgr.GetArchitecture(FuncArchTag);
+  if (spFuncArch == nullptr)
+    return false;
+  auto FuncMode = m_rDoc.GetMode(rFuncAddr);
+  if (FuncMode == 0)
+    return false;
+
+  // First, we need to retrieve all available calling convention
+  std::vector<CallingConvention const*> CC;
+  auto const& rCCNames = spFuncArch->GetCallingConventionNames();
+  for (auto const& rCCName : rCCNames)
+  {
+    auto pCC = spFuncArch->GetCallingConvention(rCCName, FuncMode);
+    if (pCC == nullptr)
+      continue;
+    CC.push_back(pCC);
+  }
+
+  if (!(rFuncLbl.GetType() & Label::Imported))
+  {
+    Log::Write("core") << "determine calling convention of " << rFuncLbl.GetName() << " by its code" << LogEnd;
+    ControlFlowGraph CFG(m_rDoc);
+    if (!BuildControlFlowGraph(m_rDoc, rFuncAddr, CFG))
+      return false;
+    Expression::VSPType Inputs;
+    CFG.ForEachBasicBlock([&](BasicBlockVertexProperties const& rBB)
+    {
+      auto const& rAddrs = rBB.GetAddresses();
+      for (auto const& rAddr : rAddrs)
+      {
+        auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rAddr));
+        if (spInsn == nullptr)
+          continue;
+        for (auto const& rExpr : spInsn->GetSemantic())
+        {
+          if (auto spAssign = expr_cast<AssignmentExpression>(rExpr))
+          {
+            for (auto const* pCC : CC)
+            {
+              u16 ParamNr;
+              CallingConvention::ValueType ParamTy;
+              auto spSrcExpr = spAssign->GetSourceExpression();
+
+              // TODO: optimize source expression to eliminate sign_extend, normalize id...
+
+              Log::Write("core") << "src: " << spSrcExpr->ToString() << LogEnd;
+              if (pCC->AnalyzeParameter(spSrcExpr, ParamNr, ParamTy))
+              {
+                Log::Write("core") << "src: " << spSrcExpr->ToString() << ", param_nr: " << ParamNr << LogEnd;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  else
+  {
+    Log::Write("core") << "determine calling convention of " << rFuncLbl.GetName() << " by the way it's called" << LogEnd;
+  }
+
+  return false;
+}
+
+// FIXME(wisk): code dup
+bool Analyzer::MakeFunctionTask::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
+{
+  std::stack<Address> CallStack;
+  Address::List Addresses;
+  typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> TupleEdge;
+  std::list<TupleEdge> Edges;
+  std::map<Address, bool> VisitedInstruction;
+  bool RetReached = false;
+
+  Address CurAddr = rAddr;
+
+  MemoryArea const* pMemArea = rDoc.GetMemoryArea(CurAddr);
+
+  if (pMemArea == nullptr)
+    return false;
+
+  CallStack.push(CurAddr);
+
+  while (!CallStack.empty())
+  {
+    CurAddr = CallStack.top();
+    CallStack.pop();
+
+    while (rDoc.ContainsCode(CurAddr))
+    {
+      auto spInsn = std::static_pointer_cast<Instruction>(rDoc.GetCell(CurAddr));
+
+      if (spInsn == nullptr)
+        return false;
+
+      auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+      if (spArch == nullptr)
+        return false;
+
+      // If the current address is already visited
+      if (VisitedInstruction[CurAddr])
+      {
+        // ... and if the current instruction is the end of the function, we take another address from the callstack
+        if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
+          break;
+
+        // if not, we try with the next address.
+        CurAddr += spInsn->GetLength();
+        continue;
+      }
+
+      Addresses.push_back(CurAddr);
+      VisitedInstruction[CurAddr] = true;
+
+      if (spInsn->GetSubType() & Instruction::JumpType)
+      {
+        Address DstAddr;
+
+
+        if (expr_cast<MemoryExpression>(spInsn->GetOperand(0)) != nullptr)
+          break;
+
+        if (!spInsn->GetOperandReference(rDoc, 0, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
+          break;
+
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
+        {
+          Address NextAddr = CurAddr + spInsn->GetLength();
+          Edges.push_back(TupleEdge(DstAddr, CurAddr, BasicBlockEdgeProperties::True));
+          Edges.push_back(TupleEdge(NextAddr, CurAddr, BasicBlockEdgeProperties::False));
+          CallStack.push(NextAddr);
+        }
+        else
+        {
+          Edges.push_back(TupleEdge(DstAddr, CurAddr, BasicBlockEdgeProperties::Unconditional));
+        }
+
+        CurAddr = DstAddr;
+        continue;
+      }
+
+      else if (spInsn->GetSubType() & Instruction::ReturnType && !(spInsn->GetSubType() & Instruction::ConditionalType))
+      {
+        RetReached = true;
+        break;
+      }
+
+      CurAddr += spInsn->GetLength();
+    } // end while (m_Document.IsPresent(CurAddr))
+  } // while (!CallStack.empty())
+
+  BasicBlockVertexProperties FirstBasicBlock(rDoc, Addresses);
+
+  // This case is required because a jmp type insn can be located just before the entry point of a function,
+  // thus nothing can split this part (which normally is done by the call <func>)
+  Address::List FirstSplitAddrs;
+  if (FirstBasicBlock.Split(rAddr, FirstSplitAddrs))
+    rCfg.AddBasicBlockVertex(BasicBlockVertexProperties(rDoc, FirstSplitAddrs));
+
+  rCfg.AddBasicBlockVertex(FirstBasicBlock);
+
+  for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
+  {
+    static const char *TypeStr[] =
+    {
+      "Unknown",
+      "Unconditional",
+      "True",
+      "False"
+    };
+    bool Res = rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
+    Log::Write("core").Level(LogDebug) << "dst: " << std::get<0>(*itEdge) << ", src: " << std::get<1>(*itEdge) << ", type: " << TypeStr[std::get<2>(*itEdge)] << (Res ? ", succeed" : ", failed") << LogEnd;
+  }
+
+  for (auto itEdge = std::begin(Edges); itEdge != std::end(Edges); ++itEdge)
+    rCfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(*itEdge)), std::get<1>(*itEdge), std::get<0>(*itEdge));
+
+  rCfg.Finalize(rDoc);
+
+  return RetReached;
+}
 
 Analyzer::DisassembleTask::DisassembleTask(Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode)
   : MakeFunctionTask(rDoc, rAddr), m_rArch(rArch), m_Mode(Mode)
@@ -484,6 +695,8 @@ bool Analyzer::DisassembleTask::Disassemble(Address const& rAddr)
   std::for_each(std::begin(FuncAddr), std::end(FuncAddr), [&](Address const& rAddr)
   {
     CreateFunction(rAddr);
+    std::string CC;
+    DetermineCallingConvention(rAddr, CC);
   });
 
   return true;
@@ -874,6 +1087,8 @@ void Analyzer::DisassembleAllFunctionsTask::Run(void)
 
     DisassembleFunctionTask DisasmFuncTask(m_rDoc, rAddress, *spArch, Mode);
     DisasmFuncTask.Run();
+    MakeFunctionTask CreateFuncTask(m_rDoc, rAddress);
+    CreateFuncTask.Run();
   });
 }
 
@@ -1077,6 +1292,7 @@ void Analyzer::AnalyzeStackAllFunctionsTask::Run(void)
 
 }
 
+// FIXME(wisk): code dup
 bool Analyzer::ComputeFunctionLength(
   Document const& rDoc,
   Address const& rFunctionAddress,
@@ -1240,19 +1456,16 @@ bool Analyzer::MakeWindowsString(Document& rDoc, Address const& rAddr) const
 
   RawLen += sizeof(Utf16Char); // include L'\0'
 
-  auto pStrBuf = new u8[RawLen];
-  if (!rBinStrm.Read(StrOff, pStrBuf, RawLen))
+  auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
+  if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
   {
     Log::Write("core") << "Unable to read utf-16 string at " << rAddr << LogEnd;
-    delete [] pStrBuf;
     return false;
   }
-  std::string CvtStr = Utf16Str.ConvertToUtf8(pStrBuf, RawLen);
-  delete [] pStrBuf;
+  std::string CvtStr = Utf16Str.ConvertToUtf8(upStrBuf.get(), RawLen);
   if (CvtStr.empty())
   {
     Log::Write("core") << "Unable to convert utf-16 string at " << rAddr << LogEnd;
-    delete [] pStrBuf;
     return false;
   }
 
@@ -1271,6 +1484,7 @@ bool Analyzer::BuildControlFlowGraph(Document const& rDoc, std::string const& rL
   return BuildControlFlowGraph(rDoc, rLblAddr, rCfg);
 }
 
+// FIXME(wisk): code dup
 bool Analyzer::BuildControlFlowGraph(Document const& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
 {
   std::stack<Address> CallStack;

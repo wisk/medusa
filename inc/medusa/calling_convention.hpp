@@ -46,9 +46,11 @@ public:
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const { return nullptr; }
   virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const { return nullptr; }
 
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const { return UnknownRegister; }
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const { return false; }
+  virtual bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const { return false; }
+  virtual RegisterType       GetRegisterType(u32 Id)                                          const { return UnknownRegister; }
   virtual StackCleanerType   StackCleanupBy(void)                                             const { return StackCleanedByUnknown; }
 };
 

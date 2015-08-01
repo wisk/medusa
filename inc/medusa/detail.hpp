@@ -258,18 +258,20 @@ public:
 
   FunctionDetail(std::string const& rName = "",
     TypeDetail const& rReturnType = TypeDetail(),
-    TypedValueDetail::List const& rParameters = TypedValueDetail::List());
+    TypedValueDetail::List const& rParameters = TypedValueDetail::List(),
+    std::string const& rCallConvName = "");
 
-  virtual std::string                Dump(void)          const;
-  TypeDetail                  const& GetReturnType(void) const;
-  std::list<TypedValueDetail> const& GetParameters(void) const;
+  virtual std::string                Dump(void)                     const;
+  TypeDetail                  const& GetReturnType(void)            const;
+  std::list<TypedValueDetail> const& GetParameters(void)            const;
+  std::string                 const& GetCallingConventionName(void) const;
 
 private:
   TypeDetail             m_ReturnType;
   TypedValueDetail::List m_Parameters;
+  std::string            m_CallingConventionName;
   // TODO:
   // Attributes
-  // Calling convention
 };
 
 MEDUSA_NAMESPACE_END
