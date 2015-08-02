@@ -7,10 +7,14 @@
 
 #include <list>
 
-#include <ogdf/layered/SugiyamaLayout.h>
-#include <ogdf/layered/MedianHeuristic.h>
-#include <ogdf/layered/OptimalRanking.h>
-#include <ogdf/layered/OptimalHierarchyLayout.h>
+#ifdef MEDUSA_BUILD_WITH_OGDF
+# include <ogdf/basic/Graph.h>
+# include <ogdf/basic/GraphAttributes.h>
+# include <ogdf/layered/SugiyamaLayout.h>
+# include <ogdf/layered/MedianHeuristic.h>
+# include <ogdf/layered/OptimalRanking.h>
+# include <ogdf/layered/OptimalHierarchyLayout.h>
+#endif
 
 ControlFlowGraphScene::ControlFlowGraphScene(QObject* pParent, medusa::Medusa& rCore, medusa::Address const& rCfgAddr)
   : QGraphicsScene(pParent)
@@ -23,6 +27,8 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject* pParent, medusa::Medusa& r
 
 bool ControlFlowGraphScene::_Update(void)
 {
+// TODO(wisk): move this in code medusa
+#ifdef MEDUSA_BUILD_WITH_OGDF
   ogdf::Graph Graph;
   ogdf::GraphAttributes GraphAttr(Graph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
   medusa::ControlFlowGraph CFG(m_rCore.GetDocument());
@@ -114,4 +120,7 @@ bool ControlFlowGraphScene::_Update(void)
   medusa::UserConfiguration UserCfg;
   setBackgroundBrush(QBrush(QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")))));
   return true;
+#else
+  return false;
+#endif
 }

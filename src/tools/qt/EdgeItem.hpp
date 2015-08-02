@@ -7,7 +7,9 @@
 
 #include <medusa/basic_block.hpp>
 
+#ifdef MEDUSA_BUILD_WITH_OGDF
 #include <ogdf/basic/geometry.h>
+#endif
 
 class EdgeItem : public QAbstractGraphicsShapeItem
 {
@@ -17,6 +19,7 @@ public:
 
   EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType type);
 
+#ifdef MEDUSA_BUILD_WITH_OGDF
   int type(void) const { return Type; }
   virtual QRectF boundingRect(void) const;
   virtual QPainterPath shape(void) const;
@@ -25,12 +28,15 @@ public:
 
 protected:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+#endif
 
 private:
   QGraphicsItem * _startItem, *_endItem;
   EdgeType        _type;
   QColor          _clr;
+#ifdef MEDUSA_BUILD_WITH_OGDF
   ogdf::DPolyline _bends;
+#endif
   QPainterPath    _line, _head;
 };
 

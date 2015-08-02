@@ -1,5 +1,7 @@
-#ifndef __MEDUSA_VERSION_HPP__
-#define __MEDUSA_VERSION_HPP__
+#ifndef MEDUSA_VERSION_HPP
+#define MEDUSA_VERSION_HPP
+
+/* This file has been generated automatically, don't modify it directly */
 
 namespace Version
 {
@@ -11,4 +13,8 @@ namespace Version
   };
 }
 
-#endif // !__MEDUSA_VERSION_HPP__
+// Features
+
+@MEDUSA_HAS_OGDF@
+
+#endif // !MEDUSA_VERSION_HPP

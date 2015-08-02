@@ -8,9 +8,6 @@
 #include <medusa/medusa.hpp>
 #include <medusa/function.hpp>
 
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
-
 class ControlFlowGraphScene : public QGraphicsScene
 {
   Q_OBJECT

@@ -97,7 +97,13 @@ add_executable(qMedusa ${GUI_TYPE}
 )
 
 qt5_use_modules(qMedusa Widgets)
-target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
+
+# TODO(wisk): ogdf must be only used by medusa itself, not by tools
+if (MEDUSA_BUILD_WITH_OGDF)
+  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
+else()
+  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT})
+endif()
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
 # I can't believe how hard it is to deploy qt5...

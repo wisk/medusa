@@ -3,6 +3,8 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/core)
 
 # all source files
 set(SRC
+  ${CMAKE_BINARY_DIR}/inc/medusa/version.hpp
+
   ${INCROOT}/address.hpp
   ${INCROOT}/analyzer.hpp
   ${INCROOT}/architecture.hpp

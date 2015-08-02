@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
-find_package(Boost 1.46 COMPONENTS Python REQUIRED)
+find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS Python REQUIRED)
+set(Python_ADDITIONAL_VERSIONS ${MEDUSA_PYTHON_VERSION})
 find_package(PythonLibs REQUIRED)
 
 set(SRC

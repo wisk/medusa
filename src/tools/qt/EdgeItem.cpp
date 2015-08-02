@@ -3,7 +3,6 @@
 EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType type)
   : _startItem(startItem), _endItem(endItem), _type(type)
   , _clr(Qt::black)
-  , _bends()
 {
   switch (type)
   {
@@ -16,6 +15,7 @@ EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType ty
   setZValue(1.0);
 }
 
+#ifdef MEDUSA_BUILD_WITH_OGDF
 QPainterPath EdgeItem::shape(void) const
 {
   QPainterPath path;
@@ -161,3 +161,5 @@ void EdgeItem::computeCoordinates(void)
   _head.addPolygon(head);
   _head.setFillRule(Qt::WindingFill);
 }
+
+#endif
