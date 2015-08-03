@@ -20,8 +20,9 @@ Build-bot
 Prerequisites
 =============
 
-Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (included), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
+Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (required git), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
 You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2013 update 4 on Windows).
+Git is optional but allows to clone remote repository for specific features, see *Compilation/Options*.
 
 Feature
 =======
@@ -125,7 +126,7 @@ Finally, we're ready to retrieve and compile medusa:
 
 .. code-block:: bash
 
-  git clone --recursive https://github.com/wisk/medusa.git
+  git clone https://github.com/wisk/medusa.git
   mkdir build
   cd build
   # UNIX users should define CMAKE_BUILD_TYPE e.g. -DCMAKE_BUILD_TYPE=Release to compile Medusa with optimizatin
@@ -143,6 +144,12 @@ In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux 
 For Windows users, you should probably add **-G"Visual Studio XX Win64"** where *XX* is your Visual Studio version and *Win64* if you build medusa in 64-bit.
 To run the Qt interface on Windows, you may have to add the folder *%QTDIR%\\bin* to your *%PATH%* and copy the folder *%QTDIR%\\plugins\\platforms*.
 By default, Medusa searches modules in the current folder, so you should run medusa executables from the folder where modules are located (e.g. *build/bin* on UNIX or *build\\bin\\{Debug,Release,...}* on Windows).
+
+Options
+-------
+
+* MEDUSA_BUILD_WITH_OGDF: clone OGDF project and build it, this library allows qMedusa to display graph
+
 
 Screenshots
 ===========
