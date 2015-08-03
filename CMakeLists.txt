@@ -54,14 +54,16 @@ option(MEDUSA_BUILD_WITH_OGDF
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
 
-  find_package(Git)
-  if (NOT GIT_FOUND)
-    message(FATAL_ERROR "Unable to find Git executable")
-  endif()
+  if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf")
+    find_package(Git)
+    if (NOT GIT_FOUND)
+      message(FATAL_ERROR "Unable to find Git executable")
+    endif()
 
   execute_process(
-    COMMAND "${GIT_EXECUTABLE}" clone https://github.com/ogdf/ogdf
+    COMMAND "${GIT_EXECUTABLE}" clone https://github.com/wisk/ogdf
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/deps")
+  endif()
 
   if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf/")
     message(FATAL_ERROR "OGDF folder is missing")
