@@ -1,25 +1,34 @@
 language: cpp
 
+sudo: false
+
+cache:
+- ccache
+- apt
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - boost-latest
+    packages:
+    - gcc-4.9
+    - g++-4.9
+    - ccache
+    - libboost1.55-all-dev
+
 compiler:
   - gcc
 
 before_install:
   - git submodule update --init --recursive
-  - sudo apt-get remove cmake --purge
-
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository -y ppa:boost-latest/ppa
-  - sudo apt-get -qq update
-
-  - sudo apt-get -qq install boost1.55 gcc-4.9 g++-4.9 expect
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 90
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 90
+  - export CC="ccache gcc-4.9"
+  - export CXX="ccache g++-4.9"
   - cd .travis
-  - wget http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.sh
-  - chmod +x cmake-3.2.1-Linux-x86_64.sh
-  - chmod +x installcmake.sh
-  - sudo ./installcmake.sh
-  - sudo ln -s /usr/cmake-3.2.1-Linux-x86_64/bin/cmake /usr/bin/cmake
+  - wget -O cmake.tar.gz http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.tar.gz
+  - tar xvzf cmake.tar.gz
+  - ls -la
+  - export PATH=$(pwd)/cmake-3.2.1-Linux-x86_64/bin:$PATH
   - cd ..
 
 before_script:
@@ -31,6 +40,7 @@ before_script:
 script:
   - cd build_release
   - make all test
+  - ccache -s
   - cd ..
 
 notifications:
