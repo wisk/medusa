@@ -13,22 +13,22 @@ namespace medusa
     {
       Log::Write("core")
         << "Function found"
-        << ": address=" << m_rAddr.ToString()
+        << ": address=" << m_Addr.ToString()
         << ", length=" << FuncLen
         << ", instruction counter: " << InsnCnt
         << LogEnd;
 
-      Label FuncLbl(m_rAddr, Label::Function | Label::Global);
+      Label FuncLbl(m_Addr, Label::Function | Label::Global);
       Function* pFunction = new Function(FuncLbl.GetLabel(), FuncLen, InsnCnt);
-      m_rDoc.SetMultiCell(m_rAddr, pFunction, false);
-      m_rDoc.AddLabel(m_rAddr, FuncLbl, false);
+      m_rDoc.SetMultiCell(m_Addr, pFunction, false);
+      m_rDoc.AddLabel(m_Addr, FuncLbl, false);
     }
     else
     {
-      auto pMemArea = m_rDoc.GetMemoryArea(m_rAddr);
+      auto pMemArea = m_rDoc.GetMemoryArea(m_Addr);
       if (pMemArea == nullptr)
         return false;
-      auto spInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(m_rAddr));
+      auto spInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(m_Addr));
       if (spInsn == nullptr)
         return false;
       auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
@@ -37,7 +37,7 @@ namespace medusa
       if (spInsn->GetSubType() != Instruction::JumpType)
         return false;
       Address OpRefAddr;
-      if (spInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(m_rAddr, *spInsn), OpRefAddr) == false)
+      if (spInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(m_Addr, *spInsn), OpRefAddr) == false)
         return false;
       auto OpLbl = m_rDoc.GetLabelFromAddress(OpRefAddr);
       if (OpLbl.GetType() == Label::Unknown)
@@ -45,14 +45,14 @@ namespace medusa
 
       // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
       std::string FuncName = std::string(spInsn->GetName()) + std::string("_") + OpLbl.GetName();
-      m_rDoc.AddLabel(m_rAddr, Label(FuncName, Label::Function | Label::Global), false);
+      m_rDoc.AddLabel(m_Addr, Label(FuncName, Label::Function | Label::Global), false);
       auto pFunc = new Function(FuncName, spInsn->GetLength(), 1);
-      m_rDoc.SetMultiCell(m_rAddr, pFunc, true);
+      m_rDoc.SetMultiCell(m_Addr, pFunc, true);
 
       // Propagate the detail ID
       Id RefId;
       if (m_rDoc.RetrieveDetailId(OpRefAddr, 0, RefId))
-        m_rDoc.BindDetailId(m_rAddr, 0, RefId);
+        m_rDoc.BindDetailId(m_Addr, 0, RefId);
     }
 
     auto OsName = m_rDoc.GetOperatingSystemName();
@@ -66,7 +66,7 @@ namespace medusa
       return true;
     }
 
-    spOs->AnalyzeFunction(m_rDoc, m_rAddr);
+    spOs->AnalyzeFunction(m_rDoc, m_Addr);
 
     return true;
   }
@@ -78,12 +78,12 @@ namespace medusa
     bool RetReached = false;
 
     u32 FuncLen = 0x0;
-    Address CurAddr = m_rAddr;
+    Address CurAddr = m_Addr;
     rFunctionLength = 0x0;
     rInstructionCounter = 0x0;
     MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
 
-    auto Lbl = m_rDoc.GetLabelFromAddress(m_rAddr);
+    auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
     if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
       return false;
 
@@ -113,6 +113,12 @@ namespace medusa
 
         if (VisitedInstruction[CurAddr])
         {
+          auto InsnLen = spInsn->GetLength();
+          if (InsnLen == 0)
+          {
+            Log::Write("core").Level(LogDebug) << "0 length instruction at " << CurAddr << LogEnd;
+            break;
+          }
           CurAddr += spInsn->GetLength();
           continue;
         }

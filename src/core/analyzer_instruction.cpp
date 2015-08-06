@@ -5,7 +5,7 @@ namespace medusa
 {
   bool AnalyzerInstruction::FindCrossReference(void)
   {
-    auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(m_rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(m_Addr));
     if (spInsn == nullptr)
       return false;
 
@@ -24,14 +24,14 @@ namespace medusa
         continue;
 
       Address DstAddr;
-      if (!spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_rAddr, *spInsn), DstAddr))
+      if (!spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, *spInsn), DstAddr))
         continue;
 
       auto spMemExpr = expr_cast<MemoryExpression>(spCurOprd);
       if (spMemExpr != nullptr && spMemExpr->IsDereferencable())
       {
         Address RefAddr;
-        if (spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_rAddr, *spInsn), RefAddr, false))
+        if (spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, *spInsn), RefAddr, false))
           m_rDoc.ChangeValueSize(RefAddr, spInsn->GetOperand(CurOp)->GetBitSize(), false);
       }
 
@@ -41,7 +41,7 @@ namespace medusa
         continue;
 
       // Add XRef
-      m_rDoc.AddCrossReference(DstAddr, m_rAddr);
+      m_rDoc.AddCrossReference(DstAddr, m_Addr);
 
       u16 LblTy = Label::Unknown;
 

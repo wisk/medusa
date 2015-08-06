@@ -636,7 +636,7 @@ public:
     //  }
     //}
     // TODO: iterate
-    m_rCore.MakeAsciiString(m_pView->GetCursorAddress());
+    m_rCore.CreateUtf8String(m_pView->GetCursorAddress());
   }
 };
 
@@ -679,7 +679,7 @@ public:
     //  }
     //}
     // TODO: iterate
-    m_rCore.MakeWindowsString(m_pView->GetCursorAddress());
+    m_rCore.CreateUtf16String(m_pView->GetCursorAddress());
   }
 };
 

@@ -96,13 +96,13 @@ bool Medusa::Start(
     return true;
 
   /* Disassemble the file with the default analyzer */
-  AddTask(m_Analyzer.CreateDisassembleAllFunctionsTask(m_Document));
+  AddTask(m_Analyzer.CreateTask("disassemble all functions", m_Document));
 
   /* Analyze the stack for each functions */
   //AddTask(m_Analyzer.CreateAnalyzeStackAllFunctionsTask(m_Document));
 
-  ///* Find all strings using the previous analyze */
-  AddTask(m_Analyzer.CreateFindAllStringTask(m_Document));
+  /* Find all strings using the previous analyze */
+  AddTask(m_Analyzer.CreateTask("find all strings", m_Document));
 
   /* Analyze all functions */
   if (spOperatingSystem)
@@ -343,10 +343,10 @@ void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
   if (Mode == 0)
     Mode = spArch->GetDefaultMode(rAddr);
 
-  AddTask(m_Analyzer.CreateDisassembleTask(m_Document, rAddr, *spArch, Mode));
+  AddTask(m_Analyzer.CreateTask("disassemble with", m_Document, rAddr, *spArch, Mode));
 }
 
-bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg) const
+bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
 {
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
@@ -413,7 +413,19 @@ Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, 
 
 bool Medusa::CreateFunction(Address const& rAddr)
 {
-  AddTask(m_Analyzer.CreateMakeFunctionTask(m_Document, rAddr));
+  AddTask(m_Analyzer.CreateTask("create function", m_Document, rAddr));
+  return true;
+}
+
+bool Medusa::CreateUtf8String(Address const& rAddr)
+{
+  AddTask(m_Analyzer.CreateTask("create utf-8 string", m_Document, rAddr));
+  return true;
+}
+
+bool Medusa::CreateUtf16String(Address const& rAddr)
+{
+  AddTask(m_Analyzer.CreateTask("create utf-16 string", m_Document, rAddr));
   return true;
 }
 

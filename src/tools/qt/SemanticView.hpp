@@ -19,7 +19,7 @@ class SemanticView : public QTextEdit
   Q_OBJECT
 
 public:
-  SemanticView(QWidget *parent, medusa::Medusa const& core, medusa::Address const& funcAddr);
+  SemanticView(QWidget *parent, medusa::Medusa& core, medusa::Address const& funcAddr);
 };
 
 #endif // !QMEDUSA_SEMANTIC_VIEW_HPP

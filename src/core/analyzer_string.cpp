@@ -11,14 +11,14 @@ namespace medusa
     std::string StrData;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
 
-    if (m_rDoc.ConvertAddressToFileOffset(m_rAddr.GetOffset(), Offset) == false)
+    if (m_rDoc.ConvertAddressToFileOffset(m_Addr.GetOffset(), Offset) == false)
       return false;
 
     for (;;)
     {
       if (!rBinStrm.Read(Offset + RawLen, CurChar))
       {
-        Log::Write("core") << "Unable to read utf-8 string at " << m_rAddr << LogEnd;
+        Log::Write("core") << "Unable to read utf-8 string at " << m_Addr << LogEnd;
         return false;
       }
 
@@ -35,7 +35,7 @@ namespace medusa
     ++RawLen;
 
     auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-    m_rDoc.SetCellWithLabel(m_rAddr, spString, Label(StrData, Label::String | Label::Global), true);
+    m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
 
     return true;
   }
@@ -48,14 +48,14 @@ namespace medusa
     u16 RawLen = 0;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
 
-    if (m_rDoc.ConvertAddressToFileOffset(m_rAddr, StrOff) == false)
+    if (m_rDoc.ConvertAddressToFileOffset(m_Addr, StrOff) == false)
       return false;
 
     for (;;)
     {
       if (!rBinStrm.Read(StrOff + RawLen, Utf16Char))
       {
-        Log::Write("core") << "Unable to read utf-16 string at " << m_rAddr << LogEnd;
+        Log::Write("core") << "Unable to read utf-16 string at " << m_Addr << LogEnd;
         return false;
       }
 
@@ -73,18 +73,18 @@ namespace medusa
     auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
     if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
     {
-      Log::Write("core") << "Unable to read utf-16 string at " << m_rAddr << LogEnd;
+      Log::Write("core") << "Unable to read utf-16 string at " << m_Addr << LogEnd;
       return false;
     }
     std::string CvtStr = Utf16Str.ConvertToUtf8(upStrBuf.get(), RawLen);
     if (CvtStr.empty())
     {
-      Log::Write("core") << "Unable to convert utf-16 string at " << m_rAddr << LogEnd;
+      Log::Write("core") << "Unable to convert utf-16 string at " << m_Addr << LogEnd;
       return false;
     }
 
     auto spString = std::make_shared<String>(String::Utf16Type, RawLen);
-    m_rDoc.SetCellWithLabel(m_rAddr, spString, Label(CvtStr, Label::String | Label::Global), true);
+    m_rDoc.SetCellWithLabel(m_Addr, spString, Label(CvtStr, Label::String | Label::Global), true);
 
     return true;
   }
