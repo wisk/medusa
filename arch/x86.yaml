@@ -362,6 +362,9 @@ semantic:
     op0.val = res;
     free_var('res');
 
+  xorps: &xorps |
+    op0.val ^= op1.val;
+
   sub: &sub |
     alloc_var('res', op0.bit);
     res = op0.val - op1.val;
@@ -490,7 +493,7 @@ semantic:
   mul: &mul |
     alloc_var('upper_res', op0.bit);
     alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-    if __code and is_byte_operation: 
+    if __code and is_byte_operation:
       ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
       upper_res = ah.id;
     if __code and is_word_operation:
@@ -3438,9 +3441,10 @@ instruction:
 
       - opcode: 0x28
         sub_opcodes:
-          - mnemonic: vmovaps
+          - mnemonic: movaps
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: vmovapd
             operand: [ Vx, Wx ]
@@ -3449,9 +3453,10 @@ instruction:
 
       - opcode: 0x29
         sub_opcodes:
-          - mnemonic: vmovaps
+          - mnemonic: movaps
             operand: [ Wx, Vx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: vmovapd
             operand: [ Wx, Vx ]
@@ -3865,9 +3870,10 @@ instruction:
 
       - opcode: 0x57
         sub_opcodes:
-          - mnemonic: vxorps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: xorps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *xorps
 
           - mnemonic: vxorpd
             operand: [ Vx, Hx, Wx ]

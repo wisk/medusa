@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jun 27 13:17:14 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 15 20:39:38 2015) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -267,6 +267,7 @@ enum X86Opcode
   X86_Opcode_Monitor,
   X86_Opcode_Montmul,
   X86_Opcode_Mov,
+  X86_Opcode_Movaps,
   X86_Opcode_Movbe,
   X86_Opcode_Movd,
   X86_Opcode_Movdq2q,
@@ -656,7 +657,6 @@ enum X86Opcode
   X86_Opcode_Vmmcall,
   X86_Opcode_Vmodqa,
   X86_Opcode_Vmovapd,
-  X86_Opcode_Vmovaps,
   X86_Opcode_Vmovd,
   X86_Opcode_Vmovddup,
   X86_Opcode_Vmovdqa,
@@ -863,7 +863,6 @@ enum X86Opcode
   X86_Opcode_Vunpcklpd,
   X86_Opcode_Vunpcklps,
   X86_Opcode_Vxorpd,
-  X86_Opcode_Vxorps,
   X86_Opcode_Vzeroupper,
   X86_Opcode_Wbindvd,
   X86_Opcode_Wrfsbase,
@@ -877,6 +876,7 @@ enum X86Opcode
   X86_Opcode_Xgetbv,
   X86_Opcode_Xlat,
   X86_Opcode_Xor,
+  X86_Opcode_Xorps,
   X86_Opcode_Xrstor,
   X86_Opcode_Xsave,
   X86_Opcode_Xsaveopt,

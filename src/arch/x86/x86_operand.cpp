@@ -1635,7 +1635,30 @@ Expression::SPType X86Architecture::__Decode_Wq(BinaryStream const& rBinStrm, TO
 
 Expression::SPType X86Architecture::__Decode_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  return nullptr; /* TODO */
+  Expression::SPType spOprd;
+  u8 OprdLen = 0;
+  auto const ModRm = __GetModRm(rBinStrm, Offset);
+
+  ++rInsn.Length();
+
+  switch (ModRm.Mod())
+  {
+  case 0: case 1: case 2:
+    {
+      auto spOff = __DecodeModRmAddress(&m_CpuInfo, rBinStrm, Offset, rInsn, OprdLen, static_cast<X86_Bit>(Mode));
+      if (spOff == nullptr)
+        return nullptr;
+      spOprd = Expr::MakeMem(128, __GetSegmentRegister(&m_CpuInfo, rInsn), spOff);
+      break;
+    }
+
+  case 3:
+    spOprd = __GetRegisterFromIndex(&m_CpuInfo, __ModRmMemoryRegister(rInsn, ModRm), s_XMM);
+    break;
+  }
+
+  rInsn.Length() += OprdLen;
+  return spOprd;
 }
 
 Expression::SPType X86Architecture::__Decode_Wy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)

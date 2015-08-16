@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jun 27 13:17:14 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 15 20:39:38 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -268,6 +268,7 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "monitor",
   "montmul",
   "mov",
+  "movaps",
   "movbe",
   "movd",
   "movdq2q",
@@ -657,7 +658,6 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "vmmcall",
   "vmodqa",
   "vmovapd",
-  "vmovaps",
   "vmovd",
   "vmovddup",
   "vmovdqa",
@@ -864,7 +864,6 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "vunpcklpd",
   "vunpcklps",
   "vxorpd",
-  "vxorps",
   "vzeroupper",
   "wbindvd",
   "wrfsbase",
@@ -878,6 +877,7 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "xgetbv",
   "xlat",
   "xor",
+  "xorps",
   "xrstor",
   "xsave",
   "xsaveopt",
@@ -44473,7 +44473,7 @@ free_var('res');
  * opcode: 04
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-if __code and is_byte_operation: 
+if __code and is_byte_operation:
   ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
   upper_res = ah.id;
 if __code and is_word_operation:
@@ -45098,7 +45098,7 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeVar("upper_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
         /* semantic: alloc_var('mul_res', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __code and is_byte_operation: 
+        /* semantic: if __code and is_byte_operation:
           ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
           upper_res = ah.id */
         if (rInsn.GetOperand(0)->GetBitSize() == 8)
@@ -45703,7 +45703,7 @@ free_var('res');
  * opcode: 04
  * semantic: alloc_var('upper_res', op0.bit);
 alloc_var('mul_res', concat(op0.bit, ignore(' * 2')));
-if __code and is_byte_operation: 
+if __code and is_byte_operation:
   ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
   upper_res = ah.id;
 if __code and is_word_operation:
@@ -46328,7 +46328,7 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeVar("upper_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
         /* semantic: alloc_var('mul_res', concat(op0.bit, ignore(' * 2'))) */
         AllExpr.push_back(Expr::MakeVar("mul_res", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize() * 2));
-        /* semantic: if __code and is_byte_operation: 
+        /* semantic: if __code and is_byte_operation:
           ax.id = bit_cast(bit_cast(al.id, int_type16) * bit_cast(op0.val, int_type16), int_type16)
           upper_res = ah.id */
         if (rInsn.GetOperand(0)->GetBitSize() == 8)
@@ -51010,8 +51010,10 @@ bool X86Architecture::Table_2_27(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 28
  *
- * mnemonic: vmovaps
+ * mnemonic: movaps
  * operand: ['Vx', 'Wx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: vmovapd
@@ -51039,10 +51041,18 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovaps);
+      rInsn.SetOpcode(X86_Opcode_Movaps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -51052,8 +51062,10 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 29
  *
- * mnemonic: vmovaps
+ * mnemonic: movaps
  * operand: ['Wx', 'Vx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: vmovapd
@@ -51081,10 +51093,18 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovaps);
+      rInsn.SetOpcode(X86_Opcode_Movaps);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -52737,8 +52757,10 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 57
  *
- * mnemonic: vxorps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: xorps
+ * operand: ['Vx', 'Wx']
+ * semantic: op0.val ^= op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: vxorpd
@@ -52766,10 +52788,22 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vxorps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Xorps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val ^= op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeBinOp(
+            OperationExpression::OpXor,
+            rInsn.GetOperand(0),
+            rInsn.GetOperand(1)))
+        );
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
