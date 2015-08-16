@@ -695,7 +695,7 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
   }
 
   m_IsSymbolic = true;
-  return Expr::MakeSym(SymbolicExpression::Unknown, "", m_rCurAddr, spIdExpr);
+  return nullptr;
 }
 
 Expression::SPType EvaluateVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
