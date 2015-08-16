@@ -1006,34 +1006,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVectorIdentifier(Ve
   return spVecIdExpr;
 }
 
-Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
+Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTrack(TrackExpression::SPType spTrkExpr)
 {
-  switch (m_State)
-  {
-  case Read:
-  {
-    auto pRegVal = _EmitReadRegister(spTrkIdExpr->GetId(), *spTrkIdExpr->GetCpuInformation());
-    if (pRegVal == nullptr)
-      return nullptr;
-    m_ValueStack.push(pRegVal);
-    break;
-  }
-
-  case Write:
-  {
-    if (m_ValueStack.empty())
-      return nullptr;
-    auto pRegVal = m_ValueStack.top();
-    m_ValueStack.pop();
-    if (!_EmitWriteRegister(spTrkIdExpr->GetId(), *spTrkIdExpr->GetCpuInformation(), pRegVal))
-      return nullptr;
-    break;
-  }
-
-  default:
-    return nullptr;
-  }
-  return spTrkIdExpr;
+  return spTrkExpr->GetTrackedExpression()->Visit(this);
 }
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableExpression::SPType spVarExpr)

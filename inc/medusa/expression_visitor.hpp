@@ -2,6 +2,7 @@
 #define MEDUSA_EXPRESSION_VISITOR_HPP
 
 #include "medusa/expression.hpp"
+#include "medusa/architecture.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -19,7 +20,7 @@ public:
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
   virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
@@ -42,7 +43,7 @@ public:
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
   virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
@@ -78,7 +79,7 @@ public:
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
   virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
@@ -102,7 +103,58 @@ protected:
   Expression::SPType m_spResExpr;
 };
 
-//! Visit an expression and convert IdentifierExpression to TrackedIdentifierExpression.
+class Medusa_EXPORT SymbolicVisitor : public ExpressionVisitor
+{
+public:
+  // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
+  // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
+  // z80/gb bank:offset...).
+  SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef = true);
+
+  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
+  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
+  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+
+  bool IsSymbolic(void) const { return m_IsSymbolic; }
+  bool IsRelative(void) const { return m_IsRelative; }
+  bool IsMemoryReference(void) const { return m_IsMemoryReference; }
+
+  Expression::SPType  GetExpression(Expression::SPType spExpr);
+  Expression::VSPType GetExpressions(void) const;
+  Expression::SPType  FindExpression(Expression::SPType spExpr);
+
+  std::string ToString(void) const;
+  void BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr);
+  bool UpdateAddress(Architecture& rArch, Address const& rAddr);
+
+protected:
+
+  Document const&    m_rDoc;
+  u8                 m_Mode;
+  std::map<Expression::SPType, Expression::SPType> m_SymCtxt;
+  std::set<std::string> m_VarPool;
+  bool               m_IsSymbolic;
+  bool               m_IsRelative;
+  bool               m_IsMemoryReference;
+  bool               m_EvalMemRef;
+  bool               m_Update;
+  Address            m_CurAddr;
+  u8                 m_CurPos;
+};
+
+//! Visit an expression and convert IdentifierExpression to TrackExpression.
 class Medusa_EXPORT TrackVisitor : public CloneVisitor
 {
 public:
@@ -111,7 +163,7 @@ public:
 
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
 
 private:
   Address m_CurAddr;
@@ -134,7 +186,7 @@ public:
   bool GetResult(void) const { return m_Result; }
 
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
 
 private:
   Track::BackTrackContext& m_rBtCtxt;

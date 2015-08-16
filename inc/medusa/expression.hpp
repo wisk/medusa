@@ -70,10 +70,18 @@ public:
     Const,
     Id,
     VecId,
-    TrackedId,
+    Track,
     Var,
     Mem,
     Sym,
+  };
+
+  enum CompareType
+  {
+    CmpUnknown,
+    CmpDifferent,
+    CmpSameExpression,
+    CmpIdentical,
   };
 
   virtual ~Expression(void) {}
@@ -83,6 +91,7 @@ public:
   virtual u32 GetBitSize(void) const = 0;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor) = 0;
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
+  virtual CompareType Compare(Expression::SPType spExpr) const = 0;
 
   virtual Kind GetClassKind(void) const { return Unknown; }
   static  Kind GetStaticClassKind(void) { return Unknown; }
@@ -130,6 +139,7 @@ public:
   virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   std::string const& GetName(void)    const { return m_Name;    }
   Address     const& GetAddress(void) const { return m_Address; }
@@ -156,6 +166,7 @@ public:
   virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
 private:
   Expression::LSPType m_Expressions;
@@ -191,6 +202,7 @@ public:
   virtual Expression::SPType Clone(void) const { return nullptr; }
   virtual u32 GetBitSize(void) const { return 0; }
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Type GetType(void) const { return m_Type; }
   Expression::SPType GetReferenceExpression(void) const { return m_spRefExpr; }
@@ -215,6 +227,7 @@ public:
   virtual Expression::SPType Clone(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Expression::SPType GetTrueExpression(void) { return m_spTrueExpr; }
   Expression::SPType GetFalseExpression(void) { return m_spFalseExpr; }
@@ -237,6 +250,7 @@ public:
   virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Expression::SPType GetThenExpression(void) { return m_spThenExpr; }
   Expression::SPType GetElseExpression(void) { return m_spElseExpr; }
@@ -259,6 +273,7 @@ public:
   virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Expression::SPType GetBodyExpression(void) { return m_spBodyExpr; }
 
@@ -281,6 +296,7 @@ public:
   virtual u32 GetBitSize(void) const { return 0; }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   virtual Expression::SPType GetDestinationExpression(void) { return m_spDstExpr; }
   virtual Expression::SPType GetSourceExpression(void) { return m_spSrcExpr; }
@@ -338,6 +354,7 @@ public:
   virtual Expression::SPType Clone(void) const { return nullptr; }
   virtual u32 GetBitSize(void) const;
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   u8 GetOperation(void) const { return m_OpType; }
   u8 GetOppositeOperation(void) const;
@@ -359,6 +376,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Expression::SPType GetExpression(void) { return m_spExpr;  }
 
@@ -379,6 +397,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Expression::SPType GetLeftExpression(void)  { return m_spLeftExpr; }
   Expression::SPType GetRightExpression(void) { return m_spRightExpr; }
@@ -409,6 +428,7 @@ public:
   virtual u32 GetBitSize(void) const { return m_Value.GetBitSize(); }
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
@@ -436,6 +456,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
@@ -463,6 +484,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   virtual void Prepare(DataContainerType& rData) const;
   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
@@ -477,29 +499,30 @@ protected:
   CpuInformation const* m_pCpuInfo;
 };
 
-class Medusa_EXPORT TrackedIdentifierExpression : public Expression
+class Medusa_EXPORT TrackExpression : public Expression
 {
-  DECL_EXPR(TrackedIdentifierExpression, Expression::TrackedId, Expression)
+  DECL_EXPR(TrackExpression, Expression::Track, Expression)
 
 public:
-  TrackedIdentifierExpression(u32 Id, CpuInformation const* pCpuInfo, Address const& rCurAddr);
+  TrackExpression(Expression::SPType spTrkExpr, Address const& rCurAddr, u8 Pos);
 
-  virtual ~TrackedIdentifierExpression(void);
+  virtual ~TrackExpression(void);
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
-  u32 GetId(void) const { return m_Id; }
-  CpuInformation const* GetCpuInformation(void) const { return m_pCpuInfo; }
-  Address GetCurrentAddress(void) const { return m_CurAddr; }
+  Expression::SPType GetTrackedExpression(void) const { return m_spTrkExpr; }
+  Address GetTrackAddress(void) const { return m_CurAddr; }
+  u8 GetTrackPosition(void) const { return m_Pos; }
 
 private:
-  u32 m_Id;
-  CpuInformation const* m_pCpuInfo;
+  Expression::SPType m_spTrkExpr;
   Address m_CurAddr;
+  u8 m_Pos;
 };
 
 // variable ///////////////////////////////////////////////////////////////////
@@ -526,6 +549,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   std::string const& GetName(void) const { return m_Name; }
   ActionType         GetAction(void) const { return m_Action; }
@@ -558,6 +582,7 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   virtual bool               Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
   virtual bool               Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
@@ -589,7 +614,7 @@ public:
     Undefined,
   };
 
-  SymbolicExpression(Type SymType, std::string const& rValue, Address const& rAddr);
+  SymbolicExpression(Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr);
 
   virtual ~SymbolicExpression(void) {}
 
@@ -598,15 +623,18 @@ public:
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor *pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Type GetType(void) const { return m_Type; }
   std::string const& GetValue(void) const { return m_Value; }
   Address const& GetAddress(void) const { return m_Address; }
+  Expression::SPType GetExpression(void) const { return m_spExpr; }
 
 private:
   Type m_Type;
   std::string m_Value;
   Address m_Address;
+  Expression::SPType m_spExpr;
 };
 
 // visitor ////////////////////////////////////////////////////////////////////
@@ -625,7 +653,7 @@ public:
   virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
   virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
@@ -640,6 +668,7 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
+  Medusa_EXPORT Expression::SPType MakeTrack(Expression::SPType spTrkExpr, Address const& rCurAddr, u8 Pos);
   Medusa_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
   Medusa_EXPORT Expression::SPType MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize = 0);
 
@@ -653,7 +682,7 @@ namespace Expr
 
   Medusa_EXPORT Expression::SPType MakeBind(Expression::LSPType const& rExprs);
 
-  Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr);
+  Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr = nullptr);
   Medusa_EXPORT Expression::SPType MakeSys(std::string const& rName, Address const& rAddr);
 }
 

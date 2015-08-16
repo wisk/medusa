@@ -128,9 +128,10 @@ bool Symbolic::Block::IsEndOfBlock(void) const
     if (spIdExpr != nullptr && spIdExpr->GetId() == m_PcRegId)
       return spExpr;
 
-    auto spTrkIdExpr = expr_cast<TrackedIdentifierExpression>(pAssignExpr->GetDestinationExpression());
-    if (spTrkIdExpr != nullptr && spTrkIdExpr->GetId() == m_PcRegId)
-      return spExpr;
+    // FIXME(wisk):
+    //auto spTrkIdExpr = expr_cast<TrackedIdentifierExpression>(pAssignExpr->GetDestinationExpression());
+    //if (spTrkIdExpr != nullptr && spTrkIdExpr->GetId() == m_PcRegId)
+    //  return spExpr;
 
     return nullptr;
   }, 1);

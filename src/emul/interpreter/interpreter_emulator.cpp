@@ -459,40 +459,9 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVecto
   return spVecIdExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitTrack(TrackExpression::SPType spTrkExpr)
 {
-  switch (m_State)
-  {
-  case Read:
-  {
-    IntType RegVal(spTrkIdExpr->GetBitSize(), 0);
-    if (!m_pCpuCtxt->ReadRegister(spTrkIdExpr->GetId(), RegVal))
-    {
-      Log::Write("emul_interpreter").Level(LogError) << "unable to read tracked register" << LogEnd;
-      return nullptr;
-    }
-    m_Values.push_back(RegVal);
-    break;
-  }
-
-  case Write:
-    if (m_Values.empty())
-    {
-      Log::Write("emul_interpreter").Level(LogError) << "no value to write into tracked register" << LogEnd;
-      return nullptr;
-    }
-    if (!m_pCpuCtxt->WriteRegister(spTrkIdExpr->GetId(), m_Values.back()))
-    {
-      Log::Write("emul_interpreter").Level(LogError) << "unable to write into tracked register" << LogEnd;
-      return nullptr;
-    }
-    m_Values.pop_back();
-    break;
-
-  default:
-    return nullptr;
-  }
-  return spTrkIdExpr;
+  return spTrkExpr->GetTrackedExpression()->Visit(this);
 }
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVariable(VariableExpression::SPType spVarExpr)

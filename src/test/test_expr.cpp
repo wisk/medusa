@@ -134,29 +134,26 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   auto spNrmExpr = spExpr->Visit(&NrmId);
   std::cout << "oper (id normalized): " << spNrmExpr->ToString() << std::endl;
 
-  Track::Context TrkCtxt;
-  TrackVisitor TrkVst0(0x10000, TrkCtxt);
-  auto spTrkInitEax = spInitEax->Visit(&TrkVst0);
-  TrackVisitor TrkVst1(0x10001, TrkCtxt);
-  auto spTrkInitBx = spInitBx->Visit(&TrkVst1);
-  TrackVisitor TrkVst2(0x10002, TrkCtxt);
-  auto spTrkNrm = spNrmExpr->Visit(&TrkVst2);
+  SymbolicVisitor SymVst(Document(), X86_32_Mode);
 
-  std::cout << spTrkInitEax->ToString() << std::endl;
-  std::cout << spTrkInitBx->ToString() << std::endl;
-  std::cout << spTrkNrm->ToString() << std::endl;
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x0, 16, 32));
+  auto spInitEbx = Expr::MakeAssign(
+    Expr::MakeId(EBX, pX86Disasm->GetCpuInformation()),
+    Expr::MakeConst(IntType(32, 0x0)));
+  spInitEbx->Visit(&SymVst);
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x1, 16, 32));
+  spInitEax->Visit(&SymVst);
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x2, 16, 32));
+  spInitBx->Visit(&SymVst);
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x3, 16, 32));
+  spNrmExpr->Visit(&SymVst);
 
-  TrackedIdMerger TIM(spTrkNrm, Expression::VSPType{ spTrkInitEax, spTrkInitBx });
-  BOOST_REQUIRE(TIM.Execute());
+  std::cout << SymVst.ToString() << std::endl;
 
-  std::cout << spTrkNrm->ToString() << std::endl;
-
-  EvaluateVisitor EvalVst(Document(), 0x0, X86_32_Mode, false);
-  EvalVst.SetId(EBX, Expr::MakeConst(32, 0xaabbccdd));
-  spTrkNrm->Visit(&EvalVst);
-  auto spRes = EvalVst.GetResultExpression();
-  BOOST_REQUIRE(spRes);
+  auto spRes = expr_cast<ConstantExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
+  BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
+  BOOST_REQUIRE(spRes->GetConstant().ConvertTo<u32>() == 0x000000EE);
 
   delete pX86Disasm;
 }
@@ -170,6 +167,84 @@ BOOST_AUTO_TEST_CASE(expr_var)
   std::cout << spAllocVarExpr->ToString() << std::endl;
   std::cout << spAssignVarExpr->ToString() << std::endl;
   std::cout << spFreeVarExpr->ToString() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(expr_push_pop)
+{
+  auto& rModMgr = ModuleManager::Instance();
+  auto pX86Getter = rModMgr.LoadModule<TGetArchitecture>(".", "x86");
+  BOOST_REQUIRE(pX86Getter != nullptr);
+  auto pX86Disasm = pX86Getter();
+
+  auto const X86_32_Mode = pX86Disasm->GetModeByName("32-bit");
+  BOOST_REQUIRE(X86_32_Mode != 0);
+
+  auto const pCpuInfo = pX86Disasm->GetCpuInformation();
+  auto SS = pCpuInfo->ConvertNameToIdentifier("ss");
+  auto ESP = pCpuInfo->ConvertNameToIdentifier("esp");
+  auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
+  auto spSs = Expr::MakeId(SS, pCpuInfo);
+  auto spEsp = Expr::MakeId(ESP, pCpuInfo);
+  auto spEax = Expr::MakeId(EAX, pCpuInfo);
+
+  NormalizeIdentifier NrmId(*pCpuInfo, X86_32_Mode);
+
+  // PUSH byte 0xFF
+  auto spAllocVar_PushedVal = Expr::MakeVar("pushed_value", VariableExpression::Alloc, 32);
+  auto spWriteVar_PushedVal = Expr::MakeAssign(
+    Expr::MakeVar("pushed_value", VariableExpression::Use),
+    Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeConst(IntType(8, 0xFF)), Expr::MakeConst(IntType(32, 32))));
+  auto spDecStk = Expr::MakeAssign(
+    spEsp,
+    Expr::MakeBinOp(OperationExpression::OpSub, spEsp, Expr::MakeConst(IntType(32, 4))));
+  auto spWriteStk = Expr::MakeAssign(
+    Expr::MakeMem(32, spSs, spEsp),
+    Expr::MakeVar("pushed_value", VariableExpression::Use));
+  auto spFreeVar_PushedVal = Expr::MakeVar("pushed_value", VariableExpression::Free);
+
+  // POP EAX
+  auto spAllocVar_PoppedVal = Expr::MakeVar("popped_value", VariableExpression::Alloc, 32);
+  auto spReadVar_PoppedVar = Expr::MakeAssign(
+    Expr::MakeVar("popped_value", VariableExpression::Use),
+    Expr::MakeMem(32, spSs, spEsp));
+  auto spIncStk = Expr::MakeAssign(
+    spEsp,
+    Expr::MakeBinOp(OperationExpression::OpAdd, spEsp, Expr::MakeConst(IntType(32, 4))));
+  auto spReadStk = Expr::MakeAssign(
+    spEax,
+    Expr::MakeVar("popped_value", VariableExpression::Use));
+  auto spFreeVar_PoppedVal = Expr::MakeVar("popped_value", VariableExpression::Free);
+
+
+  Expression::VSPType PushFF = {
+    spAllocVar_PushedVal, spWriteVar_PushedVal, spDecStk, spWriteStk, spFreeVar_PushedVal,
+  };
+
+  Expression::VSPType PopEax = {
+    spAllocVar_PoppedVal, spReadVar_PoppedVar, spIncStk, spReadStk, spFreeVar_PoppedVal,
+  };
+
+  SymbolicVisitor SymVst(Document(), X86_32_Mode);
+
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::FlatType, 0x0, 0x0, 16, 32));
+  for (auto const& rspExpr : PushFF)
+  {
+    rspExpr->Visit(&SymVst);
+  }
+
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::FlatType, 0x0, 0x2, 16, 32));
+  for (auto const& rspExpr : PopEax)
+  {
+    rspExpr->Visit(&SymVst);
+  }
+
+  // Result must be EAX = 0xFFFFFFFF
+  auto spRes = expr_cast<ConstantExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
+
+  BOOST_REQUIRE(spRes != nullptr);
+  BOOST_REQUIRE(spRes->GetConstant().ConvertTo<u32>() == 0xFFFFFFFF);
+
+  delete pX86Disasm;
 }
 
 BOOST_AUTO_TEST_SUITE_END()

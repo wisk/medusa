@@ -74,11 +74,14 @@ public:
   AnalyzerDisassemble(Document& rDoc, Address const& rAddr) : AnalyzerPass("disassemble", rDoc, rAddr) {}
 
   bool Disassemble(void);
-  bool DisassembleWith(Architecture& rArch, u8 Mode);
   bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock);
+
+  bool DisassembleWith(Architecture& rArch, u8 Mode);
   bool DisassembleBasicBlockWith(Architecture& rArch, u8 Mode, std::list<Instruction::SPType>& rBasicBlock);
 
   bool BuildControlFlowGraph(ControlFlowGraph& rCfg);
+
+  bool DisassembleUsingSymbolicExecution(void);
 };
 
 class AnalyzerInstruction : public AnalyzerPass

@@ -17,101 +17,104 @@ bool ExpressionSimplifier::Execute(void)
 
 TrackedIdPropagation::TrackedIdPropagation(Expression::LSPType & rExprs, u32 Id) : m_rExprs(rExprs), m_spResExpr(nullptr)
 {
-  // Find the track id expression
-  auto FindTrkIdExpr = [&](Expression::SPType spExpr) -> Expression::SPType
-  {
-    auto spAssign = expr_cast<AssignmentExpression>(spExpr);
-    if (spAssign == nullptr)
-      return nullptr;
-    auto spDstExpr = spAssign->GetDestinationExpression();
-    if (spDstExpr->GetClassKind() != Expression::TrackedId)
-      return nullptr;
-    return spDstExpr;
-  };
+  // FIXME(wisk):
+  //// Find the track id expression
+  //auto FindTrkIdExpr = [&](Expression::SPType spExpr) -> Expression::SPType
+  //{
+  //  auto spAssign = expr_cast<AssignmentExpression>(spExpr);
+  //  if (spAssign == nullptr)
+  //    return nullptr;
+  //  auto spDstExpr = spAssign->GetDestinationExpression();
+  //  if (spDstExpr->GetClassKind() != Expression::TrackedId)
+  //    return nullptr;
+  //  return spDstExpr;
+  //};
 
-  for (auto pExpr : m_rExprs)
-  {
-    Log::Write("core").Level(LogDebug) << "TIP input: " << pExpr->ToString() << LogEnd;
-  }
+  //for (auto pExpr : m_rExprs)
+  //{
+  //  Log::Write("core").Level(LogDebug) << "TIP input: " << pExpr->ToString() << LogEnd;
+  //}
 
-  for (auto itExpr = m_rExprs.begin(); itExpr != m_rExprs.end(); ++itExpr)
-  {
-    FilterVisitor FltVst(FindTrkIdExpr, 1);
-    (*itExpr)->Visit(&FltVst);
-    auto rFltExprs = FltVst.GetMatchedExpressions();
+  //for (auto itExpr = m_rExprs.begin(); itExpr != m_rExprs.end(); ++itExpr)
+  //{
+  //  FilterVisitor FltVst(FindTrkIdExpr, 1);
+  //  (*itExpr)->Visit(&FltVst);
+  //  auto rFltExprs = FltVst.GetMatchedExpressions();
 
-    if (rFltExprs.size() != 1)
-      continue;
+  //  if (rFltExprs.size() != 1)
+  //    continue;
 
-    m_spResExpr = expr_cast<AssignmentExpression>(*itExpr);
+  //  m_spResExpr = expr_cast<AssignmentExpression>(*itExpr);
 
-    break;
-  }
+  //  break;
+  //}
 }
 
 bool TrackedIdPropagation::_RunOnce(void)
 {
-  if (m_spResExpr == nullptr)
-    return false;
+  return false;
+  // FIXME(wisk):
+  //if (m_spResExpr == nullptr)
+  //  return false;
 
-  // this functor is used to retrieve the source of a specific tracked id
-  struct FindTrkSrc
-  {
-    FindTrkSrc(void) : m_IsAssigned(false) {}
+  //// this functor is used to retrieve the source of a specific tracked id
+  //struct FindTrkSrc
+  //{
+  //  FindTrkSrc(void) : m_IsAssigned(false) {}
 
-    Expression::SPType operator()(Expression::SPType spExpr)
-    {
-      switch (spExpr->GetClassKind())
-      {
-      case Expression::Assign:
-        m_IsAssigned = true;
-        break;
+  //  Expression::SPType operator()(Expression::SPType spExpr)
+  //  {
+  //    switch (spExpr->GetClassKind())
+  //    {
+  //    case Expression::Assign:
+  //      m_IsAssigned = true;
+  //      break;
 
-      case Expression::TrackedId:
-        if (m_IsAssigned)
-        {
-          m_IsAssigned = false;
-          break;
-        }
-        return spExpr;
+  //    case Expression::TrackedId:
+  //      if (m_IsAssigned)
+  //      {
+  //        m_IsAssigned = false;
+  //        break;
+  //      }
+  //      return spExpr;
 
-      default:
-        m_IsAssigned = false;
-        break;
-      }
+  //    default:
+  //      m_IsAssigned = false;
+  //      break;
+  //    }
 
-      return nullptr;
-    }
+  //    return nullptr;
+  //  }
 
-    bool m_IsAssigned;
-  };
+  //  bool m_IsAssigned;
+  //};
 
-  FindTrkSrc Matcher;
-  FilterVisitor FindTrkSrcVst(Matcher, 1);
+  //FindTrkSrc Matcher;
+  //FilterVisitor FindTrkSrcVst(Matcher, 1);
 
-  m_spResExpr->Visit(&FindTrkSrcVst);
+  //m_spResExpr->Visit(&FindTrkSrcVst);
 
-  auto rExprs = FindTrkSrcVst.GetMatchedExpressions();
+  //auto rExprs = FindTrkSrcVst.GetMatchedExpressions();
 
-  // If there's no more tracked id, it means we've finish
-  if (rExprs.empty())
-  {
-    m_IsDone = true;
-    return true;
-  }
+  //// If there's no more tracked id, it means we've finish
+  //if (rExprs.empty())
+  //{
+  //  m_IsDone = true;
+  //  return true;
+  //}
 
-  assert(rExprs.size() == 1);
-  auto spRes = expr_cast<TrackedIdentifierExpression>(rExprs.front());
-  assert(spRes->GetClassKind() == Expression::TrackedId);
+  //assert(rExprs.size() == 1);
+  //auto spRes = expr_cast<TrackedIdentifierExpression>(rExprs.front());
+  //assert(spRes->GetClassKind() == Expression::TrackedId);
 
-  auto spAssignTrkExpr = expr_cast<AssignmentExpression>(__FindTrackedIdExpression(spRes->GetId(), spRes->GetCurrentAddress()));
-  if (spAssignTrkExpr == nullptr)
-    return false;
+  //auto spAssignTrkExpr = expr_cast<AssignmentExpression>(__FindTrackedIdExpression(spRes->GetId(), spRes->GetCurrentAddress()));
+  //if (spAssignTrkExpr == nullptr)
+  //  return false;
 
-  if (!m_spResExpr->UpdateChild(spRes, spAssignTrkExpr->GetSourceExpression()))
-    return false;
+  //if (!m_spResExpr->UpdateChild(spRes, spAssignTrkExpr->GetSourceExpression()))
+  //  return false;
 
-  return true;
+  //return true;
 }
 
 bool TrackedIdPropagation::_Finalize(void)
@@ -133,12 +136,13 @@ Expression::SPType TrackedIdPropagation::__FindTrackedIdExpression(u32 Id, Addre
     if (spAssignExpr == nullptr)
       return nullptr;
 
-    auto spTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
-    if (spTrkId == nullptr)
-      return nullptr;
+    // FIXME(wisk):
+    //auto spTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+    //if (spTrkId == nullptr)
+    //  return nullptr;
 
-    if (spTrkId->GetId() != Id || spTrkId->GetCurrentAddress() != rAddr)
-      return nullptr;
+    //if (spTrkId->GetId() != Id || spTrkId->GetCurrentAddress() != rAddr)
+    //  return nullptr;
 
     return spExpr;
   };
@@ -164,57 +168,59 @@ TrackedIdMerger::TrackedIdMerger(Expression::SPType spToBeMerged, Expression::VS
 
 }
 
+// FIXME(wisk):
 bool TrackedIdMerger::_RunOnce(void)
 {
-  FilterVisitor FindTrkId([&](Expression::SPType spExpr) -> Expression::SPType
-  {
-    auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
-    if (spAssignExpr == nullptr)
-      return nullptr;
-    auto spTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
-    if (spTrkId == nullptr)
-      return nullptr;
-    return spAssignExpr;
-  });
-  for (auto const spExpr : m_rExprsPool)
-    spExpr->Visit(&FindTrkId);
-  auto TrkInfoExprs = FindTrkId.GetMatchedExpressions();
-  if (TrkInfoExprs.empty())
-    return false;
-  class MergeTrackId : public ExpressionVisitor
-  {
-  public:
-    MergeTrackId(Expression::SPType& rspToBeMerge, Expression::LSPType const& rTrkInfoExprs, bool& rDirty)
-      : m_rTrkInfoExprs(rTrkInfoExprs), m_rspToBeMerged(rspToBeMerge), m_rDirty(rDirty) {}
+  return false;
+  //FilterVisitor FindTrkId([&](Expression::SPType spExpr) -> Expression::SPType
+  //{
+  //  auto spAssignExpr = expr_cast<AssignmentExpression>(spExpr);
+  //  if (spAssignExpr == nullptr)
+  //    return nullptr;
+  //  auto spTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+  //  if (spTrkId == nullptr)
+  //    return nullptr;
+  //  return spAssignExpr;
+  //});
+  //for (auto const spExpr : m_rExprsPool)
+  //  spExpr->Visit(&FindTrkId);
+  //auto TrkInfoExprs = FindTrkId.GetMatchedExpressions();
+  //if (TrkInfoExprs.empty())
+  //  return false;
+  //class MergeTrackId : public ExpressionVisitor
+  //{
+  //public:
+  //  MergeTrackId(Expression::SPType& rspToBeMerge, Expression::LSPType const& rTrkInfoExprs, bool& rDirty)
+  //    : m_rTrkInfoExprs(rTrkInfoExprs), m_rspToBeMerged(rspToBeMerge), m_rDirty(rDirty) {}
 
-    Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
-    {
-      for (auto spTrkInfo : m_rTrkInfoExprs)
-      {
-        auto spAssignExpr = expr_cast<AssignmentExpression>(spTrkInfo);
-        if (spAssignExpr == nullptr)
-          continue;
-        auto spDstTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
-        if (spDstTrkId == nullptr)
-          continue;
-        if (spTrkIdExpr->GetCurrentAddress() != spDstTrkId->GetCurrentAddress() || spTrkIdExpr->GetId() != spDstTrkId->GetId())
-          continue;
-        if (m_rspToBeMerged->UpdateChild(spTrkIdExpr, spAssignExpr->GetSourceExpression()))
-          m_rDirty = true;
-      }
-      return nullptr;
-    }
+  //  Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr)
+  //  {
+  //    for (auto spTrkInfo : m_rTrkInfoExprs)
+  //    {
+  //      auto spAssignExpr = expr_cast<AssignmentExpression>(spTrkInfo);
+  //      if (spAssignExpr == nullptr)
+  //        continue;
+  //      auto spDstTrkId = expr_cast<TrackedIdentifierExpression>(spAssignExpr->GetDestinationExpression());
+  //      if (spDstTrkId == nullptr)
+  //        continue;
+  //      if (spTrkIdExpr->GetCurrentAddress() != spDstTrkId->GetCurrentAddress() || spTrkIdExpr->GetId() != spDstTrkId->GetId())
+  //        continue;
+  //      if (m_rspToBeMerged->UpdateChild(spTrkIdExpr, spAssignExpr->GetSourceExpression()))
+  //        m_rDirty = true;
+  //    }
+  //    return nullptr;
+  //  }
 
-  private:
-    Expression::SPType& m_rspToBeMerged;
-    Expression::LSPType const& m_rTrkInfoExprs;
-    bool& m_rDirty;
-  };
-  bool Dirty = false;
-  MergeTrackId MTI(m_spMergedExpr, TrkInfoExprs, Dirty);
-  m_spMergedExpr->Visit(&MTI);
-  m_IsDone = Dirty ? false : true;
-  return true;
+  //private:
+  //  Expression::SPType& m_rspToBeMerged;
+  //  Expression::LSPType const& m_rTrkInfoExprs;
+  //  bool& m_rDirty;
+  //};
+  //bool Dirty = false;
+  //MergeTrackId MTI(m_spMergedExpr, TrkInfoExprs, Dirty);
+  //m_spMergedExpr->Visit(&MTI);
+  //m_IsDone = Dirty ? false : true;
+  //return true;
 }
 
 bool TrackedIdMerger::_Finalize(void)

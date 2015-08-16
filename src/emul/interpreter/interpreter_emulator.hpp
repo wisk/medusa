@@ -50,7 +50,7 @@ private:
     virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-    virtual Expression::SPType VisitTrackedIdentifier(TrackedIdentifierExpression::SPType spTrkIdExpr);
+    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
     virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
     virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);

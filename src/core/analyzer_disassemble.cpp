@@ -611,4 +611,170 @@ namespace medusa
 
     return RetReached;
   }
+
+
+  typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
+  typedef std::unordered_map<Address, SymbolicContextType> SymbolicContextMapType;
+
+  bool AnalyzerDisassemble::DisassembleUsingSymbolicExecution(void)
+  {
+    auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
+    if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+      return true;
+
+    std::stack<Address> CallStack;
+    Address::List FuncAddr;
+    Address CurAddr = m_Addr;
+    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+    if (pMemArea == nullptr)
+    {
+      //Log::Write("core") << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+      return false;
+    }
+
+    // Push entry point
+    CallStack.push(CurAddr);
+
+    // Do we still have functions to disassemble?
+    while (!CallStack.empty())
+    {
+      // Retrieve the last function
+      CurAddr = CallStack.top();
+      CallStack.pop();
+      bool FunctionIsFinished = false;
+
+      //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
+
+      // Disassemble a function
+      while (!m_rDoc.ContainsCode(CurAddr))
+      {
+        //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
+
+        auto const& rLbl = m_rDoc.GetLabelFromAddress(CurAddr);
+        if ((rLbl.GetType() & Label::AccessMask) == Label::Imported)
+          break;
+
+        // Let's try to disassemble a basic block
+        AnalyzerDisassemble AnlzDisasm(m_rDoc, CurAddr);
+        std::list<Instruction::SPType> BasicBlock;
+        if (!AnlzDisasm.DisassembleBasicBlock(BasicBlock))
+          break;
+        if (BasicBlock.size() == 0)
+          break;
+
+        for (auto spInsn : BasicBlock)
+        {
+          auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+          if (spArch == nullptr)
+            return false;
+
+          if (m_rDoc.ContainsCode(CurAddr))
+          {
+            //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
+            FunctionIsFinished = true;
+            continue;
+          }
+
+          if (!m_rDoc.SetCell(CurAddr, spInsn, true))
+          {
+            //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
+            FunctionIsFinished = true;
+            continue;
+          }
+
+          for (u8 i = 0; i < spInsn->GetNumberOfOperand(); ++i)
+          {
+            Address DstAddr;
+            if (spInsn->GetOperandReference(m_rDoc, i, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
+              CallStack.push(DstAddr);
+          }
+
+          AnalyzerInstruction AnlzInsn(m_rDoc, CurAddr);
+          AnlzInsn.FindCrossReference();
+
+          auto InsnType = spInsn->GetSubType();
+          if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
+            CurAddr += spInsn->GetLength();
+        }
+
+        if (FunctionIsFinished)
+          break;
+
+        auto spLastInsn = BasicBlock.back();
+        //Log::Write("debug") << "Last insn: " << spLastInsn->ToString() << LogEnd;
+        auto spArch = ModuleManager::Instance().GetArchitecture(spLastInsn->GetArchitectureTag());
+        if (spArch == nullptr)
+          break;
+
+        switch (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
+        {
+          // If the last instruction is a call, we follow it and save the return address
+        case Instruction::CallType:
+        {
+          Address DstAddr;
+
+          // Save return address
+          CallStack.push(spArch->CurrentAddress(CurAddr, *spLastInsn));
+
+          // Sometimes, we cannot determine the destination address, so we give up
+          // We assume destination is hold in the first operand
+          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
+          {
+            FunctionIsFinished = true;
+            break;
+          }
+
+          FuncAddr.push_back(DstAddr);
+          CurAddr = DstAddr;
+          break;
+        } // end CallType
+
+        // If the last instruction is a ret, we emulate its behavior
+        case Instruction::ReturnType:
+        {
+          // We ignore conditional ret
+          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
+          {
+            CurAddr += spLastInsn->GetLength();
+            continue;
+          }
+
+          // ret if reached, we try to disassemble an another function (or another part of this function)
+          FunctionIsFinished = true;
+          break;
+        } // end ReturnType
+
+        // Jump type could be a bit tedious to handle because of conditional jump
+        // Basically we use the same policy as call instruction
+
+        case Instruction::JumpType:
+        {
+          Address DstAddr;
+
+          // Save untaken branch address
+          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
+            CallStack.push(CurAddr + spLastInsn->GetLength());
+
+          // Sometime, we can't determine the destination address, so we give up
+          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
+          {
+            FunctionIsFinished = true;
+            break;
+          }
+
+          CurAddr = DstAddr;
+          break;
+        } // end JumpType
+
+        default: break; // This case should never happen
+        } // switch (spLastInsn->GetSubType())
+
+        if (FunctionIsFinished)
+          break;
+      } // end while (m_Document.IsPresent(CurAddr))
+    } // while (!CallStack.empty())
+
+    return true;
+  }
 }
