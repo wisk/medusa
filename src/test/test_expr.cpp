@@ -247,4 +247,68 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
   delete pX86Disasm;
 }
 
+BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
+{
+  using namespace medusa;
+
+  Log::SetLog([](std::string const& rMsg)
+  {
+    std::cout << rMsg << std::flush;
+  });
+
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/jmp_tbl.pe.x86-32";
+  std::cout << "disassembling program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    BOOST_REQUIRE(Core.NewDocument(
+      spFileBinStrm, true,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "jmp_tbl.pe.x86-32_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    BOOST_REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
+
+  auto const& rDoc = Core.GetDocument();
+  auto const& rStartAddr = rDoc.GetAddressFromLabelName("start");
+  auto spStartCell = rDoc.GetCell(rStartAddr);
+
+  auto spArch = ModuleManager::Instance().GetArchitecture(spStartCell->GetArchitectureTag());
+  BOOST_REQUIRE(spArch != nullptr);
+
+  SymbolicVisitor SymVst(Core.GetDocument(), spStartCell->GetMode());
+
+  auto SymExec = [&](Address const& rAddr)
+  {
+    BOOST_REQUIRE(SymVst.UpdateAddress(*spArch, rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(Core.GetCell(rAddr));
+    BOOST_REQUIRE(spInsn != nullptr);
+    for (auto const& rspExpr : spInsn->GetSemantic())
+    {
+      rspExpr->Visit(&SymVst);
+    }
+  };
+
+  SymExec(rDoc.MakeAddress(0x0000, 0x00401006));
+  SymExec(rDoc.MakeAddress(0x0000, 0x00401009));
+  SymExec(rDoc.MakeAddress(0x0000, 0x0040100c));
+  std::cout << SymVst.ToString() << std::endl;
+  std::cout << std::string(80, '#') << std::endl;
+  SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
+  std::cout << SymVst.ToString() << std::endl;
+}
+
 BOOST_AUTO_TEST_SUITE_END()

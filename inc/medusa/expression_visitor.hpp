@@ -106,9 +106,6 @@ protected:
 class Medusa_EXPORT SymbolicVisitor : public ExpressionVisitor
 {
 public:
-  // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
-  // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
-  // z80/gb bank:offset...).
   SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef = true);
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
@@ -140,18 +137,21 @@ public:
   bool UpdateAddress(Architecture& rArch, Address const& rAddr);
 
 protected:
+  bool _EvaluateCondition(u8 CondOp, ConstantExpression::SPType spConstRefExpr, ConstantExpression::SPType spConstTestExpr, bool& rRes) const;
 
-  Document const&    m_rDoc;
-  u8                 m_Mode;
-  std::map<Expression::SPType, Expression::SPType> m_SymCtxt;
-  std::set<std::string> m_VarPool;
-  bool               m_IsSymbolic;
-  bool               m_IsRelative;
-  bool               m_IsMemoryReference;
-  bool               m_EvalMemRef;
-  bool               m_Update;
-  Address            m_CurAddr;
-  u8                 m_CurPos;
+  typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
+  Document const&                   m_rDoc;
+  u8                                m_Mode;
+  SymbolicContextType               m_SymCtxt;
+  std::set<std::string>             m_VarPool;
+  IfElseConditionExpression::SPType m_spCond;
+  bool                              m_IsSymbolic;
+  bool                              m_IsRelative;
+  bool                              m_IsMemoryReference;
+  bool                              m_EvalMemRef;
+  bool                              m_Update;
+  Address                           m_CurAddr;
+  u8                                m_CurPos;
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackExpression.
@@ -216,6 +216,13 @@ public:
 
 private:
   std::set<u32> m_UsedId;
+};
+
+class Medusa_EXPORT SimplifyVisitor : public CloneVisitor
+{
+public:
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
 };
 
 MEDUSA_NAMESPACE_END

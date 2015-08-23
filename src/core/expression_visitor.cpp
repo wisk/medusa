@@ -818,17 +818,69 @@ Expression::SPType SymbolicVisitor::VisitSystem(SystemExpression::SPType spSysEx
 
 Expression::SPType SymbolicVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
+  for (auto const& rspExpr : spBindExpr->GetBoundExpressions())
+    rspExpr->Visit(this);
   return nullptr;
 }
 
 Expression::SPType SymbolicVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
-  return nullptr;
+  bool OldUpdateState = m_Update;
+  m_Update = true;
+  auto spRefExpr = spTernExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spTernExpr->GetTestExpression()->Visit(this);
+  m_Update = OldUpdateState;
+
+  auto spConstRefExpr = expr_cast<ConstantExpression>(spRefExpr);
+  auto spConstTestExpr = expr_cast<ConstantExpression>(spTestExpr);
+
+  if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
+  {
+    return Expr::MakeTernaryCond(spTernExpr->GetType(),
+      spConstRefExpr != nullptr ? spConstRefExpr : spRefExpr, spConstTestExpr != nullptr ? spConstTestExpr : spTestExpr,
+      spTernExpr->GetTrueExpression()->Visit(this), spTernExpr->GetFalseExpression()->Visit(this));
+  }
+
+  bool Res;
+  if (!_EvaluateCondition(spTernExpr->GetType(), spConstRefExpr, spConstTestExpr, Res))
+    return nullptr;
+
+  return Res ? spTernExpr->GetTrueExpression()->Visit(this) : spTernExpr->GetFalseExpression()->Visit(this);
 }
 
 Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  return nullptr;
+  bool OldUpdateState = m_Update;
+  m_Update = true;
+  auto spRefExpr = spIfElseExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
+  m_Update = OldUpdateState;
+
+  auto spConstRefExpr = expr_cast<ConstantExpression>(spRefExpr);
+  auto spConstTestExpr = expr_cast<ConstantExpression>(spTestExpr);
+
+  if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
+  {
+    OldUpdateState = m_Update;
+    m_Update = false;
+    auto spOldCond = m_spCond;
+    m_spCond = std::dynamic_pointer_cast<IfElseConditionExpression>(Expr::MakeIfElseCond(
+      spIfElseExpr->GetType(), spRefExpr, spTestExpr,
+      spIfElseExpr->GetThenExpression(), spIfElseExpr->GetElseExpression()));
+    auto spVstThenExpr = spIfElseExpr->GetThenExpression()->Visit(this);
+    auto spVstElseExpr = spIfElseExpr->GetElseExpression() != nullptr ? spIfElseExpr->GetThenExpression()->Visit(this) : nullptr;
+    m_spCond = spOldCond;
+    m_Update = OldUpdateState;
+    return Expr::MakeIfElseCond(spIfElseExpr->GetType(),
+      spConstRefExpr != nullptr ? spConstRefExpr : spRefExpr, spConstTestExpr != nullptr ? spConstTestExpr : spTestExpr,
+      spVstThenExpr, spVstElseExpr);
+  }
+
+  bool Res;
+  if (!_EvaluateCondition(spIfElseExpr->GetType(), spConstRefExpr, spConstTestExpr, Res))
+    return nullptr;
+
+  return Res ? spIfElseExpr->GetThenExpression()->Visit(this) : spIfElseExpr->GetElseExpression()->Visit(this);
 }
 
 Expression::SPType SymbolicVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
@@ -860,6 +912,16 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
       break;
     }
   }
+
+  // If we have a conditional expression, we need to transform the source to a ternary expression
+  if (m_spCond != nullptr)
+  {
+    auto spTernExpr = Expr::MakeTernaryCond(
+      m_spCond->GetType(), m_spCond->GetReferenceExpression(), m_spCond->GetTestExpression(),
+      spSrcExpr, spDstExpr);
+    spSrcExpr = spTernExpr;
+  }
+
   m_SymCtxt[spDstExprVst] = spSrcExpr;
   return nullptr;
 }
@@ -1105,6 +1167,18 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
 
     case VariableExpression::Free:
       m_VarPool.erase(spVarExpr->GetName());
+      for (auto const& rSymPair : m_SymCtxt)
+      {
+        auto spCurExpr = GetExpression(rSymPair.first);
+        if (auto spSymVarExpr = expr_cast<VariableExpression>(spCurExpr))
+        {
+          if (spSymVarExpr->GetName() == spVarExpr->GetName())
+          {
+            m_SymCtxt.erase(rSymPair.first);
+            break;
+          }
+        }
+      }
       break;
     }
   }
@@ -1203,6 +1277,7 @@ Expression::VSPType SymbolicVisitor::GetExpressions(void) const
 
 std::string SymbolicVisitor::ToString(void) const
 {
+  static const std::string s_Sep(80, '_');
   std::ostringstream oss;
   for (auto const& rSymPair : m_SymCtxt)
   {
@@ -1211,7 +1286,7 @@ std::string SymbolicVisitor::ToString(void) const
       oss << "<null>";
     else
       oss << rSymPair.second->ToString();
-    oss << std::endl;
+    oss << std::endl << s_Sep << std::endl;
   }
   return oss.str();
 }
@@ -1225,8 +1300,15 @@ bool SymbolicVisitor::UpdateAddress(Architecture& rArch, Address const& rAddr)
 {
   m_CurAddr = rAddr;
   m_CurPos = 0;
+
+  auto spInsn = std::dynamic_pointer_cast<Instruction>(m_rDoc.GetCell(rAddr));
+  if (spInsn == nullptr)
+  {
+    return false;
+  }
+  auto ExecAddr = rArch.CurrentAddress(rAddr, *spInsn);
   Expression::VSPType SetCurAddrExprs;
-  if (!rArch.EmitSetExecutionAddress(SetCurAddrExprs, rAddr, m_Mode))
+  if (!rArch.EmitSetExecutionAddress(SetCurAddrExprs, ExecAddr, m_Mode))
   {
     return false;
   }
@@ -1256,6 +1338,62 @@ Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
   }
   return nullptr;
 }
+
+bool SymbolicVisitor::_EvaluateCondition(u8 CondOp, ConstantExpression::SPType spConstRefExpr, ConstantExpression::SPType spConstTestExpr, bool& rRes) const
+{
+  auto RefVal = spConstRefExpr->GetConstant();
+  auto TestVal = spConstTestExpr->GetConstant();
+
+  switch (CondOp)
+  {
+  case ConditionExpression::CondEq:
+    rRes = RefVal.GetUnsignedValue() == TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondNe:
+    rRes = RefVal.GetUnsignedValue() != TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondUgt:
+    rRes = RefVal.GetUnsignedValue() > TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondUge:
+    rRes = RefVal.GetUnsignedValue() >= TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondUlt:
+    rRes = RefVal.GetUnsignedValue() < TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondUle:
+    rRes = RefVal.GetUnsignedValue() <= TestVal.GetUnsignedValue();
+    break;
+
+  case ConditionExpression::CondSgt:
+    rRes = RefVal.GetSignedValue() > TestVal.GetSignedValue();
+    break;
+
+  case ConditionExpression::CondSge:
+    rRes = RefVal.GetSignedValue() >= TestVal.GetSignedValue();
+    break;
+
+  case ConditionExpression::CondSlt:
+    rRes = RefVal.GetSignedValue() < TestVal.GetSignedValue();
+    break;
+
+  case ConditionExpression::CondSle:
+    rRes = RefVal.GetSignedValue() <= TestVal.GetSignedValue();
+    break;
+
+  default:
+    Log::Write("core") << "unknown comparison" << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
 
 NormalizeIdentifier::NormalizeIdentifier(CpuInformation const& rCpuInfo, u8 Mode)
 : m_rCpuInfo(rCpuInfo), m_Mode(Mode)
@@ -1318,6 +1456,16 @@ Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::S
   auto Id = spIdExpr->GetId();
   m_UsedId.insert(Id);
   return Expr::MakeVar(pCpuInfo->ConvertIdentifierToName(Id), VariableExpression::Use);
+}
+
+Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  return nullptr;
+}
+
+Expression::SPType SimplifyVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
+{
+  return nullptr;
 }
 
 MEDUSA_NAMESPACE_END

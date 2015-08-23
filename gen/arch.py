@@ -286,6 +286,15 @@ class ArchConvertion:
             def visit_Gt(self, node):
                 return 'ConditionExpression::CondUgt'
 
+            def visit_GtE(self, node):
+                return 'ConditionExpression::CondUge'
+
+            def visit_Lt(self, node):
+                return 'ConditionExpression::CondUlt'
+
+            def visit_LtE(self, node):
+                return 'ConditionExpression::CondUle'
+
             def visit_UnaryOp(self, node):
                 oper_name = self.visit(node.op)
                 oprd_name = self.visit(node.operand)
@@ -519,6 +528,9 @@ class ArchConvertion:
                     return 'rInsn'
 
                 # Fonction name
+                elif node_name == 'ite':
+                    return 'Expr::MakeTernaryCond(%s,\n%s, %s)'
+
                 elif node_name == 'swap':
                     return 'Expr::MakeUnOp(OperationExpression::OpSwap, %s)'
                 elif node_name == 'bsf':
@@ -526,6 +538,7 @@ class ArchConvertion:
                 elif node_name == 'bsr':
                     return 'Expr::MakeUnOp(OperationExpression::OpBsr, %s)'
                 elif node_name == 'sign_extend':
+
                     return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'zero_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
@@ -541,6 +554,15 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
                 elif node_name == 'bit_cast':
                     return 'Expr::MakeBinOp(OperationExpression::OpBcast, %s, %s)'
+
+                elif node_name == 'sgt': # s>
+                    return 'Expr::MakeBinOp(ConditionExpression::CondSgt, %s, %s)'
+                elif node_name == 'sge': # s>
+                    return 'Expr::MakeBinOp(ConditionExpression::CondSge, %s, %s)'
+                elif node_name == 'slt': # s<
+                    return 'Expr::MakeBinOp(ConditionExpression::CondSlt, %s, %s)'
+                elif node_name == 'sle': # s<=
+                    return 'Expr::MakeBinOp(ConditionExpression::CondSle, %s, %s)'
 
                 # TODO(KS): this code is architecture specific, move it to arch_<arch>.py
                 elif node_name == 'is_byte_operation':

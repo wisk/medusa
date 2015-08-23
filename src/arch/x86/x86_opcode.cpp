@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 15 20:39:38 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 22 22:43:03 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -3086,16 +3086,12 @@ bool X86Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -3306,16 +3302,12 @@ bool X86Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -3526,16 +3518,12 @@ bool X86Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -3746,16 +3734,12 @@ bool X86Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -3966,16 +3950,12 @@ bool X86Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -4186,16 +4166,12 @@ bool X86Architecture::Table_1_05(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -4479,16 +4455,12 @@ bool X86Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -4649,16 +4621,12 @@ bool X86Architecture::Table_1_09(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -4819,16 +4787,12 @@ bool X86Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -4989,16 +4953,12 @@ bool X86Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -5159,16 +5119,12 @@ bool X86Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -5329,16 +5285,12 @@ bool X86Architecture::Table_1_0d(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -5610,16 +5562,12 @@ bool X86Architecture::Table_1_10(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -5835,16 +5783,12 @@ bool X86Architecture::Table_1_11(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -6060,16 +6004,12 @@ bool X86Architecture::Table_1_12(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -6285,16 +6225,12 @@ bool X86Architecture::Table_1_13(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -6510,16 +6446,12 @@ bool X86Architecture::Table_1_14(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -6735,16 +6667,12 @@ bool X86Architecture::Table_1_15(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -7066,16 +6994,12 @@ bool X86Architecture::Table_1_18(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -7289,16 +7213,12 @@ bool X86Architecture::Table_1_19(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -7512,16 +7432,12 @@ bool X86Architecture::Table_1_1a(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -7735,16 +7651,12 @@ bool X86Architecture::Table_1_1b(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -7958,16 +7870,12 @@ bool X86Architecture::Table_1_1c(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -8181,16 +8089,12 @@ bool X86Architecture::Table_1_1d(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -8474,16 +8378,12 @@ bool X86Architecture::Table_1_20(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -8644,16 +8544,12 @@ bool X86Architecture::Table_1_21(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -8814,16 +8710,12 @@ bool X86Architecture::Table_1_22(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -8984,16 +8876,12 @@ bool X86Architecture::Table_1_23(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -9154,16 +9042,12 @@ bool X86Architecture::Table_1_24(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -9324,16 +9208,12 @@ bool X86Architecture::Table_1_25(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -9885,16 +9765,12 @@ bool X86Architecture::Table_1_28(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -10103,16 +9979,12 @@ bool X86Architecture::Table_1_29(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -10321,16 +10193,12 @@ bool X86Architecture::Table_1_2a(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -10539,16 +10407,12 @@ bool X86Architecture::Table_1_2b(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -10757,16 +10621,12 @@ bool X86Architecture::Table_1_2c(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -10975,16 +10835,12 @@ bool X86Architecture::Table_1_2d(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -11512,16 +11368,12 @@ bool X86Architecture::Table_1_30(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -11682,16 +11534,12 @@ bool X86Architecture::Table_1_31(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -11852,16 +11700,12 @@ bool X86Architecture::Table_1_32(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -12022,16 +11866,12 @@ bool X86Architecture::Table_1_33(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -12192,16 +12032,12 @@ bool X86Architecture::Table_1_34(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -12362,16 +12198,12 @@ bool X86Architecture::Table_1_35(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -12691,16 +12523,12 @@ bool X86Architecture::Table_1_38(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -12904,16 +12732,12 @@ bool X86Architecture::Table_1_39(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -13117,16 +12941,12 @@ bool X86Architecture::Table_1_3a(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -13330,16 +13150,12 @@ bool X86Architecture::Table_1_3b(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -13543,16 +13359,12 @@ bool X86Architecture::Table_1_3c(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -13756,16 +13568,12 @@ bool X86Architecture::Table_1_3d(BinaryStream const& rBinStrm, TOffset Offset, I
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
       /* semantic: call('zero_flag') */
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       /* semantic: call('parity_flag') */
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
@@ -14111,16 +13919,12 @@ bool X86Architecture::Table_1_40(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -14328,16 +14132,12 @@ bool X86Architecture::Table_1_41(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -14545,16 +14345,12 @@ bool X86Architecture::Table_1_42(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -14762,16 +14558,12 @@ bool X86Architecture::Table_1_43(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -14979,16 +14771,12 @@ bool X86Architecture::Table_1_44(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -15196,16 +14984,12 @@ bool X86Architecture::Table_1_45(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -15413,16 +15197,12 @@ bool X86Architecture::Table_1_46(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -15630,16 +15410,12 @@ bool X86Architecture::Table_1_47(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -15844,16 +15620,12 @@ bool X86Architecture::Table_1_48(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -16056,16 +15828,12 @@ bool X86Architecture::Table_1_49(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -16268,16 +16036,12 @@ bool X86Architecture::Table_1_4a(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -16480,16 +16244,12 @@ bool X86Architecture::Table_1_4b(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -16692,16 +16452,12 @@ bool X86Architecture::Table_1_4c(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -16904,16 +16660,12 @@ bool X86Architecture::Table_1_4d(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -17116,16 +16868,12 @@ bool X86Architecture::Table_1_4e(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -17328,16 +17076,12 @@ bool X86Architecture::Table_1_4f(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -21089,16 +20833,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -21254,16 +20994,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -21443,16 +21179,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -21645,16 +21377,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -21810,16 +21538,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -21993,16 +21717,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -22158,16 +21878,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -22341,16 +22057,12 @@ bool X86Architecture::Table_1_80(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -22682,16 +22394,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -22847,16 +22555,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -23036,16 +22740,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -23238,16 +22938,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -23403,16 +23099,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -23586,16 +23278,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -23751,16 +23439,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -23934,16 +23618,12 @@ bool X86Architecture::Table_1_81(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -24275,16 +23955,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -24440,16 +24116,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -24629,16 +24301,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -24831,16 +24499,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -24996,16 +24660,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -25179,16 +24839,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -25344,16 +25000,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -25527,16 +25179,12 @@ bool X86Architecture::Table_1_82(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -25868,16 +25516,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -26033,16 +25677,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -26222,16 +25862,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -26424,16 +26060,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -26589,16 +26221,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -26772,16 +26400,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -26937,16 +26561,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -27120,16 +26740,12 @@ bool X86Architecture::Table_1_83(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -27301,16 +26917,12 @@ bool X86Architecture::Table_1_84(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -27464,16 +27076,12 @@ bool X86Architecture::Table_1_85(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -29619,16 +29227,12 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -29875,16 +29479,12 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -30113,16 +29713,12 @@ bool X86Architecture::Table_1_a6(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -30397,16 +29993,12 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -30653,16 +30245,12 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -30891,16 +30479,12 @@ bool X86Architecture::Table_1_a7(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -31105,16 +30689,12 @@ bool X86Architecture::Table_1_a8(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -31268,16 +30848,12 @@ bool X86Architecture::Table_1_a9(BinaryStream const& rBinStrm, TOffset Offset, I
             OperationExpression::OpSub,
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-      AllExpr.push_back(Expr::MakeIfElseCond(
-        ConditionExpression::CondEq,
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(X86_FlZf, &m_CpuInfo),
+        Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x1)),
-        Expr::MakeAssign(
-          Expr::MakeId(X86_FlZf, &m_CpuInfo),
-          Expr::MakeConst(1, 0x0))));
+        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -31741,16 +31317,12 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -31979,16 +31551,12 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -32199,16 +31767,12 @@ bool X86Architecture::Table_1_ae(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -32465,16 +32029,12 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -32703,16 +32263,12 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -32923,16 +32479,12 @@ bool X86Architecture::Table_1_af(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -34553,16 +34105,12 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -34758,16 +34306,12 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -34954,16 +34498,12 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -35170,16 +34710,12 @@ bool X86Architecture::Table_1_c0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -35917,16 +35453,12 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -36122,16 +35654,12 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -36318,16 +35846,12 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -36534,16 +36058,12 @@ bool X86Architecture::Table_1_c1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -37742,16 +37262,12 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -37947,16 +37463,12 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -38143,16 +37655,12 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -38359,16 +37867,12 @@ bool X86Architecture::Table_1_d0(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -39106,16 +38610,12 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -39311,16 +38811,12 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -39507,16 +39003,12 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -39723,16 +39215,12 @@ bool X86Architecture::Table_1_d1(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -40470,16 +39958,12 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -40675,16 +40159,12 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -40871,16 +40351,12 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -41087,16 +40563,12 @@ bool X86Architecture::Table_1_d2(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -41834,16 +41306,12 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -42039,16 +41507,12 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -42235,16 +41699,12 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -42451,16 +41911,12 @@ bool X86Architecture::Table_1_d3(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -44640,16 +44096,12 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -44784,16 +44236,12 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -44967,16 +44415,12 @@ bool X86Architecture::Table_1_f6(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -45870,16 +45314,12 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -46014,16 +45454,12 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               OperationExpression::OpSub,
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -46197,16 +45633,12 @@ bool X86Architecture::Table_1_f7(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -47124,16 +46556,12 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -47302,16 +46730,12 @@ bool X86Architecture::Table_1_fe(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -47587,16 +47011,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -47765,16 +47185,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -56415,16 +55831,12 @@ bool X86Architecture::Table_2_a4(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -56666,16 +56078,12 @@ bool X86Architecture::Table_2_a5(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -57196,16 +56604,12 @@ bool X86Architecture::Table_2_ac(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -57445,16 +56849,12 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
                 OperationExpression::OpSub,
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
                 Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))),
-          Expr::MakeIfElseCond(
-            ConditionExpression::CondEq,
+          Expr::MakeAssign(
+            Expr::MakeId(X86_FlZf, &m_CpuInfo),
+            Expr::MakeTernaryCond(ConditionExpression::CondEq,
             Expr::MakeVar("res", VariableExpression::Use),
             Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x1)),
-            Expr::MakeAssign(
-              Expr::MakeId(X86_FlZf, &m_CpuInfo),
-              Expr::MakeConst(1, 0x0))),
+            Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))),
           Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)),
           Expr::MakeAssign(
             Expr::MakeVar("pf_tmp", VariableExpression::Use),
@@ -58966,16 +58366,12 @@ bool X86Architecture::Table_2_c0(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
@@ -59213,16 +58609,12 @@ bool X86Architecture::Table_2_c1(BinaryStream const& rBinStrm, TOffset Offset, I
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
               Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
         /* semantic: call('zero_flag') */
-        AllExpr.push_back(Expr::MakeIfElseCond(
-          ConditionExpression::CondEq,
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeId(X86_FlZf, &m_CpuInfo),
+          Expr::MakeTernaryCond(ConditionExpression::CondEq,
           Expr::MakeVar("res", VariableExpression::Use),
           Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x1)),
-          Expr::MakeAssign(
-            Expr::MakeId(X86_FlZf, &m_CpuInfo),
-            Expr::MakeConst(1, 0x0))));
+          Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
         /* semantic: call('parity_flag') */
         AllExpr.push_back(Expr::MakeVar("pf_tmp", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(X86_FlPf)));
         AllExpr.push_back(Expr::MakeAssign(
