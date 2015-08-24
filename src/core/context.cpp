@@ -204,6 +204,18 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
   return true;
 }
 
+void MemoryContext::ForEachMemoryChunk(CallbackType Callback)
+{
+  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  if (m_Memories.empty())
+    return;
+
+  for (MemoryChunk const& rMemChnk : m_Memories)
+  {
+    Callback(rMemChnk);
+  }
+}
+
 bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, u32& rFlags) const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
@@ -341,6 +353,7 @@ bool MemoryContext::_FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemCh
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
+
     if (LinearAddress >= rMemChnk.m_LinearAddress && LinearAddress < (rMemChnk.m_LinearAddress + rMemChnk.m_spMemStrm->GetSize()))
     {
       rFoundMemChnk = rMemChnk;
