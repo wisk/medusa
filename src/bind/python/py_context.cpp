@@ -125,6 +125,21 @@ namespace pydusa
     return bp::str(reinterpret_cast<char const*>(pRawMem), Size);
   }
 
+  bp::list MemoryContext_List(MemoryContext* pMemCtxt)
+  {
+    bp::list MemChunks;
+    pMemCtxt->ForEachMemoryChunk([&](MemoryContext::MemoryChunk const& rMemChunk)
+    {
+      bp::list Tuple;
+      Tuple.append(rMemChunk.m_LinearAddress);
+      Tuple.append(rMemChunk.m_spMemStrm->GetSize());
+      Tuple.append(rMemChunk.m_Flags);
+      MemChunks.append(bp::tuple(Tuple));
+    });
+
+    return MemChunks;
+  }
+
   bp::object MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
   {
     std::unique_ptr<char[]> upBuffer(new char[Size]);
@@ -224,6 +239,8 @@ void PydusaContext(void)
 
     .def("alloc",       pydusa::MemoryContext_Allocate)
     .def("free",        &MemoryContext::FreeMemory)
+
+    .def("list",        pydusa::MemoryContext_List)
 
     .def("read",        pydusa::MemoryContext_ReadBuffer)
     .def("read_u8",     pydusa::MemoryContext_Read_u8)

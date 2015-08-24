@@ -104,6 +104,8 @@ public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
   ~MemoryContext(void);
 
+  typedef std::function<void (MemoryChunk const& rMemChunk)> CallbackType;
+  void ForEachMemoryChunk(CallbackType Callback);
   virtual bool ReadMemory(u64 LinAddr, void* pVal, u32 Size) const;
   template<typename _MemTy>
   bool ReadMemory(u64 LinAddr, _MemTy& rVal) const
