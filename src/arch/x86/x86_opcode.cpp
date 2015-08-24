@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 15 20:39:38 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Aug 24 18:23:14 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -281,6 +281,7 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "movq2dq",
   "movs",
   "movsx",
+  "movups",
   "movzx",
   "mpsadbw",
   "mul",
@@ -678,7 +679,6 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "vmovsldup",
   "vmovss",
   "vmovupd",
-  "vmovups",
   "vmpsadbw",
   "vmptrld",
   "vmptrst",
@@ -48745,8 +48745,10 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Gb']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovups
+ * mnemonic: movups
  * operand: ['Vx', 'Wx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: vmovupd
@@ -48804,10 +48806,18 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovups);
+      rInsn.SetOpcode(X86_Opcode_Movups);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -48831,8 +48841,10 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovups
+ * mnemonic: movups
  * operand: ['Wx', 'Vx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: vmovupd
@@ -48890,10 +48902,18 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovups);
+      rInsn.SetOpcode(X86_Opcode_Movups);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

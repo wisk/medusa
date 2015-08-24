@@ -3207,9 +3207,10 @@ instruction:
             operand: [ Eb, Gb ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovups
+          - mnemonic: movups
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: vmovupd
             operand: [ Vx, Wx ]
@@ -3232,9 +3233,10 @@ instruction:
             operand: [ Ev, Gv ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovups
+          - mnemonic: movups
             operand: [ Wx, Vx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: vmovupd
             operand: [ Wx, Vx ]
