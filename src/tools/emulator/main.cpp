@@ -260,6 +260,7 @@ int main(int argc, char **argv)
   bool auto_cfg = false;
   bool analyze = false;
   bool hook_imported_symbols = false;
+  std::string emulator_type = "interpreter";
 
   // TODO: implement database loading...
   namespace po = boost::program_options;
@@ -274,6 +275,7 @@ int main(int argc, char **argv)
     ("auto", "configure module automatically")
     ("analyze", "analyze the executable")
     ("hook", "hook all imported symbols")
+    ("emulator", po::value<std::string>(&emulator_type), "set the emulator type")
     ;
   po::variables_map var_map;
 
@@ -311,6 +313,7 @@ int main(int argc, char **argv)
     Log::Write("ui_text") << "Using the following path for modules: \"" << mod_path.string() << "\"" << LogEnd;
     if (!script_path.empty())
       Log::Write("ui_text") << "Using script: \"" << script_path.string() << "\"" << LogEnd;
+    Log::Write("ui_text") << "Using the emulator: \"" << emulator_type << "\"" << LogEnd;
 
     Medusa m;
     if (!m.NewDocument(
@@ -418,7 +421,7 @@ int main(int argc, char **argv)
       std::cerr << "Unable to initialize emulator" << std::endl;
       return 0;
     }
-    if (!exec.SetEmulator("interpreter"))
+    if (!exec.SetEmulator(emulator_type))
     {
       std::cerr << "Unable to set the emulator" << std::endl;
       return 0;
