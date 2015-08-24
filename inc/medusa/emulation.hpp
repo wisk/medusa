@@ -53,7 +53,7 @@ public:
     return WriteMemory(rAddr, &rMemVal, sizeof(rMemVal));
   }
 
-  virtual bool Execute(Expression::SPType spExpr);   
+  virtual bool Execute(Expression::SPType spExpr);
   virtual bool Execute(Expression::VSPType const& rExprs) = 0;
   virtual bool Execute(Address const& rAddress);
 
@@ -74,12 +74,14 @@ public:
   virtual bool RemoveHook(Address const& rAddress);
   virtual bool TestHook(Address const& rAddress, u32 Type) const;
 
+  virtual bool InvalidateCache(void);
+
 protected:
   Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
   typedef std::function<bool (Address const&, Instruction&, Architecture&, u8)> DisasmCbType;
   bool _Disassemble(Address const& rAddress, DisasmCbType Cb);
-  
+
   // Semantic cache
   bool _IsSemanticCached(Address const& rAddress) const;
   bool _CacheSemantic(Address const& rAddress, Expression::VSPType& rExprs);

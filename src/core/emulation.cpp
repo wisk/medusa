@@ -155,6 +155,11 @@ bool Emulator::TestHook(Address const& rAddress, u32 Type) const
   return true;
 }
 
+bool Emulator::InvalidateCache(void)
+{
+  return false;
+}
+
 bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
 {
   Address InsnAddr = rAddress;

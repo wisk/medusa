@@ -53,6 +53,8 @@ public:
   virtual bool Execute(Expression::VSPType const& rExprs);
   virtual bool Execute(Address const& rAddress);
 
+  virtual bool InvalidateCache(void);
+
 private:
   typedef bool (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
@@ -61,7 +63,7 @@ private:
   typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
   VarMapType m_Vars;
 
-  // TODO: Implement InvalidCache to handle self-modifying code
+  // TODO: Implement InvalidateCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
   typedef std::unordered_map<u64, BasicBlockCode>   FunctionCacheType;
   FunctionCacheType             m_FunctionCache;

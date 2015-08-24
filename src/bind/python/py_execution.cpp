@@ -56,7 +56,7 @@ namespace pydusa
   {
     HookCallbackProxy Proxy(HookCb);
     return pExecution->Hook(
-      rAddr, 
+      rAddr,
       Type,
       Proxy);
   }
@@ -84,6 +84,7 @@ void PydusaExecution(void)
     .def("init", pydusa::Execution_Initialize)
     .def("set_emulator", &Execution::SetEmulator)
     .def("execute", &Execution::Execute)
+    .def("invalidate_cache", &Execution::InvalidateCache)
     .def("hook_insn", pydusa::Execution_HookInstruction)
     .def("hook_fn", pydusa::Execution_HookFunction)
     .def("hook_addr", pydusa::Execution_HookAddr)

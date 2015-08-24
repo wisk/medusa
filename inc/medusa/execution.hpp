@@ -24,6 +24,8 @@ public:
 
   void Execute(Address const& rAddr);
 
+  bool InvalidateCache(void);
+
   bool HookInstruction(Emulator::HookCallback HkCb);
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
   bool Hook(Address const& rAddress, u32 Type, Emulator::HookCallback Callback);
