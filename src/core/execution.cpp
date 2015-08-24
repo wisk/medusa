@@ -97,6 +97,13 @@ void Execution::Execute(Address const& rAddr)
       break;
 }
 
+bool Execution::InvalidateCache(void)
+{
+  if (m_spEmul == nullptr)
+    return false;
+  return m_spEmul->InvalidateCache();
+}
+
 bool Execution::HookInstruction(Emulator::HookCallback HkCb)
 {
   if (m_spEmul == nullptr)

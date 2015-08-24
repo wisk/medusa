@@ -157,7 +157,17 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       if (!rCurArch.EmitSetExecutionAddress(Exprs, CurAddr, CurMode))
         return false;
 
-      for (auto spExpr : rCurInsn.GetSemantic())
+      // Check for missing instruction semantic
+      auto const& rCurInsnSem = rCurInsn.GetSemantic();
+      if (rCurInsnSem.empty())
+      {
+        Log::Write("emul_llvm").Level(LogError) << "failed to find instruction semantic at " << ExecAddr << LogEnd;
+        Log::Write("emul_llvm").Level(LogError) << "details: " << rCurInsn.ToString() << LogEnd;
+        Exprs.clear();
+        return false;
+      }
+
+      for (auto spExpr : rCurInsnSem)
       {
         if (auto spSysExpr = expr_cast<SystemExpression>(spExpr))
         {
@@ -166,6 +176,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
           if (rSysName == "stop")
           {
             Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+            Exprs.clear();
             return false;
           }
         }
@@ -182,7 +193,8 @@ bool LlvmEmulator::Execute(Address const& rAddress)
 
     if (Exprs.empty())
     {
-      Log::Write("emul_llvm") << "failed to disassemble code at " << ExecAddr << LogEnd;
+      Log::Write("emul_llvm").Level(LogError) << "failed to disassemble code at " << ExecAddr << LogEnd;
+      Exprs.clear();
       return false;
     }
 
@@ -231,7 +243,8 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         auto spNrmExpr = spExpr->Visit(&NrmId);
         if (spNrmExpr == nullptr)
         {
-          Log::Write("emul_llvm") << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
+          Log::Write("emul_llvm").Level(LogError) << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
+          Exprs.clear();
           return false;
         }
 
@@ -239,7 +252,8 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         auto spId2Var = spNrmExpr->Visit(&Id2Var);
         if (spId2Var == nullptr)
         {
-          Log::Write("emul_llvm") << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
+          Log::Write("emul_llvm").Level(LogError) << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
+          Exprs.clear();
           return false;
         }
         JitExprs.push_back(spId2Var);
@@ -254,6 +268,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         if (pIdName == nullptr || IdBitSize == 0)
         {
           Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
+          Exprs.clear();
           return false;
         }
 
@@ -303,6 +318,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       if (spExpr->Visit(&EmitLlvm) == nullptr)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
+        Exprs.clear();
         return false;
       }
     }
@@ -313,6 +329,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     if (pCode == nullptr)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
+      Exprs.clear();
       return false;
     }
     m_FunctionCache[LinAddr] = pCode;
@@ -328,6 +345,12 @@ bool LlvmEmulator::Execute(Address const& rAddress)
   TestHook(NextAddr, Emulator::HookOnExecute);
 
   return true;
+}
+
+bool LlvmEmulator::InvalidateCache(void)
+{
+  m_JitHelper = LlvmJitHelper();
+  m_FunctionCache.clear();
 }
 
 LlvmEmulator::LlvmJitHelper::LlvmJitHelper(void)
