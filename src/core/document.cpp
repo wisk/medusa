@@ -933,8 +933,6 @@ bool Document::_ApplyTypedValue(Address const& rParentAddr, Address const& rAddr
 
 bool Document::_ApplyType(Address const& rAddr, TypeDetail::SPType const& rspTpDtl)
 {
-  if (rspTpDtl->GetType() == ValueDetail::CompositeType)
-    return true;
   return ChangeValueSize(rAddr, rspTpDtl->GetBitSize(), true);
 }
 
