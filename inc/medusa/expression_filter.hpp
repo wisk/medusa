@@ -81,10 +81,10 @@ namespace medusa
         if (spUnOpExpr == nullptr)
           return false;
 
-        if (spUnOpExpr->GetType() != Op)
+        if (spUnOpExpr->GetOperation() != Op)
           return false;
 
-        if (!m_rPattern.Filter(spUnOp->GetExpression()))
+        if (!m_rPattern.Filter(rNamedExprs, spUnOpExpr->GetExpression()))
           return false;
 
         _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
@@ -116,12 +116,12 @@ namespace medusa
         if (spBinOpExpr == nullptr)
           return false;
 
-        if (spBinOpExpr->GetType() != Op)
+        if (spBinOpExpr->GetOperation() != Op)
           return false;
 
-        if (!m_rLeftPattern.Filter(spBinOpExpr->GetLeftExpression()))
+        if (!m_rLeftPattern.Filter(rNamedExprs, spBinOpExpr->GetLeftExpression()))
           return false;
-        if (!m_rRightPattern.Filter(spBinOpExpr->GetRightExpression()))
+        if (!m_rRightPattern.Filter(rNamedExprs, spBinOpExpr->GetRightExpression()))
           return false;
 
         _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
