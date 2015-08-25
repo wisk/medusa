@@ -2,6 +2,7 @@
 #include <boost/test/unit_test.hpp> 
 
 #include <medusa/expression.hpp>
+#include <medusa/expression_filter.hpp>
 #include <medusa/expression_visitor.hpp>
 #include <medusa/expression_simplifier.hpp>
 #include <medusa/module.hpp>
@@ -167,6 +168,21 @@ BOOST_AUTO_TEST_CASE(expr_var)
   std::cout << spAllocVarExpr->ToString() << std::endl;
   std::cout << spAssignVarExpr->ToString() << std::endl;
   std::cout << spFreeVarExpr->ToString() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(expr_flt)
+{
+  using namespace Pattern;
+
+  ExpressionFilter ExprFlt(OR(Any("a"), Any("b")));
+  auto spOrExpr = Expr::MakeBinOp(OperationExpression::OpOr, Expr::MakeConst(IntType(32, 0x11223344)), Expr::MakeConst(IntType(32, 0xaabbccdd)));
+  BOOST_REQUIRE(ExprFlt.Execute(spOrExpr));
+  auto spExprA = expr_cast<ConstantExpression>(ExprFlt.GetExpression("a"));
+  BOOST_REQUIRE(spExprA != nullptr);
+  BOOST_REQUIRE(spExprA->GetConstant().ConvertTo<u32>() == 0x11223344);
+  auto spExprB = expr_cast<ConstantExpression>(ExprFlt.GetExpression("b"));
+  BOOST_REQUIRE(spExprB != nullptr);
+  BOOST_REQUIRE(spExprB->GetConstant().ConvertTo<u32>() == 0xaabbccdd);
 }
 
 BOOST_AUTO_TEST_CASE(expr_push_pop)

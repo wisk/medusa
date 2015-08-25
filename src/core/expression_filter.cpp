@@ -15,15 +15,15 @@ namespace medusa
     rNamedExprs[m_PatternName] = spExpr;
   }
 
-  ExpressionFilter::ExpressionFilter(ExpressionPattern const& rPattern)
-    : m_rPattern(rPattern)
+  ExpressionFilter::ExpressionFilter(ExpressionPattern::SPType spPattern)
+    : m_spPattern(spPattern)
   {
 
   }
 
   bool ExpressionFilter::Execute(Expression::SPType spExpr)
   {
-    return m_rPattern.Filter(m_NamedExprs, spExpr);
+    return m_spPattern->Filter(m_NamedExprs, spExpr);
   }
 
   Expression::SPType ExpressionFilter::GetExpression(std::string const& rExprName)

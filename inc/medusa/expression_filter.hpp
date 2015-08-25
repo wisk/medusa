@@ -11,9 +11,19 @@ namespace medusa
   class Medusa_EXPORT ExpressionPattern
   {
   public:
+    typedef std::shared_ptr<ExpressionPattern> SPType;
+
     ExpressionPattern(std::string const& rPatternName = "");
 
-    virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const = 0;
+    virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+    {
+      return false;
+    }
+
+    operator SPType(void)
+    {
+      return nullptr;
+    }
 
   protected:
     void _CaptureExpressionIfNeeded(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const;
@@ -24,18 +34,22 @@ namespace medusa
   class Medusa_EXPORT ExpressionFilter
   {
   public:
-    ExpressionFilter(ExpressionPattern const& rPattern);
+    ExpressionFilter(ExpressionPattern::SPType spPattern);
 
     bool Execute(Expression::SPType spExpr);
     Expression::SPType GetExpression(std::string const& rExprName);
 
   private:
-    ExpressionPattern const& m_rPattern;
+    ExpressionPattern::SPType m_spPattern;
     NamedExpressionType m_NamedExprs;
   };
 
   namespace Pattern
   {
+#define EXPORT_TEMPLATE_PATTERN(type, name)\
+  template Medusa_EXPORT class type;\
+  using name = type
+
     class Medusa_EXPORT Any : public ExpressionPattern
     {
     public:
@@ -45,6 +59,11 @@ namespace medusa
       {
         _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
         return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<Any>(m_PatternName);
       }
     };
 
@@ -64,6 +83,11 @@ namespace medusa
         return true;
       }
 
+      operator SPType(void)
+      {
+        return std::make_shared<Callback>(m_PatternName, m_Callback);
+      }
+
     private:
       Type m_Callback;
     };
@@ -72,8 +96,8 @@ namespace medusa
     class Unary : public ExpressionPattern
     {
     public:
-      Unary(ExpressionPattern& rPattern) : m_rPattern(rPattern) {}
-      Unary(std::string const& rPatternName, ExpressionPattern& rPattern) : ExpressionPattern(rPatternName), m_rPattern(rPattern) {}
+      Unary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
+      Unary(std::string const& rPatternName, ExpressionPattern::SPType spPattern) : ExpressionPattern(rPatternName), m_spPattern(spPattern) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
       {
@@ -84,31 +108,36 @@ namespace medusa
         if (spUnOpExpr->GetOperation() != Op)
           return false;
 
-        if (!m_rPattern.Filter(rNamedExprs, spUnOpExpr->GetExpression()))
+        if (!m_spPattern->Filter(rNamedExprs, spUnOpExpr->GetExpression()))
           return false;
 
         _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
         return true;
       }
 
+      operator SPType(void)
+      {
+        return std::make_shared<Unary>(m_PatternName, m_spPattern);
+      }
+
     private:
-      ExpressionPattern& m_rPattern;
+      ExpressionPattern::SPType m_spPattern;
     };
 
-    template<> class Medusa_EXPORT Unary<OperationExpression::OpNot>;
-    template<> class Medusa_EXPORT Unary<OperationExpression::OpNeg>;
-    template<> class Medusa_EXPORT Unary<OperationExpression::OpSwap>; // byte swap
-    template<> class Medusa_EXPORT Unary<OperationExpression::OpBsf>;  // bit scan forward
-    template<> class Medusa_EXPORT Unary<OperationExpression::OpBsr>;  // bit scan reverse
+    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpNot>,  NOT);
+    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpNeg>,  NEG);
+    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpSwap>, SWAP); // byte swap
+    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsf>,  BSF);  // bit scan forward
+    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsr>,  BSR);  // bit scan reverse
 
     template<unsigned Op>
     class Binary : public ExpressionPattern
     {
     public:
-      Binary(ExpressionPattern& rLeftPattern, ExpressionPattern& rRightPattern)
-        : m_rLeftPattern(rLeftPattern), m_rRightPattern(rRightPattern) {}
-      Binary(std::string const& rPatternName, ExpressionPattern& rLeftPattern, ExpressionPattern& rRightPattern)
-        : ExpressionPattern(rPatternName), m_rLeftPattern(rLeftPattern), m_rRightPattern(rRightPattern) {}
+      Binary(ExpressionPattern::SPType spLeftPattern, ExpressionPattern::SPType spRightPattern)
+        : m_spLeftPattern(spLeftPattern), m_spRightPattern(spRightPattern) {}
+      Binary(std::string const& rPatternName, ExpressionPattern::SPType spLeftPattern, ExpressionPattern::SPType spRightPattern)
+        : ExpressionPattern(rPatternName), m_spLeftPattern(spLeftPattern), m_spRightPattern(spRightPattern) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
       {
@@ -119,39 +148,46 @@ namespace medusa
         if (spBinOpExpr->GetOperation() != Op)
           return false;
 
-        if (!m_rLeftPattern.Filter(rNamedExprs, spBinOpExpr->GetLeftExpression()))
+        if (!m_spLeftPattern->Filter(rNamedExprs, spBinOpExpr->GetLeftExpression()))
           return false;
-        if (!m_rRightPattern.Filter(rNamedExprs, spBinOpExpr->GetRightExpression()))
+        if (!m_spRightPattern->Filter(rNamedExprs, spBinOpExpr->GetRightExpression()))
           return false;
 
         _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
         return true;
       }
 
+      operator SPType(void)
+      {
+        return std::make_shared<Binary>(m_PatternName, m_spLeftPattern, m_spRightPattern);
+      }
+
     private:
-      ExpressionPattern& m_rLeftPattern, &m_rRightPattern;
+      ExpressionPattern::SPType m_spLeftPattern, m_spRightPattern;
     };
 
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpAnd>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpOr>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpXor>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpLls>; /* Logical Left Shift */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpLrs>; /* Logical Right Shift */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpArs>; /* Arithmetic Right Shift */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpRol>; /* Logical Left Rotate */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpRor>; /* Logical Right Rotate */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpAdd>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpSub>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpMul>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpSDiv>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpUDiv>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpSMod>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpUMod>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpSext>; /* Sign Extend */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpZext>; /* Zero Extend */
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpInsertBits>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpExtractBits>;
-    template<> class Medusa_EXPORT Binary<OperationExpression::OpBcast>; /* Bit Cast */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpAnd>,         AND);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpOr>,          OR);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpXor>,         XOR);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpLls>,         LLS); /* Logical Left Shift */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpLrs>,         LRS); /* Logical Right Shift */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpArs>,         ARS); /* Arithmetic Right Shift */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpRol>,         ROL); /* Logical Left Rotate */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpRor>,         ROR); /* Logical Right Rotate */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpAdd>,         ADD);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSub>,         SUB);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpMul>,         MUL);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSDiv>,        SDIV);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpUDiv>,        UDIV);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSMod>,        SMOD);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpUMod>,        UMOD);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSext>,        SEXT); /* Sign Extend */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpZext>,        ZEXT); /* Zero Extend */
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpInsertBits>,  INSERT_BITS);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpExtractBits>, EXTRACT_BITS);
+    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpBcast>,       BCAST); /* Bit Cast */
+
+#undef EXPORT_TEMPLATE_PATTERN
   }
 }
 
