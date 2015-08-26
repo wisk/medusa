@@ -322,6 +322,52 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
   SymExec(rDoc.MakeAddress(0x0000, 0x00401009));
   SymExec(rDoc.MakeAddress(0x0000, 0x0040100c));
   std::cout << SymVst.ToString() << std::endl;
+
+  auto pCpuInfo = spArch->GetCpuInformation();
+  auto EIP = pCpuInfo->ConvertNameToIdentifier("eip");
+  BOOST_REQUIRE(EIP != 0);
+  auto spExpr = SymVst.FindExpression(Expr::MakeId(EIP, pCpuInfo));
+  BOOST_REQUIRE(spExpr != nullptr);
+  std::cout << spExpr->ToString() << std::endl;
+
+  auto spTernExpr = expr_cast<TernaryConditionExpression>(spExpr);
+  BOOST_REQUIRE(spTernExpr != nullptr);
+
+  using namespace Pattern;
+
+  ExpressionFilter ExprFlt(
+    OR(
+    /**/BCAST(
+    /****/LRS(
+    /******/XOR(
+    /********/XOR(
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("op1")),
+    /**********/Any("res")),
+    /********/AND(
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("res")),
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("op1")))),
+    /******/Any("shift_value")),
+    /****/Any("cast_bitsize")),
+    /**/Ternary("zf",
+    /****/EQ(Any("zf_op0"), Any("zero")),
+    /****/Any("true"), Any("false"))));
+  BOOST_REQUIRE(ExprFlt.Execute(spTernExpr->GetReferenceExpression()));
+
+  auto op0 = ExprFlt.GetExpression("op0");
+  auto op1 = ExprFlt.GetExpression("op1");
+  auto res = ExprFlt.GetExpression("res");
+
+  std::cout
+    << "op0: " << op0->ToString() << std::endl
+    << "op1: " << op1->ToString() << std::endl
+    << "res: " << res->ToString() << std::endl;
+
   std::cout << std::string(80, '#') << std::endl;
   SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
   std::cout << SymVst.ToString() << std::endl;

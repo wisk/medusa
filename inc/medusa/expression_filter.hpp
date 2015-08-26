@@ -187,6 +187,83 @@ namespace medusa
     EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpExtractBits>, EXTRACT_BITS);
     EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpBcast>,       BCAST); /* Bit Cast */
 
+    template<unsigned Cond>
+    class Condition : public ExpressionPattern
+    {
+    public:
+      Condition(ExpressionPattern::SPType spRefPattern, ExpressionPattern::SPType spTestPattern)
+        : m_spRefPattern(spRefPattern), m_spTestPattern(spTestPattern) {}
+      Condition(std::string const& rPatternName, ExpressionPattern::SPType spRefPattern, ExpressionPattern::SPType spTestPattern)
+        : ExpressionPattern(rPatternName), m_spRefPattern(spRefPattern), m_spTestPattern(spTestPattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spCondExpr = expr_cast<ConditionExpression>(spExpr);
+        if (spCondExpr->GetType() != Cond)
+          return false;
+        if (!m_spRefPattern->Filter(rNamedExprs, spCondExpr->GetReferenceExpression()))
+          return false;
+        if (!m_spTestPattern->Filter(rNamedExprs, spCondExpr->GetTestExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<Condition>(m_PatternName, m_spRefPattern, m_spTestPattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spRefPattern, m_spTestPattern;
+    };
+
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondEq>,  EQ);  //     equal
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondNe>,  NE);  // not equal
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUgt>, UGT); // unsigned greater than
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUge>, UGE); // unsigned greater than or equal
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUlt>, ULT); // unsigned lesser  than
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUle>, ULE); // unsigned lesser  than or equal
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSgt>, SGT); //   signed greater than
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSge>, SGE); //   signed greater than or equal
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSlt>, SLT); //   signed lesser  than
+    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSle>, SLE); //   signed lesser  than or equal
+
+    class Ternary : public ExpressionPattern
+    {
+    public:
+      Ternary(ExpressionPattern::SPType spCondPattern, ExpressionPattern::SPType spTruePattern, ExpressionPattern::SPType spFalsePattern)
+        : m_spCondPattern(spCondPattern), m_spTruePattern(spTruePattern), m_spFalsePattern(spFalsePattern) {}
+      Ternary(std::string const& rPatternName, ExpressionPattern::SPType spCondPattern, ExpressionPattern::SPType spTruePattern, ExpressionPattern::SPType spFalsePattern)
+        : ExpressionPattern(rPatternName), m_spCondPattern(spCondPattern), m_spTruePattern(spTruePattern), m_spFalsePattern(spFalsePattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spTernExpr = expr_cast<TernaryConditionExpression>(spExpr);
+        if (spTernExpr == nullptr)
+          return false;
+        if (!m_spCondPattern->Filter(rNamedExprs, spTernExpr))
+          return false;
+        if (!m_spTruePattern->Filter(rNamedExprs, spTernExpr->GetTrueExpression()))
+          return false;
+        if (!m_spFalsePattern->Filter(rNamedExprs, spTernExpr->GetFalseExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<Ternary>(m_PatternName, m_spCondPattern, m_spTruePattern, m_spFalsePattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spCondPattern;
+      ExpressionPattern::SPType m_spTruePattern, m_spFalsePattern;
+    };
+
 #undef EXPORT_TEMPLATE_PATTERN
   }
 }
