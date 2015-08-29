@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Aug 24 18:23:14 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Aug 30 01:37:59 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x372] =
 {
@@ -280,6 +280,7 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "movq",
   "movq2dq",
   "movs",
+  "movsd",
   "movsx",
   "movups",
   "movzx",
@@ -674,7 +675,6 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "vmovntpd",
   "vmovntps",
   "vmovq",
-  "vmovsd",
   "vmovshdup",
   "vmovsldup",
   "vmovss",
@@ -48761,9 +48761,14 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovsd
+ * mnemonic: movsd
  * operand: ['Vo', 'Moq']
- * prefix: f2
+ * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_expr_mem(op0) and is_expr_id(op1):
+  op0.val = bit_cast(op1.val, int_type64);
+
+ * attr: ['repnz']
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48773,13 +48778,35 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     if (!rBinStrm.Read(Offset - 2, Prefix))
       return false;
 
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovsd);
+      rInsn.SetOpcode(X86_Opcode_Movsd);
       if (Operand__Vo_Moq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
+        }
+        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
+          op0.val = bit_cast(op1.val, int_type64) */
+        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -48857,9 +48884,14 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovsd
- * operand: ['Mo', 'Voq']
- * prefix: f2
+ * mnemonic: movsd
+ * operand: ['Moq', 'Vo']
+ * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_expr_mem(op0) and is_expr_id(op1):
+  op0.val = bit_cast(op1.val, int_type64);
+
+ * attr: ['repnz']
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48869,13 +48901,35 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     if (!rBinStrm.Read(Offset - 2, Prefix))
       return false;
 
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovsd);
-      if (Operand__Mo_Voq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movsd);
+      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
+        }
+        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
+          op0.val = bit_cast(op1.val, int_type64) */
+        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -90570,11 +90624,11 @@ Expression::SPType X86Architecture::Decode_Vod(BinaryStream const& rBinStrm, TOf
   return __Decode_Vod(rBinStrm, Offset, rInsn, Mode);
 }
 
-/* decoder ["call('Decode_Woq')"] */
+/* decoder ["call('Decode_Voq')"] */
 Expression::SPType X86Architecture::Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: call('Decode_Woq')
-  return __Decode_Woq(rBinStrm, Offset, rInsn, Mode);
+  // operand0: call('Decode_Voq')
+  return __Decode_Voq(rBinStrm, Offset, rInsn, Mode);
 }
 
 /* decoder ["call('Decode_Vx')"] */

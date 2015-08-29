@@ -787,6 +787,13 @@ semantic:
   movsx: &movsx |
     op0.val = sign_extend(op1.val, int(op0.bit, op0.bit));
 
+  # TODO: handle case : is_expr_id(op0) and is_expr_id(op1)
+  movsd: &movsd |
+    if __code and is_expr_id(op0) and is_expr_mem(op1):
+      op0.val = bit_cast(op1.val, int_type128);
+    if __code and is_expr_mem(op0) and is_expr_id(op1):
+      op0.val = bit_cast(op1.val, int_type64);
+
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
     [
@@ -3222,10 +3229,11 @@ instruction:
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovsd
+          - mnemonic: movsd
             operand: [ Vo, Moq ]
-            prefix: 0xf2
+            attr: [ repnz ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movsd
 
       - opcode: 0x11
         sub_opcodes:
@@ -3248,10 +3256,11 @@ instruction:
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovsd
-            operand: [ Mo, Voq ]
-            prefix: 0xf2
+          - mnemonic: movsd
+            operand: [ Moq, Vo ]
+            attr: [ repnz ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movsd
 
       - opcode: 0x12
         sub_opcodes:
@@ -13654,7 +13663,7 @@ operand:
   decode_Ux: [ call('Decode_Ux') ]
   decode_Vo: [ call('Decode_Vo') ]
   decode_Vod: [ call('Decode_Vod') ]
-  decode_Voq: [ call('Decode_Woq') ]
+  decode_Voq: [ call('Decode_Voq') ]
   decode_Vx: [ call('Decode_Vx') ]
   decode_Vy: [ call('Decode_Vy') ]
   decode_Wd: [ call('Decode_Wd') ]

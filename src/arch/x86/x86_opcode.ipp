@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Aug 24 18:23:14 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Aug 30 01:37:59 2015) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -279,6 +279,7 @@ enum X86Opcode
   X86_Opcode_Movq,
   X86_Opcode_Movq2dq,
   X86_Opcode_Movs,
+  X86_Opcode_Movsd,
   X86_Opcode_Movsx,
   X86_Opcode_Movups,
   X86_Opcode_Movzx,
@@ -673,7 +674,6 @@ enum X86Opcode
   X86_Opcode_Vmovntpd,
   X86_Opcode_Vmovntps,
   X86_Opcode_Vmovq,
-  X86_Opcode_Vmovsd,
   X86_Opcode_Vmovshdup,
   X86_Opcode_Vmovsldup,
   X86_Opcode_Vmovss,

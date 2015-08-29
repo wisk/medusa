@@ -234,6 +234,8 @@ class X86ArchConvertion(ArchConvertion):
                     cond.append('(rInsn.GetPrefix() & X86_Prefix_AdSize)')
                 elif f == 'rep':
                     cond.append('(rInsn.GetPrefix() & X86_Prefix_Rep)')
+                elif f == 'repnz':
+                    cond.append('(rInsn.GetPrefix() & X86_Prefix_RepNz)')
                 elif f == 'rexb':
                     cond.append('(rInsn.GetPrefix() & X86_Prefix_REX_b) == X86_Prefix_REX_b')
                 elif f == 'rexw':
