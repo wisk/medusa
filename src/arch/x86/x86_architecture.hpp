@@ -70,12 +70,21 @@ private:
       // LATER: This is not portable http://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment
       struct { u16 l : 8; u16 h : 8; } x;
     };
+    union X86SimdRegister
+    {
+      u512 z;
+      u256 y;
+      u128 x;
+      X86SimdRegister(){};
+      ~X86SimdRegister(){};
+    };
     struct Context
     {
       X86Register a, b, c, d, si, di, bp, sp, ip, r8, r9, r10, r11, r12, r13, r14, r15;
       u16 cs, ds, es, ss, fs, gs;
       // http://en.wikipedia.org/wiki/FLAGS_register
       bool CF, PF, AF, ZF, SF, TF, IF, DF, OF, IOPL, NT, RF, VM, AC, VIF, VIP, ID;
+      X86SimdRegister xyzmm[32];
     } m_Context;
 
     u8 m_Bits;
@@ -196,6 +205,7 @@ private:
 
   Expression::SPType __Decode_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Vy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
 

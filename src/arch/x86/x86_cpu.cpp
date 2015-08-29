@@ -2,11 +2,49 @@
 
 #include <boost/format.hpp>
 
+// ------------------------------------------------ BEGIN gg helpers
+
+void print_reverse_buf(const char *name, unsigned char *buf, unsigned int size)
+{
+  unsigned int i = 0;
+  printf("%s: ", name);
+  for(i=size-1;i>0;i--) printf("%02x", buf[i]);
+  printf("\n");
+}
+
+void print_xmm(const u128 *reg, int regid)
+{
+  unsigned char *data = (unsigned char*)reg->backend().limbs();
+  unsigned int data_len = reg->backend().size() * sizeof(u128::backend_type::local_limb_type);
+  char tmp[256];
+  sprintf(tmp, "xmm%d", regid);
+  print_reverse_buf(tmp, data, data_len);
+}
+
+void read_xmm(const u128 *reg, void* pVal, u32 BitSize)
+{
+  unsigned char *data = (unsigned char*)reg->backend().limbs();
+  memcpy(pVal, data, BitSize / 8);
+}
+
+void write_xmm(const u128 *reg, const void* pVal, u32 BitSize)
+{
+  unsigned char *data = (unsigned char*)reg->backend().limbs();
+  memcpy(data, pVal, BitSize / 8);
+}
+
+// ------------------------------------------------ END gg helpers
+
+
 bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
   if (RegBitSize != BitSize)
+  {
+    Log::Write("X86CpuContext").Level(LogError) << "ReadRegister: trying to read " << BitSize
+      << " bits of register (" << Reg << ") which is on " << RegBitSize << " bits" << LogEnd;
     return false;
+  }
 
 #define READ_R_L(reg) *reinterpret_cast<u8  *>(pVal) = m_Context.reg.x.l;
 #define READ_R_H(reg) *reinterpret_cast<u8  *>(pVal) = m_Context.reg.x.h;
@@ -14,6 +52,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_S(seg)   *reinterpret_cast<u16 *>(pVal) = m_Context.seg;
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
+#define READ_R_X(reg) read_xmm(&m_Context.reg.x, pVal, BitSize);
 #define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
 
   switch (Reg)
@@ -108,6 +147,14 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
   case X86_Reg_R14: READ_R_R(r14);     break;
   case X86_Reg_R15: READ_R_R(r15);     break;
   case X86_Reg_Rip: READ_R_R(ip);      break;
+
+  case X86_Reg_Xmm0: READ_R_X(xyzmm[0]) break;
+  case X86_Reg_Xmm1: READ_R_X(xyzmm[1]) break;
+
+  default:
+    Log::Write("X86CpuContext").Level(LogError) << "ReadRegister: trying to read undefined register ("
+      << Reg << ")" << LogEnd;
+    break;
   }
 
 #undef READ_R_L
@@ -116,6 +163,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #undef READ_S
 #undef READ_R_E
 #undef READ_R_R
+#undef READ_R_X
 #undef READ_F
 
   return true;
@@ -125,7 +173,11 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 {
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
   if (RegBitSize != BitSize)
+  {
+    Log::Write("X86CpuContext").Level(LogError) << "WriteRegister: trying to write " << BitSize
+      << " bits in register (" << Reg << ") which is on " << RegBitSize << " bits" << LogEnd;
     return false;
+  }
 
 #define WRITE_R_L(reg) m_Context.reg.x.l = *reinterpret_cast<u8  const*>(pVal);
 #define WRITE_R_H(reg) m_Context.reg.x.h = *reinterpret_cast<u8  const*>(pVal);
@@ -133,6 +185,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pVal);
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
+#define WRITE_R_X(reg) write_xmm(&m_Context.reg.x, pVal, BitSize);
 #define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
 
   switch (Reg)
@@ -227,6 +280,15 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
   case X86_Reg_R14: WRITE_R_R(r14);     break;
   case X86_Reg_R15: WRITE_R_R(r15);     break;
   case X86_Reg_Rip: WRITE_R_R(ip);      break;
+
+  case X86_Reg_Xmm0: WRITE_R_X(xyzmm[0]) break;
+  case X86_Reg_Xmm1: WRITE_R_X(xyzmm[1]) break;
+
+  default:
+    Log::Write("X86CpuContext").Level(LogError) << "WriteRegister: trying to write undefined register ("
+      << Reg << ")" << LogEnd;
+    break;
+
   }
 
 #undef WRITE_R_L
@@ -235,6 +297,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #undef WRITE_S
 #undef WRITE_R_E
 #undef WRITE_R_R
+#undef WRITE_R_X
 #undef WRITE_F
 
   return true;
@@ -339,7 +402,10 @@ void* X86Architecture::X86CpuContext::GetRegisterAddress(u32 Register)
   case X86_Reg_R14:  return ADDR_R_R(r14);
   case X86_Reg_R15:  return ADDR_R_R(r15);
   case X86_Reg_Rip:  return ADDR_R_R(ip);
-  default:           break;
+  default:
+    Log::Write("X86CpuContext").Level(LogError) << "GetRegisterAddress: trying to access undefined register ("
+      << Register << ")" << LogEnd;
+    break;
   }
 
 #undef ADDR_R_L
@@ -451,7 +517,10 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
   case X86_Reg_R14:  return OFF_R_R(r14);
   case X86_Reg_R15:  return OFF_R_R(r15);
   case X86_Reg_Rip:  return OFF_R_R(ip);
-  default:           break;
+  default:
+    Log::Write("X86CpuContext").Level(LogError) << "GetRegisterOffset: trying to access undefined register ("
+      << Register << ")" << LogEnd;
+    break;
   }
 
 #undef OFF_R_L
@@ -521,6 +590,12 @@ void X86Architecture::X86CpuContext::GetRegisters(RegisterList& RegList) const
     RegList.push_back(X86_Reg_R14);
     RegList.push_back(X86_Reg_R15);
     break;
+
+  default:
+    Log::Write("X86CpuContext").Level(LogError) << "GetRegisters: trying to access undefined register size ("
+      << m_Bits << ")" << LogEnd;
+    break;
+
   }
 }
 
@@ -558,7 +633,10 @@ bool X86Architecture::X86CpuContext::GetAddress(CpuContext::AddressKind AddrKind
     case 16: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.w, 16, 16); return true;
     case 32: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.e, 16, 32); return true;
     case 64: rAddr = Address(Address::VirtualType,            0, m_Context.ip.r,  0, 64); return true;
-    default: return false;
+    default:
+      Log::Write("X86CpuContext").Level(LogError) << "GetAddress: trying to access undefined bitsize ("
+        << m_Bits << ", " << AddrKind << ")" << LogEnd;
+      return false;
     }
     break;
 
@@ -579,7 +657,10 @@ bool X86Architecture::X86CpuContext::SetAddress(CpuContext::AddressKind AddrKind
     case 16: m_Context.ip.w = rAddr.GetOffset(); m_Context.cs = rAddr.GetBase(); break;
     case 32: m_Context.ip.e = rAddr.GetOffset(); m_Context.cs = rAddr.GetBase(); break;
     case 64: m_Context.ip.r = rAddr.GetOffset(); break;
-    default: return false;
+    default:
+      Log::Write("X86CpuContext").Level(LogError) << "SetAddress: trying to access undefined bitsize ("
+        << m_Bits << ", " << AddrKind << ")" << LogEnd;
+      return false;
     }
     break;
 
@@ -605,6 +686,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   FmtFlags += m_Context.DF ? 'D' : 'd';
   FmtFlags += m_Context.OF ? 'O' : 'o';
 
+
   switch (m_Bits)
   {
   case X86_Bit_16:
@@ -615,6 +697,10 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   case X86_Bit_32:
     Result = (boost::format("eax: %08x ebx: %08x ecx: %08x edx: %08x\nesi: %08x edi: %08x esp: %08x ebp: %08x\neip: %08x eflags: %s")
       % m_Context.a.e % m_Context.b.e % m_Context.c.e % m_Context.d.e % m_Context.si.e % m_Context.di.e % m_Context.sp.e % m_Context.bp.e % m_Context.ip.e % FmtFlags).str();
+
+    print_xmm(&m_Context.xyzmm[0].x, 0);
+    print_xmm(&m_Context.xyzmm[1].x, 1);
+
     break;
 
   case X86_Bit_64:
