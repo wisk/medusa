@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 # project name
 project(Medusa)
@@ -35,6 +35,14 @@ endif()
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # features
+
+## C++
+set(CMAKE_CXX_STANDARD 11)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG(-fabi-version=6 HAVE_ABI_VERSION)
+if (HAVE_ABI_VERSION)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fabi-version=6")
+endif()
 
 ## Python
 set(MEDUSA_PYTHON_VERSION 2.7)
@@ -93,15 +101,6 @@ include_directories(
 link_directories(
   ${Boost_LIBRARY_DIRS}
   )
-
-# Found it in CMakeLists.txt from keepassx project
-if("${CMAKE_CXX_COMPILER}" MATCHES "clang(\\+\\+)?$" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(CMAKE_COMPILER_IS_CLANGXX 1)
-endif()
-
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-  add_definitions("-std=c++11" "-fabi-version=6")
-endif()
 
 # src: ogdf cmake
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
