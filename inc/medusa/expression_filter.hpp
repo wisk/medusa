@@ -39,6 +39,9 @@ namespace medusa
     bool Execute(Expression::SPType spExpr);
     Expression::SPType GetExpression(std::string const& rExprName);
 
+    typedef std::function<void(std::string const& rExprName, Expression::SPType& rspExpr)> Callback;
+    void ForEach(Callback cb);
+
   private:
     ExpressionPattern::SPType m_spPattern;
     NamedExpressionType m_NamedExprs;

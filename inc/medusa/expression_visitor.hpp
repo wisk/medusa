@@ -2,6 +2,7 @@
 #define MEDUSA_EXPRESSION_VISITOR_HPP
 
 #include "medusa/expression.hpp"
+#include "medusa/expression_simplifier.hpp"
 #include "medusa/architecture.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
@@ -135,6 +136,9 @@ public:
   std::string ToString(void) const;
   void BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr);
   bool UpdateAddress(Architecture& rArch, Address const& rAddr);
+
+  typedef std::function<bool(Expression::SPType& rspExpr)> Updater;
+  bool UpdateExpression(Expression::SPType spKeyExpr, Updater updt);
 
 protected:
   bool _EvaluateCondition(u8 CondOp, ConstantExpression::SPType spConstRefExpr, ConstantExpression::SPType spConstTestExpr, bool& rRes) const;

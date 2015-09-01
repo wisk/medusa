@@ -1319,6 +1319,23 @@ bool SymbolicVisitor::UpdateAddress(Architecture& rArch, Address const& rAddr)
   return true;
 }
 
+bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVisitor::Updater updt)
+{
+  for (auto const& rSymPair : m_SymCtxt)
+  {
+    auto spCurExpr = GetExpression(rSymPair.first);
+    if (spKeyExpr->Compare(spCurExpr) == Expression::CmpIdentical)
+    {
+      auto spClonedExpr = rSymPair.second->Clone();
+      if (!updt(spClonedExpr))
+        return false;
+      m_SymCtxt[rSymPair.first] = spClonedExpr;
+      return true;
+    }
+  }
+  return false;
+}
+
 Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)
 {
   if (auto spTrkExpr = expr_cast<TrackExpression>(spExpr))

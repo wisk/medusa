@@ -613,7 +613,15 @@ BinaryOperationExpression::~BinaryOperationExpression(void)
 
 std::string BinaryOperationExpression::ToString(void) const
 {
-  return (boost::format("(%1% %2% %3%)") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
+  std::string Res("(");
+  Res += m_spLeftExpr->ToString();
+  Res += " ";
+  Res += OperationExpression::ToString();
+  Res += " ";
+  Res += m_spRightExpr->ToString();
+  Res += ")";
+  return Res;
+  //return (boost::format("(%1% %2% %3%)") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
 }
 
 Expression::SPType BinaryOperationExpression::Clone(void) const
@@ -692,7 +700,13 @@ ConstantExpression::ConstantExpression(IntType const& rValue)
 
 std::string ConstantExpression::ToString(void) const
 {
-  return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
+  std::string Res("int");
+  Res += std::to_string(m_Value.GetBitSize());
+  Res += "(";
+  Res += m_Value.ToString();
+  Res += ")";
+  return Res;
+  //return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
 }
 
 Expression::SPType ConstantExpression::Clone(void) const

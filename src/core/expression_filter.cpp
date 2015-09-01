@@ -33,4 +33,10 @@ namespace medusa
       return nullptr;
     return itVarPair->second;
   }
+
+  void ExpressionFilter::ForEach(ExpressionFilter::Callback cb)
+  {
+    for (auto& rNamedExprPair : m_NamedExprs)
+      cb(rNamedExprPair.first, rNamedExprPair.second);
+  }
 }

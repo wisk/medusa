@@ -1,5 +1,6 @@
 #include "medusa/expression_simplifier.hpp"
 #include "medusa/expression_visitor.hpp"
+#include "medusa/expression_filter.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -339,6 +340,70 @@ bool ConstantPropagation::_RunOnce(void)
 }
 
 bool ConstantPropagation::_Finalize(void)
+{
+  return true;
+}
+
+// TODO(wisk): lazy instanciate filters
+//std::once_flag g_InitFlt;
+
+ExpressionRewriter::ExpressionRewriter(Expression::SPType& rspExpr)
+  : m_rspExpr(rspExpr)
+{
+
+}
+
+bool ExpressionRewriter::_RunOnce(void)
+{
+  using namespace Pattern;
+
+  // Filter id = cmp + <cond>a ? * : *
+  ExpressionFilter ExprFlt_CmpA(Ternary("expr", EQ((
+    OR(
+    /**/BCAST(
+    /****/LRS(
+    /******/XOR(
+    /********/XOR(
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("op1")),
+    /**********/Any("res")),
+    /********/AND(
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("res")),
+    /**********/XOR(
+    /************/Any("op0"),
+    /************/Any("op1")))),
+    /******/Any("shift_value")),
+    /****/Any("cast_bitsize")),
+    /**/Ternary("zf",
+    /****/EQ(Any("zf_op0"), Any("zero")),
+    /****/Any("zf_true"), Any("zf_false")))),
+
+    Any("int1_0")), Any("true"), Any("false")));
+
+  while (ExprFlt_CmpA.Execute(m_rspExpr))
+  {
+    auto spExpr = ExprFlt_CmpA.GetExpression("expr");
+    auto spOp0 = ExprFlt_CmpA.GetExpression("op0");
+    auto spOp1 = ExprFlt_CmpA.GetExpression("op1");
+    auto spTrue = ExprFlt_CmpA.GetExpression("true");
+    auto spFalse = ExprFlt_CmpA.GetExpression("false");
+    if (spExpr == nullptr || spOp0 == nullptr || spOp1 == nullptr || spTrue == nullptr || spFalse == nullptr)
+      break;
+
+    auto spFltExpr = Expr::MakeTernaryCond(ConditionExpression::CondUgt, spOp0, spOp1, spTrue, spFalse);
+    m_rspExpr = spFltExpr;
+
+    break;
+  }
+
+  m_IsDone = true;
+  return true;
+}
+
+bool ExpressionRewriter::_Finalize(void)
 {
   return true;
 }

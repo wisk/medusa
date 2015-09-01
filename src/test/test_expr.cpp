@@ -335,7 +335,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 
   using namespace Pattern;
 
-  ExpressionFilter ExprFlt(
+  ExpressionFilter ExprFlt_CmpA(Ternary("expr", EQ((
     OR(
     /**/BCAST(
     /****/LRS(
@@ -356,21 +356,61 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
     /****/Any("cast_bitsize")),
     /**/Ternary("zf",
     /****/EQ(Any("zf_op0"), Any("zero")),
-    /****/Any("true"), Any("false"))));
-  BOOST_REQUIRE(ExprFlt.Execute(spTernExpr->GetReferenceExpression()));
+    /****/Any("zf_true"), Any("zf_false")))),
 
-  auto op0 = ExprFlt.GetExpression("op0");
-  auto op1 = ExprFlt.GetExpression("op1");
-  auto res = ExprFlt.GetExpression("res");
+    Any("int1_0")), Any("true"), Any("false")));
+  BOOST_REQUIRE(ExprFlt_CmpA.Execute(spTernExpr));
+
+  auto expr   = ExprFlt_CmpA.GetExpression("expr");
+  auto op0    = ExprFlt_CmpA.GetExpression("op0");
+  auto op1    = ExprFlt_CmpA.GetExpression("op1");
+  auto res    = ExprFlt_CmpA.GetExpression("res");
+  auto _true  = ExprFlt_CmpA.GetExpression("true");
+  auto _false = ExprFlt_CmpA.GetExpression("false");
 
   std::cout
-    << "op0: " << op0->ToString() << std::endl
-    << "op1: " << op1->ToString() << std::endl
-    << "res: " << res->ToString() << std::endl;
+    << "expr:  " << expr->ToString() << std::endl
+    << "op0:   " << op0->ToString() << std::endl
+    << "op1:   " << op1->ToString() << std::endl
+    << "res:   " << res->ToString() << std::endl
+    << "true:  " << _true->ToString() << std::endl
+    << "false: " << _false->ToString() << std::endl
+    ;
+
+  ExpressionRewriter ExprRwr(spExpr);
+  BOOST_REQUIRE(ExprRwr.Execute());
+
+  std::cout << spExpr->ToString() << std::endl;
 
   std::cout << std::string(80, '#') << std::endl;
+
+  SymVst.UpdateExpression(Expr::MakeId(EIP, pCpuInfo), [&](Expression::SPType& rspExpr)
+  {
+    ExpressionRewriter ER(rspExpr);
+    ER.Execute();
+    return true;
+  });
+
+  std::cout << SymVst.ToString() << std::endl;
+  std::cout << std::string(80, '#') << std::endl;
+
   SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
   std::cout << SymVst.ToString() << std::endl;
 }
+
+//BOOST_AUTO_TEST_CASE(expr_tostr)
+//{
+//  Expression::SPType spExpr;
+//  Expression::SPType spLastExpr;
+//  for (auto i = 0UL; i < 0x11; ++i)
+//  {
+//    if (spLastExpr != nullptr)
+//      spExpr = Expr::MakeBinOp(OperationExpression::OpAdd, spExpr, spLastExpr);
+//    else
+//      spExpr = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeConst(IntType(0x8, 0x00)), Expr::MakeConst(IntType(0x8, 0x00)));
+//    spLastExpr = spExpr;
+//  }
+//  std::cout << spExpr->ToString() << std::endl;
+//}
 
 BOOST_AUTO_TEST_SUITE_END()

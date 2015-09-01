@@ -73,6 +73,18 @@ protected:
   Expression::SPType m_spExpr;
 };
 
+class Medusa_EXPORT ExpressionRewriter : public ExpressionSimplifier
+{
+public:
+  ExpressionRewriter(Expression::SPType& rspExpr);
+
+protected:
+  virtual bool _RunOnce(void);
+  virtual bool _Finalize(void);
+
+  Expression::SPType& m_rspExpr;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !MEDUSA_EXPRESSION_SIMPLIFIER_HPP
