@@ -1,0 +1,388 @@
+#
+## Description ################################################################
+# This yaml file tries do detail all st62 instruction.
+# It's used by Medusa to generate c++ code in order to disassemble st62
+# executable.
+# Check out http://github.com/wisk/medusa for further information.
+
+architecture_information:
+  name: st62
+
+## Control flow operations
+
+function:
+  jmp: &jmp |
+    program.id = op0.val;
+  jmpz: &jmpz |
+    if __expr and zf.id == int1(1): program.id = op0.val;
+  jmpnz: &jmpnz |
+    if __expr and zf.id == int1(0): program.id = op0.val;
+  jmpc: &jmpc |
+    if __expr and cf.id == int1(1): program.id = op0.val;
+  jmpnc: &jmpnc |
+    if __expr and cf.id == int1(0): program.id = op0.val;
+  call: &call |
+    #stack.id -= stack.size;
+    #stack.mem = program.id;
+    program.id = op0.val;
+
+instruction:
+  table:
+   table_1:
+    - opcode: 0x00
+      mnemonic: jrnz
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpnz
+
+    - opcode: 0x01
+      mnemonic: call
+      operand: [ ext ]
+      operation_type: ['call']
+      semantic: *call
+
+    - opcode: 0x02
+      mnemonic: jrnc
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpnc
+
+    - opcode: 0x03
+      mnemonic: jrr
+      alternate: jrs
+      operand: [ bitdirect, direct, ee ]
+      operation_type: ['jmp', 'cond']
+
+    - opcode: 0x04
+      mnemonic: nop
+
+    - opcode: 0x05
+      reference: table_5
+
+    - opcode: 0x06
+      mnemonic: jrc
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpc
+
+    - opcode: 0x07
+      reference: table_7
+
+    - opcode: 0x08
+      mnemonic: jrnz
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpnz
+
+    - opcode: 0x09
+      mnemonic: jp
+      operand: [ ext ]
+      semantic: *jmp
+      operation_type: ['jmp']
+
+    - opcode: 0x0a
+      mnemonic: jrnc
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpnc
+
+    - opcode: 0x0b
+      mnemonic: res
+      alternate: set
+      operand: [ bitdirect, direct ]
+
+    - opcode: 0x0c
+      mnemonic: jrz
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpz
+
+    - opcode: 0x0d
+      reference: table_D
+
+    - opcode: 0x0e
+      mnemonic: jrc
+      operand: [ pcr ]
+      operation_type: ['jmp', 'cond']
+      semantic: *jmpc
+
+    - opcode: 0x0f
+      reference: table_F
+
+   table_5:
+    - opcode: 0x00
+      invalid: true
+
+    - opcode: 0x01
+      mnemonic: inc
+      operand: [ X ]
+
+    - opcode: 0x02
+      invalid: true
+
+    - opcode: 0x03
+      mnemonic: ld
+      operand: [ A, X ]
+
+    - opcode: 0x04
+      invalid: true
+
+    - opcode: 0x05
+      mnemonic: inc
+      operand: [ Y ]
+
+    - opcode: 0x06
+      invalid: true
+
+    - opcode: 0x07
+      mnemonic: ld
+      operand: [ A, Y ]
+
+    - opcode: 0x08
+      invalid: true
+
+    - opcode: 0x09
+      mnemonic: inc
+      operand: [ V ]
+
+    - opcode: 0x0a
+      invalid: true
+
+    - opcode: 0x0b
+      mnemonic: ld
+      operand: [ A, V ]
+
+    - opcode: 0x0c
+      invalid: true
+
+    - opcode: 0x0d
+      mnemonic: inc
+      operand: [ W ]
+
+    - opcode: 0x0e
+      invalid: true
+
+    - opcode: 0x0f
+      mnemonic: ld
+      operand: [ A, W ]
+
+   table_7:
+    - opcode: 0x00
+      mnemonic: ld
+      operand: [ A, rX ]
+
+    - opcode: 0x01
+      mnemonic: ldi
+      operand: [ A, imm ]
+
+    - opcode: 0x02
+      mnemonic: cp
+      operand: [ A, rX ]
+
+    - opcode: 0x03
+      mnemonic: cpi
+      operand: [ A, imm ]
+
+    - opcode: 0x04
+      mnemonic: add
+      operand: [ A, rX ]
+
+    - opcode: 0x05
+      mnemonic: addi
+      operand: [ A, imm ]
+
+    - opcode: 0x06
+      mnemonic: inc
+      operand: [ rX ]
+
+    - opcode: 0x07
+      invalid: true
+
+    - opcode: 0x08
+      mnemonic: ld
+      operand: [ rX, A ]
+
+    - opcode: 0x09
+      invalid: true
+
+    - opcode: 0x0a
+      mnemonic: and
+      operand: [ rX, A ]
+
+    - opcode: 0x0b
+      mnemonic: andi
+      operand: [ A, imm ]
+
+    - opcode: 0x0c
+      mnemonic: sub
+      operand: [ A, rX ]
+
+    - opcode: 0x0d
+      mnemonic: subi
+      operand: [ A, imm ]
+
+    - opcode: 0x0e
+      mnemonic: dec
+      operand: [ rX ]
+
+    - opcode: 0x0f
+      invalid: true
+
+   table_D:
+    - opcode: 0x00
+      mnemonic: ldi
+      operand: [ direct, imm ]
+
+    - opcode: 0x01
+      mnemonic: set
+      operand: [ bitdirect, direct ]
+
+    - opcode: 0x02
+      mnemonic: com
+      operand: [ A ]
+
+    - opcode: 0x03
+      mnemonic: ld
+      operand: [ X, A ]
+
+    - opcode: 0x04
+      mnemonic: reti
+      operation_type: ['ret']
+
+    - opcode: 0x05
+      mnemonic: dec
+      operand: [ Y ]
+
+    - opcode: 0x06
+      mnemonic: stop
+
+    - opcode: 0x07
+      mnemonic: ld
+      operand: [ Y, A ]
+
+    - opcode: 0x08
+      invalid: true
+
+    - opcode: 0x09
+      mnemonic: dec
+      operand: [ V ]
+
+    - opcode: 0x0a
+      mnemonic: rlc
+      operand: [ A ]
+
+    - opcode: 0x0b
+      mnemonic: ld
+      operand: [ V, A ]
+
+    - opcode: 0x0c
+      mnemonic: ret
+      operation_type: ['ret']
+
+    - opcode: 0x0d
+      mnemonic: dec
+      operand: [ W ]
+
+    - opcode: 0x0e
+      mnemonic: wait
+
+    - opcode: 0x0f
+      mnemonic: ld
+      operand: [ W, A ]
+
+   table_F:
+    - opcode: 0x00
+      mnemonic: ld
+      operand: [ A, rY ]
+
+    - opcode: 0x01
+      mnemonic: ld
+      operand: [ A, direct ]
+
+    - opcode: 0x02
+      mnemonic: cp
+      operand: [ A, rY ]
+
+    - opcode: 0x03
+      mnemonic: cp
+      operand: [ A, direct ]
+
+    - opcode: 0x04
+      mnemonic: add
+      operand: [ A, rY ]
+
+    - opcode: 0x05
+      mnemonic: add
+      operand: [ A, direct ]
+
+    - opcode: 0x06
+      mnemonic: inc
+      operand: [ rY ]
+
+    - opcode: 0x07
+      mnemonic: inc
+      operand: [ direct ]
+
+    - opcode: 0x08
+      mnemonic: ld
+      operand: [ rY, A ]
+
+    - opcode: 0x09
+      mnemonic: ld
+      operand: [ direct, A ]
+
+    - opcode: 0x0a
+      mnemonic: and
+      operand: [ A, rY ]
+
+    - opcode: 0x0b
+      mnemonic: and
+      operand: [ A, direct ]
+
+    - opcode: 0x0c
+      mnemonic: sub
+      operand: [ A, rY ]
+
+    - opcode: 0x0d
+      mnemonic: sub
+      operand: [ A, direct ]
+
+    - opcode: 0x0e
+      mnemonic: dec
+      operand: [ rY ]
+
+    - opcode: 0x0f
+      mnemonic: dec
+      operand: [ direct ]
+
+
+
+operand:
+  decode_ext: [ call('Decode_ext') ]
+  ext: [ op0 = decode_ext ]
+  decode_pcr: [ call('Decode_pcr') ]
+  pcr: [ op0 = decode_pcr ]
+  decode_ee: [ call('Decode_ee') ]
+  ee: [ op0 = decode_ee ]
+  decode_direct: [ call('Decode_direct') ]
+  direct: [ op0 = decode_direct ]
+  decode_imm: [ call('Decode_imm') ]
+  imm: [ op0 = decode_imm ]
+  decode_bitdirect: [ call('Decode_bitdirect') ]
+  bitdirect: [ op0 = decode_bitdirect ]
+
+  decode_A: [ reg('A') ]
+  decode_X: [ reg('X') ]
+  decode_rX: [ ireg('X') ]
+  decode_Y: [ reg('Y') ]
+  decode_rY: [ ireg('Y') ]
+  decode_V: [ reg('V') ]
+  decode_W: [ reg('W') ]
+  A: [ op0 = decode_A ]
+  X: [ op0 = decode_X ]
+  Y: [ op0 = decode_Y ]
+  V: [ op0 = decode_V ]
+  W: [ op0 = decode_W ]
+
+  'rX': [ op0 = decode_rX ]
+  'rY': [ op0 = decode_rY ]

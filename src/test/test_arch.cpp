@@ -332,4 +332,32 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   delete pX86Disasm;
 }
 
+BOOST_AUTO_TEST_CASE(arch_st62_test_case)
+{
+  BOOST_MESSAGE("Testing ST62 architecture");
+
+  auto& rModMgr = medusa::ModuleManager::Instance();
+  medusa::Document Doc;
+  medusa::Address Addr;
+  auto pSt62Getter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "st62");
+  BOOST_REQUIRE(pSt62Getter != nullptr);
+  auto pSt62Disasm = pSt62Getter();
+
+  auto const St62x25Mode = pSt62Disasm->GetModeByName("ST62x25");
+  BOOST_REQUIRE(St62x25Mode != 0);
+
+  {
+    // 0000:0000000000000000  jp               0xC1
+    medusa::MemoryBinaryStream MemBinStrm("\x19\x0c", 2);
+    medusa::Instruction Insn;
+    BOOST_CHECK(pSt62Disasm->Disassemble(MemBinStrm, 0x0, Insn, St62x25Mode));
+    medusa::PrintData Data;
+    BOOST_CHECK(pSt62Disasm->FormatInstruction(Doc, Addr, Insn, Data));
+    BOOST_TEST_MESSAGE("jp 0xC1, decoded as: " << Data.GetTexts());
+    BOOST_CHECK(Data.GetTexts() == "0000:0000000000000000  jp               0xC1");
+  }
+
+  delete pSt62Disasm;
+}
+
 BOOST_AUTO_TEST_SUITE_END()

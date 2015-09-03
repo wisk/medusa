@@ -673,7 +673,6 @@ public:
 
   Expression::SPType GetAddressExpression(void) const { return m_spOffExpr; }
   bool IsDereferencable(void) const { return m_Dereference; }
-
 private:
   u32 m_AccessSizeInBit;
   Expression::SPType m_spBaseExpr;
