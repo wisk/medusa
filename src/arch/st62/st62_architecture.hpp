@@ -73,12 +73,6 @@ public:
     u8                   OperandNo,
     PrintData          & rPrintData) const;
 
-  virtual bool FormatInstruction(
-    Document      const& rDoc,
-    Address       const& rAddr,
-    Instruction   const& rInsn,
-    PrintData          & rPrintData) const;
-
 private:
 #include "st62_opcode.ipp"
 #include "st62_operand.ipp"

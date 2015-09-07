@@ -189,30 +189,3 @@ bool St62Architecture::FormatOperand(
   return true;
 }
 
-bool St62Architecture::FormatInstruction(
-  Document      const& rDoc,
-  Address       const& rAddr,
-  Instruction   const& rInsn,
-  PrintData          & rPrintData) const
-{
-  rPrintData.AppendMnemonic(rInsn.GetName()).AppendSpace();
-
-  char const* Sep = nullptr;
-
-  auto pSep = nullptr;
-  auto const OprdNo = rInsn.GetNumberOfOperand();
-  for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)
-  {
-    if (Sep != nullptr)
-      rPrintData.AppendOperator(Sep).AppendSpace();
-    else
-      Sep = ",";
-
-    rPrintData.MarkOffset();
-
-    if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
-      return false;
-  }
-
-  return true;
-}
