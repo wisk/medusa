@@ -1,5 +1,5 @@
-#ifndef ARCH_GAMEBOY_HPP
-#define ARCH_GAMEBOY_HPP
+#ifndef ARCH_ST62_HPP
+#define ARCH_ST62_HPP
 
 #include "medusa/types.hpp"
 #include "medusa/extend.hpp"
@@ -33,8 +33,37 @@ private:
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
     virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
+    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
   } m_CpuInfo;
+
+  class St62CpuContext : public CpuContext
+  {
+  public:
+    St62CpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
+    virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
+    virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+    virtual u8 GetMode(void) const;
+    virtual void SetMode(u8 Mode);
+    virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const;
+    virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr);
+    virtual std::string ToString(void) const;
+
+    virtual void* GetRegisterAddress(u32 Register);
+    virtual void* GetContextAddress(void);
+    virtual u16   GetRegisterOffset(u32 Register);
+
+    virtual void  GetRegisters(RegisterList& RegList) const;
+
+  private:
+    struct Context
+    {
+      u8 A, X, Y, V, W;
+      bool ZF, CF;
+      u16 Pc;
+    } m_Context;
+  };
+
 
   enum ST62Mode
   {
@@ -63,8 +92,9 @@ public:
   }
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
+  virtual CpuContext*           MakeCpuContext(void) const { return new St62CpuContext(m_CpuInfo); }
   virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  virtual bool                  EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
 
   virtual bool FormatOperand(
     Document      const& rDoc,
@@ -103,4 +133,4 @@ enum ST62Identifiers
   ST62_Reg_Pc,
 };
 
-#endif // !ARCH_GAMEBOY_HPP
+#endif // !ARCH_ST62_HPP
