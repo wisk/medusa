@@ -56,7 +56,20 @@ Expression::SPType St62Architecture::__Decode_direct(BinaryStream const& rBinStr
   rInsn.Length()++;
   rBinStrm.Read(Offset, Value);
 
-  return Expr::MakeMem(8, Expr::MakeConst(16, 0x1000), Expr::MakeConst(8, Value), false);
+  switch(Value) {
+  case 0x80:
+    return Expr::MakeId(ST62_Reg_X, &m_CpuInfo);
+  case 0x81:
+    return Expr::MakeId(ST62_Reg_Y, &m_CpuInfo);
+  case 0x82:
+    return Expr::MakeId(ST62_Reg_V, &m_CpuInfo);
+  case 0x83:
+    return Expr::MakeId(ST62_Reg_W, &m_CpuInfo);
+   default:
+    break;
+  }
+
+  return Expr::MakeMem(8, Expr::MakeConst(16, 0x1000), Expr::MakeConst(8, Value), true);
 }
 
 Expression::SPType St62Architecture::__Decode_imm(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode)
