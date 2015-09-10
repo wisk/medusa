@@ -191,6 +191,7 @@ private:
 
   Expression::SPType __Decode_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Uq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType __Decode_Ux(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
 

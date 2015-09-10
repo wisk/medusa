@@ -14,6 +14,8 @@
 class BasicBlockItem : public QObject, public QGraphicsItem, public medusa::DisassemblyView
 {
   Q_OBJECT
+  Q_INTERFACES(QGraphicsItem)
+
 public:
   BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses);
 

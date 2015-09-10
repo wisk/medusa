@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 22 22:43:03 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Sep 10 19:34:59 2015) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -8,6 +8,11 @@ enum X86Opcode
   X86_Opcode_Aas,
   X86_Opcode_Adc,
   X86_Opcode_Add,
+  X86_Opcode_Addpd,
+  X86_Opcode_Addps,
+  X86_Opcode_Addsd,
+  X86_Opcode_Addss,
+  X86_Opcode_Addsubps,
   X86_Opcode_Aesdec,
   X86_Opcode_Aesdeclast,
   X86_Opcode_Aesenc,
@@ -17,6 +22,10 @@ enum X86Opcode
   X86_Opcode_Altinst,
   X86_Opcode_And,
   X86_Opcode_Andn,
+  X86_Opcode_Andnpd,
+  X86_Opcode_Andnps,
+  X86_Opcode_Andpd,
+  X86_Opcode_Andps,
   X86_Opcode_Arpl,
   X86_Opcode_Bb0_reset,
   X86_Opcode_Bb1_reset,
@@ -30,6 +39,10 @@ enum X86Opcode
   X86_Opcode_Blsmsk,
   X86_Opcode_Blsr,
   X86_Opcode_Bound,
+  X86_Opcode_Broadcastf128,
+  X86_Opcode_Broadcasti128,
+  X86_Opcode_Broadcastsd,
+  X86_Opcode_Broadcastss,
   X86_Opcode_Bsf,
   X86_Opcode_Bsr,
   X86_Opcode_Bswap,
@@ -66,32 +79,59 @@ enum X86Opcode
   X86_Opcode_Cmovs,
   X86_Opcode_Cmovz,
   X86_Opcode_Cmp,
+  X86_Opcode_Cmpgtd,
   X86_Opcode_Cmps,
   X86_Opcode_Cmpxchg,
   X86_Opcode_Cmpxchg16b,
   X86_Opcode_Cmpxchg8b,
+  X86_Opcode_Comisd,
+  X86_Opcode_Comiss,
   X86_Opcode_Cpu_read,
   X86_Opcode_Cpu_write,
   X86_Opcode_Cpuid,
   X86_Opcode_Cqo,
   X86_Opcode_Crc32,
+  X86_Opcode_Cvtdq2pd,
+  X86_Opcode_Cvtdq2ps,
+  X86_Opcode_Cvtpd2dq,
   X86_Opcode_Cvtpd2pi,
+  X86_Opcode_Cvtpd2ps,
+  X86_Opcode_Cvtph2ps,
   X86_Opcode_Cvtpi2pd,
   X86_Opcode_Cvtpi2ps,
+  X86_Opcode_Cvtps2dq,
+  X86_Opcode_Cvtps2pd,
+  X86_Opcode_Cvtps2ph,
   X86_Opcode_Cvtps2pi,
+  X86_Opcode_Cvtsd2si,
+  X86_Opcode_Cvtsd2ss,
+  X86_Opcode_Cvtsi2sd,
+  X86_Opcode_Cvtsi2ss,
+  X86_Opcode_Cvtss2sd,
+  X86_Opcode_Cvtss2si,
+  X86_Opcode_Cvttpd2dq,
   X86_Opcode_Cvttpd2pi,
+  X86_Opcode_Cvttps2dq,
   X86_Opcode_Cvttps2pi,
+  X86_Opcode_Cvttsd2si,
+  X86_Opcode_Cvttss2si,
   X86_Opcode_Cwd,
   X86_Opcode_Cwde,
   X86_Opcode_Daa,
   X86_Opcode_Das,
   X86_Opcode_Dec,
   X86_Opcode_Div,
+  X86_Opcode_Divpd,
+  X86_Opcode_Divps,
+  X86_Opcode_Divsd,
+  X86_Opcode_Divss,
   X86_Opcode_Dmint,
   X86_Opcode_Dppd,
   X86_Opcode_Dpps,
   X86_Opcode_Emms,
   X86_Opcode_Enter,
+  X86_Opcode_Extractf128,
+  X86_Opcode_Extracti128,
   X86_Opcode_Extractps,
   X86_Opcode_Extrq,
   X86_Opcode_F2xm1,
@@ -147,12 +187,72 @@ enum X86Opcode
   X86_Opcode_Fldln2,
   X86_Opcode_Fldpi,
   X86_Opcode_Fldz,
+  X86_Opcode_Fmadd132pd,
+  X86_Opcode_Fmadd132ps,
+  X86_Opcode_Fmadd132sd,
+  X86_Opcode_Fmadd132ss,
+  X86_Opcode_Fmadd213pd,
+  X86_Opcode_Fmadd213ps,
+  X86_Opcode_Fmadd213sd,
+  X86_Opcode_Fmadd213ss,
+  X86_Opcode_Fmadd231pd,
+  X86_Opcode_Fmadd231ps,
+  X86_Opcode_Fmadd231sd,
+  X86_Opcode_Fmadd231ss,
+  X86_Opcode_Fmaddsub132pd,
+  X86_Opcode_Fmaddsub132ps,
+  X86_Opcode_Fmaddsub213pd,
+  X86_Opcode_Fmaddsub213ps,
+  X86_Opcode_Fmaddsub231pd,
+  X86_Opcode_Fmaddsub231ps,
+  X86_Opcode_Fmsub132pd,
+  X86_Opcode_Fmsub132ps,
+  X86_Opcode_Fmsub132sd,
+  X86_Opcode_Fmsub132ss,
+  X86_Opcode_Fmsub213pd,
+  X86_Opcode_Fmsub213ps,
+  X86_Opcode_Fmsub213sd,
+  X86_Opcode_Fmsub213ss,
+  X86_Opcode_Fmsub231pd,
+  X86_Opcode_Fmsub231ps,
+  X86_Opcode_Fmsub231sd,
+  X86_Opcode_Fmsub231ss,
+  X86_Opcode_Fmsubadd132pd,
+  X86_Opcode_Fmsubadd132ps,
+  X86_Opcode_Fmsubadd213pd,
+  X86_Opcode_Fmsubadd213ps,
+  X86_Opcode_Fmsubadd231pd,
+  X86_Opcode_Fmsubadd231ps,
   X86_Opcode_Fmul,
   X86_Opcode_Fmulp,
   X86_Opcode_Fnclex,
   X86_Opcode_Fndisi,
   X86_Opcode_Fneni,
   X86_Opcode_Fninit,
+  X86_Opcode_Fnmadd132pd,
+  X86_Opcode_Fnmadd132ps,
+  X86_Opcode_Fnmadd132sd,
+  X86_Opcode_Fnmadd132ss,
+  X86_Opcode_Fnmadd213pd,
+  X86_Opcode_Fnmadd213ps,
+  X86_Opcode_Fnmadd213sd,
+  X86_Opcode_Fnmadd213ss,
+  X86_Opcode_Fnmadd231pd,
+  X86_Opcode_Fnmadd231ps,
+  X86_Opcode_Fnmadd231sd,
+  X86_Opcode_Fnmadd231ss,
+  X86_Opcode_Fnmsub132pd,
+  X86_Opcode_Fnmsub132ps,
+  X86_Opcode_Fnmsub132sd,
+  X86_Opcode_Fnmsub132ss,
+  X86_Opcode_Fnmsub213pd,
+  X86_Opcode_Fnmsub213ps,
+  X86_Opcode_Fnmsub213sd,
+  X86_Opcode_Fnmsub213ss,
+  X86_Opcode_Fnmsub231pd,
+  X86_Opcode_Fnmsub231ps,
+  X86_Opcode_Fnmsub231sd,
+  X86_Opcode_Fnmsub231ss,
   X86_Opcode_Fnop,
   X86_Opcode_Fnsave,
   X86_Opcode_Fnsetpm,
@@ -200,8 +300,12 @@ enum X86Opcode
   X86_Opcode_Fyl2x,
   X86_Opcode_Fyl2xp1,
   X86_Opcode_Getsec,
+  X86_Opcode_Haddpd,
+  X86_Opcode_Haddps,
   X86_Opcode_Hint_nop,
   X86_Opcode_Hlt,
+  X86_Opcode_Hsubpd,
+  X86_Opcode_Hsubps,
   X86_Opcode_Ibts,
   X86_Opcode_Icebp,
   X86_Opcode_Idiv,
@@ -209,6 +313,8 @@ enum X86Opcode
   X86_Opcode_In,
   X86_Opcode_Inc,
   X86_Opcode_Ins,
+  X86_Opcode_Insertf128,
+  X86_Opcode_Inserti128,
   X86_Opcode_Insertps,
   X86_Opcode_Int,
   X86_Opcode_Into,
@@ -242,6 +348,8 @@ enum X86Opcode
   X86_Opcode_Jz,
   X86_Opcode_Lahf,
   X86_Opcode_Lar,
+  X86_Opcode_Lddqu,
+  X86_Opcode_Ldmxcsr,
   X86_Opcode_Lds,
   X86_Opcode_Lea,
   X86_Opcode_Leave,
@@ -262,33 +370,71 @@ enum X86Opcode
   X86_Opcode_Lss,
   X86_Opcode_Ltr,
   X86_Opcode_Lzcnt,
+  X86_Opcode_Maskmovdqu,
+  X86_Opcode_Maskmovpd,
+  X86_Opcode_Maskmovps,
   X86_Opcode_Maskmovq,
+  X86_Opcode_Maxpd,
+  X86_Opcode_Maxps,
+  X86_Opcode_Maxsd,
+  X86_Opcode_Maxss,
   X86_Opcode_Mfence,
+  X86_Opcode_Minpd,
+  X86_Opcode_Minps,
+  X86_Opcode_Minsd,
+  X86_Opcode_Minss,
+  X86_Opcode_Modqa,
   X86_Opcode_Monitor,
   X86_Opcode_Montmul,
   X86_Opcode_Mov,
+  X86_Opcode_Movapd,
   X86_Opcode_Movaps,
   X86_Opcode_Movbe,
   X86_Opcode_Movd,
+  X86_Opcode_Movddup,
   X86_Opcode_Movdq2q,
+  X86_Opcode_Movdqa,
+  X86_Opcode_Movdqu,
+  X86_Opcode_Movhpd,
+  X86_Opcode_Movhps,
+  X86_Opcode_Movlpd,
+  X86_Opcode_Movlps,
+  X86_Opcode_Movmskpd,
+  X86_Opcode_Movmskps,
+  X86_Opcode_Movntdq,
   X86_Opcode_Movntdqa,
   X86_Opcode_Movnti,
+  X86_Opcode_Movntpd,
+  X86_Opcode_Movntps,
   X86_Opcode_Movntq,
   X86_Opcode_Movntsd,
   X86_Opcode_Movntss,
   X86_Opcode_Movq,
   X86_Opcode_Movq2dq,
   X86_Opcode_Movs,
+  X86_Opcode_Movsd,
+  X86_Opcode_Movshdup,
+  X86_Opcode_Movsldup,
+  X86_Opcode_Movss,
   X86_Opcode_Movsx,
+  X86_Opcode_Movupd,
+  X86_Opcode_Movups,
   X86_Opcode_Movzx,
   X86_Opcode_Mpsadbw,
+  X86_Opcode_Mread,
   X86_Opcode_Mul,
+  X86_Opcode_Mulpd,
+  X86_Opcode_Mulps,
+  X86_Opcode_Mulsd,
+  X86_Opcode_Mulss,
   X86_Opcode_Mulx,
   X86_Opcode_Mwait,
   X86_Opcode_Neg,
   X86_Opcode_Nop,
   X86_Opcode_Not,
   X86_Opcode_Or,
+  X86_Opcode_Orpd,
+  X86_Opcode_Orps,
   X86_Opcode_Out,
   X86_Opcode_Outs,
   X86_Opcode_Pabsb,
@@ -312,7 +458,13 @@ enum X86Opcode
   X86_Opcode_Pavgb,
   X86_Opcode_Pavgusb,
   X86_Opcode_Pavgw,
+  X86_Opcode_Pblendd,
   X86_Opcode_Pblendvb,
+  X86_Opcode_Pblendvp,
+  X86_Opcode_Pbroadcastb,
+  X86_Opcode_Pbroadcastd,
+  X86_Opcode_Pbroadcastq,
+  X86_Opcode_Pbroadcastw,
   X86_Opcode_Pclmulqdq,
   X86_Opcode_Pcmpeqb,
   X86_Opcode_Pcmpeqd,
@@ -328,6 +480,13 @@ enum X86Opcode
   X86_Opcode_Pcmpistrm,
   X86_Opcode_Pd2id,
   X86_Opcode_Pdep,
+  X86_Opcode_Perm2f128,
+  X86_Opcode_Perm2i128,
+  X86_Opcode_Permd,
+  X86_Opcode_Permilpd,
+  X86_Opcode_Permilps,
+  X86_Opcode_Permps,
+  X86_Opcode_Permq,
   X86_Opcode_Pext,
   X86_Opcode_Pextrb,
   X86_Opcode_Pextrd,
@@ -352,6 +511,14 @@ enum X86Opcode
   X86_Opcode_Pfrsqrtv,
   X86_Opcode_Pfsub,
   X86_Opcode_Pfsubr,
+  X86_Opcode_Pgatherdd,
+  X86_Opcode_Pgatherdpd,
+  X86_Opcode_Pgatherdps,
+  X86_Opcode_Pgatherdq,
+  X86_Opcode_Pgatherqd,
+  X86_Opcode_Pgatherqpd,
+  X86_Opcode_Pgatherqps,
+  X86_Opcode_Pgatherqq,
   X86_Opcode_Phaddd,
   X86_Opcode_Phaddsw,
   X86_Opcode_Phaddw,
@@ -366,6 +533,8 @@ enum X86Opcode
   X86_Opcode_Pinsrw,
   X86_Opcode_Pmaddubsw,
   X86_Opcode_Pmaddwd,
+  X86_Opcode_Pmaskmovd,
+  X86_Opcode_Pmaskmovq,
   X86_Opcode_Pmaxsb,
   X86_Opcode_Pmaxsd,
   X86_Opcode_Pmaxsw,
@@ -407,17 +576,27 @@ enum X86Opcode
   X86_Opcode_Por,
   X86_Opcode_Psadbw,
   X86_Opcode_Pshufb,
+  X86_Opcode_Pshufd,
+  X86_Opcode_Pshufhw,
+  X86_Opcode_Pshuflw,
   X86_Opcode_Pshufw,
   X86_Opcode_Psignb,
   X86_Opcode_Psignd,
   X86_Opcode_Psignw,
   X86_Opcode_Pslld,
+  X86_Opcode_Pslldq,
   X86_Opcode_Psllq,
+  X86_Opcode_Psllvd,
+  X86_Opcode_Psllvq,
   X86_Opcode_Psllw,
   X86_Opcode_Psrad,
+  X86_Opcode_Psravd,
   X86_Opcode_Psraw,
   X86_Opcode_Psrld,
+  X86_Opcode_Psrldq,
   X86_Opcode_Psrlq,
+  X86_Opcode_Psrlvd,
+  X86_Opcode_Psrlvq,
   X86_Opcode_Psrlw,
   X86_Opcode_Psubb,
   X86_Opcode_Psubd,
@@ -431,15 +610,22 @@ enum X86Opcode
   X86_Opcode_Ptest,
   X86_Opcode_Punpckhbw,
   X86_Opcode_Punpckhdq,
+  X86_Opcode_Punpckhqdq,
   X86_Opcode_Punpckhwd,
   X86_Opcode_Punpcklbw,
   X86_Opcode_Punpckldq,
+  X86_Opcode_Punpcklqdq,
+  X86_Opcode_Punpcklwd,
+  X86_Opcode_Pupcklbw,
+  X86_Opcode_Pupckldq,
   X86_Opcode_Push,
   X86_Opcode_Pusha,
   X86_Opcode_Pushad,
   X86_Opcode_Pushf,
   X86_Opcode_Pxor,
   X86_Opcode_Rcl,
+  X86_Opcode_Rcpps,
+  X86_Opcode_Rcpss,
   X86_Opcode_Rcr,
   X86_Opcode_Rdfsbase,
   X86_Opcode_Rdgsbase,
@@ -460,6 +646,8 @@ enum X86Opcode
   X86_Opcode_Roundsd,
   X86_Opcode_Roundss,
   X86_Opcode_Rsm,
+  X86_Opcode_Rsqrtps,
+  X86_Opcode_Rsqrtss,
   X86_Opcode_Sahf,
   X86_Opcode_Sal,
   X86_Opcode_Salc,
@@ -491,379 +679,65 @@ enum X86Opcode
   X86_Opcode_Shr,
   X86_Opcode_Shrd,
   X86_Opcode_Shrx,
+  X86_Opcode_Shufpd,
+  X86_Opcode_Shufps,
   X86_Opcode_Sidt,
   X86_Opcode_Skinit,
   X86_Opcode_Sldt,
   X86_Opcode_Smint,
   X86_Opcode_Smsw,
+  X86_Opcode_Splld,
+  X86_Opcode_Spllq,
+  X86_Opcode_Sqrtps,
+  X86_Opcode_Sqrtpsd,
+  X86_Opcode_Sqrtsd,
+  X86_Opcode_Sqrtss,
   X86_Opcode_Stc,
   X86_Opcode_Std,
   X86_Opcode_Stgi,
   X86_Opcode_Sti,
+  X86_Opcode_Stmxcsr,
   X86_Opcode_Stos,
   X86_Opcode_Str,
   X86_Opcode_Sub,
+  X86_Opcode_Subpd,
+  X86_Opcode_Subps,
+  X86_Opcode_Subsd,
+  X86_Opcode_Subss,
   X86_Opcode_Swapgs,
   X86_Opcode_Syscall,
   X86_Opcode_Sysenter,
   X86_Opcode_Sysexit,
   X86_Opcode_Sysret,
   X86_Opcode_Test,
+  X86_Opcode_Testpd,
+  X86_Opcode_Testps,
   X86_Opcode_Tzcnt,
+  X86_Opcode_Ucomisd,
+  X86_Opcode_Ucomiss,
   X86_Opcode_Ud,
   X86_Opcode_Ud1,
   X86_Opcode_Ud2,
   X86_Opcode_Umov,
-  X86_Opcode_Vaddpd,
-  X86_Opcode_Vaddps,
-  X86_Opcode_Vaddsd,
-  X86_Opcode_Vaddss,
-  X86_Opcode_Vaddsubps,
-  X86_Opcode_Vaesdec,
-  X86_Opcode_Vaesdeclast,
-  X86_Opcode_Vaesenc,
-  X86_Opcode_Vaesenclast,
-  X86_Opcode_Vaesimc,
-  X86_Opcode_Vaeskeygenassist,
-  X86_Opcode_Vandnpd,
-  X86_Opcode_Vandnps,
-  X86_Opcode_Vandpd,
-  X86_Opcode_Vandps,
-  X86_Opcode_Vblendpd,
-  X86_Opcode_Vblendps,
-  X86_Opcode_Vblendvpd,
-  X86_Opcode_Vblendvps,
-  X86_Opcode_Vblendw,
-  X86_Opcode_Vbroadcastf128,
-  X86_Opcode_Vbroadcasti128,
-  X86_Opcode_Vbroadcastsd,
-  X86_Opcode_Vbroadcastss,
-  X86_Opcode_Vcmpgtd,
-  X86_Opcode_Vcomisd,
-  X86_Opcode_Vcomiss,
-  X86_Opcode_Vcvtdq2pd,
-  X86_Opcode_Vcvtdq2ps,
-  X86_Opcode_Vcvtpd2dq,
-  X86_Opcode_Vcvtpd2ps,
-  X86_Opcode_Vcvtph2ps,
-  X86_Opcode_Vcvtps2dq,
-  X86_Opcode_Vcvtps2pd,
-  X86_Opcode_Vcvtps2ph,
-  X86_Opcode_Vcvtsd2si,
-  X86_Opcode_Vcvtsd2ss,
-  X86_Opcode_Vcvtsi2sd,
-  X86_Opcode_Vcvtsi2ss,
-  X86_Opcode_Vcvtss2sd,
-  X86_Opcode_Vcvtss2si,
-  X86_Opcode_Vcvttpd2dq,
-  X86_Opcode_Vcvttps2dq,
-  X86_Opcode_Vcvttsd2si,
-  X86_Opcode_Vcvttss2si,
-  X86_Opcode_Vdivpd,
-  X86_Opcode_Vdivps,
-  X86_Opcode_Vdivsd,
-  X86_Opcode_Vdivss,
-  X86_Opcode_Vdppd,
-  X86_Opcode_Vdpps,
+  X86_Opcode_Unpckhpd,
+  X86_Opcode_Unpckhps,
+  X86_Opcode_Unpcklpd,
+  X86_Opcode_Unpcklps,
   X86_Opcode_Verr,
   X86_Opcode_Verw,
-  X86_Opcode_Vextractf128,
-  X86_Opcode_Vextracti128,
-  X86_Opcode_Vextractps,
-  X86_Opcode_Vfmadd132pd,
-  X86_Opcode_Vfmadd132ps,
-  X86_Opcode_Vfmadd132sd,
-  X86_Opcode_Vfmadd132ss,
-  X86_Opcode_Vfmadd213pd,
-  X86_Opcode_Vfmadd213ps,
-  X86_Opcode_Vfmadd213sd,
-  X86_Opcode_Vfmadd213ss,
-  X86_Opcode_Vfmadd231pd,
-  X86_Opcode_Vfmadd231ps,
-  X86_Opcode_Vfmadd231sd,
-  X86_Opcode_Vfmadd231ss,
-  X86_Opcode_Vfmaddsub132pd,
-  X86_Opcode_Vfmaddsub132ps,
-  X86_Opcode_Vfmaddsub213pd,
-  X86_Opcode_Vfmaddsub213ps,
-  X86_Opcode_Vfmaddsub231pd,
-  X86_Opcode_Vfmaddsub231ps,
-  X86_Opcode_Vfmsub132pd,
-  X86_Opcode_Vfmsub132ps,
-  X86_Opcode_Vfmsub132sd,
-  X86_Opcode_Vfmsub132ss,
-  X86_Opcode_Vfmsub213pd,
-  X86_Opcode_Vfmsub213ps,
-  X86_Opcode_Vfmsub213sd,
-  X86_Opcode_Vfmsub213ss,
-  X86_Opcode_Vfmsub231pd,
-  X86_Opcode_Vfmsub231ps,
-  X86_Opcode_Vfmsub231sd,
-  X86_Opcode_Vfmsub231ss,
-  X86_Opcode_Vfmsubadd132pd,
-  X86_Opcode_Vfmsubadd132ps,
-  X86_Opcode_Vfmsubadd213pd,
-  X86_Opcode_Vfmsubadd213ps,
-  X86_Opcode_Vfmsubadd231pd,
-  X86_Opcode_Vfmsubadd231ps,
-  X86_Opcode_Vfnmadd132pd,
-  X86_Opcode_Vfnmadd132ps,
-  X86_Opcode_Vfnmadd132sd,
-  X86_Opcode_Vfnmadd132ss,
-  X86_Opcode_Vfnmadd213pd,
-  X86_Opcode_Vfnmadd213ps,
-  X86_Opcode_Vfnmadd213sd,
-  X86_Opcode_Vfnmadd213ss,
-  X86_Opcode_Vfnmadd231pd,
-  X86_Opcode_Vfnmadd231ps,
-  X86_Opcode_Vfnmadd231sd,
-  X86_Opcode_Vfnmadd231ss,
-  X86_Opcode_Vfnmsub132pd,
-  X86_Opcode_Vfnmsub132ps,
-  X86_Opcode_Vfnmsub132sd,
-  X86_Opcode_Vfnmsub132ss,
-  X86_Opcode_Vfnmsub213pd,
-  X86_Opcode_Vfnmsub213ps,
-  X86_Opcode_Vfnmsub213sd,
-  X86_Opcode_Vfnmsub213ss,
-  X86_Opcode_Vfnmsub231pd,
-  X86_Opcode_Vfnmsub231ps,
-  X86_Opcode_Vfnmsub231sd,
-  X86_Opcode_Vfnmsub231ss,
-  X86_Opcode_Vhaddpd,
-  X86_Opcode_Vhaddps,
-  X86_Opcode_Vhsubpd,
-  X86_Opcode_Vhsubps,
-  X86_Opcode_Vinsertf128,
-  X86_Opcode_Vinserti128,
-  X86_Opcode_Vinsertps,
-  X86_Opcode_Vlddqu,
-  X86_Opcode_Vldmxcsr,
-  X86_Opcode_Vmaskmovdqu,
-  X86_Opcode_Vmaskmovpd,
-  X86_Opcode_Vmaskmovps,
-  X86_Opcode_Vmaxpd,
-  X86_Opcode_Vmaxps,
-  X86_Opcode_Vmaxsd,
-  X86_Opcode_Vmaxss,
   X86_Opcode_Vmcall,
   X86_Opcode_Vmclear,
-  X86_Opcode_Vminpd,
-  X86_Opcode_Vminps,
-  X86_Opcode_Vminsd,
-  X86_Opcode_Vminss,
   X86_Opcode_Vmlaunch,
   X86_Opcode_Vmload,
   X86_Opcode_Vmmcall,
-  X86_Opcode_Vmodqa,
-  X86_Opcode_Vmovapd,
-  X86_Opcode_Vmovd,
-  X86_Opcode_Vmovddup,
-  X86_Opcode_Vmovdqa,
-  X86_Opcode_Vmovdqu,
-  X86_Opcode_Vmovhpd,
-  X86_Opcode_Vmovhps,
-  X86_Opcode_Vmovlpd,
-  X86_Opcode_Vmovlps,
-  X86_Opcode_Vmovmskpd,
-  X86_Opcode_Vmovmskps,
-  X86_Opcode_Vmovntdq,
-  X86_Opcode_Vmovntdqa,
-  X86_Opcode_Vmovntpd,
-  X86_Opcode_Vmovntps,
-  X86_Opcode_Vmovq,
-  X86_Opcode_Vmovsd,
-  X86_Opcode_Vmovshdup,
-  X86_Opcode_Vmovsldup,
-  X86_Opcode_Vmovss,
-  X86_Opcode_Vmovupd,
-  X86_Opcode_Vmovups,
-  X86_Opcode_Vmpsadbw,
   X86_Opcode_Vmptrld,
   X86_Opcode_Vmptrst,
-  X86_Opcode_Vmread,
   X86_Opcode_Vmresume,
   X86_Opcode_Vmrun,
   X86_Opcode_Vmsave,
-  X86_Opcode_Vmulpd,
-  X86_Opcode_Vmulps,
-  X86_Opcode_Vmulsd,
-  X86_Opcode_Vmulss,
   X86_Opcode_Vmwrite,
   X86_Opcode_Vmxoff,
   X86_Opcode_Vmxon,
-  X86_Opcode_Vorpd,
-  X86_Opcode_Vorps,
-  X86_Opcode_Vpabsb,
-  X86_Opcode_Vpabsd,
-  X86_Opcode_Vpabsw,
-  X86_Opcode_Vpackssdw,
-  X86_Opcode_Vpacksswb,
-  X86_Opcode_Vpackusdw,
-  X86_Opcode_Vpackuswb,
-  X86_Opcode_Vpaddb,
-  X86_Opcode_Vpaddd,
-  X86_Opcode_Vpaddq,
-  X86_Opcode_Vpaddsb,
-  X86_Opcode_Vpaddsw,
-  X86_Opcode_Vpaddusb,
-  X86_Opcode_Vpaddusw,
-  X86_Opcode_Vpaddw,
-  X86_Opcode_Vpalignr,
-  X86_Opcode_Vpand,
-  X86_Opcode_Vpandn,
-  X86_Opcode_Vpavgb,
-  X86_Opcode_Vpavgw,
-  X86_Opcode_Vpblendd,
-  X86_Opcode_Vpblendvp,
-  X86_Opcode_Vpbroadcastb,
-  X86_Opcode_Vpbroadcastd,
-  X86_Opcode_Vpbroadcastq,
-  X86_Opcode_Vpbroadcastw,
-  X86_Opcode_Vpclmulqdq,
-  X86_Opcode_Vpcmpeqb,
-  X86_Opcode_Vpcmpeqd,
-  X86_Opcode_Vpcmpeqq,
-  X86_Opcode_Vpcmpeqw,
-  X86_Opcode_Vpcmpestri,
-  X86_Opcode_Vpcmpestrm,
-  X86_Opcode_Vpcmpgtb,
-  X86_Opcode_Vpcmpgtq,
-  X86_Opcode_Vpcmpgtw,
-  X86_Opcode_Vpcmpistri,
-  X86_Opcode_Vpcmpistrm,
-  X86_Opcode_Vperm2f128,
-  X86_Opcode_Vperm2i128,
-  X86_Opcode_Vpermd,
-  X86_Opcode_Vpermilpd,
-  X86_Opcode_Vpermilps,
-  X86_Opcode_Vpermps,
-  X86_Opcode_Vpermq,
-  X86_Opcode_Vpextrb,
-  X86_Opcode_Vpextrd,
-  X86_Opcode_Vpextrw,
-  X86_Opcode_Vpgatherdd,
-  X86_Opcode_Vpgatherdpd,
-  X86_Opcode_Vpgatherdps,
-  X86_Opcode_Vpgatherdq,
-  X86_Opcode_Vpgatherqd,
-  X86_Opcode_Vpgatherqpd,
-  X86_Opcode_Vpgatherqps,
-  X86_Opcode_Vpgatherqq,
-  X86_Opcode_Vphaddd,
-  X86_Opcode_Vphaddsw,
-  X86_Opcode_Vphaddw,
-  X86_Opcode_Vphminposuw,
-  X86_Opcode_Vphsubd,
-  X86_Opcode_Vphsubsw,
-  X86_Opcode_Vphsubw,
-  X86_Opcode_Vpinsrb,
-  X86_Opcode_Vpinsrd,
-  X86_Opcode_Vpinsrw,
-  X86_Opcode_Vpmaddubsw,
-  X86_Opcode_Vpmaddwd,
-  X86_Opcode_Vpmaskmovd,
-  X86_Opcode_Vpmaskmovq,
-  X86_Opcode_Vpmaxsb,
-  X86_Opcode_Vpmaxsd,
-  X86_Opcode_Vpmaxsw,
-  X86_Opcode_Vpmaxub,
-  X86_Opcode_Vpmaxud,
-  X86_Opcode_Vpmaxuw,
-  X86_Opcode_Vpminsb,
-  X86_Opcode_Vpminsd,
-  X86_Opcode_Vpminsw,
-  X86_Opcode_Vpminub,
-  X86_Opcode_Vpminud,
-  X86_Opcode_Vpminuw,
-  X86_Opcode_Vpmovmskb,
-  X86_Opcode_Vpmovsxbd,
-  X86_Opcode_Vpmovsxbq,
-  X86_Opcode_Vpmovsxbw,
-  X86_Opcode_Vpmovsxdq,
-  X86_Opcode_Vpmovsxwd,
-  X86_Opcode_Vpmovsxwq,
-  X86_Opcode_Vpmovzxbd,
-  X86_Opcode_Vpmovzxbq,
-  X86_Opcode_Vpmovzxbw,
-  X86_Opcode_Vpmovzxdq,
-  X86_Opcode_Vpmovzxwd,
-  X86_Opcode_Vpmovzxwq,
-  X86_Opcode_Vpmuldq,
-  X86_Opcode_Vpmulhrsw,
-  X86_Opcode_Vpmulhuw,
-  X86_Opcode_Vpmulhw,
-  X86_Opcode_Vpmulld,
-  X86_Opcode_Vpmullw,
-  X86_Opcode_Vpmuludq,
-  X86_Opcode_Vpor,
-  X86_Opcode_Vpsadbw,
-  X86_Opcode_Vpshufb,
-  X86_Opcode_Vpshufd,
-  X86_Opcode_Vpshufhw,
-  X86_Opcode_Vpshuflw,
-  X86_Opcode_Vpsignb,
-  X86_Opcode_Vpsignd,
-  X86_Opcode_Vpsignw,
-  X86_Opcode_Vpsllvd,
-  X86_Opcode_Vpsllvq,
-  X86_Opcode_Vpsllw,
-  X86_Opcode_Vpsrad,
-  X86_Opcode_Vpsravd,
-  X86_Opcode_Vpsraw,
-  X86_Opcode_Vpsrld,
-  X86_Opcode_Vpsrlvd,
-  X86_Opcode_Vpsrlvq,
-  X86_Opcode_Vpsrlw,
-  X86_Opcode_Vpsubb,
-  X86_Opcode_Vpsubd,
-  X86_Opcode_Vpsubq,
-  X86_Opcode_Vpsubsb,
-  X86_Opcode_Vpsubsw,
-  X86_Opcode_Vpsubusb,
-  X86_Opcode_Vpsubusw,
-  X86_Opcode_Vpsubw,
-  X86_Opcode_Vptest,
-  X86_Opcode_Vpunpckhbw,
-  X86_Opcode_Vpunpckhdq,
-  X86_Opcode_Vpunpckhqdq,
-  X86_Opcode_Vpunpckhwd,
-  X86_Opcode_Vpunpcklqdq,
-  X86_Opcode_Vpunpcklwd,
-  X86_Opcode_Vpupcklbw,
-  X86_Opcode_Vpupckldq,
-  X86_Opcode_Vpxor,
-  X86_Opcode_Vrcpps,
-  X86_Opcode_Vrcpss,
-  X86_Opcode_Vroundpd,
-  X86_Opcode_Vroundps,
-  X86_Opcode_Vroundsd,
-  X86_Opcode_Vroundss,
-  X86_Opcode_Vrsqrtps,
-  X86_Opcode_Vrsqrtss,
-  X86_Opcode_Vshufpd,
-  X86_Opcode_Vshufps,
-  X86_Opcode_Vsplld,
-  X86_Opcode_Vspllq,
-  X86_Opcode_Vsqrtps,
-  X86_Opcode_Vsqrtpsd,
-  X86_Opcode_Vsqrtsd,
-  X86_Opcode_Vsqrtss,
-  X86_Opcode_Vstmxcsr,
-  X86_Opcode_Vsubpd,
-  X86_Opcode_Vsubps,
-  X86_Opcode_Vsubsd,
-  X86_Opcode_Vsubss,
-  X86_Opcode_Vtestpd,
-  X86_Opcode_Vtestps,
-  X86_Opcode_Vucomisd,
-  X86_Opcode_Vucomiss,
-  X86_Opcode_Vunpckhpd,
-  X86_Opcode_Vunpckhps,
-  X86_Opcode_Vunpcklpd,
-  X86_Opcode_Vunpcklps,
-  X86_Opcode_Vxorpd,
-  X86_Opcode_Vzeroupper,
   X86_Opcode_Wbindvd,
   X86_Opcode_Wrfsbase,
   X86_Opcode_Wrgsbase,
@@ -876,13 +750,15 @@ enum X86Opcode
   X86_Opcode_Xgetbv,
   X86_Opcode_Xlat,
   X86_Opcode_Xor,
+  X86_Opcode_Xorpd,
   X86_Opcode_Xorps,
   X86_Opcode_Xrstor,
   X86_Opcode_Xsave,
   X86_Opcode_Xsaveopt,
   X86_Opcode_Xsetbv,
   X86_Opcode_Xsha,
-  X86_Opcode_Xstore
+  X86_Opcode_Xstore,
+  X86_Opcode_Zeroupper
 };
 private:
   typedef bool (X86Architecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);
@@ -2985,13 +2861,11 @@ private:
   bool Operand__m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Moq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_rSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_r13b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__CH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__DX_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_rSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Sw_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3019,7 +2893,6 @@ private:
   bool Operand__Ev_Gv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eAX_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r13_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rCX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ho_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3033,13 +2906,11 @@ private:
   bool Operand__d64_rCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Ey(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_r14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Mo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_CS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_m32fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Mo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ho_Edb_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3050,7 +2921,7 @@ private:
   Expression::SPType Decode_CH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__My_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gb_Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__rDI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Woq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__DX_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Eyw_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3058,7 +2929,6 @@ private:
   bool Operand__DX_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ey_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__BL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__AH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r11_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Lx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3066,7 +2936,7 @@ private:
   bool Operand__r14_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Xb_Yb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vo_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Mw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3075,6 +2945,7 @@ private:
   Expression::SPType Decode_ST7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vo_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3086,7 +2957,6 @@ private:
   bool Operand__rBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__eSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_SS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Mq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gv_Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3102,7 +2972,6 @@ private:
   bool Operand__d64_r12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ho_Woq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__ST0_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__d64_r15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3118,7 +2987,7 @@ private:
   Expression::SPType Decode_AX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ES(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Eb_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vo_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__eCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wob(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3128,15 +2997,16 @@ private:
   bool Operand__Ob_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__AL_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Nq_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Uo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wow(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r14b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ev_CL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vo_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__CS(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Qd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r15_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r10b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3170,6 +3040,7 @@ private:
   Expression::SPType Decode_Vy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ST0_ST6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ov(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Uo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Iw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_eBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3190,14 +3061,16 @@ private:
   bool Operand__ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gv_Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vx_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vy_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_r9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Hy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vx_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__d64_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Mq_x_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ib_AL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r11_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3206,9 +3079,9 @@ private:
   bool Operand__BH_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Xb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Eyb_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__ST0_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vx_Mo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX_Yv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r12_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3217,13 +3090,12 @@ private:
   bool Operand__Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_rBP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Xz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__eCX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ev_Iz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Rv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Md(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ma(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gv_Ew(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__ST0_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ibsq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Mx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3266,6 +3138,7 @@ private:
   Expression::SPType Decode_eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__m80fp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__AL_Yb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__d64_r13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3283,6 +3156,7 @@ private:
   bool Operand__d64_r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__d64_rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ew_Sw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eAX_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3296,8 +3170,8 @@ private:
   Expression::SPType Decode_DX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r10_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_rDI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_r13b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_DH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_DL(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3309,11 +3183,11 @@ private:
   bool Operand__r14_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vo_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rDI_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Iw(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3332,7 +3206,7 @@ private:
   Expression::SPType Decode_Ho(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Mx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__ST0_ST3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX_Xv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__DX_eAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gv_Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3347,7 +3221,6 @@ private:
   bool Operand__Ry_Dy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__m16int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vo_Ho_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r12_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_m64int(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Mqo_Hx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3361,13 +3234,13 @@ private:
   bool Operand__ST1_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Izsq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eSP(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__AL_Yb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vo_Ho_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ey_Gy(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_By(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Woqo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_m80bcd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Gy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__eSI(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Gy_Wod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_r10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_r11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3397,11 +3270,11 @@ private:
   bool Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_eDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_x(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vx_Uo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Wd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
@@ -3416,16 +3289,17 @@ private:
   bool Operand__ST0_ST4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ST0_ST5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_d64_rDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vx_Uo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r12b_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ev_Ibs(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Gy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__r8_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__ST0_ST2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__rDI_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Uoq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_M(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Wx_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rBP_Iv(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__AL_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  bool Operand__Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);

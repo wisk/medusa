@@ -303,6 +303,32 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     }
   }
 
+  {
+    auto const pSimdInsn =
+      "\xF3\x0F\x58\x05\xB8\x2A\x0B\x08" // addss xmm0, oword ds:[xxx]
+      "\xF3\x0F\x10\x35\xBC\x2A\x0B\x08" // movss xmm6, oword ds:[xxx]
+      "\x66\x0F\x73\xD1\x01"             // psrlq xmm1, 1
+      "\xF3\x0F\x10\xD1"                 // movss   xmm2, xmm1
+      "\x66\x0F\x70\xDF\xD4"             // pshufd xmm3, xmm1, 0xd4
+      ;
+
+    medusa::MemoryBinaryStream MBS(pSimdInsn, 8 + 8 + 5 + 4 + 5);
+    medusa::Instruction InsnArr[5];
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS,  0, InsnArr[0], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS,  8, InsnArr[1], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[2], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[3], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 25, InsnArr[4], X86_64_Mode));
+
+    for (auto const& rInsn : InsnArr)
+    {
+      std::cout << rInsn.ToString() << std::endl;
+      medusa::PrintData PD;
+      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      std::cout << PD.GetTexts() << std::endl;
+    }
+  }
+
   delete pX86Disasm;
 }
 

@@ -16,7 +16,7 @@ namespace medusa
 
     if (pMemArea == nullptr)
     {
-      //Log::Write("core") << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
       return false;
     }
 
@@ -331,6 +331,7 @@ namespace medusa
   {
     Address CurAddr = m_Addr;
     MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+    bool DisasmBscBlkOnly = true;
 
     try
     {
@@ -371,6 +372,7 @@ namespace medusa
         if (spArch == nullptr)
           throw std::string("unable to find architecture module for: ") + CurAddr.ToString();
         u8 Mode = m_rDoc.GetMode(CurAddr);
+        DisasmBscBlkOnly = spArch->DisassembleBasicBlockOnly();
 
         // If something bad happens, we quit
         if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
@@ -406,12 +408,10 @@ namespace medusa
       return false;
     }
 
-    return false;
-
     //// At this point, we reach neither an basic block exit (jump, call, return) nor code,
     //// so if we must disassemble basic block only: we have to return false, otherwise it's safe
     //// to return true.
-    //return spArch->DisassembleBasicBlockOnly() == false ? true : false;
+    return DisasmBscBlkOnly ? false : true;
   }
 
   bool AnalyzerDisassemble::DisassembleBasicBlockWith(Architecture& rArch, u8 Mode, std::list<Instruction::SPType>& rBasicBlock)
@@ -483,7 +483,7 @@ namespace medusa
     catch (std::string const& rExcpMsg)
     {
       rBasicBlock.clear();
-      Log::Write("core").Level(LogDebug) << rExcpMsg << LogEnd;
+      Log::Write("core").Level(LogWarning) << rExcpMsg << LogEnd;
       return false;
     }
 
@@ -629,7 +629,7 @@ namespace medusa
 
     if (pMemArea == nullptr)
     {
-      //Log::Write("core") << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
       return false;
     }
 

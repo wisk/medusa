@@ -1,6 +1,6 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Aug 22 22:43:03 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Sep 10 19:34:59 2015) */
 #include "x86_architecture.hpp"
-const char *X86Architecture::m_Mnemonic[0x372] =
+const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
   "unknown",
   "aaa",
@@ -9,6 +9,11 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "aas",
   "adc",
   "add",
+  "addpd",
+  "addps",
+  "addsd",
+  "addss",
+  "addsubps",
   "aesdec",
   "aesdeclast",
   "aesenc",
@@ -18,6 +23,10 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "altinst",
   "and",
   "andn",
+  "andnpd",
+  "andnps",
+  "andpd",
+  "andps",
   "arpl",
   "bb0_reset",
   "bb1_reset",
@@ -31,6 +40,10 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "blsmsk",
   "blsr",
   "bound",
+  "broadcastf128",
+  "broadcasti128",
+  "broadcastsd",
+  "broadcastss",
   "bsf",
   "bsr",
   "bswap",
@@ -67,32 +80,59 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "cmovs",
   "cmovz",
   "cmp",
+  "cmpgtd",
   "cmps",
   "cmpxchg",
   "cmpxchg16b",
   "cmpxchg8b",
+  "comisd",
+  "comiss",
   "cpu_read",
   "cpu_write",
   "cpuid",
   "cqo",
   "crc32",
+  "cvtdq2pd",
+  "cvtdq2ps",
+  "cvtpd2dq",
   "cvtpd2pi",
+  "cvtpd2ps",
+  "cvtph2ps",
   "cvtpi2pd",
   "cvtpi2ps",
+  "cvtps2dq",
+  "cvtps2pd",
+  "cvtps2ph",
   "cvtps2pi",
+  "cvtsd2si",
+  "cvtsd2ss",
+  "cvtsi2sd",
+  "cvtsi2ss",
+  "cvtss2sd",
+  "cvtss2si",
+  "cvttpd2dq",
   "cvttpd2pi",
+  "cvttps2dq",
   "cvttps2pi",
+  "cvttsd2si",
+  "cvttss2si",
   "cwd",
   "cwde",
   "daa",
   "das",
   "dec",
   "div",
+  "divpd",
+  "divps",
+  "divsd",
+  "divss",
   "dmint",
   "dppd",
   "dpps",
   "emms",
   "enter",
+  "extractf128",
+  "extracti128",
   "extractps",
   "extrq",
   "f2xm1",
@@ -148,12 +188,72 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "fldln2",
   "fldpi",
   "fldz",
+  "fmadd132pd",
+  "fmadd132ps",
+  "fmadd132sd",
+  "fmadd132ss",
+  "fmadd213pd",
+  "fmadd213ps",
+  "fmadd213sd",
+  "fmadd213ss",
+  "fmadd231pd",
+  "fmadd231ps",
+  "fmadd231sd",
+  "fmadd231ss",
+  "fmaddsub132pd",
+  "fmaddsub132ps",
+  "fmaddsub213pd",
+  "fmaddsub213ps",
+  "fmaddsub231pd",
+  "fmaddsub231ps",
+  "fmsub132pd",
+  "fmsub132ps",
+  "fmsub132sd",
+  "fmsub132ss",
+  "fmsub213pd",
+  "fmsub213ps",
+  "fmsub213sd",
+  "fmsub213ss",
+  "fmsub231pd",
+  "fmsub231ps",
+  "fmsub231sd",
+  "fmsub231ss",
+  "fmsubadd132pd",
+  "fmsubadd132ps",
+  "fmsubadd213pd",
+  "fmsubadd213ps",
+  "fmsubadd231pd",
+  "fmsubadd231ps",
   "fmul",
   "fmulp",
   "fnclex",
   "fndisi",
   "fneni",
   "fninit",
+  "fnmadd132pd",
+  "fnmadd132ps",
+  "fnmadd132sd",
+  "fnmadd132ss",
+  "fnmadd213pd",
+  "fnmadd213ps",
+  "fnmadd213sd",
+  "fnmadd213ss",
+  "fnmadd231pd",
+  "fnmadd231ps",
+  "fnmadd231sd",
+  "fnmadd231ss",
+  "fnmsub132pd",
+  "fnmsub132ps",
+  "fnmsub132sd",
+  "fnmsub132ss",
+  "fnmsub213pd",
+  "fnmsub213ps",
+  "fnmsub213sd",
+  "fnmsub213ss",
+  "fnmsub231pd",
+  "fnmsub231ps",
+  "fnmsub231sd",
+  "fnmsub231ss",
   "fnop",
   "fnsave",
   "fnsetpm",
@@ -201,8 +301,12 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "fyl2x",
   "fyl2xp1",
   "getsec",
+  "haddpd",
+  "haddps",
   "hint_nop",
   "hlt",
+  "hsubpd",
+  "hsubps",
   "ibts",
   "icebp",
   "idiv",
@@ -210,6 +314,8 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "in",
   "inc",
   "ins",
+  "insertf128",
+  "inserti128",
   "insertps",
   "int",
   "into",
@@ -243,6 +349,8 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "jz",
   "lahf",
   "lar",
+  "lddqu",
+  "ldmxcsr",
   "lds",
   "lea",
   "leave",
@@ -263,33 +371,71 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "lss",
   "ltr",
   "lzcnt",
+  "maskmovdqu",
+  "maskmovpd",
+  "maskmovps",
   "maskmovq",
+  "maxpd",
+  "maxps",
+  "maxsd",
+  "maxss",
   "mfence",
+  "minpd",
+  "minps",
+  "minsd",
+  "minss",
+  "modqa",
   "monitor",
   "montmul",
   "mov",
+  "movapd",
   "movaps",
   "movbe",
   "movd",
+  "movddup",
   "movdq2q",
+  "movdqa",
+  "movdqu",
+  "movhpd",
+  "movhps",
+  "movlpd",
+  "movlps",
+  "movmskpd",
+  "movmskps",
+  "movntdq",
   "movntdqa",
   "movnti",
+  "movntpd",
+  "movntps",
   "movntq",
   "movntsd",
   "movntss",
   "movq",
   "movq2dq",
   "movs",
+  "movsd",
+  "movshdup",
+  "movsldup",
+  "movss",
   "movsx",
+  "movupd",
+  "movups",
   "movzx",
   "mpsadbw",
+  "mread",
   "mul",
+  "mulpd",
+  "mulps",
+  "mulsd",
+  "mulss",
   "mulx",
   "mwait",
   "neg",
   "nop",
   "not",
   "or",
+  "orpd",
+  "orps",
   "out",
   "outs",
   "pabsb",
@@ -313,7 +459,13 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "pavgb",
   "pavgusb",
   "pavgw",
+  "pblendd",
   "pblendvb",
+  "pblendvp",
+  "pbroadcastb",
+  "pbroadcastd",
+  "pbroadcastq",
+  "pbroadcastw",
   "pclmulqdq",
   "pcmpeqb",
   "pcmpeqd",
@@ -329,6 +481,13 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "pcmpistrm",
   "pd2id",
   "pdep",
+  "perm2f128",
+  "perm2i128",
+  "permd",
+  "permilpd",
+  "permilps",
+  "permps",
+  "permq",
   "pext",
   "pextrb",
   "pextrd",
@@ -353,6 +512,14 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "pfrsqrtv",
   "pfsub",
   "pfsubr",
+  "pgatherdd",
+  "pgatherdpd",
+  "pgatherdps",
+  "pgatherdq",
+  "pgatherqd",
+  "pgatherqpd",
+  "pgatherqps",
+  "pgatherqq",
   "phaddd",
   "phaddsw",
   "phaddw",
@@ -367,6 +534,8 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "pinsrw",
   "pmaddubsw",
   "pmaddwd",
+  "pmaskmovd",
+  "pmaskmovq",
   "pmaxsb",
   "pmaxsd",
   "pmaxsw",
@@ -408,17 +577,27 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "por",
   "psadbw",
   "pshufb",
+  "pshufd",
+  "pshufhw",
+  "pshuflw",
   "pshufw",
   "psignb",
   "psignd",
   "psignw",
   "pslld",
+  "pslldq",
   "psllq",
+  "psllvd",
+  "psllvq",
   "psllw",
   "psrad",
+  "psravd",
   "psraw",
   "psrld",
+  "psrldq",
   "psrlq",
+  "psrlvd",
+  "psrlvq",
   "psrlw",
   "psubb",
   "psubd",
@@ -432,15 +611,22 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "ptest",
   "punpckhbw",
   "punpckhdq",
+  "punpckhqdq",
   "punpckhwd",
   "punpcklbw",
   "punpckldq",
+  "punpcklqdq",
+  "punpcklwd",
+  "pupcklbw",
+  "pupckldq",
   "push",
   "pusha",
   "pushad",
   "pushf",
   "pxor",
   "rcl",
+  "rcpps",
+  "rcpss",
   "rcr",
   "rdfsbase",
   "rdgsbase",
@@ -461,6 +647,8 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "roundsd",
   "roundss",
   "rsm",
+  "rsqrtps",
+  "rsqrtss",
   "sahf",
   "sal",
   "salc",
@@ -492,379 +680,65 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "shr",
   "shrd",
   "shrx",
+  "shufpd",
+  "shufps",
   "sidt",
   "skinit",
   "sldt",
   "smint",
   "smsw",
+  "splld",
+  "spllq",
+  "sqrtps",
+  "sqrtpsd",
+  "sqrtsd",
+  "sqrtss",
   "stc",
   "std",
   "stgi",
   "sti",
+  "stmxcsr",
   "stos",
   "str",
   "sub",
+  "subpd",
+  "subps",
+  "subsd",
+  "subss",
   "swapgs",
   "syscall",
   "sysenter",
   "sysexit",
   "sysret",
   "test",
+  "testpd",
+  "testps",
   "tzcnt",
+  "ucomisd",
+  "ucomiss",
   "ud",
   "ud1",
   "ud2",
   "umov",
-  "vaddpd",
-  "vaddps",
-  "vaddsd",
-  "vaddss",
-  "vaddsubps",
-  "vaesdec",
-  "vaesdeclast",
-  "vaesenc",
-  "vaesenclast",
-  "vaesimc",
-  "vaeskeygenassist",
-  "vandnpd",
-  "vandnps",
-  "vandpd",
-  "vandps",
-  "vblendpd",
-  "vblendps",
-  "vblendvpd",
-  "vblendvps",
-  "vblendw",
-  "vbroadcastf128",
-  "vbroadcasti128",
-  "vbroadcastsd",
-  "vbroadcastss",
-  "vcmpgtd",
-  "vcomisd",
-  "vcomiss",
-  "vcvtdq2pd",
-  "vcvtdq2ps",
-  "vcvtpd2dq",
-  "vcvtpd2ps",
-  "vcvtph2ps",
-  "vcvtps2dq",
-  "vcvtps2pd",
-  "vcvtps2ph",
-  "vcvtsd2si",
-  "vcvtsd2ss",
-  "vcvtsi2sd",
-  "vcvtsi2ss",
-  "vcvtss2sd",
-  "vcvtss2si",
-  "vcvttpd2dq",
-  "vcvttps2dq",
-  "vcvttsd2si",
-  "vcvttss2si",
-  "vdivpd",
-  "vdivps",
-  "vdivsd",
-  "vdivss",
-  "vdppd",
-  "vdpps",
+  "unpckhpd",
+  "unpckhps",
+  "unpcklpd",
+  "unpcklps",
   "verr",
   "verw",
-  "vextractf128",
-  "vextracti128",
-  "vextractps",
-  "vfmadd132pd",
-  "vfmadd132ps",
-  "vfmadd132sd",
-  "vfmadd132ss",
-  "vfmadd213pd",
-  "vfmadd213ps",
-  "vfmadd213sd",
-  "vfmadd213ss",
-  "vfmadd231pd",
-  "vfmadd231ps",
-  "vfmadd231sd",
-  "vfmadd231ss",
-  "vfmaddsub132pd",
-  "vfmaddsub132ps",
-  "vfmaddsub213pd",
-  "vfmaddsub213ps",
-  "vfmaddsub231pd",
-  "vfmaddsub231ps",
-  "vfmsub132pd",
-  "vfmsub132ps",
-  "vfmsub132sd",
-  "vfmsub132ss",
-  "vfmsub213pd",
-  "vfmsub213ps",
-  "vfmsub213sd",
-  "vfmsub213ss",
-  "vfmsub231pd",
-  "vfmsub231ps",
-  "vfmsub231sd",
-  "vfmsub231ss",
-  "vfmsubadd132pd",
-  "vfmsubadd132ps",
-  "vfmsubadd213pd",
-  "vfmsubadd213ps",
-  "vfmsubadd231pd",
-  "vfmsubadd231ps",
-  "vfnmadd132pd",
-  "vfnmadd132ps",
-  "vfnmadd132sd",
-  "vfnmadd132ss",
-  "vfnmadd213pd",
-  "vfnmadd213ps",
-  "vfnmadd213sd",
-  "vfnmadd213ss",
-  "vfnmadd231pd",
-  "vfnmadd231ps",
-  "vfnmadd231sd",
-  "vfnmadd231ss",
-  "vfnmsub132pd",
-  "vfnmsub132ps",
-  "vfnmsub132sd",
-  "vfnmsub132ss",
-  "vfnmsub213pd",
-  "vfnmsub213ps",
-  "vfnmsub213sd",
-  "vfnmsub213ss",
-  "vfnmsub231pd",
-  "vfnmsub231ps",
-  "vfnmsub231sd",
-  "vfnmsub231ss",
-  "vhaddpd",
-  "vhaddps",
-  "vhsubpd",
-  "vhsubps",
-  "vinsertf128",
-  "vinserti128",
-  "vinsertps",
-  "vlddqu",
-  "vldmxcsr",
-  "vmaskmovdqu",
-  "vmaskmovpd",
-  "vmaskmovps",
-  "vmaxpd",
-  "vmaxps",
-  "vmaxsd",
-  "vmaxss",
   "vmcall",
   "vmclear",
-  "vminpd",
-  "vminps",
-  "vminsd",
-  "vminss",
   "vmlaunch",
   "vmload",
   "vmmcall",
-  "vmodqa",
-  "vmovapd",
-  "vmovd",
-  "vmovddup",
-  "vmovdqa",
-  "vmovdqu",
-  "vmovhpd",
-  "vmovhps",
-  "vmovlpd",
-  "vmovlps",
-  "vmovmskpd",
-  "vmovmskps",
-  "vmovntdq",
-  "vmovntdqa",
-  "vmovntpd",
-  "vmovntps",
-  "vmovq",
-  "vmovsd",
-  "vmovshdup",
-  "vmovsldup",
-  "vmovss",
-  "vmovupd",
-  "vmovups",
-  "vmpsadbw",
   "vmptrld",
   "vmptrst",
-  "vmread",
   "vmresume",
   "vmrun",
   "vmsave",
-  "vmulpd",
-  "vmulps",
-  "vmulsd",
-  "vmulss",
   "vmwrite",
   "vmxoff",
   "vmxon",
-  "vorpd",
-  "vorps",
-  "vpabsb",
-  "vpabsd",
-  "vpabsw",
-  "vpackssdw",
-  "vpacksswb",
-  "vpackusdw",
-  "vpackuswb",
-  "vpaddb",
-  "vpaddd",
-  "vpaddq",
-  "vpaddsb",
-  "vpaddsw",
-  "vpaddusb",
-  "vpaddusw",
-  "vpaddw",
-  "vpalignr",
-  "vpand",
-  "vpandn",
-  "vpavgb",
-  "vpavgw",
-  "vpblendd",
-  "vpblendvp",
-  "vpbroadcastb",
-  "vpbroadcastd",
-  "vpbroadcastq",
-  "vpbroadcastw",
-  "vpclmulqdq",
-  "vpcmpeqb",
-  "vpcmpeqd",
-  "vpcmpeqq",
-  "vpcmpeqw",
-  "vpcmpestri",
-  "vpcmpestrm",
-  "vpcmpgtb",
-  "vpcmpgtq",
-  "vpcmpgtw",
-  "vpcmpistri",
-  "vpcmpistrm",
-  "vperm2f128",
-  "vperm2i128",
-  "vpermd",
-  "vpermilpd",
-  "vpermilps",
-  "vpermps",
-  "vpermq",
-  "vpextrb",
-  "vpextrd",
-  "vpextrw",
-  "vpgatherdd",
-  "vpgatherdpd",
-  "vpgatherdps",
-  "vpgatherdq",
-  "vpgatherqd",
-  "vpgatherqpd",
-  "vpgatherqps",
-  "vpgatherqq",
-  "vphaddd",
-  "vphaddsw",
-  "vphaddw",
-  "vphminposuw",
-  "vphsubd",
-  "vphsubsw",
-  "vphsubw",
-  "vpinsrb",
-  "vpinsrd",
-  "vpinsrw",
-  "vpmaddubsw",
-  "vpmaddwd",
-  "vpmaskmovd",
-  "vpmaskmovq",
-  "vpmaxsb",
-  "vpmaxsd",
-  "vpmaxsw",
-  "vpmaxub",
-  "vpmaxud",
-  "vpmaxuw",
-  "vpminsb",
-  "vpminsd",
-  "vpminsw",
-  "vpminub",
-  "vpminud",
-  "vpminuw",
-  "vpmovmskb",
-  "vpmovsxbd",
-  "vpmovsxbq",
-  "vpmovsxbw",
-  "vpmovsxdq",
-  "vpmovsxwd",
-  "vpmovsxwq",
-  "vpmovzxbd",
-  "vpmovzxbq",
-  "vpmovzxbw",
-  "vpmovzxdq",
-  "vpmovzxwd",
-  "vpmovzxwq",
-  "vpmuldq",
-  "vpmulhrsw",
-  "vpmulhuw",
-  "vpmulhw",
-  "vpmulld",
-  "vpmullw",
-  "vpmuludq",
-  "vpor",
-  "vpsadbw",
-  "vpshufb",
-  "vpshufd",
-  "vpshufhw",
-  "vpshuflw",
-  "vpsignb",
-  "vpsignd",
-  "vpsignw",
-  "vpsllvd",
-  "vpsllvq",
-  "vpsllw",
-  "vpsrad",
-  "vpsravd",
-  "vpsraw",
-  "vpsrld",
-  "vpsrlvd",
-  "vpsrlvq",
-  "vpsrlw",
-  "vpsubb",
-  "vpsubd",
-  "vpsubq",
-  "vpsubsb",
-  "vpsubsw",
-  "vpsubusb",
-  "vpsubusw",
-  "vpsubw",
-  "vptest",
-  "vpunpckhbw",
-  "vpunpckhdq",
-  "vpunpckhqdq",
-  "vpunpckhwd",
-  "vpunpcklqdq",
-  "vpunpcklwd",
-  "vpupcklbw",
-  "vpupckldq",
-  "vpxor",
-  "vrcpps",
-  "vrcpss",
-  "vroundpd",
-  "vroundps",
-  "vroundsd",
-  "vroundss",
-  "vrsqrtps",
-  "vrsqrtss",
-  "vshufpd",
-  "vshufps",
-  "vsplld",
-  "vspllq",
-  "vsqrtps",
-  "vsqrtpsd",
-  "vsqrtsd",
-  "vsqrtss",
-  "vstmxcsr",
-  "vsubpd",
-  "vsubps",
-  "vsubsd",
-  "vsubss",
-  "vtestpd",
-  "vtestps",
-  "vucomisd",
-  "vucomiss",
-  "vunpckhpd",
-  "vunpckhps",
-  "vunpcklpd",
-  "vunpcklps",
-  "vxorpd",
-  "vzeroupper",
   "wbindvd",
   "wrfsbase",
   "wrgsbase",
@@ -877,13 +751,15 @@ const char *X86Architecture::m_Mnemonic[0x372] =
   "xgetbv",
   "xlat",
   "xor",
+  "xorpd",
   "xorps",
   "xrstor",
   "xsave",
   "xsaveopt",
   "xsetbv",
   "xsha",
-  "xstore"
+  "xstore",
+  "zeroupper"
 };
 const X86Architecture::TDisassembler X86Architecture::m_Table_1[0x100] =
 {
@@ -48161,56 +48037,52 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Eb', 'Gb']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovups
+ * mnemonic: movups
  * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovupd
+ * mnemonic: movupd
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovss
- * operand: ['Vo', 'Mod']
+ * mnemonic: movss
+ * operand: ['Vo', 'Uod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovsd
- * operand: ['Vo', 'Moq']
+ * mnemonic: movsd
+ * operand: ['Vo', 'Uoq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovsd);
-      if (Operand__Vo_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movsd);
+      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovss);
-      if (Operand__Vo_Mod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movss);
+      if (Operand__Vo_Uod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovupd);
+      rInsn.SetOpcode(X86_Opcode_Movupd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -48220,7 +48092,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovups);
+      rInsn.SetOpcode(X86_Opcode_Movups);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -48247,56 +48119,52 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ev', 'Gv']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovups
+ * mnemonic: movups
  * operand: ['Wx', 'Vx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovupd
+ * mnemonic: movupd
  * operand: ['Wx', 'Vx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovss
- * operand: ['Mo', 'Vod']
+ * mnemonic: movss
+ * operand: ['Uo', 'Vod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovsd
- * operand: ['Mo', 'Voq']
+ * mnemonic: movsd
+ * operand: ['Uo', 'Voq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovsd);
-      if (Operand__Mo_Voq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movsd);
+      if (Operand__Uo_Voq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovss);
-      if (Operand__Mo_Vod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movss);
+      if (Operand__Uo_Vod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovupd);
+      rInsn.SetOpcode(X86_Opcode_Movupd);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -48306,7 +48174,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovups);
+      rInsn.SetOpcode(X86_Opcode_Movups);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -48333,21 +48201,21 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gb', 'Ev']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovlps
- * operand: ['Vo', 'Ho', 'Moq']
+ * mnemonic: movlps
+ * operand: ['Vo', 'Uoq']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovlpd
- * operand: ['Vo', 'Ho', 'Moq']
+ * mnemonic: movlpd
+ * operand: ['Vo', 'Uoq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovsldup
+ * mnemonic: movsldup
  * operand: ['Vx', 'Wx']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse3
  *
- * mnemonic: vmovddup
+ * mnemonic: movddup
  * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse3
@@ -48355,35 +48223,31 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovddup);
+      rInsn.SetOpcode(X86_Opcode_Movddup);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovsldup);
+      rInsn.SetOpcode(X86_Opcode_Movsldup);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovlpd);
-      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movlpd);
+      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48392,8 +48256,8 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovlps);
-      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movlps);
+      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48419,12 +48283,12 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gv', 'Ev']
  * cpu_model: == X86_Arch_80386
  *
- * mnemonic: vmovlps
- * operand: ['Moq', 'Vo']
+ * mnemonic: movlps
+ * operand: ['Uoq', 'Vo']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovlpd
- * operand: ['Moq', 'Vo']
+ * mnemonic: movlpd
+ * operand: ['Uoq', 'Vo']
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48433,8 +48297,8 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovlpd);
-      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movlpd);
+      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48443,8 +48307,8 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovlps);
-      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movlps);
+      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48468,27 +48332,23 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vunpcklps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: unpcklps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vunpcklpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: unpcklpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vunpcklpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Unpcklpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48497,8 +48357,8 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vunpcklps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Unpcklps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48515,27 +48375,23 @@ bool X86Architecture::Table_2_14(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vunpckhps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: unpckhps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vunpckhpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: unpckhpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vunpckhpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Unpckhpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48544,8 +48400,8 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vunpckhps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Unpckhps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48562,16 +48418,16 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vmovhps
- * operand: ['Vo', 'Ho', 'Moq']
+ * mnemonic: movhps
+ * operand: ['Vo', 'Uoq']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovhpd
- * operand: ['Vo', 'Ho', 'Moq']
+ * mnemonic: movhpd
+ * operand: ['Vo', 'Uoq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovshdup
+ * mnemonic: movshdup
  * operand: ['Vx', 'Wx']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse3
@@ -48579,25 +48435,21 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf3)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovshdup);
+      rInsn.SetOpcode(X86_Opcode_Movshdup);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovhpd);
-      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movhpd);
+      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48606,8 +48458,8 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovhps);
-      if (Operand__Vo_Ho_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movhps);
+      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48624,27 +48476,23 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vmovhps
- * operand: ['Moq', 'Vo']
+ * mnemonic: movhps
+ * operand: ['Uoq', 'Vo']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovhpd
- * operand: ['Moq', 'Vo']
+ * mnemonic: movhpd
+ * operand: ['Uoq', 'Vo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovhpd);
-      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movhpd);
+      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48653,8 +48501,8 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovhps);
-      if (Operand__Moq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Movhps);
+      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -50432,7 +50280,7 @@ bool X86Architecture::Table_2_27(BinaryStream const& rBinStrm, TOffset Offset, I
 
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovapd
+ * mnemonic: movapd
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -50440,14 +50288,10 @@ bool X86Architecture::Table_2_27(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovapd);
+      rInsn.SetOpcode(X86_Opcode_Movapd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50484,7 +50328,7 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
 
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovapd
+ * mnemonic: movapd
  * operand: ['Wx', 'Vx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -50492,14 +50336,10 @@ bool X86Architecture::Table_2_28(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovapd);
+      rInsn.SetOpcode(X86_Opcode_Movapd);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50548,44 +50388,40 @@ bool X86Architecture::Table_2_29(BinaryStream const& rBinStrm, TOffset Offset, I
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvtsi2ss
- * operand: ['Vo', 'Ho', 'Ey']
+ * mnemonic: cvtsi2ss
+ * operand: ['Vo', 'Ey']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvtsi2sd
- * operand: ['Vo', 'Ho', 'Ey']
+ * mnemonic: cvtsi2sd
+ * operand: ['Vo', 'Ey']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtsi2sd);
-      if (Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtsi2sd);
+      if (Operand__Vo_Ey(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtsi2ss);
-      if (Operand__Vo_Ho_Ey(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtsi2ss);
+      if (Operand__Vo_Ey(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2pd);
@@ -50595,7 +50431,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpi2pd);
@@ -50631,11 +50467,11 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 2b
  *
- * mnemonic: vmovntps
+ * mnemonic: movntps
  * operand: ['Mx', 'Vx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovntpd
+ * mnemonic: movntpd
  * operand: ['Mx', 'Vx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -50653,11 +50489,7 @@ bool X86Architecture::Table_2_2a(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntsd);
@@ -50667,7 +50499,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntss);
@@ -50677,10 +50509,10 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovntpd);
+      rInsn.SetOpcode(X86_Opcode_Movntpd);
       if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50690,7 +50522,7 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovntps);
+      rInsn.SetOpcode(X86_Opcode_Movntps);
       if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50712,12 +50544,12 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2_mmx
  *
- * mnemonic: vcvttss2si
+ * mnemonic: cvttss2si
  * operand: ['Gy', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvttsd2si
+ * mnemonic: cvttsd2si
  * operand: ['Gy', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
@@ -50725,31 +50557,27 @@ bool X86Architecture::Table_2_2b(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvttsd2si);
+      rInsn.SetOpcode(X86_Opcode_Cvttsd2si);
       if (Operand__Gy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvttss2si);
+      rInsn.SetOpcode(X86_Opcode_Cvttss2si);
       if (Operand__Gy_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvttpd2pi);
@@ -50784,12 +50612,12 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2_mmx
  *
- * mnemonic: vcvtss2si
+ * mnemonic: cvtss2si
  * operand: ['Gy', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvtsd2si
+ * mnemonic: cvtsd2si
  * operand: ['Gy', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
@@ -50797,31 +50625,27 @@ bool X86Architecture::Table_2_2c(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtsd2si);
+      rInsn.SetOpcode(X86_Opcode_Cvtsd2si);
       if (Operand__Gy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtss2si);
+      rInsn.SetOpcode(X86_Opcode_Cvtss2si);
       if (Operand__Gy_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Cvtpd2pi);
@@ -50847,11 +50671,11 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 2e
  *
- * mnemonic: vucomiss
+ * mnemonic: ucomiss
  * operand: ['Vo', 'Wod']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vucomisd
+ * mnemonic: ucomisd
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -50859,14 +50683,10 @@ bool X86Architecture::Table_2_2d(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vucomisd);
+      rInsn.SetOpcode(X86_Opcode_Ucomisd);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50876,7 +50696,7 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vucomiss);
+      rInsn.SetOpcode(X86_Opcode_Ucomiss);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50889,11 +50709,11 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 2f
  *
- * mnemonic: vcomiss
+ * mnemonic: comiss
  * operand: ['Vo', 'Wod']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcomisd
+ * mnemonic: comisd
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -50901,14 +50721,10 @@ bool X86Architecture::Table_2_2e(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcomisd);
+      rInsn.SetOpcode(X86_Opcode_Comisd);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -50918,7 +50734,7 @@ bool X86Architecture::Table_2_2f(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcomiss);
+      rInsn.SetOpcode(X86_Opcode_Comiss);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -51849,11 +51665,11 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 50
  *
- * mnemonic: vmovmskps
+ * mnemonic: movmskps
  * operand: ['Gy', 'Ux']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmovmskpd
+ * mnemonic: movmskpd
  * operand: ['Gy', 'Ux']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -51861,14 +51677,10 @@ bool X86Architecture::Table_2_4f(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovmskpd);
+      rInsn.SetOpcode(X86_Opcode_Movmskpd);
       if (Operand__Gy_Ux(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -51878,7 +51690,7 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovmskps);
+      rInsn.SetOpcode(X86_Opcode_Movmskps);
       if (Operand__Gy_Ux(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -51891,56 +51703,52 @@ bool X86Architecture::Table_2_50(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 51
  *
- * mnemonic: vsqrtps
+ * mnemonic: sqrtps
  * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vsqrtpsd
+ * mnemonic: sqrtpsd
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vsqrtss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: sqrtss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vsqrtsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: sqrtsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsqrtsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Sqrtsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsqrtss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Sqrtss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsqrtpsd);
+      rInsn.SetOpcode(X86_Opcode_Sqrtpsd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -51950,7 +51758,7 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsqrtps);
+      rInsn.SetOpcode(X86_Opcode_Sqrtps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -51963,27 +51771,23 @@ bool X86Architecture::Table_2_51(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 52
  *
- * mnemonic: vrsqrtps
+ * mnemonic: rsqrtps
  * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vrsqrtss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: rsqrtss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
 **/
 bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vrsqrtss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Rsqrtss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -51992,7 +51796,7 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vrsqrtps);
+      rInsn.SetOpcode(X86_Opcode_Rsqrtps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -52005,27 +51809,23 @@ bool X86Architecture::Table_2_52(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 53
  *
- * mnemonic: vrcpps
+ * mnemonic: rcpps
  * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vrcpss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: rcpss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
 **/
 bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vrcpss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Rcpss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52034,7 +51834,7 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vrcpps);
+      rInsn.SetOpcode(X86_Opcode_Rcpps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -52047,27 +51847,23 @@ bool X86Architecture::Table_2_53(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 54
  *
- * mnemonic: vandps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: andps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vandpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: andpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vandpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Andpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52076,8 +51872,8 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vandps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Andps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52089,27 +51885,23 @@ bool X86Architecture::Table_2_54(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 55
  *
- * mnemonic: vandnps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: andnps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vandnpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: andnpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vandnpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Andnpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52118,8 +51910,8 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vandnps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Andnps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52131,27 +51923,23 @@ bool X86Architecture::Table_2_55(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 56
  *
- * mnemonic: vorps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: orps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vorpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: orpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse
  *
 **/
 bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vorpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Orpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52160,8 +51948,8 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vorps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Orps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52179,23 +51967,19 @@ bool X86Architecture::Table_2_56(BinaryStream const& rBinStrm, TOffset Offset, I
 
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vxorpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: xorpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vxorpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Xorpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52229,57 +52013,53 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 58
  *
- * mnemonic: vaddps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: addps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vaddpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: addpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vaddss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: addss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vaddsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: addsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52288,8 +52068,8 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52301,57 +52081,53 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 59
  *
- * mnemonic: vmulps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: mulps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmulpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: mulpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmulss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: mulss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmulsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: mulsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmulsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mulsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmulss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mulss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmulpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mulpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52360,8 +52136,8 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmulps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mulps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52373,57 +52149,53 @@ bool X86Architecture::Table_2_59(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5a
  *
- * mnemonic: vcvtps2pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: cvtps2pd
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvtpd2ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: cvtpd2ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vcvtss2sd
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: cvtss2sd
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vcvtsd2ss
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: cvtsd2ss
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtsd2ss);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtsd2ss);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtss2sd);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtss2sd);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtpd2ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtpd2ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52432,8 +52204,8 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtps2pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cvtps2pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52445,16 +52217,16 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5b
  *
- * mnemonic: vcvtdq2ps
+ * mnemonic: cvtdq2ps
  * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vcvtps2dq
+ * mnemonic: cvtps2dq
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vcvttps2dq
+ * mnemonic: cvttps2dq
  * operand: ['Vx', 'Wx']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse2
@@ -52462,24 +52234,20 @@ bool X86Architecture::Table_2_5a(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvttps2dq);
+      rInsn.SetOpcode(X86_Opcode_Cvttps2dq);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtps2dq);
+      rInsn.SetOpcode(X86_Opcode_Cvtps2dq);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -52489,7 +52257,7 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtdq2ps);
+      rInsn.SetOpcode(X86_Opcode_Cvtdq2ps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -52502,57 +52270,53 @@ bool X86Architecture::Table_2_5b(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5c
  *
- * mnemonic: vsubps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: subps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vsubpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: subpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vsubss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: subss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vsubsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: subsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsubsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Subsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsubss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Subss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsubpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Subpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52561,8 +52325,8 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsubps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Subps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52574,57 +52338,53 @@ bool X86Architecture::Table_2_5c(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5d
  *
- * mnemonic: vminps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: minps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vminpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: minpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vminss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: minss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vminsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: minsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vminsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Minsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vminss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Minss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vminpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Minpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52633,8 +52393,8 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vminps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Minps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52646,57 +52406,53 @@ bool X86Architecture::Table_2_5d(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5e
  *
- * mnemonic: vdivps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: divps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vdivpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: divpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vdivss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: divss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vdivsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: divsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdivsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Divsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdivss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Divss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdivpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Divpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52705,8 +52461,8 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdivps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Divps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52718,57 +52474,53 @@ bool X86Architecture::Table_2_5e(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 5f
  *
- * mnemonic: vmaxps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: maxps
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmaxpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: maxpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmaxss
- * operand: ['Vo', 'Ho', 'Wod']
+ * mnemonic: maxss
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vmaxsd
- * operand: ['Vo', 'Ho', 'Woq']
+ * mnemonic: maxsd
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaxsd);
-      if (Operand__Vo_Ho_Woq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maxsd);
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaxss);
-      if (Operand__Vo_Ho_Wod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maxss);
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaxpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maxpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52777,8 +52529,8 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaxps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maxps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52794,23 +52546,19 @@ bool X86Architecture::Table_2_5f(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qd']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpupcklbw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pupcklbw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpupcklbw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pupcklbw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52832,27 +52580,23 @@ bool X86Architecture::Table_2_60(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 61
  *
- * mnemonic: vpunpcklwd
+ * mnemonic: punpcklwd
  * operand: ['Pq', 'Qd']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpunpcklwd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: punpcklwd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpcklwd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Punpcklwd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52861,7 +52605,7 @@ bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Mmx)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpcklwd);
+      rInsn.SetOpcode(X86_Opcode_Punpcklwd);
       if (Operand__Pq_Qd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -52878,8 +52622,8 @@ bool X86Architecture::Table_2_61(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qd']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpupckldq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pupckldq
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -52888,8 +52632,8 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpupckldq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pupckldq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52915,23 +52659,19 @@ bool X86Architecture::Table_2_62(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpacksswb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: packsswb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpacksswb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Packsswb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52957,23 +52697,19 @@ bool X86Architecture::Table_2_63(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpcmpgtb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpgtb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpgtb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpgtb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -52999,23 +52735,19 @@ bool X86Architecture::Table_2_64(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpcmpgtw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpgtw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpgtw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpgtw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53041,23 +52773,19 @@ bool X86Architecture::Table_2_65(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vcmpgtd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: cmpgtd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcmpgtd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Cmpgtd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53083,23 +52811,19 @@ bool X86Architecture::Table_2_66(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpackuswb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: packuswb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpackuswb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Packuswb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53125,7 +52849,7 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpunpckhbw
+ * mnemonic: punpckhbw
  * operand: ['Hx', 'Hx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -53133,14 +52857,10 @@ bool X86Architecture::Table_2_67(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpckhbw);
+      rInsn.SetOpcode(X86_Opcode_Punpckhbw);
       if (Operand__Hx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53167,23 +52887,19 @@ bool X86Architecture::Table_2_68(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpunpckhwd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: punpckhwd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpckhwd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Punpckhwd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53209,23 +52925,19 @@ bool X86Architecture::Table_2_69(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpunpckhdq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: punpckhdq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpckhdq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Punpckhdq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53251,23 +52963,19 @@ bool X86Architecture::Table_2_6a(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpackssdw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: packssdw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpackssdw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Packssdw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53291,23 +52999,19 @@ bool X86Architecture::Table_2_6b(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vpunpcklqdq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: punpcklqdq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpcklqdq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Punpcklqdq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53324,23 +53028,19 @@ bool X86Architecture::Table_2_6c(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vpunpckhqdq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: punpckhqdq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpunpckhqdq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Punpckhqdq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53363,12 +53063,12 @@ bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Ey']
  * attr: ['m64', 'rexw']
  *
- * mnemonic: vmovd
+ * mnemonic: movd
  * operand: ['Vo', 'Ey']
  * attr: ['op_size']
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovq
+ * mnemonic: movq
  * operand: ['Vo', 'Ey']
  * attr: ['m64', 'rexw', 'op_size']
  * cpu_model: >= X86_Arch_Sse2
@@ -53379,7 +53079,7 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Mode == X86_Bit_64 && (rInsn.GetPrefix() & X86_Prefix_REX_w) == X86_Prefix_REX_w && (rInsn.GetPrefix() & X86_Prefix_OpSize))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovq);
+      rInsn.SetOpcode(X86_Opcode_Movq);
       if (Operand__Vo_Ey(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53389,7 +53089,7 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovd);
+      rInsn.SetOpcode(X86_Opcode_Movd);
       if (Operand__Vo_Ey(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53426,12 +53126,12 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vmodqa
+ * mnemonic: modqa
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovdqu
+ * mnemonic: movdqu
  * operand: ['Vx', 'Wx']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
@@ -53439,24 +53139,20 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && Prefix == 0xf3)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovdqu);
+      rInsn.SetOpcode(X86_Opcode_Movdqu);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmodqa);
+      rInsn.SetOpcode(X86_Opcode_Modqa);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53483,17 +53179,17 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq', 'Ib']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpshufd
+ * mnemonic: pshufd
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vpshufhw
+ * mnemonic: pshufhw
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vpshuflw
+ * mnemonic: pshuflw
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
@@ -53501,34 +53197,30 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpshuflw);
+      rInsn.SetOpcode(X86_Opcode_Pshuflw);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpshufhw);
+      rInsn.SetOpcode(X86_Opcode_Pshufhw);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpshufd);
+      rInsn.SetOpcode(X86_Opcode_Pshufd);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53548,31 +53240,350 @@ bool X86Architecture::Table_2_70(BinaryStream const& rBinStrm, TOffset Offset, I
     return false;
 }
 
-/** instruction
- * opcode: 71
+/** group:
+ * opcode: 00
  * invalid
+ *
+ * opcode: 01
+ * invalid
+ *
+ * opcode: 02
+ * sub_opcodes: [{'mnemonic': 'psrlw', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psrlw', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 03
+ * invalid
+ *
+ * opcode: 04
+ * sub_opcodes: [{'mnemonic': 'psraw', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psraw', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 05
+ * invalid
+ *
+ * opcode: 06
+ * sub_opcodes: [{'mnemonic': 'psllw', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psllw', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 07
+ * invalid
+ *
 **/
 bool X86Architecture::Table_2_71(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    return false; /* INVALID */
+    u8 ModRmByte;
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
+
+    x86::ModRM ModRm(ModRmByte);
+    switch (ModRm.Reg())
+    {
+    case 0x0:
+      return false;
+    case 0x1:
+      return false;
+    case 0x2:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrlw);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrlw);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x3:
+      return false;
+    case 0x4:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psraw);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psraw);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x5:
+      return false;
+    case 0x6:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psllw);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psllw);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x7:
+      return false;
+    default:
+      return false;
+    }
 }
 
-/** instruction
- * opcode: 72
+/** group:
+ * opcode: 00
  * invalid
+ *
+ * opcode: 01
+ * invalid
+ *
+ * opcode: 02
+ * sub_opcodes: [{'mnemonic': 'psrld', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psrld', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 03
+ * invalid
+ *
+ * opcode: 04
+ * sub_opcodes: [{'mnemonic': 'psrad', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psrad', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 05
+ * invalid
+ *
+ * opcode: 06
+ * sub_opcodes: [{'mnemonic': 'pslld', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'pslld', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 07
+ * invalid
+ *
 **/
 bool X86Architecture::Table_2_72(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    return false; /* INVALID */
+    u8 ModRmByte;
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
+
+    x86::ModRM ModRm(ModRmByte);
+    switch (ModRm.Reg())
+    {
+    case 0x0:
+      return false;
+    case 0x1:
+      return false;
+    case 0x2:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrld);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrld);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x3:
+      return false;
+    case 0x4:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrad);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrad);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x5:
+      return false;
+    case 0x6:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Pslld);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Pslld);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x7:
+      return false;
+    default:
+      return false;
+    }
 }
 
-/** instruction
- * opcode: 73
+/** group:
+ * opcode: 00
  * invalid
+ *
+ * opcode: 01
+ * invalid
+ *
+ * opcode: 02
+ * sub_opcodes: [{'mnemonic': 'psrlq', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psrlq', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 03
+ * sub_opcodes: [{'invalid': None}, {'mnemonic': 'psrldq', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 04
+ * invalid
+ *
+ * opcode: 05
+ * invalid
+ *
+ * opcode: 06
+ * sub_opcodes: [{'mnemonic': 'psllq', 'operand': ['Nq', 'Ib']}, {'mnemonic': 'psllq', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
+ * opcode: 07
+ * sub_opcodes: [{'invalid': None}, {'mnemonic': 'pslldq', 'operand': ['Ux', 'Ib'], 'prefix': 102}]
+ *
 **/
 bool X86Architecture::Table_2_73(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    return false; /* INVALID */
+    u8 ModRmByte;
+    if (!rBinStrm.Read(Offset, ModRmByte))
+      return false;
+
+    x86::ModRM ModRm(ModRmByte);
+    switch (ModRm.Reg())
+    {
+    case 0x0:
+      return false;
+    case 0x1:
+      return false;
+    case 0x2:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrlq);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrlq);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x3:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psrldq);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        return false; /* INVALID */
+      }
+    case 0x4:
+      return false;
+    case 0x5:
+      return false;
+    case 0x6:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psllq);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Psllq);
+        if (Operand__Nq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+    case 0x7:
+      if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Pslldq);
+        if (Operand__Ux_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+        {
+          return false;
+        }
+        return true;
+      }
+      else
+      {
+        return false; /* INVALID */
+      }
+    default:
+      return false;
+    }
 }
 
 /** instructions
@@ -53582,23 +53593,19 @@ bool X86Architecture::Table_2_73(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpcmpeqb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpeqb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpeqb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpeqb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53624,23 +53631,19 @@ bool X86Architecture::Table_2_74(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpcmpeqw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpeqw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpeqw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpeqw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53666,23 +53669,19 @@ bool X86Architecture::Table_2_75(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpcmpeqd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpeqd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpeqd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpeqd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53707,7 +53706,7 @@ bool X86Architecture::Table_2_76(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: emms
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vzeroupper
+ * mnemonic: zeroupper
  * cpu_model: >= X86_Arch_Avx
  *
 **/
@@ -53716,7 +53715,7 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vzeroupper);
+      rInsn.SetOpcode(X86_Opcode_Zeroupper);
       return true;
     }
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Mmx)
@@ -53731,7 +53730,7 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: 78
  *
- * mnemonic: vmread
+ * mnemonic: mread
  * operand: ['Ey', 'Gy']
  *
  * mnemonic: extrq
@@ -53742,11 +53741,7 @@ bool X86Architecture::Table_2_77(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extrq);
@@ -53759,7 +53754,7 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
     else
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmread);
+      rInsn.SetOpcode(X86_Opcode_Mread);
       if (Operand__Ey_Gy(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53782,11 +53777,7 @@ bool X86Architecture::Table_2_78(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse4a && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extrq);
@@ -53847,38 +53838,34 @@ bool X86Architecture::Table_2_7b(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vhaddpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: haddpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse3
  *
- * mnemonic: vhaddps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: haddps
+ * operand: ['Vx', 'Wx']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse3
  *
 **/
 bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vhaddps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Haddps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vhaddpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Haddpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53895,38 +53882,34 @@ bool X86Architecture::Table_2_7c(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vhsubpd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: hsubpd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse3
  *
- * mnemonic: vhsubps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: hsubps
+ * operand: ['Vx', 'Wx']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse3
  *
 **/
 bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vhsubps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Hsubps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vhsubpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Hsubpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -53945,12 +53928,12 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Ey', 'Pq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vmovd
+ * mnemonic: movd
  * operand: ['Ey', 'Vo']
  * attr: ['op_size']
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovq
+ * mnemonic: movq
  * operand: ['Vo', 'Woq']
  * attr: ['rep']
  * cpu_model: >= X86_Arch_Sse2
@@ -53961,7 +53944,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovq);
+      rInsn.SetOpcode(X86_Opcode_Movq);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53971,7 +53954,7 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovd);
+      rInsn.SetOpcode(X86_Opcode_Movd);
       if (Operand__Ey_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -53998,12 +53981,12 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Qq', 'Pq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vmovdqa
+ * mnemonic: movdqa
  * operand: ['Wx', 'Vx']
  * attr: ['op_size']
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vmovdqu
+ * mnemonic: movdqu
  * operand: ['Wx', 'Vx']
  * attr: ['rep']
  * cpu_model: >= X86_Arch_Sse2
@@ -54014,7 +53997,7 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovdqu);
+      rInsn.SetOpcode(X86_Opcode_Movdqu);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -54024,7 +54007,7 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize))
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovdqa);
+      rInsn.SetOpcode(X86_Opcode_Movdqa);
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -56984,10 +56967,10 @@ bool X86Architecture::Table_2_ad(BinaryStream const& rBinStrm, TOffset Offset, I
  * sub_opcodes: [{'mnemonic': 'fxrstor', 'operand': ['M']}, {'mnemonic': 'rdgsbase', 'operand': ['Ry'], 'prefix': 243}]
  *
  * opcode: 02
- * sub_opcodes: [{'mnemonic': 'vldmxcsr', 'operand': ['Md']}, {'mnemonic': 'wrfsbase', 'operand': ['Ry'], 'prefix': 243}]
+ * sub_opcodes: [{'mnemonic': 'ldmxcsr', 'operand': ['Md']}, {'mnemonic': 'wrfsbase', 'operand': ['Ry'], 'prefix': 243}]
  *
  * opcode: 03
- * sub_opcodes: [{'mnemonic': 'vstmxcsr', 'operand': ['Md']}, {'mnemonic': 'wrgsbase', 'operand': ['Ry'], 'prefix': 243}]
+ * sub_opcodes: [{'mnemonic': 'stmxcsr', 'operand': ['Md']}, {'mnemonic': 'wrgsbase', 'operand': ['Ry'], 'prefix': 243}]
  *
  * mnemonic: xsave
  * operand: ['M']
@@ -57013,112 +56996,88 @@ bool X86Architecture::Table_2_ae(BinaryStream const& rBinStrm, TOffset Offset, I
     switch (ModRm.Reg())
     {
     case 0x0:
+      if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
       {
-        u8 Prefix;
-        if (!rBinStrm.Read(Offset - 2, Prefix))
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Rdfsbase);
+        if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
+        {
           return false;
-
-        if (Prefix == 0xf3)
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Rdfsbase);
-          if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
         }
-        else
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Fxsave);
+        if (Operand__M(rBinStrm, Offset, rInsn, Mode) == false)
         {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Fxsave);
-          if (Operand__M(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
+          return false;
         }
+        return true;
       }
     case 0x1:
+      if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
       {
-        u8 Prefix;
-        if (!rBinStrm.Read(Offset - 2, Prefix))
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Rdgsbase);
+        if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
+        {
           return false;
-
-        if (Prefix == 0xf3)
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Rdgsbase);
-          if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
         }
-        else
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Fxrstor);
+        if (Operand__M(rBinStrm, Offset, rInsn, Mode) == false)
         {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Fxrstor);
-          if (Operand__M(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
+          return false;
         }
+        return true;
       }
     case 0x2:
+      if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
       {
-        u8 Prefix;
-        if (!rBinStrm.Read(Offset - 2, Prefix))
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Wrfsbase);
+        if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
+        {
           return false;
-
-        if (Prefix == 0xf3)
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Wrfsbase);
-          if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
         }
-        else
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Ldmxcsr);
+        if (Operand__Md(rBinStrm, Offset, rInsn, Mode) == false)
         {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Vldmxcsr);
-          if (Operand__Md(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
+          return false;
         }
+        return true;
       }
     case 0x3:
+      if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
       {
-        u8 Prefix;
-        if (!rBinStrm.Read(Offset - 2, Prefix))
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Wrgsbase);
+        if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
+        {
           return false;
-
-        if (Prefix == 0xf3)
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Wrgsbase);
-          if (Operand__Ry(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
         }
-        else
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Stmxcsr);
+        if (Operand__Md(rBinStrm, Offset, rInsn, Mode) == false)
         {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Vstmxcsr);
-          if (Operand__Md(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
+          return false;
         }
+        return true;
       }
     case 0x4:
       rInsn.Length()++;
@@ -57640,11 +57599,7 @@ bool X86Architecture::Table_2_b7(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (Prefix == 0xf3)
+    if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Popcnt);
@@ -58061,11 +58016,7 @@ else:
 **/
 bool X86Architecture::Table_2_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (Prefix == 0xf3)
+    if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Tzcnt);
@@ -58132,11 +58083,7 @@ else:
 **/
 bool X86Architecture::Table_2_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (Prefix == 0xf3)
+    if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Lzcnt);
@@ -58771,23 +58718,19 @@ bool X86Architecture::Table_2_c3(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Mw', 'Ib']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpinsrw
- * operand: ['Vo', 'Ho', 'Mw', 'Ib']
+ * mnemonic: pinsrw
+ * operand: ['Vo', 'Mw', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpinsrw);
-      if (Operand__Vo_Ho_Mw_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pinsrw);
+      if (Operand__Vo_Mw_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -58813,7 +58756,7 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gy', 'Nq', 'Ib']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpextrw
+ * mnemonic: pextrw
  * operand: ['Gy', 'Uo', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -58821,14 +58764,10 @@ bool X86Architecture::Table_2_c4(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpextrw);
+      rInsn.SetOpcode(X86_Opcode_Pextrw);
       if (Operand__Gy_Uo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -58851,27 +58790,23 @@ bool X86Architecture::Table_2_c5(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instructions
  * opcode: c6
  *
- * mnemonic: vshufps
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: shufps
+ * operand: ['Vx', 'Wx', 'Ib']
  * cpu_model: >= X86_Arch_Sse
  *
- * mnemonic: vshufpd
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: shufpd
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vshufpd);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Shufpd);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -58880,8 +58815,8 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vshufps);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Shufps);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -58895,7 +58830,7 @@ bool X86Architecture::Table_2_c6(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * opcode: 01
- * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq'], 'semantic': []}, {'mnemonic': 'cmpxchg16b', 'operand': ['Mo'], 'semantic': [], 'attr': ['m64']}]
+ * sub_opcodes: [{'mnemonic': 'cmpxchg8b', 'operand': ['Mq'], 'semantic': []}, {'mnemonic': 'cmpxchg16b', 'operand': ['Uo'], 'semantic': [], 'attr': ['m64']}]
  *
  * opcode: 02
  * invalid
@@ -58933,7 +58868,7 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         rInsn.Length()++;
         rInsn.SetOpcode(X86_Opcode_Cmpxchg16b);
-        if (Operand__Mo(rBinStrm, Offset, rInsn, Mode) == false)
+        if (Operand__Uo(rBinStrm, Offset, rInsn, Mode) == false)
         {
           return false;
         }
@@ -58958,37 +58893,31 @@ bool X86Architecture::Table_2_c7(BinaryStream const& rBinStrm, TOffset Offset, I
     case 0x5:
       return false;
     case 0x6:
+      if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
       {
-        u8 Prefix;
-        if (!rBinStrm.Read(Offset - 2, Prefix))
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Vmxon);
+        return true;
+      }
+      else if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Vmclear);
+        if (Operand__Mq(rBinStrm, Offset, rInsn, Mode) == false)
+        {
           return false;
-
-        if (Prefix == 0xf3)
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Vmxon);
-          return true;
         }
-        else if (Prefix == 0x66)
+        return true;
+      }
+      else
+      {
+        rInsn.Length()++;
+        rInsn.SetOpcode(X86_Opcode_Vmptrld);
+        if (Operand__Mq(rBinStrm, Offset, rInsn, Mode) == false)
         {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Vmclear);
-          if (Operand__Mq(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
+          return false;
         }
-        else
-        {
-          rInsn.Length()++;
-          rInsn.SetOpcode(X86_Opcode_Vmptrld);
-          if (Operand__Mq(rBinStrm, Offset, rInsn, Mode) == false)
-          {
-            return false;
-          }
-          return true;
-        }
+        return true;
       }
     case 0x7:
       rInsn.Length()++;
@@ -59680,38 +59609,34 @@ bool X86Architecture::Table_2_cf(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vaddsubps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: addsubps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse3
  *
- * mnemonic: vaddsubps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: addsubps
+ * operand: ['Vx', 'Wx']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse3
  *
 **/
 bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddsubps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addsubps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaddsubps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Addsubps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59730,23 +59655,19 @@ bool X86Architecture::Table_2_d0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsrlw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrlw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrlw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrlw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59772,23 +59693,19 @@ bool X86Architecture::Table_2_d1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsrld
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrld
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrld);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrld);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59814,23 +59731,19 @@ bool X86Architecture::Table_2_d2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsrld
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrld
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrld);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrld);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59856,23 +59769,19 @@ bool X86Architecture::Table_2_d3(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse2
  *
- * mnemonic: vpaddq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59898,23 +59807,19 @@ bool X86Architecture::Table_2_d4(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpmullw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmullw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmullw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmullw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -59938,7 +59843,7 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vmovq
+ * mnemonic: movq
  * operand: ['Woq', 'Vo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -59956,11 +59861,7 @@ bool X86Architecture::Table_2_d5(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movdq2q);
@@ -59970,7 +59871,7 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2_mmx && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movq2dq);
@@ -59980,10 +59881,10 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovq);
+      rInsn.SetOpcode(X86_Opcode_Movq);
       if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -60003,7 +59904,7 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Gy', 'Nq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpmovmskb
+ * mnemonic: pmovmskb
  * operand: ['Gy', 'Ux']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -60011,14 +59912,10 @@ bool X86Architecture::Table_2_d6(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovmskb);
+      rInsn.SetOpcode(X86_Opcode_Pmovmskb);
       if (Operand__Gy_Ux(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -60045,23 +59942,19 @@ bool X86Architecture::Table_2_d7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubusb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubusb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubusb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubusb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60087,23 +59980,19 @@ bool X86Architecture::Table_2_d8(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubusw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubusw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubusw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubusw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60129,23 +60018,19 @@ bool X86Architecture::Table_2_d9(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpminub
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminub
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminub);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminub);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60171,23 +60056,19 @@ bool X86Architecture::Table_2_da(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpand
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pand
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpand);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pand);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60213,23 +60094,19 @@ bool X86Architecture::Table_2_db(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddusb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddusb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddusb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddusb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60255,23 +60132,19 @@ bool X86Architecture::Table_2_dc(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddusw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddusw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddusw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddusw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60297,23 +60170,19 @@ bool X86Architecture::Table_2_dd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpmaxub
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxub
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxub);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxub);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60339,23 +60208,19 @@ bool X86Architecture::Table_2_de(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpandn
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pandn
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpandn);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pandn);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60381,23 +60246,19 @@ bool X86Architecture::Table_2_df(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpavgb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pavgb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpavgb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pavgb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60423,23 +60284,19 @@ bool X86Architecture::Table_2_e0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsraw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psraw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsraw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psraw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60465,23 +60322,19 @@ bool X86Architecture::Table_2_e1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsrad
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrad
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrad);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrad);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60507,23 +60360,19 @@ bool X86Architecture::Table_2_e2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpavgw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pavgw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpavgw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pavgw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60549,23 +60398,19 @@ bool X86Architecture::Table_2_e3(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpmulhuw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulhuw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulhuw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulhuw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60591,23 +60436,19 @@ bool X86Architecture::Table_2_e4(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpmulhw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulhw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulhw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulhw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60631,17 +60472,17 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vcvttpd2dq
+ * mnemonic: cvttpd2dq
  * operand: ['Vo', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vcvtdq2pd
+ * mnemonic: cvtdq2pd
  * operand: ['Vo', 'Woq']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse2
  *
- * mnemonic: vcvtpd2dq
+ * mnemonic: cvtpd2dq
  * operand: ['Vo', 'Wx']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
@@ -60649,34 +60490,30 @@ bool X86Architecture::Table_2_e5(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtpd2dq);
+      rInsn.SetOpcode(X86_Opcode_Cvtpd2dq);
       if (Operand__Vo_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtdq2pd);
+      rInsn.SetOpcode(X86_Opcode_Cvtdq2pd);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvttpd2dq);
+      rInsn.SetOpcode(X86_Opcode_Cvttpd2dq);
       if (Operand__Vo_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -60696,7 +60533,7 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Mq', 'Pq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vmovntdq
+ * mnemonic: movntdq
  * operand: ['Mx', 'Vx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -60704,14 +60541,10 @@ bool X86Architecture::Table_2_e6(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovntdq);
+      rInsn.SetOpcode(X86_Opcode_Movntdq);
       if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -60738,23 +60571,19 @@ bool X86Architecture::Table_2_e7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60780,23 +60609,19 @@ bool X86Architecture::Table_2_e8(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60822,23 +60647,19 @@ bool X86Architecture::Table_2_e9(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpminsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60864,23 +60685,19 @@ bool X86Architecture::Table_2_ea(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpor
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: por
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpor);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Por);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60906,23 +60723,19 @@ bool X86Architecture::Table_2_eb(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60948,23 +60761,19 @@ bool X86Architecture::Table_2_ec(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -60990,23 +60799,19 @@ bool X86Architecture::Table_2_ed(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpmaxsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61032,23 +60837,19 @@ bool X86Architecture::Table_2_ee(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpxor
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pxor
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpxor);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pxor);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61072,7 +60873,7 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * invalid
  *
- * mnemonic: vlddqu
+ * mnemonic: lddqu
  * operand: ['Vx', 'Mx']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse3
@@ -61080,14 +60881,10 @@ bool X86Architecture::Table_2_ef(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse3 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vlddqu);
+      rInsn.SetOpcode(X86_Opcode_Lddqu);
       if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -61107,23 +60904,19 @@ bool X86Architecture::Table_2_f0(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsllw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psllw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsllw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psllw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61149,23 +60942,19 @@ bool X86Architecture::Table_2_f1(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vsplld
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: splld
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vsplld);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Splld);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61191,23 +60980,19 @@ bool X86Architecture::Table_2_f2(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vspllq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: spllq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vspllq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Spllq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61233,23 +61018,19 @@ bool X86Architecture::Table_2_f3(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse2
  *
- * mnemonic: vpmuludq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmuludq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmuludq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmuludq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61275,23 +61056,19 @@ bool X86Architecture::Table_2_f4(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpmaddwd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaddwd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaddwd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaddwd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61317,23 +61094,19 @@ bool X86Architecture::Table_2_f5(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vpsadbw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psadbw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsadbw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psadbw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61359,7 +61132,7 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Nq']
  * cpu_model: >= X86_Arch_Mmx_sse
  *
- * mnemonic: vmaskmovdqu
+ * mnemonic: maskmovdqu
  * operand: ['Vo', 'Uo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
@@ -61367,14 +61140,10 @@ bool X86Architecture::Table_2_f6(BinaryStream const& rBinStrm, TOffset Offset, I
 **/
 bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaskmovdqu);
+      rInsn.SetOpcode(X86_Opcode_Maskmovdqu);
       if (Operand__Vo_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -61401,23 +61170,19 @@ bool X86Architecture::Table_2_f7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61443,23 +61208,19 @@ bool X86Architecture::Table_2_f8(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61485,23 +61246,19 @@ bool X86Architecture::Table_2_f9(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61527,23 +61284,19 @@ bool X86Architecture::Table_2_fa(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpsubq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psubq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsubq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psubq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61569,23 +61322,19 @@ bool X86Architecture::Table_2_fb(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61611,23 +61360,19 @@ bool X86Architecture::Table_2_fc(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -61653,23 +61398,19 @@ bool X86Architecture::Table_2_fd(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Pq', 'Qq']
  * cpu_model: >= X86_Arch_Mmx
  *
- * mnemonic: vpaddd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: paddd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
 bool X86Architecture::Table_2_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpaddd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Paddd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -64362,45 +64103,41 @@ bool X86Architecture::Table_3dnow1_ff(BinaryStream const& rBinStrm, TOffset Offs
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpshufb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pshufb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpshufb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pshufb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpshufb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pshufb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpshufb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pshufb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pshufb);
@@ -64435,45 +64172,41 @@ bool X86Architecture::Table_3_38_00(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphaddw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphaddw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddw);
@@ -64508,45 +64241,41 @@ bool X86Architecture::Table_3_38_01(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphaddd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphaddd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddd);
@@ -64581,45 +64310,41 @@ bool X86Architecture::Table_3_38_02(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphaddsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphaddsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phaddsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphaddsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phaddsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phaddsw);
@@ -64654,45 +64379,41 @@ bool X86Architecture::Table_3_38_03(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpmaddubsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaddubsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmaddubsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaddubsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaddubsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaddubsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaddubsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaddubsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaddubsw);
@@ -64727,45 +64448,41 @@ bool X86Architecture::Table_3_38_04(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphsubw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphsubw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubw);
@@ -64800,45 +64517,41 @@ bool X86Architecture::Table_3_38_05(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphsubd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphsubd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubd);
@@ -64873,45 +64586,41 @@ bool X86Architecture::Table_3_38_06(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vphsubsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vphsubsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: phsubsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphsubsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Phsubsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phsubsw);
@@ -64946,45 +64655,41 @@ bool X86Architecture::Table_3_38_07(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpsignb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpsignb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignb);
@@ -65019,45 +64724,41 @@ bool X86Architecture::Table_3_38_08(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpsignw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpsignw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignw);
@@ -65092,45 +64793,41 @@ bool X86Architecture::Table_3_38_09(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpsignd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpsignd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psignd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsignd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psignd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Psignd);
@@ -65165,45 +64862,41 @@ bool X86Architecture::Table_3_38_0a(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpmulhrsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulhrsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmulhrsw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulhrsw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulhrsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulhrsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulhrsw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulhrsw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhrsw);
@@ -65227,79 +64920,19 @@ bool X86Architecture::Table_3_38_0b(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermilps
+ * mnemonic: permilps
  * prefix: 66
  * opcode: 0c
  * attr: ['w0']
- * operand: ['Vx', 'Hx', 'Wx']
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermilps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
-      {
-        return false;
-      }
-      return true;
-    }
-    else
-      return false;
-}
-
-/** instruction
- * mnemonic: vpermilpd
- * prefix: 66
- * opcode: 0d
- * attr: ['w0']
- * operand: ['Vx', 'Hx', 'Wx']
- * cpu_model: >= X86_Arch_Avx
-**/
-bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
-    {
-      rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermilpd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
-      {
-        return false;
-      }
-      return true;
-    }
-    else
-      return false;
-}
-
-/** instruction
- * mnemonic: vtestps
- * prefix: 66
- * opcode: 0e
- * attr: ['nv', 'w0']
- * operand: ['Vx', 'Wx']
- * cpu_model: >= X86_Arch_Avx
-**/
-bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
-    {
-      rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vtestps);
+      rInsn.SetOpcode(X86_Opcode_Permilps);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -65311,7 +64944,55 @@ bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vtestpd
+ * mnemonic: permilpd
+ * prefix: 66
+ * opcode: 0d
+ * attr: ['w0']
+ * operand: ['Vx', 'Wx']
+ * cpu_model: >= X86_Arch_Avx
+**/
+bool X86Architecture::Table_3_38_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+    {
+      rInsn.Length()++;
+      rInsn.SetOpcode(X86_Opcode_Permilpd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      {
+        return false;
+      }
+      return true;
+    }
+    else
+      return false;
+}
+
+/** instruction
+ * mnemonic: testps
+ * prefix: 66
+ * opcode: 0e
+ * attr: ['nv', 'w0']
+ * operand: ['Vx', 'Wx']
+ * cpu_model: >= X86_Arch_Avx
+**/
+bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
+    {
+      rInsn.Length()++;
+      rInsn.SetOpcode(X86_Opcode_Testps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      {
+        return false;
+      }
+      return true;
+    }
+    else
+      return false;
+}
+
+/** instruction
+ * mnemonic: testpd
  * prefix: 66
  * opcode: 0f
  * attr: ['nv', 'w0']
@@ -65320,14 +65001,10 @@ bool X86Architecture::Table_3_38_0e(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vtestpd);
+      rInsn.SetOpcode(X86_Opcode_Testpd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -65347,11 +65024,7 @@ bool X86Architecture::Table_3_38_0f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pblendvb);
@@ -65386,13 +65059,13 @@ bool X86Architecture::Table_3_38_12(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 13
  *
- * mnemonic: vcvtph2ps
+ * mnemonic: cvtph2ps
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['vl0']
  * cpu_model: >= X86_Arch_F16c
  *
- * mnemonic: vcvtph2ps
+ * mnemonic: cvtph2ps
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * attr: ['vl1']
@@ -65401,24 +65074,20 @@ bool X86Architecture::Table_3_38_12(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtph2ps);
+      rInsn.SetOpcode(X86_Opcode_Cvtph2ps);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtph2ps);
+      rInsn.SetOpcode(X86_Opcode_Cvtph2ps);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -65437,11 +65106,7 @@ bool X86Architecture::Table_3_38_13(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendvps);
@@ -65464,11 +65129,7 @@ bool X86Architecture::Table_3_38_14(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendvpd);
@@ -65483,7 +65144,7 @@ bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermps
+ * mnemonic: permps
  * operand: ['Vy', 'Hy', 'Wy']
  * prefix: 66
  * opcode: 16
@@ -65491,14 +65152,10 @@ bool X86Architecture::Table_3_38_15(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermps);
+      rInsn.SetOpcode(X86_Opcode_Permps);
       if (Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -65517,7 +65174,7 @@ bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vptest
+ * mnemonic: ptest
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['nv']
@@ -65526,21 +65183,17 @@ bool X86Architecture::Table_3_38_16(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vptest);
+      rInsn.SetOpcode(X86_Opcode_Ptest);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Ptest);
@@ -65556,13 +65209,13 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 18
  *
- * mnemonic: vbroadcastss
- * operand: ['Vx', 'Mod']
+ * mnemonic: broadcastss
+ * operand: ['Vx', 'Uod']
  * prefix: 66
  * attr: ['nc', 'w0']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vbroadcastss
+ * mnemonic: broadcastss
  * operand: ['Vx', 'Uo']
  * prefix: 66
  * attr: ['nc', 'w0']
@@ -65571,25 +65224,21 @@ bool X86Architecture::Table_3_38_17(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcastss);
+      rInsn.SetOpcode(X86_Opcode_Broadcastss);
       if (Operand__Vx_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcastss);
-      if (Operand__Vx_Mod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Broadcastss);
+      if (Operand__Vx_Uod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -65601,13 +65250,13 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 19
  *
- * mnemonic: vbroadcastsd
- * operand: ['Vy', 'Moq']
+ * mnemonic: broadcastsd
+ * operand: ['Vy', 'Uoq']
  * prefix: 66
  * attr: ['nc', 'w0']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vbroadcastsd
+ * mnemonic: broadcastsd
  * operand: ['Vy', 'Uo']
  * prefix: 66
  * attr: ['nc', 'w0']
@@ -65616,25 +65265,21 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcastsd);
+      rInsn.SetOpcode(X86_Opcode_Broadcastsd);
       if (Operand__Vy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcastsd);
-      if (Operand__Vy_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Broadcastsd);
+      if (Operand__Vy_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -65644,24 +65289,20 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vbroadcastf128
+ * mnemonic: broadcastf128
  * prefix: 66
  * opcode: 1a
  * attr: ['nv', 'w0']
- * operand: ['Vy', 'Mo']
+ * operand: ['Vy', 'Uo']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcastf128);
-      if (Operand__Vy_Mo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Broadcastf128);
+      if (Operand__Vy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -65692,13 +65333,13 @@ bool X86Architecture::Table_3_38_1b(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpabsb
+ * mnemonic: pabsb
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpabsb
+ * mnemonic: pabsb
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -65706,31 +65347,27 @@ bool X86Architecture::Table_3_38_1b(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsb);
+      rInsn.SetOpcode(X86_Opcode_Pabsb);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsb);
+      rInsn.SetOpcode(X86_Opcode_Pabsb);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsb);
@@ -65765,13 +65402,13 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpabsw
+ * mnemonic: pabsw
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpabsw
+ * mnemonic: pabsw
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -65779,31 +65416,27 @@ bool X86Architecture::Table_3_38_1c(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsw);
+      rInsn.SetOpcode(X86_Opcode_Pabsw);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsw);
+      rInsn.SetOpcode(X86_Opcode_Pabsw);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsw);
@@ -65838,13 +65471,13 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpabsd
+ * mnemonic: pabsd
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpabsd
+ * mnemonic: pabsd
  * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -65852,31 +65485,27 @@ bool X86Architecture::Table_3_38_1d(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsd);
+      rInsn.SetOpcode(X86_Opcode_Pabsd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpabsd);
+      rInsn.SetOpcode(X86_Opcode_Pabsd);
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pabsd);
@@ -65916,13 +65545,13 @@ bool X86Architecture::Table_3_38_1f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxbw
+ * mnemonic: pmovsxbw
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxbw
+ * mnemonic: pmovsxbw
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -65930,31 +65559,27 @@ bool X86Architecture::Table_3_38_1f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbw);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbw);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbw);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbw);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbw);
@@ -65975,13 +65600,13 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxbd
+ * mnemonic: pmovsxbd
  * operand: ['Vo', 'Wod']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxbd
+ * mnemonic: pmovsxbd
  * operand: ['Vy', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -65989,31 +65614,27 @@ bool X86Architecture::Table_3_38_20(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbd);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbd);
       if (Operand__Vy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbd);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbd);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbd);
@@ -66034,13 +65655,13 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxbq
+ * mnemonic: pmovsxbq
  * operand: ['Vo', 'Wow']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxbq
+ * mnemonic: pmovsxbq
  * operand: ['Vy', 'Wod']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66048,31 +65669,27 @@ bool X86Architecture::Table_3_38_21(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbq);
       if (Operand__Vy_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxbq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxbq);
       if (Operand__Vo_Wow(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxbq);
@@ -66093,13 +65710,13 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxwd
+ * mnemonic: pmovsxwd
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxwd
+ * mnemonic: pmovsxwd
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66107,31 +65724,27 @@ bool X86Architecture::Table_3_38_22(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxwd);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxwd);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxwd);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxwd);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxwd);
@@ -66152,13 +65765,13 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxwq
+ * mnemonic: pmovsxwq
  * operand: ['Vo', 'Wod']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxwq
+ * mnemonic: pmovsxwq
  * operand: ['Vy', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66166,31 +65779,27 @@ bool X86Architecture::Table_3_38_23(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxwq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxwq);
       if (Operand__Vy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxwq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxwq);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxwq);
@@ -66211,13 +65820,13 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovsxdq
+ * mnemonic: pmovsxdq
  * operand: ['Vo', 'Wow']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovsxdq
+ * mnemonic: pmovsxdq
  * operand: ['Vy', 'Wod']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66225,31 +65834,27 @@ bool X86Architecture::Table_3_38_24(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_25(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxdq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxdq);
       if (Operand__Vy_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovsxdq);
+      rInsn.SetOpcode(X86_Opcode_Pmovsxdq);
       if (Operand__Vo_Wow(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovsxdq);
@@ -66288,45 +65893,41 @@ bool X86Architecture::Table_3_38_27(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmuldq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmuldq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmuldq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmuldq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmuldq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmuldq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmuldq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmuldq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmuldq);
@@ -66347,45 +65948,41 @@ bool X86Architecture::Table_3_38_28(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpcmpeqq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpeqq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpcmpeqq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpeqq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpeqq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpeqq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpeqq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpeqq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpeqq);
@@ -66406,13 +66003,13 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vmovntdqa
+ * mnemonic: movntdqa
  * operand: ['Vx', 'Mx']
  * prefix: 66
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vmovntdqa
+ * mnemonic: movntdqa
  * operand: ['Vx', 'Mx']
  * prefix: 66
  * attr: ['nv']
@@ -66421,31 +66018,27 @@ bool X86Architecture::Table_3_38_29(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovntdqa);
+      rInsn.SetOpcode(X86_Opcode_Movntdqa);
       if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmovntdqa);
+      rInsn.SetOpcode(X86_Opcode_Movntdqa);
       if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movntdqa);
@@ -66466,45 +66059,41 @@ bool X86Architecture::Table_3_38_2a(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpackusdw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: packusdw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpackusdw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: packusdw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpackusdw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Packusdw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpackusdw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Packusdw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Packusdw);
@@ -66518,24 +66107,20 @@ bool X86Architecture::Table_3_38_2b(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vmaskmovps
+ * mnemonic: maskmovps
  * prefix: 66
  * opcode: 2c
  * attr: ['w0']
- * operand: ['Vx', 'Hx', 'Mx']
+ * operand: ['Vx', 'Mx']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaskmovps);
-      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maskmovps);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -66546,24 +66131,20 @@ bool X86Architecture::Table_3_38_2c(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vmaskmovpd
+ * mnemonic: maskmovpd
  * prefix: 66
  * opcode: 2d
  * attr: ['w0']
- * operand: ['Vx', 'Hx', 'Mx']
+ * operand: ['Vx', 'Mx']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaskmovpd);
-      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maskmovpd);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -66574,24 +66155,20 @@ bool X86Architecture::Table_3_38_2d(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vmaskmovps
+ * mnemonic: maskmovps
  * prefix: 66
  * opcode: 2e
  * attr: ['w0']
- * operand: ['Mx', 'Hx', 'Vx']
+ * operand: ['Mx', 'Vx']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaskmovps);
-      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maskmovps);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -66602,24 +66179,20 @@ bool X86Architecture::Table_3_38_2e(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vmaskmovpd
+ * mnemonic: maskmovpd
  * prefix: 66
  * opcode: 2f
  * attr: ['w0']
- * operand: ['Mx', 'Hx', 'Vx']
+ * operand: ['Mx', 'Vx']
  * cpu_model: >= X86_Arch_Avx
 **/
 bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmaskmovpd);
-      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Maskmovpd);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -66637,13 +66210,13 @@ bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxbw
+ * mnemonic: pmovzxbw
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxbw
+ * mnemonic: pmovzxbw
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66651,31 +66224,27 @@ bool X86Architecture::Table_3_38_2f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbw);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbw);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbw);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbw);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbw);
@@ -66696,13 +66265,13 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxbd
+ * mnemonic: pmovzxbd
  * operand: ['Vo', 'Wod']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxbd
+ * mnemonic: pmovzxbd
  * operand: ['Vy', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66710,31 +66279,27 @@ bool X86Architecture::Table_3_38_30(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbd);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbd);
       if (Operand__Vy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbd);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbd);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbd);
@@ -66755,13 +66320,13 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxbq
+ * mnemonic: pmovzxbq
  * operand: ['Vo', 'Wow']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxbq
+ * mnemonic: pmovzxbq
  * operand: ['Vy', 'Wod']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66769,31 +66334,27 @@ bool X86Architecture::Table_3_38_31(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbq);
       if (Operand__Vy_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxbq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxbq);
       if (Operand__Vo_Wow(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxbq);
@@ -66814,13 +66375,13 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxwd
+ * mnemonic: pmovzxwd
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxwd
+ * mnemonic: pmovzxwd
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66828,31 +66389,27 @@ bool X86Architecture::Table_3_38_32(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxwd);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxwd);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxwd);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxwd);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxwd);
@@ -66873,13 +66430,13 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxwq
+ * mnemonic: pmovzxwq
  * operand: ['Vo', 'Wod']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxwq
+ * mnemonic: pmovzxwq
  * operand: ['Vy', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66887,31 +66444,27 @@ bool X86Architecture::Table_3_38_33(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxwq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxwq);
       if (Operand__Vy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxwq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxwq);
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxwq);
@@ -66932,13 +66485,13 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmovzxdq
+ * mnemonic: pmovzxdq
  * operand: ['Vo', 'Woq']
  * prefix: 66
  * attr: ['ny', 'nv']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmovzxdq
+ * mnemonic: pmovzxdq
  * operand: ['Vy', 'Woo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -66946,31 +66499,27 @@ bool X86Architecture::Table_3_38_34(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxdq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxdq);
       if (Operand__Vy_Woo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmovzxdq);
+      rInsn.SetOpcode(X86_Opcode_Pmovzxdq);
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmovzxdq);
@@ -66984,7 +66533,7 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermd
+ * mnemonic: permd
  * operand: ['Vy', 'Hy', 'Wy']
  * prefix: 66
  * opcode: 36
@@ -66992,14 +66541,10 @@ bool X86Architecture::Table_3_38_35(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermd);
+      rInsn.SetOpcode(X86_Opcode_Permd);
       if (Operand__Vy_Hy_Wy(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -67018,8 +66563,8 @@ bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse42
  *
- * mnemonic: vpcmpgtq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pcmpgtq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
@@ -67027,21 +66572,17 @@ bool X86Architecture::Table_3_38_36(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpgtq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pcmpgtq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpgtq);
@@ -67062,45 +66603,41 @@ bool X86Architecture::Table_3_38_37(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpminsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpminsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminsb);
@@ -67121,45 +66658,41 @@ bool X86Architecture::Table_3_38_38(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpminsd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminsd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpminsd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminsd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminsd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminsd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminsd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminsd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminsd);
@@ -67180,45 +66713,41 @@ bool X86Architecture::Table_3_38_39(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpminuw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminuw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpminuw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminuw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminuw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminuw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminuw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminuw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminuw);
@@ -67239,45 +66768,41 @@ bool X86Architecture::Table_3_38_3a(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpminud
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminud
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpminud
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pminud
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminud);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminud);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpminud);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pminud);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pminud);
@@ -67298,45 +66823,41 @@ bool X86Architecture::Table_3_38_3b(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmaxsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmaxsb
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxsb
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxsb);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxsb);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxsb);
@@ -67357,45 +66878,41 @@ bool X86Architecture::Table_3_38_3c(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmaxsd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxsd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmaxsd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxsd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxsd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxsd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxsd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxsd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxsd);
@@ -67416,45 +66933,41 @@ bool X86Architecture::Table_3_38_3d(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmaxuw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxuw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmaxuw
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxuw
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxuw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxuw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxuw);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxuw);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxuw);
@@ -67475,45 +66988,41 @@ bool X86Architecture::Table_3_38_3e(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmaxud
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxud
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmaxud
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmaxud
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxud);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxud);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaxud);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaxud);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmaxud);
@@ -67534,45 +67043,41 @@ bool X86Architecture::Table_3_38_3f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpmulld
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulld
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpmulld
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: pmulld
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulld);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulld);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmulld);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmulld);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pmulld);
@@ -67593,7 +67098,7 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vphminposuw
+ * mnemonic: phminposuw
  * operand: ['Vo', 'Wo']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -67602,21 +67107,17 @@ bool X86Architecture::Table_3_38_40(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vphminposuw);
+      rInsn.SetOpcode(X86_Opcode_Phminposuw);
       if (Operand__Vo_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Phminposuw);
@@ -67659,14 +67160,14 @@ bool X86Architecture::Table_3_38_44(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 45
  *
- * mnemonic: vpsrlvd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrlvd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpsrlvq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psrlvq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Avx2
@@ -67674,25 +67175,21 @@ bool X86Architecture::Table_3_38_44(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrlvq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrlvq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsrlvd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psrlvd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67702,24 +67199,20 @@ bool X86Architecture::Table_3_38_45(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpsravd
+ * mnemonic: psravd
  * prefix: 66
  * opcode: 46
  * attr: ['w0']
- * operand: ['Vx', 'Hx', 'Wx']
+ * operand: ['Vx', 'Wx']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsravd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psravd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67732,14 +67225,14 @@ bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 47
  *
- * mnemonic: vpsllvd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psllvd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpsllvq
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: psllvq
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
@@ -67747,25 +67240,21 @@ bool X86Architecture::Table_3_38_46(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_47(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsllvq);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psllvq);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpsllvd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Psllvd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67919,24 +67408,20 @@ bool X86Architecture::Table_3_38_57(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpbroadcastd
+ * mnemonic: pbroadcastd
  * prefix: 66
  * opcode: 58
  * attr: ['nv', 'w0']
- * operand: ['Vx', 'Mod']
+ * operand: ['Vx', 'Uod']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpbroadcastd);
-      if (Operand__Vx_Mod(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pbroadcastd);
+      if (Operand__Vx_Uod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67947,24 +67432,20 @@ bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpbroadcastq
+ * mnemonic: pbroadcastq
  * prefix: 66
  * opcode: 59
  * attr: ['nv', 'w0']
- * operand: ['Vx', 'Moq']
+ * operand: ['Vx', 'Uoq']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpbroadcastq);
-      if (Operand__Vx_Moq(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pbroadcastq);
+      if (Operand__Vx_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67975,24 +67456,20 @@ bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vbroadcasti128
+ * mnemonic: broadcasti128
  * prefix: 66
  * opcode: 5a
  * attr: ['nv', 'w0']
- * operand: ['Vy', 'Mo']
+ * operand: ['Vy', 'Uo']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vbroadcasti128);
-      if (Operand__Vy_Mo(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Broadcasti128);
+      if (Operand__Vy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68264,24 +67741,20 @@ bool X86Architecture::Table_3_38_77(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpbroadcastb
+ * mnemonic: pbroadcastb
  * prefix: 66
  * opcode: 78
  * attr: ['nv']
- * operand: ['Vx', 'Mo', 'b']
+ * operand: ['Vx', 'Uo', 'b']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpbroadcastb);
-      if (Operand__Vx_Mo_b(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pbroadcastb);
+      if (Operand__Vx_Uo_b(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68292,24 +67765,20 @@ bool X86Architecture::Table_3_38_78(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpbroadcastw
+ * mnemonic: pbroadcastw
  * prefix: 66
  * opcode: 79
  * attr: ['nv']
- * operand: ['Vx', 'Mo', 'w']
+ * operand: ['Vx', 'Uo', 'w']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpbroadcastw);
-      if (Operand__Vx_Mo_w(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pbroadcastw);
+      if (Operand__Vx_Uo_w(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68375,22 +67844,18 @@ bool X86Architecture::Table_3_38_7f(BinaryStream const& rBinStrm, TOffset Offset
 
 /** instruction
  * mnemonic: invept
- * operand: ['Gy', 'Mo']
+ * operand: ['Gy', 'Uo']
  * prefix: 66
  * opcode: 80
  * cpu_model: >= X86_Arch_Vmx
 **/
 bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Vmx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Vmx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invept);
-      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Gy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68402,22 +67867,18 @@ bool X86Architecture::Table_3_38_80(BinaryStream const& rBinStrm, TOffset Offset
 
 /** instruction
  * mnemonic: invvpid
- * operand: ['Gy', 'Mo']
+ * operand: ['Gy', 'Uo']
  * prefix: 66
  * opcode: 81
  * cpu_model: >= X86_Arch_Vmx
 **/
 bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Vmx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Vmx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invvpid);
-      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Gy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68429,22 +67890,18 @@ bool X86Architecture::Table_3_38_81(BinaryStream const& rBinStrm, TOffset Offset
 
 /** instruction
  * mnemonic: invpcid
- * operand: ['Gy', 'Mo']
+ * operand: ['Gy', 'Uo']
  * prefix: 66
  * opcode: 82
  * cpu_model: >= X86_Arch_Invpcid
 **/
 bool X86Architecture::Table_3_38_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Invpcid && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Invpcid && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Invpcid);
-      if (Operand__Gy_Mo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Gy_Uo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68538,14 +67995,14 @@ bool X86Architecture::Table_3_38_8b(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 8c
  *
- * mnemonic: vpmaskmovd
- * operand: ['Vx', 'Hx', 'Mx']
+ * mnemonic: pmaskmovd
+ * operand: ['Vx', 'Mx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpmaskmovq
- * operand: ['Vx', 'Hx', 'Mx']
+ * mnemonic: pmaskmovq
+ * operand: ['Vx', 'Mx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Avx2
@@ -68553,25 +68010,21 @@ bool X86Architecture::Table_3_38_8b(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaskmovq);
-      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaskmovq);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaskmovd);
-      if (Operand__Vx_Hx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaskmovd);
+      if (Operand__Vx_Mx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68592,14 +68045,14 @@ bool X86Architecture::Table_3_38_8d(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 8e
  *
- * mnemonic: vpmaskmovd
- * operand: ['Mx', 'Hx', 'Vx']
+ * mnemonic: pmaskmovd
+ * operand: ['Mx', 'Vx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpmaskmovq
- * operand: ['Mx', 'Hx', 'Vx']
+ * mnemonic: pmaskmovq
+ * operand: ['Mx', 'Vx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Avx2
@@ -68607,25 +68060,21 @@ bool X86Architecture::Table_3_38_8d(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaskmovq);
-      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaskmovq);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpmaskmovd);
-      if (Operand__Mx_Hx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pmaskmovd);
+      if (Operand__Mx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68646,13 +68095,13 @@ bool X86Architecture::Table_3_38_8f(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 90
  *
- * mnemonic: vpgatherdd
+ * mnemonic: pgatherdd
  * operand: ['Vx', 'Md', 'x', 'Hx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpgatherdq
+ * mnemonic: pgatherdq
  * operand: ['Vx', 'Mqo', 'Hx']
  * prefix: 66
  * attr: ['w1']
@@ -68661,24 +68110,20 @@ bool X86Architecture::Table_3_38_8f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherdq);
+      rInsn.SetOpcode(X86_Opcode_Pgatherdq);
       if (Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherdd);
+      rInsn.SetOpcode(X86_Opcode_Pgatherdd);
       if (Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -68691,13 +68136,13 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 91
  *
- * mnemonic: vpgatherqd
+ * mnemonic: pgatherqd
  * operand: ['Vo', 'Md', 'x', 'Ho']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpgatherqq
+ * mnemonic: pgatherqq
  * operand: ['Vx', 'Mq', 'x', 'Hx']
  * prefix: 66
  * attr: ['w1']
@@ -68706,24 +68151,20 @@ bool X86Architecture::Table_3_38_90(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherqq);
+      rInsn.SetOpcode(X86_Opcode_Pgatherqq);
       if (Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherqd);
+      rInsn.SetOpcode(X86_Opcode_Pgatherqd);
       if (Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -68736,13 +68177,13 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 92
  *
- * mnemonic: vpgatherdps
+ * mnemonic: pgatherdps
  * operand: ['Vx', 'Md', 'x', 'Hx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpgatherdpd
+ * mnemonic: pgatherdpd
  * operand: ['Vx', 'Mqo', 'Hx']
  * prefix: 66
  * attr: ['w1']
@@ -68751,24 +68192,20 @@ bool X86Architecture::Table_3_38_91(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherdpd);
+      rInsn.SetOpcode(X86_Opcode_Pgatherdpd);
       if (Operand__Vx_Mqo_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherdps);
+      rInsn.SetOpcode(X86_Opcode_Pgatherdps);
       if (Operand__Vx_Md_x_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -68781,13 +68218,13 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 93
  *
- * mnemonic: vpgatherqps
+ * mnemonic: pgatherqps
  * operand: ['Vo', 'Md', 'x', 'Ho']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Avx2
  *
- * mnemonic: vpgatherqpd
+ * mnemonic: pgatherqpd
  * operand: ['Vx', 'Mq', 'x', 'Hx']
  * prefix: 66
  * attr: ['w1']
@@ -68796,24 +68233,20 @@ bool X86Architecture::Table_3_38_92(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherqpd);
+      rInsn.SetOpcode(X86_Opcode_Pgatherqpd);
       if (Operand__Vx_Mq_x_Hx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpgatherqps);
+      rInsn.SetOpcode(X86_Opcode_Pgatherqps);
       if (Operand__Vo_Md_x_Ho(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -68844,14 +68277,14 @@ bool X86Architecture::Table_3_38_95(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 96
  *
- * mnemonic: vfmaddsub132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmaddsub132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -68859,25 +68292,21 @@ bool X86Architecture::Table_3_38_95(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68889,14 +68318,14 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 97
  *
- * mnemonic: vfmsubadd132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsubadd132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -68904,25 +68333,21 @@ bool X86Architecture::Table_3_38_96(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68934,14 +68359,14 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 98
  *
- * mnemonic: vfmadd132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -68949,25 +68374,21 @@ bool X86Architecture::Table_3_38_97(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -68979,13 +68400,13 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 99
  *
- * mnemonic: vfmadd132ss
+ * mnemonic: fmadd132ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd132sd
+ * mnemonic: fmadd132sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -68994,24 +68415,20 @@ bool X86Architecture::Table_3_38_98(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd132sd);
+      rInsn.SetOpcode(X86_Opcode_Fmadd132sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd132ss);
+      rInsn.SetOpcode(X86_Opcode_Fmadd132ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69024,14 +68441,14 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9a
  *
- * mnemonic: vfmsub132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69039,25 +68456,21 @@ bool X86Architecture::Table_3_38_99(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69069,13 +68482,13 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9b
  *
- * mnemonic: vfmsub132ss
+ * mnemonic: fmsub132ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub132sd
+ * mnemonic: fmsub132sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69084,24 +68497,20 @@ bool X86Architecture::Table_3_38_9a(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub132sd);
+      rInsn.SetOpcode(X86_Opcode_Fmsub132sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub132ss);
+      rInsn.SetOpcode(X86_Opcode_Fmsub132ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69114,14 +68523,14 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9c
  *
- * mnemonic: vfnmadd132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69129,25 +68538,21 @@ bool X86Architecture::Table_3_38_9b(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69159,13 +68564,13 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9d
  *
- * mnemonic: vfnmadd132ss
+ * mnemonic: fnmadd132ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd132sd
+ * mnemonic: fnmadd132sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69174,24 +68579,20 @@ bool X86Architecture::Table_3_38_9c(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd132sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd132sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd132ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd132ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69204,14 +68605,14 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9e
  *
- * mnemonic: vfnmsub132ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub132ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub132pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub132pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69219,25 +68620,21 @@ bool X86Architecture::Table_3_38_9d(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub132pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub132pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub132ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub132ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69249,13 +68646,13 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 9f
  *
- * mnemonic: vfnmsub132ss
+ * mnemonic: fnmsub132ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub132sd
+ * mnemonic: fnmsub132sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69264,24 +68661,20 @@ bool X86Architecture::Table_3_38_9e(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_9f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub132sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub132sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub132ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub132ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69348,14 +68741,14 @@ bool X86Architecture::Table_3_38_a5(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: a6
  *
- * mnemonic: vfmaddsub213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmaddsub213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69363,25 +68756,21 @@ bool X86Architecture::Table_3_38_a5(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69393,14 +68782,14 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: a7
  *
- * mnemonic: vfmsubadd213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsubadd213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69408,25 +68797,21 @@ bool X86Architecture::Table_3_38_a6(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69438,14 +68823,14 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: a8
  *
- * mnemonic: vfmadd213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69453,25 +68838,21 @@ bool X86Architecture::Table_3_38_a7(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69483,13 +68864,13 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: a9
  *
- * mnemonic: vfmadd213ss
+ * mnemonic: fmadd213ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd213sd
+ * mnemonic: fmadd213sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69498,24 +68879,20 @@ bool X86Architecture::Table_3_38_a8(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd213sd);
+      rInsn.SetOpcode(X86_Opcode_Fmadd213sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd213ss);
+      rInsn.SetOpcode(X86_Opcode_Fmadd213ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69528,14 +68905,14 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: aa
  *
- * mnemonic: vfmsub213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69543,25 +68920,21 @@ bool X86Architecture::Table_3_38_a9(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69573,13 +68946,13 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: ab
  *
- * mnemonic: vfmsub213ss
+ * mnemonic: fmsub213ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub213sd
+ * mnemonic: fmsub213sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69588,24 +68961,20 @@ bool X86Architecture::Table_3_38_aa(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub213sd);
+      rInsn.SetOpcode(X86_Opcode_Fmsub213sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub213ss);
+      rInsn.SetOpcode(X86_Opcode_Fmsub213ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69618,14 +68987,14 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: ac
  *
- * mnemonic: vfnmadd213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69633,25 +69002,21 @@ bool X86Architecture::Table_3_38_ab(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69663,13 +69028,13 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: ad
  *
- * mnemonic: vfnmadd213ss
+ * mnemonic: fnmadd213ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd213sd
+ * mnemonic: fnmadd213sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69678,24 +69043,20 @@ bool X86Architecture::Table_3_38_ac(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd213sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd213sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd213ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd213ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69708,14 +69069,14 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: ae
  *
- * mnemonic: vfnmsub213ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub213ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub213pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub213pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69723,25 +69084,21 @@ bool X86Architecture::Table_3_38_ad(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub213pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub213pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub213ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub213ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69753,13 +69110,13 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: af
  *
- * mnemonic: vfnmsub213ss
+ * mnemonic: fnmsub213ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub213sd
+ * mnemonic: fnmsub213sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -69768,24 +69125,20 @@ bool X86Architecture::Table_3_38_ae(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_af(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub213sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub213sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub213ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub213ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -69852,14 +69205,14 @@ bool X86Architecture::Table_3_38_b5(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: b6
  *
- * mnemonic: vfmaddsub231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmaddsub231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmaddsub231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69867,25 +69220,21 @@ bool X86Architecture::Table_3_38_b5(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmaddsub231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmaddsub231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69897,14 +69246,14 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: b7
  *
- * mnemonic: vfmsubadd231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsubadd231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsubadd231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69912,25 +69261,21 @@ bool X86Architecture::Table_3_38_b6(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsubadd231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsubadd231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69942,14 +69287,14 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: b8
  *
- * mnemonic: vfmadd231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmadd231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -69957,25 +69302,21 @@ bool X86Architecture::Table_3_38_b7(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmadd231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -69987,13 +69328,13 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: b9
  *
- * mnemonic: vfmadd231ss
+ * mnemonic: fmadd231ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmadd231sd
+ * mnemonic: fmadd231sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -70002,24 +69343,20 @@ bool X86Architecture::Table_3_38_b8(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd231sd);
+      rInsn.SetOpcode(X86_Opcode_Fmadd231sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmadd231ss);
+      rInsn.SetOpcode(X86_Opcode_Fmadd231ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -70032,14 +69369,14 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: ba
  *
- * mnemonic: vfmsub231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fmsub231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -70047,25 +69384,21 @@ bool X86Architecture::Table_3_38_b9(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fmsub231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -70077,13 +69410,13 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: bb
  *
- * mnemonic: vfmsub231ss
+ * mnemonic: fmsub231ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfmsub231sd
+ * mnemonic: fmsub231sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -70092,24 +69425,20 @@ bool X86Architecture::Table_3_38_ba(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub231sd);
+      rInsn.SetOpcode(X86_Opcode_Fmsub231sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfmsub231ss);
+      rInsn.SetOpcode(X86_Opcode_Fmsub231ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -70122,14 +69451,14 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: bc
  *
- * mnemonic: vfnmadd231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmadd231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -70137,25 +69466,21 @@ bool X86Architecture::Table_3_38_bb(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmadd231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -70167,13 +69492,13 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: bd
  *
- * mnemonic: vfnmadd231ss
+ * mnemonic: fnmadd231ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmadd231sd
+ * mnemonic: fnmadd231sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -70182,24 +69507,20 @@ bool X86Architecture::Table_3_38_bc(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd231sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd231sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmadd231ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmadd231ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -70212,14 +69533,14 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: be
  *
- * mnemonic: vfnmsub231ps
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub231ps
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub231pd
- * operand: ['Vx', 'Hx', 'Wx']
+ * mnemonic: fnmsub231pd
+ * operand: ['Vx', 'Wx']
  * prefix: 66
  * attr: ['w1']
  * cpu_model: >= X86_Arch_Fma
@@ -70227,25 +69548,21 @@ bool X86Architecture::Table_3_38_bd(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub231pd);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub231pd);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub231ps);
-      if (Operand__Vx_Hx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Fnmsub231ps);
+      if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -70257,13 +69574,13 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: bf
  *
- * mnemonic: vfnmsub231ss
+ * mnemonic: fnmsub231ss
  * operand: ['Vo', 'Ho', 'Wd']
  * prefix: 66
  * attr: ['w0']
  * cpu_model: >= X86_Arch_Fma
  *
- * mnemonic: vfnmsub231sd
+ * mnemonic: fnmsub231sd
  * operand: ['Vo', 'Ho', 'Wq']
  * prefix: 66
  * attr: ['w1']
@@ -70272,24 +69589,20 @@ bool X86Architecture::Table_3_38_be(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub231sd);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub231sd);
       if (Operand__Vo_Ho_Wq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Fma && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vfnmsub231ss);
+      rInsn.SetOpcode(X86_Opcode_Fnmsub231ss);
       if (Operand__Vo_Ho_Wd(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -70551,7 +69864,7 @@ bool X86Architecture::Table_3_38_da(BinaryStream const& rBinStrm, TOffset Offset
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaesimc
+ * mnemonic: aesimc
  * operand: ['Vo', 'Wo']
  * prefix: 66
  * attr: ['nv', 'ny']
@@ -70560,21 +69873,17 @@ bool X86Architecture::Table_3_38_da(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaesimc);
+      rInsn.SetOpcode(X86_Opcode_Aesimc);
       if (Operand__Vo_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesimc);
@@ -70596,7 +69905,7 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaesenc
+ * mnemonic: aesenc
  * operand: ['Vo', 'Ho', 'Wo']
  * prefix: 66
  * attr: ['ny']
@@ -70605,21 +69914,17 @@ bool X86Architecture::Table_3_38_db(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaesenc);
+      rInsn.SetOpcode(X86_Opcode_Aesenc);
       if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesenc);
@@ -70641,7 +69946,7 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaesenclast
+ * mnemonic: aesenclast
  * operand: ['Vo', 'Ho', 'Wo']
  * prefix: 66
  * attr: ['ny']
@@ -70650,21 +69955,17 @@ bool X86Architecture::Table_3_38_dc(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaesenclast);
+      rInsn.SetOpcode(X86_Opcode_Aesenclast);
       if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesenclast);
@@ -70686,7 +69987,7 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaesdec
+ * mnemonic: aesdec
  * operand: ['Vo', 'Ho', 'Wo']
  * prefix: 66
  * attr: ['ny']
@@ -70695,21 +69996,17 @@ bool X86Architecture::Table_3_38_dd(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaesdec);
+      rInsn.SetOpcode(X86_Opcode_Aesdec);
       if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesdec);
@@ -70731,7 +70028,7 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
  * attr: ['nv', 'ny']
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaesdeclast
+ * mnemonic: aesdeclast
  * operand: ['Vo', 'Ho', 'Wo']
  * prefix: 66
  * attr: ['ny']
@@ -70740,21 +70037,17 @@ bool X86Architecture::Table_3_38_de(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaesdeclast);
+      rInsn.SetOpcode(X86_Opcode_Aesdeclast);
       if (Operand__Vo_Ho_Wo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aesdeclast);
@@ -70936,11 +70229,7 @@ bool X86Architecture::Table_3_38_ef(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (Prefix == 0x66 || Prefix == 0xf2))
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
@@ -70950,7 +70239,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0xf2)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
@@ -70960,7 +70249,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Movbe && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Movbe && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
@@ -71008,11 +70297,7 @@ bool X86Architecture::Table_3_38_f0(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (Prefix == 0x66 || Prefix == 0xf2))
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
@@ -71022,7 +70307,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0xf2)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Crc32);
@@ -71032,7 +70317,7 @@ bool X86Architecture::Table_3_38_f1(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Movbe && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Movbe && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movbe);
@@ -71097,26 +70382,22 @@ bool X86Architecture::Table_3_38_f2(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if ((Prefix == 0x66 || Prefix == 0xf2))
+    if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       return true;
     }
-    else if (Prefix == 0xf2)
+    else if ((rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       return true;
     }
-    else if (Prefix == 0xf3)
+    else if ((rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       return true;
     }
-    else if (Prefix == 0x66)
+    else if ((rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       return true;
@@ -71214,11 +70495,7 @@ bool X86Architecture::Table_3_38_f4(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pdep);
@@ -71228,7 +70505,7 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pext);
@@ -71260,11 +70537,7 @@ bool X86Architecture::Table_3_38_f5(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mulx);
@@ -71303,11 +70576,7 @@ bool X86Architecture::Table_3_38_f6(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shrx);
@@ -71317,7 +70586,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf3)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_Rep) == X86_Prefix_Rep)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Sarx);
@@ -71327,7 +70596,7 @@ bool X86Architecture::Table_3_38_f7(BinaryStream const& rBinStrm, TOffset Offset
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Shlx);
@@ -71423,7 +70692,7 @@ bool X86Architecture::Table_3_38_ff(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermq
+ * mnemonic: permq
  * operand: ['Vy', 'Wy', 'Ib']
  * prefix: 66
  * opcode: 00
@@ -71431,14 +70700,10 @@ bool X86Architecture::Table_3_38_ff(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermq);
+      rInsn.SetOpcode(X86_Opcode_Permq);
       if (Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -71450,7 +70715,7 @@ bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermd
+ * mnemonic: permd
  * operand: ['Vy', 'Wy', 'Ib']
  * prefix: 66
  * opcode: 01
@@ -71458,14 +70723,10 @@ bool X86Architecture::Table_3_3a_00(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermd);
+      rInsn.SetOpcode(X86_Opcode_Permd);
       if (Operand__Vy_Wy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -71477,23 +70738,19 @@ bool X86Architecture::Table_3_3a_01(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpblendd
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: pblendd
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * opcode: 02
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_3a_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpblendd);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Pblendd);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -71513,7 +70770,7 @@ bool X86Architecture::Table_3_3a_03(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermilps
+ * mnemonic: permilps
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * opcode: 04
@@ -71521,14 +70778,10 @@ bool X86Architecture::Table_3_3a_03(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermilps);
+      rInsn.SetOpcode(X86_Opcode_Permilps);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -71540,7 +70793,7 @@ bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vpermilpd
+ * mnemonic: permilpd
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * opcode: 05
@@ -71548,14 +70801,10 @@ bool X86Architecture::Table_3_3a_04(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpermilpd);
+      rInsn.SetOpcode(X86_Opcode_Permilpd);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -71567,7 +70816,7 @@ bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vperm2f128
+ * mnemonic: perm2f128
  * operand: ['Vy', 'Hy', 'Wy', 'Ib']
  * prefix: 66
  * opcode: 06
@@ -71575,14 +70824,10 @@ bool X86Architecture::Table_3_3a_05(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vperm2f128);
+      rInsn.SetOpcode(X86_Opcode_Perm2f128);
       if (Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -71610,7 +70855,7 @@ bool X86Architecture::Table_3_3a_07(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vroundps
+ * mnemonic: roundps
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * attr: ['nv']
@@ -71619,21 +70864,17 @@ bool X86Architecture::Table_3_3a_07(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vroundps);
+      rInsn.SetOpcode(X86_Opcode_Roundps);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundps);
@@ -71654,7 +70895,7 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vroundpd
+ * mnemonic: roundpd
  * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * attr: ['nv']
@@ -71663,21 +70904,17 @@ bool X86Architecture::Table_3_3a_08(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vroundpd);
+      rInsn.SetOpcode(X86_Opcode_Roundpd);
       if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundpd);
@@ -71698,7 +70935,7 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vroundss
+ * mnemonic: roundss
  * operand: ['Vo', 'Ho', 'Woq', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -71707,21 +70944,17 @@ bool X86Architecture::Table_3_3a_09(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vroundss);
+      rInsn.SetOpcode(X86_Opcode_Roundss);
       if (Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundss);
@@ -71742,7 +70975,7 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vroundsd
+ * mnemonic: roundsd
  * operand: ['Vo', 'Ho', 'Woq', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -71751,21 +70984,17 @@ bool X86Architecture::Table_3_3a_0a(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vroundsd);
+      rInsn.SetOpcode(X86_Opcode_Roundsd);
       if (Operand__Vo_Ho_Woq_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Roundsd);
@@ -71786,29 +71015,25 @@ bool X86Architecture::Table_3_3a_0b(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vblendps
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: blendps
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx
  *
 **/
 bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendps);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Blendps);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendps);
@@ -71829,29 +71054,25 @@ bool X86Architecture::Table_3_3a_0c(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vblendpd
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: blendpd
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx
  *
 **/
 bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendpd);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Blendpd);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendpd);
@@ -71872,45 +71093,41 @@ bool X86Architecture::Table_3_3a_0d(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vblendw
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: blendw
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vblendw
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: blendw
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendw);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Blendw);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendw);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Blendw);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Blendw);
@@ -71935,45 +71152,41 @@ bool X86Architecture::Table_3_3a_0e(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Ssse3
  *
- * mnemonic: vpalignr
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: palignr
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpalignr
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: palignr
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_3a_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpalignr);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Palignr);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpalignr);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Palignr);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Ssse3 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Palignr);
@@ -72040,7 +71253,7 @@ bool X86Architecture::Table_3_3a_13(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpextrb
+ * mnemonic: pextrb
  * operand: ['Wob', 'Vo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -72049,21 +71262,17 @@ bool X86Architecture::Table_3_3a_13(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpextrb);
+      rInsn.SetOpcode(X86_Opcode_Pextrb);
       if (Operand__Wob_Vo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrb);
@@ -72084,7 +71293,7 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpextrw
+ * mnemonic: pextrw
  * operand: ['Wow', 'Vo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -72093,21 +71302,17 @@ bool X86Architecture::Table_3_3a_14(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpextrw);
+      rInsn.SetOpcode(X86_Opcode_Pextrw);
       if (Operand__Wow_Vo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrw);
@@ -72129,7 +71334,7 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
  * cpu_model: >= X86_Arch_Sse41
  * constraint: f64
  *
- * mnemonic: vpextrd
+ * mnemonic: pextrd
  * prefix: 66
  * attr: ['ny', 'nv']
  * constraint: f64
@@ -72139,21 +71344,17 @@ bool X86Architecture::Table_3_3a_15(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpextrd);
+      rInsn.SetOpcode(X86_Opcode_Pextrd);
       if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pextrd);
@@ -72174,7 +71375,7 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vextractps
+ * mnemonic: extractps
  * operand: ['Ey', 'Vo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -72183,21 +71384,17 @@ bool X86Architecture::Table_3_3a_16(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vextractps);
+      rInsn.SetOpcode(X86_Opcode_Extractps);
       if (Operand__Ey_Vo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Extractps);
@@ -72211,7 +71408,7 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vinsertf128
+ * mnemonic: insertf128
  * operand: ['Vy', 'Hy', 'Wo', 'Ib']
  * prefix: 66
  * opcode: 18
@@ -72219,14 +71416,10 @@ bool X86Architecture::Table_3_3a_17(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vinsertf128);
+      rInsn.SetOpcode(X86_Opcode_Insertf128);
       if (Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -72238,7 +71431,7 @@ bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vextractf128
+ * mnemonic: extractf128
  * operand: ['Wo', 'Vy', 'Ib']
  * prefix: 66
  * opcode: 19
@@ -72246,14 +71439,10 @@ bool X86Architecture::Table_3_3a_18(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vextractf128);
+      rInsn.SetOpcode(X86_Opcode_Extractf128);
       if (Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -72292,7 +71481,7 @@ bool X86Architecture::Table_3_3a_1c(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vcvtps2ph
+ * mnemonic: cvtps2ph
  * operand: ['Woqo', 'Vx', 'Ib']
  * prefix: 66
  * opcode: 1d
@@ -72300,14 +71489,10 @@ bool X86Architecture::Table_3_3a_1c(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_F16c && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vcvtps2ph);
+      rInsn.SetOpcode(X86_Opcode_Cvtps2ph);
       if (Operand__Woqo_Vx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -72344,7 +71529,7 @@ bool X86Architecture::Table_3_3a_1f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpinsrb
+ * mnemonic: pinsrb
  * operand: ['Vo', 'Ho', 'Edb', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -72353,21 +71538,17 @@ bool X86Architecture::Table_3_3a_1f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpinsrb);
+      rInsn.SetOpcode(X86_Opcode_Pinsrb);
       if (Operand__Vo_Ho_Edb_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pinsrb);
@@ -72388,7 +71569,7 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vinsertps
+ * mnemonic: insertps
  * operand: ['Vo', 'Ho', 'Uod', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -72397,21 +71578,17 @@ bool X86Architecture::Table_3_3a_20(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vinsertps);
+      rInsn.SetOpcode(X86_Opcode_Insertps);
       if (Operand__Vo_Ho_Uod_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Insertps);
@@ -72432,7 +71609,7 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vpinsrd
+ * mnemonic: pinsrd
  * operand: ['Vo', 'Ho', 'Ey', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -72441,21 +71618,17 @@ bool X86Architecture::Table_3_3a_21(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpinsrd);
+      rInsn.SetOpcode(X86_Opcode_Pinsrd);
       if (Operand__Vo_Ho_Ey_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pinsrd);
@@ -72658,7 +71831,7 @@ bool X86Architecture::Table_3_3a_37(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vinserti128
+ * mnemonic: inserti128
  * operand: ['Vy', 'Hy', 'Wo', 'Ib']
  * prefix: 66
  * opcode: 38
@@ -72666,14 +71839,10 @@ bool X86Architecture::Table_3_3a_37(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vinserti128);
+      rInsn.SetOpcode(X86_Opcode_Inserti128);
       if (Operand__Vy_Hy_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -72685,7 +71854,7 @@ bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vextracti128
+ * mnemonic: extracti128
  * prefix: 66
  * opcode: 39
  * attr: ['nv']
@@ -72694,14 +71863,10 @@ bool X86Architecture::Table_3_3a_38(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vextracti128);
+      rInsn.SetOpcode(X86_Opcode_Extracti128);
       if (Operand__Wo_Vy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -72774,29 +71939,25 @@ bool X86Architecture::Table_3_3a_3f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vdpps
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: dpps
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx
  *
 **/
 bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdpps);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Dpps);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dpps);
@@ -72817,7 +71978,7 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vdppd
+ * mnemonic: dppd
  * operand: ['Vo', 'Ho', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -72826,21 +71987,17 @@ bool X86Architecture::Table_3_3a_40(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vdppd);
+      rInsn.SetOpcode(X86_Opcode_Dppd);
       if (Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Dppd);
@@ -72861,45 +72018,41 @@ bool X86Architecture::Table_3_3a_41(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse41
  *
- * mnemonic: vmpsadbw
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: mpsadbw
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vmpsadbw
- * operand: ['Vx', 'Hx', 'Wx', 'Ib']
+ * mnemonic: mpsadbw
+ * operand: ['Vx', 'Wx', 'Ib']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
  *
 **/
 bool X86Architecture::Table_3_3a_42(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmpsadbw);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mpsadbw);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vmpsadbw);
-      if (Operand__Vx_Hx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
+      rInsn.SetOpcode(X86_Opcode_Mpsadbw);
+      if (Operand__Vx_Wx_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse41 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Mpsadbw);
@@ -72929,7 +72082,7 @@ bool X86Architecture::Table_3_3a_43(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Clmul
  *
- * mnemonic: vpclmulqdq
+ * mnemonic: pclmulqdq
  * operand: ['Vo', 'Ho', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny']
@@ -72938,21 +72091,17 @@ bool X86Architecture::Table_3_3a_43(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_44(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpclmulqdq);
+      rInsn.SetOpcode(X86_Opcode_Pclmulqdq);
       if (Operand__Vo_Ho_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Clmul && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Clmul && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pclmulqdq);
@@ -72975,7 +72124,7 @@ bool X86Architecture::Table_3_3a_45(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vperm2i128
+ * mnemonic: perm2i128
  * operand: ['Vy', 'Hy', 'Wy', 'Ib']
  * prefix: 66
  * opcode: 46
@@ -72983,14 +72132,10 @@ bool X86Architecture::Table_3_3a_45(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vperm2i128);
+      rInsn.SetOpcode(X86_Opcode_Perm2i128);
       if (Operand__Vy_Hy_Wy_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -73029,7 +72174,7 @@ bool X86Architecture::Table_3_3a_49(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vblendvps
+ * mnemonic: blendvps
  * operand: ['Vx', 'Hx', 'Wx', 'Lx']
  * prefix: 66
  * opcode: 4a
@@ -73037,14 +72182,10 @@ bool X86Architecture::Table_3_3a_49(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendvps);
+      rInsn.SetOpcode(X86_Opcode_Blendvps);
       if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -73056,7 +72197,7 @@ bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
 }
 
 /** instruction
- * mnemonic: vblendvpd
+ * mnemonic: blendvpd
  * operand: ['Vx', 'Hx', 'Wx', 'Lx']
  * prefix: 66
  * opcode: 4b
@@ -73064,14 +72205,10 @@ bool X86Architecture::Table_3_3a_4a(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vblendvpd);
+      rInsn.SetOpcode(X86_Opcode_Blendvpd);
       if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -73085,13 +72222,13 @@ bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
 /** instructions
  * opcode: 4c
  *
- * mnemonic: vpblendvp
+ * mnemonic: pblendvp
  * operand: ['Vx', 'Hx', 'Wx', 'Lx']
  * prefix: 66
  * attr: ['ny']
  * cpu_model: >= X86_Arch_Avx
  *
- * mnemonic: vpblendvp
+ * mnemonic: pblendvp
  * operand: ['Vx', 'Hx', 'Wx', 'Lx']
  * prefix: 66
  * cpu_model: >= X86_Arch_Avx2
@@ -73099,24 +72236,20 @@ bool X86Architecture::Table_3_3a_4b(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_4c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpblendvp);
+      rInsn.SetOpcode(X86_Opcode_Pblendvp);
       if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpblendvp);
+      rInsn.SetOpcode(X86_Opcode_Pblendvp);
       if (Operand__Vx_Hx_Wx_Lx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
@@ -73305,7 +72438,7 @@ bool X86Architecture::Table_3_3a_5f(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse42
  *
- * mnemonic: vpcmpestrm
+ * mnemonic: pcmpestrm
  * operand: ['Vo', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -73314,21 +72447,17 @@ bool X86Architecture::Table_3_3a_5f(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpestrm);
+      rInsn.SetOpcode(X86_Opcode_Pcmpestrm);
       if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpestrm);
@@ -73349,7 +72478,7 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse42
  *
- * mnemonic: vpcmpestri
+ * mnemonic: pcmpestri
  * operand: ['Vo', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -73358,21 +72487,17 @@ bool X86Architecture::Table_3_3a_60(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpestri);
+      rInsn.SetOpcode(X86_Opcode_Pcmpestri);
       if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpestri);
@@ -73393,7 +72518,7 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse42
  *
- * mnemonic: vpcmpistrm
+ * mnemonic: pcmpistrm
  * operand: ['Vo', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -73402,21 +72527,17 @@ bool X86Architecture::Table_3_3a_61(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpistrm);
+      rInsn.SetOpcode(X86_Opcode_Pcmpistrm);
       if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpistrm);
@@ -73437,7 +72558,7 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse42
  *
- * mnemonic: vpcmpistri
+ * mnemonic: pcmpistri
  * operand: ['Vo', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nv']
@@ -73446,21 +72567,17 @@ bool X86Architecture::Table_3_3a_62(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vpcmpistri);
+      rInsn.SetOpcode(X86_Opcode_Pcmpistri);
       if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse42 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pcmpistri);
@@ -74588,7 +73705,7 @@ bool X86Architecture::Table_3_3a_de(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * cpu_model: >= X86_Arch_Aes
  *
- * mnemonic: vaeskeygenassist
+ * mnemonic: aeskeygenassist
  * operand: ['Vo', 'Wo', 'Ib']
  * prefix: 66
  * attr: ['ny', 'nc']
@@ -74597,21 +73714,17 @@ bool X86Architecture::Table_3_3a_de(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && Prefix == 0x66)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Avx && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
-      rInsn.SetOpcode(X86_Opcode_Vaeskeygenassist);
+      rInsn.SetOpcode(X86_Opcode_Aeskeygenassist);
       if (Operand__Vo_Wo_Ib(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
       return true;
     }
-    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && Prefix == 0x66)
+    else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Aes && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Aeskeygenassist);
@@ -74778,11 +73891,7 @@ bool X86Architecture::Table_3_3a_ef(BinaryStream const& rBinStrm, TOffset Offset
 **/
 bool X86Architecture::Table_3_3a_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    u8 Prefix;
-    if (!rBinStrm.Read(Offset - 2, Prefix))
-      return false;
-
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && Prefix == 0xf2)
+    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Bmi2 && (rInsn.GetPrefix() & X86_Prefix_RepNz) == X86_Prefix_RepNz)
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Rorx);
@@ -86177,24 +85286,6 @@ bool X86Architecture::Operand__Gy_Ey_By(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Gy', 'op1 = decode_Mo'] */
-bool X86Architecture::Operand__Gy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Gy
-  auto spOprd0 = Decode_Gy(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mo
-  auto spOprd1 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
 /* operand ['op0 = decode_Gy', 'op1 = decode_Nq'] */
 bool X86Architecture::Operand__Gy_Nq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -86233,6 +85324,24 @@ bool X86Architecture::Operand__Gy_Nq_Ib(BinaryStream const& rBinStrm, TOffset Of
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Gy', 'op1 = decode_Uo'] */
+bool X86Architecture::Operand__Gy_Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Gy
+  auto spOprd0 = Decode_Gy(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uo
+  auto spOprd1 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
 
   return true;
 }
@@ -86339,9 +85448,11 @@ bool X86Architecture::Operand__Hx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Hx', 'op1 = decode_Ux', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Hx', 'op1 = decode_Ux', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Hx_Ux_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Hx
   auto spOprd0 = Decode_Hx(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -86354,6 +85465,8 @@ bool X86Architecture::Operand__Hx_Ux_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -86506,72 +85619,6 @@ bool X86Architecture::Operand__Md_Vo(BinaryStream const& rBinStrm, TOffset Offse
 {
   // operand0: op0 = decode_Md
   auto spOprd0 = Decode_Md(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Vo
-  auto spOprd1 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Mo'] */
-bool X86Architecture::Operand__Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Mo
-  auto spOprd0 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Mo', 'op1 = decode_Vod'] */
-bool X86Architecture::Operand__Mo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Mo
-  auto spOprd0 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Vod
-  auto spOprd1 = Decode_Vod(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Mo', 'op1 = decode_Voq'] */
-bool X86Architecture::Operand__Mo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Mo
-  auto spOprd0 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Voq
-  auto spOprd1 = Decode_Voq(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Moq', 'op1 = decode_Vo'] */
-bool X86Architecture::Operand__Moq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Moq
-  auto spOprd0 = Decode_Moq(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -87473,6 +86520,18 @@ bool X86Architecture::Operand__Ty_Ry(BinaryStream const& rBinStrm, TOffset Offse
   return true;
 }
 
+/* operand ['op0 = decode_Uo'] */
+bool X86Architecture::Operand__Uo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Uo
+  auto spOprd0 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  return true;
+}
+
 /* operand ['op0 = decode_Uo', 'op1 = decode_Ib', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -87497,15 +86556,73 @@ bool X86Architecture::Operand__Uo_Ib_Ib(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Ux', 'op1 = decode_Ib'] */
+/* operand ['op0 = decode_Uo', 'op1 = decode_Vod'] */
+bool X86Architecture::Operand__Uo_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Uo
+  auto spOprd0 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Vod
+  auto spOprd1 = Decode_Vod(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Uo', 'op1 = decode_Voq'] */
+bool X86Architecture::Operand__Uo_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Uo
+  auto spOprd0 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Voq
+  auto spOprd1 = Decode_Voq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Uoq', 'op1 = decode_Vo'] */
+bool X86Architecture::Operand__Uoq_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Uoq
+  auto spOprd0 = Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Vo
+  auto spOprd1 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['last_len', 'op0 = decode_Ux', 'move_decode_offset(next_operand)', 'op1 = decode_Ib'] */
 bool X86Architecture::Operand__Ux_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Ux
   auto spOprd0 = Decode_Ux(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
 
+  // operand1: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand1: op1 = decode_Ib
   auto spOprd1 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd1 == nullptr)
@@ -87665,30 +86782,6 @@ bool X86Architecture::Operand__Vo_Ho_Ey_Ib(BinaryStream const& rBinStrm, TOffset
   return true;
 }
 
-/* operand ['op0 = decode_Vo', 'op1 = decode_Ho', 'op2 = decode_Moq'] */
-bool X86Architecture::Operand__Vo_Ho_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vo
-  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Ho
-  auto spOprd1 = Decode_Ho(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  // operand2: op2 = decode_Moq
-  auto spOprd2 = Decode_Moq(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd2 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd2);
-
-  return true;
-}
-
 /* operand ['op0 = decode_Vo', 'op1 = decode_Ho', 'op2 = decode_Mw', 'op3 = decode_Ib'] */
 bool X86Architecture::Operand__Vo_Ho_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -87745,6 +86838,30 @@ bool X86Architecture::Operand__Vo_Ho_Uod_Ib(BinaryStream const& rBinStrm, TOffse
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vo', 'op1 = decode_Ho', 'op2 = decode_Uoq'] */
+bool X86Architecture::Operand__Vo_Ho_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vo
+  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Ho
+  auto spOprd1 = Decode_Ho(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  // operand2: op2 = decode_Uoq
+  auto spOprd2 = Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
 
   return true;
 }
@@ -87959,42 +87076,6 @@ bool X86Architecture::Operand__Vo_Md_x_Ho(BinaryStream const& rBinStrm, TOffset 
   return true;
 }
 
-/* operand ['op0 = decode_Vo', 'op1 = decode_Mod'] */
-bool X86Architecture::Operand__Vo_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vo
-  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mod
-  auto spOprd1 = Decode_Mod(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vo', 'op1 = decode_Moq'] */
-bool X86Architecture::Operand__Vo_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vo
-  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Moq
-  auto spOprd1 = Decode_Moq(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
 /* operand ['op0 = decode_Vo', 'op1 = decode_Mq'] */
 bool X86Architecture::Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -88009,6 +87090,30 @@ bool X86Architecture::Operand__Vo_Mq(BinaryStream const& rBinStrm, TOffset Offse
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vo', 'op1 = decode_Mw', 'op2 = decode_Ib'] */
+bool X86Architecture::Operand__Vo_Mw_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vo
+  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Mw
+  auto spOprd1 = Decode_Mw(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  // operand2: op2 = decode_Ib
+  auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
 
   return true;
 }
@@ -88049,6 +87154,24 @@ bool X86Architecture::Operand__Vo_Uo(BinaryStream const& rBinStrm, TOffset Offse
   return true;
 }
 
+/* operand ['op0 = decode_Vo', 'op1 = decode_Uod'] */
+bool X86Architecture::Operand__Vo_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vo
+  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uod
+  auto spOprd1 = Decode_Uod(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
 /* operand ['op0 = decode_Vo', 'op1 = decode_Uod', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -88069,6 +87192,24 @@ bool X86Architecture::Operand__Vo_Uod_Ib(BinaryStream const& rBinStrm, TOffset O
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vo', 'op1 = decode_Uoq'] */
+bool X86Architecture::Operand__Vo_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vo
+  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uoq
+  auto spOprd1 = Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
 
   return true;
 }
@@ -88259,9 +87400,11 @@ bool X86Architecture::Operand__Vx_Hx_Wx(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Vx', 'op1 = decode_Hx', 'op2 = decode_Wx', 'op3 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Vx', 'op1 = decode_Hx', 'op2 = decode_Wx', 'move_decode_offset(next_operand)', 'op3 = decode_Ib'] */
 bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Vx
   auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88280,6 +87423,8 @@ bool X86Architecture::Operand__Vx_Hx_Wx_Ib(BinaryStream const& rBinStrm, TOffset
     return false;
   rInsn.AddOperand(spOprd2);
 
+  // operand3: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand3: op3 = decode_Ib
   auto spOprd3 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd3 == nullptr)
@@ -88345,90 +87490,6 @@ bool X86Architecture::Operand__Vx_Md_x_Hx(BinaryStream const& rBinStrm, TOffset 
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vx', 'op1 = decode_Mo', 'op2 = decode_b'] */
-bool X86Architecture::Operand__Vx_Mo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vx
-  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mo
-  auto spOprd1 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  // operand2: op2 = decode_b
-  auto spOprd2 = Decode_b(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd2 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd2);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vx', 'op1 = decode_Mo', 'op2 = decode_w'] */
-bool X86Architecture::Operand__Vx_Mo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vx
-  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mo
-  auto spOprd1 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  // operand2: op2 = decode_w
-  auto spOprd2 = Decode_w(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd2 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd2);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vx', 'op1 = decode_Mod'] */
-bool X86Architecture::Operand__Vx_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vx
-  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mod
-  auto spOprd1 = Decode_Mod(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vx', 'op1 = decode_Moq'] */
-bool X86Architecture::Operand__Vx_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vx
-  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Moq
-  auto spOprd1 = Decode_Moq(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
 
   return true;
 }
@@ -88523,6 +87584,90 @@ bool X86Architecture::Operand__Vx_Uo(BinaryStream const& rBinStrm, TOffset Offse
   return true;
 }
 
+/* operand ['op0 = decode_Vx', 'op1 = decode_Uo', 'op2 = decode_b'] */
+bool X86Architecture::Operand__Vx_Uo_b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vx
+  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uo
+  auto spOprd1 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  // operand2: op2 = decode_b
+  auto spOprd2 = Decode_b(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vx', 'op1 = decode_Uo', 'op2 = decode_w'] */
+bool X86Architecture::Operand__Vx_Uo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vx
+  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uo
+  auto spOprd1 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  // operand2: op2 = decode_w
+  auto spOprd2 = Decode_w(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd2 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd2);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vx', 'op1 = decode_Uod'] */
+bool X86Architecture::Operand__Vx_Uod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vx
+  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uod
+  auto spOprd1 = Decode_Uod(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vx', 'op1 = decode_Uoq'] */
+bool X86Architecture::Operand__Vx_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vx
+  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uoq
+  auto spOprd1 = Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
 /* operand ['op0 = decode_Vx', 'op1 = decode_Wx'] */
 bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -88541,9 +87686,11 @@ bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offse
   return true;
 }
 
-/* operand ['op0 = decode_Vx', 'op1 = decode_Wx', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Vx', 'op1 = decode_Wx', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Vx
   auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88556,6 +87703,8 @@ bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -88565,9 +87714,11 @@ bool X86Architecture::Operand__Vx_Wx_Ib(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Vy', 'op1 = decode_Hy', 'op2 = decode_Wo', 'op3 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Vy', 'op1 = decode_Hy', 'op2 = decode_Wo', 'move_decode_offset(next_operand)', 'op3 = decode_Ib'] */
 bool X86Architecture::Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Vy
   auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88586,6 +87737,8 @@ bool X86Architecture::Operand__Vy_Hy_Wo_Ib(BinaryStream const& rBinStrm, TOffset
     return false;
   rInsn.AddOperand(spOprd2);
 
+  // operand3: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand3: op3 = decode_Ib
   auto spOprd3 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd3 == nullptr)
@@ -88619,9 +87772,11 @@ bool X86Architecture::Operand__Vy_Hy_Wy(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Vy', 'op1 = decode_Hy', 'op2 = decode_Wy', 'op3 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Vy', 'op1 = decode_Hy', 'op2 = decode_Wy', 'move_decode_offset(next_operand)', 'op3 = decode_Ib'] */
 bool X86Architecture::Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Vy
   auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88640,47 +87795,13 @@ bool X86Architecture::Operand__Vy_Hy_Wy_Ib(BinaryStream const& rBinStrm, TOffset
     return false;
   rInsn.AddOperand(spOprd2);
 
+  // operand3: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand3: op3 = decode_Ib
   auto spOprd3 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vy', 'op1 = decode_Mo'] */
-bool X86Architecture::Operand__Vy_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vy
-  auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Mo
-  auto spOprd1 = Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
-
-  return true;
-}
-
-/* operand ['op0 = decode_Vy', 'op1 = decode_Moq'] */
-bool X86Architecture::Operand__Vy_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: op0 = decode_Vy
-  auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd0 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd0);
-
-  // operand1: op1 = decode_Moq
-  auto spOprd1 = Decode_Moq(rBinStrm, Offset, rInsn, Mode);
-  if (spOprd1 == nullptr)
-    return false;
-  rInsn.AddOperand(spOprd1);
 
   return true;
 }
@@ -88696,6 +87817,24 @@ bool X86Architecture::Operand__Vy_Uo(BinaryStream const& rBinStrm, TOffset Offse
 
   // operand1: op1 = decode_Uo
   auto spOprd1 = Decode_Uo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vy', 'op1 = decode_Uoq'] */
+bool X86Architecture::Operand__Vy_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vy
+  auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Uoq
+  auto spOprd1 = Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -88757,9 +87896,11 @@ bool X86Architecture::Operand__Vy_Woq(BinaryStream const& rBinStrm, TOffset Offs
   return true;
 }
 
-/* operand ['op0 = decode_Vy', 'op1 = decode_Wy', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Vy', 'op1 = decode_Wy', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Vy
   auto spOprd0 = Decode_Vy(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88772,6 +87913,8 @@ bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -88781,9 +87924,11 @@ bool X86Architecture::Operand__Vy_Wy_Ib(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Wo', 'op1 = decode_Vy', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Wo', 'op1 = decode_Vy', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Wo
   auto spOprd0 = Decode_Wo(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88796,6 +87941,8 @@ bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Of
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -88805,9 +87952,11 @@ bool X86Architecture::Operand__Wo_Vy_Ib(BinaryStream const& rBinStrm, TOffset Of
   return true;
 }
 
-/* operand ['op0 = decode_Wob', 'op1 = decode_Vo', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Wob', 'op1 = decode_Vo', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Wob
   auto spOprd0 = Decode_Wob(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88820,6 +87969,8 @@ bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset O
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -88847,9 +87998,11 @@ bool X86Architecture::Operand__Woq_Vo(BinaryStream const& rBinStrm, TOffset Offs
   return true;
 }
 
-/* operand ['op0 = decode_Woqo', 'op1 = decode_Vx', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Woqo', 'op1 = decode_Vx', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Woqo
   auto spOprd0 = Decode_Woqo(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88862,6 +88015,8 @@ bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset 
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -88871,9 +88026,11 @@ bool X86Architecture::Operand__Woqo_Vx_Ib(BinaryStream const& rBinStrm, TOffset 
   return true;
 }
 
-/* operand ['op0 = decode_Wow', 'op1 = decode_Vo', 'op2 = decode_Ib'] */
+/* operand ['last_len', 'op0 = decode_Wow', 'op1 = decode_Vo', 'move_decode_offset(next_operand)', 'op2 = decode_Ib'] */
 bool X86Architecture::Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
+  // operand0: last_len
+  auto LastLen = rInsn.GetLength();
   // operand0: op0 = decode_Wow
   auto spOprd0 = Decode_Wow(rBinStrm, Offset, rInsn, Mode);
   if (spOprd0 == nullptr)
@@ -88886,6 +88043,8 @@ bool X86Architecture::Operand__Wow_Vo_Ib(BinaryStream const& rBinStrm, TOffset O
     return false;
   rInsn.AddOperand(spOprd1);
 
+  // operand2: move_decode_offset(next_operand)
+  Offset += (rInsn.GetLength() - LastLen);
   // operand2: op2 = decode_Ib
   auto spOprd2 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
   if (spOprd2 == nullptr)
@@ -89697,27 +88856,6 @@ Expression::SPType X86Architecture::Decode_Md(BinaryStream const& rBinStrm, TOff
   return __Decode_Md(rBinStrm, Offset, rInsn, Mode);
 }
 
-/* decoder ["call('Decode_Mo')"] */
-Expression::SPType X86Architecture::Decode_Mo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: call('Decode_Mo')
-  return __Decode_Mo(rBinStrm, Offset, rInsn, Mode);
-}
-
-/* decoder ["call('Decode_Mod')"] */
-Expression::SPType X86Architecture::Decode_Mod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: call('Decode_Mod')
-  return __Decode_Mod(rBinStrm, Offset, rInsn, Mode);
-}
-
-/* decoder ["call('Decode_Moq')"] */
-Expression::SPType X86Architecture::Decode_Moq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
-{
-  // operand0: call('Decode_Moq')
-  return __Decode_Moq(rBinStrm, Offset, rInsn, Mode);
-}
-
 /* decoder ["call('Decode_Mp')"] */
 Expression::SPType X86Architecture::Decode_Mp(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -89912,6 +89050,13 @@ Expression::SPType X86Architecture::Decode_Uod(BinaryStream const& rBinStrm, TOf
 {
   // operand0: call('Decode_Uod')
   return __Decode_Uod(rBinStrm, Offset, rInsn, Mode);
+}
+
+/* decoder ["call('Decode_Uoq')"] */
+Expression::SPType X86Architecture::Decode_Uoq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: call('Decode_Uoq')
+  return __Decode_Uoq(rBinStrm, Offset, rInsn, Mode);
 }
 
 /* decoder ["call('Decode_Uq')"] */

@@ -15,7 +15,7 @@ EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType ty
   setZValue(1.0);
 }
 
-#ifdef MEDUSA_BUILD_WITH_OGDF
+#ifdef MEDUSA_HAS_OGDF
 QPainterPath EdgeItem::shape(void) const
 {
   QPainterPath path;

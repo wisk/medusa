@@ -83,8 +83,8 @@ class X86ArchConvertion(ArchConvertion):
 
     def _X86_GenerateSingleInstruction(self, opcd):
         res = ''
-        if 'prefix' in opcd:
-            res += self._GenerateRead('Prefix', 'Offset - 2', 8)
+        # if 'prefix' in opcd:
+        #     res += self._GenerateRead('Prefix', 'Offset - 2', 8)
         if 'suffix' in opcd:
             res += self._GenerateRead('Suffix', 'Offset + 0', 8)
 
@@ -110,13 +110,13 @@ class X86ArchConvertion(ArchConvertion):
     def _X86_GenerateMultipleInstruction(self, opcd_arr):
         res = ''
         cond_type = 'if'
-        has_pref = False
+        # has_pref = False
         has_suff = False
 
         for opcd in opcd_arr['sub_opcodes']:
-            if not has_pref and 'prefix' in opcd:
-                res += self._GenerateRead('Prefix', 'Offset - 2', 8)
-                has_pref = True
+            # if not has_pref and 'prefix' in opcd:
+            #     res += self._GenerateRead('Prefix', 'Offset - 2', 8)
+            #     has_pref = True
             if not has_suff and 'suffix' in opcd:
                 res += self._GenerateRead('Suffix', 'Offset + 0', 8)
                 has_suff = True
@@ -244,10 +244,24 @@ class X86ArchConvertion(ArchConvertion):
                 #    raise Exception('Unknown attr %s', f)
 
         if 'prefix' in opcd:
+            prefix_map = { 0x66 : 'X86_Prefix_OpSize', 0xF2 : 'X86_Prefix_RepNz', 0xF3 : 'X86_Prefix_Rep' }
+            prefixes = []
             if type(opcd['prefix']) == list:
-                cond.append('(%s)' % ' || '.join(['Prefix == %#04x' % x for x in opcd['prefix']]))
+                prefixes = opcd['prefix']
             else:
-                cond.append('Prefix == %#04x' % opcd['prefix'])
+                prefixes.append(opcd['prefix'])
+
+            for p in prefixes:
+                if not p in prefix_map:
+                    raise Exception('Unmapped prefix')
+                p_val = prefix_map[p]
+                cond.append('(rInsn.GetPrefix() & %s) == %s' % (p_val, p_val))
+
+
+            # if type(opcd['prefix']) == list:
+            #     cond.append('(%s)' % ' || '.join(['Prefix == %#04x' % x for x in opcd['prefix']]))
+            # else:
+            #     cond.append('Prefix == %#04x' % opcd['prefix'])
         if 'suffix' in opcd:
             cond.append('Suffix == %#04x' % opcd['suffix'])
 

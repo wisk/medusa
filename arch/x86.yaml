@@ -3204,22 +3204,22 @@ instruction:
             operand: [ Eb, Gb ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovups
+          - mnemonic: movups
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovupd
+          - mnemonic: movupd
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovss
-            operand: [ Vo, Mod ]
+          - mnemonic: movss
+            operand: [ Vo, Uod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovsd
-            operand: [ Vo, Moq ]
+          - mnemonic: movsd
+            operand: [ Vo, Uoq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3229,22 +3229,22 @@ instruction:
             operand: [ Ev, Gv ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovups
+          - mnemonic: movups
             operand: [ Wx, Vx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovupd
+          - mnemonic: movupd
             operand: [ Wx, Vx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovss
-            operand: [ Mo, Vod ]
+          - mnemonic: movss
+            operand: [ Uo, Vod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovsd
-            operand: [ Mo, Voq ]
+          - mnemonic: movsd
+            operand: [ Uo, Voq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3254,21 +3254,21 @@ instruction:
             operand: [ Gb, Ev ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovlps
-            operand: [ Vo, Ho, Moq ]
+          - mnemonic: movlps
+            operand: [ Vo, Uoq ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovlpd
-            operand: [ Vo, Ho, Moq ]
+          - mnemonic: movlpd
+            operand: [ Vo, Uoq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovsldup
+          - mnemonic: movsldup
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse3"
 
-          - mnemonic: vmovddup
+          - mnemonic: movddup
             operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse3"
@@ -3279,24 +3279,24 @@ instruction:
             operand: [ Gv, Ev ]
             cpu_model: "== X86_Arch_80386"
 
-          - mnemonic: vmovlps
-            operand: [ Moq, Vo ]
+          - mnemonic: movlps
+            operand: [ Uoq, Vo ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovlpd
-            operand: [ Moq, Vo ]
+          - mnemonic: movlpd
+            operand: [ Uoq, Vo ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x14
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vunpcklps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: unpcklps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vunpcklpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: unpcklpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3304,12 +3304,12 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vunpckhps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: unpckhps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vunpckhpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: unpckhpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3317,16 +3317,16 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vmovhps
-            operand: [ Vo, Ho, Moq ]
+          - mnemonic: movhps
+            operand: [ Vo, Uoq ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovhpd
-            operand: [ Vo, Ho, Moq ]
+          - mnemonic: movhpd
+            operand: [ Vo, Uoq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovshdup
+          - mnemonic: movshdup
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse3"
@@ -3335,12 +3335,12 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vmovhps
-            operand: [ Moq, Vo ]
+          - mnemonic: movhps
+            operand: [ Uoq, Vo ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovhpd
-            operand: [ Moq, Vo ]
+          - mnemonic: movhpd
+            operand: [ Uoq, Vo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3443,7 +3443,7 @@ instruction:
             cpu_model: ">= X86_Arch_Sse"
             semantic: *mov
 
-          - mnemonic: vmovapd
+          - mnemonic: movapd
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -3455,7 +3455,7 @@ instruction:
             cpu_model: ">= X86_Arch_Sse"
             semantic: *mov
 
-          - mnemonic: vmovapd
+          - mnemonic: movapd
             operand: [ Wx, Vx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -3480,23 +3480,23 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvtsi2ss
-            operand: [ Vo, Ho, Ey ]
+          - mnemonic: cvtsi2ss
+            operand: [ Vo, Ey ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvtsi2sd
-            operand: [ Vo, Ho, Ey ]
+          - mnemonic: cvtsi2sd
+            operand: [ Vo, Ey ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x2b
         sub_opcodes:
-          - mnemonic: vmovntps
+          - mnemonic: movntps
             operand: [ Mx, Vx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovntpd
+          - mnemonic: movntpd
             operand: [ Mx, Vx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -3522,12 +3522,12 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2_mmx"
 
-          - mnemonic: vcvttss2si
+          - mnemonic: cvttss2si
             operand: [ Gy, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvttsd2si
+          - mnemonic: cvttsd2si
             operand: [ Gy, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
@@ -3543,34 +3543,34 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2_mmx"
 
-          - mnemonic: vcvtss2si
+          - mnemonic: cvtss2si
             operand: [ Gy, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvtsd2si
+          - mnemonic: cvtsd2si
             operand: [ Gy, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x2e
         sub_opcodes:
-          - mnemonic: vucomiss
+          - mnemonic: ucomiss
             operand: [ Vo, Wod ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vucomisd
+          - mnemonic: ucomisd
             operand: [ Vo, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x2f
         sub_opcodes:
-          - mnemonic: vcomiss
+          - mnemonic: comiss
             operand: [ Vo, Wod ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcomisd
+          - mnemonic: comisd
             operand: [ Vo, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -3780,88 +3780,88 @@ instruction:
 
       - opcode: 0x50
         sub_opcodes:
-          - mnemonic: vmovmskps
+          - mnemonic: movmskps
             operand: [ Gy, Ux ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmovmskpd
+          - mnemonic: movmskpd
             operand: [ Gy, Ux ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x51
         sub_opcodes:
-          - mnemonic: vsqrtps
+          - mnemonic: sqrtps
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vsqrtpsd
+          - mnemonic: sqrtpsd
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vsqrtss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: sqrtss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vsqrtsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: sqrtsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x52
         sub_opcodes:
-          - mnemonic: vrsqrtps
+          - mnemonic: rsqrtps
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vrsqrtss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: rsqrtss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
       - opcode: 0x53
         sub_opcodes:
-          - mnemonic: vrcpps
+          - mnemonic: rcpps
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vrcpss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: rcpss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
       - opcode: 0x54
         sub_opcodes:
-          - mnemonic: vandps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: andps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vandpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: andpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x55
         sub_opcodes:
-          - mnemonic: vandnps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: andnps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vandnpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: andnpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x56
         sub_opcodes:
-          - mnemonic: vorps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: orps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vorpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: orpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse"
 
@@ -3872,171 +3872,171 @@ instruction:
             cpu_model: ">= X86_Arch_Sse"
             semantic: *xorps
 
-          - mnemonic: vxorpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: xorpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x58
         sub_opcodes:
-          - mnemonic: vaddps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: addps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vaddpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: addpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vaddss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: addss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vaddsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: addsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x59
         sub_opcodes:
-          - mnemonic: vmulps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: mulps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmulpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: mulpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmulss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: mulss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmulsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: mulsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5a
         sub_opcodes:
-          - mnemonic: vcvtps2pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: cvtps2pd
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvtpd2ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: cvtpd2ps
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vcvtss2sd
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: cvtss2sd
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vcvtsd2ss
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: cvtsd2ss
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5b
         sub_opcodes:
-          - mnemonic: vcvtdq2ps
+          - mnemonic: cvtdq2ps
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vcvtps2dq
+          - mnemonic: cvtps2dq
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vcvttps2dq
+          - mnemonic: cvttps2dq
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5c
         sub_opcodes:
-          - mnemonic: vsubps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: subps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vsubpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: subpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vsubss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: subss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vsubsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: subsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5d
         sub_opcodes:
-          - mnemonic: vminps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: minps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vminpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: minpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vminss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: minss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vminsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: minsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5e
         sub_opcodes:
-          - mnemonic: vdivps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: divps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vdivpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: divpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vdivss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: divss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vdivsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: divsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x5f
         sub_opcodes:
-          - mnemonic: vmaxps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: maxps
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmaxpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: maxpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmaxss
-            operand: [ Vo, Ho, Wod ]
+          - mnemonic: maxss
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vmaxsd
-            operand: [ Vo, Ho, Woq ]
+          - mnemonic: maxsd
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4046,19 +4046,19 @@ instruction:
             operand: [ Pq, Qd ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpupcklbw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pupcklbw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x61
         sub_opcodes:
-          - mnemonic: vpunpcklwd
+          - mnemonic: punpcklwd
             operand: [ Pq, Qd ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpunpcklwd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: punpcklwd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4068,8 +4068,8 @@ instruction:
             operand: [ Pq, Qd ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpupckldq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pupckldq
+            operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x63
@@ -4078,8 +4078,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpacksswb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: packsswb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4089,8 +4089,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpcmpgtb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpgtb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4100,8 +4100,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpcmpgtw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpgtw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4111,8 +4111,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vcmpgtd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: cmpgtd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4122,8 +4122,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpackuswb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: packuswb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4133,7 +4133,7 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpunpckhbw
+          - mnemonic: punpckhbw
             operand: [ Hx, Hx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -4144,8 +4144,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpunpckhwd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: punpckhwd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4155,8 +4155,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpunpckhdq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: punpckhdq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4166,8 +4166,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpackssdw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: packssdw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4175,8 +4175,8 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vpunpcklqdq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: punpcklqdq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4184,8 +4184,8 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vpunpckhqdq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: punpckhqdq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4199,12 +4199,12 @@ instruction:
             operand: [ Pq, Ey ]
             attr: [ m64, rexw ]
 
-          - mnemonic: vmovd
+          - mnemonic: movd
             operand: [ Vo, Ey ]
             attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovq
+          - mnemonic: movq
             operand: [ Vo, Ey ]
             attr: [ m64, rexw, op_size ]
             cpu_model: ">= X86_Arch_Sse2"
@@ -4215,12 +4215,12 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vmodqa
+          - mnemonic: modqa
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovdqu
+          - mnemonic: movdqu
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
@@ -4231,29 +4231,29 @@ instruction:
             operand: [ Pq, Qq, Ib ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpshufd
+          - mnemonic: pshufd
             operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vpshufhw
+          - mnemonic: pshufhw
             operand: [ Vx, Wx, Ib ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vpshuflw
+          - mnemonic: pshuflw
             operand: [ Vx, Wx, Ib ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x71
-        invalid:
+        reference: group_12
 
       - opcode: 0x72
-        invalid:
+        reference: group_13
 
       - opcode: 0x73
-        invalid:
+        reference: group_14
 
       - opcode: 0x74
         sub_opcodes:
@@ -4261,8 +4261,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpcmpeqb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpeqb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4272,8 +4272,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpcmpeqw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpeqw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4283,8 +4283,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpcmpeqd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpeqd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4293,12 +4293,12 @@ instruction:
           - mnemonic: emms
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vzeroupper
+          - mnemonic: zeroupper
             cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x78
         sub_opcodes:
-          - mnemonic: vmread
+          - mnemonic: mread
             operand: [ Ey, Gy ]
 
           - mnemonic: extrq
@@ -4328,13 +4328,13 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vhaddpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: haddpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse3"
 
-          - mnemonic: vhaddps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: haddps
+            operand: [ Vx, Wx ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse3"
 
@@ -4342,13 +4342,13 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vhsubpd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: hsubpd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse3"
 
-          - mnemonic: vhsubps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: hsubps
+            operand: [ Vx, Wx ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse3"
 
@@ -4358,12 +4358,12 @@ instruction:
             operand: [ Ey, Pq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vmovd
+          - mnemonic: movd
             operand: [ Ey, Vo ]
             attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovq
+          - mnemonic: movq
             operand: [ Vo, Woq ]
             attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
@@ -4374,12 +4374,12 @@ instruction:
             operand: [ Qq, Pq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vmovdqa
+          - mnemonic: movdqa
             operand: [ Wx, Vx ]
             attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vmovdqu
+          - mnemonic: movdqu
             operand: [ Wx, Vx ]
             attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
@@ -4876,8 +4876,8 @@ instruction:
             operand: [ Pq, Mw, Ib ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpinsrw
-            operand: [ Vo, Ho, Mw, Ib ]
+          - mnemonic: pinsrw
+            operand: [ Vo, Mw, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -4887,19 +4887,19 @@ instruction:
             operand: [ Gy, Nq, Ib ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpextrw
+          - mnemonic: pextrw
             operand: [ Gy, Uo, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0xc6
         sub_opcodes:
-          - mnemonic: vshufps
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: shufps
+            operand: [ Vx, Wx, Ib ]
             cpu_model: ">= X86_Arch_Sse"
 
-          - mnemonic: vshufpd
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: shufpd
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5014,13 +5014,13 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vaddsubps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: addsubps
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse3"
 
-          - mnemonic: vaddsubps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: addsubps
+            operand: [ Vx, Wx ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse3"
 
@@ -5030,8 +5030,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsrlw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrlw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5041,8 +5041,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsrld
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrld
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5052,8 +5052,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsrld
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrld
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5063,8 +5063,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse2"
 
-          - mnemonic: vpaddq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5074,8 +5074,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpmullw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmullw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5083,7 +5083,7 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vmovq
+          - mnemonic: movq
             operand: [ Woq, Vo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -5104,7 +5104,7 @@ instruction:
             operand: [ Gy, Nq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpmovmskb
+          - mnemonic: pmovmskb
             operand: [ Gy, Ux ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -5115,8 +5115,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubusb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubusb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5126,8 +5126,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubusw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubusw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5137,8 +5137,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpminub
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminub
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5148,8 +5148,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpand
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pand
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5159,8 +5159,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddusb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddusb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5170,8 +5170,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddusw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddusw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5181,8 +5181,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpmaxub
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxub
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5192,8 +5192,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpandn
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pandn
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5203,8 +5203,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpavgb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pavgb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5214,8 +5214,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsraw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psraw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5225,8 +5225,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsrad
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrad
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5236,8 +5236,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpavgw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pavgw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5247,8 +5247,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpmulhuw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulhuw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5258,8 +5258,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpmulhw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulhw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5267,17 +5267,17 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vcvttpd2dq
+          - mnemonic: cvttpd2dq
             operand: [ Vo, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vcvtdq2pd
+          - mnemonic: cvtdq2pd
             operand: [ Vo, Woq ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse2"
 
-          - mnemonic: vcvtpd2dq
+          - mnemonic: cvtpd2dq
             operand: [ Vo, Wx ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
@@ -5288,7 +5288,7 @@ instruction:
             operand: [ Mq, Pq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vmovntdq
+          - mnemonic: movntdq
             operand: [ Mx, Vx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -5299,8 +5299,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubsb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5310,8 +5310,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5321,8 +5321,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpminsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5332,8 +5332,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpor
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: por
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5343,8 +5343,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddsb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5354,8 +5354,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5365,8 +5365,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpmaxsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5376,8 +5376,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpxor
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pxor
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5385,7 +5385,7 @@ instruction:
         sub_opcodes:
           - invalid:
 
-          - mnemonic: vlddqu
+          - mnemonic: lddqu
             operand: [ Vx, Mx ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse3"
@@ -5396,8 +5396,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsllw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psllw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5407,8 +5407,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vsplld
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: splld
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5418,8 +5418,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vspllq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: spllq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5429,8 +5429,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse2"
 
-          - mnemonic: vpmuludq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmuludq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5440,8 +5440,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpmaddwd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaddwd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5451,8 +5451,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vpsadbw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psadbw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5462,7 +5462,7 @@ instruction:
             operand: [ Pq, Nq ]
             cpu_model: ">= X86_Arch_Mmx_sse"
 
-          - mnemonic: vmaskmovdqu
+          - mnemonic: maskmovdqu
             operand: [ Vo, Uo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
@@ -5473,8 +5473,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5484,8 +5484,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5495,8 +5495,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5506,8 +5506,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpsubq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psubq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5517,8 +5517,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5528,8 +5528,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -5539,8 +5539,8 @@ instruction:
             operand: [ Pq, Qq ]
             cpu_model: ">= X86_Arch_Mmx"
 
-          - mnemonic: vpaddd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: paddd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -6384,14 +6384,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpshufb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pshufb
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpshufb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pshufb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6406,14 +6406,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphaddw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphaddw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6428,14 +6428,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphaddd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddd
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphaddd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6450,14 +6450,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphaddsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddsw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphaddsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phaddsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6472,14 +6472,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpmaddubsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaddubsw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmaddubsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaddubsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6494,14 +6494,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphsubw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphsubw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6516,14 +6516,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphsubd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubd
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphsubd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6538,14 +6538,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vphsubsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubsw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vphsubsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: phsubsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6560,14 +6560,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpsignb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignb
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpsignb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6582,14 +6582,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpsignw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpsignw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6604,14 +6604,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpsignd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignd
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpsignd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psignd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6626,40 +6626,40 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpmulhrsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulhrsw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmulhrsw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulhrsw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x0c
-        mnemonic: vpermilps
-        operand: [ Vx, Hx, Wx ]
+        mnemonic: permilps
+        operand: [ Vx, Wx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x0d
-        mnemonic: vpermilpd
-        operand: [ Vx, Hx, Wx ]
+        mnemonic: permilpd
+        operand: [ Vx, Wx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x0e
-        mnemonic: vtestps
+        mnemonic: testps
         operand: [ Vx, Wx ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x0f
-        mnemonic: vtestpd
+        mnemonic: testpd
         operand: [ Vx, Wx ]
         attr: [ nv, w0 ]
         prefix: 0x66
@@ -6679,13 +6679,13 @@ instruction:
 
       - opcode: 0x13
         sub_opcodes:
-          - mnemonic: vcvtph2ps
+          - mnemonic: cvtph2ps
             operand: [ Vo, Woq ]
             attr: [ vl0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_F16c"
 
-          - mnemonic: vcvtph2ps
+          - mnemonic: cvtph2ps
             operand: [ Vy, Woo ]
             attr: [ vl1 ]
             prefix: 0x66
@@ -6704,7 +6704,7 @@ instruction:
         cpu_model: ">= X86_Arch_Sse41"
 
       - opcode: 0x16
-        mnemonic: vpermps
+        mnemonic: permps
         operand: [ Vy, Hy, Wy ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -6716,7 +6716,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vptest
+          - mnemonic: ptest
             operand: [ Vx, Wx ]
             attr: [ nv ]
             prefix: 0x66
@@ -6724,13 +6724,13 @@ instruction:
 
       - opcode: 0x18
         sub_opcodes:
-          - mnemonic: vbroadcastss
-            operand: [ Vx, Mod ]
+          - mnemonic: broadcastss
+            operand: [ Vx, Uod ]
             attr: [ nc, w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vbroadcastss
+          - mnemonic: broadcastss
             operand: [ Vx, Uo ]
             attr: [ nc, w0 ]
             prefix: 0x66
@@ -6738,21 +6738,21 @@ instruction:
 
       - opcode: 0x19
         sub_opcodes:
-          - mnemonic: vbroadcastsd
-            operand: [ Vy, Moq ]
+          - mnemonic: broadcastsd
+            operand: [ Vy, Uoq ]
             attr: [ nc, w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vbroadcastsd
+          - mnemonic: broadcastsd
             operand: [ Vy, Uo ]
             attr: [ nc, w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x1a
-        mnemonic: vbroadcastf128
-        operand: [ Vy, Mo ]
+        mnemonic: broadcastf128
+        operand: [ Vy, Uo ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
@@ -6771,13 +6771,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpabsb
+          - mnemonic: pabsb
             operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpabsb
+          - mnemonic: pabsb
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6793,13 +6793,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpabsw
+          - mnemonic: pabsw
             operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpabsw
+          - mnemonic: pabsw
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6815,13 +6815,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpabsd
+          - mnemonic: pabsd
             operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpabsd
+          - mnemonic: pabsd
             operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6836,13 +6836,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxbw
+          - mnemonic: pmovsxbw
             operand: [ Vo, Woq ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxbw
+          - mnemonic: pmovsxbw
             operand: [ Vy, Woo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6854,13 +6854,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxbd
+          - mnemonic: pmovsxbd
             operand: [ Vo, Wod ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxbd
+          - mnemonic: pmovsxbd
             operand: [ Vy, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6872,13 +6872,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxbq
+          - mnemonic: pmovsxbq
             operand: [ Vo, Wow ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxbq
+          - mnemonic: pmovsxbq
             operand: [ Vy, Wod ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6890,13 +6890,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxwd
+          - mnemonic: pmovsxwd
             operand: [ Vo, Woq ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxwd
+          - mnemonic: pmovsxwd
             operand: [ Vy, Woo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6908,13 +6908,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxwq
+          - mnemonic: pmovsxwq
             operand: [ Vo, Wod ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxwq
+          - mnemonic: pmovsxwq
             operand: [ Vy, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6926,13 +6926,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovsxdq
+          - mnemonic: pmovsxdq
             operand: [ Vo, Wow ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovsxdq
+          - mnemonic: pmovsxdq
             operand: [ Vy, Wod ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -6950,14 +6950,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmuldq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmuldq
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmuldq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmuldq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6968,14 +6968,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpcmpeqq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpeqq
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpcmpeqq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpeqq
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -6986,13 +6986,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vmovntdqa
+          - mnemonic: movntdqa
             operand: [ Vx, Mx ]
             attr: [ nv, ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vmovntdqa
+          - mnemonic: movntdqa
             operand: [ Vx, Mx ]
             attr: [ nv ]
             prefix: 0x66
@@ -7005,41 +7005,41 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpackusdw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: packusdw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpackusdw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: packusdw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x2c
-        mnemonic: vmaskmovps
-        operand: [ Vx, Hx, Mx ]
+        mnemonic: maskmovps
+        operand: [ Vx, Mx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x2d
-        mnemonic: vmaskmovpd
-        operand: [ Vx, Hx, Mx ]
+        mnemonic: maskmovpd
+        operand: [ Vx, Mx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x2e
-        mnemonic: vmaskmovps
-        operand: [ Mx, Hx, Vx ]
+        mnemonic: maskmovps
+        operand: [ Mx, Vx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x2f
-        mnemonic: vmaskmovpd
-        operand: [ Mx, Hx, Vx ]
+        mnemonic: maskmovpd
+        operand: [ Mx, Vx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
@@ -7051,13 +7051,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxbw
+          - mnemonic: pmovzxbw
             operand: [ Vo, Woq ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxbw
+          - mnemonic: pmovzxbw
             operand: [ Vy, Woo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7069,13 +7069,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxbd
+          - mnemonic: pmovzxbd
             operand: [ Vo, Wod ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxbd
+          - mnemonic: pmovzxbd
             operand: [ Vy, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7087,13 +7087,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxbq
+          - mnemonic: pmovzxbq
             operand: [ Vo, Wow ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxbq
+          - mnemonic: pmovzxbq
             operand: [ Vy, Wod ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7105,13 +7105,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxwd
+          - mnemonic: pmovzxwd
             operand: [ Vo, Woq ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxwd
+          - mnemonic: pmovzxwd
             operand: [ Vy, Woo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7123,13 +7123,13 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxwq
+          - mnemonic: pmovzxwq
             operand: [ Vo, Wod ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxwq
+          - mnemonic: pmovzxwq
             operand: [ Vy, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7141,19 +7141,19 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmovzxdq
+          - mnemonic: pmovzxdq
             operand: [ Vo, Woq ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmovzxdq
+          - mnemonic: pmovzxdq
             operand: [ Vy, Woo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x36
-        mnemonic: vpermd
+        mnemonic: permd
         operand: [ Vy, Hy, Wy ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -7165,8 +7165,8 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse42"
 
-          - mnemonic: vpcmpgtq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pcmpgtq
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
@@ -7178,14 +7178,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpminsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminsb
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpminsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminsb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7196,14 +7196,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpminsd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminsd
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpminsd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminsd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7214,14 +7214,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpminuw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminuw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpminuw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminuw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7232,14 +7232,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpminud
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminud
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpminud
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pminud
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7250,14 +7250,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmaxsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxsb
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmaxsb
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxsb
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7268,14 +7268,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmaxsd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxsd
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmaxsd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxsd
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7286,14 +7286,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmaxuw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxuw
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmaxuw
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxuw
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7304,14 +7304,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmaxud
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxud
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmaxud
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmaxud
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7322,14 +7322,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpmulld
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulld
+            operand: [ Vx, Wx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpmulld
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: pmulld
+            operand: [ Vx, Wx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -7340,7 +7340,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vphminposuw
+          - mnemonic: phminposuw
             operand: [ Vo, Wo ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -7357,35 +7357,35 @@ instruction:
 
       - opcode: 0x45
         sub_opcodes:
-          - mnemonic: vpsrlvd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrlvd
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpsrlvq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psrlvq
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x46
-        mnemonic: vpsravd
-        operand: [ Vx, Hx, Wx ]
+        mnemonic: psravd
+        operand: [ Vx, Wx ]
         attr: [ w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x47
         sub_opcodes:
-          - mnemonic: vpsllvd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psllvd
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpsllvq
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: psllvq
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7439,22 +7439,22 @@ instruction:
         invalid:
 
       - opcode: 0x58
-        mnemonic: vpbroadcastd
-        operand: [ Vx, Mod ]
+        mnemonic: pbroadcastd
+        operand: [ Vx, Uod ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x59
-        mnemonic: vpbroadcastq
-        operand: [ Vx, Moq ]
+        mnemonic: pbroadcastq
+        operand: [ Vx, Uoq ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x5a
-        mnemonic: vbroadcasti128
-        operand: [ Vy, Mo ]
+        mnemonic: broadcasti128
+        operand: [ Vy, Uo ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -7547,15 +7547,15 @@ instruction:
         invalid:
 
       - opcode: 0x78
-        mnemonic: vpbroadcastb
-        operand: [ Vx, Mo, b ]
+        mnemonic: pbroadcastb
+        operand: [ Vx, Uo, b ]
         attr: [ nv ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x79
-        mnemonic: vpbroadcastw
-        operand: [ Vx, Mo, w ]
+        mnemonic: pbroadcastw
+        operand: [ Vx, Uo, w ]
         attr: [ nv ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -7580,19 +7580,19 @@ instruction:
 
       - opcode: 0x80
         mnemonic: invept
-        operand: [ Gy, Mo ]
+        operand: [ Gy, Uo ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Vmx"
 
       - opcode: 0x81
         mnemonic: invvpid
-        operand: [ Gy, Mo ]
+        operand: [ Gy, Uo ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Vmx"
 
       - opcode: 0x82
         mnemonic: invpcid
-        operand: [ Gy, Mo ]
+        operand: [ Gy, Uo ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Invpcid"
 
@@ -7625,14 +7625,14 @@ instruction:
 
       - opcode: 0x8c
         sub_opcodes:
-          - mnemonic: vpmaskmovd
-            operand: [ Vx, Hx, Mx ]
+          - mnemonic: pmaskmovd
+            operand: [ Vx, Mx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpmaskmovq
-            operand: [ Vx, Hx, Mx ]
+          - mnemonic: pmaskmovq
+            operand: [ Vx, Mx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7642,14 +7642,14 @@ instruction:
 
       - opcode: 0x8e
         sub_opcodes:
-          - mnemonic: vpmaskmovd
-            operand: [ Mx, Hx, Vx ]
+          - mnemonic: pmaskmovd
+            operand: [ Mx, Vx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpmaskmovq
-            operand: [ Mx, Hx, Vx ]
+          - mnemonic: pmaskmovq
+            operand: [ Mx, Vx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -7659,13 +7659,13 @@ instruction:
 
       - opcode: 0x90
         sub_opcodes:
-          - mnemonic: vpgatherdd
+          - mnemonic: pgatherdd
             operand: [ Vx, Md, x, Hx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpgatherdq
+          - mnemonic: pgatherdq
             operand: [ Vx, Mqo, Hx ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7673,13 +7673,13 @@ instruction:
 
       - opcode: 0x91
         sub_opcodes:
-          - mnemonic: vpgatherqd
+          - mnemonic: pgatherqd
             operand: [ Vo, Md, x, Ho ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpgatherqq
+          - mnemonic: pgatherqq
             operand: [ Vx, Mq, x, Hx ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7687,13 +7687,13 @@ instruction:
 
       - opcode: 0x92
         sub_opcodes:
-          - mnemonic: vpgatherdps
+          - mnemonic: pgatherdps
             operand: [ Vx, Md, x, Hx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpgatherdpd
+          - mnemonic: pgatherdpd
             operand: [ Vx, Mqo, Hx ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7701,13 +7701,13 @@ instruction:
 
       - opcode: 0x93
         sub_opcodes:
-          - mnemonic: vpgatherqps
+          - mnemonic: pgatherqps
             operand: [ Vo, Md, x, Ho ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
-          - mnemonic: vpgatherqpd
+          - mnemonic: pgatherqpd
             operand: [ Vx, Mq, x, Hx ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7721,55 +7721,55 @@ instruction:
 
       - opcode: 0x96
         sub_opcodes:
-          - mnemonic: vfmaddsub132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmaddsub132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x97
         sub_opcodes:
-          - mnemonic: vfmsubadd132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsubadd132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x98
         sub_opcodes:
-          - mnemonic: vfmadd132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x99
         sub_opcodes:
-          - mnemonic: vfmadd132ss
+          - mnemonic: fmadd132ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd132sd
+          - mnemonic: fmadd132sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7777,27 +7777,27 @@ instruction:
 
       - opcode: 0x9a
         sub_opcodes:
-          - mnemonic: vfmsub132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x9b
         sub_opcodes:
-          - mnemonic: vfmsub132ss
+          - mnemonic: fmsub132ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub132sd
+          - mnemonic: fmsub132sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7805,27 +7805,27 @@ instruction:
 
       - opcode: 0x9c
         sub_opcodes:
-          - mnemonic: vfnmadd132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x9d
         sub_opcodes:
-          - mnemonic: vfnmadd132ss
+          - mnemonic: fnmadd132ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd132sd
+          - mnemonic: fnmadd132sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7833,27 +7833,27 @@ instruction:
 
       - opcode: 0x9e
         sub_opcodes:
-          - mnemonic: vfnmsub132ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub132ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub132pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub132pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0x9f
         sub_opcodes:
-          - mnemonic: vfnmsub132ss
+          - mnemonic: fnmsub132ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub132sd
+          - mnemonic: fnmsub132sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7879,55 +7879,55 @@ instruction:
 
       - opcode: 0xa6
         sub_opcodes:
-          - mnemonic: vfmaddsub213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmaddsub213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xa7
         sub_opcodes:
-          - mnemonic: vfmsubadd213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsubadd213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xa8
         sub_opcodes:
-          - mnemonic: vfmadd213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xa9
         sub_opcodes:
-          - mnemonic: vfmadd213ss
+          - mnemonic: fmadd213ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd213sd
+          - mnemonic: fmadd213sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7935,27 +7935,27 @@ instruction:
 
       - opcode: 0xaa
         sub_opcodes:
-          - mnemonic: vfmsub213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xab
         sub_opcodes:
-          - mnemonic: vfmsub213ss
+          - mnemonic: fmsub213ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub213sd
+          - mnemonic: fmsub213sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7963,27 +7963,27 @@ instruction:
 
       - opcode: 0xac
         sub_opcodes:
-          - mnemonic: vfnmadd213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xad
         sub_opcodes:
-          - mnemonic: vfnmadd213ss
+          - mnemonic: fnmadd213ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd213sd
+          - mnemonic: fnmadd213sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -7991,27 +7991,27 @@ instruction:
 
       - opcode: 0xae
         sub_opcodes:
-          - mnemonic: vfnmsub213ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub213ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub213pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub213pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xaf
         sub_opcodes:
-          - mnemonic: vfnmsub213ss
+          - mnemonic: fnmsub213ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub213sd
+          - mnemonic: fnmsub213sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -8037,55 +8037,55 @@ instruction:
 
       - opcode: 0xb6
         sub_opcodes:
-          - mnemonic: vfmaddsub231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmaddsub231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmaddsub231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xb7
         sub_opcodes:
-          - mnemonic: vfmsubadd231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsubadd231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsubadd231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xb8
         sub_opcodes:
-          - mnemonic: vfmadd231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmadd231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xb9
         sub_opcodes:
-          - mnemonic: vfmadd231ss
+          - mnemonic: fmadd231ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmadd231sd
+          - mnemonic: fmadd231sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -8093,27 +8093,27 @@ instruction:
 
       - opcode: 0xba
         sub_opcodes:
-          - mnemonic: vfmsub231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fmsub231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xbb
         sub_opcodes:
-          - mnemonic: vfmsub231ss
+          - mnemonic: fmsub231ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfmsub231sd
+          - mnemonic: fmsub231sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -8121,27 +8121,27 @@ instruction:
 
       - opcode: 0xbc
         sub_opcodes:
-          - mnemonic: vfnmadd231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmadd231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xbd
         sub_opcodes:
-          - mnemonic: vfnmadd231ss
+          - mnemonic: fnmadd231ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmadd231sd
+          - mnemonic: fnmadd231sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -8149,27 +8149,27 @@ instruction:
 
       - opcode: 0xbe
         sub_opcodes:
-          - mnemonic: vfnmsub231ps
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub231ps
+            operand: [ Vx, Wx ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub231pd
-            operand: [ Vx, Hx, Wx ]
+          - mnemonic: fnmsub231pd
+            operand: [ Vx, Wx ]
             attr: [ w1 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
       - opcode: 0xbf
         sub_opcodes:
-          - mnemonic: vfnmsub231ss
+          - mnemonic: fnmsub231ss
             operand: [ Vo, Ho, Wd ]
             attr: [ w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Fma"
 
-          - mnemonic: vfnmsub231sd
+          - mnemonic: fnmsub231sd
             operand: [ Vo, Ho, Wq ]
             attr: [ w1 ]
             prefix: 0x66
@@ -8264,7 +8264,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaesimc
+          - mnemonic: aesimc
             operand: [ Vo, Wo ]
             attr: [ nv, ny ]
             prefix: 0x66
@@ -8278,7 +8278,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaesenc
+          - mnemonic: aesenc
             operand: [ Vo, Ho, Wo ]
             attr: [ ny ]
             prefix: 0x66
@@ -8292,7 +8292,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaesenclast
+          - mnemonic: aesenclast
             operand: [ Vo, Ho, Wo ]
             attr: [ ny ]
             prefix: 0x66
@@ -8306,7 +8306,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaesdec
+          - mnemonic: aesdec
             operand: [ Vo, Ho, Wo ]
             attr: [ ny ]
             prefix: 0x66
@@ -8320,7 +8320,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaesdeclast
+          - mnemonic: aesdeclast
             operand: [ Vo, Ho, Wo ]
             attr: [ ny ]
             prefix: 0x66
@@ -8510,20 +8510,20 @@ instruction:
 
     table_3_3A:
       - opcode: 0x00
-        mnemonic: vpermq
+        mnemonic: permq
         operand: [ Vy, Wy, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x01
-        mnemonic: vpermd
+        mnemonic: permd
         operand: [ Vy, Wy, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x02
-        mnemonic: vpblendd
-        operand: [ Vx, Hx, Wx, Ib ]
+        mnemonic: pblendd
+        operand: [ Vx, Wx, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
@@ -8531,19 +8531,19 @@ instruction:
         invalid:
 
       - opcode: 0x04
-        mnemonic: vpermilps
+        mnemonic: permilps
         operand: [ Vx, Wx, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x05
-        mnemonic: vpermilpd
+        mnemonic: permilpd
         operand: [ Vx, Wx, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x06
-        mnemonic: vperm2f128
+        mnemonic: perm2f128
         operand: [ Vy, Hy, Wy, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
@@ -8558,7 +8558,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vroundps
+          - mnemonic: roundps
             operand: [ Vx, Wx, Ib ]
             attr: [ nv ]
             prefix: 0x66
@@ -8571,7 +8571,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vroundpd
+          - mnemonic: roundpd
             operand: [ Vx, Wx, Ib ]
             attr: [ nv ]
             prefix: 0x66
@@ -8584,7 +8584,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vroundss
+          - mnemonic: roundss
             operand: [ Vo, Ho, Woq, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8597,7 +8597,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vroundsd
+          - mnemonic: roundsd
             operand: [ Vo, Ho, Woq, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8610,8 +8610,8 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vblendps
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: blendps
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
@@ -8622,8 +8622,8 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vblendpd
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: blendpd
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
@@ -8634,14 +8634,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vblendw
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: blendw
+            operand: [ Vx, Wx, Ib ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vblendw
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: blendw
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -8656,14 +8656,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Ssse3"
 
-          - mnemonic: vpalignr
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: palignr
+            operand: [ Vx, Wx, Ib ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpalignr
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: palignr
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -8686,7 +8686,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpextrb
+          - mnemonic: pextrb
             operand: [ Wob, Vo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -8699,7 +8699,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpextrw
+          - mnemonic: pextrw
             operand: [ Wow, Vo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -8713,7 +8713,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpextrd
+          - mnemonic: pextrd
             operand: [ Ey, Vo, Ib ]
             constraint: f64
             attr: [ ny, nv ]
@@ -8727,20 +8727,20 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vextractps
+          - mnemonic: extractps
             operand: [ Ey, Vo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x18
-        mnemonic: vinsertf128
+        mnemonic: insertf128
         operand: [ Vy, Hy, Wo, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x19
-        mnemonic: vextractf128
+        mnemonic: extractf128
         operand: [ Wo, Vy, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
@@ -8755,7 +8755,7 @@ instruction:
         invalid:
 
       - opcode: 0x1d
-        mnemonic: vcvtps2ph
+        mnemonic: cvtps2ph
         operand: [ Woqo, Vx, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_F16c"
@@ -8773,7 +8773,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpinsrb
+          - mnemonic: pinsrb
             operand: [ Vo, Ho, Edb, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8786,7 +8786,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vinsertps
+          - mnemonic: insertps
             operand: [ Vo, Ho, Uod, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8799,7 +8799,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vpinsrd
+          - mnemonic: pinsrd
             operand: [ Vo, Ho, Ey, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8869,13 +8869,13 @@ instruction:
         invalid:
 
       - opcode: 0x38
-        mnemonic: vinserti128
+        mnemonic: inserti128
         operand: [ Vy, Hy, Wo, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
 
       - opcode: 0x39
-        mnemonic: vextracti128
+        mnemonic: extracti128
         operand: [ Wo, Vy, Ib ]
         attr: [ nv ]
         prefix: 0x66
@@ -8906,8 +8906,8 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vdpps
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: dpps
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
@@ -8918,7 +8918,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vdppd
+          - mnemonic: dppd
             operand: [ Vo, Ho, Wo, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8931,14 +8931,14 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse41"
 
-          - mnemonic: vmpsadbw
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: mpsadbw
+            operand: [ Vx, Wx, Ib ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vmpsadbw
-            operand: [ Vx, Hx, Wx, Ib ]
+          - mnemonic: mpsadbw
+            operand: [ Vx, Wx, Ib ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
 
@@ -8952,7 +8952,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Clmul"
 
-          - mnemonic: vpclmulqdq
+          - mnemonic: pclmulqdq
             operand: [ Vo, Ho, Wo, Ib ]
             attr: [ ny ]
             prefix: 0x66
@@ -8962,7 +8962,7 @@ instruction:
         invalid:
 
       - opcode: 0x46
-        mnemonic: vperm2i128
+        mnemonic: perm2i128
         operand: [ Vy, Hy, Wy, Ib ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -8977,26 +8977,26 @@ instruction:
         invalid:
 
       - opcode: 0x4a
-        mnemonic: vblendvps
+        mnemonic: blendvps
         operand: [ Vx, Hx, Wx, Lx ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x4b
-        mnemonic: vblendvpd
+        mnemonic: blendvpd
         operand: [ Vx, Hx, Wx, Lx ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx"
 
       - opcode: 0x4c
         sub_opcodes:
-          - mnemonic: vpblendvp
+          - mnemonic: pblendvp
             operand: [ Vx, Hx, Wx, Lx ]
             attr: [ ny ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
 
-          - mnemonic: vpblendvp
+          - mnemonic: pblendvp
             operand: [ Vx, Hx, Wx, Lx ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx2"
@@ -9065,7 +9065,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse42"
 
-          - mnemonic: vpcmpestrm
+          - mnemonic: pcmpestrm
             operand: [ Vo, Wo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -9078,7 +9078,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse42"
 
-          - mnemonic: vpcmpestri
+          - mnemonic: pcmpestri
             operand: [ Vo, Wo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -9091,7 +9091,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse42"
 
-          - mnemonic: vpcmpistrm
+          - mnemonic: pcmpistrm
             operand: [ Vo, Wo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -9104,7 +9104,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse42"
 
-          - mnemonic: vpcmpistri
+          - mnemonic: pcmpistri
             operand: [ Vo, Wo, Ib ]
             attr: [ ny, nv ]
             prefix: 0x66
@@ -9486,7 +9486,7 @@ instruction:
             prefix: 0x66
             cpu_model: ">= X86_Arch_Aes"
 
-          - mnemonic: vaeskeygenassist
+          - mnemonic: aeskeygenassist
             operand: [ Vo, Wo, Ib ]
             attr: [ ny, nc ]
             prefix: 0x66
@@ -12869,7 +12869,7 @@ instruction:
           semantic: *cmpxchg8b
 
         - mnemonic: cmpxchg16b
-          operand: [ Mo ]
+          operand: [ Uo ]
           attr: [ m64 ]
           semantic: *cmpxchg16b
 
@@ -12968,10 +12968,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpsrlw
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: psrlw
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x03
       invalid:
@@ -12985,10 +12985,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpwraw
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: pwraw
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x05
       invalid:
@@ -13002,10 +13002,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpwraw
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: pwraw
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x07
       invalid:
@@ -13026,10 +13026,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpsrld
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: psrld
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x03
       invalid:
@@ -13043,10 +13043,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpdrad
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: pdrad
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x05
       invalid:
@@ -13060,10 +13060,10 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpdrad
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: pdrad
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x07
       invalid:
@@ -13084,23 +13084,23 @@ instruction:
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpsrlq
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: psrlq
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x03
       sub_opcodes:
         - invalid:
 
-        - mnemonic: vpsrldq
+        - mnemonic: psrldq
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpsrldq
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: psrldq
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x04
       invalid:
@@ -13113,27 +13113,27 @@ instruction:
         - mnemonic: psllq
           operand: [ Nq, Ib ]
 
-        - mnemonic: vpsllq
+        - mnemonic: psllq
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpsllq
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: psllq
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     - opcode: 0x07
       sub_opcodes:
         - invalid:
 
-        - mnemonic: vpslldq
+        - mnemonic: pslldq
           operand: [ Ux, Ib ]
           prefix: 0x66
 
-        - mnemonic: vpslldq
-          operand: [ Hx, Ux, Ib ]
-          attr: [ vex ]
-          prefix: 0x66
+        # - mnemonic: pslldq
+        #   operand: [ Hx, Ux, Ib ]
+        #   attr: [ vex ]
+        #   prefix: 0x66
 
     group_15:
     - opcode: 0x00
@@ -13156,7 +13156,7 @@ instruction:
 
     - opcode: 0x02
       sub_opcodes:
-        - mnemonic: vldmxcsr
+        - mnemonic: ldmxcsr
           operand: [ Md ]
 
         - mnemonic: wrfsbase
@@ -13165,7 +13165,7 @@ instruction:
 
     - opcode: 0x03
       sub_opcodes:
-        - mnemonic: vstmxcsr
+        - mnemonic: stmxcsr
           operand: [ Md ]
 
         - mnemonic: wrgsbase
@@ -13614,9 +13614,9 @@ operand:
   decode_M: [ call('Decode_M') ]
   decode_Ma: [ call('Decode_Ma') ]
   decode_Md: [ call('Decode_Md') ]
-  decode_Mo: [ call('Decode_Mo') ]
-  decode_Mod: [ call('Decode_Mod') ]
-  decode_Moq: [ call('Decode_Moq') ]
+  decode_Uo: [ call('Decode_Uo') ]
+  decode_Uod: [ call('Decode_Uod') ]
+  decode_Uoq: [ call('Decode_Uoq') ]
   decode_Mp: [ call('Decode_Mp') ]
   decode_Mq: [ call('Decode_Mq') ]
   decode_Mqo: [ call('Decode_Mqo') ]
@@ -13796,7 +13796,7 @@ operand:
   Gy_Ev: [ op0 = decode_Gy, op1 = decode_Ev ]
   Gy_Ey: [ op0 = decode_Gy, op1 = decode_Ey ]
   Gy_Ey_By: [ op0 = decode_Gy, op1 = decode_Ey, op2 = decode_By ]
-  Gy_Mo: [ op0 = decode_Gy, op1 = decode_Mo ]
+  Gy_Uo: [ op0 = decode_Gy, op1 = decode_Uo ]
   Gy_Nq: [ op0 = decode_Gy, op1 = decode_Nq ]
   Gy_Nq_Ib: [ op0 = decode_Gy, op1 = decode_Nq, op2 = decode_Ib ]
   Gy_Uo_Ib: [ op0 = decode_Gy, op1 = decode_Uo, op2 = decode_Ib ]
@@ -13804,7 +13804,7 @@ operand:
   Gy_Wod: [ op0 = decode_Gy, op1 = decode_Wod ]
   Gy_Woq: [ op0 = decode_Gy, op1 = decode_Woq ]
   Hx_Hx_Wx: [ op0 = decode_Hx, op1 = decode_Hx, op2 = decode_Wx ]
-  Hx_Ux_Ib: [ op0 = decode_Hx, op1 = decode_Ux, op2 = decode_Ib ]
+  Hx_Ux_Ib: [ last_len, op0 = decode_Hx, op1 = decode_Ux, move_decode_offset(next_operand), op2 = decode_Ib ]
   Ib: [ op0 = decode_Ib ]
   Ib_AL: [ op0 = decode_Ib, op1 = decode_AL ]
   Ib_eAX: [ op0 = decode_Ib, op1 = decode_eAX ]
@@ -13816,10 +13816,10 @@ operand:
   M: [ op0 = decode_M ]
   Md: [ op0 = decode_Md ]
   Md_Vo: [ op0 = decode_Md, op1 = decode_Vo ]
-  Mo: [ op0 = decode_Mo ]
-  Mo_Vod: [ op0 = decode_Mo, op1 = decode_Vod ]
-  Mo_Voq: [ op0 = decode_Mo, op1 = decode_Voq ]
-  Moq_Vo: [ op0 = decode_Moq, op1 = decode_Vo ]
+  Uo: [ op0 = decode_Uo ]
+  Uo_Vod: [ op0 = decode_Uo, op1 = decode_Vod ]
+  Uo_Voq: [ op0 = decode_Uo, op1 = decode_Voq ]
+  Uoq_Vo: [ op0 = decode_Uoq, op1 = decode_Vo ]
   Mp: [ op0 = decode_Mp ]
   Mq: [ op0 = decode_Mq ]
   Mq_Pq: [ op0 = decode_Mq, op1 = decode_Pq ]
@@ -13874,14 +13874,15 @@ operand:
   Sw_Ew: [ op0 = decode_Sw, op1 = decode_Ew ]
   Ty_Ry: [ op0 = decode_Ty, op1 = decode_Ry ]
   Uo_Ib_Ib: [ op0 = decode_Uo, op1 = decode_Ib, op2 = decode_Ib ]
-  Ux_Ib: [ op0 = decode_Ux, op1 = decode_Ib ]
+  Ux_Ib: [ last_len, op0 = decode_Ux, move_decode_offset(next_operand), op1 = decode_Ib ]
   Vo_Edb_Ib: [ op0 = decode_Vo, op1 = decode_Edb, op2 = decode_Ib ]
   Vo_Ey: [ op0 = decode_Vo, op1 = decode_Ey ]
   Vo_Ey_Ib: [ op0 = decode_Vo, op1 = decode_Ey, op2 = decode_Ib ]
   Vo_Ho_Edb_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Edb, op3 = decode_Ib ]
   Vo_Ho_Ey: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Ey ]
   Vo_Ho_Ey_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Ey, op3 = decode_Ib ]
-  Vo_Ho_Moq: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Moq ]
+  Vo_Ho_Uoq: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Uoq ]
+  Vo_Mw_Ib: [ op0 = decode_Vo, op1 = decode_Mw, op2 = decode_Ib ]
   Vo_Ho_Mw_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Mw, op3 = decode_Ib ]
   Vo_Ho_Uod_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Uod, op3 = decode_Ib ]
   Vo_Ho_Wd: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Wd ]
@@ -13892,8 +13893,8 @@ operand:
   Vo_Ho_Woq_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Woq, op3 = decode_Ib ]
   Vo_Ho_Wq: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Wq ]
   Vo_Md_x_Ho: [ op0 = decode_Vo, op1 = decode_Md, op2 = decode_x, op3 = decode_Ho ]
-  Vo_Mod: [ op0 = decode_Vo, op1 = decode_Mod ]
-  Vo_Moq: [ op0 = decode_Vo, op1 = decode_Moq ]
+  Vo_Uod: [ op0 = decode_Vo, op1 = decode_Uod ]
+  Vo_Uoq: [ op0 = decode_Vo, op1 = decode_Uoq ]
   Vo_Mq: [ op0 = decode_Vo, op1 = decode_Mq ]
   Vo_Nq: [ op0 = decode_Vo, op1 = decode_Nq ]
   Vo_Uo: [ op0 = decode_Vo, op1 = decode_Uo ]
@@ -13907,34 +13908,34 @@ operand:
   Vo_Wx: [ op0 = decode_Vo, op1 = decode_Wx ]
   Vx_Hx_Mx: [ op0 = decode_Vx, op1 = decode_Hx, op2 = decode_Mx ]
   Vx_Hx_Wx: [ op0 = decode_Vx, op1 = decode_Hx, op2 = decode_Wx ]
-  Vx_Hx_Wx_Ib: [ op0 = decode_Vx, op1 = decode_Hx, op2 = decode_Wx, op3 = decode_Ib ]
+  Vx_Hx_Wx_Ib: [ last_len, op0 = decode_Vx, op1 = decode_Hx, op2 = decode_Wx, move_decode_offset(next_operand), op3 = decode_Ib ]
   Vx_Hx_Wx_Lx: [ op0 = decode_Vx, op1 = decode_Hx, op2 = decode_Wx, op3 = decode_Lx ]
   Vx_Md_x_Hx: [ op0 = decode_Vx, op1 = decode_Md, op2 = decode_x, op3 = decode_Hx ]
-  Vx_Mo_b: [ op0 = decode_Vx, op1 = decode_Mo, op2 = decode_b ]
-  Vx_Mo_w: [ op0 = decode_Vx, op1 = decode_Mo, op2 = decode_w ]
-  Vx_Mod: [ op0 = decode_Vx, op1 = decode_Mod ]
-  Vx_Moq: [ op0 = decode_Vx, op1 = decode_Moq ]
+  Vx_Uo_b: [ op0 = decode_Vx, op1 = decode_Uo, op2 = decode_b ]
+  Vx_Uo_w: [ op0 = decode_Vx, op1 = decode_Uo, op2 = decode_w ]
+  Vx_Uod: [ op0 = decode_Vx, op1 = decode_Uod ]
+  Vx_Uoq: [ op0 = decode_Vx, op1 = decode_Uoq ]
   Vx_Mq_x_Hx: [ op0 = decode_Vx, op1 = decode_Mq, op2 = decode_x, op3 = decode_Hx ]
   Vx_Mqo_Hx: [ op0 = decode_Vx, op1 = decode_Mqo, op2 = decode_Hx ]
   Vx_Mx: [ op0 = decode_Vx, op1 = decode_Mx ]
   Vx_Uo: [ op0 = decode_Vx, op1 = decode_Uo ]
   Vx_Wx: [ op0 = decode_Vx, op1 = decode_Wx ]
-  Vx_Wx_Ib: [ op0 = decode_Vx, op1 = decode_Wx, op2 = decode_Ib ]
-  Vy_Hy_Wo_Ib: [ op0 = decode_Vy, op1 = decode_Hy, op2 = decode_Wo, op3 = decode_Ib ]
+  Vx_Wx_Ib: [ last_len, op0 = decode_Vx, op1 = decode_Wx, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Vy_Hy_Wo_Ib: [ last_len, op0 = decode_Vy, op1 = decode_Hy, op2 = decode_Wo, move_decode_offset(next_operand), op3 = decode_Ib ]
   Vy_Hy_Wy: [ op0 = decode_Vy, op1 = decode_Hy, op2 = decode_Wy ]
-  Vy_Hy_Wy_Ib: [ op0 = decode_Vy, op1 = decode_Hy, op2 = decode_Wy, op3 = decode_Ib ]
-  Vy_Mo: [ op0 = decode_Vy, op1 = decode_Mo ]
-  Vy_Moq: [ op0 = decode_Vy, op1 = decode_Moq ]
+  Vy_Hy_Wy_Ib: [ last_len, op0 = decode_Vy, op1 = decode_Hy, op2 = decode_Wy, move_decode_offset(next_operand), op3 = decode_Ib ]
+  Vy_Uo: [ op0 = decode_Vy, op1 = decode_Uo ]
+  Vy_Uoq: [ op0 = decode_Vy, op1 = decode_Uoq ]
   Vy_Uo: [ op0 = decode_Vy, op1 = decode_Uo ]
   Vy_Wod: [ op0 = decode_Vy, op1 = decode_Wod ]
   Vy_Woo: [ op0 = decode_Vy, op1 = decode_Woo ]
   Vy_Woq: [ op0 = decode_Vy, op1 = decode_Woq ]
-  Vy_Wy_Ib: [ op0 = decode_Vy, op1 = decode_Wy, op2 = decode_Ib ]
-  Wo_Vy_Ib: [ op0 = decode_Wo, op1 = decode_Vy, op2 = decode_Ib ]
-  Wob_Vo_Ib: [ op0 = decode_Wob, op1 = decode_Vo, op2 = decode_Ib ]
+  Vy_Wy_Ib: [ last_len, op0 = decode_Vy, op1 = decode_Wy, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Wo_Vy_Ib: [ last_len, op0 = decode_Wo, op1 = decode_Vy, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Wob_Vo_Ib: [ last_len, op0 = decode_Wob, op1 = decode_Vo, move_decode_offset(next_operand), op2 = decode_Ib ]
   Woq_Vo: [ op0 = decode_Woq, op1 = decode_Vo ]
-  Woqo_Vx_Ib: [ op0 = decode_Woqo, op1 = decode_Vx, op2 = decode_Ib ]
-  Wow_Vo_Ib: [ op0 = decode_Wow, op1 = decode_Vo, op2 = decode_Ib ]
+  Woqo_Vx_Ib: [ last_len, op0 = decode_Woqo, op1 = decode_Vx, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Wow_Vo_Ib: [ last_len, op0 = decode_Wow, op1 = decode_Vo, move_decode_offset(next_operand), op2 = decode_Ib ]
   Wx_Vx: [ op0 = decode_Wx, op1 = decode_Vx ]
   AL_Yb: [ op0 = decode_AL, op1 = decode_Yb ] # Inversion needed here!
   Yb_DX: [ op0 = decode_Yb, op1 = decode_DX ]

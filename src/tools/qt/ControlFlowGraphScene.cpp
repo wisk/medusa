@@ -7,7 +7,7 @@
 
 #include <list>
 
-#ifdef MEDUSA_BUILD_WITH_OGDF
+#ifdef MEDUSA_HAS_OGDF
 # include <ogdf/basic/Graph.h>
 # include <ogdf/basic/GraphAttributes.h>
 # include <ogdf/layered/SugiyamaLayout.h>
@@ -28,7 +28,7 @@ ControlFlowGraphScene::ControlFlowGraphScene(QObject* pParent, medusa::Medusa& r
 bool ControlFlowGraphScene::_Update(void)
 {
 // TODO(wisk): move this in code medusa
-#ifdef MEDUSA_BUILD_WITH_OGDF
+#ifdef MEDUSA_HAS_OGDF
   ogdf::Graph Graph;
   ogdf::GraphAttributes GraphAttr(Graph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
   medusa::ControlFlowGraph CFG(m_rCore.GetDocument());
