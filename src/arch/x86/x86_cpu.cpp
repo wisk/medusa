@@ -2,39 +2,16 @@
 
 #include <boost/format.hpp>
 
-// ------------------------------------------------ BEGIN gg helpers
 
-void print_reverse_buf(const char *name, unsigned char *buf, unsigned int size)
+static void ReadXMMRegister(u128 const* Reg, void* pVal, u32 BitSize)
 {
-  unsigned int i = 0;
-  printf("%s: ", name);
-  for(i=size-1;i>0;i--) printf("%02x", buf[i]);
-  printf("\n");
+  memcpy(pVal, Reg->backend().limbs(), BitSize / 8);
 }
 
-void print_xmm(const u128 *reg, int regid)
+static void WriteXMMRegister(u128* Reg, void const* pVal, u32 BitSize)
 {
-  unsigned char *data = (unsigned char*)reg->backend().limbs();
-  unsigned int data_len = reg->backend().size() * sizeof(u128::backend_type::local_limb_type);
-  char tmp[256];
-  sprintf(tmp, "xmm%d", regid);
-  print_reverse_buf(tmp, data, data_len);
+  memcpy(Reg->backend().limbs(), pVal, BitSize / 8);
 }
-
-void read_xmm(const u128 *reg, void* pVal, u32 BitSize)
-{
-  unsigned char *data = (unsigned char*)reg->backend().limbs();
-  memcpy(pVal, data, BitSize / 8);
-}
-
-void write_xmm(const u128 *reg, const void* pVal, u32 BitSize)
-{
-  unsigned char *data = (unsigned char*)reg->backend().limbs();
-  memcpy(data, pVal, BitSize / 8);
-}
-
-// ------------------------------------------------ END gg helpers
-
 
 bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
@@ -52,8 +29,8 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_S(seg)   *reinterpret_cast<u16 *>(pVal) = m_Context.seg;
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
-#define READ_R_X(reg) read_xmm(&m_Context.reg.x, pVal, BitSize);
 #define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
+#define READ_R_X(reg) ReadXMMRegister(&m_Context.reg.x, pVal, BitSize);
 
   switch (Reg)
   {
@@ -150,6 +127,20 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 
   case X86_Reg_Xmm0: READ_R_X(xyzmm[0]) break;
   case X86_Reg_Xmm1: READ_R_X(xyzmm[1]) break;
+  case X86_Reg_Xmm2: READ_R_X(xyzmm[2]) break;
+  case X86_Reg_Xmm3: READ_R_X(xyzmm[3]) break;
+  case X86_Reg_Xmm4: READ_R_X(xyzmm[4]) break;
+  case X86_Reg_Xmm5: READ_R_X(xyzmm[5]) break;
+  case X86_Reg_Xmm6: READ_R_X(xyzmm[6]) break;
+  case X86_Reg_Xmm7: READ_R_X(xyzmm[7]) break;
+  case X86_Reg_Xmm8: READ_R_X(xyzmm[8]) break;
+  case X86_Reg_Xmm9: READ_R_X(xyzmm[9]) break;
+  case X86_Reg_Xmm10: READ_R_X(xyzmm[10]) break;
+  case X86_Reg_Xmm11: READ_R_X(xyzmm[11]) break;
+  case X86_Reg_Xmm12: READ_R_X(xyzmm[12]) break;
+  case X86_Reg_Xmm13: READ_R_X(xyzmm[13]) break;
+  case X86_Reg_Xmm14: READ_R_X(xyzmm[14]) break;
+  case X86_Reg_Xmm15: READ_R_X(xyzmm[15]) break;
 
   default:
     Log::Write("X86CpuContext").Level(LogError) << "ReadRegister: trying to read undefined register ("
@@ -185,8 +176,8 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pVal);
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
-#define WRITE_R_X(reg) write_xmm(&m_Context.reg.x, pVal, BitSize);
 #define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
+#define WRITE_R_X(reg) WriteXMMRegister(&m_Context.reg.x, pVal, BitSize);
 
   switch (Reg)
   {
@@ -283,6 +274,20 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 
   case X86_Reg_Xmm0: WRITE_R_X(xyzmm[0]) break;
   case X86_Reg_Xmm1: WRITE_R_X(xyzmm[1]) break;
+  case X86_Reg_Xmm2: WRITE_R_X(xyzmm[2]) break;
+  case X86_Reg_Xmm3: WRITE_R_X(xyzmm[3]) break;
+  case X86_Reg_Xmm4: WRITE_R_X(xyzmm[4]) break;
+  case X86_Reg_Xmm5: WRITE_R_X(xyzmm[5]) break;
+  case X86_Reg_Xmm6: WRITE_R_X(xyzmm[6]) break;
+  case X86_Reg_Xmm7: WRITE_R_X(xyzmm[7]) break;
+  case X86_Reg_Xmm8: WRITE_R_X(xyzmm[8]) break;
+  case X86_Reg_Xmm9: WRITE_R_X(xyzmm[9]) break;
+  case X86_Reg_Xmm10: WRITE_R_X(xyzmm[10]) break;
+  case X86_Reg_Xmm11: WRITE_R_X(xyzmm[11]) break;
+  case X86_Reg_Xmm12: WRITE_R_X(xyzmm[12]) break;
+  case X86_Reg_Xmm13: WRITE_R_X(xyzmm[13]) break;
+  case X86_Reg_Xmm14: WRITE_R_X(xyzmm[14]) break;
+  case X86_Reg_Xmm15: WRITE_R_X(xyzmm[15]) break;
 
   default:
     Log::Write("X86CpuContext").Level(LogError) << "WriteRegister: trying to write undefined register ("
@@ -692,15 +697,21 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   case X86_Bit_16:
     Result = (boost::format("ax: %04x bx: %04x cx: %04x dx: %04x\nsi: %04x di: %04x sp: %04x bp: %04x\nip: %04x flags: %s")
       % m_Context.a.w % m_Context.b.w % m_Context.c.w % m_Context.d.w % m_Context.si.w % m_Context.di.w % m_Context.sp.w % m_Context.bp.w % m_Context.ip.w % FmtFlags).str();
+
+    Result += (boost::format("\nxmm0: %032x xmm1: %032x\nxmm2: %032x xmm3: %032x\n"
+    "xmm4: %032x xmm5: %032x\nxmm6: %032x xmm7: %032x")
+    % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
+    % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x).str();
     break;
 
   case X86_Bit_32:
     Result = (boost::format("eax: %08x ebx: %08x ecx: %08x edx: %08x\nesi: %08x edi: %08x esp: %08x ebp: %08x\neip: %08x eflags: %s")
       % m_Context.a.e % m_Context.b.e % m_Context.c.e % m_Context.d.e % m_Context.si.e % m_Context.di.e % m_Context.sp.e % m_Context.bp.e % m_Context.ip.e % FmtFlags).str();
 
-    print_xmm(&m_Context.xyzmm[0].x, 0);
-    print_xmm(&m_Context.xyzmm[1].x, 1);
-
+    Result += (boost::format("\nxmm0: %032x xmm1: %032x\nxmm2: %032x xmm3: %032x\n"
+    "xmm4: %032x xmm5: %032x\nxmm6: %032x xmm7: %032x")
+    % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
+    % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x).str();
     break;
 
   case X86_Bit_64:
@@ -714,6 +725,15 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
       % m_Context.r8.r  % m_Context.r9.r  % m_Context.r10.r % m_Context.r11.r
       % m_Context.r12.r % m_Context.r13.r % m_Context.r14.r % m_Context.r15.r
       % m_Context.ip.r  % FmtFlags).str();
+
+    Result += (boost::format("\nxmm0:  %032x xmm1:  %032x\nxmm2:  %032x xmm3:  %032x\n"
+    "xmm4:  %032x xmm5:  %032x\nxmm6:  %032x xmm7:  %032x\n"
+    "xmm8:  %032x xmm9:  %032x\nxmm10: %032x xmm11: %032x\n"
+    "xmm12: %032x xmm13: %032x\nxmm14: %032x xmm15: %032x")
+    % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
+    % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x
+    % m_Context.xyzmm[8].x % m_Context.xyzmm[9].x % m_Context.xyzmm[10].x % m_Context.xyzmm[11].x
+    % m_Context.xyzmm[12].x % m_Context.xyzmm[13].x % m_Context.xyzmm[14].x % m_Context.xyzmm[15].x).str();
     break;
 
   default: return "";
@@ -722,5 +742,6 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   Result += (boost::format("\ncs: %04x ds: %04x es: %04x ss: %04x fs: %04x gs: %04x")
     % m_Context.cs % m_Context.ds % m_Context.es % m_Context.ss % m_Context.fs % m_Context.gs).str();
   Result += "\n";
+
   return Result;
 }
