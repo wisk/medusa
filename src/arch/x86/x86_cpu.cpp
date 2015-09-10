@@ -2,15 +2,16 @@
 
 #include <boost/format.hpp>
 
-
-static void ReadXMMRegister(u128 const* Reg, void* pVal, u32 BitSize)
+template<typename T>
+void ReadSSERegister(T const& rReg, void* pVal, u32 BitSize)
 {
-  memcpy(pVal, Reg->backend().limbs(), BitSize / 8);
+  memcpy(pVal, rReg.backend().limbs(), BitSize / 8);
 }
 
-static void WriteXMMRegister(u128* Reg, void const* pVal, u32 BitSize)
+template<typename T>
+void WriteSSERegister(T& rReg, void const* pVal, u32 BitSize)
 {
-  memcpy(Reg->backend().limbs(), pVal, BitSize / 8);
+  memcpy(rReg.backend().limbs(), pVal, BitSize / 8);
 }
 
 bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
@@ -30,7 +31,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
 #define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
-#define READ_R_X(reg) ReadXMMRegister(&m_Context.reg.x, pVal, BitSize);
+#define READ_R_X(reg)  ReadSSERegister<u128  >(m_Context.reg.x, pVal, BitSize);
 
   switch (Reg)
   {
@@ -177,7 +178,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
 #define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
-#define WRITE_R_X(reg) WriteXMMRegister(&m_Context.reg.x, pVal, BitSize);
+#define WRITE_R_X(reg) WriteSSERegister<u128>(m_Context.reg.x, pVal, BitSize);
 
   switch (Reg)
   {
