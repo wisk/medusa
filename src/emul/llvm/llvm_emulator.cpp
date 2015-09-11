@@ -351,6 +351,7 @@ bool LlvmEmulator::InvalidateCache(void)
 {
   m_JitHelper = LlvmJitHelper();
   m_FunctionCache.clear();
+  return true;
 }
 
 LlvmEmulator::LlvmJitHelper::LlvmJitHelper(void)

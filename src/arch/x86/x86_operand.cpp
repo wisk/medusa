@@ -1456,6 +1456,12 @@ Expression::SPType X86Architecture::__Decode_Vod(BinaryStream const& rBinStrm, T
   return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_XMM);
 }
 
+Expression::SPType X86Architecture::__Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  auto const ModRm = __GetModRm(rBinStrm, Offset);
+  return __GetRegisterFromIndex(&m_CpuInfo, __ModRmRegister(rInsn, ModRm), s_XMM);
+}
+
 Expression::SPType X86Architecture::__Decode_Vx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
   /* TODO: Handle YMM register here */

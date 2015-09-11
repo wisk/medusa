@@ -154,7 +154,7 @@ class ArchConvertion:
             def visit_Assign(self, node):
                 assert(len(node.targets) == 1)
 
-                value_name  = self.visit(node.value)              
+                value_name  = self.visit(node.value)
                 target_name = self.visit(node.targets[0])
 
                 cb = CodeBlock(CodeBlock.EXPR_TYPE)
@@ -407,7 +407,7 @@ class ArchConvertion:
                     if '!' in func_name:
                         return '!(rInsn.GetPrefix() & (%s))' % mask
                     return '%s & (%s)' % (func_name, mask)
-                
+
                 return func_name % tuple(args_name)
 
             def visit_Attribute(self, node):
@@ -528,6 +528,11 @@ class ArchConvertion:
                     return 'rInsn'
 
                 # Fonction name
+                elif node_name == 'is_expr_id':
+                    return 'Expr::TestKind(Expression::Id, %s)'
+                elif node_name == 'is_expr_mem':
+                    return 'Expr::TestKind(Expression::Mem, %s)'
+
                 elif node_name == 'ite':
                     return 'Expr::MakeTernaryCond(%s,\n%s, %s)'
 
@@ -625,7 +630,7 @@ class ArchConvertion:
                     break
             if need_flat:
                 sem = itertools.chain(*sem)
-                
+
             # Handle new type of instructions semantic definition
             if isinstance(sem, str):
                 sem = sem.split(";")

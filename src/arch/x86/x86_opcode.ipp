@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Sep 10 19:34:59 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 12:00:43 2015) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -2976,6 +2976,7 @@ private:
   Expression::SPType Decode_Ap(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__eBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__d64_r8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Vx_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__rBX_rAX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vy_Woo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_AH(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);

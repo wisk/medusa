@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Sep 10 19:34:59 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 12:00:43 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -48047,12 +48047,12 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_Sse2
  *
  * mnemonic: movss
- * operand: ['Vo', 'Uod']
+ * operand: ['Vo', 'Wod']
  * prefix: f3
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movsd
- * operand: ['Vo', 'Uoq']
+ * operand: ['Vo', 'Woq']
  * prefix: f2
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48063,7 +48063,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movsd);
-      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48073,7 +48073,7 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movss);
-      if (Operand__Vo_Uod(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48202,11 +48202,11 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: == X86_Arch_80386
  *
  * mnemonic: movlps
- * operand: ['Vo', 'Uoq']
+ * operand: ['Vo', 'Woq']
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movlpd
- * operand: ['Vo', 'Uoq']
+ * operand: ['Vo', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48247,7 +48247,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movlpd);
-      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48257,7 +48257,7 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movlps);
-      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48284,11 +48284,11 @@ bool X86Architecture::Table_2_12(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: == X86_Arch_80386
  *
  * mnemonic: movlps
- * operand: ['Uoq', 'Vo']
+ * operand: ['Woq', 'Vo']
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movlpd
- * operand: ['Uoq', 'Vo']
+ * operand: ['Woq', 'Vo']
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48298,7 +48298,7 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movlpd);
-      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48308,7 +48308,7 @@ bool X86Architecture::Table_2_13(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movlps);
-      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48419,11 +48419,11 @@ bool X86Architecture::Table_2_15(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * mnemonic: movhps
- * operand: ['Vo', 'Uoq']
+ * operand: ['Vo', 'Woq']
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movhpd
- * operand: ['Vo', 'Uoq']
+ * operand: ['Vo', 'Woq']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48449,7 +48449,7 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movhpd);
-      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48459,7 +48459,7 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movhps);
-      if (Operand__Vo_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48477,11 +48477,11 @@ bool X86Architecture::Table_2_16(BinaryStream const& rBinStrm, TOffset Offset, I
  * invalid
  *
  * mnemonic: movhps
- * operand: ['Uoq', 'Vo']
+ * operand: ['Woq', 'Vo']
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movhpd
- * operand: ['Uoq', 'Vo']
+ * operand: ['Woq', 'Vo']
  * prefix: 66
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48492,7 +48492,7 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movhpd);
-      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48502,7 +48502,7 @@ bool X86Architecture::Table_2_17(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movhps);
-      if (Operand__Uoq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -65251,7 +65251,7 @@ bool X86Architecture::Table_3_38_18(BinaryStream const& rBinStrm, TOffset Offset
  * opcode: 19
  *
  * mnemonic: broadcastsd
- * operand: ['Vy', 'Uoq']
+ * operand: ['Vy', 'Woq']
  * prefix: 66
  * attr: ['nc', 'w0']
  * cpu_model: >= X86_Arch_Avx
@@ -65279,7 +65279,7 @@ bool X86Architecture::Table_3_38_19(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Broadcastsd);
-      if (Operand__Vy_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vy_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -67436,7 +67436,7 @@ bool X86Architecture::Table_3_38_58(BinaryStream const& rBinStrm, TOffset Offset
  * prefix: 66
  * opcode: 59
  * attr: ['nv', 'w0']
- * operand: ['Vx', 'Uoq']
+ * operand: ['Vx', 'Woq']
  * cpu_model: >= X86_Arch_Avx2
 **/
 bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -67445,7 +67445,7 @@ bool X86Architecture::Table_3_38_59(BinaryStream const& rBinStrm, TOffset Offset
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pbroadcastq);
-      if (Operand__Vx_Uoq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vx_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -87668,6 +87668,24 @@ bool X86Architecture::Operand__Vx_Uoq(BinaryStream const& rBinStrm, TOffset Offs
   return true;
 }
 
+/* operand ['op0 = decode_Vx', 'op1 = decode_Woq'] */
+bool X86Architecture::Operand__Vx_Woq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vx
+  auto spOprd0 = Decode_Vx(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Woq
+  auto spOprd1 = Decode_Woq(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
 /* operand ['op0 = decode_Vx', 'op1 = decode_Wx'] */
 bool X86Architecture::Operand__Vx_Wx(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -89087,11 +89105,11 @@ Expression::SPType X86Architecture::Decode_Vod(BinaryStream const& rBinStrm, TOf
   return __Decode_Vod(rBinStrm, Offset, rInsn, Mode);
 }
 
-/* decoder ["call('Decode_Woq')"] */
+/* decoder ["call('Decode_Voq')"] */
 Expression::SPType X86Architecture::Decode_Voq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-  // operand0: call('Decode_Woq')
-  return __Decode_Woq(rBinStrm, Offset, rInsn, Mode);
+  // operand0: call('Decode_Voq')
+  return __Decode_Voq(rBinStrm, Offset, rInsn, Mode);
 }
 
 /* decoder ["call('Decode_Vx')"] */

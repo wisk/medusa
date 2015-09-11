@@ -784,6 +784,14 @@ semantic:
   movsx: &movsx |
     op0.val = sign_extend(op1.val, int(op0.bit, op0.bit));
 
+  movsd: &movsd |
+    if __code and is_expr_id(op0) and is_expr_mem(op1):
+      op0.val = bit_cast(op1.val, int_type128);
+    if __code and is_expr_mem(op0) and is_expr_id(op1):
+      op0.val = bit_cast(op1.val, int_type64)
+    if __code and is_expr_id(op0) and is_expr_id(op1):
+      op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
     [
@@ -3214,12 +3222,12 @@ instruction:
             cpu_model: ">= X86_Arch_Sse2"
 
           - mnemonic: movss
-            operand: [ Vo, Uod ]
+            operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
 
           - mnemonic: movsd
-            operand: [ Vo, Uoq ]
+            operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3255,11 +3263,11 @@ instruction:
             cpu_model: "== X86_Arch_80386"
 
           - mnemonic: movlps
-            operand: [ Vo, Uoq ]
+            operand: [ Vo, Woq ]
             cpu_model: ">= X86_Arch_Sse"
 
           - mnemonic: movlpd
-            operand: [ Vo, Uoq ]
+            operand: [ Vo, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3280,11 +3288,11 @@ instruction:
             cpu_model: "== X86_Arch_80386"
 
           - mnemonic: movlps
-            operand: [ Uoq, Vo ]
+            operand: [ Woq, Vo ]
             cpu_model: ">= X86_Arch_Sse"
 
           - mnemonic: movlpd
-            operand: [ Uoq, Vo ]
+            operand: [ Woq, Vo ]
             cpu_model: ">= X86_Arch_Sse2"
 
       - opcode: 0x14
@@ -3318,11 +3326,11 @@ instruction:
           - invalid:
 
           - mnemonic: movhps
-            operand: [ Vo, Uoq ]
+            operand: [ Vo, Woq ]
             cpu_model: ">= X86_Arch_Sse"
 
           - mnemonic: movhpd
-            operand: [ Vo, Uoq ]
+            operand: [ Vo, Woq ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -3336,11 +3344,11 @@ instruction:
           - invalid:
 
           - mnemonic: movhps
-            operand: [ Uoq, Vo ]
+            operand: [ Woq, Vo ]
             cpu_model: ">= X86_Arch_Sse"
 
           - mnemonic: movhpd
-            operand: [ Uoq, Vo ]
+            operand: [ Woq, Vo ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Sse2"
 
@@ -6739,7 +6747,7 @@ instruction:
       - opcode: 0x19
         sub_opcodes:
           - mnemonic: broadcastsd
-            operand: [ Vy, Uoq ]
+            operand: [ Vy, Woq ]
             attr: [ nc, w0 ]
             prefix: 0x66
             cpu_model: ">= X86_Arch_Avx"
@@ -7447,7 +7455,7 @@ instruction:
 
       - opcode: 0x59
         mnemonic: pbroadcastq
-        operand: [ Vx, Uoq ]
+        operand: [ Vx, Woq ]
         attr: [ nv, w0 ]
         prefix: 0x66
         cpu_model: ">= X86_Arch_Avx2"
@@ -13649,7 +13657,7 @@ operand:
   decode_Ux: [ call('Decode_Ux') ]
   decode_Vo: [ call('Decode_Vo') ]
   decode_Vod: [ call('Decode_Vod') ]
-  decode_Voq: [ call('Decode_Woq') ]
+  decode_Voq: [ call('Decode_Voq') ]
   decode_Vx: [ call('Decode_Vx') ]
   decode_Vy: [ call('Decode_Vy') ]
   decode_Wd: [ call('Decode_Wd') ]
@@ -13915,6 +13923,7 @@ operand:
   Vx_Uo_w: [ op0 = decode_Vx, op1 = decode_Uo, op2 = decode_w ]
   Vx_Uod: [ op0 = decode_Vx, op1 = decode_Uod ]
   Vx_Uoq: [ op0 = decode_Vx, op1 = decode_Uoq ]
+  Vx_Woq: [ op0 = decode_Vx, op1 = decode_Woq ]
   Vx_Mq_x_Hx: [ op0 = decode_Vx, op1 = decode_Mq, op2 = decode_x, op3 = decode_Hx ]
   Vx_Mqo_Hx: [ op0 = decode_Vx, op1 = decode_Mqo, op2 = decode_Hx ]
   Vx_Mx: [ op0 = decode_Vx, op1 = decode_Mx ]

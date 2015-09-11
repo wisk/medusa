@@ -1329,3 +1329,8 @@ Expression::SPType Expr::MakeSys(std::string const& rName, Address const& rAddr)
 {
   return std::make_shared<SystemExpression>(rName, rAddr);
 }
+
+bool Expr::TestKind(Expression::Kind Kind, Expression::SPType spExpr)
+{
+  return spExpr->IsKindOf(Kind);
+}

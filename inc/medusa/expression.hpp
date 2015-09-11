@@ -684,6 +684,8 @@ namespace Expr
 
   Medusa_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr = nullptr);
   Medusa_EXPORT Expression::SPType MakeSys(std::string const& rName, Address const& rAddr);
+
+  Medusa_EXPORT bool TestKind(Expression::Kind Kind, Expression::SPType spExpr);
 }
 
 
