@@ -793,7 +793,7 @@ semantic:
     if __code and is_id_and_id(op0, op1):
       tmp_val = op0.val >> int(op0.bit, 64)
       tmp_val = tmp_val << int(op0.bit, 64)
-      tmp_val += bit_cast(bit_cast(op1.val, int_type64), int_type128)
+      tmp_val += bit_cast(op1.val, int_type64)
       op0.val = tmp_val;
     free_var('tmp_val');
 
