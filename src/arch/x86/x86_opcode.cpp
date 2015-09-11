@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 15:50:04 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 18:01:02 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -48056,12 +48056,17 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movsd
  * operand: ['Vo', 'Woq']
  * prefix: f2
- * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+ * semantic: alloc_var('tmp_val', op0.bit);
+if __code and is_id_and_mem(op0, op1):
   op0.val = bit_cast(op1.val, int_type128);
-if __code and is_expr_mem(op0) and is_expr_id(op1):
-  op0.val = bit_cast(op1.val, int_type64)
-if __code and is_expr_id(op0) and is_expr_id(op1):
-  op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+if __code and is_mem_and_id(op0, op1):
+  op0.val = bit_cast(op1.val, int_type64);
+if __code and is_id_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 64)
+  tmp_val = tmp_val << int(op0.bit, 64)
+  tmp_val += bit_cast(op1.val, int_type64)
+  op0.val = tmp_val;
+free_var('tmp_val');
 
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48078,34 +48083,59 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+        /* semantic: alloc_var('tmp_val', op0.bit) */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        /* semantic: if __code and is_id_and_mem(op0, op1):
           op0.val = bit_cast(op1.val, int_type128) */
-        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Mem, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
         }
-        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
-          op0.val = bit_cast(op1.val, int_type64)
-        if __code and is_expr_id(op0) and is_expr_id(op1):
-          op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
-         */
-        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        /* semantic: if __code and is_mem_and_id(op0, op1):
+          op0.val = bit_cast(op1.val, int_type64) */
+        if ((Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
         }
-        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        /* semantic: if __code and is_id_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 64)
+          tmp_val = tmp_val << int(op0.bit, 64)
+          tmp_val += bit_cast(op1.val, int_type64)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64)), Expr::MakeConst(128, 128))));
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
         }
+        /* semantic: free_var('tmp_val') */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Free));
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -48187,12 +48217,17 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movsd
  * operand: ['Uo', 'Voq']
  * prefix: f2
- * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+ * semantic: alloc_var('tmp_val', op0.bit);
+if __code and is_id_and_mem(op0, op1):
   op0.val = bit_cast(op1.val, int_type128);
-if __code and is_expr_mem(op0) and is_expr_id(op1):
-  op0.val = bit_cast(op1.val, int_type64)
-if __code and is_expr_id(op0) and is_expr_id(op1):
-  op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+if __code and is_mem_and_id(op0, op1):
+  op0.val = bit_cast(op1.val, int_type64);
+if __code and is_id_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 64)
+  tmp_val = tmp_val << int(op0.bit, 64)
+  tmp_val += bit_cast(op1.val, int_type64)
+  op0.val = tmp_val;
+free_var('tmp_val');
 
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -48209,34 +48244,59 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
-        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+        /* semantic: alloc_var('tmp_val', op0.bit) */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        /* semantic: if __code and is_id_and_mem(op0, op1):
           op0.val = bit_cast(op1.val, int_type128) */
-        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Mem, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
         }
-        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
-          op0.val = bit_cast(op1.val, int_type64)
-        if __code and is_expr_id(op0) and is_expr_id(op1):
-          op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
-         */
-        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        /* semantic: if __code and is_mem_and_id(op0, op1):
+          op0.val = bit_cast(op1.val, int_type64) */
+        if ((Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
             Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
         }
-        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        /* semantic: if __code and is_id_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 64)
+          tmp_val = tmp_val << int(op0.bit, 64)
+          tmp_val += bit_cast(op1.val, int_type64)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
         {
           /* block glb expressions */
           AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x40))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
             rInsn.GetOperand(0),
-            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64)), Expr::MakeConst(128, 128))));
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
         }
+        /* semantic: free_var('tmp_val') */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Free));
         rInsn.SetSemantic(AllExpr);
       }
       return true;

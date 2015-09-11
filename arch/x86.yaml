@@ -785,12 +785,17 @@ semantic:
     op0.val = sign_extend(op1.val, int(op0.bit, op0.bit));
 
   movsd: &movsd |
-    if __code and is_expr_id(op0) and is_expr_mem(op1):
+    alloc_var('tmp_val', op0.bit);
+    if __code and is_id_and_mem(op0, op1):
       op0.val = bit_cast(op1.val, int_type128);
-    if __code and is_expr_mem(op0) and is_expr_id(op1):
-      op0.val = bit_cast(op1.val, int_type64)
-    if __code and is_expr_id(op0) and is_expr_id(op1):
-      op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+    if __code and is_mem_and_id(op0, op1):
+      op0.val = bit_cast(op1.val, int_type64);
+    if __code and is_id_and_id(op0, op1):
+      tmp_val = op0.val >> int(op0.bit, 64)
+      tmp_val = tmp_val << int(op0.bit, 64)
+      tmp_val += bit_cast(bit_cast(op1.val, int_type64), int_type128)
+      op0.val = tmp_val;
+    free_var('tmp_val');
 
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
