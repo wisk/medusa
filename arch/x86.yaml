@@ -3215,6 +3215,7 @@ instruction:
           - mnemonic: movups
             operand: [ Vx, Wx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: movupd
             operand: [ Vx, Wx ]
@@ -3230,6 +3231,7 @@ instruction:
             operand: [ Vo, Woq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movsd
 
       - opcode: 0x11
         sub_opcodes:
@@ -3240,6 +3242,7 @@ instruction:
           - mnemonic: movups
             operand: [ Wx, Vx ]
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
           - mnemonic: movupd
             operand: [ Wx, Vx ]
@@ -3255,6 +3258,7 @@ instruction:
             operand: [ Uo, Voq ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movsd
 
       - opcode: 0x12
         sub_opcodes:

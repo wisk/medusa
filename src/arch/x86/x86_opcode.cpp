@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 12:00:43 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 15:50:04 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -48039,6 +48039,8 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movups
  * operand: ['Vx', 'Wx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movupd
@@ -48054,6 +48056,13 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movsd
  * operand: ['Vo', 'Woq']
  * prefix: f2
+ * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_expr_mem(op0) and is_expr_id(op1):
+  op0.val = bit_cast(op1.val, int_type64)
+if __code and is_expr_id(op0) and is_expr_id(op1):
+  op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48066,6 +48075,38 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Vo_Woq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
+        }
+        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
+          op0.val = bit_cast(op1.val, int_type64)
+        if __code and is_expr_id(op0) and is_expr_id(op1):
+          op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+         */
+        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
+        }
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64)), Expr::MakeConst(128, 128))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -48097,6 +48138,14 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else if (m_CfgMdl.GetEnum("Architecture") == X86_Arch_80386)
@@ -48121,6 +48170,8 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movups
  * operand: ['Wx', 'Vx']
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movupd
@@ -48136,6 +48187,13 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movsd
  * operand: ['Uo', 'Voq']
  * prefix: f2
+ * semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_expr_mem(op0) and is_expr_id(op1):
+  op0.val = bit_cast(op1.val, int_type64)
+if __code and is_expr_id(op0) and is_expr_id(op1):
+  op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+
  * cpu_model: >= X86_Arch_Sse2
  *
 **/
@@ -48148,6 +48206,38 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Uo_Voq(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_expr_id(op0) and is_expr_mem(op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(128, 128))));
+        }
+        /* semantic: if __code and is_expr_mem(op0) and is_expr_id(op1):
+          op0.val = bit_cast(op1.val, int_type64)
+        if __code and is_expr_id(op0) and is_expr_id(op1):
+          op0.val = zero_extend(bit_cast(op1.val, int_type64), int_type128)
+         */
+        if (Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64))));
+        }
+        if (Expr::TestKind(Expression::Id, rInsn.GetOperand(0)))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpZext, Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConst(64, 64)), Expr::MakeConst(128, 128))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -48178,6 +48268,14 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
