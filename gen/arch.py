@@ -528,11 +528,6 @@ class ArchConvertion:
                     return 'rInsn'
 
                 # Fonction name
-                elif node_name == 'is_expr_id':
-                    return 'Expr::TestKind(Expression::Id, %s)'
-                elif node_name == 'is_expr_mem':
-                    return 'Expr::TestKind(Expression::Mem, %s)'
-
                 elif node_name == 'ite':
                     return 'Expr::MakeTernaryCond(%s,\n%s, %s)'
 
@@ -578,6 +573,16 @@ class ArchConvertion:
                     return 'rInsn.GetOperand(0)->GetBitSize() == 32'
                 elif node_name == 'is_qword_operation':
                     return 'rInsn.GetOperand(0)->GetBitSize() == 64'
+                elif node_name == 'is_expr_id':
+                    return 'Expr::TestKind(Expression::Id, %s)'
+                elif node_name == 'is_expr_mem':
+                    return 'Expr::TestKind(Expression::Mem, %s)'
+                elif node_name == 'is_id_and_mem':
+                    return '(Expr::TestKind(Expression::Id, %s) && Expr::TestKind(Expression::Mem, %s))'
+                elif node_name == 'is_mem_and_id':
+                    return '(Expr::TestKind(Expression::Mem, %s) && Expr::TestKind(Expression::Id, %s))'
+                elif node_name == 'is_id_and_id':
+                    return '(Expr::TestKind(Expression::Id, %s) && Expr::TestKind(Expression::Id, %s))'
 
                 elif node_name == 'instruction_has_prefix':
                     return 'rInsn.GetPrefix()'
