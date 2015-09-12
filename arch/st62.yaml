@@ -11,6 +11,10 @@ architecture_information:
 ## Control flow operations
 
 function:
+  zero_flag: &zero_flag |
+    zf.id = ite(res.val == int(op0.bit, 0), int1(1), int1(0))
+  carry_flag_add: &carry_flag_add |
+    cf.id = bit_cast(((op0.val & op1.val) ^ ((op0.val ^ op1.val ^ res.val) & (op0.val ^ op1.val))) >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
   jmp: &jmp |
     program.id = op0.val;
   jmpz: &jmpz |
@@ -26,6 +30,63 @@ function:
     #stack.mem = program.id;
     program.id = op0.val;
 
+semantic:
+  ld: &ld |
+    alloc_var('res', op0.bit);
+    res.val = op1.val;
+    call('zero_flag');
+    op0.val = res.val;
+    free_var('res');
+
+  inc: &inc |
+    alloc_var('op1', op0.bit);
+    alloc_var('res', op0.bit);
+    op1 = int(op0.bit, 1);
+    res = op0.val + op1;
+    call('zero_flag');
+    op0.val = res.val;
+    free_var('op1');
+    free_var('res');
+
+  dec: &dec |
+    alloc_var('op1', op0.bit);
+    alloc_var('res', op0.bit);
+    op1 = int(op0.bit, 1);
+    res = op0.val - op1;
+    call('zero_flag');
+    op0.val = res.val;
+    free_var('op1');
+    free_var('res');
+
+  sub: &sub |
+    alloc_var('res', op0.bit);
+    res = op0.val - op1.val;
+    call('zero_flag');
+    cf.id = ite(op0.val < op1.val, int1(1), int1(0))
+    op0.val = res;
+    free_var('res');
+
+  add: &add |
+    alloc_var('res', op0.bit);
+    res = op0.val - op1.val;
+    call('zero_flag');
+    call('carry_flag_add');
+    op0.val = res;
+    free_var('res');
+
+  and: &and |
+    alloc_var('res', op0.bit);
+    res = op0.val & op1.val;
+    call('zero_flag')
+    op0.val = res;
+    free_var('res');
+
+  cp: &cp |
+    alloc_var('res', op0.bit);
+    res = op0.val - op1.val;
+    cf.id = ite(op0.val < op1.val, int1(1), int1(0))
+    free_var('res');
+
 instruction:
   table:
    table_1:
@@ -33,6 +94,7 @@ instruction:
       mnemonic: jrnz
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ zf ]
       semantic: *jmpnz
 
     - opcode: 0x01
@@ -45,6 +107,7 @@ instruction:
       mnemonic: jrnc
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ cf ]
       semantic: *jmpnc
 
     - opcode: 0x03
@@ -52,6 +115,14 @@ instruction:
       alternate: jrs
       operand: [ bitdirect, direct, ee ]
       operation_type: ['jmp', 'cond']
+      update_flags: [ cf ]
+      test_flags: [ cf ]
+      semantic: |
+        cf.id = bit_cast(op1.val >> op0.val, int1(1));
+        if __expr and cf.id == int1(0): program.id = op2.val;
+      semantic_alt: |
+        cf.id = bit_cast(op1.val >> op0.val, int1(1));
+        if __expr and cf.id == int1(1): program.id = op2.val;
 
     - opcode: 0x04
       mnemonic: nop
@@ -63,6 +134,7 @@ instruction:
       mnemonic: jrc
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ cf ]
       semantic: *jmpc
 
     - opcode: 0x07
@@ -72,6 +144,7 @@ instruction:
       mnemonic: jrnz
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ zf ]
       semantic: *jmpnz
 
     - opcode: 0x09
@@ -84,17 +157,23 @@ instruction:
       mnemonic: jrnc
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ cf ]
       semantic: *jmpnc
 
     - opcode: 0x0b
       mnemonic: res
       alternate: set
       operand: [ bitdirect, direct ]
+      semantic: |
+        op1.val = op1.val & ~(int8(1) << op0.val)
+      semantic_alt: |
+        op1.val = op1.val | (int8(1) << op0.val)
 
     - opcode: 0x0c
       mnemonic: jrz
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ zf ]
       semantic: *jmpz
 
     - opcode: 0x0d
@@ -104,6 +183,7 @@ instruction:
       mnemonic: jrc
       operand: [ pcr ]
       operation_type: ['jmp', 'cond']
+      test_flags: [ cf ]
       semantic: *jmpc
 
     - opcode: 0x0f
@@ -115,85 +195,115 @@ instruction:
 
     - opcode: 0x01
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ X ]
+      semantic: *inc
 
     - opcode: 0x02
       invalid: true
 
     - opcode: 0x03
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, X ]
+      semantic: *ld
 
     - opcode: 0x04
       invalid: true
 
     - opcode: 0x05
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ Y ]
+      semantic: *inc
 
     - opcode: 0x06
       invalid: true
 
     - opcode: 0x07
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, Y ]
+      semantic: *ld
 
     - opcode: 0x08
       invalid: true
 
     - opcode: 0x09
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ V ]
+      semantic: *inc
 
     - opcode: 0x0a
       invalid: true
 
     - opcode: 0x0b
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, V ]
+      semantic: *ld
 
     - opcode: 0x0c
       invalid: true
 
     - opcode: 0x0d
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ W ]
+      semantic: *inc
 
     - opcode: 0x0e
       invalid: true
 
     - opcode: 0x0f
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, W ]
+      semantic: *ld
 
    table_7:
     - opcode: 0x00
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, rX ]
+      semantic: *ld
 
     - opcode: 0x01
       mnemonic: ldi
+      update_flags: [ zf ]
       operand: [ A, imm ]
+      semantic: *ld
 
     - opcode: 0x02
       mnemonic: cp
+      update_flags: [ zf, cf ]
       operand: [ A, rX ]
+      semantic: *cp
 
     - opcode: 0x03
       mnemonic: cpi
+      update_flags: [ zf, cf ]
       operand: [ A, imm ]
+      semantic: *cp
 
     - opcode: 0x04
       mnemonic: add
+      update_flags: [ zf, cf ]
       operand: [ A, rX ]
+      semantic: *add
 
     - opcode: 0x05
       mnemonic: addi
       operand: [ A, imm ]
+      update_flags: [ zf, cf ]
+      semantic: *add
 
     - opcode: 0x06
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ rX ]
+      semantic: *inc
 
     - opcode: 0x07
       invalid: true
@@ -201,29 +311,41 @@ instruction:
     - opcode: 0x08
       mnemonic: ld
       operand: [ rX, A ]
+      update_flags: [ zf ]
+      semantic: *ld
 
     - opcode: 0x09
       invalid: true
 
     - opcode: 0x0a
       mnemonic: and
-      operand: [ rX, A ]
+      update_flags: [ zf ]
+      operand: [ A, rX ]
+      semantic: *and
 
     - opcode: 0x0b
       mnemonic: andi
+      update_flags: [ zf ]
       operand: [ A, imm ]
+      semantic: *and
 
     - opcode: 0x0c
       mnemonic: sub
+      update_flags: [ zf, cf ]
       operand: [ A, rX ]
+      semantic: *sub
 
     - opcode: 0x0d
       mnemonic: subi
+      update_flags: [ zf, cf ]
       operand: [ A, imm ]
+      semantic: *sub
 
     - opcode: 0x0e
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ rX ]
+      semantic: *dec
 
     - opcode: 0x0f
       invalid: true
@@ -232,6 +354,7 @@ instruction:
     - opcode: 0x00
       mnemonic: ldi
       operand: [ direct, imm ]
+      semantic: *ld
 
     - opcode: 0x01
       mnemonic: set
@@ -240,40 +363,66 @@ instruction:
     - opcode: 0x02
       mnemonic: com
       operand: [ A ]
+      semantic: |
+        alloc_var('res', op0.bit);
+        cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
+        res = ~op0.val;
+        op0.val = res;
+        call('zero_flag')
+        free_var('res');
 
     - opcode: 0x03
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ X, A ]
+      semantic: *ld
 
     - opcode: 0x04
       mnemonic: reti
+      update_flags: [ zf, cf ]
       operation_type: ['ret']
 
     - opcode: 0x05
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ Y ]
+      semantic: *dec
 
     - opcode: 0x06
       mnemonic: stop
 
     - opcode: 0x07
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ Y, A ]
+      semantic: *ld
 
     - opcode: 0x08
       invalid: true
 
     - opcode: 0x09
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ V ]
+      semantic: *dec
 
     - opcode: 0x0a
       mnemonic: rlc
+      test_flags: [ cf ]
+      update_flags: [ zf, cf ]
       operand: [ A ]
+      semantic: |
+        alloc_var('res', op0.bit);
+        cf.id = bit_cast(op0.val >> (int(op0.bit, op0.bit) - int(op0.bit, 1)), int1(1));
+        res.val = op0.val << int(op0.bit, 1) + bit_cast(cf.id, int(op0.bit, op0.bit));
+        op0.val = res.val;
+        free_var('res');
 
     - opcode: 0x0b
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ V, A ]
+      semantic: *ld
 
     - opcode: 0x0c
       mnemonic: ret
@@ -281,80 +430,115 @@ instruction:
 
     - opcode: 0x0d
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ W ]
+      semantic: *dec
 
     - opcode: 0x0e
       mnemonic: wait
 
     - opcode: 0x0f
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ W, A ]
+      semantic: *ld
 
    table_F:
     - opcode: 0x00
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, rY ]
+      semantic: *ld
 
     - opcode: 0x01
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ A, direct ]
+      semantic: *ld
 
     - opcode: 0x02
       mnemonic: cp
+      update_flags: [ zf, cf ]
       operand: [ A, rY ]
+      semantic: *cp
 
     - opcode: 0x03
       mnemonic: cp
+      update_flags: [ zf, cf ]
       operand: [ A, direct ]
+      semantic: *cp
 
     - opcode: 0x04
       mnemonic: add
+      update_flags: [ zf, cf ]
       operand: [ A, rY ]
+      semantic: *add
 
     - opcode: 0x05
       mnemonic: add
+      update_flags: [ zf, cf ]
       operand: [ A, direct ]
+      semantic: *add
 
     - opcode: 0x06
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ rY ]
+      semantic: *inc
 
     - opcode: 0x07
       mnemonic: inc
+      update_flags: [ zf ]
       operand: [ direct ]
+      semantic: *inc
 
     - opcode: 0x08
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ rY, A ]
+      semantic: *ld
 
     - opcode: 0x09
       mnemonic: ld
+      update_flags: [ zf ]
       operand: [ direct, A ]
+      semantic: *ld
 
     - opcode: 0x0a
       mnemonic: and
+      update_flags: [ zf ]
       operand: [ A, rY ]
+      semantic: *and
 
     - opcode: 0x0b
       mnemonic: and
+      update_flags: [ zf ]
       operand: [ A, direct ]
+      semantic: *and
 
     - opcode: 0x0c
       mnemonic: sub
+      update_flags: [ zf, cf ]
       operand: [ A, rY ]
+      semantic: *sub
 
     - opcode: 0x0d
       mnemonic: sub
+      update_flags: [ zf, cf ]
       operand: [ A, direct ]
+      semantic: *sub
 
     - opcode: 0x0e
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ rY ]
+      semantic: *dec
 
     - opcode: 0x0f
       mnemonic: dec
+      update_flags: [ zf ]
       operand: [ direct ]
-
+      semantic: *dec
 
 
 operand:

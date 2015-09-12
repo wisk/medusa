@@ -138,7 +138,12 @@ class St62ArchConvertion(ArchConvertion):
                     'return false;\n')
 
         if 'semantic' in opcd:
+            if 'semantic_alt' in opcd:
+                res += 'if (Value & 0x10)\n'
+                res += self._ConvertSemanticToCode(opcd, opcd['semantic_alt'], self.id_mapper)
+                res += 'else\n'
             res += self._ConvertSemanticToCode(opcd, opcd['semantic'], self.id_mapper)
+
         else:
             res += self._ConvertSemanticToCode(opcd, None, self.id_mapper)
         res += 'return true;\n'
