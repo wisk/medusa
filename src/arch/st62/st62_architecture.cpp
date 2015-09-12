@@ -162,12 +162,13 @@ bool St62Architecture::St62CpuContext::SetAddress(CpuContext::AddressKind AddrKi
 std::string St62Architecture::St62CpuContext::ToString(void) const
 {
   return (boost::format(
-      "A:0x%02x X:0x%02x Y: 0x%02x\n"
-      "V:0x%02x W:0x%02x\n"
-      "pc:%04x\n")
+      "A:0x%02x X:0x%02x Y: 0x%02x V:0x%02x W:0x%02x\n"
+      "pc:%04x flags: %s%s\n")
     % (u16)m_Context.A % (u16)m_Context.X % (u16)m_Context.Y
     % (u16)m_Context.V % (u16)m_Context.W
-    % m_Context.Pc).str();
+    % m_Context.Pc
+    % (m_Context.CF ? "C" : "c")
+    % (m_Context.ZF ? "Z" : "z")).str();
 }
 
 void* St62Architecture::St62CpuContext::GetRegisterAddress(u32 Register)
