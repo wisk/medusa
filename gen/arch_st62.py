@@ -14,7 +14,11 @@ class St62ArchConvertion(ArchConvertion):
         'cf':'ST62_Flg_C',   'zf':'ST62_Flg_Z',
         'A':'ST62_Reg_A',   'X':'ST62_Reg_X',   'Y':'ST62_Reg_Y',
         'V':'ST62_Reg_V',   'W':'ST62_Reg_W',
-        'pc':'ST62_Reg_Pc' }
+        'pc':'ST62_Reg_Pc',
+        'stk0':'ST62_Reg_Stk0', 'stk1':'ST62_Reg_Stk1',
+        'stk2':'ST62_Reg_Stk2', 'stk3':'ST62_Reg_Stk3',
+        'stk4':'ST62_Reg_Stk4', 'stk5':'ST62_Reg_Stk5',
+        }
 
         self.id_mem_mapper = {
         'A':'0xFF',   'X':'0x80',   'Y':'0x81',

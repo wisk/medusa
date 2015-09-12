@@ -18,6 +18,12 @@ char const* St62Architecture::ST62CpuInformation::ConvertIdentifierToName(u32 Id
 
     /* Pseudo-register */
   case ST62_Reg_Pc: return "pc";
+  case ST62_Reg_Stk0: return "stk0";
+  case ST62_Reg_Stk1: return "stk1";
+  case ST62_Reg_Stk2: return "stk2";
+  case ST62_Reg_Stk3: return "stk3";
+  case ST62_Reg_Stk4: return "stk4";
+  case ST62_Reg_Stk5: return "stk5";
   }
 }
 
@@ -30,6 +36,10 @@ u32 St62Architecture::ST62CpuInformation::ConvertNameToIdentifier(std::string co
     s_NameToId["A"] = ST62_Reg_A; s_NameToId["X"] = ST62_Reg_X; s_NameToId["Y"] = ST62_Reg_Y;
     s_NameToId["V"] = ST62_Reg_V; s_NameToId["W"] = ST62_Reg_W;
     s_NameToId["pc"] = ST62_Reg_Pc;
+    s_NameToId["stk0"] = ST62_Reg_Stk0;  s_NameToId["stk1"] = ST62_Reg_Stk1;
+    s_NameToId["stk2"] = ST62_Reg_Stk2;  s_NameToId["stk3"] = ST62_Reg_Stk3;
+    s_NameToId["stk4"] = ST62_Reg_Stk4;  s_NameToId["stk5"] = ST62_Reg_Stk5;
+
   }
   auto itId = s_NameToId.find(rName);
   if (itId == std::end(s_NameToId))
@@ -64,6 +74,9 @@ u32 St62Architecture::ST62CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
     return 8;
 
     /* Pseudo-register */
+  case ST62_Reg_Stk0: case ST62_Reg_Stk1:
+  case ST62_Reg_Stk2: case ST62_Reg_Stk3:
+  case ST62_Reg_Stk4: case ST62_Reg_Stk5:
   case ST62_Reg_Pc:
     return 16;
   }
@@ -73,7 +86,7 @@ bool St62Architecture::St62CpuContext::ReadRegister(u32 Reg, void* pVal, u32 Bit
 {
 #define READ_F(flg)        if (BitSize != 1)  return false; *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
 #define READ_REGISTER(reg) if (BitSize != 8)  return false; *reinterpret_cast<u8  *>(pVal) = m_Context.reg;
-#define READ_PC()          if (BitSize != 16) return false; *reinterpret_cast<u16 *>(pVal) = m_Context.Pc;
+#define READ_PC(reg)       if (BitSize != 16) return false; *reinterpret_cast<u16 *>(pVal) = m_Context.reg;
   switch (Reg)
   {
   case ST62_Flg_Z: READ_F(ZF); break;
@@ -85,7 +98,13 @@ bool St62Architecture::St62CpuContext::ReadRegister(u32 Reg, void* pVal, u32 Bit
   case ST62_Reg_Y: READ_REGISTER(Y); break;
   case ST62_Reg_V: READ_REGISTER(V); break;
   case ST62_Reg_W: READ_REGISTER(W); break;
-  case ST62_Reg_Pc:READ_PC(); break;
+  case ST62_Reg_Pc:READ_PC(Pc); break;
+  case ST62_Reg_Stk0:READ_PC(Stk[0]); break;
+  case ST62_Reg_Stk1:READ_PC(Stk[1]); break;
+  case ST62_Reg_Stk2:READ_PC(Stk[2]); break;
+  case ST62_Reg_Stk3:READ_PC(Stk[3]); break;
+  case ST62_Reg_Stk4:READ_PC(Stk[4]); break;
+  case ST62_Reg_Stk5:READ_PC(Stk[5]); break;
   default: return false;
   }
 #undef READ_REGISTER
@@ -97,7 +116,7 @@ bool St62Architecture::St62CpuContext::WriteRegister(u32 Reg, void const* pVal, 
 {
 #define WRITE_F(flg)        if (BitSize != 1)  return false; m_Context.flg = *reinterpret_cast<u8 const*>(pVal) ? true : false;
 #define WRITE_REGISTER(reg) if (BitSize != 8)  return false; m_Context.reg = *reinterpret_cast<u8 const*>(pVal);
-#define WRITE_PC()          if (BitSize != 16) return false; m_Context.Pc  = *reinterpret_cast<u16 const*>(pVal);
+#define WRITE_PC(reg)       if (BitSize != 16) return false; m_Context.reg = *reinterpret_cast<u16 const*>(pVal);
   switch (Reg)
   {
   case ST62_Flg_Z: WRITE_F(ZF); break;
@@ -109,7 +128,13 @@ bool St62Architecture::St62CpuContext::WriteRegister(u32 Reg, void const* pVal, 
   case ST62_Reg_Y: WRITE_REGISTER(Y); break;
   case ST62_Reg_V: WRITE_REGISTER(V); break;
   case ST62_Reg_W: WRITE_REGISTER(W); break;
-  case ST62_Reg_Pc:WRITE_PC(); break;
+  case ST62_Reg_Pc:WRITE_PC(Pc); break;
+  case ST62_Reg_Stk0:WRITE_PC(Stk[0]); break;
+  case ST62_Reg_Stk1:WRITE_PC(Stk[1]); break;
+  case ST62_Reg_Stk2:WRITE_PC(Stk[2]); break;
+  case ST62_Reg_Stk3:WRITE_PC(Stk[3]); break;
+  case ST62_Reg_Stk4:WRITE_PC(Stk[4]); break;
+  case ST62_Reg_Stk5:WRITE_PC(Stk[5]); break;
   default: return false;
   }
 #undef WRITE_REGISTER
@@ -163,12 +188,16 @@ std::string St62Architecture::St62CpuContext::ToString(void) const
 {
   return (boost::format(
       "A:0x%02x X:0x%02x Y: 0x%02x V:0x%02x W:0x%02x\n"
-      "pc:%04x flags: %s%s\n")
+      "pc:%03x flags: %s%s  stack:%03x %03x %03x %03x %03x %03x")
     % (u16)m_Context.A % (u16)m_Context.X % (u16)m_Context.Y
     % (u16)m_Context.V % (u16)m_Context.W
     % m_Context.Pc
     % (m_Context.CF ? "C" : "c")
-    % (m_Context.ZF ? "Z" : "z")).str();
+    % (m_Context.ZF ? "Z" : "z")
+    % m_Context.Stk[0] % m_Context.Stk[1]
+    % m_Context.Stk[2] % m_Context.Stk[2]
+    % m_Context.Stk[4] % m_Context.Stk[3]
+    ).str();
 }
 
 void* St62Architecture::St62CpuContext::GetRegisterAddress(u32 Register)
@@ -181,6 +210,12 @@ void* St62Architecture::St62CpuContext::GetRegisterAddress(u32 Register)
     case ST62_Reg_V:  return &m_Context.V;
     case ST62_Reg_W:  return &m_Context.W;
     case ST62_Reg_Pc: return &m_Context.Pc;
+    case ST62_Reg_Stk0: return &m_Context.Stk[0];
+    case ST62_Reg_Stk1: return &m_Context.Stk[1];
+    case ST62_Reg_Stk2: return &m_Context.Stk[2];
+    case ST62_Reg_Stk3: return &m_Context.Stk[3];
+    case ST62_Reg_Stk4: return &m_Context.Stk[4];
+    case ST62_Reg_Stk5: return &m_Context.Stk[5];
     default: return nullptr;
   }
 }
@@ -204,6 +239,12 @@ u16 St62Architecture::St62CpuContext::GetRegisterOffset(u32 Register)
   OFF(ST62_Reg_V,  V);
   OFF(ST62_Reg_W,  W);
   OFF(ST62_Reg_Pc, Pc);
+  OFF(ST62_Reg_Stk0, Stk[0]);
+  OFF(ST62_Reg_Stk1, Stk[1]);
+  OFF(ST62_Reg_Stk2, Stk[2]);
+  OFF(ST62_Reg_Stk3, Stk[3]);
+  OFF(ST62_Reg_Stk4, Stk[4]);
+  OFF(ST62_Reg_Stk5, Stk[5]);
   default:           break;
   }
 #undef OFF
@@ -221,6 +262,13 @@ void St62Architecture::St62CpuContext::GetRegisters(CpuContext::RegisterList& Re
   RegList.push_back(ST62_Reg_V);
   RegList.push_back(ST62_Reg_W);
   RegList.push_back(ST62_Reg_Pc);
+
+  RegList.push_back(ST62_Reg_Stk0);
+  RegList.push_back(ST62_Reg_Stk1);
+  RegList.push_back(ST62_Reg_Stk2);
+  RegList.push_back(ST62_Reg_Stk3);
+  RegList.push_back(ST62_Reg_Stk4);
+  RegList.push_back(ST62_Reg_Stk5);
 }
 
 

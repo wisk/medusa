@@ -25,12 +25,25 @@ function:
     if __expr and cf.id == int1(1): program.id = op0.val;
   jmpnc: &jmpnc |
     if __expr and cf.id == int1(0): program.id = op0.val;
-  call: &call |
-    #stack.id -= stack.size;
-    #stack.mem = program.id;
-    program.id = op0.val;
 
 semantic:
+  call: &call |
+    stk5.id = stk4.id;
+    stk4.id = stk3.id;
+    stk3.id = stk2.id;
+    stk2.id = stk1.id;
+    stk1.id = stk0.id;
+    stk0.id = program.id;
+    program.id = op0.val;
+
+  ret: &ret |
+    program.id = stk0.id;
+    stk0.id = stk1.id;
+    stk1.id = stk2.id;
+    stk2.id = stk3.id;
+    stk3.id = stk4.id;
+    stk4.id = stk5.id;
+
   ld: &ld |
     alloc_var('res', op0.bit);
     res.val = op1.val;
@@ -381,6 +394,7 @@ instruction:
       mnemonic: reti
       update_flags: [ zf, cf ]
       operation_type: ['ret']
+      semantic: *ret
 
     - opcode: 0x05
       mnemonic: dec
@@ -427,6 +441,7 @@ instruction:
     - opcode: 0x0c
       mnemonic: ret
       operation_type: ['ret']
+      semantic: *ret
 
     - opcode: 0x0d
       mnemonic: dec

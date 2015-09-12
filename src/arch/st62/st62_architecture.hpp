@@ -61,6 +61,7 @@ private:
       u8 A, X, Y, V, W;
       bool ZF, CF;
       u16 Pc;
+      u16 Stk[6];
     } m_Context;
   };
 
@@ -130,6 +131,12 @@ enum ST62Identifiers
   ST62_Reg_V,
   ST62_Reg_W,
   ST62_Reg_Pc,
+  ST62_Reg_Stk0,
+  ST62_Reg_Stk1,
+  ST62_Reg_Stk2,
+  ST62_Reg_Stk3,
+  ST62_Reg_Stk4,
+  ST62_Reg_Stk5,
 };
 
 #endif // !ARCH_ST62_HPP

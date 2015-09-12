@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Sep 12 13:13:34 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Sep 12 13:52:18 2015) */
 #include "st62_architecture.hpp"
 const char *St62Architecture::m_Mnemonic[0x1e] =
 {
@@ -173,8 +173,12 @@ bool St62Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, 
  * operand: ['ext']
  * opcode: 01
  * operation_type: ['call']
- * semantic: #stack.id -= stack.size;
-#stack.mem = program.id;
+ * semantic: stk5.id = stk4.id;
+stk4.id = stk3.id;
+stk3.id = stk2.id;
+stk2.id = stk1.id;
+stk1.id = stk0.id;
+stk0.id = program.id;
 program.id = op0.val;
 
 **/
@@ -189,8 +193,30 @@ bool St62Architecture::Table_1_01(BinaryStream const& rBinStrm, TOffset Offset, 
     }
     {
       Expression::LSPType AllExpr;
-      /* semantic: #stack.id -= stack.size */
-      /* semantic: #stack.mem = program.id */
+      /* semantic: stk5.id = stk4.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk5, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo)));
+      /* semantic: stk4.id = stk3.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo)));
+      /* semantic: stk3.id = stk2.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo)));
+      /* semantic: stk2.id = stk1.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo)));
+      /* semantic: stk1.id = stk0.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo)));
+      /* semantic: stk0.id = program.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo),
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
       /* semantic: program.id = op0.val */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -2170,6 +2196,13 @@ bool St62Architecture::Table_d_03(BinaryStream const& rBinStrm, TOffset Offset, 
  * operation_type: ['ret']
  * update_flags: ['zf', 'cf']
  * opcode: 04
+ * semantic: program.id = stk0.id;
+stk0.id = stk1.id;
+stk1.id = stk2.id;
+stk2.id = stk3.id;
+stk3.id = stk4.id;
+stk4.id = stk5.id;
+
 **/
 bool St62Architecture::Table_d_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -2179,6 +2212,30 @@ bool St62Architecture::Table_d_04(BinaryStream const& rBinStrm, TOffset Offset, 
     {
       Expression::LSPType AllExpr;
       rInsn.SetUpdatedFlags(ST62_Flg_Z | ST62_Flg_C);
+      /* semantic: program.id = stk0.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo)));
+      /* semantic: stk0.id = stk1.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo)));
+      /* semantic: stk1.id = stk2.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo)));
+      /* semantic: stk2.id = stk3.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo)));
+      /* semantic: stk3.id = stk4.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo)));
+      /* semantic: stk4.id = stk5.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk5, &m_CpuInfo)));
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -2490,12 +2547,47 @@ bool St62Architecture::Table_d_0b(BinaryStream const& rBinStrm, TOffset Offset, 
  * mnemonic: ret
  * operation_type: ['ret']
  * opcode: 0c
+ * semantic: program.id = stk0.id;
+stk0.id = stk1.id;
+stk1.id = stk2.id;
+stk2.id = stk3.id;
+stk3.id = stk4.id;
+stk4.id = stk5.id;
+
 **/
 bool St62Architecture::Table_d_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(ST62_Opcode_Ret);
     rInsn.SubType() |= Instruction::ReturnType;
+    {
+      Expression::LSPType AllExpr;
+      /* semantic: program.id = stk0.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo)));
+      /* semantic: stk0.id = stk1.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk0, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo)));
+      /* semantic: stk1.id = stk2.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk1, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo)));
+      /* semantic: stk2.id = stk3.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk2, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo)));
+      /* semantic: stk3.id = stk4.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk3, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo)));
+      /* semantic: stk4.id = stk5.id */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(ST62_Reg_Stk4, &m_CpuInfo),
+        Expr::MakeId(ST62_Reg_Stk5, &m_CpuInfo)));
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
