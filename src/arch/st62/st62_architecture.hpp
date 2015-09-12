@@ -68,8 +68,7 @@ private:
   enum ST62Mode
   {
     ST62_Mode_Unknown,
-    ST62_Mode_Original,
-    ST62_Mode_LR35902,
+    ST62_Mode_Original
   };
 
   enum ST62TestedFlag
