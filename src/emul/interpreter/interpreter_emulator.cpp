@@ -364,7 +364,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   return spBinOpExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(IntegerExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {

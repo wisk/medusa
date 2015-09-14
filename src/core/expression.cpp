@@ -688,17 +688,17 @@ void BinaryOperationExpression::SwapLeftExpressions(BinaryOperationExpression::S
 
 // constant expression ////////////////////////////////////////////////////////
 
-ConstantExpression::ConstantExpression(u16 BitSize, ap_int Value)
+IntegerExpression::IntegerExpression(u16 BitSize, ap_int Value)
 : m_Value(BitSize, Value)
 {
 }
 
-ConstantExpression::ConstantExpression(IntType const& rValue)
+IntegerExpression::IntegerExpression(IntType const& rValue)
 : m_Value(rValue)
 {
 }
 
-std::string ConstantExpression::ToString(void) const
+std::string IntegerExpression::ToString(void) const
 {
   std::string Res("int");
   Res += std::to_string(m_Value.GetBitSize());
@@ -709,19 +709,19 @@ std::string ConstantExpression::ToString(void) const
   //return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
 }
 
-Expression::SPType ConstantExpression::Clone(void) const
+Expression::SPType IntegerExpression::Clone(void) const
 {
-  return std::make_shared<ConstantExpression>(m_Value);
+  return std::make_shared<IntegerExpression>(m_Value);
 }
 
-Expression::SPType ConstantExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType IntegerExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return pVisitor->VisitConstant(std::static_pointer_cast<ConstantExpression>(shared_from_this()));
+  return pVisitor->VisitConstant(std::static_pointer_cast<IntegerExpression>(shared_from_this()));
 }
 
-Expression::CompareType ConstantExpression::Compare(Expression::SPType spExpr) const
+Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) const
 {
-  auto spCmpExpr = expr_cast<ConstantExpression>(spExpr);
+  auto spCmpExpr = expr_cast<IntegerExpression>(spExpr);
   if (spCmpExpr == nullptr)
     return CmpDifferent;
   if (m_Value.GetUnsignedValue() != spCmpExpr->GetConstant().GetUnsignedValue())
@@ -729,7 +729,7 @@ Expression::CompareType ConstantExpression::Compare(Expression::SPType spExpr) c
   return CmpIdentical;
 }
 
-bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
+bool IntegerExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
   if (rData.size() != 1)
     return false;
@@ -738,12 +738,12 @@ bool ConstantExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Dat
   return true;
 }
 
-bool ConstantExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
+bool IntegerExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
   return false;
 }
 
-bool ConstantExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool IntegerExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
 {
   return false;
 }
@@ -1245,19 +1245,19 @@ Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) c
 
 // helper /////////////////////////////////////////////////////////////////////
 
-Expression::SPType Expr::MakeConst(IntType const& rValue)
+Expression::SPType Expr::MakeConstInt(IntType const& rValue)
 {
-  return std::make_shared<ConstantExpression>(rValue);
+  return std::make_shared<IntegerExpression>(rValue);
 }
 
-Expression::SPType Expr::MakeConst(u16 BitSize, ap_int Value)
+Expression::SPType Expr::MakeConstInt(u16 BitSize, ap_int Value)
 {
-  return std::make_shared<ConstantExpression>(BitSize, Value);
+  return std::make_shared<IntegerExpression>(BitSize, Value);
 }
 
 Expression::SPType Expr::MakeBoolean(bool Value)
 {
-  return std::make_shared<ConstantExpression>(1, Value ? 1 : 0);
+  return std::make_shared<IntegerExpression>(1, Value ? 1 : 0);
 }
 
 Expression::SPType Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)

@@ -47,7 +47,7 @@ private:
     virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
     virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
     virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitConstant(IntegerExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
     virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);

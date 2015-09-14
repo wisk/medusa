@@ -201,7 +201,7 @@ u32 X86Architecture::X86CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
   case X86_Reg_Cs:    case X86_Reg_Ds:    case X86_Reg_Es:    case X86_Reg_Ss:
   case X86_Reg_Fs:    case X86_Reg_Gs:
     return 16;
- 
+
   case X86_Reg_Eax:   case X86_Reg_Ebx:   case X86_Reg_Ecx:   case X86_Reg_Edx:
   case X86_Reg_Esp:   case X86_Reg_Ebp:   case X86_Reg_Esi:   case X86_Reg_Edi:
   case X86_Reg_R8d:   case X86_Reg_R9d:   case X86_Reg_R10d:  case X86_Reg_R11d:
@@ -430,7 +430,7 @@ bool X86Architecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Addre
   u32 IdSz = m_CpuInfo.GetSizeOfRegisterInBit(Id);
   if (IdSz == 0)
     return false;
-  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConst(IdSz, rAddr.GetOffset())));
+  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConstInt(IdSz, rAddr.GetOffset())));
   return true;
 }
 

@@ -35,11 +35,11 @@ void PydusaExpression(void)
 
   // constant expression class inherited from base expression class
 
-  bp::class_<ConstantExpression, bp::bases<Expression>>("ConstantExpression", bp::no_init)
-    .def("__str__", &ConstantExpression::ToString)
-    .add_property("value", &ConstantExpression::GetConstant)
+  bp::class_<IntegerExpression, bp::bases<Expression>>("IntegerExpression", bp::no_init)
+    .def("__str__", &IntegerExpression::ToString)
+    .add_property("value", &IntegerExpression::GetConstant)
     ;
-  bp::register_ptr_to_python<ConstantExpression::SPType>();
+  bp::register_ptr_to_python<IntegerExpression::SPType>();
 
   // identifier expression class inherited from base expression class
 
@@ -87,10 +87,10 @@ void PydusaExpression(void)
     .def("__str__", &BinaryOperationExpression::ToString)
     ;
   bp::register_ptr_to_python<BinaryOperationExpression::SPType>();
-  
+
   // helpers used to create instance of a specific expression type
 
-  //bp::def("expr_make_const", Expr::MakeConst);
+  //bp::def("expr_make_const", Expr::MakeConstInt);
   bp::def("expr_make_id", Expr::MakeId);
 
   // exposing enumerations

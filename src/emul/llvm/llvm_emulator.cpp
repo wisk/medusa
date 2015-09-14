@@ -917,7 +917,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
 
   case OperationExpression::OpInsertBits:
   {
-    auto spRConst = expr_cast<ConstantExpression>(spRight);
+    auto spRConst = expr_cast<IntegerExpression>(spRight);
     if (spRConst == nullptr)
       break;
     auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
@@ -929,7 +929,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
 
   case OperationExpression::OpExtractBits:
   {
-    auto spRConst = expr_cast<ConstantExpression>(spRight);
+    auto spRConst = expr_cast<IntegerExpression>(spRight);
     if (spRConst == nullptr)
       break;
     auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
@@ -946,7 +946,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
   return spBinOpExpr;
 }
 
-Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitConstant(ConstantExpression::SPType spConstExpr)
+Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitConstant(IntegerExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {

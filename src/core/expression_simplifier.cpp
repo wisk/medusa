@@ -318,8 +318,8 @@ bool ConstantPropagation::_RunOnce(void)
   auto spBinOpExpr = expr_cast<BinaryOperationExpression>(Exprs.front());
   if (spBinOpExpr == nullptr)
     return false;
-  auto spLConstExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetLeftExpression());
-  auto spRConstExpr = expr_cast<ConstantExpression>(spBinOpExpr->GetRightExpression());
+  auto spLConstExpr = expr_cast<IntegerExpression>(spBinOpExpr->GetLeftExpression());
+  auto spRConstExpr = expr_cast<IntegerExpression>(spBinOpExpr->GetRightExpression());
 
   if (spLConstExpr == nullptr || spRConstExpr == nullptr)
     return false;
@@ -335,7 +335,7 @@ bool ConstantPropagation::_RunOnce(void)
     // TODO: handle all operations...
   }
 
-  auto spConstExpr = Expr::MakeConst(Bit, Res);
+  auto spConstExpr = Expr::MakeConstInt(Bit, Res);
   return m_spExpr->UpdateChild(spBinOpExpr, spConstExpr);
 }
 

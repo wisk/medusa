@@ -129,8 +129,8 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
     return true;
 
   // TODO: execute this part
-  auto spBase = expr_cast<ConstantExpression>(spAdrIpImm->GetOperand(1));
-  auto spDisp = expr_cast<ConstantExpression>(spAddIpIpImm->GetOperand(2));
+  auto spBase = expr_cast<IntegerExpression>(spAdrIpImm->GetOperand(1));
+  auto spDisp = expr_cast<IntegerExpression>(spAddIpIpImm->GetOperand(2));
   auto spMem  = expr_cast<MemoryExpression>(spLdrPcIpImm->GetOperand(1));
 
   if (spBase == nullptr || spDisp == nullptr || spMem == nullptr)
@@ -139,7 +139,7 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   auto spBinOp = expr_cast<BinaryOperationExpression>(spMem->GetOffsetExpression());
   if (spBinOp == nullptr)
     return true;
-  auto spOff = expr_cast<ConstantExpression>(spBinOp->GetRightExpression());
+  auto spOff = expr_cast<IntegerExpression>(spBinOp->GetRightExpression());
 
   Address DstAddr(
     Address::FlatType,

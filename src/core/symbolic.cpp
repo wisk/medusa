@@ -352,7 +352,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     //rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(),
     //  Expr::MakeAssign(
     //  /**/Expr::MakeId(m_PcRegId, m_pCpuInfo),
-    //  /**/Expr::MakeConst(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
+    //  /**/Expr::MakeConstInt(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
 
     auto pInsnSem = spInsn->GetSemantic();
     for (auto spExpr : pInsnSem)
@@ -419,7 +419,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   auto spResExpr = EvalVst.GetResultExpression();
 
   // When the next address is a constant value
-  auto spConstExpr = expr_cast<ConstantExpression>(spResExpr);
+  auto spConstExpr = expr_cast<IntegerExpression>(spResExpr);
   if (spConstExpr != nullptr)
   {
     // HACK:
@@ -433,8 +433,8 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
   if (spMemExpr != nullptr)
   {
-    auto spBaseExpr = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
-    auto spOffExpr = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    auto spBaseExpr = expr_cast<IntegerExpression>(spMemExpr->GetBaseExpression());
+    auto spOffExpr = expr_cast<IntegerExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
     Address DstAddr(rCurAddr.GetAddressingType(),

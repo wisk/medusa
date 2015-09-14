@@ -24,7 +24,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -82,7 +82,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -105,7 +105,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeConst(16, Imm), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeConstInt(16, Imm), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -180,7 +180,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -210,7 +210,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -268,7 +268,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -294,7 +294,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -365,7 +365,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -396,7 +396,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -414,7 +414,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -472,7 +472,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -496,7 +496,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -567,7 +567,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -592,7 +592,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -610,7 +610,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -668,7 +668,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -692,7 +692,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -763,7 +763,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2454,7 +2454,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2469,7 +2469,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
+      auto spOprd0 = Expr::MakeConstInt(16, Imm);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2483,7 +2483,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
+      auto spOprd0 = Expr::MakeConstInt(16, Imm);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2510,7 +2510,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2519,7 +2519,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   case 0xc7:
     rInsn.SetName("rst");
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x0);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x0);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2552,7 +2552,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -3147,7 +3147,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x40:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3160,7 +3160,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x41:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3173,7 +3173,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x42:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3186,7 +3186,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x43:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3199,7 +3199,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x44:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3212,7 +3212,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x45:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3225,7 +3225,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x46:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3238,7 +3238,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x47:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3260,7 +3260,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x49:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3273,7 +3273,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4a:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3286,7 +3286,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4b:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3299,7 +3299,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4c:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3312,7 +3312,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4d:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3325,7 +3325,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4e:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3338,7 +3338,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x4f:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3351,7 +3351,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x50:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3364,7 +3364,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x51:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3377,7 +3377,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x52:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3390,7 +3390,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x53:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3403,7 +3403,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x54:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3416,7 +3416,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x55:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3429,7 +3429,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x56:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3442,7 +3442,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x57:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3464,7 +3464,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x59:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3477,7 +3477,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5a:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3490,7 +3490,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5b:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3503,7 +3503,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5c:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3516,7 +3516,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5d:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3529,7 +3529,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5e:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3542,7 +3542,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x5f:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3555,7 +3555,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x60:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3568,7 +3568,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x61:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3581,7 +3581,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x62:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3594,7 +3594,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x63:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3607,7 +3607,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x64:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3620,7 +3620,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x65:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3633,7 +3633,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x66:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3646,7 +3646,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x67:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3668,7 +3668,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x69:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3681,7 +3681,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6a:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3694,7 +3694,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6b:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3707,7 +3707,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6c:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3720,7 +3720,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6d:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3733,7 +3733,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6e:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3746,7 +3746,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x6f:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3759,7 +3759,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x70:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3772,7 +3772,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x71:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3785,7 +3785,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x72:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3798,7 +3798,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x73:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3811,7 +3811,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x74:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3824,7 +3824,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x75:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3837,7 +3837,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x76:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3850,7 +3850,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x77:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3872,7 +3872,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x79:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3885,7 +3885,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7a:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3898,7 +3898,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7b:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3911,7 +3911,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7c:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3924,7 +3924,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7d:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3937,7 +3937,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7e:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3950,7 +3950,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x7f:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3963,7 +3963,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x80:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3976,7 +3976,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x81:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3989,7 +3989,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x82:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4002,7 +4002,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x83:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4015,7 +4015,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x84:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4028,7 +4028,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x85:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4041,7 +4041,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x86:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4054,7 +4054,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x87:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4076,7 +4076,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x89:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4089,7 +4089,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8a:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4102,7 +4102,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8b:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4115,7 +4115,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8c:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4128,7 +4128,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8d:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4141,7 +4141,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8e:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4154,7 +4154,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x8f:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4167,7 +4167,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x90:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4180,7 +4180,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x91:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4193,7 +4193,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x92:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4206,7 +4206,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x93:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4219,7 +4219,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x94:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4232,7 +4232,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x95:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4245,7 +4245,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x96:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4258,7 +4258,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x97:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4280,7 +4280,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x99:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4293,7 +4293,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9a:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4306,7 +4306,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9b:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4319,7 +4319,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9c:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4332,7 +4332,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9d:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4345,7 +4345,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9e:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4358,7 +4358,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0x9f:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4371,7 +4371,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa0:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4384,7 +4384,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa1:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4397,7 +4397,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa2:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4410,7 +4410,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa3:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4423,7 +4423,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa4:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4436,7 +4436,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa5:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4449,7 +4449,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa6:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4462,7 +4462,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa7:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4484,7 +4484,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xa9:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4497,7 +4497,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xaa:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4510,7 +4510,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xab:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4523,7 +4523,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xac:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4536,7 +4536,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xad:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4549,7 +4549,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xae:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4562,7 +4562,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xaf:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4575,7 +4575,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb0:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4588,7 +4588,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb1:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4601,7 +4601,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb2:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4614,7 +4614,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb3:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4627,7 +4627,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb4:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4640,7 +4640,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb5:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4653,7 +4653,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb6:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4666,7 +4666,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb7:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4688,7 +4688,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xb9:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4701,7 +4701,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xba:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4714,7 +4714,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xbb:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4727,7 +4727,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xbc:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4740,7 +4740,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xbd:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4753,7 +4753,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xbe:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4766,7 +4766,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xbf:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4779,7 +4779,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc0:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4792,7 +4792,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc1:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4805,7 +4805,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc2:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4818,7 +4818,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc3:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4831,7 +4831,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc4:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4844,7 +4844,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc5:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4857,7 +4857,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc6:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4870,7 +4870,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc7:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x0);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x0);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4892,7 +4892,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xc9:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4905,7 +4905,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xca:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4918,7 +4918,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xcb:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4931,7 +4931,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xcc:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4944,7 +4944,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xcd:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4957,7 +4957,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xce:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4970,7 +4970,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xcf:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x1);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x1);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4983,7 +4983,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd0:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4996,7 +4996,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd1:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5009,7 +5009,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd2:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5022,7 +5022,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd3:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5035,7 +5035,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd4:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5048,7 +5048,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd5:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5061,7 +5061,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd6:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5074,7 +5074,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd7:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x2);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x2);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5096,7 +5096,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xd9:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5109,7 +5109,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xda:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5122,7 +5122,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xdb:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5135,7 +5135,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xdc:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5148,7 +5148,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xdd:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5161,7 +5161,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xde:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5174,7 +5174,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xdf:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x3);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x3);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5187,7 +5187,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe0:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5200,7 +5200,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe1:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5213,7 +5213,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe2:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5226,7 +5226,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe3:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5239,7 +5239,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe4:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5252,7 +5252,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe5:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5265,7 +5265,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe6:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5278,7 +5278,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe7:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x4);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x4);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5300,7 +5300,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xe9:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5313,7 +5313,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xea:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5326,7 +5326,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xeb:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5339,7 +5339,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xec:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5352,7 +5352,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xed:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5365,7 +5365,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xee:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5378,7 +5378,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xef:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x5);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x5);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5391,7 +5391,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf0:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5404,7 +5404,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf1:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5417,7 +5417,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf2:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5430,7 +5430,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf3:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5443,7 +5443,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf4:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5456,7 +5456,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf5:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5469,7 +5469,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf6:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5482,7 +5482,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf7:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x6);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x6);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5504,7 +5504,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xf9:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5517,7 +5517,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xfa:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5530,7 +5530,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xfb:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5543,7 +5543,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xfc:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5556,7 +5556,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xfd:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5569,7 +5569,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xfe:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5582,7 +5582,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       case 0xff:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeConst(8, 0x7);
+          auto spOprd0 = Expr::MakeConstInt(8, 0x7);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5609,7 +5609,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5624,7 +5624,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeConst(16, Imm);
+      auto spOprd0 = Expr::MakeConstInt(16, Imm);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5642,7 +5642,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5652,7 +5652,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("rst");
     rInsn.SubType() |= Instruction::JumpType;
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x8);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x8);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5692,7 +5692,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5715,7 +5715,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5742,7 +5742,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5752,7 +5752,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("rst");
     rInsn.SubType() |= Instruction::JumpType;
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x10);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x10);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5785,7 +5785,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5807,7 +5807,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(16, Imm);
+      auto spOprd1 = Expr::MakeConstInt(16, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5828,7 +5828,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5838,7 +5838,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("rst");
     rInsn.SubType() |= Instruction::JumpType;
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x18);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x18);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5853,8 +5853,8 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeConst(16, 0xff00),
-        Expr::MakeConst(8, Imm)), true);
+        Expr::MakeConstInt(16, 0xff00),
+        Expr::MakeConstInt(8, Imm)), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5877,7 +5877,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("ldh");
     {
       auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeConst(16, 0xff00),
+        Expr::MakeConstInt(16, 0xff00),
         Expr::MakeId(Z80_Reg_C, &m_CpuInfo)), true);
       if (spOprd0 == nullptr)
         return false;
@@ -5915,7 +5915,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5924,7 +5924,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   case 0xe7:
     rInsn.SetName("rst");
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x20);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x20);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5942,7 +5942,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5965,7 +5965,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeConst(16, Imm), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeConstInt(16, Imm), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5996,7 +5996,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6006,7 +6006,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("rst");
     rInsn.SubType() |= Instruction::JumpType;
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x28);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x28);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6025,8 +6025,8 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeConst(16, 0xff00),
-        Expr::MakeConst(8, Imm)), true);
+        Expr::MakeConstInt(16, 0xff00),
+        Expr::MakeConstInt(8, Imm)), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6071,7 +6071,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6080,7 +6080,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
   case 0xf7:
     rInsn.SetName("rst");
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x30);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x30);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6100,7 +6100,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
       rInsn.Length() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo),
-        Expr::MakeConst(16, SignExtend<s64, 8>(Imm)));
+        Expr::MakeConstInt(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6131,7 +6131,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeConst(16, Imm), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeConstInt(16, Imm), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6158,7 +6158,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
         return false;
 
       rInsn.Length() += sizeof(Imm);
-      auto spOprd1 = Expr::MakeConst(8, Imm);
+      auto spOprd1 = Expr::MakeConstInt(8, Imm);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6168,7 +6168,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, 
     rInsn.SetName("rst");
     rInsn.SubType() |= Instruction::JumpType;
     {
-      auto spOprd0 = Expr::MakeConst(8, 0x38);
+      auto spOprd0 = Expr::MakeConstInt(8, 0x38);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);

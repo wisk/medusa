@@ -52,17 +52,17 @@ class Z80ArchConvertion(ArchConvertion):
                     self.var_expr.append('rInsn.Length() += sizeof(Imm);\n')
 
                     if len(func_args) == 1:
-                        self.var_expr.append('Expr::MakeConst(%d, Imm)' % read_size)
+                        self.var_expr.append('Expr::MakeConstInt(%d, Imm)' % read_size)
 
                     else:
-                        self.var_expr.append('Expr::MakeConst(%d, SignExtend<s64, %d>(Imm))' % (func_args[1], read_size))
+                        self.var_expr.append('Expr::MakeConstInt(%d, SignExtend<s64, %d>(Imm))' % (func_args[1], read_size))
                     return self.var_expr[-1]
 
                 if func_name == 'cst':
                     assert(len(func_args) == 2)
                     cst_size = func_args[0]
                     cst_value = func_args[1]
-                    self.var_expr.append('Expr::MakeConst(%d, %#x)' % (cst_size, cst_value))
+                    self.var_expr.append('Expr::MakeConstInt(%d, %#x)' % (cst_size, cst_value))
                     return self.var_expr[-1]
 
                 if func_name == 'sign_extend':

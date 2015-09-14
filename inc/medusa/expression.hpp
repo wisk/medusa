@@ -419,9 +419,21 @@ class Medusa_EXPORT ConstantExpression : public Expression
   DECL_EXPR(ConstantExpression, Expression::Const, Expression)
 
 public:
-  ConstantExpression(u16 BitSize, ap_int Value);
-  ConstantExpression(IntType const& rValue);
-  virtual ~ConstantExpression(void) {}
+  enum Type
+  {
+    ConstInt,
+    ConstFloat,
+  };
+};
+
+class Medusa_EXPORT IntegerExpression : public ConstantExpression
+{
+  DECL_EXPR(IntegerExpression, ConstantExpression::Const, ConstantExpression)
+
+public:
+  IntegerExpression(u16 BitSize, ap_int Value);
+  IntegerExpression(IntType const& rValue);
+  virtual ~IntegerExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -650,7 +662,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr);
+  virtual Expression::SPType VisitConstant(IntegerExpression::SPType spConstExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -663,8 +675,8 @@ public:
 
 namespace Expr
 {
-  Medusa_EXPORT Expression::SPType MakeConst(IntType const& rValue);
-  Medusa_EXPORT Expression::SPType MakeConst(u16 BitSize, ap_int Value);
+  Medusa_EXPORT Expression::SPType MakeConstInt(IntType const& rValue);
+  Medusa_EXPORT Expression::SPType MakeConstInt(u16 BitSize, ap_int Value);
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
