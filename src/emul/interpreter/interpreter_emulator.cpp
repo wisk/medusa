@@ -364,14 +364,14 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   return spBinOpExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitConstant(IntegerExpression::SPType spConstExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitInt(IntegerExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {
     Log::Write("emul_interpreter").Level(LogError) << "constant can only be read" << LogEnd;
     return nullptr;
   }
-  m_Values.push_back(spConstExpr->GetConstant());
+  m_Values.push_back(spConstExpr->GetInt());
   return spConstExpr;
 }
 

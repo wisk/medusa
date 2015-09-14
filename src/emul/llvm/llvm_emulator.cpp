@@ -920,8 +920,8 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     auto spRConst = expr_cast<IntegerExpression>(spRight);
     if (spRConst == nullptr)
       break;
-    auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
-    auto pMask = _MakeInteger(spRConst->GetConstant());
+    auto pShift = _MakeInteger(spRConst->GetInt().Lsb());
+    auto pMask = _MakeInteger(spRConst->GetInt());
     auto pShiftedVal = m_rBuilder.CreateShl(LeftVal, pShift, "insert_bits0");
     pBinOpVal = m_rBuilder.CreateAnd(pShiftedVal, pMask, "insert_bits1");
     break;
@@ -932,8 +932,8 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     auto spRConst = expr_cast<IntegerExpression>(spRight);
     if (spRConst == nullptr)
       break;
-    auto pShift = _MakeInteger(spRConst->GetConstant().Lsb());
-    auto pMask = _MakeInteger(spRConst->GetConstant());
+    auto pShift = _MakeInteger(spRConst->GetInt().Lsb());
+    auto pMask = _MakeInteger(spRConst->GetInt());
     auto pMaskedVal = m_rBuilder.CreateAnd(LeftVal, pMask, "extract_bits0");
     pBinOpVal = m_rBuilder.CreateLShr(pMaskedVal, pShift, "extract_bits1");
     break;
@@ -946,14 +946,14 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
   return spBinOpExpr;
 }
 
-Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitConstant(IntegerExpression::SPType spConstExpr)
+Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitInt(IntegerExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {
     Log::Write("emul_llvm").Level(LogError) << "constant can only be read" << LogEnd;
     return nullptr;
   }
-  auto pConstVal = _MakeInteger(spConstExpr->GetConstant());
+  auto pConstVal = _MakeInteger(spConstExpr->GetInt());
   if (pConstVal == nullptr)
     return nullptr;
   m_ValueStack.push(pConstVal);

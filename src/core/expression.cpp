@@ -716,7 +716,7 @@ Expression::SPType IntegerExpression::Clone(void) const
 
 Expression::SPType IntegerExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return pVisitor->VisitConstant(std::static_pointer_cast<IntegerExpression>(shared_from_this()));
+  return pVisitor->VisitInt(std::static_pointer_cast<IntegerExpression>(shared_from_this()));
 }
 
 Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) const
@@ -724,7 +724,7 @@ Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) co
   auto spCmpExpr = expr_cast<IntegerExpression>(spExpr);
   if (spCmpExpr == nullptr)
     return CmpDifferent;
-  if (m_Value.GetUnsignedValue() != spCmpExpr->GetConstant().GetUnsignedValue())
+  if (m_Value.GetUnsignedValue() != spCmpExpr->GetInt().GetUnsignedValue())
     return CmpSameExpression;
   return CmpIdentical;
 }
@@ -760,20 +760,27 @@ FloatingPointExpression::FloatingPointExpression(double const Value)
   m_Precision = FloatingPointExpression::Double;
 }
 
+FloatingPointExpression::FloatingPointExpression(FloatingType const& rValue)
+: m_Value(rValue)
+{
+}
+
 std::string FloatingPointExpression::ToString(void) const
 {
   std::string Res("float");
   Res += std::to_string(GetBitSize());
   Res += "(";
 
+  std::ostringstream Tmp;
+
   switch (m_Precision)
   {
-  case FloatingPointExpression::Single: Res += m_Value.sgl; break;
-  case FloatingPointExpression::Double: Res += m_Value.dbl; break;
+  case FloatingPointExpression::Single: Tmp << m_Value.sgl; break;
+  case FloatingPointExpression::Double: Tmp << m_Value.dbl; break;
   default: return "<invalid variable>";
   }
 
-  Res += ")";
+  Res += Tmp.str() + ")";
   return Res;
 }
 
@@ -796,7 +803,7 @@ Expression::CompareType FloatingPointExpression::Compare(Expression::SPType spEx
   switch (m_Precision)
   {
   case FloatingPointExpression::Single:
-    if (m_Value.sgl != spCmpExpr->GetSimple()) return CmpSameExpression;
+    if (m_Value.sgl != spCmpExpr->GetSingle()) return CmpSameExpression;
   break;
   case FloatingPointExpression::Double:
     if (m_Value.dbl != spCmpExpr->GetDouble()) return CmpSameExpression;
@@ -809,17 +816,31 @@ Expression::CompareType FloatingPointExpression::Compare(Expression::SPType spEx
 
 Expression::SPType FloatingPointExpression::Clone(void) const
 {
-  return nullptr; // TODO
+  return std::make_shared<FloatingPointExpression>(m_Value);
 }
 
 Expression::SPType FloatingPointExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return nullptr; // TODO
+  return pVisitor->VisitFloat(std::static_pointer_cast<FloatingPointExpression>(shared_from_this()));
 }
 
 bool FloatingPointExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
-  return nullptr; // TODO
+  if (rData.size() != 1)
+  return false;
+
+  switch (m_Precision)
+  {
+  case FloatingPointExpression::Single:
+    rData.front() = IntType(0x1337beef); // TODO : convert "m_Value.sgl" to IntType. Don't know how yet.
+  break;
+  case FloatingPointExpression::Double:
+    rData.front() = IntType(0x1337b00f); // TODO : convert "m_Value.dbl" to IntType. Don't know how yet.
+  break;
+  default: return false;
+  }
+
+  return true;
 }
 
 bool FloatingPointExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
@@ -1329,14 +1350,24 @@ Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) c
 
 // helper /////////////////////////////////////////////////////////////////////
 
-Expression::SPType Expr::MakeConstInt(IntType const& rValue)
+Expression::SPType Expr::MakeInt(IntType const& rValue)
 {
   return std::make_shared<IntegerExpression>(rValue);
 }
 
-Expression::SPType Expr::MakeConstInt(u16 BitSize, ap_int Value)
+Expression::SPType Expr::MakeInt(u16 BitSize, ap_int Value)
 {
   return std::make_shared<IntegerExpression>(BitSize, Value);
+}
+
+Expression::SPType Expr::MakeFloat(float const Value)
+{
+  return std::make_shared<FloatingPointExpression>(Value);
+}
+
+Expression::SPType Expr::MakeFloat(double const Value)
+{
+  return std::make_shared<FloatingPointExpression>(Value);
 }
 
 Expression::SPType Expr::MakeBoolean(bool Value)

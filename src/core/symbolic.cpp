@@ -352,7 +352,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
     //rBlk.TrackExpression(CurAddr, rCtxt.GetTrackContext(),
     //  Expr::MakeAssign(
     //  /**/Expr::MakeId(m_PcRegId, m_pCpuInfo),
-    //  /**/Expr::MakeConstInt(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
+    //  /**/Expr::MakeInt(CurAddr.GetOffsetSize(), CurAddr.GetOffset())));
 
     auto pInsnSem = spInsn->GetSemantic();
     for (auto spExpr : pInsnSem)
@@ -424,7 +424,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   {
     // HACK:
     Address DstAddr = rCurAddr;
-    DstAddr.SetOffset(spConstExpr->GetConstant().ConvertTo<TOffset>());
+    DstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<TOffset>());
     rNextAddresses.push_back(DstAddr);
     return true;
   }
@@ -438,8 +438,8 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
     if (spOffExpr == nullptr)
       return false;
     Address DstAddr(rCurAddr.GetAddressingType(),
-      spBaseExpr != nullptr ? spBaseExpr->GetConstant().ConvertTo<u16>() : 0x0,
-      spOffExpr->GetConstant().ConvertTo<u64>(),
+      spBaseExpr != nullptr ? spBaseExpr->GetInt().ConvertTo<u16>() : 0x0,
+      spOffExpr->GetInt().ConvertTo<u64>(),
       spBaseExpr != nullptr ? spBaseExpr->GetBitSize() : 0x0,
       spOffExpr->GetBitSize());
     rNextAddresses.push_back(DstAddr);

@@ -441,7 +441,7 @@ class X86ArchConvertion(ArchConvertion):
 
                 if func_name.startswith('const'):
                     assert(len(func_args) == 2)
-                    return 'return Expr::MakeConstInt(%s, %s);' % tuple(func_args)
+                    return 'return Expr::MakeInt(%s, %s);' % tuple(func_args)
 
                 if func_name.startswith('addr_'):
                     addr_type = func_name[5]
@@ -575,7 +575,7 @@ class X86ArchConvertion(ArchConvertion):
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(Offset, Value)', 'return nullptr;')
                         read_body += 'Offset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
-                        read_body += 'return Expr::MakeConstInt(%d, Value);\n' % read_type
+                        read_body += 'return Expr::MakeInt(%d, Value);\n' % read_type
                         return read_body
                     def __GenerateReadTypeSignExtend(read_type, sign_type):
                         read_body = ''
@@ -583,7 +583,7 @@ class X86ArchConvertion(ArchConvertion):
                         read_body += self.parent._GenerateCondition('if', '!rBinStrm.Read(Offset, Value)', 'return nullptr;')
                         read_body += 'Offset += sizeof(Value);\n'
                         read_body += 'rInsn.Length() += sizeof(Value);\n'
-                        read_body += 'return Expr::MakeConstInt(%d, SignExtend<s%d, %d>(Value));\n' % (sign_type, sign_type, read_type)
+                        read_body += 'return Expr::MakeInt(%d, SignExtend<s%d, %d>(Value));\n' % (sign_type, sign_type, read_type)
                         return read_body
 
                     if read_type == 'b':

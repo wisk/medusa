@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(expression_test_suite)
 BOOST_AUTO_TEST_CASE(expr_const_test_case)
 {
   BOOST_MESSAGE("Testing creation of IntegerExpression");
-  auto spConstExpr = Expr::MakeConstInt(16, 0x1234);
+  auto spConstExpr = Expr::MakeInt(16, 0x1234);
   BOOST_CHECK(spConstExpr != nullptr);
 }
 
@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_eval)
   auto BL = pCpuInfo->ConvertNameToIdentifier("bl");
   auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
   auto EBX = pCpuInfo->ConvertNameToIdentifier("ebx");
-  auto spEaxExpr = Expr::MakeConstInt(32, 0x11223344);
-  auto spEbxExpr = Expr::MakeConstInt(32, 0xffeeddcc);
+  auto spEaxExpr = Expr::MakeInt(32, 0x11223344);
+  auto spEbxExpr = Expr::MakeInt(32, 0xffeeddcc);
 
   auto spExpr = Expr::MakeAssign(Expr::MakeId(AH, pCpuInfo), Expr::MakeId(BL, pCpuInfo));
   std::cout << "assign: " << spExpr->ToString() << std::endl;
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_eval)
   auto spRes = expr_cast<IntegerExpression>(EvalVst.GetResultExpression());
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
-  BOOST_CHECK(spRes->GetConstant().ConvertTo<u32>() == 0x1122cc44);
+  BOOST_CHECK(spRes->GetInt().ConvertTo<u32>() == 0x1122cc44);
 
   delete pX86Disasm;
 }
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_64_id_nrm_eval)
   auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
   auto RAX = pCpuInfo->ConvertNameToIdentifier("rax");
 
-  auto spExpr = Expr::MakeAssign(Expr::MakeId(EAX, pCpuInfo), Expr::MakeConstInt(32, 0x11223344));
+  auto spExpr = Expr::MakeAssign(Expr::MakeId(EAX, pCpuInfo), Expr::MakeInt(32, 0x11223344));
   std::cout << "assign: " << spExpr->ToString() << std::endl;
 
   NormalizeIdentifier NrmId(*pCpuInfo, X86_64_Mode);
@@ -78,12 +78,12 @@ BOOST_AUTO_TEST_CASE(expr_x86_64_id_nrm_eval)
   std::cout << "assign (id normalized): " << spExpr->ToString() << std::endl;
 
   EvaluateVisitor EvalVst(Document(), 0x0, X86_64_Mode, false);
-  EvalVst.SetId(RAX, Expr::MakeConstInt(64, 0xffffffffffffffff));
+  EvalVst.SetId(RAX, Expr::MakeInt(64, 0xffffffffffffffff));
   spExpr->Visit(&EvalVst);
   auto spRes = expr_cast<IntegerExpression>(EvalVst.GetResultExpression());
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
-  BOOST_CHECK(spRes->GetConstant().ConvertTo<u32>() == 0x11223344);
+  BOOST_CHECK(spRes->GetInt().ConvertTo<u32>() == 0x11223344);
 
   delete pX86Disasm;
 }
@@ -112,14 +112,14 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   NormalizeIdentifier NrmId(*pCpuInfo, X86_32_Mode);
 
   // EAX = 0x11223344
-  auto spInitEax = Expr::MakeAssign(spEax, Expr::MakeConstInt(spEax->GetBitSize(), 0x11223344));
+  auto spInitEax = Expr::MakeAssign(spEax, Expr::MakeInt(spEax->GetBitSize(), 0x11223344));
   std::cout << "init eax: " << spInitEax->ToString() << std::endl;
 
   spInitEax = spInitEax->Visit(&NrmId);
   std::cout << "init eax (id normalized): " << spInitEax->ToString() << std::endl;
 
   // BX = 0xAA55
-  auto spInitBx = Expr::MakeAssign(spBx, Expr::MakeConstInt(spBx->GetBitSize(), 0xAA55));
+  auto spInitBx = Expr::MakeAssign(spBx, Expr::MakeInt(spBx->GetBitSize(), 0xAA55));
   std::cout << "init bx: " << spInitBx->ToString() << std::endl;
 
   spInitBx = spInitBx->Visit(&NrmId);
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
 
   // EAX = zero_extend_32(AL + BH)
   auto spOp0 = Expr::MakeBinOp(OperationExpression::OpAdd, spAl, spBh);
-  auto spOp1 = Expr::MakeBinOp(OperationExpression::OpZext, spOp0, Expr::MakeConstInt(spEax->GetBitSize(), spEax->GetBitSize()));
+  auto spOp1 = Expr::MakeBinOp(OperationExpression::OpZext, spOp0, Expr::MakeInt(spEax->GetBitSize(), spEax->GetBitSize()));
   auto spExpr = Expr::MakeAssign(spEax, spOp1);
 
   std::cout << "oper: " << spExpr->ToString() << std::endl;
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x0, 16, 32));
   auto spInitEbx = Expr::MakeAssign(
     Expr::MakeId(EBX, pX86Disasm->GetCpuInformation()),
-    Expr::MakeConstInt(IntType(32, 0x0)));
+    Expr::MakeInt(IntType(32, 0x0)));
   spInitEbx->Visit(&SymVst);
   SymVst.UpdateAddress(*pX86Disasm, Address(Address::LogicalType, 0x0, 0x1, 16, 32));
   spInitEax->Visit(&SymVst);
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
   auto spRes = expr_cast<IntegerExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
-  BOOST_REQUIRE(spRes->GetConstant().ConvertTo<u32>() == 0x000000EE);
+  BOOST_REQUIRE(spRes->GetInt().ConvertTo<u32>() == 0x000000EE);
 
   delete pX86Disasm;
 }
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
 BOOST_AUTO_TEST_CASE(expr_var)
 {
   auto spAllocVarExpr = Expr::MakeVar("test", VariableExpression::Alloc, 32);
-  auto spAssignVarExpr = Expr::MakeAssign(Expr::MakeVar("test", VariableExpression::Use), Expr::MakeConstInt(32, 0x11223344));
+  auto spAssignVarExpr = Expr::MakeAssign(Expr::MakeVar("test", VariableExpression::Use), Expr::MakeInt(32, 0x11223344));
   auto spFreeVarExpr = Expr::MakeVar("test", VariableExpression::Free);
 
   std::cout << spAllocVarExpr->ToString() << std::endl;
@@ -175,14 +175,14 @@ BOOST_AUTO_TEST_CASE(expr_flt)
   using namespace Pattern;
 
   ExpressionFilter ExprFlt(OR(Any("a"), Any("b")));
-  auto spOrExpr = Expr::MakeBinOp(OperationExpression::OpOr, Expr::MakeConstInt(IntType(32, 0x11223344)), Expr::MakeConstInt(IntType(32, 0xaabbccdd)));
+  auto spOrExpr = Expr::MakeBinOp(OperationExpression::OpOr, Expr::MakeInt(IntType(32, 0x11223344)), Expr::MakeInt(IntType(32, 0xaabbccdd)));
   BOOST_REQUIRE(ExprFlt.Execute(spOrExpr));
   auto spExprA = expr_cast<IntegerExpression>(ExprFlt.GetExpression("a"));
   BOOST_REQUIRE(spExprA != nullptr);
-  BOOST_REQUIRE(spExprA->GetConstant().ConvertTo<u32>() == 0x11223344);
+  BOOST_REQUIRE(spExprA->GetInt().ConvertTo<u32>() == 0x11223344);
   auto spExprB = expr_cast<IntegerExpression>(ExprFlt.GetExpression("b"));
   BOOST_REQUIRE(spExprB != nullptr);
-  BOOST_REQUIRE(spExprB->GetConstant().ConvertTo<u32>() == 0xaabbccdd);
+  BOOST_REQUIRE(spExprB->GetInt().ConvertTo<u32>() == 0xaabbccdd);
 }
 
 BOOST_AUTO_TEST_CASE(expr_push_pop)
@@ -209,10 +209,10 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
   auto spAllocVar_PushedVal = Expr::MakeVar("pushed_value", VariableExpression::Alloc, 32);
   auto spWriteVar_PushedVal = Expr::MakeAssign(
     Expr::MakeVar("pushed_value", VariableExpression::Use),
-    Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeConstInt(IntType(8, 0xFF)), Expr::MakeConstInt(IntType(32, 32))));
+    Expr::MakeBinOp(OperationExpression::OpSext, Expr::MakeInt(IntType(8, 0xFF)), Expr::MakeInt(IntType(32, 32))));
   auto spDecStk = Expr::MakeAssign(
     spEsp,
-    Expr::MakeBinOp(OperationExpression::OpSub, spEsp, Expr::MakeConstInt(IntType(32, 4))));
+    Expr::MakeBinOp(OperationExpression::OpSub, spEsp, Expr::MakeInt(IntType(32, 4))));
   auto spWriteStk = Expr::MakeAssign(
     Expr::MakeMem(32, spSs, spEsp),
     Expr::MakeVar("pushed_value", VariableExpression::Use));
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
     Expr::MakeMem(32, spSs, spEsp));
   auto spIncStk = Expr::MakeAssign(
     spEsp,
-    Expr::MakeBinOp(OperationExpression::OpAdd, spEsp, Expr::MakeConstInt(IntType(32, 4))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, spEsp, Expr::MakeInt(IntType(32, 4))));
   auto spReadStk = Expr::MakeAssign(
     spEax,
     Expr::MakeVar("popped_value", VariableExpression::Use));
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
   auto spRes = expr_cast<IntegerExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
 
   BOOST_REQUIRE(spRes != nullptr);
-  BOOST_REQUIRE(spRes->GetConstant().ConvertTo<u32>() == 0xFFFFFFFF);
+  BOOST_REQUIRE(spRes->GetInt().ConvertTo<u32>() == 0xFFFFFFFF);
 
   delete pX86Disasm;
 }
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 //    if (spLastExpr != nullptr)
 //      spExpr = Expr::MakeBinOp(OperationExpression::OpAdd, spExpr, spLastExpr);
 //    else
-//      spExpr = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeConstInt(IntType(0x8, 0x00)), Expr::MakeConstInt(IntType(0x8, 0x00)));
+//      spExpr = Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeInt(IntType(0x8, 0x00)), Expr::MakeInt(IntType(0x8, 0x00)));
 //    spLastExpr = spExpr;
 //  }
 //  std::cout << spExpr->ToString() << std::endl;

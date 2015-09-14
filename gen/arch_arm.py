@@ -285,7 +285,7 @@ class ArmArchConvertion(ArchConvertion):
                     'rInsn.Prefix() |= ARM_Prefix_S;'), 0)
 
             elif field[0] == '#' and field[1:].isdigit():
-                res += 'auto spOprd%d = Expr::MakeConstInt(32, %s);\n' % (oprd_no, field[1:])
+                res += 'auto spOprd%d = Expr::MakeInt(32, %s);\n' % (oprd_no, field[1:])
                 res += self._GenerateCondition('if', 'spOprd%d == nullptr' % oprd_no, 'return false;')
                 res += 'rInsn.AddOperand(spOprd%d);\n' % oprd_no
                 oprd_no += 1
@@ -334,14 +334,14 @@ class ArmArchConvertion(ArchConvertion):
                             return res
 
                         if func_name in [ 'arm_expand_imm', 'arm_expand_imm_c' ]:
-                            imm_expr = 'Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1))'
+                            imm_expr = 'Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1))'
                             res += imm_expr
                             self.res.append(imm_expr)
                             return res
 
                         if func_name == 'imm':
                             assert(len(func_args) == 1)
-                            imm_expr = 'Expr::MakeConstInt(32, %s)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
+                            imm_expr = 'Expr::MakeInt(32, %s)' % self.parent._ARM_GenerateExtractBits(self.insn, func_args[0])
                             res += imm_expr
                             self.res.append(imm_expr)
                             return res
@@ -349,21 +349,21 @@ class ArmArchConvertion(ArchConvertion):
                         if func_name == 'disp':
                             assert(len(func_args) == 1)
                             disp = func_args[0]
-                            imm_expr = 'Expr::MakeConstInt(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, disp)
+                            imm_expr = 'Expr::MakeInt(32, %s)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, disp)
                             res += imm_expr
                             self.res.append(imm_expr)
                             return res
 
                         if func_name == 'arm_branch':
                             assert(len(func_args) == 1)
-                            branch_expr = 'Expr::MakeConstInt(32, %s << 2)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            branch_expr = 'Expr::MakeInt(32, %s << 2)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += branch_expr
                             self.res.append(branch_expr)
                             return res
 
                         if func_name == 'thumb_branch':
                             assert(len(func_args) == 1)
-                            branch_expr = 'Expr::MakeConstInt(32, %s << 1)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
+                            branch_expr = 'Expr::MakeInt(32, %s << 1)' % self.parent._ARM_GenerateExtractBitsSigned(self.insn, func_args[0])
                             res += branch_expr
                             self.res.append(branch_expr)
                             return res
@@ -459,7 +459,7 @@ class ArmArchConvertion(ArchConvertion):
                                 ))
                             op_expr = 'Expr::MakeBinOp(ShiftType,\n%s,\n%s)' % (
                                 Indent(decode_reg),
-                                Indent('Expr::MakeConstInt(32, ShiftVal)'))
+                                Indent('Expr::MakeInt(32, ShiftVal)'))
                             self.res.append(op_expr)
                             return op_expr
 

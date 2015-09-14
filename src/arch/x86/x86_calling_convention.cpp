@@ -119,9 +119,9 @@ Expression::SPType CdeclCallingConvention::EmitGetParameter(u16 ParamNr, ValueTy
   switch (m_Mode)
   {
   case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeConstInt(IntType(16, ParamNr * 2))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeInt(IntType(16, ParamNr * 2))));
   case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeConstInt(IntType(32, ParamNr * 4))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeInt(IntType(32, ParamNr * 4))));
   default: return nullptr;
   }
 }
@@ -160,7 +160,7 @@ bool CdeclCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rP
   auto spStkOff = expr_cast<IntegerExpression>(spBinOp->GetRightExpression());
   if (spStkOff == nullptr)
     return false;
-  auto StkOff = spStkOff->GetConstant().ConvertTo<s32>();
+  auto StkOff = spStkOff->GetInt().ConvertTo<s32>();
 
   switch (m_Mode)
   {
@@ -346,9 +346,9 @@ Expression::SPType StdCallCallingConvention::EmitGetParameter(u16 ParamNr, Value
   switch (m_Mode)
   {
   case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeConstInt(IntType(16, ParamNr * 2))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeInt(IntType(16, ParamNr * 2))));
   case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeConstInt(IntType(32, ParamNr * 4))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeInt(IntType(32, ParamNr * 4))));
   default: return nullptr;
   }
 }
@@ -387,7 +387,7 @@ bool StdCallCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& 
   auto spStkOff = expr_cast<IntegerExpression>(spBinOp->GetRightExpression());
   if (spStkOff == nullptr)
     return false;
-  auto StkOff = spStkOff->GetConstant().ConvertTo<s32>();
+  auto StkOff = spStkOff->GetInt().ConvertTo<s32>();
 
   switch (m_Mode)
   {

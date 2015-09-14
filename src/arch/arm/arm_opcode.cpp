@@ -4667,7 +4667,7 @@ bool ArmArchitecture::Instruction_VEXT_A1_ffb00010_f2b00000(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<8, 11>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<8, 11>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -4705,7 +4705,7 @@ bool ArmArchitecture::Instruction_VSHL_A1_ff800f10_f2800510(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -4743,7 +4743,7 @@ bool ArmArchitecture::Instruction_VSHRN_A1_ff800fd0_f2800810(BinaryStream const&
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -4781,7 +4781,7 @@ bool ArmArchitecture::Instruction_VRSHRN_A1_ff800fd0_f2800850(BinaryStream const
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -5753,7 +5753,7 @@ bool ArmArchitecture::Instruction_VCGT_A1_ffb30b90_f3b10000(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -5791,7 +5791,7 @@ bool ArmArchitecture::Instruction_VCGE_A1_ffb30b90_f3b10080(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -5829,7 +5829,7 @@ bool ArmArchitecture::Instruction_VCEQ_A1_ffb30b90_f3b10100(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -5867,7 +5867,7 @@ bool ArmArchitecture::Instruction_VCLE_A1_ffb30b90_f3b10180(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -5905,7 +5905,7 @@ bool ArmArchitecture::Instruction_VCLT_A1_ffb30b90_f3b10200(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -6213,7 +6213,7 @@ bool ArmArchitecture::Instruction_VSHLL_A2_ffb30fd0_f3b20300(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<18, 19>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<18, 19>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -6450,7 +6450,7 @@ bool ArmArchitecture::Instruction_VSRI_A1_ff800f10_f3800410(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -6488,7 +6488,7 @@ bool ArmArchitecture::Instruction_VSLI_A1_ff800f10_f3800510(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -7387,7 +7387,7 @@ bool ArmArchitecture::Instruction_VSHR_A1_fe800f10_f2800010(BinaryStream const& 
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -7432,7 +7432,7 @@ bool ArmArchitecture::Instruction_VSRA_A1_fe800f10_f2800110(BinaryStream const& 
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -7477,7 +7477,7 @@ bool ArmArchitecture::Instruction_VRSHR_A1_fe800f10_f2800210(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -7522,7 +7522,7 @@ bool ArmArchitecture::Instruction_VRSRA_A1_fe800f10_f2800310(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -7574,7 +7574,7 @@ bool ArmArchitecture::Instruction_VQSHL_A1_fe800e10_f2800610(BinaryStream const&
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -7626,7 +7626,7 @@ bool ArmArchitecture::Instruction_VQSHR_A1_fe800ed0_f2800810(BinaryStream const&
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -7678,7 +7678,7 @@ bool ArmArchitecture::Instruction_VQRSHR_A1_fe800ed0_f2800850(BinaryStream const
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -7723,7 +7723,7 @@ bool ArmArchitecture::Instruction_VSHLL_A1_fe800fd0_f2800a10(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -8126,7 +8126,7 @@ bool ArmArchitecture::Instruction_VORR_A1_feb800b0_f2800010(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -8157,7 +8157,7 @@ bool ArmArchitecture::Instruction_VBIC_A1_feb800b0_f2800030(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -8188,7 +8188,7 @@ bool ArmArchitecture::Instruction_VMOV_A1_feb80090_f2800010(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<24>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -8579,7 +8579,7 @@ bool ArmArchitecture::Instruction_PLD_A1_ff30f000_f510f000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -8632,7 +8632,7 @@ bool ArmArchitecture::Instruction_PLI_A1_ff70f010_f650f000(BinaryStream const& r
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -8695,7 +8695,7 @@ bool ArmArchitecture::Instruction_PLD_A1_ff30f010_f710f000(BinaryStream const& r
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -8712,7 +8712,7 @@ bool ArmArchitecture::Instruction_BLX_A2_fe000000_fa000000(BinaryStream const& r
   // field: arm_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
+    Expr::MakeInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -9222,7 +9222,7 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00010_00000000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -9410,7 +9410,7 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00010_00200000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -9588,7 +9588,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0010_004d0000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -9665,7 +9665,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00010_00400000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -9849,7 +9849,7 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00010_00600000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -9983,7 +9983,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0010_008d0000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -10119,7 +10119,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00010_00800000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -10314,7 +10314,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -10498,7 +10498,7 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00010_00c00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -10682,7 +10682,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00010_00e00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -11249,7 +11249,7 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f010_01100000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -11479,7 +11479,7 @@ bool ArmArchitecture::Instruction_BKPT_A1_0ff000f0_01200070(BinaryStream const& 
   rInsn.Length() += 4;
 
   // field: imm
-  auto spOprd0 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<8, 19>(Opcode) << 4));
+  auto spOprd0 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<8, 19>(Opcode) << 4));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -11611,7 +11611,7 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f010_01300000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -11817,7 +11817,7 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f010_01500000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -12051,7 +12051,7 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -12074,19 +12074,19 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('zero_flag') */
     AllExpr.push_back(Expr::MakeIfElseCond(
       ConditionExpression::CondEq,
       Expr::MakeVar("res", VariableExpression::Use),
-      Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+      Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x1)),
+        Expr::MakeInt(1, 0x1)),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x0))));
+        Expr::MakeInt(1, 0x0))));
     /* semantic: call('carry_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlCf, &m_CpuInfo),
@@ -12113,11 +12113,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
                 OperationExpression::OpXor,
                 rInsn.GetOperand(0),
                 rInsn.GetOperand(1)),
-              Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('overflow_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlVf, &m_CpuInfo),
@@ -12135,11 +12135,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
               OperationExpression::OpXor,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: free_var('res') */
     AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
     rInsn.SetSemantic(AllExpr);
@@ -12208,19 +12208,19 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f090_01700010(BinaryStream const& r
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('zero_flag') */
     AllExpr.push_back(Expr::MakeIfElseCond(
       ConditionExpression::CondEq,
       Expr::MakeVar("res", VariableExpression::Use),
-      Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+      Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x1)),
+        Expr::MakeInt(1, 0x1)),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x0))));
+        Expr::MakeInt(1, 0x0))));
     /* semantic: call('carry_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlCf, &m_CpuInfo),
@@ -12247,11 +12247,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f090_01700010(BinaryStream const& r
                 OperationExpression::OpXor,
                 rInsn.GetOperand(0),
                 rInsn.GetOperand(1)),
-              Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('overflow_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlVf, &m_CpuInfo),
@@ -12269,11 +12269,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f090_01700010(BinaryStream const& r
               OperationExpression::OpXor,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: free_var('res') */
     AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
     rInsn.SetSemantic(AllExpr);
@@ -12467,7 +12467,7 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00010_01800000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -12775,7 +12775,7 @@ bool ArmArchitecture::Instruction_LSR_A1_0fef0070_01a00020(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<7, 11>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<7, 11>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -12817,7 +12817,7 @@ bool ArmArchitecture::Instruction_ASR_A1_0fef0070_01a00040(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<7, 11>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<7, 11>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -12859,7 +12859,7 @@ bool ArmArchitecture::Instruction_ROR_A1_0fef0070_01a00060(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<7, 11>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<7, 11>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -13182,7 +13182,7 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00010_01c00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -13380,7 +13380,7 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0010_01e00000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -13512,8 +13512,8 @@ bool ArmArchitecture::Instruction_LDRH_A1_0f7f00f0_015f00b0(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -13624,8 +13624,8 @@ bool ArmArchitecture::Instruction_STRH_A1_0e500ff0_000000b0(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -13770,8 +13770,8 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e500ff0_001000b0(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -13882,7 +13882,7 @@ bool ArmArchitecture::Instruction_STRH_A1_0e5000f0_004000b0(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -13899,8 +13899,8 @@ bool ArmArchitecture::Instruction_STRH_A1_0e5000f0_004000b0(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -13940,7 +13940,7 @@ bool ArmArchitecture::Instruction_LDRD_A1_0e5000f0_004000d0(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd2 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -13982,7 +13982,7 @@ bool ArmArchitecture::Instruction_STRD_A1_0e5000f0_004000f0(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd2 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14019,7 +14019,7 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e5000f0_005000b0(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14036,8 +14036,8 @@ bool ArmArchitecture::Instruction_LDRH_A1_0e5000f0_005000b0(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -14070,7 +14070,7 @@ bool ArmArchitecture::Instruction_LDRSB_A1_0e5000f0_005000d0(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14107,7 +14107,7 @@ bool ArmArchitecture::Instruction_LDRSH_A1_0e5000f0_005000f0(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 3>(Opcode) | ExtractBits<8, 11>(Opcode) << 4))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14152,7 +14152,7 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00000_02000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm_c
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14194,7 +14194,7 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00000_02200000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm_c
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14224,7 +14224,7 @@ bool ArmArchitecture::Instruction_SUB_A2_0fff0000_024f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: #0
-  auto spOprd2 = Expr::MakeConstInt(32, 0);
+  auto spOprd2 = Expr::MakeInt(32, 0);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14264,7 +14264,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0000_024d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14306,7 +14306,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00000_02400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14348,7 +14348,7 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00000_02600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14380,7 +14380,7 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   // field: arm_expand_label
   auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1)));
+    Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14428,7 +14428,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0000_028d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14481,7 +14481,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00000_02800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14534,7 +14534,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00000_02a00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14576,7 +14576,7 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00000_02c00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14618,7 +14618,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00000_02e00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -14648,7 +14648,7 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14662,11 +14662,11 @@ bool ArmArchitecture::Instruction_MOVW_A2_0ff00000_03000000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
+          Expr::MakeInt(32, 0xffff0000)),
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff)))));
+          Expr::MakeInt(32, 0xffff)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -14693,7 +14693,7 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f000_03100000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm_c
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14811,7 +14811,7 @@ bool ArmArchitecture::Instruction_MSR_A1_0ff3f000_0320f000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14839,7 +14839,7 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f000_03300000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm_c
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14869,7 +14869,7 @@ bool ArmArchitecture::Instruction_MOVT_A1_0ff00000_03400000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 11>(Opcode) | ExtractBits<16, 19>(Opcode) << 12));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14883,11 +14883,11 @@ bool ArmArchitecture::Instruction_MOVT_A1_0ff00000_03400000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff)),
+          Expr::MakeInt(32, 0xffff)),
         Expr::MakeBinOp(
           OperationExpression::OpLls,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0x10)))));
+          Expr::MakeInt(32, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -14914,7 +14914,7 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f000_03500000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14942,7 +14942,7 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -14965,19 +14965,19 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('zero_flag') */
     AllExpr.push_back(Expr::MakeIfElseCond(
       ConditionExpression::CondEq,
       Expr::MakeVar("res", VariableExpression::Use),
-      Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+      Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x1)),
+        Expr::MakeInt(1, 0x1)),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x0))));
+        Expr::MakeInt(1, 0x0))));
     /* semantic: call('carry_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlCf, &m_CpuInfo),
@@ -15004,11 +15004,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
                 OperationExpression::OpXor,
                 rInsn.GetOperand(0),
                 rInsn.GetOperand(1)),
-              Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('overflow_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlVf, &m_CpuInfo),
@@ -15026,11 +15026,11 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f000_03700000(BinaryStream const& r
               OperationExpression::OpXor,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: free_var('res') */
     AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
     rInsn.SetSemantic(AllExpr);
@@ -15073,7 +15073,7 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00000_03800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm_c
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -15107,7 +15107,7 @@ bool ArmArchitecture::Instruction_MOV_A1_0fef0000_03a00000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm_c
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15157,7 +15157,7 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00000_03c00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: arm_expand_imm_c
-  auto spOprd2 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd2 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -15191,7 +15191,7 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0000_03e00000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: arm_expand_imm_c
-  auto spOprd1 = Expr::MakeConstInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
+  auto spOprd1 = Expr::MakeInt(32, UnsignedRotateRight(ExtractBits<0, 7>(Opcode), ExtractBits<8, 11>(Opcode) << 1));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15231,7 +15231,7 @@ bool ArmArchitecture::Instruction_POP_A2_0fff0fff_049d0004(BinaryStream const& r
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -15352,7 +15352,7 @@ bool ArmArchitecture::Instruction_STRBT_A1_0f700000_04600000(BinaryStream const&
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 11>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 11>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -15390,7 +15390,7 @@ bool ArmArchitecture::Instruction_LDRBT_A1_0f700000_04700000(BinaryStream const&
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 11>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 11>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -15424,7 +15424,7 @@ bool ArmArchitecture::Instruction_PUSH_A2_0fff0fff_052d0004(BinaryStream const& 
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -15464,7 +15464,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0f7f0000_051f0000(BinaryStream const& r
   auto OpType = ((ExtractBit<23>(Opcode))) ? OperationExpression::OpAdd : OperationExpression::OpSub;
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OpType,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, (ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, (ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15516,8 +15516,8 @@ bool ArmArchitecture::Instruction_LDRB_A1_0f7f0000_055f0000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -15548,7 +15548,7 @@ bool ArmArchitecture::Instruction_STR_A1_0e500000_04000000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15594,7 +15594,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500000_04100000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15637,7 +15637,7 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500000_04400000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15654,8 +15654,8 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500000_04400000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -15688,7 +15688,7 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500000_04500000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -15705,8 +15705,8 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500000_04500000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -17360,7 +17360,7 @@ bool ArmArchitecture::Instruction_SSAT16_A1_0ff00ff0_06a00f30(BinaryStream const
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<16, 19>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<16, 19>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -17571,7 +17571,7 @@ bool ArmArchitecture::Instruction_SSAT_A1_0fe00030_06a00010(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<7, 11>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<7, 11>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -17612,7 +17612,7 @@ bool ArmArchitecture::Instruction_SSAT_A1_0fe00030_06a00010(BinaryStream const& 
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -17995,7 +17995,7 @@ bool ArmArchitecture::Instruction_USAT_A1_0fe00030_06e00010(BinaryStream const& 
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -18062,7 +18062,7 @@ bool ArmArchitecture::Instruction_STRT_A2_0f700010_06200000(BinaryStream const& 
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -18135,7 +18135,7 @@ bool ArmArchitecture::Instruction_LDRT_A2_0f700010_06300000(BinaryStream const& 
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -18206,7 +18206,7 @@ bool ArmArchitecture::Instruction_STRBT_A2_0f700010_06600000(BinaryStream const&
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -18279,7 +18279,7 @@ bool ArmArchitecture::Instruction_LDRBT_A2_0f700010_06700000(BinaryStream const&
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -19077,7 +19077,7 @@ bool ArmArchitecture::Instruction_STR_A1_0e500010_06000000(BinaryStream const& r
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -19159,7 +19159,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500010_06100000(BinaryStream const& r
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -19238,7 +19238,7 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500010_06400000(BinaryStream const& 
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -19256,8 +19256,8 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500010_06400000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19325,7 +19325,7 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500010_06500000(BinaryStream const& 
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
     Expr::MakeBinOp(ShiftType,
       Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-      Expr::MakeConstInt(32, ShiftVal))), true);
+      Expr::MakeInt(32, ShiftVal))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -19343,8 +19343,8 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500010_06500000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -19481,7 +19481,7 @@ bool ArmArchitecture::Instruction_POP_A1_0fff0000_08bd0000(BinaryStream const& r
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -19613,7 +19613,7 @@ bool ArmArchitecture::Instruction_PUSH_A1_0fff0000_092d0000(BinaryStream const& 
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -19818,7 +19818,7 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
   // field: arm_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
+    Expr::MakeInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -19849,7 +19849,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   // field: arm_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
+    Expr::MakeInt(32, SignExtend<s64, 24>(ExtractBits<0, 23>(Opcode)) << 2));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -19861,7 +19861,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
           rInsn.GetLength()))));
     /* semantic: program.id = op0.val */
@@ -20132,7 +20132,7 @@ bool ArmArchitecture::Instruction_VSTR_A2_0f300f00_0d000a00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -20163,7 +20163,7 @@ bool ArmArchitecture::Instruction_VSTR_A1_0f300f00_0d000b00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -21207,7 +21207,7 @@ bool ArmArchitecture::Instruction_VMOV_A2_0fb00ef0_0eb00a00(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -21421,7 +21421,7 @@ bool ArmArchitecture::Instruction_SVC_A1_0f000000_0f000000(BinaryStream const& r
     rInsn.SubType() |= Instruction::ConditionalType;
 
   // field: imm
-  auto spOprd0 = Expr::MakeConstInt(32, (ExtractBits<0, 23>(Opcode)));
+  auto spOprd0 = Expr::MakeInt(32, (ExtractBits<0, 23>(Opcode)));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -21520,7 +21520,7 @@ bool ArmArchitecture::Instruction_LSRS_T1_0000f800_00000800(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 10>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 10>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -21552,7 +21552,7 @@ bool ArmArchitecture::Instruction_ASRS_T1_0000f800_00001000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 10>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 10>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -21661,7 +21661,7 @@ bool ArmArchitecture::Instruction_ADDS_T1_0000fe00_00001c00(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 8>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 8>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -21704,7 +21704,7 @@ bool ArmArchitecture::Instruction_SUBS_T1_0000fe00_00001e00(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 8>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 8>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -21728,7 +21728,7 @@ bool ArmArchitecture::Instruction_MOVS_T1_0000f800_00002000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -21761,7 +21761,7 @@ bool ArmArchitecture::Instruction_CMP_T1_0000f800_00002800(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -21785,7 +21785,7 @@ bool ArmArchitecture::Instruction_ADDS_T2_0000f800_00003000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -21820,7 +21820,7 @@ bool ArmArchitecture::Instruction_SUBS_T2_0000f800_00003800(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -22087,7 +22087,7 @@ bool ArmArchitecture::Instruction_RSBS_T1_0000ffc0_00004240(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: #0
-  auto spOprd2 = Expr::MakeConstInt(32, 0);
+  auto spOprd2 = Expr::MakeInt(32, 0);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -22164,19 +22164,19 @@ bool ArmArchitecture::Instruction_CMN_T1_0000ffc0_000042c0(BinaryStream const& r
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('zero_flag') */
     AllExpr.push_back(Expr::MakeIfElseCond(
       ConditionExpression::CondEq,
       Expr::MakeVar("res", VariableExpression::Use),
-      Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+      Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x1)),
+        Expr::MakeInt(1, 0x1)),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x0))));
+        Expr::MakeInt(1, 0x0))));
     /* semantic: call('carry_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlCf, &m_CpuInfo),
@@ -22203,11 +22203,11 @@ bool ArmArchitecture::Instruction_CMN_T1_0000ffc0_000042c0(BinaryStream const& r
                 OperationExpression::OpXor,
                 rInsn.GetOperand(0),
                 rInsn.GetOperand(1)),
-              Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('overflow_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlVf, &m_CpuInfo),
@@ -22225,11 +22225,11 @@ bool ArmArchitecture::Instruction_CMN_T1_0000ffc0_000042c0(BinaryStream const& r
               OperationExpression::OpXor,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: free_var('res') */
     AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
     rInsn.SetSemantic(AllExpr);
@@ -22574,7 +22574,7 @@ bool ArmArchitecture::Instruction_LDR_T1_0000f800_00004800(BinaryStream const& r
   // field: label
   auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -22657,8 +22657,8 @@ bool ArmArchitecture::Instruction_STRH_T1_0000fe00_00005200(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -22697,8 +22697,8 @@ bool ArmArchitecture::Instruction_STRB_T1_0000fe00_00005400(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -22803,8 +22803,8 @@ bool ArmArchitecture::Instruction_LDRH_T1_0000fe00_00005a00(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -22845,8 +22845,8 @@ bool ArmArchitecture::Instruction_LDRB_T1_0000fe00_00005c00(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -22984,8 +22984,8 @@ bool ArmArchitecture::Instruction_STRB_T1_0000f800_00007000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -23026,8 +23026,8 @@ bool ArmArchitecture::Instruction_LDRB_T1_0000f800_00007800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -23066,8 +23066,8 @@ bool ArmArchitecture::Instruction_STRH_T1_0000f800_00008000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -23108,8 +23108,8 @@ bool ArmArchitecture::Instruction_LDRH_T1_0000f800_00008800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -23208,7 +23208,7 @@ bool ArmArchitecture::Instruction_ADR_T1_0000f800_0000a000(BinaryStream const& r
   // field: label
   auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -23249,7 +23249,7 @@ bool ArmArchitecture::Instruction_ADD_T1_0000f800_0000a800(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -23289,7 +23289,7 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff80_0000b000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 6>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 6>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -23329,7 +23329,7 @@ bool ArmArchitecture::Instruction_SUB_T1_0000ff80_0000b080(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 6>(Opcode)));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 6>(Opcode)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -23488,7 +23488,7 @@ bool ArmArchitecture::Instruction_PUSH_T1_0000fe00_0000b400(BinaryStream const& 
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -23643,7 +23643,7 @@ bool ArmArchitecture::Instruction_POP_T1_0000fe00_0000bc00(BinaryStream const& r
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -23659,7 +23659,7 @@ bool ArmArchitecture::Instruction_BKPT_T1_0000ff00_0000be00(BinaryStream const& 
   rInsn.Length() += 2;
 
   // field: imm
-  auto spOprd0 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd0 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -23768,7 +23768,7 @@ bool ArmArchitecture::Instruction_CB_T1_0000f500_0000b100(BinaryStream const& rB
   // field: label
   auto spOprd2 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 6>(ExtractBits<3, 7>(Opcode) | ExtractBit<9>(Opcode) << 5)));
+    Expr::MakeInt(32, SignExtend<s64, 6>(ExtractBits<3, 7>(Opcode) | ExtractBit<9>(Opcode) << 5)));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -23842,7 +23842,7 @@ bool ArmArchitecture::Instruction_SVC_T1_0000ff00_0000df00(BinaryStream const& r
   // TODO: unable to find conditional bits
 
   // field: imm
-  auto spOprd0 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode)));
+  auto spOprd0 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode)));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -23865,7 +23865,7 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)) << 1));
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)) << 1));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -23893,7 +23893,7 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
+    Expr::MakeInt(32, SignExtend<s64, 11>(ExtractBits<0, 10>(Opcode)) << 1));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -24002,7 +24002,7 @@ bool ArmArchitecture::Instruction_PUSH_T2_ffffa000_e8ad0000(BinaryStream const& 
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -24055,7 +24055,7 @@ bool ArmArchitecture::Instruction_POP_T2_ffff2000_e8bd0000(BinaryStream const& r
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -24516,7 +24516,7 @@ bool ArmArchitecture::Instruction_STRD_T1_fe500000_e8400000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd2 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24557,7 +24557,7 @@ bool ArmArchitecture::Instruction_LDRD_T1_fe500000_e8500000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd2 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24620,7 +24620,7 @@ bool ArmArchitecture::Instruction_TST_T2_fff08f00_ea100f00(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -24694,7 +24694,7 @@ bool ArmArchitecture::Instruction_AND_T2_ffe08000_ea000000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24768,7 +24768,7 @@ bool ArmArchitecture::Instruction_BIC_T2_ffe08000_ea200000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24921,7 +24921,7 @@ bool ArmArchitecture::Instruction_LSR_T2_ffef8030_ea4f0010(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24960,7 +24960,7 @@ bool ArmArchitecture::Instruction_ASR_T2_ffef8030_ea4f0020(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -24999,7 +24999,7 @@ bool ArmArchitecture::Instruction_ROR_T1_ffef8030_ea4f0030(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25073,7 +25073,7 @@ bool ArmArchitecture::Instruction_ORR_T2_ffe08000_ea400000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25139,7 +25139,7 @@ bool ArmArchitecture::Instruction_MVN_T2_ffef8000_ea6f0000(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -25213,7 +25213,7 @@ bool ArmArchitecture::Instruction_ORN_T1_ffe08000_ea600000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25273,7 +25273,7 @@ bool ArmArchitecture::Instruction_TEQ_T1_fff08f00_ea900f00(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -25347,7 +25347,7 @@ bool ArmArchitecture::Instruction_EOR_T2_ffe08000_ea800000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25450,7 +25450,7 @@ bool ArmArchitecture::Instruction_CMN_T2_fff08f00_eb100f00(BinaryStream const& r
   }
   auto spOprd1 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -25522,7 +25522,7 @@ bool ArmArchitecture::Instruction_ADD_T3_ffef8000_eb0d0000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25607,7 +25607,7 @@ bool ArmArchitecture::Instruction_ADD_T3_ffe08000_eb000000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25681,7 +25681,7 @@ bool ArmArchitecture::Instruction_ADC_T2_ffe08000_eb400000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25755,7 +25755,7 @@ bool ArmArchitecture::Instruction_SBC_T2_ffe08000_eb600000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25861,7 +25861,7 @@ bool ArmArchitecture::Instruction_SUB_T1_ffef8000_ebad0000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -25935,7 +25935,7 @@ bool ArmArchitecture::Instruction_SUB_T2_ffe08000_eba00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -26009,7 +26009,7 @@ bool ArmArchitecture::Instruction_RSB_T1_ffe08000_ebc00000(BinaryStream const& r
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegM + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -26274,7 +26274,7 @@ bool ArmArchitecture::Instruction_VSTR_T2_ff300f00_ed000a00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -26302,7 +26302,7 @@ bool ArmArchitecture::Instruction_VSTR_T1_ff300f00_ed000b00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -26330,7 +26330,7 @@ bool ArmArchitecture::Instruction_VLDR_T2_ff300f00_ed100a00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -26358,7 +26358,7 @@ bool ArmArchitecture::Instruction_VLDR_T1_ff300f00_ed100b00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -26474,7 +26474,7 @@ bool ArmArchitecture::Instruction_STC_T1_fe100000_ec000000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd3 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -26518,7 +26518,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe1f0000_ec1f0000(BinaryStream const& r
   // field: label
   auto spOprd3 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -26634,7 +26634,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe100000_ec100000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd3 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -27314,7 +27314,7 @@ bool ArmArchitecture::Instruction_VMOV_T2_ffb00ef0_eeb00a00(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 19>(Opcode) << 4));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -28037,7 +28037,7 @@ bool ArmArchitecture::Instruction_VEXT_T1_ffb00010_efb00000(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<8, 11>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<8, 11>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -28075,7 +28075,7 @@ bool ArmArchitecture::Instruction_VSHL_T1_ff800f10_ef800510(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -28113,7 +28113,7 @@ bool ArmArchitecture::Instruction_VSHRN_T1_ff800fd0_ef800810(BinaryStream const&
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -28151,7 +28151,7 @@ bool ArmArchitecture::Instruction_VRSHRN_T1_ff800fd0_ef800850(BinaryStream const
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -28638,7 +28638,7 @@ bool ArmArchitecture::Instruction_SSAT16_T1_fff0f0f0_f3200000(BinaryStream const
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode)));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -28673,7 +28673,7 @@ bool ArmArchitecture::Instruction_SSAT_T1_ffd08020_f3000000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -28714,7 +28714,7 @@ bool ArmArchitecture::Instruction_SSAT_T1_ffd08020_f3000000(BinaryStream const& 
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -28940,7 +28940,7 @@ bool ArmArchitecture::Instruction_USAT_T1_ffd08020_f3800000(BinaryStream const& 
   }
   auto spOprd2 = Expr::MakeBinOp(ShiftType,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, ShiftVal));
+    Expr::MakeInt(32, ShiftVal));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29006,7 +29006,7 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 17>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) << 1));
+    Expr::MakeInt(32, SignExtend<s64, 17>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -29034,7 +29034,7 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   // field: thumb_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
+    Expr::MakeInt(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -29061,7 +29061,7 @@ bool ArmArchitecture::Instruction_BLX_T2_f800d001_f000c000(BinaryStream const& r
   // field: label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 20>(ExtractBits<1, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 10)));
+    Expr::MakeInt(32, SignExtend<s64, 20>(ExtractBits<1, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 10)));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -29081,7 +29081,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   // field: thumb_branch_label
   auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
+    Expr::MakeInt(32, SignExtend<s64, 21>(ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1));
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -29093,7 +29093,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode())),
           rInsn.GetLength()))));
     /* semantic: program.id = op0.val */
@@ -29123,7 +29123,7 @@ bool ArmArchitecture::Instruction_TST_T1_fbf08f00_f0100f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29162,7 +29162,7 @@ bool ArmArchitecture::Instruction_AND_T1_fbe08000_f0000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29201,7 +29201,7 @@ bool ArmArchitecture::Instruction_BIC_T1_fbe08000_f0200000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29232,7 +29232,7 @@ bool ArmArchitecture::Instruction_MOV_T2_fbef8000_f04f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29279,7 +29279,7 @@ bool ArmArchitecture::Instruction_ORR_T1_fbe08000_f0400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29310,7 +29310,7 @@ bool ArmArchitecture::Instruction_MVN_T1_fbef8000_f06f0000(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29349,7 +29349,7 @@ bool ArmArchitecture::Instruction_ORN_T1_fbe08000_f0600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29374,7 +29374,7 @@ bool ArmArchitecture::Instruction_TEQ_T1_fbf08f00_f0900f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29413,7 +29413,7 @@ bool ArmArchitecture::Instruction_EOR_T1_fbe08000_f0800000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29462,19 +29462,19 @@ bool ArmArchitecture::Instruction_CMN_T1_fbf08f00_f1100f00(BinaryStream const& r
         Expr::MakeVar("res", VariableExpression::Use),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('zero_flag') */
     AllExpr.push_back(Expr::MakeIfElseCond(
       ConditionExpression::CondEq,
       Expr::MakeVar("res", VariableExpression::Use),
-      Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+      Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x0),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x1)),
+        Expr::MakeInt(1, 0x1)),
       Expr::MakeAssign(
         Expr::MakeId(ARM_FlZf, &m_CpuInfo),
-        Expr::MakeConstInt(1, 0x0))));
+        Expr::MakeInt(1, 0x0))));
     /* semantic: call('carry_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlCf, &m_CpuInfo),
@@ -29501,11 +29501,11 @@ bool ArmArchitecture::Instruction_CMN_T1_fbf08f00_f1100f00(BinaryStream const& r
                 OperationExpression::OpXor,
                 rInsn.GetOperand(0),
                 rInsn.GetOperand(1)),
-              Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1)))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: call('overflow_flag_add') */
     AllExpr.push_back(Expr::MakeAssign(
       Expr::MakeId(ARM_FlVf, &m_CpuInfo),
@@ -29523,11 +29523,11 @@ bool ArmArchitecture::Instruction_CMN_T1_fbf08f00_f1100f00(BinaryStream const& r
               OperationExpression::OpXor,
               rInsn.GetOperand(0),
               rInsn.GetOperand(1)),
-            Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), -0x1))),
         Expr::MakeBinOp(
           OperationExpression::OpSub,
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-          Expr::MakeConstInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConstInt(16, 0x1))));
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+          Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeInt(16, 0x1))));
     /* semantic: free_var('res') */
     AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
     rInsn.SetSemantic(AllExpr);
@@ -29565,7 +29565,7 @@ bool ArmArchitecture::Instruction_ADD_T3_fbef8000_f10d0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29604,7 +29604,7 @@ bool ArmArchitecture::Instruction_ADD_T3_fbe08000_f1000000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29654,7 +29654,7 @@ bool ArmArchitecture::Instruction_ADC_T1_fbe08000_f1400000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29693,7 +29693,7 @@ bool ArmArchitecture::Instruction_SBC_T1_fbe08000_f1600000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29718,7 +29718,7 @@ bool ArmArchitecture::Instruction_CMP_T2_fbf08f00_f1b00f00(BinaryStream const& r
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29755,7 +29755,7 @@ bool ArmArchitecture::Instruction_SUB_T2_fbef8000_f1ad0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29794,7 +29794,7 @@ bool ArmArchitecture::Instruction_SUB_T3_fbe08000_f1a00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29833,7 +29833,7 @@ bool ArmArchitecture::Instruction_RSB_T2_fbe08000_f1c00000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29866,7 +29866,7 @@ bool ArmArchitecture::Instruction_ADDW_T4_fbff8000_f20d0000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29895,7 +29895,7 @@ bool ArmArchitecture::Instruction_ADR_T3_fbff8000_f20f0000(BinaryStream const& r
   // field: label
   auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11)));
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11)));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29938,7 +29938,7 @@ bool ArmArchitecture::Instruction_ADDW_T4_fbf08000_f2000000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -29965,7 +29965,7 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -29979,11 +29979,11 @@ bool ArmArchitecture::Instruction_MOVW_T3_fbf08000_f2400000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
+          Expr::MakeInt(32, 0xffff0000)),
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff)))));
+          Expr::MakeInt(32, 0xffff)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30015,7 +30015,7 @@ bool ArmArchitecture::Instruction_SUBW_T3_fbff8000_f2ad0000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -30045,7 +30045,7 @@ bool ArmArchitecture::Instruction_SUB_T2_fbff8000_f2af0000(BinaryStream const& r
   rInsn.AddOperand(spOprd1);
 
   // field: #0
-  auto spOprd2 = Expr::MakeConstInt(32, 0);
+  auto spOprd2 = Expr::MakeInt(32, 0);
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -30080,7 +30080,7 @@ bool ArmArchitecture::Instruction_SUBW_T4_fbf08000_f2a00000(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBit<26>(Opcode) << 11));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -30107,7 +30107,7 @@ bool ArmArchitecture::Instruction_MOVT_T1_fbf08000_f2c00000(BinaryStream const& 
   rInsn.AddOperand(spOprd0);
 
   // field: imm
-  auto spOprd1 = Expr::MakeConstInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
+  auto spOprd1 = Expr::MakeInt(32, (ExtractBits<0, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 8 | ExtractBits<16, 19>(Opcode) << 11 | ExtractBit<26>(Opcode) << 15));
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30121,11 +30121,11 @@ bool ArmArchitecture::Instruction_MOVT_T1_fbf08000_f2c00000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff)),
+          Expr::MakeInt(32, 0xffff)),
         Expr::MakeBinOp(
           OperationExpression::OpLls,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0x10)))));
+          Expr::MakeInt(32, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30179,7 +30179,7 @@ bool ArmArchitecture::Instruction_STRBT_T1_fff00f00_f8000e00(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30208,7 +30208,7 @@ bool ArmArchitecture::Instruction_STRB_T3_fff00800_f8000800(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30225,8 +30225,8 @@ bool ArmArchitecture::Instruction_STRB_T3_fff00800_f8000800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30284,7 +30284,7 @@ bool ArmArchitecture::Instruction_LDRBT_T1_fff00f00_f8100e00(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30315,7 +30315,7 @@ bool ArmArchitecture::Instruction_LDRB_T3_fff00800_f8100800(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30332,8 +30332,8 @@ bool ArmArchitecture::Instruction_LDRB_T3_fff00800_f8100800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30372,8 +30372,8 @@ bool ArmArchitecture::Instruction_STRH_T2_fff00fc0_f8200000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30401,7 +30401,7 @@ bool ArmArchitecture::Instruction_STRHT_T1_fff00f00_f8200e00(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30430,7 +30430,7 @@ bool ArmArchitecture::Instruction_STRH_T3_fff00800_f8200800(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30447,8 +30447,8 @@ bool ArmArchitecture::Instruction_STRH_T3_fff00800_f8200800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(1),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30506,7 +30506,7 @@ bool ArmArchitecture::Instruction_LDRHT_T1_fff00f00_f8300e00(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30537,7 +30537,7 @@ bool ArmArchitecture::Instruction_LDRH_T3_fff00800_f8300800(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30554,8 +30554,8 @@ bool ArmArchitecture::Instruction_LDRH_T3_fff00800_f8300800(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -30635,7 +30635,7 @@ bool ArmArchitecture::Instruction_PUSH_T3_ffff0fff_f84d0d04(BinaryStream const& 
       Expr::MakeBinOp(
         OperationExpression::OpSub,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -30696,7 +30696,7 @@ bool ArmArchitecture::Instruction_STRT_T1_fff00f00_f8400e00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30725,7 +30725,7 @@ bool ArmArchitecture::Instruction_STR_T4_fff00800_f8400800(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30774,7 +30774,7 @@ bool ArmArchitecture::Instruction_POP_T3_ffff0fff_f85d0b04(BinaryStream const& r
       Expr::MakeBinOp(
         OperationExpression::OpAdd,
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        Expr::MakeConstInt(
+        Expr::MakeInt(
           (rInsn.GetOperand(0)->GetBitSize()),
           (rInsn.GetOperand(0)->GetBitSize() / 8))))
     );
@@ -30843,7 +30843,7 @@ bool ArmArchitecture::Instruction_LDRT_T1_fff00f00_f8500e00(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30874,7 +30874,7 @@ bool ArmArchitecture::Instruction_LDR_T4_fff00800_f8500800(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -30914,7 +30914,7 @@ bool ArmArchitecture::Instruction_STRB_T2_fff00000_f8800000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31024,7 +31024,7 @@ bool ArmArchitecture::Instruction_PLD_T1_ffd0f000_f890f000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(64, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31053,7 +31053,7 @@ bool ArmArchitecture::Instruction_STR_T3_fff00000_f8c00000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31130,8 +31130,8 @@ bool ArmArchitecture::Instruction_LDRB_T1_ff7f0000_f81f0000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffffff00)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x8)))));
+          Expr::MakeInt(32, 0xffffff00)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x8)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -31171,8 +31171,8 @@ bool ArmArchitecture::Instruction_LDRH_T1_ff7f0000_f83f0000(BinaryStream const& 
         Expr::MakeBinOp(
           OperationExpression::OpAnd,
           rInsn.GetOperand(0),
-          Expr::MakeConstInt(32, 0xffff0000)),
-        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeConstInt(16, 0x10)))));
+          Expr::MakeInt(32, 0xffff0000)),
+        Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(16, 0x10)))));
     rInsn.SetSemantic(AllExpr);
   }
   return true;
@@ -31318,7 +31318,7 @@ bool ArmArchitecture::Instruction_LDRSBT_T1_fff00f00_f9100e00(BinaryStream const
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31349,7 +31349,7 @@ bool ArmArchitecture::Instruction_LDRSB_T2_fff00800_f9100800(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31411,7 +31411,7 @@ bool ArmArchitecture::Instruction_LDRSHT_T1_fff00f00_f9300e00(BinaryStream const
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31442,7 +31442,7 @@ bool ArmArchitecture::Instruction_LDRSH_T2_fff00800_f9300800(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31538,7 +31538,7 @@ bool ArmArchitecture::Instruction_PLI_T1_fff0f000_f990f000(BinaryStream const& r
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd0 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd0 == nullptr)
     return false;
   rInsn.AddOperand(spOprd0);
@@ -31569,7 +31569,7 @@ bool ArmArchitecture::Instruction_LDRSB_T1_fff00000_f9900000(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -31600,7 +31600,7 @@ bool ArmArchitecture::Instruction_LDRSH_T1_fff00000_f9b00000(BinaryStream const&
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd1 = Expr::MakeMem(16, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 12>(ExtractBits<0, 11>(Opcode)))), true);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);
@@ -35310,7 +35310,7 @@ bool ArmArchitecture::Instruction_STC2_T2_fe100000_fc000000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd3 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -35354,7 +35354,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe1f0000_fc1f0000(BinaryStream const& 
   // field: label
   auto spOprd3 = Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(ARM_RegPC, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode))));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -35396,7 +35396,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe100000_fc100000(BinaryStream const& 
   u32 RegN = (ExtractBits<16, 19>(Opcode));
   auto spOprd3 = Expr::MakeMem(32, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegN + ARM_RegR0, &m_CpuInfo),
-    Expr::MakeConstInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
+    Expr::MakeInt(32, SignExtend<s64, 8>(ExtractBits<0, 7>(Opcode)))), true);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36275,7 +36275,7 @@ bool ArmArchitecture::Instruction_VCGT_T1_ffb30b90_ffb10000(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36313,7 +36313,7 @@ bool ArmArchitecture::Instruction_VCGE_T1_ffb30b90_ffb10080(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36351,7 +36351,7 @@ bool ArmArchitecture::Instruction_VCEQ_T1_ffb30b90_ffb10100(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36389,7 +36389,7 @@ bool ArmArchitecture::Instruction_VCLE_T1_ffb30b90_ffb10180(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36427,7 +36427,7 @@ bool ArmArchitecture::Instruction_VCLT_T1_ffb30b90_ffb10200(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: #0
-  auto spOprd3 = Expr::MakeConstInt(32, 0);
+  auto spOprd3 = Expr::MakeInt(32, 0);
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -36735,7 +36735,7 @@ bool ArmArchitecture::Instruction_VSHLL_T2_ffb30fd0_ffb20300(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<18, 19>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<18, 19>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -36972,7 +36972,7 @@ bool ArmArchitecture::Instruction_VSRI_T1_ff800f10_ff800410(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -37010,7 +37010,7 @@ bool ArmArchitecture::Instruction_VSLI_T1_ff800f10_ff800510(BinaryStream const& 
   rInsn.AddOperand(spOprd2);
 
   // field: imm
-  auto spOprd3 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd3 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd3 == nullptr)
     return false;
   rInsn.AddOperand(spOprd3);
@@ -37909,7 +37909,7 @@ bool ArmArchitecture::Instruction_VSHR_T1_ef800f10_ef800010(BinaryStream const& 
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -37954,7 +37954,7 @@ bool ArmArchitecture::Instruction_VSRA_T1_ef800f10_ef800110(BinaryStream const& 
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -37999,7 +37999,7 @@ bool ArmArchitecture::Instruction_VRSHR_T1_ef800f10_ef800210(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -38044,7 +38044,7 @@ bool ArmArchitecture::Instruction_VRSRA_T1_ef800f10_ef800310(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -38096,7 +38096,7 @@ bool ArmArchitecture::Instruction_VQSHL_T1_ef800e10_ef800610(BinaryStream const&
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -38148,7 +38148,7 @@ bool ArmArchitecture::Instruction_VQSHR_T1_ef800ed0_ef800810(BinaryStream const&
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -38200,7 +38200,7 @@ bool ArmArchitecture::Instruction_VQRSHR_T1_ef800ed0_ef800850(BinaryStream const
   rInsn.AddOperand(spOprd4);
 
   // field: imm
-  auto spOprd5 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd5 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd5 == nullptr)
     return false;
   rInsn.AddOperand(spOprd5);
@@ -38245,7 +38245,7 @@ bool ArmArchitecture::Instruction_VSHLL_T1_ef800fd0_ef800a10(BinaryStream const&
   rInsn.AddOperand(spOprd3);
 
   // field: imm
-  auto spOprd4 = Expr::MakeConstInt(32, (ExtractBits<16, 21>(Opcode)));
+  auto spOprd4 = Expr::MakeInt(32, (ExtractBits<16, 21>(Opcode)));
   if (spOprd4 == nullptr)
     return false;
   rInsn.AddOperand(spOprd4);
@@ -38648,7 +38648,7 @@ bool ArmArchitecture::Instruction_VORR_T1_efb800b0_ef800010(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -38679,7 +38679,7 @@ bool ArmArchitecture::Instruction_VBIC_T1_efb800b0_ef800030(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
@@ -38710,7 +38710,7 @@ bool ArmArchitecture::Instruction_VMOV_T1_efb80090_ef800010(BinaryStream const& 
   rInsn.AddOperand(spOprd1);
 
   // field: imm
-  auto spOprd2 = Expr::MakeConstInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
+  auto spOprd2 = Expr::MakeInt(32, (ExtractBits<0, 3>(Opcode) | ExtractBits<16, 18>(Opcode) << 4 | ExtractBit<28>(Opcode) << 7));
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);

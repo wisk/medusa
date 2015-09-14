@@ -430,7 +430,7 @@ bool X86Architecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Addre
   u32 IdSz = m_CpuInfo.GetSizeOfRegisterInBit(Id);
   if (IdSz == 0)
     return false;
-  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConstInt(IdSz, rAddr.GetOffset())));
+  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeInt(IdSz, rAddr.GetOffset())));
   return true;
 }
 

@@ -37,7 +37,7 @@ void PydusaExpression(void)
 
   bp::class_<IntegerExpression, bp::bases<Expression>>("IntegerExpression", bp::no_init)
     .def("__str__", &IntegerExpression::ToString)
-    .add_property("value", &IntegerExpression::GetConstant)
+    .add_property("value", &IntegerExpression::GetInt)
     ;
   bp::register_ptr_to_python<IntegerExpression::SPType>();
 
@@ -90,7 +90,7 @@ void PydusaExpression(void)
 
   // helpers used to create instance of a specific expression type
 
-  //bp::def("expr_make_const", Expr::MakeConstInt);
+  //bp::def("expr_make_const", Expr::MakeInt);
   bp::def("expr_make_id", Expr::MakeId);
 
   // exposing enumerations

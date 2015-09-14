@@ -335,7 +335,7 @@ bool ConstantPropagation::_RunOnce(void)
     // TODO: handle all operations...
   }
 
-  auto spConstExpr = Expr::MakeConstInt(Bit, Res);
+  auto spConstExpr = Expr::MakeInt(Bit, Res);
   return m_spExpr->UpdateChild(spBinOpExpr, spConstExpr);
 }
 

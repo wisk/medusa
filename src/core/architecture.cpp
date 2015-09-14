@@ -234,9 +234,9 @@ public:
     spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
-  virtual Expression::SPType VisitConstant(IntegerExpression::SPType spConstExpr)
+  virtual Expression::SPType VisitInt(IntegerExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetConstant().ConvertTo<TOffset>());
+    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -244,7 +244,7 @@ public:
       return nullptr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), 16);
+    m_rPrintData.AppendImmediate(spConstExpr->GetInt(), 16);
     return nullptr;
   }
 

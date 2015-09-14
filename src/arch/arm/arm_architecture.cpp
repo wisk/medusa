@@ -412,9 +412,9 @@ public:
     return spBinOpExpr;
   }
 
-  virtual Expression::SPType VisitConstant(IntegerExpression::SPType spConstExpr)
+  virtual Expression::SPType VisitInt(IntegerExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetConstant().ConvertTo<TOffset>());
+    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -422,7 +422,7 @@ public:
       return spConstExpr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant());
+    m_rPrintData.AppendImmediate(spConstExpr->GetInt());
     return spConstExpr;
   }
 
@@ -539,6 +539,6 @@ bool ArmArchitecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Addre
   u32 IdSz = m_CpuInfo.GetSizeOfRegisterInBit(Id);
   if (IdSz == 0)
     return false;
-  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConstInt(IdSz, rAddr.GetOffset())));
+  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeInt(IdSz, rAddr.GetOffset())));
   return true;
 }

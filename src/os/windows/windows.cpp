@@ -188,7 +188,7 @@ Expression::LSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Addres
     Expr::MakeId(EspId, pCpuInfo),
     Expr::MakeBinOp(OperationExpression::OpAdd,
     /**/Expr::MakeId(EspId, pCpuInfo),
-    /**/Expr::MakeConstInt(EspBitSize, EspBitSize / 8 * Parms.size()))));
+    /**/Expr::MakeInt(EspBitSize, EspBitSize / 8 * Parms.size()))));
 
   return SymExprs;
 }

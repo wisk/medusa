@@ -85,7 +85,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
     case DS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
     default: break;
     }
-    spExpr = Expr::MakeConstInt(ConstType, m_Value);
+    spExpr = Expr::MakeInt(ConstType, m_Value);
   }
 
   else if (m_Type & (O_REG | O_SREG))
@@ -99,7 +99,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
         spExpr = Expr::MakeBinOp(
         OperationExpression::OpMul,
         spExpr,
-        Expr::MakeConstInt(IntegerExpression::Const8Bit, (m_Type >> 8) & 0xf));
+        Expr::MakeInt(IntegerExpression::Const8Bit, (m_Type >> 8) & 0xf));
     }
 
     if (m_Reg != 0x0)
@@ -141,7 +141,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       spExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         spExpr,
-        Expr::MakeConstInt(ConstType, Disp));
+        Expr::MakeInt(ConstType, Disp));
     }
   }
 
@@ -160,7 +160,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
     spExpr = Expr::MakeBinOp(
       OperationExpression::OpAdd,
       Expr::MakeId(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), pCpuInfo),
-      Expr::MakeConstInt(ConstType, m_Value));
+      Expr::MakeInt(ConstType, m_Value));
   }
 
   if (m_Type & O_MEM)
@@ -177,14 +177,14 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       case DS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
       default: break;
       }
-      spExpr = Expr::MakeConstInt(ConstType, m_Value);
+      spExpr = Expr::MakeInt(ConstType, m_Value);
     }
 
     Expression::SPType spBaseExpr;
     if (m_Type & O_SEG)
       spBaseExpr = Expr::MakeId(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)
-      spBaseExpr = Expr::MakeConstInt(IntegerExpression::Const16Bit, m_SegValue);
+      spBaseExpr = Expr::MakeInt(IntegerExpression::Const16Bit, m_SegValue);
 
 /*
 #define MS_MASK      0x0000f000
