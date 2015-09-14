@@ -427,7 +427,9 @@ int main(int argc, char **argv)
       return 0;
     }
 
-    std::ofstream dump(dump_path.string());
+
+    std::ofstream df(dump_path.string());
+    auto& dump = (dump_path == "-") ? std::cout : df;
 
     if (!dump_path.empty())
       exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& cur_addr)
