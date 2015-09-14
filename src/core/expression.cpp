@@ -748,6 +748,90 @@ bool IntegerExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt
   return false;
 }
 
+FloatingPointExpression::FloatingPointExpression(float const Value)
+{
+  m_Value.sgl = Value;
+  m_Precision = FloatingPointExpression::Single;
+}
+
+FloatingPointExpression::FloatingPointExpression(double const Value)
+{
+  m_Value.dbl = Value;
+  m_Precision = FloatingPointExpression::Double;
+}
+
+std::string FloatingPointExpression::ToString(void) const
+{
+  std::string Res("float");
+  Res += std::to_string(GetBitSize());
+  Res += "(";
+
+  switch (m_Precision)
+  {
+  case FloatingPointExpression::Single: Res += m_Value.sgl; break;
+  case FloatingPointExpression::Double: Res += m_Value.dbl; break;
+  default: return "<invalid variable>";
+  }
+
+  Res += ")";
+  return Res;
+}
+
+u32 FloatingPointExpression::GetBitSize(void) const
+{
+  switch (m_Precision)
+  {
+  case FloatingPointExpression::Single: return 32; break;
+  case FloatingPointExpression::Double: return 64; break;
+  default: return 0;
+  }
+}
+
+Expression::CompareType FloatingPointExpression::Compare(Expression::SPType spExpr) const
+{
+  auto spCmpExpr = expr_cast<FloatingPointExpression>(spExpr);
+  if (spCmpExpr == nullptr)
+    return CmpDifferent;
+
+  switch (m_Precision)
+  {
+  case FloatingPointExpression::Single:
+    if (m_Value.sgl != spCmpExpr->GetSimple()) return CmpSameExpression;
+  break;
+  case FloatingPointExpression::Double:
+    if (m_Value.dbl != spCmpExpr->GetDouble()) return CmpSameExpression;
+  break;
+  default: return CmpDifferent;
+  }
+
+  return CmpIdentical;
+}
+
+Expression::SPType FloatingPointExpression::Clone(void) const
+{
+  return nullptr; // TODO
+}
+
+Expression::SPType FloatingPointExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return nullptr; // TODO
+}
+
+bool FloatingPointExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
+{
+  return nullptr; // TODO
+}
+
+bool FloatingPointExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
+{
+  return false;
+}
+
+bool FloatingPointExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+{
+  return false;
+}
+
 // identifier expression //////////////////////////////////////////////////////
 
 IdentifierExpression::IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo)

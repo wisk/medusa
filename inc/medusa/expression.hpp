@@ -68,6 +68,8 @@ public:
     UnOp,
     BinOp,
     Const,
+    IntConst,
+    FloatConst,
     Id,
     VecId,
     Track,
@@ -417,18 +419,11 @@ private:
 class Medusa_EXPORT ConstantExpression : public Expression
 {
   DECL_EXPR(ConstantExpression, Expression::Const, Expression)
-
-public:
-  enum Type
-  {
-    ConstInt,
-    ConstFloat,
-  };
 };
 
 class Medusa_EXPORT IntegerExpression : public ConstantExpression
 {
-  DECL_EXPR(IntegerExpression, ConstantExpression::Const, ConstantExpression)
+  DECL_EXPR(IntegerExpression, Expression::IntConst, Expression)
 
 public:
   IntegerExpression(u16 BitSize, ap_int Value);
@@ -450,6 +445,46 @@ public:
 
 private:
   IntType m_Value;
+};
+
+class Medusa_EXPORT FloatingPointExpression : public ConstantExpression
+{
+  DECL_EXPR(FloatingPointExpression, Expression::FloatConst, Expression)
+
+public:
+  FloatingPointExpression(float const Value);
+  FloatingPointExpression(double const Value);
+  virtual ~FloatingPointExpression(void) {}
+
+  virtual std::string ToString(void) const;
+  virtual Expression::SPType Clone(void) const;
+  virtual u32 GetBitSize(void) const;
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual CompareType Compare(Expression::SPType spExpr) const;
+
+  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
+  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+
+  float GetSimple(void) const { return m_Value.sgl; };
+  double GetDouble(void) const { return m_Value.dbl; };
+
+private:
+  enum Precision
+  {
+    Single,
+    Double,
+  };
+
+  union FloatingType
+  {
+    double dbl;
+    float sgl;
+  };
+
+  FloatingType m_Value;
+  u8 m_Precision;
 };
 
 // identifier expression //////////////////////////////////////////////////////
