@@ -2,16 +2,16 @@
 
 #include <boost/format.hpp>
 
-template<typename T>
-void ReadSSERegister(T const& rReg, void* pVal, u32 BitSize)
+template<unsigned _BitSize>
+void ReadSseRegister(u128 const& rReg, void* pVal)
 {
-  memcpy(pVal, rReg.backend().limbs(), BitSize / 8);
+  memcpy(pVal, rReg.backend().limbs(), _BitSize / 8);
 }
 
-template<typename T>
-void WriteSSERegister(T& rReg, void const* pVal, u32 BitSize)
+template<unsigned _BitSize>
+void WriteSseRegister(u128& rReg, void const* pVal)
 {
-  memcpy(rReg.backend().limbs(), pVal, BitSize / 8);
+  memcpy(rReg.backend().limbs(), pVal, _BitSize / 8);
 }
 
 bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
@@ -27,7 +27,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
 #define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
-#define READ_R_X(reg) ReadSSERegister(m_Context.reg.x, pVal, BitSize);
+#define READ_R_X(reg) ReadSseRegister<128>(m_Context.reg, pVal);
 
   switch (Reg)
   {
@@ -164,7 +164,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
 #define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
-#define WRITE_R_X(reg) WriteSSERegister(m_Context.reg.x, pVal, BitSize);
+#define WRITE_R_X(reg) WriteSseRegister<128>(m_Context.reg, pVal);
 
 
   switch (Reg)
@@ -662,8 +662,8 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
 
     Result += (boost::format("\nxmm0: %032x xmm1: %032x\nxmm2: %032x xmm3: %032x\n"
       "xmm4: %032x xmm5: %032x\nxmm6: %032x xmm7: %032x")
-      % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
-      % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x).str();
+      % m_Context.xyzmm[0] % m_Context.xyzmm[1] % m_Context.xyzmm[2] % m_Context.xyzmm[3]
+      % m_Context.xyzmm[4] % m_Context.xyzmm[5] % m_Context.xyzmm[6] % m_Context.xyzmm[7]).str();
     break;
 
   case X86_Bit_32:
@@ -672,8 +672,8 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
 
     Result += (boost::format("\nxmm0: %032x xmm1: %032x\nxmm2: %032x xmm3: %032x\n"
       "xmm4: %032x xmm5: %032x\nxmm6: %032x xmm7: %032x")
-      % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
-      % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x).str();
+      % m_Context.xyzmm[0] % m_Context.xyzmm[1] % m_Context.xyzmm[2] % m_Context.xyzmm[3]
+      % m_Context.xyzmm[4] % m_Context.xyzmm[5] % m_Context.xyzmm[6] % m_Context.xyzmm[7]).str();
     break;
 
   case X86_Bit_64:
@@ -692,10 +692,10 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
       "xmm4:  %032x xmm5:  %032x\nxmm6:  %032x xmm7:  %032x\n"
       "xmm8:  %032x xmm9:  %032x\nxmm10: %032x xmm11: %032x\n"
       "xmm12: %032x xmm13: %032x\nxmm14: %032x xmm15: %032x")
-      % m_Context.xyzmm[0].x % m_Context.xyzmm[1].x % m_Context.xyzmm[2].x % m_Context.xyzmm[3].x
-      % m_Context.xyzmm[4].x % m_Context.xyzmm[5].x % m_Context.xyzmm[6].x % m_Context.xyzmm[7].x
-      % m_Context.xyzmm[8].x % m_Context.xyzmm[9].x % m_Context.xyzmm[10].x % m_Context.xyzmm[11].x
-      % m_Context.xyzmm[12].x % m_Context.xyzmm[13].x % m_Context.xyzmm[14].x % m_Context.xyzmm[15].x).str();
+      % m_Context.xyzmm[0] % m_Context.xyzmm[1] % m_Context.xyzmm[2] % m_Context.xyzmm[3]
+      % m_Context.xyzmm[4] % m_Context.xyzmm[5] % m_Context.xyzmm[6] % m_Context.xyzmm[7]
+      % m_Context.xyzmm[8] % m_Context.xyzmm[9] % m_Context.xyzmm[10] % m_Context.xyzmm[11]
+      % m_Context.xyzmm[12] % m_Context.xyzmm[13] % m_Context.xyzmm[14] % m_Context.xyzmm[15]).str();
     break;
 
   default: return "";
