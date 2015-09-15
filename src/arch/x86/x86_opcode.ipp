@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 21:25:50 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Sep 15 11:34:42 2015) */
 enum X86Opcode
 {
   X86_Opcode_Unknown,
@@ -3272,9 +3272,10 @@ private:
   bool Operand__ST3_ST0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Ry_Ty(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Pq_Qq(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType Decode_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_rBX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_eDX(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType Decode_Wo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  bool Operand__Wod_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_x(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   bool Operand__Vx_Uo_w(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
   Expression::SPType Decode_Vod(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);

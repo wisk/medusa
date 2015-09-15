@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 11 21:25:50 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Sep 15 11:34:42 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -47821,7 +47821,7 @@ bool X86Architecture::Table_2_04(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: == X86_Arch_80286
  *
  * mnemonic: syscall
- * semantic:
+ * semantic: 
  * cpu_model: >= X86_Arch_K6_2
  *
 **/
@@ -47860,7 +47860,7 @@ bool X86Architecture::Table_2_06(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: == X86_Arch_80386
  *
  * mnemonic: sysret
- * semantic:
+ * semantic: 
  * cpu_model: >= X86_Arch_K6_2
  *
 **/
@@ -48051,6 +48051,21 @@ bool X86Architecture::Table_2_0f(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movss
  * operand: ['Vo', 'Wod']
  * prefix: f3
+ * semantic: alloc_var('tmp_val', op0.bit);
+if __code and is_id_and_mem(op0, op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_mem_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 32)
+  tmp_val = tmp_val << int(op0.bit, 32)
+  tmp_val += bit_cast(op1.val, int_type32)
+  op0.val = tmp_val;
+if __code and is_id_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 32)
+  tmp_val = tmp_val << int(op0.bit, 32)
+  tmp_val += bit_cast(op1.val, int_type32)
+  op0.val = tmp_val;
+free_var('tmp_val');
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movsd
@@ -48148,6 +48163,85 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         return false;
       }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: alloc_var('tmp_val', op0.bit) */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        /* semantic: if __code and is_id_and_mem(op0, op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Mem, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(128, 128))));
+        }
+        /* semantic: if __code and is_mem_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 32)
+          tmp_val = tmp_val << int(op0.bit, 32)
+          tmp_val += bit_cast(op1.val, int_type32)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(32, 32))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
+        }
+        /* semantic: if __code and is_id_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 32)
+          tmp_val = tmp_val << int(op0.bit, 32)
+          tmp_val += bit_cast(op1.val, int_type32)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(32, 32))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
+        }
+        /* semantic: free_var('tmp_val') */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Free));
+        rInsn.SetSemantic(AllExpr);
+      }
       return true;
     }
     else if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_Sse2 && (rInsn.GetPrefix() & X86_Prefix_OpSize) == X86_Prefix_OpSize)
@@ -48210,12 +48304,27 @@ bool X86Architecture::Table_2_10(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_Sse2
  *
  * mnemonic: movss
- * operand: ['Uo', 'Vod']
+ * operand: ['Wod', 'Vo']
  * prefix: f3
+ * semantic: alloc_var('tmp_val', op0.bit);
+if __code and is_id_and_mem(op0, op1):
+  op0.val = bit_cast(op1.val, int_type128);
+if __code and is_mem_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 32)
+  tmp_val = tmp_val << int(op0.bit, 32)
+  tmp_val += bit_cast(op1.val, int_type32)
+  op0.val = tmp_val;
+if __code and is_id_and_id(op0, op1):
+  tmp_val = op0.val >> int(op0.bit, 32)
+  tmp_val = tmp_val << int(op0.bit, 32)
+  tmp_val += bit_cast(op1.val, int_type32)
+  op0.val = tmp_val;
+free_var('tmp_val');
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: movsd
- * operand: ['Uo', 'Voq']
+ * operand: ['Woq', 'Vo']
  * prefix: f2
  * semantic: alloc_var('tmp_val', op0.bit);
 if __code and is_id_and_mem(op0, op1):
@@ -48238,7 +48347,7 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movsd);
-      if (Operand__Uo_Voq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Woq_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
       }
@@ -48305,9 +48414,88 @@ bool X86Architecture::Table_2_11(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movss);
-      if (Operand__Uo_Vod(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Wod_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: alloc_var('tmp_val', op0.bit) */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        /* semantic: if __code and is_id_and_mem(op0, op1):
+          op0.val = bit_cast(op1.val, int_type128) */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Mem, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(128, 128))));
+        }
+        /* semantic: if __code and is_mem_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 32)
+          tmp_val = tmp_val << int(op0.bit, 32)
+          tmp_val += bit_cast(op1.val, int_type32)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Mem, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(32, 32))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
+        }
+        /* semantic: if __code and is_id_and_id(op0, op1):
+          tmp_val = op0.val >> int(op0.bit, 32)
+          tmp_val = tmp_val << int(op0.bit, 32)
+          tmp_val += bit_cast(op1.val, int_type32)
+          op0.val = tmp_val */
+        if ((Expr::TestKind(Expression::Id, rInsn.GetOperand(0)) && Expr::TestKind(Expression::Id, rInsn.GetOperand(1))))
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLrs,
+              rInsn.GetOperand(0),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpLls,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+          AllExpr.push_back(Expr::MakeAssign(
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              Expr::MakeVar("tmp_val", VariableExpression::Use),
+              Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(32, 32))))
+          );
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeVar("tmp_val", VariableExpression::Use)));
+        }
+        /* semantic: free_var('tmp_val') */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Free));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -50964,7 +51152,7 @@ bool X86Architecture::Table_2_33(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sysenter
  * opcode: 34
- * semantic:
+ * semantic: 
  * attr: ['intel']
 **/
 bool X86Architecture::Table_2_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -50982,7 +51170,7 @@ bool X86Architecture::Table_2_34(BinaryStream const& rBinStrm, TOffset Offset, I
 /** instruction
  * mnemonic: sysexit
  * opcode: 35
- * semantic:
+ * semantic: 
  * attr: ['intel']
 **/
 bool X86Architecture::Table_2_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -57470,7 +57658,7 @@ bool X86Architecture::Table_2_b0(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeAssign(
             Expr::MakeId(X86_FlZf, &m_CpuInfo),
             Expr::MakeInt(1, 0x0))));
-        /* semantic:
+        /* semantic: 
         if __expr and zf.id == int1(1):
           op0.val = op1.val */
         AllExpr.push_back(Expr::MakeIfElseCond(
@@ -57529,7 +57717,7 @@ bool X86Architecture::Table_2_b1(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeAssign(
             Expr::MakeId(X86_FlZf, &m_CpuInfo),
             Expr::MakeInt(1, 0x0))));
-        /* semantic:
+        /* semantic: 
         if __expr and zf.id == int1(1):
           op0.val = op1.val */
         AllExpr.push_back(Expr::MakeIfElseCond(
@@ -88152,6 +88340,24 @@ bool X86Architecture::Operand__Wob_Vo_Ib(BinaryStream const& rBinStrm, TOffset O
   if (spOprd2 == nullptr)
     return false;
   rInsn.AddOperand(spOprd2);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Wod', 'op1 = decode_Vo'] */
+bool X86Architecture::Operand__Wod_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Wod
+  auto spOprd0 = Decode_Wod(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Vo
+  auto spOprd1 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
 
   return true;
 }

@@ -797,6 +797,22 @@ semantic:
       op0.val = tmp_val;
     free_var('tmp_val');
 
+  movss: &movss |
+    alloc_var('tmp_val', op0.bit);
+    if __code and is_id_and_mem(op0, op1):
+      op0.val = bit_cast(op1.val, int_type128);
+    if __code and is_mem_and_id(op0, op1):
+      tmp_val = op0.val >> int(op0.bit, 32)
+      tmp_val = tmp_val << int(op0.bit, 32)
+      tmp_val += bit_cast(op1.val, int_type32)
+      op0.val = tmp_val;
+    if __code and is_id_and_id(op0, op1):
+      tmp_val = op0.val >> int(op0.bit, 32)
+      tmp_val = tmp_val << int(op0.bit, 32)
+      tmp_val += bit_cast(op1.val, int_type32)
+      op0.val = tmp_val;
+    free_var('tmp_val');
+
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
     [
@@ -3231,6 +3247,7 @@ instruction:
             operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *movss
 
           - mnemonic: movsd
             operand: [ Vo, Woq ]
@@ -3255,12 +3272,13 @@ instruction:
             cpu_model: ">= X86_Arch_Sse2"
 
           - mnemonic: movss
-            operand: [ Uo, Vod ]
+            operand: [ Wod, Vo ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *movss
 
           - mnemonic: movsd
-            operand: [ Uo, Voq ]
+            operand: [ Woq, Vo ]
             prefix: 0xf2
             cpu_model: ">= X86_Arch_Sse2"
             semantic: *movsd
@@ -13951,6 +13969,7 @@ operand:
   Vy_Wy_Ib: [ last_len, op0 = decode_Vy, op1 = decode_Wy, move_decode_offset(next_operand), op2 = decode_Ib ]
   Wo_Vy_Ib: [ last_len, op0 = decode_Wo, op1 = decode_Vy, move_decode_offset(next_operand), op2 = decode_Ib ]
   Wob_Vo_Ib: [ last_len, op0 = decode_Wob, op1 = decode_Vo, move_decode_offset(next_operand), op2 = decode_Ib ]
+  Wod_Vo: [ op0 = decode_Wod, op1 = decode_Vo ]
   Woq_Vo: [ op0 = decode_Woq, op1 = decode_Vo ]
   Woqo_Vx_Ib: [ last_len, op0 = decode_Woqo, op1 = decode_Vx, move_decode_offset(next_operand), op2 = decode_Ib ]
   Wow_Vo_Ib: [ last_len, op0 = decode_Wow, op1 = decode_Vo, move_decode_offset(next_operand), op2 = decode_Ib ]
