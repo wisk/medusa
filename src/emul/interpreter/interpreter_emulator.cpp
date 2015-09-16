@@ -300,6 +300,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       m_Values.push_back(LeftVal.Add(RightVal));
       break;
 
+    case OperationExpression::OpAddFloat:
+      m_Values.push_back(LeftVal.AddFloat(RightVal));
+      break;
+
     case OperationExpression::OpSub:
       m_Values.push_back(LeftVal.Sub(RightVal));
       break;

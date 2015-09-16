@@ -335,6 +335,7 @@ public:
     OpRol, /* Logical Left Rotate */
     OpRor, /* Logical Right Rotate */
     OpAdd,
+    OpAddFloat,
     OpSub,
     OpMul,
     OpSDiv,

@@ -124,6 +124,20 @@ semantic:
     op0.val = res.val;
     free_var('res');
 
+  addss: &addss |
+    alloc_var('tmp0', 32);
+    alloc_var('tmp1', 32);
+    alloc_var('tmp_val', op0.bit);
+    tmp0.val = bit_cast(op0.val, int_type32);
+    tmp1.val = bit_cast(op1.val, int_type32);
+    tmp_val = op0.val >> int(op0.bit, 32);
+    tmp_val = tmp_val << int(op0.bit, 32);
+    tmp_val += add_float(tmp0.val, tmp1.val);
+    op0.val = tmp_val;
+    free_var('tmp_val');
+    free_var('tmp1');
+    free_var('tmp0');
+
   aaa: &aaa |
     alloc_var('cond', 1);
     cond = int1(0);
@@ -3927,6 +3941,7 @@ instruction:
             operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *addss
 
           - mnemonic: addsd
             operand: [ Vo, Woq ]

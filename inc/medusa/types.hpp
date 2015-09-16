@@ -223,6 +223,8 @@ public:
   IntType  Ror(IntType const& rVal) const;
   IntType& RorAssign(IntType const& rVal);
 
+  IntType  AddFloat(IntType const& rVal) const;
+
 private:
   void _Adjust(void);
 

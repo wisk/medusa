@@ -564,6 +564,9 @@ class ArchConvertion:
                 elif node_name == 'sle': # s<=
                     return 'Expr::MakeBinOp(ConditionExpression::CondSle, %s, %s)'
 
+                elif node_name == 'add_float':
+                    return 'Expr::MakeBinOp(OperationExpression::OpAddFloat, %s, %s)'
+
                 # TODO(KS): this code is architecture specific, move it to arch_<arch>.py
                 elif node_name == 'is_byte_operation':
                     return 'rInsn.GetOperand(0)->GetBitSize() == 8'

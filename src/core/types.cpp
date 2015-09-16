@@ -21,12 +21,12 @@ void IntType::SignExtend(u16 NewBitSize)
 
   if (!((GetUnsignedValue() >> Pos) & 1))
   {
-    m_BitSize = NewBitSize; 
+    m_BitSize = NewBitSize;
     return;
   }
   ap_int InsertedBits = ((ap_int(1) << NewBitSize) - 1) - ((ap_int(1) << Pos) - 1);
   m_Value |= InsertedBits;
-  m_BitSize = NewBitSize; 
+  m_BitSize = NewBitSize;
 }
 
 void IntType::ZeroExtend(u16 NewBitSize)
@@ -410,6 +410,34 @@ IntType& IntType::RorAssign(IntType const& rVal)
   IntType Tmp = Ror(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
+  return *this;
+}
+
+IntType IntType::AddFloat(IntType const& rVal) const
+{
+  if (m_BitSize == 32)
+  {
+    u32 UIntLeft = static_cast<u32>(m_Value);
+    u32 UIntRight = static_cast<u32>(rVal.m_Value);
+    float FloatLeft = *reinterpret_cast<float *>(&UIntLeft);
+    float FloatRight = *reinterpret_cast<float *>(&UIntRight);
+    float Res = FloatLeft + FloatRight;
+    IntType Tmp(m_BitSize, *reinterpret_cast<u32 *>(&Res));
+    Tmp._Adjust();
+    return Tmp;
+  }
+  else if (m_BitSize == 64)
+  {
+    u64 UIntLeft = static_cast<u64>(m_Value);
+    u64 UIntRight = static_cast<u64>(rVal.m_Value);
+    double FloatLeft = *reinterpret_cast<double *>(&UIntLeft);
+    double FloatRight = *reinterpret_cast<double *>(&UIntRight);
+    double Res = FloatLeft + FloatRight;
+    IntType Tmp(m_BitSize, *reinterpret_cast<u64 *>(&Res));
+    Tmp._Adjust();
+    return Tmp;
+  }
+
   return *this;
 }
 

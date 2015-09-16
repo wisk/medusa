@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Sep 15 11:34:42 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Sep 16 11:01:29 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -52371,6 +52371,19 @@ bool X86Architecture::Table_2_57(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: addss
  * operand: ['Vo', 'Wod']
  * prefix: f3
+ * semantic: alloc_var('tmp0', 32);
+alloc_var('tmp1', 32);
+alloc_var('tmp_val', op0.bit);
+tmp0.val = bit_cast(op0.val, int_type32);
+tmp1.val = bit_cast(op1.val, int_type32);
+tmp_val = op0.val >> int(op0.bit, 32);
+tmp_val = tmp_val << int(op0.bit, 32);
+tmp_val += add_float(tmp0.val, tmp1.val);
+op0.val = tmp_val;
+free_var('tmp_val');
+free_var('tmp1');
+free_var('tmp0');
+
  * cpu_model: >= X86_Arch_Sse
  *
  * mnemonic: addsd
@@ -52398,6 +52411,56 @@ bool X86Architecture::Table_2_58(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Vo_Wod(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: alloc_var('tmp0', 32) */
+        AllExpr.push_back(Expr::MakeVar("tmp0", VariableExpression::Alloc, 0x20));
+        /* semantic: alloc_var('tmp1', 32) */
+        AllExpr.push_back(Expr::MakeVar("tmp1", VariableExpression::Alloc, 0x20));
+        /* semantic: alloc_var('tmp_val', op0.bit) */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Alloc, rInsn.GetOperand(0)->GetBitSize()));
+        /* semantic: tmp0.val = bit_cast(op0.val, int_type32) */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("tmp0", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(0), Expr::MakeInt(32, 32))));
+        /* semantic: tmp1.val = bit_cast(op1.val, int_type32) */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("tmp1", VariableExpression::Use),
+          Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeInt(32, 32))));
+        /* semantic: tmp_val = op0.val >> int(op0.bit, 32) */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("tmp_val", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpLrs,
+            rInsn.GetOperand(0),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+        /* semantic: tmp_val = tmp_val << int(op0.bit, 32) */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("tmp_val", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpLls,
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeInt(rInsn.GetOperand(0)->GetBitSize(), 0x20))));
+        /* semantic: tmp_val += add_float(tmp0.val, tmp1.val) */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("tmp_val", VariableExpression::Use),
+          Expr::MakeBinOp(
+            OperationExpression::OpAdd,
+            Expr::MakeVar("tmp_val", VariableExpression::Use),
+            Expr::MakeBinOp(OperationExpression::OpAddFloat, Expr::MakeVar("tmp0", VariableExpression::Use), Expr::MakeVar("tmp1", VariableExpression::Use))))
+        );
+        /* semantic: op0.val = tmp_val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          Expr::MakeVar("tmp_val", VariableExpression::Use)));
+        /* semantic: free_var('tmp_val') */
+        AllExpr.push_back(Expr::MakeVar("tmp_val", VariableExpression::Free));
+        /* semantic: free_var('tmp1') */
+        AllExpr.push_back(Expr::MakeVar("tmp1", VariableExpression::Free));
+        /* semantic: free_var('tmp0') */
+        AllExpr.push_back(Expr::MakeVar("tmp0", VariableExpression::Free));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

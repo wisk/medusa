@@ -518,6 +518,7 @@ std::string OperationExpression::ToString(void) const
   case OpRol: return "rol";
   case OpRor: return "ror";
   case OpAdd:  return "+";
+  case OpAddFloat:  return "+{f}";
   case OpSub:  return "-";
   case OpMul:  return "*";
   case OpSDiv: return "/{s}";
@@ -832,10 +833,10 @@ bool FloatingPointExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt
   switch (m_Precision)
   {
   case FloatingPointExpression::Single:
-    rData.front() = IntType(0x1337beef); // TODO : convert "m_Value.sgl" to IntType. Don't know how yet.
+    rData.front() = IntType(*reinterpret_cast<u32 const*>(&m_Value.sgl));
   break;
   case FloatingPointExpression::Double:
-    rData.front() = IntType(0x1337b00f); // TODO : convert "m_Value.dbl" to IntType. Don't know how yet.
+    rData.front() = IntType(*reinterpret_cast<u64 const*>(&m_Value.dbl));
   break;
   default: return false;
   }
