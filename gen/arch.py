@@ -386,7 +386,7 @@ class ArchConvertion:
 
                 if func_name == 'int_type':
                     assert(len(args_name) == 1)
-                    return 'Expr::MakeInt(%s, %s)' % (args_name[0], args_name[0])
+                    return 'Expr::MakeBitVector(%s, %s)' % (args_name[0], args_name[0])
 
                 if 'VariableExpression::Alloc' in func_name:
                     var_name = args_name[0][1:-1]
@@ -433,18 +433,18 @@ class ArchConvertion:
 
                     if value_name == 'rInsn':
                         get_pc_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()))'
-                        return 'Expr::MakeInt(\n%s,\n%s)'\
+                        return 'Expr::MakeBitVector(\n%s,\n%s)'\
                                 % (Indent(get_pc_size_bit), Indent('rInsn.GetLength()'))
 
                     elif value_name.startswith('rInsn.GetOperand') or value_name.startswith('expr_cast<MemoryExpression>(rInsn.GetOperand'):
                         get_insn_size_bit = '(%s->GetBitSize())' % value_name
                         get_insn_size_byte = '(%s->GetBitSize() / 8)' % value_name
-                        return 'Expr::MakeInt(\n%s,\n%s)'\
+                        return 'Expr::MakeBitVector(\n%s,\n%s)'\
                                 % (Indent(get_insn_size_bit), Indent(get_insn_size_byte))
 
                     else:
                         get_reg_size_bit = 'm_CpuInfo.GetSizeOfRegisterInBit(%s)' % value_name
-                        return 'Expr::MakeInt(\n%s,\n%s / 8)'\
+                        return 'Expr::MakeBitVector(\n%s,\n%s / 8)'\
                                 % (Indent(get_reg_size_bit), Indent(get_reg_size_bit))
 
                 elif attr_name == 'bit':
@@ -490,14 +490,14 @@ class ArchConvertion:
                     return node_name
                 elif node_name.startswith('int_type'):
                     int_size = int(node_name[8:])
-                    return 'Expr::MakeInt(%d, %d)' % (int_size, int_size)
+                    return 'Expr::MakeBitVector(%d, %d)' % (int_size, int_size)
 
                 # Integer
                 elif node_name == 'int':
-                    return 'Expr::MakeInt(%s, %s)'
+                    return 'Expr::MakeBitVector(%s, %s)'
                 elif node_name.startswith('int'):
                     int_size = int(node_name[3:])
-                    return 'Expr::MakeInt(%d, %%s)' % int_size
+                    return 'Expr::MakeBitVector(%d, %%s)' % int_size
 
                 # Variable
                 elif node_name == 'alloc_var':
@@ -601,7 +601,7 @@ class ArchConvertion:
 
             def visit_Num(self, node):
                 return '%#x' % node.n
-                return 'Expr::MakeInt(0, %#x)' % node.n
+                return 'Expr::MakeBitVector(0, %#x)' % node.n
 
             def visit_Str(self, node):
                 return '"%s"' % node.s

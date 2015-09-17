@@ -234,7 +234,7 @@ public:
     spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spConstExpr)
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr)
   {
     Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);

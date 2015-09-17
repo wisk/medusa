@@ -13,15 +13,15 @@ public:
   CdeclCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
   virtual bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt,
-    u16 ParamNr, IntType& rParamVal)                                                          const;
+    u16 ParamNr, BitVector& rParamVal)                                                          const;
   virtual bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
     u16 ParamNo)                                                                              const;
   virtual bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
-    u16 ParamNo, IntType const& rRetVal)                                                      const;
+    u16 ParamNo, BitVector const& rRetVal)                                                      const;
 
   virtual Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy)                 const;
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
-  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
+  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const;
 
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
@@ -41,15 +41,15 @@ public:
   StdCallCallingConvention(u8 Mode, CpuInformation const& rCpuInfo) : m_Mode(Mode), m_rCpuInfo(rCpuInfo) {}
 
   virtual bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt,
-    u16 ParamNr, IntType& rParamVal)                                                          const;
+    u16 ParamNr, BitVector& rParamVal)                                                          const;
   virtual bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
     u16 ParamNo)                                                                              const;
   virtual bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
-    u16 ParamNo, IntType const& rRetVal)                                                      const;
+    u16 ParamNo, BitVector const& rRetVal)                                                      const;
 
   virtual Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy)                 const;
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
-  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
+  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const;
 
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
@@ -69,15 +69,15 @@ public:
   MsX64CallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt,
-    u16 ParamNr, IntType& rParamVal)                                                          const;
+    u16 ParamNr, BitVector& rParamVal)                                                          const;
   virtual bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
     u16 ParamNo)                                                                              const;
   virtual bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
-    u16 ParamNo, IntType const& rRetVal)                                                      const;
+    u16 ParamNo, BitVector const& rRetVal)                                                      const;
 
   virtual Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy)                 const;
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
-  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
+  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const;
 
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
@@ -96,15 +96,15 @@ public:
   SystemVCallingConvention(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   virtual bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt,
-    u16 ParamNr, IntType& rParamVal)                                                          const;
+    u16 ParamNr, BitVector& rParamVal)                                                          const;
   virtual bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
     u16 ParamNo)                                                                              const;
   virtual bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt,
-    u16 ParamNo, IntType const& rRetVal)                                                      const;
+    u16 ParamNo, BitVector const& rRetVal)                                                      const;
 
   virtual Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy)                 const;
   virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo)                              const;
-  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const;
+  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const;
 
   virtual bool               AnalyzeArgument(
     Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;

@@ -368,7 +368,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
   return spBinOpExpr;
 }
 
-Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitInt(IntegerExpression::SPType spConstExpr)
+Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBitVector(BitVectorExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {
@@ -385,7 +385,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
   {
   case Read:
   {
-    IntType RegVal(spIdExpr->GetBitSize(), 0);
+    BitVector RegVal(spIdExpr->GetBitSize(), 0);
     if (!m_pCpuCtxt->ReadRegister(spIdExpr->GetId(), RegVal))
     {
       Log::Write("emul_interpreter").Level(LogError) << "unable to read register " << m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(spIdExpr->GetId()) << LogEnd;
@@ -399,7 +399,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitIdent
   {
     if (m_Values.empty())
       return nullptr;
-    IntType RegVal = m_Values.back();
+    BitVector RegVal = m_Values.back();
     if (!m_pCpuCtxt->WriteRegister(spIdExpr->GetId(), RegVal))
     {
       Log::Write("emul_interpreter").Level(LogError) << "unable to write register " << m_pCpuCtxt->GetCpuInformation().ConvertIdentifierToName(spIdExpr->GetId()) << LogEnd;
@@ -425,7 +425,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVecto
     auto VecId = spVecIdExpr->GetVector();
     for (auto Id : VecId)
     {
-      IntType RegVal(pCpuInfo->GetSizeOfRegisterInBit(Id), 0);
+      BitVector RegVal(pCpuInfo->GetSizeOfRegisterInBit(Id), 0);
       if (!m_pCpuCtxt->ReadRegister(Id, RegVal))
       {
         Log::Write("emul_interpreter").Level(LogError) << "unable to read register" << LogEnd;
@@ -477,7 +477,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
     switch (spVarExpr->GetAction())
     {
     case VariableExpression::Alloc:
-      m_rVars[spVarExpr->GetName()] = IntType();
+      m_rVars[spVarExpr->GetName()] = BitVector();
       break;
 
     case VariableExpression::Free:
@@ -580,7 +580,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
     {
       if (m_NrOfValueToRead == 0)
       {
-        IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
+        BitVector MemVal(spMemExpr->GetAccessSizeInBit(), 0);
         if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
         {
           Log::Write("emul_interpreter").Level(LogError) << "unable to read memory at address: " << LinAddr << LogEnd;
@@ -590,7 +590,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
       }
       while (m_NrOfValueToRead != 0)
       {
-        IntType MemVal(spMemExpr->GetAccessSizeInBit(), 0);
+        BitVector MemVal(spMemExpr->GetAccessSizeInBit(), 0);
         if (!m_pMemCtxt->ReadMemory(LinAddr, MemVal))
         {
           Log::Write("emul_interpreter").Level(LogError) << "unable to read memory at address: " << LinAddr << LogEnd;
@@ -603,7 +603,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
     }
     else
     {
-      m_Values.push_back(IntType(spMemExpr->GetAccessSizeInBit(), LinAddr));
+      m_Values.push_back(BitVector(spMemExpr->GetAccessSizeInBit(), LinAddr));
     }
     break;
   }

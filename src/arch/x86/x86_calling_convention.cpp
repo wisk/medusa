@@ -4,7 +4,7 @@ MEDUSA_NAMESPACE_USE
 
 // cdecl //////////////////////////////////////////////////////////////////////
 
-bool CdeclCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, IntType& rParamVal) const
+bool CdeclCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const
 {
   switch (m_Mode)
   {
@@ -22,7 +22,7 @@ bool CdeclCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
     u16 ParamVal;
     if (!pMemCtxt->ReadMemory(StkLinAddr + (ParamNr + 1) * 2, ParamVal))
       return false;
-    rParamVal = IntType(ParamVal);
+    rParamVal = BitVector(ParamVal);
     return true;
   }
 
@@ -40,7 +40,7 @@ bool CdeclCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
     u32 ParamVal;
     if (!pMemCtxt->ReadMemory(StkLinAddr + (ParamNr + 1) * 4, ParamVal))
       return false;
-    rParamVal = IntType(ParamVal);
+    rParamVal = BitVector(ParamVal);
     return true;
   }
 
@@ -102,7 +102,7 @@ bool CdeclCallingConvention::ReturnFromFunction(CpuContext* pCpuCtxt, MemoryCont
   }
 }
 
-bool CdeclCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, IntType const& rRetVal) const
+bool CdeclCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const
 {
   if (!ReturnFromFunction(pCpuCtxt, pMemCtxt, ParamNo))
     return false;
@@ -119,9 +119,9 @@ Expression::SPType CdeclCallingConvention::EmitGetParameter(u16 ParamNr, ValueTy
   switch (m_Mode)
   {
   case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeInt(IntType(16, ParamNr * 2))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeBitVector(BitVector(16, ParamNr * 2))));
   case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeInt(IntType(32, ParamNr * 4))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeBitVector(BitVector(32, ParamNr * 4))));
   default: return nullptr;
   }
 }
@@ -132,7 +132,7 @@ Expression::SPType CdeclCallingConvention::EmitReturnFromFunction(u16 ParamNo) c
   return nullptr;
 }
 
-Expression::SPType CdeclCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const
+Expression::SPType CdeclCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const
 {
   // TODO(wisk)
   return nullptr;
@@ -157,7 +157,7 @@ bool CdeclCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& rP
   auto spSpId = expr_cast<IdentifierExpression>(spBinOp->GetLeftExpression());
   if (spSpId == nullptr)
     return false;
-  auto spStkOff = expr_cast<IntegerExpression>(spBinOp->GetRightExpression());
+  auto spStkOff = expr_cast<BitVectorExpression>(spBinOp->GetRightExpression());
   if (spStkOff == nullptr)
     return false;
   auto StkOff = spStkOff->GetInt().ConvertTo<s32>();
@@ -231,7 +231,7 @@ CallingConvention::StackCleanerType CdeclCallingConvention::StackCleanupBy(void)
 
 // stdcall ////////////////////////////////////////////////////////////////////
 
-bool StdCallCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, IntType& rParamVal) const
+bool StdCallCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const
 {
   switch (m_Mode)
   {
@@ -249,7 +249,7 @@ bool StdCallCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCo
     u16 ParamVal;
     if (!pMemCtxt->ReadMemory(StkLinAddr + (ParamNr + 1) * 2, ParamVal))
       return false;
-    rParamVal = IntType(ParamVal);
+    rParamVal = BitVector(ParamVal);
     return true;
   }
 
@@ -267,7 +267,7 @@ bool StdCallCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCo
     u32 ParamVal;
     if (!pMemCtxt->ReadMemory(StkLinAddr + (ParamNr + 1) * 4, ParamVal))
       return false;
-    rParamVal = IntType(ParamVal);
+    rParamVal = BitVector(ParamVal);
     return true;
   }
 
@@ -329,7 +329,7 @@ bool StdCallCallingConvention::ReturnFromFunction(CpuContext* pCpuCtxt, MemoryCo
   }
 }
 
-bool StdCallCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, IntType const& rRetVal) const
+bool StdCallCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const
 {
   if (!ReturnFromFunction(pCpuCtxt, pMemCtxt, ParamNo))
     return false;
@@ -346,9 +346,9 @@ Expression::SPType StdCallCallingConvention::EmitGetParameter(u16 ParamNr, Value
   switch (m_Mode)
   {
   case X86_Bit_16: return Expr::MakeMem(16, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeInt(IntType(16, ParamNr * 2))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Sp, &m_rCpuInfo), Expr::MakeBitVector(BitVector(16, ParamNr * 2))));
   case X86_Bit_32: return Expr::MakeMem(32, Expr::MakeId(X86_Reg_Ss, &m_rCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeInt(IntType(32, ParamNr * 4))));
+    Expr::MakeBinOp(OperationExpression::OpAdd, Expr::MakeId(X86_Reg_Esp, &m_rCpuInfo), Expr::MakeBitVector(BitVector(32, ParamNr * 4))));
   default: return nullptr;
   }
 }
@@ -359,7 +359,7 @@ Expression::SPType StdCallCallingConvention::EmitReturnFromFunction(u16 ParamNo)
   return nullptr;
 }
 
-Expression::SPType StdCallCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const
+Expression::SPType StdCallCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const
 {
   // TODO(wisk)
   return nullptr;
@@ -384,7 +384,7 @@ bool StdCallCallingConvention::AnalyzeParameter(Expression::SPType spExpr, u16& 
   auto spSpId = expr_cast<IdentifierExpression>(spBinOp->GetLeftExpression());
   if (spSpId == nullptr)
     return false;
-  auto spStkOff = expr_cast<IntegerExpression>(spBinOp->GetRightExpression());
+  auto spStkOff = expr_cast<BitVectorExpression>(spBinOp->GetRightExpression());
   if (spStkOff == nullptr)
     return false;
   auto StkOff = spStkOff->GetInt().ConvertTo<s32>();
@@ -458,7 +458,7 @@ CallingConvention::StackCleanerType StdCallCallingConvention::StackCleanupBy(voi
 
 // Microsoft x64 //////////////////////////////////////////////////////////////
 
-bool MsX64CallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, IntType& rParamVal) const
+bool MsX64CallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const
 {
   u32 IdParam = 0;
   switch (ParamNr)
@@ -489,7 +489,7 @@ bool MsX64CallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
       return false;
   }
 
-  rParamVal = IntType(ParamVal);
+  rParamVal = BitVector(ParamVal);
   return true;
 }
 
@@ -512,7 +512,7 @@ bool MsX64CallingConvention::ReturnFromFunction(CpuContext* pCpuCtxt, MemoryCont
   return true;
 }
 
-bool MsX64CallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, IntType const& rRetVal) const
+bool MsX64CallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const
 {
   if (!ReturnFromFunction(pCpuCtxt, pMemCtxt, ParamNo))
     return false;
@@ -539,7 +539,7 @@ Expression::SPType MsX64CallingConvention::EmitReturnFromFunction(u16 ParamNo) c
   return nullptr;
 }
 
-Expression::SPType MsX64CallingConvention::EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const
+Expression::SPType MsX64CallingConvention::EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const
 {
   // TODO(wisk)
   return nullptr;
@@ -578,7 +578,7 @@ CallingConvention::StackCleanerType MsX64CallingConvention::StackCleanupBy(void)
 
 // System V ///////////////////////////////////////////////////////////////////
 
-bool SystemVCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, IntType& rParamVal) const
+bool SystemVCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const
 {
   u32 IdParam = 0;
   switch (ParamNr)
@@ -611,7 +611,7 @@ bool SystemVCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCo
       return false;
   }
 
-  rParamVal = IntType(ParamVal);
+  rParamVal = BitVector(ParamVal);
   return true;
 }
 
@@ -634,7 +634,7 @@ bool SystemVCallingConvention::ReturnFromFunction(CpuContext* pCpuCtxt, MemoryCo
   return true;
 }
 
-bool SystemVCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, IntType const& rRetVal) const
+bool SystemVCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const
 {
   if (!ReturnFromFunction(pCpuCtxt, pMemCtxt, ParamNo))
     return false;
@@ -653,7 +653,7 @@ Expression::SPType SystemVCallingConvention::EmitReturnFromFunction(u16 ParamNo)
   return nullptr;
 }
 
-Expression::SPType SystemVCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, IntType const& rRetVal) const
+Expression::SPType SystemVCallingConvention::EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const
 {
   // TODO(wisk)
   return nullptr;

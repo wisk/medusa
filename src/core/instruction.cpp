@@ -113,11 +113,11 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   auto spMemExpr = expr_cast<MemoryExpression>(spResExpr);
   if (spMemExpr != nullptr)
   {
-    auto spBaseExpr = expr_cast<IntegerExpression>(spMemExpr->GetBaseExpression());
+    auto spBaseExpr = expr_cast<BitVectorExpression>(spMemExpr->GetBaseExpression());
     if (spBaseExpr != nullptr)
       rDstAddr.SetBase(spBaseExpr->GetInt().ConvertTo<TBase>());
 
-    auto spOffExpr = expr_cast<IntegerExpression>(spMemExpr->GetOffsetExpression());
+    auto spOffExpr = expr_cast<BitVectorExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
     rDstAddr.SetOffset(spOffExpr->GetInt().ConvertTo<TOffset>());
@@ -125,7 +125,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   }
 
   // HACK: We ignore 8-bit const since it's probably not a reference
-  auto spConstExpr = expr_cast<IntegerExpression>(spResExpr);
+  auto spConstExpr = expr_cast<BitVectorExpression>(spResExpr);
   if (spConstExpr != nullptr && spConstExpr->GetBitSize() > 8)
   {
     rDstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<TOffset>());

@@ -14,7 +14,7 @@ MachOLoader::MachOLoader(void) :
   m_Arch64(false),
   m_Endian(EndianUnknown),
   m_EntryPoint(0x0),
-  m_EntryPointType(ENTRYPOINT_NONE),
+  m_EntryPoBitVector(ENTRYPOINT_NONE),
   m_TextSectionVMAddr(0x0),
   m_SymbolsOffset(0x0),
   m_StringsOffset(0x0),
@@ -177,7 +177,7 @@ void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 
   /* We wait until here to add the start label because we might
   need fields from different load commands. */
-  if (m_EntryPointType == ENTRYPOINT_OFFSET) {
+  if (m_EntryPoBitVector == ENTRYPOINT_OFFSET) {
     if (m_TextSectionVMAddr) {
       m_EntryPoint = m_TextSectionVMAddr + m_EntryPoint;
     }
@@ -319,7 +319,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
       MachOType::EndianSwap(x86State, m_Endian);
 
       m_EntryPoint     = x86State.eip;
-      m_EntryPointType = ENTRYPOINT_VMADDR;
+      m_EntryPoBitVector = ENTRYPOINT_VMADDR;
     }
     break;
 
@@ -348,7 +348,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
       MachOType::EndianSwap(x86State, m_Endian);
 
       m_EntryPoint     = x86State.rip;
-      m_EntryPointType = ENTRYPOINT_VMADDR;
+      m_EntryPoBitVector = ENTRYPOINT_VMADDR;
     }
     break;
 
@@ -383,7 +383,7 @@ void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff)
   MachOType::EndianSwap(EntryPoint, m_Endian);
 
   m_EntryPoint     = EntryPoint.entryoff;
-  m_EntryPointType = ENTRYPOINT_OFFSET;
+  m_EntryPoBitVector = ENTRYPOINT_OFFSET;
 }
 
 template<int bit>

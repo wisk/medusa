@@ -115,7 +115,7 @@ private:
     virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
     virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
     virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitInt(IntegerExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
     virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -124,11 +124,11 @@ private:
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
   protected:
-    llvm::Value* _MakeInteger(IntType const& rInt) const;
+    llvm::Value* _MakeInteger(BitVector const& rInt) const;
     llvm::Value* _MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
     llvm::Value* _MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
 
-    llvm::Type*  _IntTypeToLlvmType(IntType const& rInt) const;
+    llvm::Type*  _BitVectorToLlvmType(BitVector const& rInt) const;
     llvm::Type*  _BitSizeToLlvmType(u16 BitSize) const;
 
     llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;

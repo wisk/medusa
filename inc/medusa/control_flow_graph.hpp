@@ -29,8 +29,8 @@ public:
   > Type;
 
   typedef boost::rectangle_topology<> TopologyType;
-  typedef TopologyType::point_type PointType;
-  typedef std::vector<PointType> PointVector;
+  typedef TopologyType::point_type PoBitVector;
+  typedef std::vector<PoBitVector> PointVector;
   typedef boost::iterator_property_map<
     PointVector::iterator, boost::property_map<Type, boost::vertex_index_t>::type
   > PositionMap;

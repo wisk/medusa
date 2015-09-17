@@ -26,10 +26,10 @@ BOOST_AUTO_TEST_CASE(core_ap_int_test_case)
 {
   using namespace medusa;
 
-  IntType Int0(16, -1);
+  BitVector Int0(16, -1);
   BOOST_CHECK(Int0.GetUnsignedValue() == 0xffff);
 
-  IntType Int1(16, 0xffff);
+  BitVector Int1(16, 0xffff);
   BOOST_CHECK(Int1.GetSignedValue() == -1);
 
   ++Int1;
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
     ;
 
   StructureDetail _IMAGE_DATA_DIRECTORY ("_IMAGE_DATA_DIRECTORY");
-  _IMAGE_DATA_DIRECTORY 
+  _IMAGE_DATA_DIRECTORY
     .AddField(DWORD, "VirtualAddress")
     .AddField(DWORD, "Size")
     ;

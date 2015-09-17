@@ -64,7 +64,7 @@ PrintData& PrintData::AppendImmediate(ap_int const& rImmediate, u32 Bits, u8 Bas
   return AppendImmediate(Buf.str());
 }
 
-PrintData& PrintData::AppendImmediate(IntType const& rVal, u8 Base)
+PrintData& PrintData::AppendImmediate(BitVector const& rVal, u8 Base)
 {
   return AppendImmediate(rVal.ToString(Base));
 }

@@ -52,7 +52,7 @@ public:
   typedef std::list<Expression::SPType> LSPType;
   typedef std::vector<Expression::SPType> VSPType;
 
-  typedef std::deque<IntType> DataContainerType;
+  typedef std::deque<BitVector> DataContainerType;
 
   enum Kind
   {
@@ -68,8 +68,6 @@ public:
     UnOp,
     BinOp,
     Const,
-    IntConst,
-    FloatConst,
     Id,
     VecId,
     Track,
@@ -417,19 +415,14 @@ private:
 
 // constant expression ////////////////////////////////////////////////////////
 
-class Medusa_EXPORT ConstantExpression : public Expression
+class Medusa_EXPORT BitVectorExpression : public Expression
 {
-  DECL_EXPR(ConstantExpression, Expression::Const, Expression)
-};
-
-class Medusa_EXPORT IntegerExpression : public ConstantExpression
-{
-  DECL_EXPR(IntegerExpression, Expression::IntConst, Expression)
+  DECL_EXPR(BitVectorExpression, Expression::Const, Expression)
 
 public:
-  IntegerExpression(u16 BitSize, ap_int Value);
-  IntegerExpression(IntType const& rValue);
-  virtual ~IntegerExpression(void) {}
+  BitVectorExpression(u16 BitSize, ap_int Value);
+  BitVectorExpression(BitVector const& rValue);
+  virtual ~BitVectorExpression(void) {}
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -442,53 +435,80 @@ public:
   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
-  IntType      GetInt(void) const { return m_Value; }
+  BitVector      GetInt(void) const { return m_Value; }
 
 private:
-  IntType m_Value;
+  BitVector m_Value;
 };
 
-class Medusa_EXPORT FloatingPointExpression : public ConstantExpression
-{
-  DECL_EXPR(FloatingPointExpression, Expression::FloatConst, Expression)
+// class Medusa_EXPORT IntegerExpression : public BitVectorExpression
+// {
+//   DECL_EXPR(IntegerExpression, Expression::IntConst, Expression)
 
-public:
-  union FloatingType
-  {
-    double dbl;
-    float sgl;
-  };
+// public:
+//   IntegerExpression(u16 BitSize, ap_int Value);
+//   IntegerExpression(BitVector const& rValue);
+//   virtual ~IntegerExpression(void) {}
 
-  enum Precision
-  {
-    Double,
-    Single,
-  };
+//   virtual std::string ToString(void) const;
+//   virtual Expression::SPType Clone(void) const;
+//   virtual u32 GetBitSize(void) const { return m_Value.GetBitSize(); }
+//   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+//   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+//   virtual CompareType Compare(Expression::SPType spExpr) const;
 
-  FloatingPointExpression(float const Value);
-  FloatingPointExpression(double const Value);
-  FloatingPointExpression(FloatingType const& rValue);
-  virtual ~FloatingPointExpression(void) {}
+//   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+//   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
+//   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
 
-  virtual std::string ToString(void) const;
-  virtual Expression::SPType Clone(void) const;
-  virtual u32 GetBitSize(void) const;
-  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
-  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
-  virtual CompareType Compare(Expression::SPType spExpr) const;
+//   BitVector      GetInt(void) const { return m_Value; }
 
-  virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
-  virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
-  virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+// private:
+//   BitVector m_Value;
+// };
 
-  float GetSingle(void) const { return m_Value.sgl; };
-  double GetDouble(void) const { return m_Value.dbl; };
-  u8 GetPrecision(void) const { return m_Precision; };
+// class Medusa_EXPORT FloatingPointExpression : public BitVectorExpression
+// {
+//   DECL_EXPR(FloatingPointExpression, Expression::FloatConst, Expression)
 
-private:
-  FloatingType m_Value;
-  u8 m_Precision;
-};
+// public:
+//   union FloatingType
+//   {
+//     double dbl;
+//     float sgl;
+//   };
+
+//   enum Precision
+//   {
+//     Double,
+//     Single,
+//   };
+
+//   FloatingPointExpression(float const Value);
+//   FloatingPointExpression(double const Value);
+//   FloatingPointExpression(FloatingType const& rValue);
+//   virtual ~FloatingPointExpression(void) {}
+
+//   virtual std::string ToString(void) const;
+//   virtual Expression::SPType Clone(void) const;
+//   virtual u32 GetBitSize(void) const;
+//   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+//   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+//   virtual CompareType Compare(Expression::SPType spExpr) const;
+
+//   virtual bool Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const;
+//   virtual bool Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData);
+//   virtual bool GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const;
+
+//   float GetSingle(void) const { return m_Value.sgl; };
+//   double GetDouble(void) const { return m_Value.dbl; };
+//   u8 GetPrecision(void) const { return m_Precision; };
+
+// private:
+//   FloatingType m_Value;
+//   u8 m_Precision;
+// };
+
 
 // identifier expression //////////////////////////////////////////////////////
 
@@ -700,8 +720,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitFloat(FloatingPointExpression::SPType spFloatExpr);
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -714,10 +733,8 @@ public:
 
 namespace Expr
 {
-  Medusa_EXPORT Expression::SPType MakeInt(IntType const& rValue);
-  Medusa_EXPORT Expression::SPType MakeInt(u16 BitSize, ap_int Value);
-  Medusa_EXPORT Expression::SPType MakeFloat(float const Value);
-  Medusa_EXPORT Expression::SPType MakeFloat(double const Value);
+  Medusa_EXPORT Expression::SPType MakeBitVector(BitVector const& rValue);
+  Medusa_EXPORT Expression::SPType MakeBitVector(u16 BitSize, ap_int Value);
   Medusa_EXPORT Expression::SPType MakeBoolean(bool Value);
   Medusa_EXPORT Expression::SPType MakeId(u32 Id, CpuInformation const* pCpuInfo);
   Medusa_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);

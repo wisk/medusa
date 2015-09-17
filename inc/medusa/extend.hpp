@@ -14,7 +14,7 @@ template<typename _Ty, unsigned _Pos> inline _Ty SignExtend(_Ty const x)
 }
 
 template<unsigned _Pos>
-inline IntType SignExtend(IntType const& x)
+inline BitVector SignExtend(BitVector const& x)
 {
   u16 BitSize = x.GetBitSize();
   auto UnsignedValue = x.GetUnsignedValue();
@@ -24,7 +24,7 @@ inline IntType SignExtend(IntType const& x)
 
   ap_int InsertedBits = ((ap_int(1) << BitSize) - 1) - ((ap_int(1) << _Pos) - 1);
   UnsignedValue |= InsertedBits;
-  return IntType(BitSize, UnsignedValue);
+  return BitVector(BitSize, UnsignedValue);
 }
 
 MEDUSA_NAMESPACE_END

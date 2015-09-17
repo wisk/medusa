@@ -63,12 +63,7 @@ Expression::SPType ExpressionVisitor::VisitBinaryOperation(BinaryOperationExpres
   return nullptr;
 }
 
-Expression::SPType ExpressionVisitor::VisitInt(IntegerExpression::SPType spIntExpr)
-{
-  return nullptr;
-}
-
-Expression::SPType ExpressionVisitor::VisitFloat(FloatingPointExpression::SPType spFloatExpr)
+Expression::SPType ExpressionVisitor::VisitBitVector(BitVectorExpression::SPType spIntExpr)
 {
   return nullptr;
 }
@@ -173,19 +168,9 @@ Expression::SPType CloneVisitor::VisitBinaryOperation(BinaryOperationExpression:
     spBinOpExpr->GetRightExpression()->Visit(this));
 }
 
-Expression::SPType CloneVisitor::VisitInt(IntegerExpression::SPType spIntExpr)
+Expression::SPType CloneVisitor::VisitBitVector(BitVectorExpression::SPType spIntExpr)
 {
-  return Expr::MakeInt(spIntExpr->GetInt());
-}
-
-Expression::SPType CloneVisitor::VisitFloat(FloatingPointExpression::SPType spFloatExpr)
-{
-  switch (spFloatExpr->GetPrecision())
-  {
-  case FloatingPointExpression::Single: return Expr::MakeFloat(spFloatExpr->GetSingle());
-  case FloatingPointExpression::Double: return Expr::MakeFloat(spFloatExpr->GetDouble());
-  default: return nullptr;;
-  }
+  return Expr::MakeBitVector(spIntExpr->GetInt());
 }
 
 Expression::SPType CloneVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
@@ -365,15 +350,9 @@ Expression::SPType FilterVisitor::VisitBinaryOperation(BinaryOperationExpression
   return nullptr;
 }
 
-Expression::SPType FilterVisitor::VisitInt(IntegerExpression::SPType spIntExpr)
+Expression::SPType FilterVisitor::VisitBitVector(BitVectorExpression::SPType spIntExpr)
 {
   _Evaluate(spIntExpr);
-  return nullptr;
-}
-
-Expression::SPType FilterVisitor::VisitFloat(FloatingPointExpression::SPType spFloatExpr)
-{
-  _Evaluate(spFloatExpr);
   return nullptr;
 }
 
@@ -541,14 +520,14 @@ Expression::SPType EvaluateVisitor::VisitAssignment(AssignmentExpression::SPType
 
 Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
 {
-  auto spExpr = expr_cast<IntegerExpression>(spUnOpExpr->GetExpression()->Visit(this));
+  auto spExpr = expr_cast<BitVectorExpression>(spUnOpExpr->GetExpression()->Visit(this));
 
   if (spExpr == nullptr)
     return nullptr;
 
   u32 Bit = spExpr->GetBitSize();
   auto Value = spExpr->GetInt();
-  IntType Result;
+  BitVector Result;
 
   switch (spUnOpExpr->GetOperation())
   {
@@ -576,20 +555,20 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
     return nullptr;
   }
 
-  return Expr::MakeInt(Result);
+  return Expr::MakeBitVector(Result);
 }
 
 Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  auto spLExpr = expr_cast<IntegerExpression>(spBinOpExpr->GetLeftExpression()->Visit(this));
-  auto spRExpr = expr_cast<IntegerExpression>(spBinOpExpr->GetRightExpression()->Visit(this));
+  auto spLExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetLeftExpression()->Visit(this));
+  auto spRExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetRightExpression()->Visit(this));
 
   if (spLExpr == nullptr || spRExpr == nullptr)
     return nullptr;
 
   auto Left = spLExpr->GetInt();
   auto Right = spRExpr->GetInt();
-  IntType Result;
+  BitVector Result;
 
   switch (spBinOpExpr->GetOperation())
   {
@@ -683,17 +662,12 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return nullptr;
   }
 
-  return Expr::MakeInt(Result);
+  return Expr::MakeBitVector(Result);
 }
 
-Expression::SPType EvaluateVisitor::VisitInt(IntegerExpression::SPType spIntExpr)
+Expression::SPType EvaluateVisitor::VisitBitVector(BitVectorExpression::SPType spIntExpr)
 {
   return spIntExpr;
-}
-
-Expression::SPType EvaluateVisitor::VisitFloat(FloatingPointExpression::SPType spFloatExpr)
-{
-  return spFloatExpr;
 }
 
 Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
@@ -706,12 +680,12 @@ Expression::SPType EvaluateVisitor::VisitIdentifier(IdentifierExpression::SPType
   if (PcBaseId != 0 && PcBaseId == spIdExpr->GetId())
   {
     m_IsRelative = true;
-    return Expr::MakeInt(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
+    return Expr::MakeBitVector(m_rCurAddr.GetBaseSize(), m_rCurAddr.GetBase());
   }
   if (PcOffId != 0 && PcOffId == spIdExpr->GetId())
   {
     m_IsRelative = true;
-    return Expr::MakeInt(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
+    return Expr::MakeBitVector(m_rCurAddr.GetOffsetSize(), m_rCurAddr.GetOffset());
   }
 
   auto const itIdPair = m_Ids.find(spIdExpr->GetId());
@@ -760,7 +734,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
   if (spMemExpr->GetBaseExpression() != nullptr)
   {
-    spBaseConst = expr_cast<IntegerExpression>(spMemExpr->GetBaseExpression()->Visit(this));
+    spBaseConst = expr_cast<BitVectorExpression>(spMemExpr->GetBaseExpression()->Visit(this));
     if (spBaseConst == nullptr)
     {
       m_IsSymbolic = true;
@@ -768,7 +742,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     }
   }
 
-  auto spOffConst = expr_cast<IntegerExpression>(spMemExpr->GetOffsetExpression()->Visit(this));
+  auto spOffConst = expr_cast<BitVectorExpression>(spMemExpr->GetOffsetExpression()->Visit(this));
   if (spOffConst == nullptr)
   {
     m_IsSymbolic = true;
@@ -815,7 +789,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return nullptr;
   }
 
-  return Expr::MakeInt(spMemExpr->GetAccessSizeInBit(), Value);
+  return Expr::MakeBitVector(spMemExpr->GetAccessSizeInBit(), Value);
 }
 
 Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
@@ -857,8 +831,8 @@ Expression::SPType SymbolicVisitor::VisitTernaryCondition(TernaryConditionExpres
   auto spTestExpr = spTernExpr->GetTestExpression()->Visit(this);
   m_Update = OldUpdateState;
 
-  auto spConstRefExpr = expr_cast<IntegerExpression>(spRefExpr);
-  auto spConstTestExpr = expr_cast<IntegerExpression>(spTestExpr);
+  auto spConstRefExpr = expr_cast<BitVectorExpression>(spRefExpr);
+  auto spConstTestExpr = expr_cast<BitVectorExpression>(spTestExpr);
 
   if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
   {
@@ -882,8 +856,8 @@ Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpressi
   auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
   m_Update = OldUpdateState;
 
-  auto spConstRefExpr = expr_cast<IntegerExpression>(spRefExpr);
-  auto spConstTestExpr = expr_cast<IntegerExpression>(spTestExpr);
+  auto spConstRefExpr = expr_cast<BitVectorExpression>(spRefExpr);
+  auto spConstTestExpr = expr_cast<BitVectorExpression>(spTestExpr);
 
   if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
   {
@@ -959,14 +933,14 @@ Expression::SPType SymbolicVisitor::VisitUnaryOperation(UnaryOperationExpression
   if (spExprVst == nullptr)
     return nullptr;
 
-  auto spExpr = expr_cast<IntegerExpression>(spExprVst);
+  auto spExpr = expr_cast<BitVectorExpression>(spExprVst);
 
   if (spExpr == nullptr)
     return Expr::MakeUnOp(static_cast<OperationExpression::Type>(spUnOpExpr->GetOperation()), spExprVst);
 
   u32 Bit = spExpr->GetBitSize();
   auto Value = spExpr->GetInt();
-  IntType Result;
+  BitVector Result;
 
   switch (spUnOpExpr->GetOperation())
   {
@@ -994,7 +968,7 @@ Expression::SPType SymbolicVisitor::VisitUnaryOperation(UnaryOperationExpression
     return nullptr;
   }
 
-  return Expr::MakeInt(Result);
+  return Expr::MakeBitVector(Result);
 }
 
 Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
@@ -1005,8 +979,8 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
   if (spLExprVst == nullptr || spRExprVst == nullptr)
     return nullptr;
 
-  auto spLExpr = expr_cast<IntegerExpression>(spLExprVst);
-  auto spRExpr = expr_cast<IntegerExpression>(spRExprVst);
+  auto spLExpr = expr_cast<BitVectorExpression>(spLExprVst);
+  auto spRExpr = expr_cast<BitVectorExpression>(spRExprVst);
 
   if (spLExpr == nullptr || spRExpr == nullptr)
     return Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
@@ -1014,7 +988,7 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
 
   auto Left = spLExpr->GetInt();
   auto Right = spRExpr->GetInt();
-  IntType Result;
+  BitVector Result;
 
   switch (spBinOpExpr->GetOperation())
   {
@@ -1108,17 +1082,12 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return nullptr;
   }
 
-  return Expr::MakeInt(Result);
+  return Expr::MakeBitVector(Result);
 }
 
-Expression::SPType SymbolicVisitor::VisitInt(IntegerExpression::SPType spIntExpr)
+Expression::SPType SymbolicVisitor::VisitBitVector(BitVectorExpression::SPType spIntExpr)
 {
   return spIntExpr;
-}
-
-Expression::SPType SymbolicVisitor::VisitFloat(FloatingPointExpression::SPType spFloatExpr)
-{
-  return spFloatExpr;
 }
 
 Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
@@ -1234,7 +1203,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   m_Update = OldUpdateState;
 
   // Sometimes, we don't want to evaluate memory reference or we can't
-  auto spOffConstExpr = expr_cast<IntegerExpression>(spOffExpr);
+  auto spOffConstExpr = expr_cast<BitVectorExpression>(spOffExpr);
   if (!m_EvalMemRef || spOffConstExpr == nullptr)
   {
     auto spMemExprVst = Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemExpr->IsDereferencable());
@@ -1250,7 +1219,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   auto Offset = spOffConstExpr->GetInt().ConvertTo<TOffset>();
 
   TBase Base = 0;
-  if (auto spBaseConstExpr = expr_cast<IntegerExpression>(spBaseExpr))
+  if (auto spBaseConstExpr = expr_cast<BitVectorExpression>(spBaseExpr))
     Base = spBaseConstExpr->GetInt().ConvertTo<TBase>();
 
   Address CurAddr(Base, Offset);
@@ -1283,13 +1252,13 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
       return nullptr;
     break;
 
-  // LATER(wisk): rely on IntType to support any read size
+  // LATER(wisk): rely on BitVector to support any read size
 
   default:
     return nullptr;
   }
 
-  return Expr::MakeInt(spMemExpr->GetAccessSizeInBit(), Value);
+  return Expr::MakeBitVector(spMemExpr->GetAccessSizeInBit(), Value);
 }
 
 Expression::SPType SymbolicVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
@@ -1387,7 +1356,7 @@ Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
   return nullptr;
 }
 
-bool SymbolicVisitor::_EvaluateCondition(u8 CondOp, IntegerExpression::SPType spConstRefExpr, IntegerExpression::SPType spConstTestExpr, bool& rRes) const
+bool SymbolicVisitor::_EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const
 {
   auto RefVal = spConstRefExpr->GetInt();
   auto TestVal = spConstTestExpr->GetInt();
@@ -1465,9 +1434,9 @@ Expression::SPType NormalizeIdentifier::VisitAssignment(AssignmentExpression::SP
 
       // ExtDstId = (ExtDstId & ~Mask) | InsertBits(bit_cast(ExtSrc, NrmIdBitSize))
       auto spExtDstId = Expr::MakeId(NrmId, pCpuInfo);
-      auto spMask = Expr::MakeInt(NrmIdBitSize, Mask);
-      auto spNotMask = Expr::MakeInt(NrmIdBitSize, ~Mask);
-      auto spBitCastSrc = Expr::MakeBinOp(OperationExpression::OpBcast, spNrmSrc, Expr::MakeInt(NrmIdBitSize, NrmIdBitSize));
+      auto spMask = Expr::MakeBitVector(NrmIdBitSize, Mask);
+      auto spNotMask = Expr::MakeBitVector(NrmIdBitSize, ~Mask);
+      auto spBitCastSrc = Expr::MakeBinOp(OperationExpression::OpBcast, spNrmSrc, Expr::MakeBitVector(NrmIdBitSize, NrmIdBitSize));
       auto spInsertBits = Expr::MakeBinOp(OperationExpression::OpInsertBits, spBitCastSrc, spMask);
       auto spClearBits = Expr::MakeBinOp(OperationExpression::OpAnd, spExtDstId, spNotMask);
       auto spExtSrc = Expr::MakeBinOp(OperationExpression::OpOr, spClearBits, spInsertBits);
@@ -1493,9 +1462,9 @@ Expression::SPType NormalizeIdentifier::VisitIdentifier(IdentifierExpression::SP
   auto spExtractBits = Expr::MakeBinOp(
     OperationExpression::OpExtractBits,
     Expr::MakeId(NrmId, spIdExpr->GetCpuInformation()),
-    Expr::MakeInt(NrmIdBitSize, Mask));
+    Expr::MakeBitVector(NrmIdBitSize, Mask));
   return Expr::MakeBinOp(OperationExpression::OpBcast,
-    spExtractBits, Expr::MakeInt(IdBitSize, IdBitSize));
+    spExtractBits, Expr::MakeBitVector(IdBitSize, IdBitSize));
 }
 
 Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::SPType spIdExpr)

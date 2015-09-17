@@ -76,8 +76,8 @@ protected:
 template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
 template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal);
 
-template<> Medusa_EXPORT bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const;
-template<> Medusa_EXPORT bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal);
+template<> Medusa_EXPORT bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const;
+template<> Medusa_EXPORT bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal);
 
 class Medusa_EXPORT MemoryContext
 {
@@ -144,8 +144,8 @@ private:
   MemoryContext const& operator=(MemoryContext const&);
 };
 
-template<> Medusa_EXPORT bool MemoryContext::ReadMemory<IntType>(u64 LinAddr, IntType& rVal) const;
-template<> Medusa_EXPORT bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, IntType const& rVal);
+template<> Medusa_EXPORT bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const;
+template<> Medusa_EXPORT bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal);
 
 MEDUSA_NAMESPACE_END
 

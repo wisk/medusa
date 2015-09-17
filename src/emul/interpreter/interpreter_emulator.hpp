@@ -28,13 +28,13 @@ public:
   virtual bool Execute(Expression::VSPType const& rExprs);
 
 protected:
-  std::unordered_map<std::string, IntType> m_Vars;
+  std::unordered_map<std::string, BitVector> m_Vars;
 
 private:
   class InterpreterExpressionVisitor : public ExpressionVisitor
   {
   public:
-    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, IntType>& rVars)
+    InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, BitVector>& rVars)
       : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_NrOfValueToRead(), m_State(Unknown) {}
 
     virtual ~InterpreterExpressionVisitor(void);
@@ -47,7 +47,7 @@ private:
     virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
     virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
     virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitInt(IntegerExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
     virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
     virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
     virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -63,7 +63,7 @@ private:
   private:
     bool _EvaluateComparison(u8 CondOp, bool& rRes);
 
-    std::unordered_map<std::string, IntType>& m_rVars;
+    std::unordered_map<std::string, BitVector>& m_rVars;
     Expression::DataContainerType m_Values;
     size_t m_NrOfValueToRead;
 

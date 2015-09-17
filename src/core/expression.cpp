@@ -689,17 +689,17 @@ void BinaryOperationExpression::SwapLeftExpressions(BinaryOperationExpression::S
 
 // constant expression ////////////////////////////////////////////////////////
 
-IntegerExpression::IntegerExpression(u16 BitSize, ap_int Value)
+BitVectorExpression::BitVectorExpression(u16 BitSize, ap_int Value)
 : m_Value(BitSize, Value)
 {
 }
 
-IntegerExpression::IntegerExpression(IntType const& rValue)
+BitVectorExpression::BitVectorExpression(BitVector const& rValue)
 : m_Value(rValue)
 {
 }
 
-std::string IntegerExpression::ToString(void) const
+std::string BitVectorExpression::ToString(void) const
 {
   std::string Res("int");
   Res += std::to_string(m_Value.GetBitSize());
@@ -710,19 +710,19 @@ std::string IntegerExpression::ToString(void) const
   //return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
 }
 
-Expression::SPType IntegerExpression::Clone(void) const
+Expression::SPType BitVectorExpression::Clone(void) const
 {
-  return std::make_shared<IntegerExpression>(m_Value);
+  return std::make_shared<BitVectorExpression>(m_Value);
 }
 
-Expression::SPType IntegerExpression::Visit(ExpressionVisitor* pVisitor)
+Expression::SPType BitVectorExpression::Visit(ExpressionVisitor* pVisitor)
 {
-  return pVisitor->VisitInt(std::static_pointer_cast<IntegerExpression>(shared_from_this()));
+  return pVisitor->VisitBitVector(std::static_pointer_cast<BitVectorExpression>(shared_from_this()));
 }
 
-Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) const
+Expression::CompareType BitVectorExpression::Compare(Expression::SPType spExpr) const
 {
-  auto spCmpExpr = expr_cast<IntegerExpression>(spExpr);
+  auto spCmpExpr = expr_cast<BitVectorExpression>(spExpr);
   if (spCmpExpr == nullptr)
     return CmpDifferent;
   if (m_Value.GetUnsignedValue() != spCmpExpr->GetInt().GetUnsignedValue())
@@ -730,7 +730,7 @@ Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) co
   return CmpIdentical;
 }
 
-bool IntegerExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
+bool BitVectorExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
 {
   if (rData.size() != 1)
     return false;
@@ -739,120 +739,180 @@ bool IntegerExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Data
   return true;
 }
 
-bool IntegerExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
+bool BitVectorExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
   return false;
 }
 
-bool IntegerExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
 {
   return false;
 }
 
-FloatingPointExpression::FloatingPointExpression(float const Value)
-{
-  m_Value.sgl = Value;
-  m_Precision = FloatingPointExpression::Single;
-}
+// IntegerExpression::IntegerExpression(u16 BitSize, ap_int Value)
+// : m_Value(BitSize, Value)
+// {
+// }
 
-FloatingPointExpression::FloatingPointExpression(double const Value)
-{
-  m_Value.dbl = Value;
-  m_Precision = FloatingPointExpression::Double;
-}
+// IntegerExpression::IntegerExpression(BitVector const& rValue)
+// : m_Value(rValue)
+// {
+// }
 
-FloatingPointExpression::FloatingPointExpression(FloatingType const& rValue)
-: m_Value(rValue)
-{
-}
+// std::string IntegerExpression::ToString(void) const
+// {
+//   std::string Res("int");
+//   Res += std::to_string(m_Value.GetBitSize());
+//   Res += "(";
+//   Res += m_Value.ToString();
+//   Res += ")";
+//   return Res;
+//   //return (boost::format("int%d(%x)") % m_Value.GetBitSize() % m_Value.ToString()).str();
+// }
 
-std::string FloatingPointExpression::ToString(void) const
-{
-  std::string Res("float");
-  Res += std::to_string(GetBitSize());
-  Res += "(";
+// Expression::SPType IntegerExpression::Clone(void) const
+// {
+//   return std::make_shared<IntegerExpression>(m_Value);
+// }
 
-  std::ostringstream Tmp;
+// Expression::SPType IntegerExpression::Visit(ExpressionVisitor* pVisitor)
+// {
+//   return pVisitor->VisitBitVector(std::static_pointer_cast<IntegerExpression>(shared_from_this()));
+// }
 
-  switch (m_Precision)
-  {
-  case FloatingPointExpression::Single: Tmp << m_Value.sgl; break;
-  case FloatingPointExpression::Double: Tmp << m_Value.dbl; break;
-  default: return "<invalid variable>";
-  }
+// Expression::CompareType IntegerExpression::Compare(Expression::SPType spExpr) const
+// {
+//   auto spCmpExpr = expr_cast<IntegerExpression>(spExpr);
+//   if (spCmpExpr == nullptr)
+//     return CmpDifferent;
+//   if (m_Value.GetUnsignedValue() != spCmpExpr->GetInt().GetUnsignedValue())
+//     return CmpSameExpression;
+//   return CmpIdentical;
+// }
 
-  Res += Tmp.str() + ")";
-  return Res;
-}
+// bool IntegerExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
+// {
+//   if (rData.size() != 1)
+//     return false;
 
-u32 FloatingPointExpression::GetBitSize(void) const
-{
-  switch (m_Precision)
-  {
-  case FloatingPointExpression::Single: return 32; break;
-  case FloatingPointExpression::Double: return 64; break;
-  default: return 0;
-  }
-}
+//   rData.front() = m_Value;
+//   return true;
+// }
 
-Expression::CompareType FloatingPointExpression::Compare(Expression::SPType spExpr) const
-{
-  auto spCmpExpr = expr_cast<FloatingPointExpression>(spExpr);
-  if (spCmpExpr == nullptr)
-    return CmpDifferent;
+// bool IntegerExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
+// {
+//   return false;
+// }
 
-  switch (m_Precision)
-  {
-  case FloatingPointExpression::Single:
-    if (m_Value.sgl != spCmpExpr->GetSingle()) return CmpSameExpression;
-  break;
-  case FloatingPointExpression::Double:
-    if (m_Value.dbl != spCmpExpr->GetDouble()) return CmpSameExpression;
-  break;
-  default: return CmpDifferent;
-  }
+// bool IntegerExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+// {
+//   return false;
+// }
 
-  return CmpIdentical;
-}
+// FloatingPointExpression::FloatingPointExpression(float const Value)
+// {
+//   m_Value.sgl = Value;
+//   m_Precision = FloatingPointExpression::Single;
+// }
 
-Expression::SPType FloatingPointExpression::Clone(void) const
-{
-  return std::make_shared<FloatingPointExpression>(m_Value);
-}
+// FloatingPointExpression::FloatingPointExpression(double const Value)
+// {
+//   m_Value.dbl = Value;
+//   m_Precision = FloatingPointExpression::Double;
+// }
 
-Expression::SPType FloatingPointExpression::Visit(ExpressionVisitor* pVisitor)
-{
-  return pVisitor->VisitFloat(std::static_pointer_cast<FloatingPointExpression>(shared_from_this()));
-}
+// FloatingPointExpression::FloatingPointExpression(FloatingType const& rValue)
+// : m_Value(rValue)
+// {
+// }
 
-bool FloatingPointExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
-{
-  if (rData.size() != 1)
-  return false;
+// std::string FloatingPointExpression::ToString(void) const
+// {
+//   std::string Res("float");
+//   Res += std::to_string(GetBitSize());
+//   Res += "(";
 
-  switch (m_Precision)
-  {
-  case FloatingPointExpression::Single:
-    rData.front() = IntType(*reinterpret_cast<u32 const*>(&m_Value.sgl));
-  break;
-  case FloatingPointExpression::Double:
-    rData.front() = IntType(*reinterpret_cast<u64 const*>(&m_Value.dbl));
-  break;
-  default: return false;
-  }
+//   std::ostringstream Tmp;
 
-  return true;
-}
+//   switch (m_Precision)
+//   {
+//   case FloatingPointExpression::Single: Tmp << m_Value.sgl; break;
+//   case FloatingPointExpression::Double: Tmp << m_Value.dbl; break;
+//   default: return "<invalid variable>";
+//   }
 
-bool FloatingPointExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
-{
-  return false;
-}
+//   Res += Tmp.str() + ")";
+//   return Res;
+// }
 
-bool FloatingPointExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
-{
-  return false;
-}
+// u32 FloatingPointExpression::GetBitSize(void) const
+// {
+//   switch (m_Precision)
+//   {
+//   case FloatingPointExpression::Single: return 32; break;
+//   case FloatingPointExpression::Double: return 64; break;
+//   default: return 0;
+//   }
+// }
+
+// Expression::CompareType FloatingPointExpression::Compare(Expression::SPType spExpr) const
+// {
+//   auto spCmpExpr = expr_cast<FloatingPointExpression>(spExpr);
+//   if (spCmpExpr == nullptr)
+//     return CmpDifferent;
+
+//   switch (m_Precision)
+//   {
+//   case FloatingPointExpression::Single:
+//     if (m_Value.sgl != spCmpExpr->GetSingle()) return CmpSameExpression;
+//   break;
+//   case FloatingPointExpression::Double:
+//     if (m_Value.dbl != spCmpExpr->GetDouble()) return CmpSameExpression;
+//   break;
+//   default: return CmpDifferent;
+//   }
+
+//   return CmpIdentical;
+// }
+
+// Expression::SPType FloatingPointExpression::Clone(void) const
+// {
+//   return std::make_shared<FloatingPointExpression>(m_Value);
+// }
+
+// Expression::SPType FloatingPointExpression::Visit(ExpressionVisitor* pVisitor)
+// {
+//   return pVisitor->VisitFloat(std::static_pointer_cast<FloatingPointExpression>(shared_from_this()));
+// }
+
+// bool FloatingPointExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const
+// {
+//   if (rData.size() != 1)
+//   return false;
+
+//   switch (m_Precision)
+//   {
+//   case FloatingPointExpression::Single:
+//     rData.front() = BitVector(*reinterpret_cast<u32 const*>(&m_Value.sgl));
+//   break;
+//   case FloatingPointExpression::Double:
+//     rData.front() = BitVector(*reinterpret_cast<u64 const*>(&m_Value.dbl));
+//   break;
+//   default: return false;
+//   }
+
+//   return true;
+// }
+
+// bool FloatingPointExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
+// {
+//   return false;
+// }
+
+// bool FloatingPointExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const
+// {
+//   return false;
+// }
 
 // identifier expression //////////////////////////////////////////////////////
 
@@ -907,7 +967,7 @@ bool IdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, D
   if (!pCpuCtxt->ReadRegister(m_Id, &Value, RegSize))
     return false;
 
-  rData.front() = IntType(RegSize, ap_int(Value));
+  rData.front() = BitVector(RegSize, ap_int(Value));
   return true;
 }
 
@@ -1002,7 +1062,7 @@ bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemC
     u64 RegValue = 0;
     if (!pCpuCtxt->ReadRegister(Id, &RegValue, RegSize))
       return false;
-    rData.push_front(IntType(RegSize, RegValue));
+    rData.push_front(BitVector(RegSize, RegValue));
   }
   return true;
 }
@@ -1180,14 +1240,14 @@ bool MemoryExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataC
       u64 MemVal = 0;
       if (!pMemCtxt->ReadMemory(LinAddr, &MemVal, m_AccessSizeInBit / 8))
         return false;
-      rDataValue = IntType(m_AccessSizeInBit, MemVal);
+      rDataValue = BitVector(m_AccessSizeInBit, MemVal);
     }
   }
   else
   {
     if (rData.size() != 1)
       return false;
-    rData.front() = IntType(m_AccessSizeInBit, LinAddr);
+    rData.front() = BitVector(m_AccessSizeInBit, LinAddr);
   }
 
   return true;
@@ -1351,29 +1411,19 @@ Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) c
 
 // helper /////////////////////////////////////////////////////////////////////
 
-Expression::SPType Expr::MakeInt(IntType const& rValue)
+Expression::SPType Expr::MakeBitVector(BitVector const& rValue)
 {
-  return std::make_shared<IntegerExpression>(rValue);
+  return std::make_shared<BitVectorExpression>(rValue);
 }
 
-Expression::SPType Expr::MakeInt(u16 BitSize, ap_int Value)
+Expression::SPType Expr::MakeBitVector(u16 BitSize, ap_int Value)
 {
-  return std::make_shared<IntegerExpression>(BitSize, Value);
-}
-
-Expression::SPType Expr::MakeFloat(float const Value)
-{
-  return std::make_shared<FloatingPointExpression>(Value);
-}
-
-Expression::SPType Expr::MakeFloat(double const Value)
-{
-  return std::make_shared<FloatingPointExpression>(Value);
+  return std::make_shared<BitVectorExpression>(BitSize, Value);
 }
 
 Expression::SPType Expr::MakeBoolean(bool Value)
 {
-  return std::make_shared<IntegerExpression>(1, Value ? 1 : 0);
+  return std::make_shared<BitVectorExpression>(1, Value ? 1 : 0);
 }
 
 Expression::SPType Expr::MakeId(u32 Id, CpuInformation const* pCpuInfo)

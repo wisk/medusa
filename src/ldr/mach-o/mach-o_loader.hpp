@@ -24,7 +24,7 @@ typedef enum {
     ENTRYPOINT_NONE,
     ENTRYPOINT_VMADDR,
     ENTRYPOINT_OFFSET,
-} EntryPointType;
+} EntryPoBitVector;
 
 class MachOLoader : public Loader
 {
@@ -53,7 +53,7 @@ private:
     bool           m_Arch64;
     EEndianness    m_Endian;
     u64            m_EntryPoint;
-    EntryPointType m_EntryPointType;
+    EntryPoBitVector m_EntryPoBitVector;
     u64            m_TextSectionVMAddr;
     u32            m_SymbolsOffset;
     u32            m_StringsOffset;

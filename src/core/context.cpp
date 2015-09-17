@@ -21,7 +21,7 @@ bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal)
 namespace
 {
   template<typename _Ty>
-  bool ReadRegisterHelper(CpuContext const& rCpuCtxt, u32 Reg, IntType& rVal)
+  bool ReadRegisterHelper(CpuContext const& rCpuCtxt, u32 Reg, BitVector& rVal)
   {
     auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
     if (RegBitSize != rVal.GetBitSize())
@@ -29,12 +29,12 @@ namespace
     _Ty RegVal;
     if (!rCpuCtxt.ReadRegister(Reg, &RegVal, RegBitSize))
       return false;
-    rVal = IntType(RegBitSize, RegVal);
+    rVal = BitVector(RegBitSize, RegVal);
     return true;
   }
 
   template<typename _Ty>
-  bool WriteRegisterHelper(CpuContext& rCpuCtxt, u32 Reg, IntType const& rVal)
+  bool WriteRegisterHelper(CpuContext& rCpuCtxt, u32 Reg, BitVector const& rVal)
   {
     auto RegBitSize = rCpuCtxt.GetCpuInformation().GetSizeOfRegisterInBit(Reg);
     if (RegBitSize != rVal.GetBitSize())
@@ -47,7 +47,7 @@ namespace
 }
 
 template<>
-bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const
+bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const
 {
   std::lock_guard<std::mutex> Lock(m_CpuLock);
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
@@ -66,7 +66,7 @@ bool CpuContext::ReadRegister<IntType>(u32 Reg, IntType& rVal) const
 }
 
 template<>
-bool CpuContext::WriteRegister<IntType>(u32 Reg, IntType const& rVal)
+bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal)
 {
   std::lock_guard<std::mutex> Lock(m_CpuLock);
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
@@ -118,17 +118,17 @@ bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
 namespace
 {
   template<typename _Ty>
-  bool ReadMemoryHelper(MemoryContext const& rMemCtxt, u64 LinAddr, IntType& rVal)
+  bool ReadMemoryHelper(MemoryContext const& rMemCtxt, u64 LinAddr, BitVector& rVal)
   {
     _Ty MemVal = 0;
     if (!rMemCtxt.ReadMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
       return false;
-    rVal = IntType(MemVal);
+    rVal = BitVector(MemVal);
     return true;
   }
 
   template<typename _Ty>
-  bool WriteMemoryHelper(MemoryContext& rMemCtxt, u64 LinAddr, IntType const& rVal)
+  bool WriteMemoryHelper(MemoryContext& rMemCtxt, u64 LinAddr, BitVector const& rVal)
   {
     auto MemVal = rVal.ConvertTo<_Ty>();
     if (!rMemCtxt.WriteMemory(LinAddr, &MemVal, rVal.GetBitSize() / 8))
@@ -138,7 +138,7 @@ namespace
 }
 
 template<>
-bool MemoryContext::ReadMemory<IntType>(u64 LinAddr, IntType& rVal) const
+bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   switch (rVal.GetBitSize())
@@ -155,7 +155,7 @@ bool MemoryContext::ReadMemory<IntType>(u64 LinAddr, IntType& rVal) const
 }
 
 template<>
-bool MemoryContext::WriteMemory<IntType>(u64 LinAddr, IntType const& rVal)
+bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal)
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   switch (rVal.GetBitSize())

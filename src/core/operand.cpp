@@ -76,16 +76,16 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
 
   if (m_Type & (O_ABS | O_IMM))
   {
-    u32 ConstType = IntegerExpression::ConstUnknownBit;
+    u32 ConstType = BitVectorExpression::ConstUnknownBit;
     switch (m_Type & DS_MASK)
     {
-    case DS_8BIT:  ConstType = IntegerExpression::Const8Bit; break;
-    case DS_16BIT: ConstType = IntegerExpression::Const16Bit; break;
-    case DS_32BIT: ConstType = IntegerExpression::Const32Bit; break;
-    case DS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
+    case DS_8BIT:  ConstType = BitVectorExpression::Const8Bit; break;
+    case DS_16BIT: ConstType = BitVectorExpression::Const16Bit; break;
+    case DS_32BIT: ConstType = BitVectorExpression::Const32Bit; break;
+    case DS_64BIT: ConstType = BitVectorExpression::Const64Bit; break;
     default: break;
     }
-    spExpr = Expr::MakeInt(ConstType, m_Value);
+    spExpr = Expr::MakeBitVector(ConstType, m_Value);
   }
 
   else if (m_Type & (O_REG | O_SREG))
@@ -99,7 +99,7 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
         spExpr = Expr::MakeBinOp(
         OperationExpression::OpMul,
         spExpr,
-        Expr::MakeInt(IntegerExpression::Const8Bit, (m_Type >> 8) & 0xf));
+        Expr::MakeBitVector(BitVectorExpression::Const8Bit, (m_Type >> 8) & 0xf));
     }
 
     if (m_Reg != 0x0)
@@ -125,13 +125,13 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       default:       Disp =                     m_Value ; break;
       }
 
-      u32 ConstType = IntegerExpression::ConstUnknownBit;
+      u32 ConstType = BitVectorExpression::ConstUnknownBit;
       switch (m_Type & AS_MASK)
       {
-      case AS_8BIT:  ConstType = IntegerExpression::Const8Bit; break;
-      case AS_16BIT: ConstType = IntegerExpression::Const16Bit; break;
-      case AS_32BIT: ConstType = IntegerExpression::Const32Bit; break;
-      case AS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
+      case AS_8BIT:  ConstType = BitVectorExpression::Const8Bit; break;
+      case AS_16BIT: ConstType = BitVectorExpression::Const16Bit; break;
+      case AS_32BIT: ConstType = BitVectorExpression::Const32Bit; break;
+      case AS_64BIT: ConstType = BitVectorExpression::Const64Bit; break;
       default: break;
       }
 
@@ -141,26 +141,26 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
       spExpr = Expr::MakeBinOp(
         OperationExpression::OpAdd,
         spExpr,
-        Expr::MakeInt(ConstType, Disp));
+        Expr::MakeBitVector(ConstType, Disp));
     }
   }
 
   else if (m_Type & O_REL)
   {
-    u32 ConstType = IntegerExpression::ConstUnknownBit;
+    u32 ConstType = BitVectorExpression::ConstUnknownBit;
     switch (m_Type & DS_MASK)
     {
-    case DS_8BIT:  ConstType = IntegerExpression::Const8Bit; break;
-    case DS_16BIT: ConstType = IntegerExpression::Const16Bit; break;
-    case DS_32BIT: ConstType = IntegerExpression::Const32Bit; break;
-    case DS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
+    case DS_8BIT:  ConstType = BitVectorExpression::Const8Bit; break;
+    case DS_16BIT: ConstType = BitVectorExpression::Const16Bit; break;
+    case DS_32BIT: ConstType = BitVectorExpression::Const32Bit; break;
+    case DS_64BIT: ConstType = BitVectorExpression::Const64Bit; break;
     default: break;
     }
 
     spExpr = Expr::MakeBinOp(
       OperationExpression::OpAdd,
       Expr::MakeId(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, Mode), pCpuInfo),
-      Expr::MakeInt(ConstType, m_Value));
+      Expr::MakeBitVector(ConstType, m_Value));
   }
 
   if (m_Type & O_MEM)
@@ -168,23 +168,23 @@ Expression::SPType Operand::GetSemantic(u8 Mode, CpuInformation const* pCpuInfo,
     /* TODO: Quick fix to handle x86 O* */
     if (spExpr == nullptr && m_Type & O_DISP)
     {
-      u32 ConstType = IntegerExpression::ConstUnknownBit;
+      u32 ConstType = BitVectorExpression::ConstUnknownBit;
       switch (m_Type & DS_MASK)
       {
-      case DS_8BIT:  ConstType = IntegerExpression::Const8Bit; break;
-      case DS_16BIT: ConstType = IntegerExpression::Const16Bit; break;
-      case DS_32BIT: ConstType = IntegerExpression::Const32Bit; break;
-      case DS_64BIT: ConstType = IntegerExpression::Const64Bit; break;
+      case DS_8BIT:  ConstType = BitVectorExpression::Const8Bit; break;
+      case DS_16BIT: ConstType = BitVectorExpression::Const16Bit; break;
+      case DS_32BIT: ConstType = BitVectorExpression::Const32Bit; break;
+      case DS_64BIT: ConstType = BitVectorExpression::Const64Bit; break;
       default: break;
       }
-      spExpr = Expr::MakeInt(ConstType, m_Value);
+      spExpr = Expr::MakeBitVector(ConstType, m_Value);
     }
 
     Expression::SPType spBaseExpr;
     if (m_Type & O_SEG)
       spBaseExpr = Expr::MakeId(m_Seg, pCpuInfo);
     else if (m_Type & O_SEG_VAL)
-      spBaseExpr = Expr::MakeInt(IntegerExpression::Const16Bit, m_SegValue);
+      spBaseExpr = Expr::MakeBitVector(BitVectorExpression::Const16Bit, m_SegValue);
 
 /*
 #define MS_MASK      0x0000f000

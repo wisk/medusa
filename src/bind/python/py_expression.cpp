@@ -35,11 +35,11 @@ void PydusaExpression(void)
 
   // constant expression class inherited from base expression class
 
-  bp::class_<IntegerExpression, bp::bases<Expression>>("IntegerExpression", bp::no_init)
-    .def("__str__", &IntegerExpression::ToString)
-    .add_property("value", &IntegerExpression::GetInt)
+  bp::class_<BitVectorExpression, bp::bases<Expression>>("BitVectorExpression", bp::no_init)
+    .def("__str__", &BitVectorExpression::ToString)
+    .add_property("value", &BitVectorExpression::GetInt)
     ;
-  bp::register_ptr_to_python<IntegerExpression::SPType>();
+  bp::register_ptr_to_python<BitVectorExpression::SPType>();
 
   // identifier expression class inherited from base expression class
 

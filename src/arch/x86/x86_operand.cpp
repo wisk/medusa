@@ -154,7 +154,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       {
         u16 Disp16;
         rBinStrm.Read(Offset + 1, Disp16);
-        spOff = Expr::MakeInt(16, Disp16);
+        spOff = Expr::MakeBitVector(16, Disp16);
         OprdLen += sizeof(Disp16);
         break;
       }
@@ -179,7 +179,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u8 Disp8;
       rBinStrm.Read(Offset + 1, Disp8);
       OprdLen += sizeof(Disp8);
-      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeInt(16, static_cast<u16>(SignExtend<s16, 8>(Disp8))));
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeBitVector(16, static_cast<u16>(SignExtend<s16, 8>(Disp8))));
       break;
     }
   case 0x2:
@@ -187,7 +187,7 @@ static Expression::SPType __DecodeModRmAddress16(CpuInformation* pCpuInfo, Binar
       u16 Disp16;
       rBinStrm.Read(Offset + 1, Disp16);
       OprdLen += sizeof(Disp16);
-      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeInt(16, Disp16));
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spOff, Expr::MakeBitVector(16, Disp16));
       break;
     }
   default:
@@ -225,7 +225,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-        spDisp = Expr::MakeInt(32, Disp32);
+        spDisp = Expr::MakeBitVector(32, Disp32);
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -236,7 +236,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
 
         u8 Disp8;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-        spDisp = Expr::MakeInt(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
+        spDisp = Expr::MakeBitVector(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -258,7 +258,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
       {
         u8 Disp8;
         rBinStrm.Read(Offset + 1, Disp8);
-        spDisp = Expr::MakeInt(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
+        spDisp = Expr::MakeBitVector(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -267,7 +267,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + 1, Disp32);
-        spDisp = Expr::MakeInt(32, Disp32);
+        spDisp = Expr::MakeBitVector(32, Disp32);
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -280,7 +280,7 @@ static Expression::SPType __DecodeSib32(CpuInformation* pCpuInfo, BinaryStream c
   rOprdLen += sizeof(Sib);
 
   auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
-  auto spScale = Expr::MakeInt(32, aScale[Sib.Scale()]);
+  auto spScale = Expr::MakeBitVector(32, aScale[Sib.Scale()]);
 
   if (spReg == nullptr && spSecReg == nullptr && spDisp != nullptr)
     return spDisp;
@@ -320,7 +320,7 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
     u32 Disp32;
     rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
     rOprdLen += sizeof(Disp32);
-    return Expr::MakeInt(32, Disp32);
+    return Expr::MakeBitVector(32, Disp32);
   }
 
   auto spReg = Expr::MakeId((rInsn.GetPrefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? Reg32RexB[ModRm.Rm()] : Reg32[ModRm.Rm()], pCpuInfo);
@@ -336,7 +336,7 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
     {
       u8 Disp8;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-      spDisp = Expr::MakeInt(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
+      spDisp = Expr::MakeBitVector(32, static_cast<u32>(SignExtend<s32, 8>(Disp8)));
       rOprdLen += sizeof(Disp8);
       break;
     }
@@ -344,7 +344,7 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
     {
       u32 Disp32;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-      spDisp = Expr::MakeInt(32, Disp32);
+      spDisp = Expr::MakeBitVector(32, Disp32);
       rOprdLen += sizeof(Disp32);
       break;
     }
@@ -384,7 +384,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-        spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
+        spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -395,7 +395,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
 
         u8 Disp8;
         rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-        spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
+        spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -417,7 +417,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u8 Disp8;
         rBinStrm.Read(Offset + 1, Disp8);
-        spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
+        spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
         rOprdLen += sizeof(Disp8);
         break;
       }
@@ -426,7 +426,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
       {
         u32 Disp32;
         rBinStrm.Read(Offset + 1, Disp32);
-        spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
+        spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
         rOprdLen += sizeof(Disp32);
         break;
       }
@@ -439,7 +439,7 @@ static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream c
   rOprdLen += sizeof(Sib);
 
   auto spSecReg = pRegIndex[Sib.Index()] ? Expr::MakeId(pRegIndex[Sib.Index()], pCpuInfo) : nullptr;
-  auto spScale = Expr::MakeInt(64, aScale[Sib.Scale()]);
+  auto spScale = Expr::MakeBitVector(64, aScale[Sib.Scale()]);
 
   if (spReg == nullptr && spSecReg == nullptr && spDisp != nullptr)
     return spDisp;
@@ -480,7 +480,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     u32 Disp32;
     rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
     rOprdLen += sizeof(Disp32);
-    return Expr::MakeInt(64, Disp32);
+    return Expr::MakeBitVector(64, Disp32);
   }
 
   auto spReg = Expr::MakeId((rInsn.GetPrefix() & (X86_Prefix_REX_b & ~X86_Prefix_REX)) ? RegRexB[ModRm.Rm()] : Reg[ModRm.Rm()], pCpuInfo);
@@ -496,7 +496,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     {
       u8 Disp8;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp8);
-      spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
+      spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 8>(Disp8)));
       rOprdLen += sizeof(Disp8);
       break;
     }
@@ -504,7 +504,7 @@ static Expression::SPType __DecodeModRmAddress64(CpuInformation* pCpuInfo, Binar
     {
       u32 Disp32;
       rBinStrm.Read(Offset + sizeof(ModRm), Disp32);
-      spDisp = Expr::MakeInt(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
+      spDisp = Expr::MakeBitVector(64, static_cast<u64>(SignExtend<s64, 32>(Disp32)));
       rOprdLen += sizeof(Disp32);
       break;
     }
@@ -551,11 +551,11 @@ static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryS
         if (Is64)
           spExpr = Expr::MakeBinOp(OperationExpression::OpAdd,
           /**/Expr::MakeId(Reg, pCpuInfo),
-          /**/Expr::MakeInt(64, SignExtend<s64, 32>(Disp32)));
+          /**/Expr::MakeBitVector(64, SignExtend<s64, 32>(Disp32)));
         else
           spExpr = Expr::MakeBinOp(OperationExpression::OpAdd,
           /**/Expr::MakeId(Reg, pCpuInfo),
-          /**/Expr::MakeInt(32, Disp32));
+          /**/Expr::MakeBitVector(32, Disp32));
         break;
       }
     }
@@ -585,8 +585,8 @@ Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, TO
     if (!rBinStrm.Read(Offset, Seg))
       return nullptr;
 
-    auto spConstSeg = Expr::MakeInt(16, Seg);
-    auto spConstOff = Expr::MakeInt(16, Off);
+    auto spConstSeg = Expr::MakeBitVector(16, Seg);
+    auto spConstOff = Expr::MakeBitVector(16, Off);
     return Expr::MakeMem(16, spConstSeg, spConstOff, false);
   };
 
@@ -600,8 +600,8 @@ Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, TO
     if (!rBinStrm.Read(Offset, Seg))
       return nullptr;
 
-    auto spConstSeg = Expr::MakeInt(16, Seg);
-    auto spConstOff = Expr::MakeInt(16, Off);
+    auto spConstSeg = Expr::MakeBitVector(16, Seg);
+    auto spConstOff = Expr::MakeBitVector(16, Off);
     return Expr::MakeMem(16, spConstSeg, spConstOff, false);
   };
 
@@ -892,7 +892,7 @@ Expression::SPType X86Architecture::__Decode_Ibs(BinaryStream const& rBinStrm, T
   if (spOprd0 != nullptr)
     BitSize = spOprd0->GetBitSize();
 
-  return Expr::MakeInt(BitSize, SignExtend<s64, 8>(Value));
+  return Expr::MakeBitVector(BitSize, SignExtend<s64, 8>(Value));
 }
 
 Expression::SPType X86Architecture::__Decode_Jb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -911,7 +911,7 @@ Expression::SPType X86Architecture::__Decode_Jb(BinaryStream const& rBinStrm, TO
 
   return Expr::MakeBinOp(OperationExpression::OpAdd,
     Expr::MakeId(RegPc, &m_CpuInfo),
-    Expr::MakeInt(RegPcSize, SignExtend<s64, 8>(Value)));
+    Expr::MakeBitVector(RegPcSize, SignExtend<s64, 8>(Value)));
 }
 
 Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -934,7 +934,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
 
       return Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
-        Expr::MakeInt(RegPcSize, SignExtend<s64, 16>(Value)));
+        Expr::MakeBitVector(RegPcSize, SignExtend<s64, 16>(Value)));
     }
 
   case 32: case 64:
@@ -946,7 +946,7 @@ Expression::SPType X86Architecture::__Decode_Jz(BinaryStream const& rBinStrm, TO
 
       return Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeId(RegPc, &m_CpuInfo),
-        Expr::MakeInt(RegPcSize, SignExtend<s64, 32>(Value)));
+        Expr::MakeBitVector(RegPcSize, SignExtend<s64, 32>(Value)));
     }
 
   default:
@@ -1156,7 +1156,7 @@ Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TO
       u16 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(16, Value);
+      spOff = Expr::MakeBitVector(16, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }
@@ -1166,7 +1166,7 @@ Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TO
       u32 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(32, Value);
+      spOff = Expr::MakeBitVector(32, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }
@@ -1176,7 +1176,7 @@ Expression::SPType X86Architecture::__Decode_Ob(BinaryStream const& rBinStrm, TO
       u64 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(64, Value);
+      spOff = Expr::MakeBitVector(64, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }
@@ -1198,7 +1198,7 @@ Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TO
       u16 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(16, Value);
+      spOff = Expr::MakeBitVector(16, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }
@@ -1208,7 +1208,7 @@ Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TO
       u32 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(32, Value);
+      spOff = Expr::MakeBitVector(32, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }
@@ -1218,7 +1218,7 @@ Expression::SPType X86Architecture::__Decode_Ov(BinaryStream const& rBinStrm, TO
       u64 Value;
       if (!rBinStrm.Read(Offset, Value))
         return nullptr;
-      spOff = Expr::MakeInt(64, Value);
+      spOff = Expr::MakeBitVector(64, Value);
       rInsn.Length() += sizeof(Value);
       break;
     }

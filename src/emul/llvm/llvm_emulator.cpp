@@ -593,8 +593,8 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
     m_rBuilder.CreateCall5(
       s_pHandleHookFunc,
       _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
-      _MakeInteger(IntType(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(IntType(64, spSysExpr->GetAddress().GetOffset())),
-      _MakeInteger(IntType(32, Emulator::HookOnExecute)));
+      _MakeInteger(BitVector(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(BitVector(64, spSysExpr->GetAddress().GetOffset())),
+      _MakeInteger(BitVector(32, Emulator::HookOnExecute)));
     return spSysExpr;
   }
 
@@ -770,18 +770,18 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
     case OperationExpression::OpBsf:
       pUnOpVal = _CallIntrinsic(llvm::Intrinsic::cttz,
         { pVal->getType() },
-        { pVal, _MakeInteger(IntType(1, 1)) });
+        { pVal, _MakeInteger(BitVector(1, 1)) });
       break;
 
     case OperationExpression::OpBsr:
     {
       auto pCtlz = _CallIntrinsic(llvm::Intrinsic::ctlz,
         { pVal->getType() },
-        { pVal, _MakeInteger(IntType(1, 1)) });
+        { pVal, _MakeInteger(BitVector(1, 1)) });
       // NOTE(wisk): LLVM operation ctlz gives the result from the beginning (in x86 it emits bsr op0, op1 ; xor op0, op1.bitsize - 1)
       // we have to reverse the last xor to avoid invalid result
       auto ValBitSize = pVal->getType()->getScalarSizeInBits();
-      pUnOpVal = m_rBuilder.CreateXor(pCtlz, _MakeInteger(IntType(ValBitSize, ValBitSize - 1)));
+      pUnOpVal = m_rBuilder.CreateXor(pCtlz, _MakeInteger(BitVector(ValBitSize, ValBitSize - 1)));
     }
     break;
   }
@@ -852,9 +852,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     if (LeftBits == 0)
       break;
 
-    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(IntType(LeftBits, LeftBits)));
+    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(BitVector(LeftBits, LeftBits)));
     auto pRol0   = m_rBuilder.CreateShl(LeftVal, pCnt, "rol_0");
-    auto pRolSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), pCnt, "rol_sub");
+    auto pRolSub = m_rBuilder.CreateSub(_MakeInteger(BitVector(LeftBits, LeftBits)), pCnt, "rol_sub");
     auto pRol1   = m_rBuilder.CreateLShr(LeftVal, pRolSub, "rol_1");
     pBinOpVal    = m_rBuilder.CreateOr(pRol0, pRol1, "rol");
   }
@@ -867,9 +867,9 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     if (LeftBits == 0)
       break;
 
-    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(IntType(LeftBits, LeftBits)));
+    auto pCnt    = m_rBuilder.CreateURem(RightVal, _MakeInteger(BitVector(LeftBits, LeftBits)));
     auto pRor0   = m_rBuilder.CreateLShr(LeftVal, pCnt, "ror_0");
-    auto pRorSub = m_rBuilder.CreateSub(_MakeInteger(IntType(LeftBits, LeftBits)), pCnt, "rol_sub");
+    auto pRorSub = m_rBuilder.CreateSub(_MakeInteger(BitVector(LeftBits, LeftBits)), pCnt, "rol_sub");
     auto pRor1   = m_rBuilder.CreateShl(LeftVal, pRorSub, "ror_1");
     pBinOpVal    = m_rBuilder.CreateOr(pRor0, pRor1, "ror");
   }
@@ -917,7 +917,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
 
   case OperationExpression::OpInsertBits:
   {
-    auto spRConst = expr_cast<IntegerExpression>(spRight);
+    auto spRConst = expr_cast<BitVectorExpression>(spRight);
     if (spRConst == nullptr)
       break;
     auto pShift = _MakeInteger(spRConst->GetInt().Lsb());
@@ -929,7 +929,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
 
   case OperationExpression::OpExtractBits:
   {
-    auto spRConst = expr_cast<IntegerExpression>(spRight);
+    auto spRConst = expr_cast<BitVectorExpression>(spRight);
     if (spRConst == nullptr)
       break;
     auto pShift = _MakeInteger(spRConst->GetInt().Lsb());
@@ -946,7 +946,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
   return spBinOpExpr;
 }
 
-Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitInt(IntegerExpression::SPType spConstExpr)
+Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBitVector(BitVectorExpression::SPType spConstExpr)
 {
   if (m_State != Read)
   {
@@ -1110,7 +1110,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   auto spBaseExpr = spMemExpr->GetBaseExpression();
 
   if (spBaseExpr == nullptr)
-    m_ValueStack.push(_MakeInteger(IntType(16, 0x0)));
+    m_ValueStack.push(_MakeInteger(BitVector(16, 0x0)));
   else if (spBaseExpr->Visit(this) == nullptr)
     return nullptr;
 
@@ -1129,14 +1129,14 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   auto pBaseVal = m_ValueStack.top();
   m_ValueStack.pop();
   auto AccBitSize = spMemExpr->GetAccessSizeInBit();
-  auto pAccBitSizeVal = _MakeInteger(IntType(32, AccBitSize));
+  auto pAccBitSizeVal = _MakeInteger(BitVector(32, AccBitSize));
 
   llvm::Value* pPtrVal = nullptr;
   if (m_State != Read || spMemExpr->IsDereferencable())
   {
     auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
     pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
-    auto pFalseVal = _MakeInteger(IntType(1, 0));
+    auto pFalseVal = _MakeInteger(BitVector(1, 0));
     _EmitReturnIfNull(pPtrVal, pFalseVal);
   }
 
@@ -1166,7 +1166,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
       auto pVal = m_rBuilder.CreateLoad(pPtrVal, "read_mem");
       m_ValueStack.push(pVal);
       // FIXME(KS):
-      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(IntType(AccBitSize, AccBitSize / 8)), "inc_ptr");
+      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(BitVector(AccBitSize, AccBitSize / 8)), "inc_ptr");
       --m_NrOfValueToRead;
     }
     break;
@@ -1196,7 +1196,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
       m_ValueStack.pop();
       m_rBuilder.CreateStore(pCurVal, pPtrVal);
       // FIXME(KS):
-      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(IntType(AccBitSize, AccBitSize / 8)), "inc_ptr");
+      //m_rBuilder.CreateAdd(pPtrVal, _MakeInteger(BitVector(AccBitSize, AccBitSize / 8)), "inc_ptr");
     } while (!m_ValueStack.empty());
     break;
   }
@@ -1210,7 +1210,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSymbolic(SymbolicEx
   return nullptr;
 }
 
-llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakeInteger(IntType const& rInt) const
+llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakeInteger(BitVector const& rInt) const
 {
   // TODO(KS): Handle integer larger than 64-bit
   if (rInt.GetBitSize() > 64)
@@ -1232,7 +1232,7 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakePointer(u32 Bits, void* p
   if (Offset == 0x0)
     return pPtr;
 
-  return m_rBuilder.CreateGEP(pPtr, _MakeInteger(IntType(Offset)));
+  return m_rBuilder.CreateGEP(pPtr, _MakeInteger(BitVector(Offset)));
 }
 
 llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset) const
@@ -1240,13 +1240,13 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_MakePointer(u32 Bits, llvm::V
   if (Offset != 0x0)
   {
     //src: http://llvm.1065342.n5.nabble.com/Creating-Pointer-Constants-td31886.html
-    pPointerValue = m_rBuilder.CreateGEP(pPointerValue, _MakeInteger(IntType(Offset)));
+    pPointerValue = m_rBuilder.CreateGEP(pPointerValue, _MakeInteger(BitVector(Offset)));
   }
 
   return m_rBuilder.CreateBitCast(pPointerValue, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), Bits));
 }
 
-llvm::Type* LlvmEmulator::LlvmExpressionVisitor::_IntTypeToLlvmType(IntType const& rInt) const
+llvm::Type* LlvmEmulator::LlvmExpressionVisitor::_BitVectorToLlvmType(BitVector const& rInt) const
 {
   return _BitSizeToLlvmType(rInt.GetBitSize());
 }
@@ -1340,8 +1340,8 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitReadRegister(u32 Reg, Cpu
   auto RegBitSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
 
   // Make values for function parameters
-  auto pRegVal = _MakeInteger(IntType(32, Reg));
-  auto pBitSize = _MakeInteger(IntType(32, RegBitSize));
+  auto pRegVal = _MakeInteger(BitVector(32, Reg));
+  auto pBitSize = _MakeInteger(BitVector(32, RegBitSize));
 
   // Allocate the result on the stack
   auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, RegName + "_alloc");
@@ -1363,8 +1363,8 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   auto RegBitSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
 
   // Make values for function parameters
-  auto pRegVal = _MakeInteger(IntType(32, Reg));
-  auto pBitSize = _MakeInteger(IntType(32, RegBitSize));
+  auto pRegVal = _MakeInteger(BitVector(32, Reg));
+  auto pBitSize = _MakeInteger(BitVector(32, RegBitSize));
 
   // Allocate the new value on the stack
   auto pRegAlloca = m_rBuilder.CreateAlloca(_BitSizeToLlvmType(RegBitSize), nullptr, RegName + "_alloc");
@@ -1388,7 +1388,7 @@ void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal
   auto pBbCont = llvm::BasicBlock::Create(rCtxt, "continue", pFunc);
 
   auto pChkValInt = m_rBuilder.CreatePtrToInt(pChkVal, llvm::Type::getIntNTy(rCtxt, sizeof(void*) * 8));
-  auto pNullPtrInt = _MakeInteger(IntType(sizeof(void*) * 8, 0));
+  auto pNullPtrInt = _MakeInteger(BitVector(sizeof(void*) * 8, 0));
   auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt, "ret_if_null_cmp");
   m_rBuilder.CreateCondBr(pCmpPtr, pBbRet, pBbCont);
 

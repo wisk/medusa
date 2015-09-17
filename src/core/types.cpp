@@ -3,7 +3,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string IntType::ToString(u16 Base) const
+std::string BitVector::ToString(u16 Base) const
 {
   std::ostringstream Out;
   switch (Base)
@@ -15,7 +15,7 @@ std::string IntType::ToString(u16 Base) const
   return Out.str();
 }
 
-void IntType::SignExtend(u16 NewBitSize)
+void BitVector::SignExtend(u16 NewBitSize)
 {
   u16 Pos = m_BitSize - 1;
 
@@ -29,20 +29,20 @@ void IntType::SignExtend(u16 NewBitSize)
   m_BitSize = NewBitSize;
 }
 
-void IntType::ZeroExtend(u16 NewBitSize)
+void BitVector::ZeroExtend(u16 NewBitSize)
 {
   //assert(NewBitSize > m_BitSize);
   m_BitSize = NewBitSize;
 }
 
-void IntType::BitCast(u16 NewBitSize)
+void BitVector::BitCast(u16 NewBitSize)
 {
   m_BitSize = NewBitSize;
   ap_int Mask = (ap_int(1) << m_BitSize) - 1;
   m_Value &= Mask;
 }
 
-ap_int IntType::GetSignedValue(void) const
+ap_int BitVector::GetSignedValue(void) const
 {
   // If the value is positive, we don't need to do anything
   if (!((GetUnsignedValue() >> (m_BitSize - 1)) & 1))
@@ -53,7 +53,7 @@ ap_int IntType::GetSignedValue(void) const
   return -((m_Value ^ Mask) + 1);
 }
 
-ap_uint IntType::GetUnsignedValue(void) const
+ap_uint BitVector::GetUnsignedValue(void) const
 {
   // If the value is positive, we don't need to do anything
   if (!m_Value.backend().sign())
@@ -65,77 +65,77 @@ ap_uint IntType::GetUnsignedValue(void) const
   return NegValue;
 }
 
-IntType IntType::Not(void) const
+BitVector BitVector::Not(void) const
 {
-  IntType Tmp(m_BitSize, ~m_Value);
+  BitVector Tmp(m_BitSize, ~m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType IntType::Neg(void) const
+BitVector BitVector::Neg(void) const
 {
-  IntType Tmp(m_BitSize, -m_Value);
+  BitVector Tmp(m_BitSize, -m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::PreInc(void)
+BitVector& BitVector::PreInc(void)
 {
   ++m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::PostInc(void)
+BitVector BitVector::PostInc(void)
 {
-  IntType Tmp(m_BitSize, m_Value + 1);
+  BitVector Tmp(m_BitSize, m_Value + 1);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::PreDec(void)
+BitVector& BitVector::PreDec(void)
 {
   --m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::PostDec(void)
+BitVector BitVector::PostDec(void)
 {
-  IntType Tmp(m_BitSize, m_Value - 1);
+  BitVector Tmp(m_BitSize, m_Value - 1);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType IntType::Bsf(void) const
+BitVector BitVector::Bsf(void) const
 {
   return Lsb();
 }
 
-IntType IntType::Lsb(void) const
+BitVector BitVector::Lsb(void) const
 {
   if (m_Value.is_zero())
-    return IntType(m_BitSize, 0);
-  return IntType(m_BitSize, boost::multiprecision::lsb(m_Value));
+    return BitVector(m_BitSize, 0);
+  return BitVector(m_BitSize, boost::multiprecision::lsb(m_Value));
 }
 
-IntType IntType::Bsr(void) const
+BitVector BitVector::Bsr(void) const
 {
   return Msb();
 }
 
-IntType IntType::Msb(void) const
+BitVector BitVector::Msb(void) const
 {
   if (m_Value.is_zero())
     // Avoid "No bits were set in the operand."
-    return IntType(m_BitSize, 0);
+    return BitVector(m_BitSize, 0);
   if (m_Value.backend().sign())
     // HACK(KS): to avoid "Testing individual bits in negative values is not supported - results are undefined."
-    return IntType(m_BitSize, boost::multiprecision::msb(boost::multiprecision::abs(m_Value)));
-  return IntType(m_BitSize, boost::multiprecision::msb(m_Value));
+    return BitVector(m_BitSize, boost::multiprecision::msb(boost::multiprecision::abs(m_Value)));
+  return BitVector(m_BitSize, boost::multiprecision::msb(m_Value));
 }
 
-IntType IntType::Swap(void) const
+BitVector BitVector::Swap(void) const
 {
   switch (m_BitSize)
   {
@@ -143,7 +143,7 @@ IntType IntType::Swap(void) const
     {
       auto Res = ConvertTo<u16>();
       EndianSwap(Res);
-      IntType Tmp(m_BitSize, Res);
+      BitVector Tmp(m_BitSize, Res);
       return Tmp;
     }
 
@@ -151,7 +151,7 @@ IntType IntType::Swap(void) const
     {
       auto Res = ConvertTo<u32>();
       EndianSwap(Res);
-      IntType Tmp(m_BitSize, Res);
+      BitVector Tmp(m_BitSize, Res);
       return Tmp;
     }
 
@@ -159,7 +159,7 @@ IntType IntType::Swap(void) const
     {
       auto Res = ConvertTo<u64>();
       EndianSwap(Res);
-      IntType Tmp(m_BitSize, Res);
+      BitVector Tmp(m_BitSize, Res);
       return Tmp;
     }
 
@@ -169,193 +169,193 @@ IntType IntType::Swap(void) const
   }
 }
 
-IntType IntType::Add(IntType const& rVal) const
+BitVector BitVector::Add(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value + rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value + rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::AddAssign(IntType const& rVal)
+BitVector& BitVector::AddAssign(BitVector const& rVal)
 {
   m_Value += rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Sub(IntType const& rVal) const
+BitVector BitVector::Sub(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value - rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value - rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::SubAssign(IntType const& rVal)
+BitVector& BitVector::SubAssign(BitVector const& rVal)
 {
   m_Value -= rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Mul(IntType const& rVal) const
+BitVector BitVector::Mul(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value * rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value * rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::MulAssign(IntType const& rVal)
+BitVector& BitVector::MulAssign(BitVector const& rVal)
 {
   m_Value *= rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::UDiv(IntType const& rVal) const
+BitVector BitVector::UDiv(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value / rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value / rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::UDivAssign(IntType const& rVal)
+BitVector& BitVector::UDivAssign(BitVector const& rVal)
 {
-  IntType Tmp = UDiv(rVal);
+  BitVector Tmp = UDiv(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::SDiv(IntType const& rVal) const
+BitVector BitVector::SDiv(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, GetSignedValue() / rVal.GetSignedValue());
+  BitVector Tmp(m_BitSize, GetSignedValue() / rVal.GetSignedValue());
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::SDivAssign(IntType const& rVal)
+BitVector& BitVector::SDivAssign(BitVector const& rVal)
 {
-  IntType Tmp = SDiv(rVal);
+  BitVector Tmp = SDiv(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::UMod(IntType const& rVal) const
+BitVector BitVector::UMod(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value % rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value % rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::UModAssign(IntType const& rVal)
+BitVector& BitVector::UModAssign(BitVector const& rVal)
 {
-  IntType Tmp = UMod(rVal);
+  BitVector Tmp = UMod(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::SMod(IntType const& rVal) const
+BitVector BitVector::SMod(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, GetSignedValue() % rVal.GetSignedValue());
+  BitVector Tmp(m_BitSize, GetSignedValue() % rVal.GetSignedValue());
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::SModAssign(IntType const& rVal)
+BitVector& BitVector::SModAssign(BitVector const& rVal)
 {
-  IntType Tmp = SMod(rVal);
+  BitVector Tmp = SMod(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::And(IntType const& rVal) const
+BitVector BitVector::And(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value & rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value & rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::AndAssign(IntType const& rVal)
+BitVector& BitVector::AndAssign(BitVector const& rVal)
 {
   m_Value &= rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Or(IntType const& rVal) const
+BitVector BitVector::Or(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value | rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value | rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::OrAssign(IntType const& rVal)
+BitVector& BitVector::OrAssign(BitVector const& rVal)
 {
   m_Value |= rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Xor(IntType const& rVal) const
+BitVector BitVector::Xor(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value ^ rVal.m_Value);
+  BitVector Tmp(m_BitSize, m_Value ^ rVal.m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::XorAssign(IntType const& rVal)
+BitVector& BitVector::XorAssign(BitVector const& rVal)
 {
   m_Value ^= rVal.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Lls(IntType const& rVal) const
+BitVector BitVector::Lls(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value << rVal.ConvertTo<u32>());
+  BitVector Tmp(m_BitSize, m_Value << rVal.ConvertTo<u32>());
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::LlsAssign(IntType const& rVal)
+BitVector& BitVector::LlsAssign(BitVector const& rVal)
 {
-  IntType Tmp = Lls(rVal);
+  BitVector Tmp = Lls(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Lrs(IntType const& rVal) const
+BitVector BitVector::Lrs(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
-  IntType Tmp(m_BitSize, m_Value >> rVal.ConvertTo<u32>());
+  BitVector Tmp(m_BitSize, m_Value >> rVal.ConvertTo<u32>());
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::LrsAssign(IntType const& rVal)
+BitVector& BitVector::LrsAssign(BitVector const& rVal)
 {
-  IntType Tmp = Lrs(rVal);
+  BitVector Tmp = Lrs(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Ars(IntType const& rVal) const
+BitVector BitVector::Ars(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
   u32 Count = rVal.ConvertTo<u32>();
@@ -365,55 +365,55 @@ IntType IntType::Ars(IntType const& rVal) const
     ShiftedValue >>= m_BitSize - 1;
   else
     ShiftedValue >>= Count;
-  IntType Tmp(ShiftedBitSize, ShiftedValue);
+  BitVector Tmp(ShiftedBitSize, ShiftedValue);
   Tmp.SignExtend(m_BitSize);
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::ArsAssign(IntType const& rVal)
+BitVector& BitVector::ArsAssign(BitVector const& rVal)
 {
-  IntType Tmp = Ars(rVal);
+  BitVector Tmp = Ars(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Rol(IntType const& rVal) const
+BitVector BitVector::Rol(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
   u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
-  IntType Tmp(m_BitSize, (m_Value << Count) | (m_Value >> (m_BitSize - Count)));
+  BitVector Tmp(m_BitSize, (m_Value << Count) | (m_Value >> (m_BitSize - Count)));
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::RolAssign(IntType const& rVal)
+BitVector& BitVector::RolAssign(BitVector const& rVal)
 {
-  IntType Tmp = Rol(rVal);
+  BitVector Tmp = Rol(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::Ror(IntType const& rVal) const
+BitVector BitVector::Ror(BitVector const& rVal) const
 {
   //assert(m_BitSize == rVal.GetBitSize());
   u32 Count = rVal.ConvertTo<u32>() % m_BitSize;
-  IntType Tmp(m_BitSize, (m_Value >> Count) | (m_Value << (m_BitSize - Count)));
+  BitVector Tmp(m_BitSize, (m_Value >> Count) | (m_Value << (m_BitSize - Count)));
   Tmp._Adjust();
   return Tmp;
 }
 
-IntType& IntType::RorAssign(IntType const& rVal)
+BitVector& BitVector::RorAssign(BitVector const& rVal)
 {
-  IntType Tmp = Ror(rVal);
+  BitVector Tmp = Ror(rVal);
   m_Value = Tmp.m_Value;
   _Adjust();
   return *this;
 }
 
-IntType IntType::AddFloat(IntType const& rVal) const
+BitVector BitVector::AddFloat(BitVector const& rVal) const
 {
   if (m_BitSize == 32)
   {
@@ -422,7 +422,7 @@ IntType IntType::AddFloat(IntType const& rVal) const
     float FloatLeft = *reinterpret_cast<float *>(&UIntLeft);
     float FloatRight = *reinterpret_cast<float *>(&UIntRight);
     float Res = FloatLeft + FloatRight;
-    IntType Tmp(m_BitSize, *reinterpret_cast<u32 *>(&Res));
+    BitVector Tmp(m_BitSize, *reinterpret_cast<u32 *>(&Res));
     Tmp._Adjust();
     return Tmp;
   }
@@ -433,7 +433,7 @@ IntType IntType::AddFloat(IntType const& rVal) const
     double FloatLeft = *reinterpret_cast<double *>(&UIntLeft);
     double FloatRight = *reinterpret_cast<double *>(&UIntRight);
     double Res = FloatLeft + FloatRight;
-    IntType Tmp(m_BitSize, *reinterpret_cast<u64 *>(&Res));
+    BitVector Tmp(m_BitSize, *reinterpret_cast<u64 *>(&Res));
     Tmp._Adjust();
     return Tmp;
   }
@@ -441,7 +441,7 @@ IntType IntType::AddFloat(IntType const& rVal) const
   return *this;
 }
 
-void IntType::_Adjust(void)
+void BitVector::_Adjust(void)
 {
   ap_int Mask = (ap_int(1) << m_BitSize) - 1;
   m_Value = Mask & GetUnsignedValue();

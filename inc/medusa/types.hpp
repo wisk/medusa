@@ -70,28 +70,28 @@ typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
 // boost::multiprecision::cpp_int doesn't support arbitrary unsigned int
 typedef ap_int ap_uint;
 
-class Medusa_EXPORT IntType
+class Medusa_EXPORT BitVector
 {
 public:
-  IntType(void) : m_BitSize(0), m_Value() {}
-  explicit IntType(s8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
-  explicit IntType(u8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
-  explicit IntType(s16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
-  explicit IntType(u16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
-  explicit IntType(s32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
-  explicit IntType(u32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
-  explicit IntType(s64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
-  explicit IntType(u64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
-  explicit IntType(s128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
-  explicit IntType(u128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
-  explicit IntType(s256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
-  explicit IntType(u256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
-  explicit IntType(s512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
-  explicit IntType(u512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
-  explicit IntType(s1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
-  explicit IntType(u1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+  BitVector(void) : m_BitSize(0), m_Value() {}
+  explicit BitVector(s8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit BitVector(u8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit BitVector(s16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+  explicit BitVector(u1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
 
-  explicit IntType(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
+  explicit BitVector(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
   template<typename _Ty>
   typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo(void) const
@@ -137,93 +137,93 @@ public:
 
   // Unary
 
-  IntType  Not(void) const;
-  IntType  operator~(void) const { return Not(); }
+  BitVector  Not(void) const;
+  BitVector  operator~(void) const { return Not(); }
 
-  IntType  Neg(void) const;
-  IntType  operator-(void) const { return Neg(); }
+  BitVector  Neg(void) const;
+  BitVector  operator-(void) const { return Neg(); }
 
-  IntType& PreInc(void);
-  IntType& operator++(void) { return PreInc(); }
-  IntType  PostInc(void);
-  IntType  operator++(int) { return PostInc(); }
+  BitVector& PreInc(void);
+  BitVector& operator++(void) { return PreInc(); }
+  BitVector  PostInc(void);
+  BitVector  operator++(int) { return PostInc(); }
 
-  IntType& PreDec(void);
-  IntType& operator--(void) { return PreDec(); }
-  IntType  PostDec(void);
-  IntType  operator--(int) { return PostDec(); }
+  BitVector& PreDec(void);
+  BitVector& operator--(void) { return PreDec(); }
+  BitVector  PostDec(void);
+  BitVector  operator--(int) { return PostDec(); }
 
-  IntType  Bsf(void) const;
-  IntType  Lsb(void) const;
-  IntType  Bsr(void) const;
-  IntType  Msb(void) const;
+  BitVector  Bsf(void) const;
+  BitVector  Lsb(void) const;
+  BitVector  Bsr(void) const;
+  BitVector  Msb(void) const;
 
-  IntType  Swap(void) const;
+  BitVector  Swap(void) const;
 
   // Binary
 
-  IntType  Add(IntType const& rVal) const;
-  IntType  operator+(IntType const& rVal) const { return Add(rVal); }
-  IntType& AddAssign(IntType const& rVal);
-  IntType& operator+=(IntType const& rVal) { return AddAssign(rVal); }
+  BitVector  Add(BitVector const& rVal) const;
+  BitVector  operator+(BitVector const& rVal) const { return Add(rVal); }
+  BitVector& AddAssign(BitVector const& rVal);
+  BitVector& operator+=(BitVector const& rVal) { return AddAssign(rVal); }
 
-  IntType  Sub(IntType const& rVal) const;
-  IntType  operator-(IntType const& rVal) const { return Sub(rVal); }
-  IntType& SubAssign(IntType const& rVal);
-  IntType& operator-=(IntType const& rVal) { return SubAssign(rVal); }
+  BitVector  Sub(BitVector const& rVal) const;
+  BitVector  operator-(BitVector const& rVal) const { return Sub(rVal); }
+  BitVector& SubAssign(BitVector const& rVal);
+  BitVector& operator-=(BitVector const& rVal) { return SubAssign(rVal); }
 
-  IntType  Mul(IntType const& rVal) const;
-  IntType  operator*(IntType const& rVal) const { return Mul(rVal); }
-  IntType& MulAssign(IntType const& rVal);
-  IntType& operator*=(IntType const& rVal) { return MulAssign(rVal); }
+  BitVector  Mul(BitVector const& rVal) const;
+  BitVector  operator*(BitVector const& rVal) const { return Mul(rVal); }
+  BitVector& MulAssign(BitVector const& rVal);
+  BitVector& operator*=(BitVector const& rVal) { return MulAssign(rVal); }
 
-  IntType  UDiv(IntType const& rVal) const;
-  IntType  operator/(IntType const& rVal) const { return UDiv(rVal); }
-  IntType& UDivAssign(IntType const& rVal);
-  IntType& operator/=(IntType const& rVal) { return UDivAssign(rVal); }
-  IntType  SDiv(IntType const& rVal) const;
-  IntType& SDivAssign(IntType const& rVal);
+  BitVector  UDiv(BitVector const& rVal) const;
+  BitVector  operator/(BitVector const& rVal) const { return UDiv(rVal); }
+  BitVector& UDivAssign(BitVector const& rVal);
+  BitVector& operator/=(BitVector const& rVal) { return UDivAssign(rVal); }
+  BitVector  SDiv(BitVector const& rVal) const;
+  BitVector& SDivAssign(BitVector const& rVal);
 
-  IntType  UMod(IntType const& rVal) const;
-  IntType  operator%(IntType const& rVal) const { return UMod(rVal); }
-  IntType& UModAssign(IntType const& rVal);
-  IntType& operator%=(IntType const& rVal) { return UModAssign(rVal); }
-  IntType  SMod(IntType const& rVal) const;
-  IntType& SModAssign(IntType const& rVal);
+  BitVector  UMod(BitVector const& rVal) const;
+  BitVector  operator%(BitVector const& rVal) const { return UMod(rVal); }
+  BitVector& UModAssign(BitVector const& rVal);
+  BitVector& operator%=(BitVector const& rVal) { return UModAssign(rVal); }
+  BitVector  SMod(BitVector const& rVal) const;
+  BitVector& SModAssign(BitVector const& rVal);
 
-  IntType  And(IntType const& rVal) const;
-  IntType  operator&(IntType const& rVal) const { return And(rVal); }
-  IntType& AndAssign(IntType const& rVal);
-  IntType& operator&=(IntType const& rVal) { return AndAssign(rVal); }
+  BitVector  And(BitVector const& rVal) const;
+  BitVector  operator&(BitVector const& rVal) const { return And(rVal); }
+  BitVector& AndAssign(BitVector const& rVal);
+  BitVector& operator&=(BitVector const& rVal) { return AndAssign(rVal); }
 
-  IntType Or(IntType const& rVal) const;
-  IntType operator|(IntType const& rVal) const { return Or(rVal); }
-  IntType& OrAssign(IntType const& rVal);
-  IntType& operator|=(IntType const& rVal) { return OrAssign(rVal); }
+  BitVector Or(BitVector const& rVal) const;
+  BitVector operator|(BitVector const& rVal) const { return Or(rVal); }
+  BitVector& OrAssign(BitVector const& rVal);
+  BitVector& operator|=(BitVector const& rVal) { return OrAssign(rVal); }
 
-  IntType  Xor(IntType const& rVal) const;
-  IntType  operator^(IntType const& rVal) const { return Xor(rVal); }
-  IntType& XorAssign(IntType const& rVal);
-  IntType& operator^=(IntType const& rVal) { return XorAssign(rVal); }
+  BitVector  Xor(BitVector const& rVal) const;
+  BitVector  operator^(BitVector const& rVal) const { return Xor(rVal); }
+  BitVector& XorAssign(BitVector const& rVal);
+  BitVector& operator^=(BitVector const& rVal) { return XorAssign(rVal); }
 
-  IntType  Lls(IntType const& rVal) const;
-  IntType  operator<<(IntType const& rVal) const { return Lls(rVal); }
-  IntType& LlsAssign(IntType const& rVal);
-  IntType& operator<<=(IntType const& rVal) { return LlsAssign(rVal); }
+  BitVector  Lls(BitVector const& rVal) const;
+  BitVector  operator<<(BitVector const& rVal) const { return Lls(rVal); }
+  BitVector& LlsAssign(BitVector const& rVal);
+  BitVector& operator<<=(BitVector const& rVal) { return LlsAssign(rVal); }
 
-  IntType  Lrs(IntType const& rVal) const;
-  IntType  operator>>(IntType const& rVal) const { return Lrs(rVal); }
-  IntType& LrsAssign(IntType const& rVal);
-  IntType& operator>>=(IntType const& rVal) { return LrsAssign(rVal); }
-  IntType  Ars(IntType const& rVal) const;
-  IntType& ArsAssign(IntType const& rVal);
+  BitVector  Lrs(BitVector const& rVal) const;
+  BitVector  operator>>(BitVector const& rVal) const { return Lrs(rVal); }
+  BitVector& LrsAssign(BitVector const& rVal);
+  BitVector& operator>>=(BitVector const& rVal) { return LrsAssign(rVal); }
+  BitVector  Ars(BitVector const& rVal) const;
+  BitVector& ArsAssign(BitVector const& rVal);
 
-  IntType  Rol(IntType const& rVal) const;
-  IntType& RolAssign(IntType const& rVal);
-  IntType  Ror(IntType const& rVal) const;
-  IntType& RorAssign(IntType const& rVal);
+  BitVector  Rol(BitVector const& rVal) const;
+  BitVector& RolAssign(BitVector const& rVal);
+  BitVector  Ror(BitVector const& rVal) const;
+  BitVector& RorAssign(BitVector const& rVal);
 
-  IntType  AddFloat(IntType const& rVal) const;
+  BitVector  AddFloat(BitVector const& rVal) const;
 
 private:
   void _Adjust(void);

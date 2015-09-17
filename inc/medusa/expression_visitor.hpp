@@ -18,8 +18,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitFloat(FloatingPointExpression::SPType spFloatExpr);
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -42,8 +41,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitFloat(FloatingPointExpression::SPType spFloatExpr);
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -79,8 +77,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitFloat(FloatingPointExpression::SPType spFloatExpr);
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -120,8 +117,7 @@ public:
   virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
   virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitInt(IntegerExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitFloat(FloatingPointExpression::SPType spFloatExpr);
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
   virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
   virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
@@ -145,7 +141,7 @@ public:
   bool UpdateExpression(Expression::SPType spKeyExpr, Updater updt);
 
 protected:
-  bool _EvaluateCondition(u8 CondOp, IntegerExpression::SPType spConstRefExpr, IntegerExpression::SPType spConstTestExpr, bool& rRes) const;
+  bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
   typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
   Document const&                   m_rDoc;

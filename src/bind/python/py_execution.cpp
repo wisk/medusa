@@ -63,7 +63,7 @@ namespace pydusa
 
   bp::object Execution_GetFunctionParameter(Execution* pExecution, bp::str CallConv, u16 ParamNo)
   {
-    IntType ParamValue;
+    BitVector ParamValue;
     if (!pExecution->GetFunctionParameter(bp::extract<std::string>(CallConv), ParamNo, ParamValue))
       return bp::object();
     // TODO(wisk): handle type larger than 64-bit...

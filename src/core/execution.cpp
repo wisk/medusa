@@ -192,7 +192,7 @@ Address Execution::GetHookAddress(std::string const& rHkFuncName) const
   return Address();
 }
 
-bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, IntType& rParamValue) const
+bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamValue) const
 {
   auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
   if (pCallConv == nullptr)
@@ -216,7 +216,7 @@ bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) co
   return pCallConv->ReturnFromFunction(m_pCpuCtxt, m_pMemCtxt, ParamNo);
 }
 
-bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, IntType const& rRetVal) const
+bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const
 {
   auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
   if (pCallConv == nullptr)
