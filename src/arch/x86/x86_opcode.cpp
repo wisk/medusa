@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Sep 17 15:57:26 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 18 11:43:09 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -53473,7 +53473,12 @@ bool X86Architecture::Table_2_6d(BinaryStream const& rBinStrm, TOffset Offset, I
  * attr: ['m64', 'rexw']
  *
  * mnemonic: movd
- * operand: ['Vo', 'Ey']
+ * operand: ['Vo', 'Ed']
+ * semantic: if __code and is_dword_operation:
+  op0.val = bit_cast(op1.val, int_type32);
+if __code and is_oword_operation:
+  op0.val = bit_cast(op1.val, int_type128);
+
  * attr: ['op_size']
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -53499,9 +53504,31 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movd);
-      if (Operand__Vo_Ey(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Vo_Ed(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_dword_operation:
+          op0.val = bit_cast(op1.val, int_type32) */
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeBitVector(32, 32))));
+        }
+        /* semantic: if __code and is_oword_operation:
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (rInsn.GetOperand(0)->GetBitSize() == 128)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeBitVector(128, 128))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -54338,7 +54365,12 @@ bool X86Architecture::Table_2_7d(BinaryStream const& rBinStrm, TOffset Offset, I
  * cpu_model: >= X86_Arch_Mmx
  *
  * mnemonic: movd
- * operand: ['Ey', 'Vo']
+ * operand: ['Ed', 'Vo']
+ * semantic: if __code and is_dword_operation:
+  op0.val = bit_cast(op1.val, int_type32);
+if __code and is_oword_operation:
+  op0.val = bit_cast(op1.val, int_type128);
+
  * attr: ['op_size']
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -54364,9 +54396,31 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Movd);
-      if (Operand__Ey_Vo(rBinStrm, Offset, rInsn, Mode) == false)
+      if (Operand__Ed_Vo(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: if __code and is_dword_operation:
+          op0.val = bit_cast(op1.val, int_type32) */
+        if (rInsn.GetOperand(0)->GetBitSize() == 32)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeBitVector(32, 32))));
+        }
+        /* semantic: if __code and is_oword_operation:
+          op0.val = bit_cast(op1.val, int_type128) */
+        if (rInsn.GetOperand(0)->GetBitSize() == 128)
+        {
+          /* block glb expressions */
+          AllExpr.push_back(Expr::MakeAssign(
+            rInsn.GetOperand(0),
+            Expr::MakeBinOp(OperationExpression::OpBcast, rInsn.GetOperand(1), Expr::MakeBitVector(128, 128))));
+        }
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -84987,6 +85041,24 @@ bool X86Architecture::Operand__Ed(BinaryStream const& rBinStrm, TOffset Offset, 
   return true;
 }
 
+/* operand ['op0 = decode_Ed', 'op1 = decode_Vo'] */
+bool X86Architecture::Operand__Ed_Vo(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Ed
+  auto spOprd0 = Decode_Ed(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Vo
+  auto spOprd1 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
 /* operand ['op0 = decode_Ev'] */
 bool X86Architecture::Operand__Ev(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -87034,6 +87106,24 @@ bool X86Architecture::Operand__Ux_Ib(BinaryStream const& rBinStrm, TOffset Offse
   Offset += (rInsn.GetLength() - LastLen);
   // operand1: op1 = decode_Ib
   auto spOprd1 = Decode_Ib(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd1 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd1);
+
+  return true;
+}
+
+/* operand ['op0 = decode_Vo', 'op1 = decode_Ed'] */
+bool X86Architecture::Operand__Vo_Ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+{
+  // operand0: op0 = decode_Vo
+  auto spOprd0 = Decode_Vo(rBinStrm, Offset, rInsn, Mode);
+  if (spOprd0 == nullptr)
+    return false;
+  rInsn.AddOperand(spOprd0);
+
+  // operand1: op1 = decode_Ed
+  auto spOprd1 = Decode_Ed(rBinStrm, Offset, rInsn, Mode);
   if (spOprd1 == nullptr)
     return false;
   rInsn.AddOperand(spOprd1);

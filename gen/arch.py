@@ -576,6 +576,8 @@ class ArchConvertion:
                     return 'rInsn.GetOperand(0)->GetBitSize() == 32'
                 elif node_name == 'is_qword_operation':
                     return 'rInsn.GetOperand(0)->GetBitSize() == 64'
+                elif node_name == 'is_oword_operation':
+                    return 'rInsn.GetOperand(0)->GetBitSize() == 128'
                 elif node_name == 'is_expr_id':
                     return 'Expr::TestKind(Expression::Id, %s)'
                 elif node_name == 'is_expr_mem':

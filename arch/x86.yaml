@@ -827,6 +827,12 @@ semantic:
       op0.val = tmp_val;
     free_var('tmp_val');
 
+  movd_sse: &movd_sse |
+    if __code and is_dword_operation:
+      op0.val = bit_cast(op1.val, int_type32);
+    if __code and is_oword_operation:
+      op0.val = bit_cast(op1.val, int_type128);
+
   # TODO: http://www.felixcloutier.com/x86/CMPXCHG8B:CMPXCHG16B.html
   cmpxchg8b: &cmpxchg8b
     [
@@ -4250,9 +4256,10 @@ instruction:
             attr: [ m64, rexw ]
 
           - mnemonic: movd
-            operand: [ Vo, Ey ]
+            operand: [ Vo, Ed ]
             attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movd_sse
 
           - mnemonic: movq
             operand: [ Vo, Ey ]
@@ -4409,9 +4416,10 @@ instruction:
             cpu_model: ">= X86_Arch_Mmx"
 
           - mnemonic: movd
-            operand: [ Ey, Vo ]
+            operand: [ Ed, Vo ]
             attr: [ op_size ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *movd_sse
 
           - mnemonic: movq
             operand: [ Vo, Woq ]
@@ -13809,6 +13817,7 @@ operand:
   Eb_Gb: [ op0 = decode_Eb, op1 = decode_Gb ]
   Eb_Ib: [ last_len, op0 = decode_Eb, move_decode_offset(next_operand), op1 = decode_Ib ]
   Ed: [ op0 = decode_Ed ]
+  Ed_Vo: [ op0 = decode_Ed, op1 = decode_Vo ]
   Ev: [ op0 = decode_Ev ]
   Ev_1: [ op0 = decode_Ev, op1 = decode_1 ]
   Ev_CL: [ op0 = decode_Ev, op1 = decode_CL ]
@@ -13926,6 +13935,7 @@ operand:
   Uo_Ib_Ib: [ op0 = decode_Uo, op1 = decode_Ib, op2 = decode_Ib ]
   Ux_Ib: [ last_len, op0 = decode_Ux, move_decode_offset(next_operand), op1 = decode_Ib ]
   Vo_Edb_Ib: [ op0 = decode_Vo, op1 = decode_Edb, op2 = decode_Ib ]
+  Vo_Ed: [ op0 = decode_Vo, op1 = decode_Ed ]
   Vo_Ey: [ op0 = decode_Vo, op1 = decode_Ey ]
   Vo_Ey_Ib: [ op0 = decode_Vo, op1 = decode_Ey, op2 = decode_Ib ]
   Vo_Ho_Edb_Ib: [ op0 = decode_Vo, op1 = decode_Ho, op2 = decode_Edb, op3 = decode_Ib ]
