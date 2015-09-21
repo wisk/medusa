@@ -22,7 +22,7 @@ public:
 
   medusa::Database::SPType           GetSelectedDatabase(void) const;
   medusa::Loader::SPType             GetSelectedLoader(void) const;
-  medusa::Architecture::VSPType GetSelectedArchitectures(void) const;
+  medusa::Architecture::VSPType      GetSelectedArchitectures(void) const;
   medusa::OperatingSystem::SPType    GetSelectedOperatingSystem(void) const;
 
 protected slots:
@@ -42,14 +42,12 @@ private:
   void _DisplayConfigurationOptions(medusa::ConfigurationModel& rConfigurationModel);
   void _ClearOptions(void);
 
-  medusa::BinaryStream::SPType       m_spBinaryStream;
-  medusa::Database::SPType           m_spDatabase;
-  medusa::Loader::SPType             m_spLoader;
-  medusa::Architecture::VSPType m_spArchitectures;
-  medusa::OperatingSystem::SPType    m_spOpratingSystem;
+  medusa::BinaryStream::SPType          m_spBinaryStream;
+  medusa::Database::SPType              m_spDatabase;
+  medusa::Loader::SPType                m_spLoader;
+  medusa::Architecture::VSPType         m_spArchitectures;
+  medusa::OperatingSystem::SPType       m_spOpratingSystem;
   QLineEdit*                            m_pModulePathWidget;
-  QString                               m_ModulePath;
-
 
   class ConfigurationVisitor : public boost::static_visitor<>
   {

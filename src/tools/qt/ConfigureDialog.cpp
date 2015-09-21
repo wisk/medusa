@@ -19,7 +19,6 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SPType 
   , m_spArchitectures()
   , m_spOpratingSystem()
   , m_pModulePathWidget(nullptr)
-  , m_ModulePath(".")
 {
   setupUi(this);
 
@@ -216,18 +215,20 @@ void ConfigureDialog::_AddTreeChild(QTreeWidgetItem* pParent, QString const& rIc
 void ConfigureDialog::_DisplayDocumentOptions(void)
 {
   auto& rModMgr = medusa::ModuleManager::Instance();
+  medusa::UserConfiguration UserCfg;
 
   auto pModPathLayout = new QHBoxLayout;
   pModPathLayout->addWidget(new QLabel("Module path"));
-  m_pModulePathWidget = new QLineEdit(m_ModulePath);
+  m_pModulePathWidget = new QLineEdit(UserCfg.GetOption("core.module_path").c_str());
   pModPathLayout->addWidget(m_pModulePathWidget);
   auto pToolBtn = new QToolButton;
   connect(pToolBtn, &QToolButton::clicked, [&](bool Clicked)
   {
-    m_ModulePath = QFileDialog::getExistingDirectory(this, "Select module directory");
-    if (m_ModulePath.isEmpty())
-      m_ModulePath = ".";
-    m_pModulePathWidget->setText(m_ModulePath);
+    auto ModulePath = QFileDialog::getExistingDirectory(this, "Select module directory");
+    if (ModulePath.isEmpty())
+      ModulePath = ".";
+    m_pModulePathWidget->setText(ModulePath);
+    UserCfg.SetOption("core.module_path", ModulePath.toStdString());
   });
   pModPathLayout->addWidget(pToolBtn);
   ConfigurationLayout->addLayout(pModPathLayout);
