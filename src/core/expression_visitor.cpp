@@ -1291,9 +1291,26 @@ std::string SymbolicVisitor::ToString(void) const
   return oss.str();
 }
 
-void SymbolicVisitor::BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr)
+bool SymbolicVisitor::BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate)
 {
   m_SymCtxt[spKeyExpr] = spValueExpr;
+
+  if (!Propagate)
+    return true;
+
+  bool Res = false;
+  for (auto const& rSymPair : m_SymCtxt)
+  {
+    auto spClonedExpr = rSymPair.second->Clone();
+
+    if (!spClonedExpr->UpdateChild(spKeyExpr, spValueExpr))
+      continue;
+
+    Res = true;
+    m_SymCtxt[rSymPair.first] = spClonedExpr;
+  }
+
+  return Res;
 }
 
 bool SymbolicVisitor::UpdateAddress(Architecture& rArch, Address const& rAddr)

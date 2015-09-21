@@ -692,7 +692,7 @@ public:
   virtual Expression::SPType Clone(void) const;
   virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor *pVisitor);
-  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
   virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Type GetType(void) const { return m_Type; }

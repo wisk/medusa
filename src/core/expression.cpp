@@ -1393,6 +1393,17 @@ Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
   return pVisitor->VisitSymbolic(std::static_pointer_cast<SymbolicExpression>(shared_from_this()));
 }
 
+bool SymbolicExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
+{
+  if (m_spExpr->Compare(spOldExpr) == Expression::CmpIdentical)
+  {
+    m_spExpr = spNewExpr;
+    return true;
+  }
+
+  return m_spExpr->UpdateChild(spOldExpr, spNewExpr);
+}
+
 Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) const
 {
   auto spCmpExpr = expr_cast<SymbolicExpression>(spExpr);

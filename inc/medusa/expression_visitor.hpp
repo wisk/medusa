@@ -134,7 +134,7 @@ public:
   Expression::SPType  FindExpression(Expression::SPType spExpr);
 
   std::string ToString(void) const;
-  void BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr);
+  bool BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate = false);
   bool UpdateAddress(Architecture& rArch, Address const& rAddr);
 
   typedef std::function<bool(Expression::SPType& rspExpr)> Updater;

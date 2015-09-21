@@ -325,6 +325,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 
   auto pCpuInfo = spArch->GetCpuInformation();
   auto EIP = pCpuInfo->ConvertNameToIdentifier("eip");
+  auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
   BOOST_REQUIRE(EIP != 0);
   auto spExpr = SymVst.FindExpression(Expr::MakeId(EIP, pCpuInfo));
   BOOST_REQUIRE(spExpr != nullptr);
@@ -382,7 +383,6 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 
   std::cout << spExpr->ToString() << std::endl;
 
-  std::cout << std::string(80, '#') << std::endl;
 
   SymVst.UpdateExpression(Expr::MakeId(EIP, pCpuInfo), [&](Expression::SPType& rspExpr)
   {
@@ -390,6 +390,11 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
     ER.Execute();
     return true;
   });
+
+  std::cout << SymVst.ToString() << std::endl;
+  std::cout << std::string(80, '#') << std::endl;
+
+  SymVst.BindExpression(Expr::MakeId(EAX, pCpuInfo), Expr::MakeBitVector(BitVector(32, 0x0)), true);
 
   std::cout << SymVst.ToString() << std::endl;
   std::cout << std::string(80, '#') << std::endl;
