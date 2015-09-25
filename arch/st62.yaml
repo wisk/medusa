@@ -139,6 +139,8 @@ instruction:
 
     - opcode: 0x04
       mnemonic: nop
+      semantic: |
+        program.id = program.id
 
     - opcode: 0x05
       reference: table_5

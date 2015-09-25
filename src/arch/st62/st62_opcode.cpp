@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Sep 12 13:52:18 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 25 14:30:07 2015) */
 #include "st62_architecture.hpp"
 const char *St62Architecture::m_Mnemonic[0x1e] =
 {
@@ -353,11 +353,22 @@ bool St62Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, 
 /** instruction
  * mnemonic: nop
  * opcode: 04
+ * semantic: program.id = program.id
+
 **/
 bool St62Architecture::Table_1_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Length()++;
     rInsn.SetOpcode(ST62_Opcode_Nop);
+    {
+      Expression::LSPType AllExpr;
+      /* semantic: program.id = program.id
+       */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
+        Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
+      rInsn.SetSemantic(AllExpr);
+    }
     return true;
 }
 
