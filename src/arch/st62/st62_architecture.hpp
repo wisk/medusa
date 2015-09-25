@@ -39,7 +39,7 @@ private:
   class St62CpuContext : public CpuContext
   {
   public:
-    St62CpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    St62CpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); memset(&m_Context.Stk, 0xFF, sizeof(m_Context.Stk));}
     virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
     virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
     virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
