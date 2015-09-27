@@ -1,5 +1,6 @@
-#include "medusa/expression_visitor.hpp"
 #include "medusa/bits.hpp"
+#include "medusa/expression_visitor.hpp"
+#include "medusa/expression_filter.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -13,6 +14,13 @@ Expression::SPType ExpressionVisitor::VisitBind(BindExpression::SPType spBindExp
   auto& rExprs = spBindExpr->GetBoundExpressions();
   for (auto pExpr : rExprs)
     pExpr->Visit(this);
+  return nullptr;
+}
+
+Expression::SPType ExpressionVisitor::VisitCondition(ConditionExpression::SPType spCondExpr)
+{
+  spCondExpr->GetReferenceExpression()->Visit(this);
+  spCondExpr->GetTestExpression()->Visit(this);
   return nullptr;
 }
 
@@ -114,6 +122,14 @@ Expression::SPType CloneVisitor::VisitBind(BindExpression::SPType spBindExpr)
     Exprs.push_back(spExpr->Visit(this));
 
   return Expr::MakeBind(Exprs);
+}
+
+Expression::SPType CloneVisitor::VisitCondition(ConditionExpression::SPType spCondExpr)
+{
+  return Expr::MakeCond(
+    spCondExpr->GetType(),
+    spCondExpr->GetReferenceExpression()->Visit(this),
+    spCondExpr->GetTestExpression()->Visit(this));
 }
 
 Expression::SPType CloneVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
@@ -243,6 +259,20 @@ Expression::SPType FilterVisitor::VisitBind(BindExpression::SPType spBindExpr)
       return nullptr;
   }
 
+  return nullptr;
+}
+
+Expression::SPType FilterVisitor::VisitCondition(ConditionExpression::SPType spCondExpr)
+{
+  _Evaluate(spCondExpr);
+  if (_IsDone())
+    return nullptr;
+
+  spCondExpr->GetReferenceExpression()->Visit(this);
+  if (_IsDone())
+    return nullptr;
+
+  spCondExpr->GetTestExpression()->Visit(this);
   return nullptr;
 }
 
@@ -823,6 +853,11 @@ Expression::SPType SymbolicVisitor::VisitBind(BindExpression::SPType spBindExpr)
   return nullptr;
 }
 
+Expression::SPType SymbolicVisitor::VisitCondition(ConditionExpression::SPType spCondExpr)
+{
+  return nullptr;
+}
+
 Expression::SPType SymbolicVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
   bool OldUpdateState = m_Update;
@@ -1279,6 +1314,14 @@ std::string SymbolicVisitor::ToString(void) const
 {
   static const std::string s_Sep(80, '_');
   std::ostringstream oss;
+  oss << "condition:" << std::endl;
+  for (auto spCond : m_SymCond)
+  {
+    oss << spCond->ToString() << std::endl;
+  }
+  oss << std::endl;
+
+  oss << "context:" << std::endl;
   for (auto const& rSymPair : m_SymCtxt)
   {
     oss << rSymPair.first->ToString() << " = ";
@@ -1323,8 +1366,46 @@ bool SymbolicVisitor::UpdateAddress(Architecture& rArch, Address const& rAddr)
   {
     return false;
   }
+
+  // Get PC register
+  auto const pCpuInfo = rArch.GetCpuInformation();
+  auto PcId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, spInsn->GetMode());
+  if (PcId == 0)
+    return false;
+
+  // If the user makes assumption, we need to store the condition
+  for (auto const& rSymPair : m_SymCtxt)
+  {
+    auto spDstIdExpr = expr_cast<IdentifierExpression>(rSymPair.first);
+    if (spDstIdExpr == nullptr)
+      continue;
+    if (spDstIdExpr->GetId() != PcId)
+      continue;
+    auto spTernExpr = expr_cast<TernaryConditionExpression>(rSymPair.second);
+    if (spTernExpr == nullptr)
+      continue;
+
+    // NOTE(wisk): Usually conditional branch where ``true'' part is the new address
+    // At this time, we don't support conditional branch with known register
+    auto spTrueVal = expr_cast<BitVectorExpression>(spTernExpr->GetTrueExpression());
+    if (spTrueVal == nullptr)
+      continue;
+    auto spFalseId = expr_cast<IdentifierExpression>(spTernExpr->GetFalseExpression());
+    if (spFalseId == nullptr)
+      continue;
+    if (spFalseId->GetId() != PcId)
+      continue;
+
+    auto Cond = spTrueVal->GetInt().ConvertTo<u64>() == m_CurAddr.GetOffset() ? spTernExpr->GetCondition() : spTernExpr->GetOppositeCondition();
+    auto spCondExpr = Expr::MakeCond(Cond, spTernExpr->GetReferenceExpression(), spTernExpr->GetTestExpression());
+    m_SymCond.push_back(spCondExpr);
+    break;
+  }
+
+  // Update PC address
   auto ExecAddr = rArch.CurrentAddress(rAddr, *spInsn);
   Expression::VSPType SetCurAddrExprs;
+
   if (!rArch.EmitSetExecutionAddress(SetCurAddrExprs, ExecAddr, m_Mode))
   {
     return false;
@@ -1351,6 +1432,54 @@ bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVis
     }
   }
   return false;
+}
+
+bool SymbolicVisitor::FindAllPaths(Architecture& rArch, SymbolicVisitor::DestinationPathCallbackType DstPathCb)
+{
+  auto const pCpuInfo = rArch.GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return false;
+
+  auto PcId = pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister,  m_rDoc.GetMode(m_CurAddr));
+  if (PcId == 0)
+    return false;
+
+  auto PcExpr = FindExpression(Expr::MakeId(PcId, pCpuInfo));
+  if (PcExpr == nullptr)
+    return false;
+
+  // Is it a simple branch to a register?
+  auto spIdDst = expr_cast<IdentifierExpression>(PcExpr);
+  if (spIdDst != nullptr)
+  {
+
+  }
+
+  // Is it a branch table (switch)
+  auto spMemDst = expr_cast<MemoryExpression>(PcExpr);
+  if (spMemDst != nullptr)
+  {
+    using namespace Pattern;
+    ExpressionFilter ExprFlt_JmpTbl(Memory(
+      ADD(
+      /**/MUL(Any("idx"), Any("ptr_sz")),
+      /**/Any("tbl_addr"))));
+
+    if (!ExprFlt_JmpTbl.Execute(spMemDst))
+      return false;
+    auto spIdxExpr     = ExprFlt_JmpTbl.GetExpression("idx");
+    auto spPtrSzExpr   = expr_cast<BitVectorExpression>(ExprFlt_JmpTbl.GetExpression("ptr_sz"));
+    auto spTblAddrExpr = expr_cast<BitVectorExpression>(ExprFlt_JmpTbl.GetExpression("tbl_addr"));
+
+    if (spIdxExpr == nullptr || spPtrSzExpr == nullptr || spTblAddrExpr == nullptr)
+      return false;
+
+    Log::Write("core") << "idx: " << spIdxExpr->ToString() << ", ptr_sz: " << spPtrSzExpr->ToString() << ", tbl_addr: " << spTblAddrExpr->ToString() << LogEnd;
+
+    // TODO(wisk): complete this function...
+  }
+
+  return true;
 }
 
 Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)

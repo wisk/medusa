@@ -95,6 +95,74 @@ namespace medusa
       Type m_Callback;
     };
 
+    class Medusa_EXPORT Memory : public ExpressionPattern
+    {
+    public:
+      Memory(ExpressionPattern::SPType spOffsetPattern)
+        : m_spOffsetPattern(spOffsetPattern) {}
+      Memory(ExpressionPattern::SPType spBasePattern, ExpressionPattern::SPType spOffsetPattern)
+        : m_spBasePattern(spBasePattern), m_spOffsetPattern(spOffsetPattern) {}
+
+      Memory(std::string const& rPatternName, ExpressionPattern::SPType spOffsetPattern)
+        : ExpressionPattern(rPatternName), m_spOffsetPattern(spOffsetPattern) {}
+      Memory(std::string const& rPatternName, ExpressionPattern::SPType spBasePattern, ExpressionPattern::SPType spOffsetPattern)
+        : ExpressionPattern(rPatternName), m_spOffsetPattern(spOffsetPattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spMemExpr = expr_cast<MemoryExpression>(spExpr);
+        if (spMemExpr == nullptr)
+          return false;
+
+        if (m_spBasePattern != nullptr && spMemExpr->GetBaseExpression() != nullptr)
+          if (!m_spBasePattern->Filter(rNamedExprs, spMemExpr->GetBaseExpression()))
+            return false;
+
+        if (!m_spOffsetPattern->Filter(rNamedExprs, spMemExpr->GetOffsetExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<Memory>(m_PatternName, m_spBasePattern, m_spOffsetPattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spBasePattern, m_spOffsetPattern;
+    };
+
+    template<unsigned Op>
+    class AnyUnary : public ExpressionPattern
+    {
+    public:
+      AnyUnary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
+      AnyUnary(std::string const& rPatternName, ExpressionPattern::SPType spPattern) : ExpressionPattern(rPatternName), m_spPattern(spPattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spUnOpExpr = expr_cast<UnaryOperationExpression>(spExpr);
+        if (spUnOpExpr == nullptr)
+          return false;
+
+        if (!m_spPattern->Filter(rNamedExprs, spUnOpExpr->GetExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<AnyUnary>(m_PatternName, m_spPattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spPattern;
+    };
+
     template<unsigned Op>
     class Unary : public ExpressionPattern
     {
@@ -132,6 +200,39 @@ namespace medusa
     EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpSwap>, SWAP); // byte swap
     EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsf>,  BSF);  // bit scan forward
     EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsr>,  BSR);  // bit scan reverse
+
+    template<unsigned Op>
+    class AnyBinary : public ExpressionPattern
+    {
+    public:
+      AnyBinary(ExpressionPattern::SPType spLeftPattern, ExpressionPattern::SPType spRightPattern)
+        : m_spLeftPattern(spLeftPattern), m_spRightPattern(spRightPattern) {}
+      AnyBinary(std::string const& rPatternName, ExpressionPattern::SPType spLeftPattern, ExpressionPattern::SPType spRightPattern)
+        : ExpressionPattern(rPatternName), m_spLeftPattern(spLeftPattern), m_spRightPattern(spRightPattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spBinOpExpr = expr_cast<BinaryOperationExpression>(spExpr);
+        if (spBinOpExpr == nullptr)
+          return false;
+
+        if (!m_spLeftPattern->Filter(rNamedExprs, spBinOpExpr->GetLeftExpression()))
+          return false;
+        if (!m_spRightPattern->Filter(rNamedExprs, spBinOpExpr->GetRightExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<AnyBinary>(m_PatternName, m_spLeftPattern, m_spRightPattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spLeftPattern, m_spRightPattern;
+    };
 
     template<unsigned Op>
     class Binary : public ExpressionPattern
@@ -189,6 +290,35 @@ namespace medusa
     EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpInsertBits>,  INSERT_BITS);
     EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpExtractBits>, EXTRACT_BITS);
     EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpBcast>,       BCAST); /* Bit Cast */
+
+    class AnyCondition : public ExpressionPattern
+    {
+    public:
+      AnyCondition(ExpressionPattern::SPType spRefPattern, ExpressionPattern::SPType spTestPattern)
+        : m_spRefPattern(spRefPattern), m_spTestPattern(spTestPattern) {}
+      AnyCondition(std::string const& rPatternName, ExpressionPattern::SPType spRefPattern, ExpressionPattern::SPType spTestPattern)
+        : ExpressionPattern(rPatternName), m_spRefPattern(spRefPattern), m_spTestPattern(spTestPattern) {}
+
+      virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
+      {
+        auto spCondExpr = expr_cast<ConditionExpression>(spExpr);
+        if (!m_spRefPattern->Filter(rNamedExprs, spCondExpr->GetReferenceExpression()))
+          return false;
+        if (!m_spTestPattern->Filter(rNamedExprs, spCondExpr->GetTestExpression()))
+          return false;
+
+        _CaptureExpressionIfNeeded(rNamedExprs, spExpr);
+        return true;
+      }
+
+      operator SPType(void)
+      {
+        return std::make_shared<AnyCondition>(m_PatternName, m_spRefPattern, m_spTestPattern);
+      }
+
+    private:
+      ExpressionPattern::SPType m_spRefPattern, m_spTestPattern;
+    };
 
     template<unsigned Cond>
     class Condition : public ExpressionPattern
@@ -268,7 +398,7 @@ namespace medusa
     };
 
 #undef EXPORT_TEMPLATE_PATTERN
-  }
+  } // namespace Pattern
 }
 
 #endif // !MEDUSA_EXPRESSION_FILTER_HPP

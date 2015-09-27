@@ -12,6 +12,7 @@ class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
 public:
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
   virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
@@ -35,6 +36,7 @@ public:
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
   virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
@@ -111,6 +113,7 @@ public:
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
   virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
@@ -140,6 +143,9 @@ public:
   typedef std::function<bool(Expression::SPType& rspExpr)> Updater;
   bool UpdateExpression(Expression::SPType spKeyExpr, Updater updt);
 
+  typedef std::function<void(Address const& rDstAddr, Expression::SPType& rspAssumExpr)> DestinationPathCallbackType;
+  bool FindAllPaths(Architecture& rArch, DestinationPathCallbackType DstPathCb);
+
 protected:
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
@@ -147,8 +153,9 @@ protected:
   Document const&                   m_rDoc;
   u8                                m_Mode;
   SymbolicContextType               m_SymCtxt;
+  Expression::VSPType               m_SymCond;            // This field contains assumption needed for symbolic context to be valid.
   std::set<std::string>             m_VarPool;
-  IfElseConditionExpression::SPType m_spCond;
+  IfElseConditionExpression::SPType m_spCond;             // Used to transformed IfElseExpr to TernExpr when possible.
   bool                              m_IsSymbolic;
   bool                              m_IsRelative;
   bool                              m_IsMemoryReference;

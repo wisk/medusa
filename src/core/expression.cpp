@@ -159,6 +159,39 @@ std::string ConditionExpression::ToString(void) const
   return (boost::format("(%1% %2% %3%)") % m_spRefExpr->ToString() % s_StrCond[m_Type] % m_spTestExpr->ToString()).str();
 }
 
+Expression::SPType ConditionExpression::Clone(void) const
+{
+  return Expr::MakeCond(m_Type, m_spRefExpr, m_spTestExpr);
+}
+
+Expression::SPType ConditionExpression::Visit(ExpressionVisitor* pVisitor)
+{
+  return pVisitor->VisitCondition(std::static_pointer_cast<ConditionExpression>(shared_from_this()));
+}
+
+bool ConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
+{
+  if (m_spRefExpr == spOldExpr)
+  {
+    m_spRefExpr = spNewExpr;
+    return true;
+  }
+
+  if (m_spTestExpr == spOldExpr)
+  {
+    m_spTestExpr = spNewExpr;
+    return true;
+  }
+
+  if (m_spRefExpr->UpdateChild(spOldExpr, spNewExpr))
+    return true;
+
+  if (m_spTestExpr->UpdateChild(spOldExpr, spNewExpr))
+    return true;
+
+  return false;
+}
+
 Expression::CompareType ConditionExpression::Compare(Expression::SPType spExpr) const
 {
   auto spCmpExpr = expr_cast<ConditionExpression>(spExpr);
@@ -172,6 +205,25 @@ Expression::CompareType ConditionExpression::Compare(Expression::SPType spExpr) 
   if (m_spTestExpr->Compare(spCmpExpr->GetTestExpression()) != CmpIdentical)
     return CmpSameExpression;
   return CmpIdentical;
+}
+
+ConditionExpression::Type ConditionExpression::GetOppositeCondition(void) const
+{
+  switch (m_Type)
+  {
+  default:
+  case CondUnk: return CondUnk;
+  case CondEq:  return CondNe;
+  case CondNe:  return CondEq;
+  case CondUgt: return CondUle;
+  case CondUge: return CondUlt;
+  case CondUlt: return CondUge;
+  case CondUle: return CondUgt;
+  case CondSgt: return CondSle;
+  case CondSge: return CondSlt;
+  case CondSlt: return CondSge;
+  case CondSle: return CondSgt;
+  }
 }
 
 TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)
@@ -701,7 +753,7 @@ BitVectorExpression::BitVectorExpression(BitVector const& rValue)
 
 std::string BitVectorExpression::ToString(void) const
 {
-  std::string Res("int");
+  std::string Res("bv");
   Res += std::to_string(m_Value.GetBitSize());
   Res += "(";
   Res += m_Value.ToString();
@@ -1460,6 +1512,11 @@ Expression::SPType Expr::MakeMem(u32 AccessSize, Expression::SPType spExprBase, 
 Expression::SPType Expr::MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize)
 {
   return std::make_shared<VariableExpression>(rName, Act, BitSize);
+}
+
+Expression::SPType Expr::MakeCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr)
+{
+  return std::make_shared<ConditionExpression>(CondType, spRefExpr, spTestExpr);
 }
 
 Expression::SPType Expr::MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)

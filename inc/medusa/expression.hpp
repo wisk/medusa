@@ -199,12 +199,15 @@ public:
   virtual ~ConditionExpression(void);
 
   virtual std::string ToString(void) const;
-  virtual Expression::SPType Clone(void) const { return nullptr; }
+  virtual Expression::SPType Clone(void) const;
   virtual u32 GetBitSize(void) const { return 0; }
-  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
+  virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
+  virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
   virtual CompareType Compare(Expression::SPType spExpr) const;
 
   Type GetType(void) const { return m_Type; }
+  Type GetCondition(void) const { return m_Type; }
+  Type GetOppositeCondition(void) const;
   Expression::SPType GetReferenceExpression(void) const { return m_spRefExpr; }
   Expression::SPType GetTestExpression(void) const { return m_spTestExpr; }
 
@@ -714,6 +717,7 @@ class Medusa_EXPORT ExpressionVisitor
 public:
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
   virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
@@ -742,6 +746,7 @@ namespace Expr
   Medusa_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
   Medusa_EXPORT Expression::SPType MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize = 0);
 
+  Medusa_EXPORT Expression::SPType MakeCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr);
   Medusa_EXPORT Expression::SPType MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
   Medusa_EXPORT Expression::SPType MakeIfElseCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr);
   Medusa_EXPORT Expression::SPType MakeWhileCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr);

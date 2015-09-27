@@ -394,13 +394,13 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
   std::cout << SymVst.ToString() << std::endl;
   std::cout << std::string(80, '#') << std::endl;
 
-  SymVst.BindExpression(Expr::MakeId(EAX, pCpuInfo), Expr::MakeBitVector(BitVector(32, 0x0)), true);
-
-  std::cout << SymVst.ToString() << std::endl;
-  std::cout << std::string(80, '#') << std::endl;
-
   SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
   std::cout << SymVst.ToString() << std::endl;
+
+  BOOST_REQUIRE(SymVst.FindAllPaths(*spArch, [&](Address const& rDstAddr, Expression::SPType spExpr)
+  {
+    std::cout << "DST: " << rDstAddr << ", EXPR: " << spExpr->ToString() << std::endl;
+  }));
 }
 
 //BOOST_AUTO_TEST_CASE(expr_tostr)
