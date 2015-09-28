@@ -47,7 +47,7 @@ private:
   class X86CpuContext : public CpuContext
   {
   public:
-    X86CpuContext(u8 Bits, CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo), m_Bits(Bits) { memset(&m_Context, 0x0, sizeof(m_Context)); }
+    X86CpuContext(u8 Bits, CpuInformation const& rCpuInfo);
     virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
     virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
     virtual void* GetRegisterAddress(u32 Register);

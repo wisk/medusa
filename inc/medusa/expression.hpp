@@ -325,29 +325,38 @@ public:
     OpBsf,  // bit scan forward
     OpBsr,  // bit scan reverse
 
+    // Unary floating point operations
+    OpFNeg,
+
     // Binary operations
-    OpXchg, // exchange
     OpAnd,
     OpOr,
     OpXor,
-    OpLls, /* Logical Left Shift */
-    OpLrs, /* Logical Right Shift */
-    OpArs, /* Arithmetic Right Shift */
-    OpRol, /* Logical Left Rotate */
-    OpRor, /* Logical Right Rotate */
+    OpLls,         /* Logical Left Shift     */
+    OpLrs,         /* Logical Right Shift    */
+    OpArs,         /* Arithmetic Right Shift */
+    OpRol,         /* Logical Left Rotate    */
+    OpRor,         /* Logical Right Rotate   */
     OpAdd,
-    OpAddFloat,
     OpSub,
     OpMul,
     OpSDiv,
     OpUDiv,
     OpSMod,
     OpUMod,
-    OpSext, /* Sign Extend */
-    OpZext, /* Zero Extend */
-    OpInsertBits,
-    OpExtractBits,
-    OpBcast, /* Bit Cast */
+    OpSext,        /* Sign Extend */
+    OpZext,        /* Zero Extend */
+    OpInsertBits,  /* Insert bits  e.g. insert_bits (0x0000bbcc, 0x00ffff00) = 0x00bbcc00 */
+    OpExtractBits, /* Extract bits e.g. extract_bits(0xaabbccdd, 0x00ffff00) = 0x0000bbcc */
+    OpClearBits,   /* Clear bits   e.g. clear_bits  (0xaabbccdd, 0xff0000ff) = 0x00bbdd00 */
+    OpBcast,       /* Bit Cast */
+
+    // Binary floating point operations
+    OpFAdd,
+    OpFSub,
+    OpFMul,
+    OpFDiv,
+    OpFMod,
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new

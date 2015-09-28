@@ -161,7 +161,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       auto const& rCurInsnSem = rCurInsn.GetSemantic();
       if (rCurInsnSem.empty())
       {
-        Log::Write("emul_llvm").Level(LogError) << "failed to find instruction semantic at " << ExecAddr << LogEnd;
+        Log::Write("emul_llvm").Level(LogError) << "failed to find instruction semantic at " << rInsnAddr << LogEnd;
         Log::Write("emul_llvm").Level(LogError) << "details: " << rCurInsn.ToString() << LogEnd;
         Exprs.clear();
         return false;
@@ -175,7 +175,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
           // Don't bother to continue if a "stop" is asked
           if (rSysName == "stop")
           {
-            Log::Write("emul_llvm").Level(LogWarning) << "stop asked" << LogEnd;
+            Log::Write("emul_llvm").Level(LogWarning) << "stop asked at " << rInsnAddr << LogEnd;
             Exprs.clear();
             return false;
           }
@@ -614,8 +614,38 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBind(BindExpression
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr)
 {
-  Log::Write("emul_llvm").Level(LogError) << "ternary cond not supported" << LogEnd;
-  return nullptr;
+  // _Emit test and ref
+  State OldState = m_State;
+  m_State = Read;
+  auto spRefExpr = spTernExpr->GetReferenceExpression()->Visit(this);
+  auto spTestExpr = spTernExpr->GetTestExpression()->Visit(this);
+
+  // Emit the condition
+  auto pCondVal = _EmitComparison(spTernExpr->GetType(), "emit_tern_cmp");
+  if (pCondVal == nullptr)
+    return nullptr;
+
+  auto spTrueExpr = spTernExpr->GetTrueExpression();
+  if (spTrueExpr->Visit(this) == nullptr)
+    return nullptr;
+  if (m_ValueStack.size() < 1)
+    return nullptr;
+  auto pTrueVal = m_ValueStack.top();
+  m_ValueStack.pop();
+
+  auto spFalseExpr = spTernExpr->GetFalseExpression();
+  if (spFalseExpr->Visit(this) == nullptr)
+    return nullptr;
+  if (m_ValueStack.size() < 1)
+    return nullptr;
+  auto pFalseVal = m_ValueStack.top();
+  m_ValueStack.pop();
+
+  m_State = OldState;
+
+  auto pTernVal = m_rBuilder.CreateSelect(pCondVal, pTrueVal, pFalseVal, "tern");
+  m_ValueStack.push(pTernVal);
+  return spTernExpr;
 }
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
@@ -753,6 +783,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
   switch (spUnOpExpr->GetOperation())
   {
   default:
+    Log::Write("emul_llvm") << "unhandled unary operation for " << spUnOpExpr->ToString() << LogEnd;
     return nullptr;
 
     case OperationExpression::OpNot:
@@ -794,12 +825,6 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitUnaryOperation(Unar
 
 Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
-  {
-    Log::Write("emul_llvm") << "operation exchange is deprecated" << LogEnd;
-    return nullptr;
-  }
-
   auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
   auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
 
@@ -815,10 +840,12 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
   m_ValueStack.pop();
 
   llvm::Value* pBinOpVal = nullptr;
+  auto BinOp = spBinOpExpr->GetOperation();
 
-  switch (spBinOpExpr->GetOperation())
+  switch (BinOp)
   {
   default:
+    Log::Write("emul_llvm") << "unhandled binary operation for " << spBinOpExpr->ToString() << LogEnd;
     return nullptr;
 
   case OperationExpression::OpAnd:
@@ -912,7 +939,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpBcast:
-      pBinOpVal = m_rBuilder.CreateZExtOrTrunc(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
+    pBinOpVal = m_rBuilder.CreateZExtOrTrunc(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "bcast");
     break;
 
   case OperationExpression::OpInsertBits:
@@ -938,10 +965,28 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     pBinOpVal = m_rBuilder.CreateLShr(pMaskedVal, pShift, "extract_bits1");
     break;
   }
+
+  case OperationExpression::OpClearBits:
+  {
+    pBinOpVal = m_rBuilder.CreateAnd(LeftVal, m_rBuilder.CreateNot(RightVal), "clear_bits");
+    break;
+  }
+
+  case OperationExpression::OpFAdd:
+  case OperationExpression::OpFSub:
+  case OperationExpression::OpFMul:
+  case OperationExpression::OpFDiv:
+  case OperationExpression::OpFMod:
+    pBinOpVal = _EmitFloatingPointBinaryOperation(static_cast<OperationExpression::Type>(BinOp), LeftVal, RightVal);
+    break;
   }
 
   if (pBinOpVal == nullptr)
+  {
+    Log::Write("emul_llvm").Level(LogError) << "failed to emit expression: " << spBinOpExpr->ToString() << LogEnd;
     return nullptr;
+  }
+
   m_ValueStack.push(pBinOpVal);
   return spBinOpExpr;
 }
@@ -1396,4 +1441,53 @@ void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal
   m_rBuilder.CreateRet(pRetVal);
 
   m_rBuilder.SetInsertPoint(pBbCont);
+}
+
+llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitFloatingPointBinaryOperation(OperationExpression::Type FOpType, llvm::Value* pLeftVal, llvm::Value* pRightVal) const
+{
+  auto pLeftType = pLeftVal->getType();
+  auto LeftBits = pLeftType->getScalarSizeInBits();
+  auto pRightType = pRightVal->getType();
+  auto RightBits = pRightType->getScalarSizeInBits();
+
+  if (LeftBits != RightBits)
+  {
+    Log::Write("emul_llvm").Level(LogError) << "mismatch type for floating point operations" << LogEnd;
+    return nullptr;
+  }
+
+  llvm::Type* pFloatType = nullptr;
+  switch (LeftBits)
+  {
+  case 32:
+    pFloatType = llvm::Type::getFloatTy(llvm::getGlobalContext());
+    break;
+
+  case 64:
+    pFloatType = llvm::Type::getDoubleTy(llvm::getGlobalContext());
+    break;
+
+  default:
+    Log::Write("emul_llvm").Level(LogError) << "unhandle floating point size: " << LeftBits << LogEnd;
+    return nullptr;
+  }
+
+  auto pLeftFloat  = m_rBuilder.CreateCast(llvm::Instruction::BitCast, pLeftVal, pFloatType, "leftval_to_flp");
+  auto pRightFloat = m_rBuilder.CreateCast(llvm::Instruction::BitCast, pRightVal, pFloatType, "rightval_to_flp");
+
+  llvm::Value* pFloatOpVal = nullptr;
+  switch (FOpType)
+  {
+  case OperationExpression::OpFAdd: pFloatOpVal = m_rBuilder.CreateFAdd(pLeftFloat, pRightFloat, "fadd"); break;
+  case OperationExpression::OpFSub: pFloatOpVal = m_rBuilder.CreateFSub(pLeftFloat, pRightFloat, "fsub"); break;
+  case OperationExpression::OpFMul: pFloatOpVal = m_rBuilder.CreateFMul(pLeftFloat, pRightFloat, "fmul"); break;
+  case OperationExpression::OpFDiv: pFloatOpVal = m_rBuilder.CreateFDiv(pLeftFloat, pRightFloat, "fdiv"); break;
+  case OperationExpression::OpFMod: pFloatOpVal = m_rBuilder.CreateFRem(pLeftFloat, pRightFloat, "fmod"); break;
+
+  default:
+    Log::Write("emul_llvm").Level(LogError) << "unhandle floating point operation" << LogEnd;
+    return nullptr;
+  }
+
+  return m_rBuilder.CreateCast(llvm::Instruction::BitCast, pFloatOpVal, pLeftType, "res_to_bv");
 }

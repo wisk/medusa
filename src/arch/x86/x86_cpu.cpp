@@ -14,6 +14,49 @@ void WriteSseRegister(u128& rReg, void const* pVal)
   memcpy(rReg.backend().limbs(), pVal, _BitSize / 8);
 }
 
+X86Architecture::X86CpuContext::X86CpuContext(u8 Bits, CpuInformation const& rCpuInfo)
+  : CpuContext(rCpuInfo), m_Bits(Bits)
+{
+  // GPR
+  m_Context.a.r   = 0x0;
+  m_Context.b.r   = 0x0;
+  m_Context.c.r   = 0x0;
+  m_Context.d.r   = 0x0;
+  m_Context.si.r  = 0x0;
+  m_Context.di.r  = 0x0;
+  m_Context.bp.r  = 0x0;
+  m_Context.sp.r  = 0x0;
+  m_Context.ip.r  = 0x0;
+  m_Context.r8.r  = 0x0;
+  m_Context.r9.r  = 0x0;
+  m_Context.r10.r = 0x0;
+  m_Context.r11.r = 0x0;
+  m_Context.r12.r = 0x0;
+  m_Context.r13.r = 0x0;
+  m_Context.r14.r = 0x0;
+  m_Context.r15.r = 0x0;
+
+  // FLAGS
+  m_Context.CF = false;
+  m_Context.PF = false;
+  m_Context.AF = false;
+  m_Context.ZF = false;
+  m_Context.SF = false;
+  m_Context.TF = false;
+  m_Context.DF = false;
+  m_Context.OF = false;
+  m_Context.IOPL = false;
+  m_Context.NT = false;
+  m_Context.RF = false;
+  m_Context.VM = false;
+  m_Context.AC = false;
+  m_Context.VIF = false;
+  m_Context.ID = false;
+
+  for (auto& rSimdReg : m_Context.xyzmm)
+    rSimdReg = 0;
+}
+
 bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);

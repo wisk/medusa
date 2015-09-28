@@ -553,35 +553,41 @@ std::string OperationExpression::ToString(void) const
   case OpUnk: default: return "???";
 
     // unary
-  case OpNot:  return "~";
-  case OpNeg:  return "-";
-  case OpSwap: return "⇄";
-  case OpBsf:  return "bsf";
-  case OpBsr:  return "bsr";
+  case OpNot:          return "~";
+  case OpNeg:          return "-";
+  case OpSwap:         return "⇄";
+  case OpBsf:          return "bsf";
+  case OpBsr:          return "bsr";
+
+  case OpFNeg:         return "-{f}";
 
     // binary
-  case OpXchg: return "↔";
-  case OpAnd:  return "&";
-  case OpOr:   return "|";
-  case OpXor:  return "^";
-  case OpLls:  return "<<";
-  case OpLrs:  return ">>{u}";
-  case OpArs:  return ">>{s}";
-  case OpRol: return "rol";
-  case OpRor: return "ror";
-  case OpAdd:  return "+";
-  case OpAddFloat:  return "+{f}";
-  case OpSub:  return "-";
-  case OpMul:  return "*";
-  case OpSDiv: return "/{s}";
-  case OpUDiv: return "/{u}";
-  case OpSMod: return "%{s}";
-  case OpUMod: return "%{u}";
-  case OpSext: return "↗{s}";
-  case OpZext: return "↗{z}";
-  case OpInsertBits: return "<insert_bits>";
-  case OpExtractBits: return "<extract_bits>";
-  case OpBcast: return "<bcast>";
+  case OpAnd:          return "&";
+  case OpOr:           return "|";
+  case OpXor:          return "^";
+  case OpLls:          return "<<";
+  case OpLrs:          return ">>{u}";
+  case OpArs:          return ">>{s}";
+  case OpRol:          return "rol";
+  case OpRor:          return "ror";
+  case OpAdd:          return "+";
+  case OpSub:          return "-";
+  case OpMul:          return "*";
+  case OpSDiv:         return "/{s}";
+  case OpUDiv:         return "/{u}";
+  case OpSMod:         return "%{s}";
+  case OpUMod:         return "%{u}";
+  case OpSext:         return "↗{s}";
+  case OpZext:         return "↗{z}";
+  case OpInsertBits:   return "<insert_bits>";
+  case OpExtractBits:  return "<extract_bits>";
+  case OpBcast:        return "<bcast>";
+
+  case OpFAdd:         return "+{f}";
+  case OpFSub:         return "-{f}";
+  case OpFMul:         return "*{f}";
+  case OpFDiv:         return "/{f}";
+  case OpFMod:         return "%{f}";
   }
 }
 

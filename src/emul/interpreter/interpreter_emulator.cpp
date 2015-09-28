@@ -185,8 +185,20 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitAssig
 
   m_State = Read;
   auto spSrc = spAssignExpr->GetSourceExpression()->Visit(this);
+  if (spSrc == nullptr)
+  {
+    m_State = OldState;
+    Log::Write("emul_interpreter").Level(LogError) << "failed to execute source of expression: " << spAssignExpr->ToString() << LogEnd;
+    return nullptr;
+  }
   m_State = Write;
   auto spDst = spAssignExpr->GetDestinationExpression()->Visit(this);
+  if (spDst == nullptr)
+  {
+    m_State = OldState;
+    Log::Write("emul_interpreter").Level(LogError) << "failed to execute destination of expression: " << spAssignExpr->ToString() << LogEnd;
+    return nullptr;
+  }
   m_State = OldState;
 
   if (spDst == nullptr || spSrc == nullptr)
@@ -239,12 +251,6 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitUnary
 
 Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  if (spBinOpExpr->GetOperation() == OperationExpression::OpXchg)
-  {
-    Log::Write("emul_interpreter") << "operation exchange is deprecated" << LogEnd;
-    return nullptr;
-  }
-
   auto spLeft = spBinOpExpr->GetLeftExpression()->Visit(this);
   auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
 
@@ -261,9 +267,6 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 
   switch (spBinOpExpr->GetOperation())
   {
-    case OperationExpression::OpXchg:
-      break;
-
     case OperationExpression::OpAnd:
       m_Values.push_back(LeftVal.And(RightVal));
       break;
@@ -298,10 +301,6 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
 
     case OperationExpression::OpAdd:
       m_Values.push_back(LeftVal.Add(RightVal));
-      break;
-
-    case OperationExpression::OpAddFloat:
-      m_Values.push_back(LeftVal.AddFloat(RightVal));
       break;
 
     case OperationExpression::OpSub:
@@ -352,6 +351,10 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       m_Values.push_back((LeftVal & RightVal) >> RightVal.Lsb());
       break;
 
+    case OperationExpression::OpClearBits:
+      m_Values.push_back(LeftVal & ~RightVal);
+      break;
+
     case OperationExpression::OpBcast:
     {
       auto Result = LeftVal;
@@ -359,6 +362,26 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitBinar
       m_Values.push_back(Result);
       break;
     }
+
+    case OperationExpression::OpFAdd:
+      m_Values.push_back(LeftVal.FAdd(RightVal));
+      break;
+
+    case OperationExpression::OpFSub:
+      m_Values.push_back(LeftVal.FSub(RightVal));
+      break;
+
+    case OperationExpression::OpFMul:
+      m_Values.push_back(LeftVal.FMul(RightVal));
+      break;
+
+    case OperationExpression::OpFDiv:
+      m_Values.push_back(LeftVal.FDiv(RightVal));
+      break;
+
+    case OperationExpression::OpFMod:
+      m_Values.push_back(LeftVal.FMod(RightVal));
+      break;
 
     default:
       Log::Write("emul_interpreter").Level(LogError) << "unknown binary operator" << LogEnd;

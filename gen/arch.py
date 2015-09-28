@@ -537,8 +537,10 @@ class ArchConvertion:
                     return 'Expr::MakeUnOp(OperationExpression::OpBsf, %s)'
                 elif node_name == 'bsr':
                     return 'Expr::MakeUnOp(OperationExpression::OpBsr, %s)'
-                elif node_name == 'sign_extend':
+                elif node_name == 'fneg':
+                    return 'Expr::MakeUnOp(OperationExpression::OpFNeg, %s)'
 
+                elif node_name == 'sign_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpSext, %s, %s)'
                 elif node_name == 'zero_extend':
                     return 'Expr::MakeBinOp(OperationExpression::OpZext, %s, %s)'
@@ -554,6 +556,12 @@ class ArchConvertion:
                     return 'Expr::MakeBinOp(OperationExpression::OpSMod, %s, %s)'
                 elif node_name == 'bit_cast':
                     return 'Expr::MakeBinOp(OperationExpression::OpBcast, %s, %s)'
+                elif node_name == 'insert_bits':
+                    return 'Expr::MakeBinOp(OperationExpression::OpInsertBits, %s, %s)'
+                elif node_name == 'extract_bits':
+                    return 'Expr::MakeBinOp(OperationExpression::OpExtractBits, %s, %s)'
+                elif node_name == 'clear_bits':
+                    return 'Expr::MakeBinOp(OperationExpression::OpClearBits, %s, %s)'
 
                 elif node_name == 'sgt': # s>
                     return 'Expr::MakeBinOp(ConditionExpression::CondSgt, %s, %s)'
@@ -564,8 +572,16 @@ class ArchConvertion:
                 elif node_name == 'sle': # s<=
                     return 'Expr::MakeBinOp(ConditionExpression::CondSle, %s, %s)'
 
-                elif node_name == 'add_float':
-                    return 'Expr::MakeBinOp(OperationExpression::OpAddFloat, %s, %s)'
+                elif node_name == 'fadd':
+                    return 'Expr::MakeBinOp(OperationExpression::OpFAdd, %s, %s)'
+                elif node_name == 'fsub':
+                    return 'Expr::MakeBinOp(OperationExpression::OpFSub, %s, %s)'
+                elif node_name == 'fmul':
+                    return 'Expr::MakeBinOp(OperationExpression::OpFMul, %s, %s)'
+                elif node_name == 'fdiv':
+                    return 'Expr::MakeBinOp(OperationExpression::OpFDiv, %s, %s)'
+                elif node_name == 'fmod':
+                    return 'Expr::MakeBinOp(OperationExpression::OpFMod, %s, %s)'
 
                 # TODO(KS): this code is architecture specific, move it to arch_<arch>.py
                 elif node_name == 'is_byte_operation':

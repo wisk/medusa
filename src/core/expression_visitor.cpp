@@ -672,9 +672,6 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     Result.ZeroExtend(Right.ConvertTo<u16>());
     break;
 
-  case OperationExpression::OpXchg:
-    return nullptr;
-
   case OperationExpression::OpInsertBits:
     Result = ((Left << Right.Lsb()) & Right);
     break;
@@ -1096,9 +1093,6 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
     Result = Left;
     Result.ZeroExtend(Right.ConvertTo<u16>());
     break;
-
-  case OperationExpression::OpXchg:
-    return nullptr;
 
   case OperationExpression::OpInsertBits:
     Result = ((Left << Right.Lsb()) & Right);

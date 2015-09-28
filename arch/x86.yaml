@@ -125,18 +125,16 @@ semantic:
     free_var('res');
 
   addss: &addss |
-    alloc_var('tmp0', 32);
-    alloc_var('tmp1', 32);
-    alloc_var('tmp_val', op0.bit);
-    tmp0.val = bit_cast(op0.val, int_type32);
-    tmp1.val = bit_cast(op1.val, int_type32);
-    tmp_val = op0.val >> int(op0.bit, 32);
-    tmp_val = tmp_val << int(op0.bit, 32);
-    tmp_val += add_float(tmp0.val, tmp1.val);
-    op0.val = tmp_val;
-    free_var('tmp_val');
-    free_var('tmp1');
-    free_var('tmp0');
+    alloc_var('res', 32);
+    res     = fadd(bit_cast(op0.val, int_type32), bit_cast(op1.val, int_type32));
+    op0.val = clear_bits(op0.val, bit_cast(int(op0.bit, 0xffffffff), int_type(op0.bit))) | bit_cast(res, int_type(op0.bit));
+    free_var('res');
+
+  mulss: &mulss |
+    alloc_var('res', 32);
+    res     = fmul(bit_cast(op0.val, int_type32), bit_cast(op1.val, int_type32));
+    op0.val = clear_bits(op0.val, bit_cast(int(op0.bit, 0xffffffff), int_type(op0.bit))) | bit_cast(res, int_type(op0.bit));
+    free_var('res');
 
   aaa: &aaa |
     alloc_var('cond', 1);
@@ -3969,6 +3967,7 @@ instruction:
             operand: [ Vo, Wod ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mulss
 
           - mnemonic: mulsd
             operand: [ Vo, Woq ]

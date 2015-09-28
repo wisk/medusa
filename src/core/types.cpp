@@ -413,31 +413,108 @@ BitVector& BitVector::RorAssign(BitVector const& rVal)
   return *this;
 }
 
-BitVector BitVector::AddFloat(BitVector const& rVal) const
+BitVector BitVector::FAdd(BitVector const& rVal) const
 {
-  if (m_BitSize == 32)
+  switch (m_BitSize)
   {
-    u32 UIntLeft = static_cast<u32>(m_Value);
-    u32 UIntRight = static_cast<u32>(rVal.m_Value);
-    float FloatLeft = *reinterpret_cast<float *>(&UIntLeft);
-    float FloatRight = *reinterpret_cast<float *>(&UIntRight);
-    float Res = FloatLeft + FloatRight;
-    BitVector Tmp(m_BitSize, *reinterpret_cast<u32 *>(&Res));
-    Tmp._Adjust();
-    return Tmp;
+  case 32:
+    return BitVector(ConvertTo<float>() + rVal.ConvertTo<float>());
+  case 64:
+    return BitVector(ConvertTo<double>() + rVal.ConvertTo<double>());
+  default:
+    return *this;
   }
-  else if (m_BitSize == 64)
-  {
-    u64 UIntLeft = static_cast<u64>(m_Value);
-    u64 UIntRight = static_cast<u64>(rVal.m_Value);
-    double FloatLeft = *reinterpret_cast<double *>(&UIntLeft);
-    double FloatRight = *reinterpret_cast<double *>(&UIntRight);
-    double Res = FloatLeft + FloatRight;
-    BitVector Tmp(m_BitSize, *reinterpret_cast<u64 *>(&Res));
-    Tmp._Adjust();
-    return Tmp;
-  }
+}
 
+BitVector& BitVector::FAddAssign(BitVector const& rVal)
+{
+  BitVector Tmp = FAdd(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
+BitVector BitVector::FSub(BitVector const& rVal) const
+{
+  switch (m_BitSize)
+  {
+  case 32:
+    return BitVector(ConvertTo<float>() - rVal.ConvertTo<float>());
+  case 64:
+    return BitVector(ConvertTo<double>() - rVal.ConvertTo<double>());
+  default:
+    return *this;
+  }
+}
+
+BitVector& BitVector::FSubAssign(BitVector const& rVal)
+{
+  BitVector Tmp = FSub(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
+BitVector BitVector::FMul(BitVector const& rVal) const
+{
+  switch (m_BitSize)
+  {
+  case 32:
+    return BitVector(ConvertTo<float>() * rVal.ConvertTo<float>());
+  case 64:
+    return BitVector(ConvertTo<double>() * rVal.ConvertTo<double>());
+  default:
+    return *this;
+  }
+}
+
+BitVector& BitVector::FMulAssign(BitVector const& rVal)
+{
+  BitVector Tmp = FMul(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
+BitVector BitVector::FDiv(BitVector const& rVal) const
+{
+  switch (m_BitSize)
+  {
+  case 32:
+    return BitVector(ConvertTo<float>() / rVal.ConvertTo<float>());
+  case 64:
+    return BitVector(ConvertTo<double>() / rVal.ConvertTo<double>());
+  default:
+    return *this;
+  }
+}
+
+BitVector& BitVector::FDivAssign(BitVector const& rVal)
+{
+  BitVector Tmp = FDiv(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
+  return *this;
+}
+
+BitVector BitVector::FMod(BitVector const& rVal) const
+{
+  switch (m_BitSize)
+  {
+  case 32:
+    return BitVector(std::fmod(ConvertTo<float>(), rVal.ConvertTo<float>()));
+  case 64:
+    return BitVector(std::fmod(ConvertTo<double>(), rVal.ConvertTo<double>()));
+  default:
+    return *this;
+  }
+}
+
+BitVector& BitVector::FModAssign(BitVector const& rVal)
+{
+  BitVector Tmp = FMod(rVal);
+  m_Value = Tmp.m_Value;
+  _Adjust();
   return *this;
 }
 

@@ -74,22 +74,25 @@ class Medusa_EXPORT BitVector
 {
 public:
   BitVector(void) : m_BitSize(0), m_Value() {}
-  explicit BitVector(s8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
-  explicit BitVector(u8 Value)    : m_BitSize(8),    m_Value(Value) { _Adjust(); }
-  explicit BitVector(s16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(u16 Value)   : m_BitSize(16),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(s32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(u32 Value)   : m_BitSize(32),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(s64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(u64 Value)   : m_BitSize(64),   m_Value(Value) { _Adjust(); }
-  explicit BitVector(s128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(u128 Value)  : m_BitSize(128),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(s256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(u256 Value)  : m_BitSize(256),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(s512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(u512 Value)  : m_BitSize(512),  m_Value(Value) { _Adjust(); }
-  explicit BitVector(s1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
-  explicit BitVector(u1024 Value) : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+  explicit BitVector(s8 Value)     : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit BitVector(u8 Value)     : m_BitSize(8),    m_Value(Value) { _Adjust(); }
+  explicit BitVector(s16 Value)    : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u16 Value)    : m_BitSize(16),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s32 Value)    : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u32 Value)    : m_BitSize(32),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s64 Value)    : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(u64 Value)    : m_BitSize(64),   m_Value(Value) { _Adjust(); }
+  explicit BitVector(s128 Value)   : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u128 Value)   : m_BitSize(128),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s256 Value)   : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u256 Value)   : m_BitSize(256),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s512 Value)   : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(u512 Value)   : m_BitSize(512),  m_Value(Value) { _Adjust(); }
+  explicit BitVector(s1024 Value)  : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+  explicit BitVector(u1024 Value)  : m_BitSize(1024), m_Value(Value) { _Adjust(); }
+
+  explicit BitVector(float Value)  : BitVector(*reinterpret_cast<u32*>(&Value)) {}
+  explicit BitVector(double Value) : BitVector(*reinterpret_cast<u64*>(&Value)) {}
 
   explicit BitVector(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
@@ -122,6 +125,22 @@ public:
       Res |= Mask;
     }
     return Res;
+  }
+
+  // TODO(wisk): find something safer...
+  template<>
+  float ConvertTo<float>(void) const
+  {
+    auto Tmp = ConvertTo<u32>();
+    return *reinterpret_cast<float const*>(&Tmp);
+  }
+
+  // TODO(wisk): ditto
+  template<>
+  double ConvertTo<double>(void) const
+  {
+    auto Tmp = ConvertTo<u64>();
+    return *reinterpret_cast<double const*>(&Tmp);
   }
 
   std::string ToString(u16 Base = 16) const;
@@ -223,7 +242,20 @@ public:
   BitVector  Ror(BitVector const& rVal) const;
   BitVector& RorAssign(BitVector const& rVal);
 
-  BitVector  AddFloat(BitVector const& rVal) const;
+  BitVector  FAdd(BitVector const& rVal) const;
+  BitVector& FAddAssign(BitVector const& rVal);
+
+  BitVector  FSub(BitVector const& rVal) const;
+  BitVector& FSubAssign(BitVector const& rVal);
+
+  BitVector  FMul(BitVector const& rVal) const;
+  BitVector& FMulAssign(BitVector const& rVal);
+
+  BitVector  FDiv(BitVector const& rVal) const;
+  BitVector& FDivAssign(BitVector const& rVal);
+
+  BitVector  FMod(BitVector const& rVal) const;
+  BitVector& FModAssign(BitVector const& rVal);
 
 private:
   void _Adjust(void);

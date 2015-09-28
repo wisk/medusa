@@ -137,6 +137,7 @@ private:
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
     void         _EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal);
+    llvm::Value* _EmitFloatingPointBinaryOperation(OperationExpression::Type FOpType, llvm::Value* pLeftVal, llvm::Value* pRightVal) const;
 
     Emulator*                 m_pEmul;
     HookAddressHashMap const& m_rHooks;
