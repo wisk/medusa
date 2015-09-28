@@ -418,9 +418,9 @@ BitVector BitVector::FAdd(BitVector const& rVal) const
   switch (m_BitSize)
   {
   case 32:
-    return BitVector(ConvertTo<float>() + rVal.ConvertTo<float>());
+    return BitVector(static_cast<float>(ConvertTo<float>() + rVal.ConvertTo<float>()));
   case 64:
-    return BitVector(ConvertTo<double>() + rVal.ConvertTo<double>());
+    return BitVector(static_cast<double>(ConvertTo<double>() + rVal.ConvertTo<double>()));
   default:
     return *this;
   }
@@ -522,6 +522,20 @@ void BitVector::_Adjust(void)
 {
   ap_int Mask = (ap_int(1) << m_BitSize) - 1;
   m_Value = Mask & GetUnsignedValue();
+}
+
+template<>
+float BitVector::ConvertTo<float>(void) const
+{
+  auto Tmp = ConvertTo<u32>();
+  return *reinterpret_cast<float const*>(&Tmp);
+}
+
+template<>
+double BitVector::ConvertTo<double>(void) const
+{
+  auto Tmp = ConvertTo<u64>();
+  return *reinterpret_cast<double const*>(&Tmp);
 }
 
 MEDUSA_NAMESPACE_END

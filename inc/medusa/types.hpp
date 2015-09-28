@@ -127,22 +127,6 @@ public:
     return Res;
   }
 
-  // TODO(wisk): find something safer...
-  template<>
-  float ConvertTo<float>(void) const
-  {
-    auto Tmp = ConvertTo<u32>();
-    return *reinterpret_cast<float const*>(&Tmp);
-  }
-
-  // TODO(wisk): ditto
-  template<>
-  double ConvertTo<double>(void) const
-  {
-    auto Tmp = ConvertTo<u64>();
-    return *reinterpret_cast<double const*>(&Tmp);
-  }
-
   std::string ToString(u16 Base = 16) const;
 
   u16 GetBitSize(void) const { return m_BitSize; }
@@ -263,6 +247,9 @@ private:
   u16 m_BitSize;
   ap_int m_Value;
 };
+
+template<> float  BitVector::ConvertTo<float> (void) const;
+template<> double BitVector::ConvertTo<double>(void) const;
 
 typedef u16                 TTranslationUnit;
 typedef u16                 TBase;
