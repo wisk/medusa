@@ -77,24 +77,36 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
   return true;
 }
 
-void Execution::Execute(Address const& rAddr)
+bool Execution::Execute(Address const& rAddr)
 {
   if (m_spEmul == nullptr)
   {
     Log::Write("core").Level(LogError) << "emulator is null for execution" << LogEnd;
-    return;
+    return false;
   }
 
   if (!m_pCpuCtxt->SetAddress(CpuContext::AddressExecution, rAddr))
   {
     Log::Write("core").Level(LogError) << "failed to set address " << rAddr << LogEnd;
-    return;
+    return false;
   }
 
   Address CurAddr = rAddr;
-  while (m_spEmul->Execute(CurAddr))
+  Emulator::ReturnType Status;
+  while ((Status = m_spEmul->Execute(CurAddr)) != Emulator::Stop)
+  {
+    if (Status == Emulator::Error)
+    {
+      Log::Write("core").Level(LogError) << "execution error occured at basic block: " << CurAddr << LogEnd;
+      return false;
+    }
     if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
-      break;
+    {
+      Log::Write("core").Level(LogError) << "failed to get the next address for basic block: " << CurAddr << LogEnd;
+      return false;
+    }
+  }
+  return true;
 }
 
 bool Execution::InvalidateCache(void)

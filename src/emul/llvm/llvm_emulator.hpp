@@ -50,8 +50,8 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  virtual bool Execute(Expression::VSPType const& rExprs);
-  virtual bool Execute(Address const& rAddress);
+  virtual ReturnType Execute(Expression::VSPType const& rExprs);
+  virtual ReturnType Execute(Address const& rAddress);
 
   virtual bool InvalidateCache(void);
 
@@ -136,7 +136,9 @@ private:
     llvm::Value* _EmitComparison(u8 CondOp, char const* pCmpName);
     llvm::Value* _EmitReadRegister(u32 Reg, CpuInformation const& rCpuInfo);
     bool         _EmitWriteRegister(u32 Reg, CpuInformation const& rCpuInfo, llvm::Value* pVal);
-    void         _EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal);
+    void         _EmitReturn(llvm::Value* pCondVal, llvm::Value* pRetVal);
+    void         _EmitReturn(llvm::Value* pCondVal, Emulator::ReturnType RetVal);
+    void         _EmitReturnIfNull(llvm::Value* pChkVal, Emulator::ReturnType RetVal);
     llvm::Value* _EmitFloatingPointBinaryOperation(OperationExpression::Type FOpType, llvm::Value* pLeftVal, llvm::Value* pRightVal) const;
 
     Emulator*                 m_pEmul;

@@ -30,9 +30,9 @@ namespace pydusa
   struct HookCallbackProxy
   {
     HookCallbackProxy(bp::object HookCb) : m_HookCb(HookCb) {}
-    void operator()(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
+    Emulator::ReturnType operator()(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
     {
-      m_HookCb(boost::ref(*pCpuCtxt), boost::ref(*pMemCtxt), rAddr);
+      return bp::extract<Emulator::ReturnType>(m_HookCb(boost::ref(*pCpuCtxt), boost::ref(*pMemCtxt), rAddr));
     }
     bp::object m_HookCb;
   };
@@ -78,6 +78,13 @@ void PydusaExecution(void)
     .value("READ",    Emulator::HookOnRead)
     .value("WRITE",   Emulator::HookOnWrite)
     .value("EXECUTE", Emulator::HookOnExecute)
+    ;
+
+  bp::enum_<Emulator::ReturnType>("Emulator")
+    .value("ERROR",    Emulator::Error)
+    .value("BREAK",    Emulator::Break)
+    .value("CONTINUE", Emulator::Continue)
+    .value("STOP",     Emulator::Stop)
     ;
 
   bp::class_<Execution, boost::noncopyable>("Execution", bp::init<Document&>())

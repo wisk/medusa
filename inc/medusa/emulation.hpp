@@ -53,9 +53,17 @@ public:
     return WriteMemory(rAddr, &rMemVal, sizeof(rMemVal));
   }
 
-  virtual bool Execute(Expression::SPType spExpr);
-  virtual bool Execute(Expression::VSPType const& rExprs) = 0;
-  virtual bool Execute(Address const& rAddress);
+  enum ReturnType
+  {
+    Error,
+    Break,
+    Continue,
+    Stop,
+  };
+
+  virtual ReturnType Execute(Expression::SPType spExpr);
+  virtual ReturnType Execute(Expression::VSPType const& rExprs) = 0;
+  virtual ReturnType Execute(Address const& rAddress);
 
   enum HookType
   {
@@ -65,14 +73,14 @@ public:
     HookOnExecute = 0x4,
   };
 
-  typedef std::function<void(CpuContext*, MemoryContext*, Address const&)> HookCallback;
+  typedef std::function<ReturnType(CpuContext*, MemoryContext*, Address const&)> HookCallback;
 
   virtual bool AddHookOnInstruction(HookCallback InsnCb);
-  virtual void CallInstructionHook(void);
   virtual bool AddHook(Address const& rAddress, u32 Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
-  virtual bool TestHook(Address const& rAddress, u32 Type) const;
+  virtual ReturnType CallInstructionHook(void);
+  virtual ReturnType CallHookOnExecutionIfNeeded(Address const& rAddress) const;
 
   virtual bool InvalidateCache(void);
 

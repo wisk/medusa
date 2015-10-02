@@ -14,7 +14,7 @@ InterpreterEmulator::~InterpreterEmulator(void)
 {
 }
 
-bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
+Emulator::ReturnType InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
 {
   for (Expression::SPType spExpr : rExprs)
   {
@@ -23,7 +23,11 @@ bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
       if (spSys->GetName() == "call_insn_cb")
       {
         if (m_InsnCb)
-          m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
+        {
+          auto EmulRet = m_InsnCb(m_pCpuCtxt, m_pMemCtxt, spSys->GetAddress());
+          if (EmulRet != Continue)
+            return EmulRet;
+        }
         continue;
       }
 
@@ -31,16 +35,18 @@ bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
       {
         Address CurAddr;
         if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
-          return false;
+          return Error;
         // HACK(KS):
         CurAddr.SetBase(0x0);
-        TestHook(CurAddr, Emulator::HookOnExecute);
+        auto EmulRet = CallHookOnExecutionIfNeeded(CurAddr);
+        if (EmulRet != Continue)
+          return EmulRet;
         continue;
       }
 
       if (spSys->GetName() == "stop")
       {
-        return false;
+        return Error;
       }
     }
 
@@ -50,11 +56,11 @@ bool InterpreterEmulator::Execute(Expression::VSPType const& rExprs)
     {
       std::cout << m_pCpuCtxt->ToString() << std::endl;
       std::cout << spExpr->ToString() << std::endl;
-      return false;
+      return Error;
     }
   }
 
-  return true;
+  return Continue;
 }
 
 InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor(void)

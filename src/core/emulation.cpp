@@ -50,12 +50,12 @@ bool Emulator::WriteMemory(Address const& rAddr, void const* pVal, u32 Size)
   return m_pMemCtxt->WriteMemory(LinAddr, pVal, Size);
 }
 
-bool Emulator::Execute(Expression::SPType spExpr)
+Emulator::ReturnType Emulator::Execute(Expression::SPType spExpr)
 {
   return Execute(Expression::VSPType({ spExpr }));
 }
 
-bool Emulator::Execute(Address const& rAddress)
+Emulator::ReturnType Emulator::Execute(Address const& rAddress)
 {
   if (_IsSemanticCached(rAddress))
   {
@@ -89,7 +89,7 @@ bool Emulator::Execute(Address const& rAddress)
   });
 
   if (!_CacheSemantic(rAddress, Exprs))
-    return false;
+    return Error;
 
   return Execute(Exprs);
 }
@@ -114,19 +114,6 @@ bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
   return true;
 }
 
-void Emulator::CallInstructionHook(void)
-{
-  if (!m_InsnCb)
-    return;
-  Address CurAddr;
-  if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
-  {
-    Log::Write("core").Level(LogError) << "failed to get execution address" << LogEnd;
-    return;
-  }
-  m_InsnCb(m_pCpuCtxt, m_pMemCtxt, CurAddr);
-}
-
 bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback)
 {
   auto Addr = rDoc.GetAddressFromLabelName(rLabelName);
@@ -142,17 +129,31 @@ bool Emulator::RemoveHook(Address const& rAddress)
   return true;
 }
 
-bool Emulator::TestHook(Address const& rAddress, u32 Type) const
+Emulator::ReturnType Emulator::CallInstructionHook(void)
+{
+  if (!m_InsnCb)
+    return Continue;
+  Address CurAddr;
+  if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
+  {
+    Log::Write("core").Level(LogError) << "failed to get execution address" << LogEnd;
+    return Error;
+  }
+  return m_InsnCb(m_pCpuCtxt, m_pMemCtxt, CurAddr);
+}
+
+Emulator::ReturnType Emulator::CallHookOnExecutionIfNeeded(Address const& rAddress) const
 {
   auto itHook = m_Hooks.find(rAddress);
+  // Requested address is not hooked, continue the emulation
   if (itHook == std::end(m_Hooks))
-    return false;
+    return Continue;
 
-  if (!(itHook->second.m_Type & Type))
-    return false;
+  // We only want hook on execution
+  if (!(itHook->second.m_Type & HookOnExecute))
+    return Continue;
 
-  itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, rAddress);
-  return true;
+  return itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, rAddress);
 }
 
 bool Emulator::InvalidateCache(void)

@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
   std::cout << "Using emulator type: " << pEmulatorType << std::endl;
   BOOST_REQUIRE(Exec.SetEmulator(pEmulatorType));
 
-  BOOST_REQUIRE(Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("__libc_start_main", [](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&) -> Emulator::ReturnType
   {
     std::cout << "[__libc_start_main] try to execute R0 (main)" << std::endl;
     u32 MainAddr = 0;
@@ -75,15 +75,16 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     BOOST_REQUIRE(R0 != 0 && PC != 0);
 
     if (!pCpuCtxt->ReadRegister(R0, MainAddr))
-      return;
+      return Emulator::Error;
     if (!pCpuCtxt->WriteRegister(PC, MainAddr))
-      return;
+      return Emulator::Error;
 
+    return Emulator::Continue;
   }));
 
   bool PutsCalled = false;
   bool IsHelloWorld = false;
-  BOOST_REQUIRE(Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("puts", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&) -> Emulator::ReturnType
   {
     auto const& rCpuInfo = pCpuCtxt->GetCpuInformation();
     u32 R0 = rCpuInfo.ConvertNameToIdentifier("r0");
@@ -96,7 +97,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     if (!pCpuCtxt->ReadRegister(R0, ParamAddr))
     {
       std::cout << "[puts] failed to read parameter" << std::endl;
-      return;
+      return Emulator::Error;
     }
 
     std::string Param;
@@ -114,21 +115,25 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
 
     u32 RetAddr = 0;
     if (!pCpuCtxt->ReadRegister(LR, RetAddr))
-      return;
+      return Emulator::Error;
     if (!pCpuCtxt->WriteRegister(PC, RetAddr))
-      return;
+      return Emulator::Error;
     PutsCalled = true;
     IsHelloWorld = Param == "hello world!";
+
+    return Emulator::Continue;
   }));
 
   bool AbortCalled = false;
-  BOOST_REQUIRE(Exec.HookFunction("abort", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+  BOOST_REQUIRE(Exec.HookFunction("abort", [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&) -> Emulator::ReturnType
   {
     std::cout << "[abort]" << std::endl;
     AbortCalled = true;
+
+    return Emulator::Break;
   }));
 
-  Exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr)
+  Exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& rAddr) -> Emulator::ReturnType
   {
     std::cout << pCpuCtxt->ToString() << std::endl;
     
@@ -158,6 +163,7 @@ BOOST_AUTO_TEST_CASE(emul_interpreter_arm_test_case)
     for (auto e : spCurInsn->GetSemantic())
       std::cout << e->ToString() << std::endl;
 
+    return Emulator::Continue;
   });
 
   Exec.Execute(StartAddr);

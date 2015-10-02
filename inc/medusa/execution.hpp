@@ -22,7 +22,7 @@ public:
   bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
 
-  void Execute(Address const& rAddr);
+  bool Execute(Address const& rAddr);
 
   bool InvalidateCache(void);
 

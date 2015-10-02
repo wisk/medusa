@@ -432,7 +432,7 @@ int main(int argc, char **argv)
     auto& dump = (dump_path == "-") ? std::cout : df;
 
     if (!dump_path.empty())
-      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& cur_addr)
+      exec.HookInstruction([&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const& cur_addr) -> Emulator::ReturnType
     {
       static auto pSep("--------------------------------------------------------------------------------\n");
       dump << pSep << pCpuCtxt->ToString() << "\n";
@@ -440,25 +440,27 @@ int main(int argc, char **argv)
       if (cur_insn == nullptr)
       {
         dump << "failed to get instruction" << std::endl;
-        return;
+        return Emulator::Error;
       }
       auto arch = ModuleManager::Instance().GetArchitecture(cur_insn->GetArchitectureTag());
       if (arch == nullptr)
       {
         dump << "failed to get architecture" << std::endl;
-        return;
+        return Emulator::Error;
       }
       PrintData PD;
       PD.PrependAddress(false);
       if (!arch->FormatCell(rDoc, cur_addr, *cur_insn, PD))
       {
         dump << "failed to format instruction" << std::endl;
-        return;
+        return Emulator::Error;
       }
       dump << PD.GetTexts() << "\n" << std::flush;
+
+      return Emulator::Continue;
     });
 
-    auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&)
+    auto stub_ret = [&](CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, Address const&) -> Emulator::ReturnType
     {
       auto Msg = "[stub] function " + exec.GetHookName() + ", returning ...";
       Log::Write("emulator") << Msg << LogEnd;
@@ -476,6 +478,8 @@ int main(int argc, char **argv)
       RegSpValue += (RegSz / 8);
       pCpuCtxt->WriteRegister(RegSp, &RegSpValue, RegSz);
       pCpuCtxt->WriteRegister(RegPc, &RetAddr, RegSz);
+
+      return Emulator::Continue;
     };
 
     if (hook_imported_symbols) m.GetDocument().ForEachLabel([&](Address const& rAddress, Label const& rLabel)

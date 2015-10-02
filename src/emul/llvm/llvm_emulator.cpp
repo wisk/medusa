@@ -86,20 +86,20 @@ extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj,
 static llvm::Function* s_pGetMemoryFunc = nullptr;
 
 // This function allows the JIT'ed code to call instruction hook
-extern "C" EMUL_LLVM_EXPORT void JitCallInstructionHook(u8* pEmulObj)
+extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitCallInstructionHook(u8* pEmulObj)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
-  pEmul->CallInstructionHook();
+  return pEmul->CallInstructionHook();
 }
 
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT void JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset, u32 HookType)
+extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
-  pEmul->TestHook(Address(Base, Offset), HookType);
+  return pEmul->CallHookOnExecutionIfNeeded(Address(Base, Offset));
 }
 
 static llvm::Function* s_pHandleHookFunc = nullptr;
@@ -116,19 +116,19 @@ LlvmEmulator::~LlvmEmulator(void)
 {
 }
 
-bool LlvmEmulator::Execute(Expression::VSPType const& rExprs)
+Emulator::ReturnType LlvmEmulator::Execute(Expression::VSPType const& rExprs)
 {
-  return false;
+  return Error;
 }
 
-bool LlvmEmulator::Execute(Address const& rAddress)
+Emulator::ReturnType LlvmEmulator::Execute(Address const& rAddress)
 {
   Address ExecAddr = rAddress;
   if (!m_pCpuCtxt->SetAddress(CpuContext::AddressExecution, ExecAddr))
-    return false;
+    return Error;
   u64 LinAddr;
   if (!m_pCpuCtxt->Translate(ExecAddr, LinAddr))
-    return false;
+    return Error;
 
   // Check if the code to be executed is already JIT'ed
   auto pCode = m_FunctionCache[LinAddr];
@@ -195,7 +195,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to disassemble code at " << ExecAddr << LogEnd;
       Exprs.clear();
-      return false;
+      return Error;
     }
 
     // Instruction callback must be called. To do so, we have to disable JIT optimization
@@ -245,7 +245,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         {
           Log::Write("emul_llvm").Level(LogError) << "failed to normalize id with expression: " << spExpr->ToString() << LogEnd;
           Exprs.clear();
-          return false;
+          return Error;
         }
 
         // Id to var
@@ -254,7 +254,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         {
           Log::Write("emul_llvm").Level(LogError) << "failed to convert id to var with expression: " << spNrmExpr->ToString() << LogEnd;
           Exprs.clear();
-          return false;
+          return Error;
         }
         JitExprs.push_back(spId2Var);
       }
@@ -269,7 +269,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
         {
           Log::Write("emul_llvm").Level(LogError) << "invalid id: " << Id << LogEnd;
           Exprs.clear();
-          return false;
+          return Error;
         }
 
         // Copy id value to register (2)
@@ -319,7 +319,7 @@ bool LlvmEmulator::Execute(Address const& rAddress)
       {
         Log::Write("emul_llvm").Level(LogError) << "failed to JIT expression at " << ExecAddr << LogEnd;
         Exprs.clear();
-        return false;
+        return Error;
       }
     }
 
@@ -330,21 +330,19 @@ bool LlvmEmulator::Execute(Address const& rAddress)
     {
       Log::Write("emul_llvm").Level(LogError) << "failed to JIT code for function " << pExecFunc->getName().data() << LogEnd;
       Exprs.clear();
-      return false;
+      return Error;
     }
     m_FunctionCache[LinAddr] = pCode;
   }
 
   if (!pCode(reinterpret_cast<u8*>(m_pCpuCtxt), reinterpret_cast<u8*>(m_pMemCtxt)))
-    return false;
+    return Error;
 
   Address NextAddr;
   if (!m_pCpuCtxt->GetAddress(CpuContext::AddressExecution, NextAddr))
-    return false;
+    return Error;
   NextAddr.SetBase(0x0); // HACK(KS)
-  TestHook(NextAddr, Emulator::HookOnExecute);
-
-  return true;
+  return CallHookOnExecutionIfNeeded(NextAddr);
 }
 
 bool LlvmEmulator::InvalidateCache(void)
@@ -472,7 +470,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
       llvm::Type::getInt8PtrTy(rCtxt), // pVal
       llvm::Type::getInt32Ty(rCtxt)   // BitSize
     };
-    static auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
+    static auto pWriteRegisterFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(rCtxt), Params, false);
     s_pWriteRegisterFunc = llvm::Function::Create(pWriteRegisterFuncType, llvm::GlobalValue::ExternalLinkage, "JitWriteRegister", m_pCurMod);
     EE->addGlobalMapping(s_pWriteRegisterFunc, (void*)JitWriteRegister);
     llvm::sys::DynamicLibrary::AddSymbol("JitWriteRegister", (void*)JitWriteRegister);
@@ -511,7 +509,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
     static std::vector<llvm::Type*> Params{
       llvm::Type::getInt8PtrTy(rCtxt) // pEmul
     };
-    static auto pCallInstructionHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
+    static auto pCallInstructionHookType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
     s_pCallInstructionHookFunc = llvm::Function::Create(pCallInstructionHookType, llvm::GlobalValue::ExternalLinkage, "JitCallInstructionHook", m_pCurMod);
     EE->addGlobalMapping(s_pCallInstructionHookFunc, (void*)JitCallInstructionHook);
     llvm::sys::DynamicLibrary::AddSymbol("JitCallInstructionHook", (void*)JitCallInstructionHook);
@@ -524,9 +522,8 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
       llvm::Type::getInt8PtrTy(rCtxt),  // pCpuCtxt
       llvm::Type::getInt16Ty(rCtxt),   // Base
       llvm::Type::getInt64Ty(rCtxt),  // Offset
-      llvm::Type::getInt32Ty(rCtxt), // HookType
     };
-    static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getVoidTy(rCtxt), Params, false);
+    static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
     EE->addGlobalMapping(s_pHandleHookFunc, (void*)JitHandleHook);
     llvm::sys::DynamicLibrary::AddSymbol("JitHandleHook", (void*)JitHandleHook);
@@ -584,17 +581,25 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
 
   if (rSysName == "call_insn_cb")
   {
-    m_rBuilder.CreateCall(s_pCallInstructionHookFunc, _MakePointer(8, m_pEmul));
+    auto pEmulRet = m_rBuilder.CreateCall(s_pCallInstructionHookFunc, _MakePointer(8, m_pEmul));
+
+    _EmitReturn(m_rBuilder.CreateICmpNE(pEmulRet, _MakeInteger(BitVector(8, Emulator::Continue))),
+      pEmulRet);
+
     return spSysExpr;
   }
   if (rSysName == "check_exec_hook")
   {
     Address CurAddr = spSysExpr->GetAddress();
-    m_rBuilder.CreateCall5(
+    auto pEmulRet = m_rBuilder.CreateCall5(
       s_pHandleHookFunc,
       _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
       _MakeInteger(BitVector(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(BitVector(64, spSysExpr->GetAddress().GetOffset())),
       _MakeInteger(BitVector(32, Emulator::HookOnExecute)));
+
+    _EmitReturn(m_rBuilder.CreateICmpNE(pEmulRet, _MakeInteger(BitVector(8, Emulator::Continue))),
+      pEmulRet);
+
     return spSysExpr;
   }
 
@@ -1181,8 +1186,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   {
     auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
     pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
-    auto pFalseVal = _MakeInteger(BitVector(1, 0));
-    _EmitReturnIfNull(pPtrVal, pFalseVal);
+    _EmitReturnIfNull(pPtrVal, Emulator::Error);
   }
 
   switch (m_State)
@@ -1422,25 +1426,36 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   return true;
 }
 
-void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal, llvm::Value* pRetVal)
+void LlvmEmulator::LlvmExpressionVisitor::_EmitReturn(llvm::Value* pCondVal, llvm::Value* pRetVal)
 {
-  assert(pRetVal != nullptr);
   auto pBbOrig = m_rBuilder.GetInsertBlock();
   auto& rCtxt = llvm::getGlobalContext();
   auto pFunc = pBbOrig->getParent();
 
-  auto pBbRet  = llvm::BasicBlock::Create(rCtxt, "ret", pFunc);
+  auto pBbRet = llvm::BasicBlock::Create(rCtxt, "ret", pFunc);
   auto pBbCont = llvm::BasicBlock::Create(rCtxt, "continue", pFunc);
 
-  auto pChkValInt = m_rBuilder.CreatePtrToInt(pChkVal, llvm::Type::getIntNTy(rCtxt, sizeof(void*) * 8));
-  auto pNullPtrInt = _MakeInteger(BitVector(sizeof(void*) * 8, 0));
-  auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt, "ret_if_null_cmp");
-  m_rBuilder.CreateCondBr(pCmpPtr, pBbRet, pBbCont);
+  m_rBuilder.CreateCondBr(pCondVal, pBbRet, pBbCont);
 
   m_rBuilder.SetInsertPoint(pBbRet);
   m_rBuilder.CreateRet(pRetVal);
 
   m_rBuilder.SetInsertPoint(pBbCont);
+}
+
+void LlvmEmulator::LlvmExpressionVisitor::_EmitReturn(llvm::Value* pCondVal, Emulator::ReturnType RetVal)
+{
+  _EmitReturn(pCondVal, _MakeInteger(BitVector(8, RetVal)));
+}
+
+void LlvmEmulator::LlvmExpressionVisitor::_EmitReturnIfNull(llvm::Value* pChkVal, Emulator::ReturnType RetVal)
+{
+  auto& rCtxt = llvm::getGlobalContext();
+
+  auto pChkValInt = m_rBuilder.CreatePtrToInt(pChkVal, llvm::Type::getIntNTy(rCtxt, sizeof(void*) * 8));
+  auto pNullPtrInt = _MakeInteger(BitVector(sizeof(void*) * 8, 0));
+  auto pCmpPtr = m_rBuilder.CreateICmpEQ(pChkValInt, pNullPtrInt, "ret_if_null_cmp");
+  _EmitReturn(pCmpPtr, RetVal);
 }
 
 llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitFloatingPointBinaryOperation(OperationExpression::Type FOpType, llvm::Value* pLeftVal, llvm::Value* pRightVal) const

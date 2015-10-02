@@ -25,7 +25,7 @@ public:
 
   virtual std::string GetName(void) const { return "interpreter"; }
 
-  virtual bool Execute(Expression::VSPType const& rExprs);
+  virtual ReturnType Execute(Expression::VSPType const& rExprs);
 
 protected:
   std::unordered_map<std::string, BitVector> m_Vars;
