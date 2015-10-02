@@ -36,6 +36,14 @@ X86Architecture::X86CpuContext::X86CpuContext(u8 Bits, CpuInformation const& rCp
   m_Context.r14.r = 0x0;
   m_Context.r15.r = 0x0;
 
+  // Segment
+  m_Context.cs = 0x0;
+  m_Context.ds = 0x0;
+  m_Context.es = 0x0;
+  m_Context.ss = 0x0;
+  m_Context.fs = 0x0;
+  m_Context.gs = 0x0;
+
   // FLAGS
   m_Context.CF = false;
   m_Context.PF = false;

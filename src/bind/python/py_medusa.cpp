@@ -59,9 +59,8 @@ namespace pydusa
     return pCore->GetCell(rAddress);
   }
 
-  static bp::object Medusa_FormatCell(Medusa* pCore, Address const& rAddress)
+  static bp::object Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
   {
-    auto spCell = pCore->GetCell(rAddress);
     if (spCell == nullptr)
       return bp::object();
 
@@ -78,13 +77,13 @@ namespace pydusa
     return bp::str(PD.GetTexts());
   }
 
-  static bp::object Medusa_DisassembleCurrentInstruction(Medusa* pCore, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
+  static Cell::SPType Medusa_DisassembleCurrentInstruction(Medusa* pCore, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
   {
     // We need the good architecture
     auto const& rModMgr = ModuleManager::Instance();
     auto spArch = rModMgr.GetArchitecture(pCpuCtxt->GetCpuInformation().GetArchitectureTag());
     if (spArch == nullptr)
-      return bp::object();
+      return nullptr;
 
     // and its current mode
     auto ArchMode = pCpuCtxt->GetMode();
@@ -92,32 +91,26 @@ namespace pydusa
     // Now we can retrieve the current address
     Address CurAddr;
     if (!pCpuCtxt->GetAddress(CpuContext::AddressExecution, CurAddr))
-      return bp::object();
+      return nullptr;
 
     // We must convert it to a linear address
     u64 LinAddr;
     if (!pCpuCtxt->Translate(CurAddr, LinAddr))
-      return bp::object();
+      return nullptr;
 
     // ... to retrieve its data
     BinaryStream::SPType spBinStrm;
     u32 Off;
     u32 Flags;
     if (!pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
-      return bp::object();
+      return nullptr;
 
     // we can finally disassemble it
     auto spInsn = std::make_shared<Instruction>();
     if (!spArch->Disassemble(*spBinStrm, Off, *spInsn, ArchMode))
-      return bp::object();
+      return nullptr;
 
-    // and format it
-    PrintData PD;
-    PD.PrependAddress(false);
-    if (!spArch->FormatCell(pCore->GetDocument(), CurAddr, *spInsn, PD))
-      return bp::object();
-
-    return bp::str(PD.GetTexts());
+    return spInsn;
   }
 
   static Instruction::SPType Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
