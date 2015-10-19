@@ -49,10 +49,6 @@ namespace medusa
 
   namespace Pattern
   {
-#define EXPORT_TEMPLATE_PATTERN(type, name)\
-  template Medusa_EXPORT class type;\
-  using name = type
-
     class Medusa_EXPORT Any : public ExpressionPattern
     {
     public:
@@ -195,11 +191,11 @@ namespace medusa
       ExpressionPattern::SPType m_spPattern;
     };
 
-    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpNot>,  NOT);
-    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpNeg>,  NEG);
-    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpSwap>, SWAP); // byte swap
-    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsf>,  BSF);  // bit scan forward
-    EXPORT_TEMPLATE_PATTERN(Unary<OperationExpression::OpBsr>,  BSR);  // bit scan reverse
+    using NOT  = Unary<OperationExpression::OpNot>;
+    using NEG  = Unary<OperationExpression::OpNeg>;
+    using SWAP = Unary<OperationExpression::OpSwap>; // byte swap
+    using BSF  = Unary<OperationExpression::OpBsf>;  // bit scan forward
+    using BSR  = Unary<OperationExpression::OpBsr>;  // bit scan reverse
 
     template<unsigned Op>
     class AnyBinary : public ExpressionPattern
@@ -270,26 +266,26 @@ namespace medusa
       ExpressionPattern::SPType m_spLeftPattern, m_spRightPattern;
     };
 
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpAnd>,         AND);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpOr>,          OR);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpXor>,         XOR);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpLls>,         LLS); /* Logical Left Shift */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpLrs>,         LRS); /* Logical Right Shift */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpArs>,         ARS); /* Arithmetic Right Shift */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpRol>,         ROL); /* Logical Left Rotate */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpRor>,         ROR); /* Logical Right Rotate */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpAdd>,         ADD);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSub>,         SUB);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpMul>,         MUL);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSDiv>,        SDIV);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpUDiv>,        UDIV);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSMod>,        SMOD);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpUMod>,        UMOD);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpSext>,        SEXT); /* Sign Extend */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpZext>,        ZEXT); /* Zero Extend */
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpInsertBits>,  INSERT_BITS);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpExtractBits>, EXTRACT_BITS);
-    EXPORT_TEMPLATE_PATTERN(Binary<OperationExpression::OpBcast>,       BCAST); /* Bit Cast */
+    using AND          = Binary<OperationExpression::OpAnd>;
+    using OR           = Binary<OperationExpression::OpOr>;
+    using XOR          = Binary<OperationExpression::OpXor>;
+    using LLS          = Binary<OperationExpression::OpLls>; /* Logical Left Shift */
+    using LRS          = Binary<OperationExpression::OpLrs>; /* Logical Right Shift */
+    using ARS          = Binary<OperationExpression::OpArs>; /* Arithmetic Right Shift */
+    using ROL          = Binary<OperationExpression::OpRol>; /* Logical Left Rotate */
+    using ROR          = Binary<OperationExpression::OpRor>; /* Logical Right Rotate */
+    using ADD          = Binary<OperationExpression::OpAdd>;
+    using SUB          = Binary<OperationExpression::OpSub>;
+    using MUL          = Binary<OperationExpression::OpMul>;
+    using SDIV         = Binary<OperationExpression::OpSDiv>;
+    using UDIV         = Binary<OperationExpression::OpUDiv>;
+    using SMOD         = Binary<OperationExpression::OpSMod>;
+    using UMOD         = Binary<OperationExpression::OpUMod>;
+    using SEXT         = Binary<OperationExpression::OpSext>; /* Sign Extend */
+    using ZEXT         = Binary<OperationExpression::OpZext>; /* Zero Extend */
+    using INSERT_BITS  = Binary<OperationExpression::OpInsertBits>;
+    using EXTRACT_BITS = Binary<OperationExpression::OpExtractBits>;
+    using BCAST        = Binary<OperationExpression::OpBcast>; /* Bit Cast */
 
     class AnyCondition : public ExpressionPattern
     {
@@ -352,16 +348,16 @@ namespace medusa
       ExpressionPattern::SPType m_spRefPattern, m_spTestPattern;
     };
 
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondEq>,  EQ);  //     equal
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondNe>,  NE);  // not equal
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUgt>, UGT); // unsigned greater than
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUge>, UGE); // unsigned greater than or equal
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUlt>, ULT); // unsigned lesser  than
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondUle>, ULE); // unsigned lesser  than or equal
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSgt>, SGT); //   signed greater than
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSge>, SGE); //   signed greater than or equal
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSlt>, SLT); //   signed lesser  than
-    EXPORT_TEMPLATE_PATTERN(Condition<ConditionExpression::CondSle>, SLE); //   signed lesser  than or equal
+    using EQ  = Condition<ConditionExpression::CondEq>;  //     equal
+    using NE  = Condition<ConditionExpression::CondNe>;  // not equal
+    using UGT = Condition<ConditionExpression::CondUgt>; // unsigned greater than
+    using UGE = Condition<ConditionExpression::CondUge>; // unsigned greater than or equal
+    using ULT = Condition<ConditionExpression::CondUlt>; // unsigned lesser  than
+    using ULE = Condition<ConditionExpression::CondUle>; // unsigned lesser  than or equal
+    using SGT = Condition<ConditionExpression::CondSgt>; //   signed greater than
+    using SGE = Condition<ConditionExpression::CondSge>; //   signed greater than or equal
+    using SLT = Condition<ConditionExpression::CondSlt>; //   signed lesser  than
+    using SLE = Condition<ConditionExpression::CondSle>; //   signed lesser  than or equal
 
     class Ternary : public ExpressionPattern
     {
@@ -396,8 +392,6 @@ namespace medusa
       ExpressionPattern::SPType m_spCondPattern;
       ExpressionPattern::SPType m_spTruePattern, m_spFalsePattern;
     };
-
-#undef EXPORT_TEMPLATE_PATTERN
   } // namespace Pattern
 }
 
