@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(core_ap_int_test_case)
 
 BOOST_AUTO_TEST_CASE(core_structure_test_case)
 {
-  BOOST_MESSAGE("Testing structure");
+  BOOST_TEST_MESSAGE("Testing structure");
 
   using namespace medusa;
 

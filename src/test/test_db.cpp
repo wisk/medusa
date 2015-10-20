@@ -8,7 +8,7 @@
 BOOST_AUTO_TEST_SUITE(database_test_suite)
 
 BOOST_AUTO_TEST_CASE(db_text_test_case) {
-    BOOST_MESSAGE("Testing text database");
+    BOOST_TEST_MESSAGE("Testing text database");
 
     auto& rModMgr = medusa::ModuleManager::Instance();
     auto pDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
@@ -26,9 +26,9 @@ BOOST_AUTO_TEST_CASE(db_test_all_database_modules) {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
     BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
     for (auto &db : all_dbs) {
-        BOOST_MESSAGE("Current database name: " + db->GetName());
+        BOOST_TEST_MESSAGE("Current database name: " + db->GetName());
         boost::filesystem::path tempBaseFile =  boost::filesystem::absolute(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path());
-        BOOST_MESSAGE("Created unique  path: " + tempBaseFile.string());
+        BOOST_TEST_MESSAGE("Created unique  path: " + tempBaseFile.string());
         BOOST_CHECK(db->Create(tempBaseFile,true));
         db->SetBinaryStream(spFileBinStrm);
         medusa::Label  SampleLabel("test string",Label::Type::String);

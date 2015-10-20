@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_SUITE(expression_test_suite)
 
 BOOST_AUTO_TEST_CASE(expr_const_test_case)
 {
-  BOOST_MESSAGE("Testing creation of BitVectorExpression");
+  BOOST_TEST_MESSAGE("Testing creation of BitVectorExpression");
   auto spConstExpr = Expr::MakeBitVector(16, 0x1234);
   BOOST_CHECK(spConstExpr != nullptr);
 }

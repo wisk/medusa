@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(architecture_test_suite)
 
 BOOST_AUTO_TEST_CASE(arch_arm_test_case)
 {
-  BOOST_MESSAGE("Testing ARM architecture");
+  BOOST_TEST_MESSAGE("Testing ARM architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(arch_gameboy_test_case)
 
 BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 {
-  BOOST_MESSAGE("Testing x86 architecture");
+  BOOST_TEST_MESSAGE("Testing x86 architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   BOOST_REQUIRE(X86_64_Mode != 0);
 
   {
-    BOOST_MESSAGE("Testing Ev decoding");
+    BOOST_TEST_MESSAGE("Testing Ev decoding");
 
     auto const pAddressingTest =
       "\xFE\x0D\xFA\x0F\x00\x00"     // dec byte  [rel 0x1000]
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_MESSAGE("Testing Ev, Gv decoding");
+    BOOST_TEST_MESSAGE("Testing Ev, Gv decoding");
 
     auto const pAddressingOperandTest =
       "\x67\x88\x00"     // mov byte  [eax], al
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_MESSAGE("Testing Ev, Iz decoding");
+    BOOST_TEST_MESSAGE("Testing Ev, Iz decoding");
 
     auto const pAddressingImmediate =
       "\xC6\x00\xCC"                 // mov byte [rax], 0xcc
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_MESSAGE("Testing SIB");
+    BOOST_TEST_MESSAGE("Testing SIB");
 
     auto const pSib =
       "\x88\x8C\xD8\x90\x90\x90\x90" // mov [rax + rbx * 8 + 0x90909090], cl
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_MESSAGE("Testing Jb/Jv decoding");
+    BOOST_TEST_MESSAGE("Testing Jb/Jv decoding");
 
     auto const pRelative =
       "\xEB\x90"             // jmp short $+0x90
