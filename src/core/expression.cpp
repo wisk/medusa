@@ -171,13 +171,13 @@ Expression::SPType ConditionExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool ConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spRefExpr == spOldExpr)
+  if (m_spRefExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spRefExpr = spNewExpr;
     return true;
   }
 
-  if (m_spTestExpr == spOldExpr)
+  if (m_spTestExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spTestExpr = spNewExpr;
     return true;
@@ -266,25 +266,25 @@ Expression::SPType TernaryConditionExpression::Visit(ExpressionVisitor* pVisitor
 
 bool TernaryConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spRefExpr == spOldExpr)
+  if (m_spRefExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spRefExpr = spNewExpr;
     return true;
   }
 
-  if (m_spTestExpr == spOldExpr)
+  if (m_spTestExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spTestExpr = spNewExpr;
     return true;
   }
 
-  if (m_spTrueExpr == spOldExpr)
+  if (m_spTrueExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spTrueExpr = spNewExpr;
     return true;
   }
 
-  if (m_spFalseExpr == spOldExpr)
+  if (m_spFalseExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spFalseExpr = spNewExpr;
     return true;
@@ -350,19 +350,19 @@ Expression::SPType IfElseConditionExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool IfElseConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spRefExpr == spOldExpr)
+  if (m_spRefExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spRefExpr = spNewExpr;
     return true;
   }
 
-  if (m_spTestExpr == spOldExpr)
+  if (m_spTestExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spTestExpr = spNewExpr;
     return true;
   }
 
-  if (m_spThenExpr == spOldExpr)
+  if (m_spThenExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spThenExpr = spNewExpr;
     return true;
@@ -370,7 +370,7 @@ bool IfElseConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expres
 
   // NOTE: No need to check m_spElseExpr since spOldExpr cannot be nullptr
 
-  if (m_spElseExpr == spOldExpr)
+  if (m_spElseExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spElseExpr = spNewExpr;
     return true;
@@ -431,19 +431,19 @@ Expression::SPType WhileConditionExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool WhileConditionExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spRefExpr == spOldExpr)
+  if (m_spRefExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spRefExpr = spNewExpr;
     return true;
   }
 
-  if (m_spTestExpr == spOldExpr)
+  if (m_spTestExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spTestExpr = spNewExpr;
     return true;
   }
 
-  if (m_spBodyExpr == spOldExpr)
+  if (m_spBodyExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spBodyExpr = spNewExpr;
     return true;
@@ -503,13 +503,13 @@ Expression::SPType AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool AssignmentExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spDstExpr == spOldExpr)
+  if (m_spDstExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spDstExpr = spNewExpr;
     return true;
   }
 
-  if (m_spSrcExpr == spOldExpr)
+  if (m_spSrcExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spSrcExpr = spNewExpr;
     return true;
@@ -601,10 +601,51 @@ Expression::CompareType OperationExpression::Compare(Expression::SPType spExpr) 
   return CmpUnknown;
 }
 
+// TODO(wisk): handle more operations
 u8 OperationExpression::GetOppositeOperation(void) const
 {
-  // TODO:(KS)
-  return OpUnk;
+  switch (m_OpType)
+  {
+  default:
+    return OpUnk;
+
+  //case OpUnk:
+  //case OpNot:
+  //case OpNeg:
+  //case OpSwap:
+  //case OpBsf:
+  //case OpBsr:
+
+  //case OpFNeg:
+
+  //case OpAnd:
+  //case OpOr:
+  //case OpXor:
+  //case OpLls:
+  //case OpLrs:
+  //case OpArs:
+  //case OpRol:
+  //case OpRor:
+  case OpAdd: return OpSub;
+  case OpSub: return OpAdd;
+  //case OpMul:
+  //case OpSDiv:
+  //case OpUDiv:
+  //case OpSMod:
+  //case OpUMod:
+  //case OpSext:
+  //case OpZext:
+  //case OpInsertBits:
+  //case OpExtractBits:
+  //case OpClearBits:
+  //case OpBcast:
+
+  case OpFAdd: return OpFSub;
+  case OpFSub: return OpFAdd;
+  //case OpFMul:
+  //case OpFDiv:
+  //case OpFMod:
+  }
 }
 
 UnaryOperationExpression::UnaryOperationExpression(Type OpType, Expression::SPType spExpr)
@@ -640,11 +681,13 @@ Expression::SPType UnaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool UnaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spExpr != spOldExpr)
-    return false;
+  if (m_spExpr->Compare(spOldExpr) == CmpIdentical)
+  {
+    m_spExpr = spNewExpr;
+    return true;
+  }
 
-  m_spExpr = spNewExpr;
-  return true;
+  return false;
 }
 
 Expression::CompareType UnaryOperationExpression::Compare(Expression::SPType spExpr) const
@@ -702,13 +745,13 @@ Expression::SPType BinaryOperationExpression::Visit(ExpressionVisitor* pVisitor)
 bool BinaryOperationExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
   // LATER: What happens if left == right?
-  if (m_spLeftExpr == spOldExpr)
+  if (m_spLeftExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spLeftExpr = spNewExpr;
     return true;
   }
 
-  if (m_spRightExpr == spOldExpr)
+  if (m_spRightExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spRightExpr = spNewExpr;
     return true;
@@ -1381,13 +1424,13 @@ Expression::SPType MemoryExpression::ToAddress(void) const
 
 bool MemoryExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
-  if (m_spBaseExpr == spOldExpr)
+  if (m_spBaseExpr != nullptr && m_spBaseExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spBaseExpr = spNewExpr;
     return true;
   }
 
-  if (m_spOffExpr == spOldExpr)
+  if (m_spOffExpr->Compare(spOldExpr) == CmpIdentical)
   {
     m_spOffExpr = spNewExpr;
     return true;

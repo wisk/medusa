@@ -73,6 +73,7 @@ public:
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
   virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
@@ -95,6 +96,8 @@ public:
   void SetId(u32 Id, Expression::SPType spExpr);
 
 protected:
+  bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
+
   Document const&    m_rDoc;
   u8                 m_Mode;
   Address const&     m_rCurAddr;
