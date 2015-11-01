@@ -397,10 +397,26 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
   SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
   std::cout << SymVst.ToString() << std::endl;
 
+  std::string ExpectedResult =
+    "DST: 00401019, EXPR: (Id32(eax) = bv32(0x0002))\n"
+    "DST: 00401031, EXPR: (Id32(eax) = bv32(0x0003))\n"
+    "DST: 00401049, EXPR: (Id32(eax) = bv32(0x0004))\n"
+    "DST: 00401061, EXPR: (Id32(eax) = bv32(0x0005))\n"
+    "DST: 00401079, EXPR: (Id32(eax) = bv32(0x0006))\n"
+    "DST: 00401079, EXPR: (Id32(eax) = bv32(0x0007))\n"
+    "DST: 00401091, EXPR: (Id32(eax) = bv32(0x0008))\n"
+    "DST: 004010a9, EXPR: (Id32(eax) = bv32(0x0009))\n"
+    ;
+
+  std::ostringstream Res;
   BOOST_REQUIRE(SymVst.FindAllPaths(*spArch, [&](Address const& rDstAddr, Expression::SPType spExpr)
   {
-    std::cout << "DST: " << rDstAddr << ", EXPR: " << spExpr->ToString() << std::endl;
+    Res << "DST: " << rDstAddr << ", EXPR: " << spExpr->ToString() << std::endl;
   }));
+
+  std::cout << "CASES:" << std::endl << Res.str() << std::endl;
+
+  BOOST_REQUIRE(Res.str() == ExpectedResult);
 }
 
 //BOOST_AUTO_TEST_CASE(expr_tostr)
