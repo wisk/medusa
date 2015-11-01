@@ -176,6 +176,26 @@ Binding
 
 .. image:: https://raw.github.com/wisk/medusa/dev/img/shots/python_binding.png
 
+Docker image
+============
+
+If you do not wish to install the various dependencies on your system, you can
+use this docker image instead. Even though it is working out of the box, you may
+want to customize it to suit your needs or for added security (e.g. restrict ssh
+access to public key authentication only).
+
+Build the Medusa container
+--------------------------
+``docker build -t medusa .``
+
+Going inside the container
+--------------------------
+``docker run -it medusa /bin/bash``
+
+OR launch qMedusa (ssh with X forwarding)
+-----------------------------------------
+* ``docker run -it -d medusa``
+* ``ssh -X developer@<containers_ip> "medusa/build/bin/qMedusa"``
 
 Contacts
 ========
