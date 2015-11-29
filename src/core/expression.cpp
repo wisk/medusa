@@ -1471,12 +1471,20 @@ SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::st
 
 std::string SymbolicExpression::ToString(void) const
 {
-  static char const* TypeToStr[] = { "unknown", "retval", "parm", "undef" };
-  if (m_Type > Undefined)
-    return "<invalid symbolic expression>";
+  char const* pType = nullptr;
+  switch (m_Type)
+  {
+  case Unknown:           pType = "unknown";  break;
+  case ReturnedValue:     pType = "retval";   break;
+  case FromParameter:     pType = "parm";     break;
+  case ExternalValue:     pType = "extval";   break;
+  case ExternalFunction:  pType = "extfunc";  break;
+  case Undefined:         pType = "undef";    break;
+  default:                pType = "???";      break;
+  }
   if (m_spExpr == nullptr)
-    return (boost::format("Sym(%s, \"%s\", %s)") % TypeToStr[m_Type] % m_Value % m_Address.ToString()).str();
-  return (boost::format("Sym(%s, \"%s\", %s, %s)") % TypeToStr[m_Type] % m_Value % m_Address.ToString() % m_spExpr->ToString()).str();
+    return (boost::format("Sym(%s, \"%s\", %s)")   % pType % m_Value % m_Address.ToString()).str();
+  return (boost::format("Sym(%s, \"%s\", %s, %s)") % pType % m_Value % m_Address.ToString() % m_spExpr->ToString()).str();
 }
 
 Expression::SPType SymbolicExpression::Clone(void) const

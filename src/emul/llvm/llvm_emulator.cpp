@@ -323,7 +323,7 @@ Emulator::ReturnType LlvmEmulator::Execute(Address const& rAddress)
       }
     }
 
-    m_Builder.CreateRet(llvm::ConstantInt::getTrue(llvm::Type::getInt1Ty(llvm::getGlobalContext())));
+    m_Builder.CreateRet(llvm::ConstantInt::getIntegerValue(llvm::Type::getInt8Ty(llvm::getGlobalContext()), llvm::APInt(8, Emulator::Continue)));
     //pExecFunc->dump();
     pCode = m_JitHelper.GetFunctionCode(ExecAddr.ToString());
     if (pCode == nullptr)
@@ -383,7 +383,7 @@ llvm::Function* LlvmEmulator::LlvmJitHelper::CreateFunction(std::string const& r
     std::vector<llvm::Type*> Params;
     Params.push_back(pBytePtrType);
     Params.push_back(pBytePtrType);
-    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getInt1Ty(llvm::getGlobalContext()), Params, false);
+    s_pExecFuncType = llvm::FunctionType::get(llvm::Type::getInt8Ty(llvm::getGlobalContext()), Params, false);
   }
 
   if (m_pCurMod == nullptr)

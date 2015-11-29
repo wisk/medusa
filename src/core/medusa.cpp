@@ -45,9 +45,9 @@ std::string Medusa::GetVersion(void)
     % pBuildTime).str());
 }
 
-void Medusa::AddTask(Task* pTask)
+bool Medusa::AddTask(Task* pTask)
 {
-  m_TaskManager.AddTask(pTask);
+  return m_TaskManager.AddTask(pTask);
 }
 
 void Medusa::WaitForTasks(void)
@@ -413,20 +413,32 @@ Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, 
 
 bool Medusa::CreateFunction(Address const& rAddr)
 {
-  AddTask(m_Analyzer.CreateTask("create function", m_Document, rAddr));
-  return true;
+  return AddTask(m_Analyzer.CreateTask("create function", m_Document, rAddr));
 }
 
 bool Medusa::CreateUtf8String(Address const& rAddr)
 {
-  AddTask(m_Analyzer.CreateTask("create utf-8 string", m_Document, rAddr));
-  return true;
+  return AddTask(m_Analyzer.CreateTask("create utf-8 string", m_Document, rAddr));
 }
 
 bool Medusa::CreateUtf16String(Address const& rAddr)
 {
-  AddTask(m_Analyzer.CreateTask("create utf-16 string", m_Document, rAddr));
-  return true;
+  return AddTask(m_Analyzer.CreateTask("create utf-16 string", m_Document, rAddr));
+}
+
+bool Medusa::AddTask(std::string const& rTaskName)
+{
+  return AddTask(m_Analyzer.CreateTask(rTaskName, m_Document));
+}
+
+bool Medusa::AddTask(std::string const& rTaskName, Address const& rAddr)
+{
+  return AddTask(m_Analyzer.CreateTask(rTaskName, m_Document, rAddr));
+}
+
+bool Medusa::AddTask(std::string const& rTaskName, Address const& rAddr, Architecture& rArch, u8 Mode)
+{
+  return AddTask(m_Analyzer.CreateTask(rTaskName, m_Document, rAddr, rArch, Mode));
 }
 
 MEDUSA_NAMESPACE_END

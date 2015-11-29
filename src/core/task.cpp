@@ -29,12 +29,11 @@ void TaskManager::Start(void)
     {
       { std::unique_lock<std::mutex> Lock(m_Mutex);
 
-        while (m_Tasks.empty())
-          m_CondVar.wait(Lock);
+      while (m_Tasks.empty())
+        m_CondVar.wait(Lock);
 
-        pCurTask = m_Tasks.front();
-        m_Tasks.pop();
-
+      pCurTask = m_Tasks.front();
+      m_Tasks.pop();
       }
 
       if (pCurTask == nullptr)
@@ -45,19 +44,19 @@ void TaskManager::Start(void)
       pCurTask->Run();
       m_Notify(pCurTask);
       delete pCurTask;
-    }
 
-    while (!m_Tasks.empty())
-    {
-      { std::unique_lock<std::mutex> Lock(m_Mutex);
-      pCurTask = m_Tasks.front();
-      m_Tasks.pop();
-      }
-
-      if (pCurTask)
+      while (!m_Tasks.empty())
       {
-        pCurTask->Run();
-        delete pCurTask;
+        { std::unique_lock<std::mutex> Lock(m_Mutex);
+        pCurTask = m_Tasks.front();
+        m_Tasks.pop();
+        }
+
+        if (pCurTask)
+        {
+          pCurTask->Run();
+          delete pCurTask;
+        }
       }
     }
   });
@@ -85,23 +84,20 @@ void TaskManager::Wait(void)
   m_Running = false;
   if (m_Thread.joinable())
     m_Thread.join();
-  m_Running = true;
 }
 
-void TaskManager::AddTask(Task* pTask)
+bool TaskManager::AddTask(Task* pTask)
 {
   if (!m_Running)
-  {
-    delete pTask;
-    return;
-  }
+    Start();
 
   if (pTask == nullptr)
-    return;
+    return false;
 
   std::unique_lock<std::mutex> Lock(m_Mutex);
   m_Tasks.push(pTask);
   m_CondVar.notify_one();
+  return true;
 }
 
 MEDUSA_NAMESPACE_END

@@ -131,6 +131,8 @@ public:
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
+  SymbolicVisitor Fork(void) const;
+
   bool IsSymbolic(void) const { return m_IsSymbolic; }
   bool IsRelative(void) const { return m_IsRelative; }
   bool IsMemoryReference(void) const { return m_IsMemoryReference; }
@@ -146,8 +148,8 @@ public:
   typedef std::function<bool(Expression::SPType& rspExpr)> Updater;
   bool UpdateExpression(Expression::SPType spKeyExpr, Updater updt);
 
-  typedef std::function<void(Address const& rDstAddr, Expression::SPType& rspAssumExpr)> DestinationPathCallbackType;
-  bool FindAllPaths(Architecture& rArch, DestinationPathCallbackType DstPathCb);
+  typedef std::function<void(Expression::SPType spDstExpr, Expression::VSPType spCondExprs)> DestinationPathCallbackType;
+  bool FindAllPaths(int& rNumOfPathFound, Architecture& rArch, DestinationPathCallbackType DstPathCb);
 
 protected:
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;

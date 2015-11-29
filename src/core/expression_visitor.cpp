@@ -928,8 +928,9 @@ bool EvaluateVisitor::_EvaluateCondition(u8 CondOp, BitVectorExpression::SPType 
 
 SymbolicVisitor::SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef)
   : m_rDoc(rDoc), m_Mode(Mode)
-  , m_IsSymbolic(false), m_IsRelative(false), m_IsMemoryReference(false), m_Update(false)
+  , m_IsSymbolic(false), m_IsRelative(false), m_IsMemoryReference(false), m_Update(true)
   , m_EvalMemRef(EvalMemRef)
+  , m_CurPos()
 {
 
 }
@@ -984,9 +985,10 @@ Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpressi
   auto spTestExpr = spIfElseExpr->GetTestExpression()->Visit(this);
   m_Update = OldUpdateState;
 
+  // NOTE(wisk): If the condition use known values, we try to simplify it by evaluating it
+  // and then apply the result
   auto spConstRefExpr = expr_cast<BitVectorExpression>(spRefExpr);
   auto spConstTestExpr = expr_cast<BitVectorExpression>(spTestExpr);
-
   if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
   {
     OldUpdateState = m_Update;
@@ -1019,39 +1021,67 @@ Expression::SPType SymbolicVisitor::VisitWhileCondition(WhileConditionExpression
 Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   m_IsSymbolic = false;
+  bool OldUpdate = m_Update;
   m_Update = true;
   auto spSrcExpr = spAssignExpr->GetSourceExpression()->Visit(this);
-  m_Update = false;
+  m_Update = OldUpdate;
   ++m_CurPos;
 
+  if (spSrcExpr == nullptr)
+    return nullptr;
+
   auto spDstExpr = spAssignExpr->GetDestinationExpression();
+  // NOTE(wisk): If the destination is an identifier, we don't want to transform it
+  // to a bitvector if it's present on the symbolic context (e.g. pc register)
+  if (auto spDstIdExpr = expr_cast<IdentifierExpression>(spDstExpr))
+  {
+    m_Update = false;
+  }
+  // NOTE(wisk): We can't update variable as destination
+  else if (auto spDstVarExpr = expr_cast<VariableExpression>(spDstExpr))
+  {
+    m_Update = false;
+  }
   auto spDstExprVst = spDstExpr->Visit(this);
+  m_Update = OldUpdate;
 
   if (spDstExpr == nullptr || spDstExprVst == nullptr)
     return nullptr;
 
-  for (auto const& rSymPair : m_SymCtxt)
-  {
-    auto spCurExpr = GetExpression(rSymPair.first);
-
-    if ((spCurExpr->Compare(spDstExpr) == Expression::CmpIdentical) || (spCurExpr->Compare(spDstExprVst) == Expression::CmpIdentical))
-    {
-      m_SymCtxt.erase(rSymPair.first);
-      break;
-    }
-  }
-
   // If we have a conditional expression, we need to transform the source to a ternary expression
+  // We allow this operation even if update flag is false since we keep the conditional part
   if (m_spCond != nullptr)
   {
+    m_Update = true;
     auto spTernExpr = Expr::MakeTernaryCond(
       m_spCond->GetType(), m_spCond->GetReferenceExpression(), m_spCond->GetTestExpression(),
-      spSrcExpr, spDstExpr);
+      spSrcExpr, spDstExpr->Visit(this));
     spSrcExpr = spTernExpr;
   }
 
-  m_SymCtxt[spDstExprVst] = spSrcExpr;
-  return nullptr;
+  if (m_Update)
+  {
+    for (auto const& rSymPair : m_SymCtxt)
+    {
+      auto spCurExpr = GetExpression(rSymPair.first);
+      if (spCurExpr == nullptr)
+        continue;
+
+      if ((spCurExpr->Compare(spDstExpr) == Expression::CmpIdentical) || (spCurExpr->Compare(spDstExprVst) == Expression::CmpIdentical))
+      {
+        m_SymCtxt.erase(rSymPair.first);
+        break;
+      }
+    }
+
+    ExpressionRewriter ER(spSrcExpr);
+    ER.Execute();
+
+    m_SymCtxt[spDstExprVst] = spSrcExpr;
+  }
+
+  m_Update = OldUpdate;
+  return Expr::MakeAssign(spDstExprVst, spSrcExpr);
 }
 
 Expression::SPType SymbolicVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
@@ -1288,6 +1318,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
             return rSymPair.second;
         }
       }
+      break;
     }
 
     case VariableExpression::Free:
@@ -1329,7 +1360,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
   // Sometimes, we don't want to evaluate memory reference or we can't
   auto spOffConstExpr = expr_cast<BitVectorExpression>(spOffExpr);
-  if (!m_EvalMemRef || spOffConstExpr == nullptr)
+  if (spOffConstExpr == nullptr)
   {
     auto spMemExprVst = Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemExpr->IsDereferencable());
     if (!m_Update)
@@ -1348,6 +1379,25 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     Base = spBaseConstExpr->GetInt().ConvertTo<TBase>();
 
   Address CurAddr(Base, Offset);
+
+  auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
+  if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+  {
+    auto LblAddr = m_rDoc.GetAddressFromLabelName(Lbl.GetName());
+    return Expr::MakeSym(SymbolicExpression::ExternalFunction, Lbl.GetName(), LblAddr);
+  }
+
+  if (!m_EvalMemRef)
+  {
+    auto spMemExprVst = Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemExpr->IsDereferencable());
+    if (!m_Update)
+      return spMemExprVst;
+
+    auto spFoundExpr = FindExpression(spMemExprVst);
+    if (spFoundExpr == nullptr)
+      return spMemExprVst;
+    return spFoundExpr;
+  }
 
   TOffset FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
@@ -1390,6 +1440,31 @@ Expression::SPType SymbolicVisitor::VisitSymbolic(SymbolicExpression::SPType spS
 {
   m_IsSymbolic = true;
   return nullptr;
+}
+
+SymbolicVisitor SymbolicVisitor::Fork(void) const
+{
+  SymbolicVisitor Forked(m_rDoc, m_Mode, m_EvalMemRef);
+
+  for (auto const& rSymCtxtPair : m_SymCtxt)
+  {
+    Forked.m_SymCtxt[rSymCtxtPair.first] = rSymCtxtPair.second->Clone();
+  }
+
+  for (auto const& rSymCond : m_SymCond)
+    Forked.m_SymCond.push_back(rSymCond->Clone());
+
+  Forked.m_VarPool = m_VarPool;
+
+  Forked.m_IsSymbolic         = Forked.m_IsSymbolic;
+  Forked.m_IsRelative         = Forked.m_IsRelative;
+  Forked.m_IsMemoryReference  = Forked.m_IsMemoryReference;
+  Forked.m_Update             = m_Update;
+
+  Forked.m_CurAddr = m_CurAddr;
+  Forked.m_CurPos  = m_CurPos;
+
+  return Forked;
 }
 
 Expression::VSPType SymbolicVisitor::GetExpressions(void) const
@@ -1481,9 +1556,11 @@ bool SymbolicVisitor::UpdateAddress(Architecture& rArch, Address const& rAddr)
     if (spTrueVal == nullptr)
       continue;
     auto spFalseId = expr_cast<IdentifierExpression>(spTernExpr->GetFalseExpression());
-    if (spFalseId == nullptr)
-      continue;
-    if (spFalseId->GetId() != PcId)
+    if (spFalseId != nullptr)
+      if (spFalseId->GetId() != PcId)
+        continue;
+    auto spFalseVal = expr_cast<BitVectorExpression>(spTernExpr->GetFalseExpression());
+    if (spFalseVal == nullptr)
       continue;
 
     auto Cond = spTrueVal->GetInt().ConvertTo<u64>() == m_CurAddr.GetOffset() ? spTernExpr->GetCondition() : spTernExpr->GetOppositeCondition();
@@ -1524,8 +1601,9 @@ bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVis
   return false;
 }
 
-bool SymbolicVisitor::FindAllPaths(Architecture& rArch, SymbolicVisitor::DestinationPathCallbackType DstPathCb)
+bool SymbolicVisitor::FindAllPaths(int& rNumOfPathFound, Architecture& rArch, SymbolicVisitor::DestinationPathCallbackType DstPathCb)
 {
+  rNumOfPathFound = 0;
   auto const pCpuInfo = rArch.GetCpuInformation();
   if (pCpuInfo == nullptr)
     return false;
@@ -1534,19 +1612,52 @@ bool SymbolicVisitor::FindAllPaths(Architecture& rArch, SymbolicVisitor::Destina
   if (PcId == 0)
     return false;
 
-  auto PcExpr = FindExpression(Expr::MakeId(PcId, pCpuInfo));
-  if (PcExpr == nullptr)
+  auto spPcExpr = FindExpression(Expr::MakeId(PcId, pCpuInfo));
+  if (spPcExpr == nullptr)
     return false;
 
-  // Is it a simple branch to a register?
-  auto spIdDst = expr_cast<IdentifierExpression>(PcExpr);
-  if (spIdDst != nullptr)
+  // Is it a simple branch to a register (converted to a BitVector)?
+  auto spBvDst = expr_cast<BitVectorExpression>(spPcExpr);
+  if (spBvDst != nullptr)
   {
-    // TODO(wisk):
+    ++rNumOfPathFound;
+    DstPathCb(spBvDst, {});
+    return true;
+  }
+
+  // Is it a call to an API?
+  auto spSymDst = expr_cast<SymbolicExpression>(spPcExpr);
+  if (spSymDst != nullptr)
+  {
+    ++rNumOfPathFound;
+    DstPathCb(spSymDst, {});
+    return true;
+  }
+
+  // Is it a conditional branch?
+  auto spTernDst = expr_cast<TernaryConditionExpression>(spPcExpr);
+  if (spTernDst != nullptr)
+  {
+    rNumOfPathFound += 2;
+    DstPathCb(spTernDst->GetTrueExpression(),
+    {
+      Expr::MakeCond(
+      spTernDst->GetCondition(),
+      spTernDst->GetReferenceExpression(), spTernDst->GetTestExpression())
+    });
+
+    DstPathCb(spTernDst->GetFalseExpression(),
+    {
+      Expr::MakeCond(
+      spTernDst->GetOppositeCondition(),
+      spTernDst->GetReferenceExpression(), spTernDst->GetTestExpression())
+    });
+
+    return true;
   }
 
   // Is it a branch table (switch)
-  auto spMemDst = expr_cast<MemoryExpression>(PcExpr);
+  auto spMemDst = expr_cast<MemoryExpression>(spPcExpr);
   if (spMemDst != nullptr)
   {
     using namespace Pattern;
@@ -1605,7 +1716,9 @@ bool SymbolicVisitor::FindAllPaths(Architecture& rArch, SymbolicVisitor::Destina
         Idx = spBvIdxExpr->GetInt();
     }
 
+    // LATER(wisk): at this time, we only support one condition...
     auto spCurCond = m_SymCond.front();
+    bool FoundPath = false;
     while (true)
     {
       EvaluateVisitor EvalCondVst(m_rDoc, m_CurAddr, m_Mode, true);
@@ -1635,10 +1748,13 @@ bool SymbolicVisitor::FindAllPaths(Architecture& rArch, SymbolicVisitor::Destina
       Address DstAddr = m_CurAddr;
       DstAddr.SetOffset(spDstResExpr->GetInt().ConvertTo<TOffset>());
       auto spAssumedExpr = Expr::MakeAssign(spIdxRegExpr, Expr::MakeBitVector(Idx));
-      DstPathCb(DstAddr, spAssumedExpr);
+      ++rNumOfPathFound;
+      DstPathCb(spDstResExpr, { spAssumedExpr });
 
       ++Idx;
     }
+
+    return true;
   }
 
   return true;

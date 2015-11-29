@@ -147,6 +147,15 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address
     });
   }
 
+  if (rTaskName == "symbolic disassemble")
+  {
+    return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)
+    {
+      AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
+      AnlzDisasm.DisassembleUsingSymbolicExecution();
+    });
+  }
+
   if (rTaskName == "create function")
   {
     return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)

@@ -693,6 +693,8 @@ public:
     Unknown,
     ReturnedValue,
     FromParameter,
+    ExternalValue,
+    ExternalFunction,
     Undefined,
   };
 

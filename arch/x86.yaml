@@ -81,6 +81,13 @@ function:
     else:
       op1.offset += int(op1.offset.bit, op1.byte);
 
+  load_string: &load_string |
+    op1.val = op0.val;
+    if __expr and df.id == int1(1):
+      op1.offset -= int(op1.offset.bit, op1.byte)
+    else:
+      op1.offset += int(op1.offset.bit, op1.byte);
+
   move_string: &move_string |
     op1.val = op0.val;
     if __expr and df.id == int1(1):
@@ -1037,6 +1044,14 @@ semantic:
         cnt.id -= int(cnt.bit, 1);
     if __code and instruction_has_no_prefix(rep):
       call('store_string');
+
+  lods: &lods |
+    if __code and instruction_has_prefix(rep):
+      while cnt.id != int(cnt.bit, 0):
+        call('load_string')
+        cnt.id -= int(cnt.bit, 1);
+    if __code and instruction_has_no_prefix(rep):
+      call('load_string')
 
   movs: &movs |
     if __code and instruction_has_prefix(rep):
@@ -2654,11 +2669,13 @@ instruction:
         mnemonic: lods
         operand: [ AL, Xb ]
         test_flags: [ df ]
+        semantic: *lods
 
       - opcode: 0xad
         mnemonic: lods
         operand: [ rAX, Xv ]
         test_flags: [ df ]
+        semantic: *lods
 
       - opcode: 0xae
         mnemonic: scas

@@ -32,7 +32,7 @@ public:
   void Stop(void);
   void Wait(void);
 
-  void AddTask(Task* pTask);
+  bool AddTask(Task* pTask);
 
 private:
   std::atomic<bool>       m_Running;

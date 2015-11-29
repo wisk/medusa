@@ -1,5 +1,6 @@
 #include "medusa/analyzer.hpp"
 #include "medusa/module.hpp"
+#include "medusa/expression_visitor.hpp"
 
 namespace medusa
 {
@@ -598,7 +599,9 @@ namespace medusa
         "Unknown",
         "Unconditional",
         "True",
-        "False"
+        "False",
+        "Next",
+        "Multiple",
       };
       bool Res = rCfg.SplitBasicBlock(std::get<0>(*itEdge), std::get<1>(*itEdge), std::get<2>(*itEdge));
       Log::Write("core") << "dst: " << std::get<0>(*itEdge) << ", src: " << std::get<1>(*itEdge) << ", type: " << TypeStr[std::get<2>(*itEdge)] << (Res ? ", succeed" : ", failed") << LogEnd;
@@ -619,13 +622,18 @@ namespace medusa
   bool AnalyzerDisassemble::DisassembleUsingSymbolicExecution(void)
   {
     auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
-    if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
+    if (Lbl.IsImported())
       return true;
 
-    std::stack<Address> CallStack;
-    Address::List FuncAddr;
+    Address::List Addresses;
+    typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> TupleEdge;
+    std::vector<TupleEdge> Branches;
+    std::stack<std::tuple<SymbolicVisitor, Address>> CallStack;
+    Address::Vector FuncAddr;
     Address CurAddr = m_Addr;
     MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+    std::map<Address, bool> VisitedInstruction;
 
     if (pMemArea == nullptr)
     {
@@ -634,146 +642,154 @@ namespace medusa
     }
 
     // Push entry point
-    CallStack.push(CurAddr);
+    CallStack.push(std::make_tuple(SymbolicVisitor(m_rDoc, m_rDoc.GetMode(CurAddr)), CurAddr));
 
-    // Do we still have functions to disassemble?
     while (!CallStack.empty())
     {
-      // Retrieve the last function
-      CurAddr = CallStack.top();
+      auto SymVst = std::get<0>(CallStack.top());
+      CurAddr = std::get<1>(CallStack.top());
       CallStack.pop();
-      bool FunctionIsFinished = false;
 
-      //Log::Write("debug") << "Analyzing address: " << CurAddr.ToString() << LogEnd;
+      Addresses.push_back(CurAddr);
 
-      // Disassemble a function
-      while (!m_rDoc.ContainsCode(CurAddr))
+      auto ArchTag = m_rDoc.GetArchitectureTag(CurAddr);
+      auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
+      auto Mode = m_rDoc.GetMode(CurAddr);
+
+      TOffset Off;
+      m_rDoc.ConvertAddressToFileOffset(CurAddr, Off);
+      auto spInsn = std::make_shared<Instruction>();
+
+      if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), Off, *spInsn, Mode))
       {
-        //Log::Write("debug") << "Disassembling basic block at " << CurAddr.ToString() << LogEnd;
+        Log::Write("core").Level(LogError) << "failed to disassemble instruction at: " << CurAddr << LogEnd;
+        break;
+      }
 
-        auto const& rLbl = m_rDoc.GetLabelFromAddress(CurAddr);
-        if ((rLbl.GetType() & Label::AccessMask) == Label::Imported)
-          break;
+      if (!m_rDoc.SetCell(CurAddr, spInsn, true))
+      {
+        Log::Write("core").Level(LogError) << "failed to set instruction at: " << CurAddr << LogEnd;
+        break;
+      }
 
-        // Let's try to disassemble a basic block
-        AnalyzerDisassemble AnlzDisasm(m_rDoc, CurAddr);
-        std::list<Instruction::SPType> BasicBlock;
-        if (!AnlzDisasm.DisassembleBasicBlock(BasicBlock))
-          break;
-        if (BasicBlock.size() == 0)
-          break;
+      auto InsnExprs = spInsn->GetSemantic();
 
-        for (auto spInsn : BasicBlock)
-        {
-          auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
-          if (spArch == nullptr)
-            return false;
+      // If we don't have semantic, we're gonna ignore this instruction
+      if (InsnExprs.empty())
+      {
+        Log::Write("core").Level(LogWarning) << "no semantic for instruction: " << spInsn->GetName() << LogEnd;
+        CurAddr += spInsn->GetLength();
+        continue;
+      }
 
-          if (m_rDoc.ContainsCode(CurAddr))
-          {
-            //Log::Write("debug") << "Instruction is already disassembled at " << CurAddr.ToString() << LogEnd;
-            FunctionIsFinished = true;
-            continue;
-          }
+      if (!SymVst.UpdateAddress(*spArch, CurAddr))
+      {
+        return false;
+      }
+      for (auto Expr : InsnExprs)
+      {
+        Expr->Visit(&SymVst);
+      }
 
-          if (!m_rDoc.SetCell(CurAddr, spInsn, true))
-          {
-            //Log::Write("core") << "Error while inserting instruction at " << CurAddr.ToString() << LogEnd;
-            FunctionIsFinished = true;
-            continue;
-          }
+      //Log::Write("dbg") << SymVst.ToString() << LogEnd;
 
-          for (u8 i = 0; i < spInsn->GetNumberOfOperand(); ++i)
-          {
-            Address DstAddr;
-            if (spInsn->GetOperandReference(m_rDoc, i, spArch->CurrentAddress(CurAddr, *spInsn), DstAddr))
-              CallStack.push(DstAddr);
-          }
+      int NumOfPathFound;
+      if (!SymVst.FindAllPaths(NumOfPathFound, *spArch, [&](Expression::SPType spDstExpr, Expression::VSPType spCondExprs)
+      {
+        Log::Write("dbg") << "DST: " << spDstExpr->ToString();
+        for (auto spCondExpr : spCondExprs)
+          Log::Write("dbg") << ", COND: " << spCondExpr->ToString();
+         Log::Write("dbg") << LogEnd;
 
-          AnalyzerInstruction AnlzInsn(m_rDoc, CurAddr);
-          AnlzInsn.FindCrossReference();
 
-          auto InsnType = spInsn->GetSubType();
-          if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
-            CurAddr += spInsn->GetLength();
-        }
+         // NOTE(wisk): Ignore symbolic branches
+         // LATER(wisk): We may want to undefine some registers according the calling convention and fix the stack if needed
+         // FIXME(wisk): It won't work with code like: cond_branch <extfunc>
+         if (auto spSymExpr = expr_cast<SymbolicExpression>(spDstExpr))
+         {
+           Address DstAddr = CurAddr + spInsn->GetLength();
+           CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
+           Branches.push_back(std::make_tuple(CurAddr, DstAddr, BasicBlockEdgeProperties::Unknown));
+         }
 
-        if (FunctionIsFinished)
-          break;
+         else if (auto spBvExpr = expr_cast<BitVectorExpression>(spDstExpr))
+         {
+           // LATER(wisk): We method is not fully generic
+           Address DstAddr = CurAddr;
+           DstAddr.SetOffset(spBvExpr->GetInt().ConvertTo<TOffset>());
+           CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
+           Branches.push_back(std::make_tuple(CurAddr, DstAddr, BasicBlockEdgeProperties::Unknown));
+         }
 
-        auto spLastInsn = BasicBlock.back();
-        //Log::Write("debug") << "Last insn: " << spLastInsn->ToString() << LogEnd;
-        auto spArch = ModuleManager::Instance().GetArchitecture(spLastInsn->GetArchitectureTag());
-        if (spArch == nullptr)
-          break;
+         else
+         {
+           Log::Write("core").Level(LogWarning) << "unknown destination type: " << CurAddr << LogEnd;
+         }
+      }))
+      {
+        Log::Write("core").Level(LogWarning) << "unknown destination: " << CurAddr << LogEnd;
+      }
 
-        switch (spLastInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType | Instruction::ReturnType))
-        {
-          // If the last instruction is a call, we follow it and save the return address
-        case Instruction::CallType:
-        {
-          Address DstAddr;
+      switch (Branches.size())
+      {
+      case 0: // 0 path means we don't where we're going... (usually it's a ret type insn)
+        break;
 
-          // Save return address
-          CallStack.push(spArch->CurrentAddress(CurAddr, *spLastInsn));
+      case 1: // 1 path means it's a simple branch
+        //Log::Write("dbg") << "it's a simple branch" << LogEnd;
+        std::get<2>(Branches.front()) = BasicBlockEdgeProperties::Unconditional;
+        break;
 
-          // Sometimes, we cannot determine the destination address, so we give up
-          // We assume destination is hold in the first operand
-          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
-          {
-            FunctionIsFinished = true;
-            break;
-          }
+      case 2: // 2 paths mean it's a conditional branch
+        //Log::Write("dbg") << "it's a conditional branch" << LogEnd;
+        std::get<2>(Branches[0]) = BasicBlockEdgeProperties::True;
+        std::get<2>(Branches[1]) = BasicBlockEdgeProperties::False;
+        break;
 
-          FuncAddr.push_back(DstAddr);
-          CurAddr = DstAddr;
-          break;
-        } // end CallType
+      default: // default means it's a multiple branch (branch table)
+        //Log::Write("dbg") << "it's a multiple branch" << LogEnd;
+        for (auto i = 0UL; i < Branches.size(); ++i)
+          std::get<2>(Branches[i]) = BasicBlockEdgeProperties::Multiple;
+        break;
+      }
 
-        // If the last instruction is a ret, we emulate its behavior
-        case Instruction::ReturnType:
-        {
-          // We ignore conditional ret
-          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
-          {
-            CurAddr += spLastInsn->GetLength();
-            continue;
-          }
+      // NOTE(wisk): If we find new paths, we have to exit this loop so we
+      // can use multiple symbolic context
+      //if (NumOfPathFound != 0)
+      //  break;
+    }
 
-          // ret if reached, we try to disassemble an another function (or another part of this function)
-          FunctionIsFinished = true;
-          break;
-        } // end ReturnType
+    // Now we can build the control flow graph
+    ControlFlowGraph Cfg(m_rDoc);
+    BasicBlockVertexProperties FirstBasicBlock(m_rDoc, Addresses);
 
-        // Jump type could be a bit tedious to handle because of conditional jump
-        // Basically we use the same policy as call instruction
+    // This case is required because a jmp type insn can be located just before the entry point of a function,
+    // thus nothing can split this part (which normally is done by the call <func>)
+    Address::List FirstSplitAddrs;
+    if (FirstBasicBlock.Split(m_Addr, FirstSplitAddrs))
+      Cfg.AddBasicBlockVertex(BasicBlockVertexProperties(m_rDoc, FirstSplitAddrs));
 
-        case Instruction::JumpType:
-        {
-          Address DstAddr;
+    Cfg.AddBasicBlockVertex(FirstBasicBlock);
 
-          // Save untaken branch address
-          if (spLastInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + spLastInsn->GetLength());
+    for (auto const& rBranch : Branches)
+    {
+      static const char *TypeStr[] =
+      {
+        "Unknown",
+        "Unconditional",
+        "True",
+        "False",
+        "Next",
+        "Multiple",
+      };
+      bool Res = Cfg.SplitBasicBlock(std::get<0>(rBranch), std::get<1>(rBranch), std::get<2>(rBranch));
+      Log::Write("core") << "dst: " << std::get<0>(rBranch) << ", src: " << std::get<1>(rBranch) << ", type: " << TypeStr[std::get<2>(rBranch)] << (Res ? ", succeed" : ", failed") << LogEnd;
+    }
 
-          // Sometime, we can't determine the destination address, so we give up
-          if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
-          {
-            FunctionIsFinished = true;
-            break;
-          }
+    for (auto const& rBranch : Branches)
+      Cfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(rBranch)), std::get<1>(rBranch), std::get<0>(rBranch));
 
-          CurAddr = DstAddr;
-          break;
-        } // end JumpType
-
-        default: break; // This case should never happen
-        } // switch (spLastInsn->GetSubType())
-
-        if (FunctionIsFinished)
-          break;
-      } // end while (m_Document.IsPresent(CurAddr))
-    } // while (!CallStack.empty())
+    Cfg.Finalize(m_rDoc);
 
     return true;
   }

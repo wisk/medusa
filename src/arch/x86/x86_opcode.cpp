@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Sep 28 16:13:38 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Nov 19 09:14:46 2015) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -31025,6 +31025,13 @@ bool X86Architecture::Table_1_ab(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['AL', 'Xb']
  * test_flags: ['df']
  * opcode: ac
+ * semantic: if __code and instruction_has_prefix(rep):
+  while cnt.id != int(cnt.bit, 0):
+    call('load_string')
+    cnt.id -= int(cnt.bit, 1);
+if __code and instruction_has_no_prefix(rep):
+  call('load_string')
+
 **/
 bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -31037,6 +31044,76 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       Expression::LSPType AllExpr;
       rInsn.SetTestedFlags(X86_FlDf);
+      /* semantic: if __code and instruction_has_prefix(rep):
+        while cnt.id != int(cnt.bit, 0):
+          call('load_string')
+          cnt.id -= int(cnt.bit, 1) */
+      if (rInsn.GetPrefix() & (X86_Prefix_Rep))
+      {
+        /* block glb expressions */
+        AllExpr.push_back(Expr::MakeWhileCond(
+          ConditionExpression::CondNe,
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+          Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x0),
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            rInsn.GetOperand(1),
+            rInsn.GetOperand(0)),
+          Expr::MakeIfElseCond(
+            ConditionExpression::CondEq,
+            Expr::MakeId(X86_FlDf, &m_CpuInfo),
+            Expr::MakeBitVector(1, 0x1),
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
+        ));
+      }
+      /* semantic: if __code and instruction_has_no_prefix(rep):
+        call('load_string')
+       */
+      if (!(rInsn.GetPrefix() & (X86_Prefix_Rep)))
+      {
+        /* block glb expressions */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(1),
+          rInsn.GetOperand(0)));
+        AllExpr.push_back(Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeId(X86_FlDf, &m_CpuInfo),
+          Expr::MakeBitVector(1, 0x1),
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+        ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+        ));
+      }
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -31047,6 +31124,13 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['rAX', 'Xv']
  * test_flags: ['df']
  * opcode: ad
+ * semantic: if __code and instruction_has_prefix(rep):
+  while cnt.id != int(cnt.bit, 0):
+    call('load_string')
+    cnt.id -= int(cnt.bit, 1);
+if __code and instruction_has_no_prefix(rep):
+  call('load_string')
+
 **/
 bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
@@ -31059,6 +31143,76 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
     {
       Expression::LSPType AllExpr;
       rInsn.SetTestedFlags(X86_FlDf);
+      /* semantic: if __code and instruction_has_prefix(rep):
+        while cnt.id != int(cnt.bit, 0):
+          call('load_string')
+          cnt.id -= int(cnt.bit, 1) */
+      if (rInsn.GetPrefix() & (X86_Prefix_Rep))
+      {
+        /* block glb expressions */
+        AllExpr.push_back(Expr::MakeWhileCond(
+          ConditionExpression::CondNe,
+          Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+          Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x0),
+          Expr::MakeBind({
+          Expr::MakeAssign(
+            rInsn.GetOperand(1),
+            rInsn.GetOperand(0)),
+          Expr::MakeIfElseCond(
+            ConditionExpression::CondEq,
+            Expr::MakeId(X86_FlDf, &m_CpuInfo),
+            Expr::MakeBitVector(1, 0x1),
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpSub,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          ,
+            Expr::MakeAssign(
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBinOp(
+                OperationExpression::OpAdd,
+                expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+                Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+          ),
+          Expr::MakeAssign(
+            Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode()), &m_CpuInfo),
+              Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x1)))
+          })
+        ));
+      }
+      /* semantic: if __code and instruction_has_no_prefix(rep):
+        call('load_string')
+       */
+      if (!(rInsn.GetPrefix() & (X86_Prefix_Rep)))
+      {
+        /* block glb expressions */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(1),
+          rInsn.GetOperand(0)));
+        AllExpr.push_back(Expr::MakeIfElseCond(
+          ConditionExpression::CondEq,
+          Expr::MakeId(X86_FlDf, &m_CpuInfo),
+          Expr::MakeBitVector(1, 0x1),
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpSub,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+        ,
+          Expr::MakeAssign(
+            expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+            Expr::MakeBinOp(
+              OperationExpression::OpAdd,
+              expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression(),
+              Expr::MakeBitVector(expr_cast<MemoryExpression>(rInsn.GetOperand(1))->GetOffsetExpression()->GetBitSize(), rInsn.GetOperand(1)->GetBitSize() / 8)))
+        ));
+      }
       rInsn.SetSemantic(AllExpr);
     }
     return true;

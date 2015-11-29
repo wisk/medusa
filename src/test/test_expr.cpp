@@ -263,6 +263,111 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
   delete pX86Disasm;
 }
 
+BOOST_AUTO_TEST_CASE(expr_x86_call_reg)
+{
+  using namespace medusa;
+
+  Log::SetLog([](std::string const& rMsg)
+  {
+    std::cout << rMsg << std::flush;
+  });
+
+  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/call_reg.pe.x86-32";
+  std::cout << "disassembling program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    BOOST_REQUIRE(Core.NewDocument(
+      spFileBinStrm, true,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "call_reg.pe.x86-32_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    BOOST_REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
+
+  auto const& rDoc = Core.GetDocument();
+  auto const& rStartAddr = rDoc.GetAddressFromLabelName("start");
+  auto spStartCell = rDoc.GetCell(rStartAddr);
+
+  auto spArch = ModuleManager::Instance().GetArchitecture(spStartCell->GetArchitectureTag());
+  BOOST_REQUIRE(spArch != nullptr);
+
+  SymbolicVisitor SymVst(Core.GetDocument(), spStartCell->GetMode());
+
+  auto SymExec = [&](Address const& rAddr)
+  {
+    BOOST_REQUIRE(SymVst.UpdateAddress(*spArch, rAddr));
+    auto spInsn = std::dynamic_pointer_cast<Instruction>(Core.GetCell(rAddr));
+    BOOST_REQUIRE(spInsn != nullptr);
+    for (auto const& rspExpr : spInsn->GetSemantic())
+    {
+      rspExpr->Visit(&SymVst);
+    }
+  };
+
+  auto pCpuInfo = spArch->GetCpuInformation();
+  auto EIP = pCpuInfo->ConvertNameToIdentifier("eip");
+  auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
+  BOOST_REQUIRE(EIP != 0);
+  BOOST_REQUIRE(EAX != 0);
+
+  std::vector<Address> Addrs =
+  {
+    rDoc.MakeAddress(0x0000, 0x00401000),
+    rDoc.MakeAddress(0x0000, 0x00401001),
+    rDoc.MakeAddress(0x0000, 0x00401007),
+    rDoc.MakeAddress(0x0000, 0x00401009),
+    rDoc.MakeAddress(0x0000, 0x0040100E),
+    rDoc.MakeAddress(0x0000, 0x00401013),
+    rDoc.MakeAddress(0x0000, 0x00401015),
+    rDoc.MakeAddress(0x0000, 0x00401017),
+    rDoc.MakeAddress(0x0000, 0x00401019),
+    rDoc.MakeAddress(0x0000, 0x0040101E),
+    rDoc.MakeAddress(0x0000, 0x00401023),
+    rDoc.MakeAddress(0x0000, 0x00401025),
+    rDoc.MakeAddress(0x0000, 0x00401027),
+    rDoc.MakeAddress(0x0000, 0x00401029),
+    rDoc.MakeAddress(0x0000, 0x0040102E),
+    rDoc.MakeAddress(0x0000, 0x00401033),
+    rDoc.MakeAddress(0x0000, 0x00401035),
+    rDoc.MakeAddress(0x0000, 0x00401037),
+    rDoc.MakeAddress(0x0000, 0x00401039),
+    rDoc.MakeAddress(0x0000, 0x0040103A),
+  };
+
+  for (auto const& rAddr : Addrs)
+  {
+    SymExec(rAddr);
+    int NumOfPathFound;
+    SymVst.FindAllPaths(NumOfPathFound, *spArch, [&](Expression::SPType spDstExpr, Expression::VSPType spCondExprs)
+    {
+      std::cout << "DST: " << spDstExpr->ToString();
+      for (auto spCondExpr : spCondExprs)
+        std::cout << ", EXPR: " << spCondExpr->ToString();
+        std::cout << std::endl;
+    });
+
+    //auto spExpr = SymVst.FindExpression(Expr::MakeId(EIP, pCpuInfo));
+    //BOOST_REQUIRE(spExpr != nullptr);
+    //std::cout << spExpr->ToString() << std::endl;
+  }
+
+  std::cout << SymVst.ToString() << std::endl;
+}
+
 BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 {
   using namespace medusa;
@@ -296,127 +401,11 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
     BOOST_REQUIRE(0);
   }
 
+  auto& rDoc = Core.GetDocument();
+
+  BOOST_REQUIRE(Core.AddTask("symbolic disassemble", rDoc.MakeAddress(0x0000, 0x00401000)));
+
   Core.WaitForTasks();
-
-  auto const& rDoc = Core.GetDocument();
-  auto const& rStartAddr = rDoc.GetAddressFromLabelName("start");
-  auto spStartCell = rDoc.GetCell(rStartAddr);
-
-  auto spArch = ModuleManager::Instance().GetArchitecture(spStartCell->GetArchitectureTag());
-  BOOST_REQUIRE(spArch != nullptr);
-
-  SymbolicVisitor SymVst(Core.GetDocument(), spStartCell->GetMode());
-
-  auto SymExec = [&](Address const& rAddr)
-  {
-    BOOST_REQUIRE(SymVst.UpdateAddress(*spArch, rAddr));
-    auto spInsn = std::dynamic_pointer_cast<Instruction>(Core.GetCell(rAddr));
-    BOOST_REQUIRE(spInsn != nullptr);
-    for (auto const& rspExpr : spInsn->GetSemantic())
-    {
-      rspExpr->Visit(&SymVst);
-    }
-  };
-
-  SymExec(rDoc.MakeAddress(0x0000, 0x00401006));
-  SymExec(rDoc.MakeAddress(0x0000, 0x00401009));
-  SymExec(rDoc.MakeAddress(0x0000, 0x0040100c));
-  std::cout << SymVst.ToString() << std::endl;
-
-  auto pCpuInfo = spArch->GetCpuInformation();
-  auto EIP = pCpuInfo->ConvertNameToIdentifier("eip");
-  auto EAX = pCpuInfo->ConvertNameToIdentifier("eax");
-  BOOST_REQUIRE(EIP != 0);
-  auto spExpr = SymVst.FindExpression(Expr::MakeId(EIP, pCpuInfo));
-  BOOST_REQUIRE(spExpr != nullptr);
-  std::cout << spExpr->ToString() << std::endl;
-
-  auto spTernExpr = expr_cast<TernaryConditionExpression>(spExpr);
-  BOOST_REQUIRE(spTernExpr != nullptr);
-
-  using namespace Pattern;
-
-  ExpressionFilter ExprFlt_CmpA(Ternary("expr", EQ((
-    OR(
-    /**/BCAST(
-    /****/LRS(
-    /******/XOR(
-    /********/XOR(
-    /**********/XOR(
-    /************/Any("op0"),
-    /************/Any("op1")),
-    /**********/Any("res")),
-    /********/AND(
-    /**********/XOR(
-    /************/Any("op0"),
-    /************/Any("res")),
-    /**********/XOR(
-    /************/Any("op0"),
-    /************/Any("op1")))),
-    /******/Any("shift_value")),
-    /****/Any("cast_bitsize")),
-    /**/Ternary("zf",
-    /****/EQ(Any("zf_op0"), Any("zero")),
-    /****/Any("zf_true"), Any("zf_false")))),
-
-    Any("int1_0")), Any("true"), Any("false")));
-  BOOST_REQUIRE(ExprFlt_CmpA.Execute(spTernExpr));
-
-  auto expr   = ExprFlt_CmpA.GetExpression("expr");
-  auto op0    = ExprFlt_CmpA.GetExpression("op0");
-  auto op1    = ExprFlt_CmpA.GetExpression("op1");
-  auto res    = ExprFlt_CmpA.GetExpression("res");
-  auto _true  = ExprFlt_CmpA.GetExpression("true");
-  auto _false = ExprFlt_CmpA.GetExpression("false");
-
-  std::cout
-    << "expr:  " << expr->ToString() << std::endl
-    << "op0:   " << op0->ToString() << std::endl
-    << "op1:   " << op1->ToString() << std::endl
-    << "res:   " << res->ToString() << std::endl
-    << "true:  " << _true->ToString() << std::endl
-    << "false: " << _false->ToString() << std::endl
-    ;
-
-  ExpressionRewriter ExprRwr(spExpr);
-  BOOST_REQUIRE(ExprRwr.Execute());
-
-  std::cout << spExpr->ToString() << std::endl;
-
-
-  SymVst.UpdateExpression(Expr::MakeId(EIP, pCpuInfo), [&](Expression::SPType& rspExpr)
-  {
-    ExpressionRewriter ER(rspExpr);
-    ER.Execute();
-    return true;
-  });
-
-  std::cout << SymVst.ToString() << std::endl;
-  std::cout << std::string(80, '#') << std::endl;
-
-  SymExec(rDoc.MakeAddress(0x0000, 0x00401012));
-  std::cout << SymVst.ToString() << std::endl;
-
-  std::string ExpectedResult =
-    "DST: 00401019, EXPR: (Id32(eax) = bv32(0x0002))\n"
-    "DST: 00401031, EXPR: (Id32(eax) = bv32(0x0003))\n"
-    "DST: 00401049, EXPR: (Id32(eax) = bv32(0x0004))\n"
-    "DST: 00401061, EXPR: (Id32(eax) = bv32(0x0005))\n"
-    "DST: 00401079, EXPR: (Id32(eax) = bv32(0x0006))\n"
-    "DST: 00401079, EXPR: (Id32(eax) = bv32(0x0007))\n"
-    "DST: 00401091, EXPR: (Id32(eax) = bv32(0x0008))\n"
-    "DST: 004010a9, EXPR: (Id32(eax) = bv32(0x0009))\n"
-    ;
-
-  std::ostringstream Res;
-  BOOST_REQUIRE(SymVst.FindAllPaths(*spArch, [&](Address const& rDstAddr, Expression::SPType spExpr)
-  {
-    Res << "DST: " << rDstAddr << ", EXPR: " << spExpr->ToString() << std::endl;
-  }));
-
-  std::cout << "CASES:" << std::endl << Res.str() << std::endl;
-
-  BOOST_REQUIRE(Res.str() == ExpectedResult);
 }
 
 //BOOST_AUTO_TEST_CASE(expr_tostr)

@@ -54,7 +54,8 @@ public:
     Unconditional,
     True,
     False,
-    Next
+    Next,
+    Multiple,
   };
 
   BasicBlockEdgeProperties(Type Type = Unknown) : m_Type(Type) {}

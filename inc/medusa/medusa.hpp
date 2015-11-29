@@ -35,7 +35,7 @@ public:
 
   static std::string              GetVersion(void);
 
-  void                            AddTask(Task* pTask);
+  bool                            AddTask(Task* pTask);
   void                            WaitForTasks(void);
 
   bool                            Start(
@@ -126,6 +126,9 @@ public:
   bool                            CreateUtf16String(Address const& rAddr);
   void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
 
+  bool                            AddTask(std::string const& rTaskName);
+  bool                            AddTask(std::string const& rTaskName, Address const& rAddr);
+  bool                            AddTask(std::string const& rTaskName, Address const& rAddr, Architecture& rArch, u8 Mode);
 private:
   TaskManager        m_TaskManager;
   Document           m_Document;
