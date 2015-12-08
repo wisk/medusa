@@ -27,6 +27,9 @@ bool UnixOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rA
 //http://asm.sourceforge.net/articles/startup.html
 //https://grugq.github.io/docs/ul_exec.txt
 // TODO: Make sure StkLen is large enough...
+// TODO(wisk): handle stack cookie for linux
+// - https://stackoverflow.com/questions/10325713/why-does-this-memory-address-have-a-random-value
+// - https://fossies.org/dox/glibc-2.22/structtcbhead__t.html
 bool UnixOperatingSystem::InitializeContext(
   Document const& rDoc,
   CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
@@ -47,6 +50,7 @@ bool UnixOperatingSystem::InitializeContext(
   u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
   if (StkRegSize < 8)
     return false;
+  StkRegSize /= 8; // Set stack register size in byte
 
   u64 StkOff = 0;
   u64 NullPtr = 0x0;
@@ -71,6 +75,8 @@ bool UnixOperatingSystem::InitializeContext(
     ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, rArgVar.c_str(), ArgVarLen);
     ArgsPtr.push_back(StkPtr + StkLen - StkOff);
   }
+  /* Align the stack */
+  StkOff = (StkOff + StkRegSize) & ~(StkRegSize - 1);
   /* Write environ pointers (envp) */
   StkOff += StkRegSize;
   ::memcpy(reinterpret_cast<u8*>(pStkMem) + StkLen - StkOff, &NullPtr, StkRegSize);
@@ -94,7 +100,7 @@ bool UnixOperatingSystem::InitializeContext(
 
   u64 StackRegisterValue = StkPtr + StkLen - StkOff;
 
-  if (rCpuCtxt.WriteRegister(StkReg, &StackRegisterValue, StkRegSize) == false)
+  if (rCpuCtxt.WriteRegister(StkReg, &StackRegisterValue, StkRegSize * 8) == false)
     return false;
 
   return true;

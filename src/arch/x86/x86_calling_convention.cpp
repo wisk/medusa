@@ -463,11 +463,11 @@ bool MsX64CallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
   u32 IdParam = 0;
   switch (ParamNr)
   {
-  case 0: IdParam = X86_Reg_Rcx;
-  case 1: IdParam = X86_Reg_Rdx;
-  case 2: IdParam = X86_Reg_R8;
-  case 3: IdParam = X86_Reg_R9;
-  default: break;
+  case 0: IdParam = X86_Reg_Rcx; break;
+  case 1: IdParam = X86_Reg_Rdx; break;
+  case 2: IdParam = X86_Reg_R8;  break;
+  case 3: IdParam = X86_Reg_R9;  break;
+  default:                       break;
   }
 
   u64 ParamVal;
@@ -526,9 +526,9 @@ Expression::SPType MsX64CallingConvention::EmitGetParameter(u16 ParamNr, ValueTy
   {
   case 0: Reg = X86_Reg_Rcx; break;
   case 1: Reg = X86_Reg_Rdx; break;
-  case 2: Reg = X86_Reg_R8; break;
-  case 3: Reg = X86_Reg_R9; break;
-  default: return nullptr; // TODO(wisk): handle stack based parameter
+  case 2: Reg = X86_Reg_R8;  break;
+  case 3: Reg = X86_Reg_R9;  break;
+  default:                   return nullptr; // TODO(wisk): handle stack based parameter
   }
   return Expr::MakeId(Reg, &m_rCpuInfo);
 }
@@ -583,13 +583,13 @@ bool SystemVCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCo
   u32 IdParam = 0;
   switch (ParamNr)
   {
-  case 0: IdParam = X86_Reg_Rdi;
-  case 1: IdParam = X86_Reg_Rsi;
-  case 2: IdParam = X86_Reg_Rdx;
-  case 3: IdParam = X86_Reg_Rcx;
-  case 4: IdParam = X86_Reg_R8;
-  case 5: IdParam = X86_Reg_R9;
-  default: break;
+  case 0: IdParam = X86_Reg_Rdi; break;
+  case 1: IdParam = X86_Reg_Rsi; break;
+  case 2: IdParam = X86_Reg_Rdx; break;
+  case 3: IdParam = X86_Reg_Rcx; break;
+  case 4: IdParam = X86_Reg_R8;  break;
+  case 5: IdParam = X86_Reg_R9;  break;
+  default:                       break;
   }
 
   u64 ParamVal;
@@ -606,7 +606,7 @@ bool SystemVCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCo
     u64 StkLinAddr;
     if (!pCpuCtxt->Translate(Address(0x0, StkVal), StkLinAddr))
       return false;
-    StkLinAddr += (0x30 + ParamNr * 0x8);
+    StkLinAddr += (0x8 + ParamNr * 0x8); // FIXME(wisk): figure out the real offset
     if (!pMemCtxt->ReadMemory(StkLinAddr, ParamVal))
       return false;
   }

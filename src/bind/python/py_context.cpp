@@ -125,6 +125,25 @@ namespace pydusa
     return bp::str(reinterpret_cast<char const*>(pRawMem), Size);
   }
 
+  bp::object MemoryContext_Size(MemoryContext* pMemCtxt, u64 LinAddr)
+  {
+    u64 Size = 0;
+    bool Found = false;
+    pMemCtxt->ForEachMemoryChunk([&](MemoryContext::MemoryChunk const& rMemChunk)
+    {
+      if (LinAddr >= rMemChunk.m_LinearAddress && LinAddr < (rMemChunk.m_LinearAddress + rMemChunk.m_spMemStrm->GetSize()))
+      {
+        Size = rMemChunk.m_spMemStrm->GetSize();
+        Found = true;
+        return;
+      }
+    });
+
+    if (!Found)
+      return bp::object();
+    return bp::object(Size);
+  }
+
   bp::list MemoryContext_List(MemoryContext* pMemCtxt)
   {
     bp::list MemChunks;
@@ -239,6 +258,7 @@ void PydusaContext(void)
 
     .def("alloc",       pydusa::MemoryContext_Allocate)
     .def("free",        &MemoryContext::FreeMemory)
+    .def("size",        pydusa::MemoryContext_Size)
 
     .def("list",        pydusa::MemoryContext_List)
 

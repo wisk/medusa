@@ -103,7 +103,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
   case X86_Reg_Spl: READ_R_L(sp);      break;
   case X86_Reg_Bpl: READ_R_L(bp);      break;
   case X86_Reg_Sil: READ_R_L(si);      break;
-  case X86_Reg_Dil: READ_R_L(sp);      break;
+  case X86_Reg_Dil: READ_R_L(di);      break;
   case X86_Reg_R8b: READ_R_L(r8);      break;
   case X86_Reg_R9b: READ_R_L(r9);      break;
   case X86_Reg_R10b:READ_R_L(r10);     break;
@@ -241,7 +241,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
   case X86_Reg_Spl: WRITE_R_L(sp);      break;
   case X86_Reg_Bpl: WRITE_R_L(bp);      break;
   case X86_Reg_Sil: WRITE_R_L(si);      break;
-  case X86_Reg_Dil: WRITE_R_L(sp);      break;
+  case X86_Reg_Dil: WRITE_R_L(di);      break;
   case X86_Reg_R8b: WRITE_R_L(r8);      break;
   case X86_Reg_R9b: WRITE_R_L(r9);      break;
   case X86_Reg_R10b:WRITE_R_L(r10);     break;
@@ -373,7 +373,7 @@ void* X86Architecture::X86CpuContext::GetRegisterAddress(u32 Register)
   case X86_Reg_Spl:  return ADDR_R_L(sp);
   case X86_Reg_Bpl:  return ADDR_R_L(bp);
   case X86_Reg_Sil:  return ADDR_R_L(si);
-  case X86_Reg_Dil:  return ADDR_R_L(sp);
+  case X86_Reg_Dil:  return ADDR_R_L(di);
   case X86_Reg_R8b:  return ADDR_R_L(r8);
   case X86_Reg_R9b:  return ADDR_R_L(r9);
   case X86_Reg_R10b: return ADDR_R_L(r10);
@@ -485,7 +485,7 @@ u16 X86Architecture::X86CpuContext::GetRegisterOffset(u32 Register)
   case X86_Reg_Spl:  return OFF_R_L(sp);
   case X86_Reg_Bpl:  return OFF_R_L(bp);
   case X86_Reg_Sil:  return OFF_R_L(si);
-  case X86_Reg_Dil:  return OFF_R_L(sp);
+  case X86_Reg_Dil:  return OFF_R_L(di);
   case X86_Reg_R8b:  return OFF_R_L(r8);
   case X86_Reg_R9b:  return OFF_R_L(r9);
   case X86_Reg_R10b: return OFF_R_L(r10);
