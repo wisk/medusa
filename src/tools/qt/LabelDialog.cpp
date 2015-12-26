@@ -41,7 +41,7 @@ void LabelDialog::SetLabel(void)
     LblType |= medusa::Label::String;
   else if (CodeButton->isChecked())
     LblType |= medusa::Label::Code;
-  else if (CodeButton->isChecked())
+  else if (FunctionButton->isChecked())
     LblType |= medusa::Label::Function;
 
   if (LocalButton->isChecked())
