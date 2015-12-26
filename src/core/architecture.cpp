@@ -217,6 +217,19 @@ public:
 
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   {
+    if (spBinOpExpr->GetOperation() == OperationExpression::OpMul) {
+      auto spLExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetLeftExpression());
+      auto spRExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetRightExpression());
+      if ((spLExpr != nullptr) && (spLExpr->GetInt().GetSignedValue() == 1)) {
+        spBinOpExpr->GetRightExpression()->Visit(this);
+        return nullptr;
+      }
+      if ((spRExpr != nullptr) && (spRExpr->GetInt().GetSignedValue() == 1)) {
+        spBinOpExpr->GetLeftExpression()->Visit(this);
+        return nullptr;
+      }
+    }
+
     std::string OpTok = "";
     switch (spBinOpExpr->GetOperation())
     {
@@ -234,6 +247,7 @@ public:
     spBinOpExpr->GetRightExpression()->Visit(this);
     return nullptr;
   }
+
   virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr)
   {
     Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
