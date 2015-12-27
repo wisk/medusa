@@ -209,7 +209,7 @@ Acknowledgements
 * My schoolmates: epieddy, flalande and FX.
 * My workmate: gg, w1gz.
 * Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
-* gunmetal313, saeschdivara, kangjoni76, KarlVogel for their contributions.
+* gunmetal313, saeschdivara, kangjoni76, KarlVogel, ekse for their contributions.
 
 .. |unix_build| image:: https://img.shields.io/travis/wisk/medusa/dev.svg?style=flat-square&label=unix%20build
     :target: http://travis-ci.org/wisk/medusa
