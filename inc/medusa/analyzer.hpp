@@ -134,6 +134,7 @@ public:
 
   bool FormatCell(Document const& rDoc, Address const& rAddress, Cell const& rCell, PrintData &rPrintData) const;
   bool FormatMultiCell(Document const& rDoc, Address const& rAddress, MultiCell const& rMultiCell, PrintData& rPrintData) const;
+  bool FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData& rGraphData) const;
 };
 
 MEDUSA_NAMESPACE_END

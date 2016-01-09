@@ -20,29 +20,6 @@ set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/tools/qt)
 set(UIROOT   ${CMAKE_SOURCE_DIR}/src/tools/qt)
 set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/tools/qt)
 
-set (SRC
-  ${SRCROOT}/About.cpp
-  ${SRCROOT}/Action.cpp
-  ${SRCROOT}/BasicBlockItem.cpp
-  ${SRCROOT}/BindingView.cpp
-  ${SRCROOT}/CommentDialog.cpp
-  ${SRCROOT}/ConfigureDialog.cpp
-  ${SRCROOT}/ControlFlowGraphScene.cpp
-  ${SRCROOT}/ControlFlowGraphView.cpp
-  ${SRCROOT}/DisassemblyView.cpp
-  ${SRCROOT}/EdgeItem.cpp
-  ${SRCROOT}/Goto.cpp
-  ${SRCROOT}/LabelDialog.cpp
-  ${SRCROOT}/LabelView.cpp
-  ${SRCROOT}/MainWindow.cpp
-  ${SRCROOT}/MemoryAreaView.cpp
-  ${SRCROOT}/Proxy.cpp
-  ${SRCROOT}/ScrollbarAddress.cpp
-  ${SRCROOT}/SemanticView.cpp
-  ${SRCROOT}/SettingsDialog.cpp
-  ${SRCROOT}/main.cpp
-)
-
 set (INC
   ${INCROOT}/About.hpp
   ${INCROOT}/Action.hpp
@@ -55,6 +32,8 @@ set (INC
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp
+  ${INCROOT}/GraphScene.hpp
+  ${SRCROOT}/GraphView.hpp
   ${INCROOT}/LabelDialog.hpp
   ${INCROOT}/LabelView.hpp
   ${INCROOT}/MainWindow.hpp
@@ -63,6 +42,33 @@ set (INC
   ${INCROOT}/ScrollbarAddress.hpp
   ${INCROOT}/SemanticView.hpp
   ${INCROOT}/SettingsDialog.hpp
+  ${INCROOT}/VertexItem.hpp
+)
+
+set (SRC
+  ${SRCROOT}/About.cpp
+  ${SRCROOT}/Action.cpp
+  ${SRCROOT}/BasicBlockItem.cpp
+  ${SRCROOT}/BindingView.cpp
+  ${SRCROOT}/CommentDialog.cpp
+  ${SRCROOT}/ConfigureDialog.cpp
+  ${SRCROOT}/ControlFlowGraphScene.cpp
+  ${SRCROOT}/ControlFlowGraphView.cpp
+  ${SRCROOT}/DisassemblyView.cpp
+  ${SRCROOT}/EdgeItem.cpp
+  ${SRCROOT}/Goto.cpp
+  ${SRCROOT}/GraphScene.cpp
+  ${SRCROOT}/GraphView.cpp
+  ${SRCROOT}/LabelDialog.cpp
+  ${SRCROOT}/LabelView.cpp
+  ${SRCROOT}/MainWindow.cpp
+  ${SRCROOT}/MemoryAreaView.cpp
+  ${SRCROOT}/Proxy.cpp
+  ${SRCROOT}/ScrollbarAddress.cpp
+  ${SRCROOT}/SemanticView.cpp
+  ${SRCROOT}/SettingsDialog.cpp
+  ${SRCROOT}/VertexItem.cpp
+  ${SRCROOT}/main.cpp
 )
 
 # Qt user interface files

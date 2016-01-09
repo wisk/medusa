@@ -387,6 +387,13 @@ bool Medusa::FormatMultiCell(
   return m_Analyzer.FormatMultiCell(m_Document, rAddress, rMultiCell, rPrintData);
 }
 
+bool Medusa::FormatGraph(
+  Graph const& rGraph,
+  GraphData& rGraphData) const
+{
+  return m_Analyzer.FormatGraph(m_Document, rGraph, rGraphData);
+}
+
 Address Medusa::MakeAddress(TOffset Offset)
 {
   return MakeAddress(Loader::SPType(), Architecture::SPType(), 0x0, Offset);

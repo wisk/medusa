@@ -117,7 +117,8 @@ std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefau
 
     { "action.add_disassembly_view", "Ctrl+D" },
     { "action.add_semantic_view", "Ctrl+S" },
-    { "action.add_control_flow_graph_view", "Ctrl+F" },
+    { "action.add_graph_view", "Ctrl+F" },
+    //{ "action.add_control_flow_graph_view", "Ctrl+F" },
     { "action.show_label_dialog", "N" },
     { "action.show_comment_dialog", "," },
     { "action.change_value_size", "S, V" },
@@ -134,6 +135,7 @@ std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefau
     { "action.to_dword", "D, D" },
     { "action.to_qword", "D, Q" },
     { "action.analyze", "A" },
+    { "action.symbolic_analyze", "Shift+A" },
     { "action.create_function", "F" },
     { "action.to_utf8_string", "D, S, 1" },
     { "action.to_utf16_name", "D, S, 2" },

@@ -115,6 +115,10 @@ public:
     MultiCell     const& rMultiCell,
     PrintData          & rPrintData) const;
 
+  bool FormatGraph(
+    Graph const& rGraph,
+    GraphData& rGraphData) const;
+
                                   //! This method makes a fully filled Address if possible. @see Address
   Address                         MakeAddress(TOffset Offset);
   Address                         MakeAddress(TBase Base, TOffset Offset);

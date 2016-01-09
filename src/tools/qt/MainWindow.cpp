@@ -396,6 +396,19 @@ void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
   this->tabWidget->addTab(cfgView, QIcon(":/icons/view-graph.png"), QString("Graph of function %1").arg(funcLbl));
 }
 
+void MainWindow::addGraphView(medusa::Address const& rMcAddr)
+{
+  auto lbl = _medusa.GetDocument().GetLabelFromAddress(rMcAddr);
+  QString McLbl = QString::fromStdString(rMcAddr.ToString());
+  if (lbl.GetType() != medusa::Label::Unknown)
+    McLbl = QString::fromStdString(lbl.GetLabel());
+
+  auto pGraphView = new GraphView(this);
+  auto pGraphScene = new GraphScene(this->tabWidget, _medusa, rMcAddr);
+  pGraphView->setScene(pGraphScene);
+  this->tabWidget->addTab(pGraphView, QIcon(":/icons/view-graph.png"), QString("Graph of %1").arg(McLbl));
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
   this->_about.exec();

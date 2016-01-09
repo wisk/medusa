@@ -57,6 +57,44 @@ public:
   virtual void Do(void);
 };
 
+class AddGraphViewAction : public medusa::Action
+{
+public:
+  AddGraphViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
+
+  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+  {
+    return std::make_shared<AddGraphViewAction>(rCore, pView);
+  }
+
+  static char const* GetBindingName(void)
+  {
+    return "action.add_graph_view";
+  }
+
+  virtual std::string GetName(void) const
+  {
+    return "Add graph view";
+  }
+
+  virtual std::string GetDescription(void) const
+  {
+    return "Add a new graph view";
+  }
+
+  virtual std::string GetIconName(void) const
+  {
+    return "view-graph.png";
+  }
+
+  virtual bool IsCompatible(void) const
+  {
+    return true;
+  }
+
+  virtual void Do(void);
+};
+
 class AddControlFlowGraphViewAction : public medusa::Action
 {
 public:

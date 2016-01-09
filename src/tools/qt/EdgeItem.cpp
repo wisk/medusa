@@ -6,10 +6,11 @@ EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType ty
 {
   switch (type)
   {
-  case medusa::BasicBlockEdgeProperties::True:          _clr = Qt::green;   break;
-  case medusa::BasicBlockEdgeProperties::False:         _clr = Qt::red;     break;
-  case medusa::BasicBlockEdgeProperties::Unconditional: _clr = Qt::blue;    break;
-  case medusa::BasicBlockEdgeProperties::Next:          _clr = Qt::magenta; break;
+  case medusa::Graph::EdgeProperties::True:          _clr = Qt::green;      break;
+  case medusa::Graph::EdgeProperties::False:         _clr = Qt::red;        break;
+  case medusa::Graph::EdgeProperties::Unconditional: _clr = Qt::blue;       break;
+  case medusa::Graph::EdgeProperties::Next:          _clr = Qt::magenta;    break;
+  case medusa::Graph::EdgeProperties::Multiple:      _clr = Qt::darkYellow; break;
   default: break;
   }
   setZValue(1.0);
@@ -74,8 +75,13 @@ void EdgeItem::computeCoordinates(void)
     else
       points.push_back(QPointF(_endItem->x() + endRect.width() / 2, _endItem->y()));
 
+    // FIXME(wisk): use only one bends type
     for (auto it = _bends.begin(); it.valid(); ++it)
       points.push_back(QPointF((*it).m_x, (*it).m_y));
+    for (auto const& rPtPos : m_Bends)
+    {
+      points.push_back(QPointF(std::get<0>(rPtPos), std::get<1>(rPtPos)));
+    }
     // Why?!?!
     std::reverse(std::begin(points) + (revLine ? 4 : 1), std::end(points));
 

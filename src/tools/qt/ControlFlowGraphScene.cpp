@@ -83,8 +83,8 @@ bool ControlFlowGraphScene::_Update(void)
     auto SrcBb     = AddBscBlk(itEdge->m_source);
     auto TgtBb     = AddBscBlk(itEdge->m_target);
     auto NewEdge   = Graph.newEdge(UsedBscBlock[itEdge->m_source], UsedBscBlock[itEdge->m_target]);
-    auto pEdgeItem = new EdgeItem(SrcBb, TgtBb, g[*itEdge].GetType());
-    Edges[NewEdge] = pEdgeItem;
+    //auto pEdgeItem = new EdgeItem(SrcBb, TgtBb, g[*itEdge].GetType());
+    //Edges[NewEdge] = pEdgeItem;
   }
 
   auto OHL = new ogdf::OptimalHierarchyLayout;

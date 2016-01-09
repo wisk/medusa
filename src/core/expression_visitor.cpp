@@ -1010,7 +1010,16 @@ Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpressi
   if (!_EvaluateCondition(spIfElseExpr->GetType(), spConstRefExpr, spConstTestExpr, Res))
     return nullptr;
 
-  return Res ? spIfElseExpr->GetThenExpression()->Visit(this) : spIfElseExpr->GetElseExpression()->Visit(this);
+  if (Res)
+  {
+    auto spThenExpr = spIfElseExpr->GetThenExpression();
+    return spThenExpr != nullptr ? spThenExpr->Visit(this) : nullptr;
+  }
+  else
+  {
+    auto spElseExpr = spIfElseExpr->GetElseExpression();
+    return spElseExpr != nullptr ? spElseExpr->Visit(this) : nullptr;
+  }
 }
 
 Expression::SPType SymbolicVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
@@ -1028,7 +1037,10 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
   ++m_CurPos;
 
   if (spSrcExpr == nullptr)
+  {
+    Log::Write("core") << "null assignment source for: " << spAssignExpr->ToString() << LogEnd;
     return nullptr;
+  }
 
   auto spDstExpr = spAssignExpr->GetDestinationExpression();
   // NOTE(wisk): If the destination is an identifier, we don't want to transform it

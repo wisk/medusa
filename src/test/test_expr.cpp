@@ -403,9 +403,19 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
 
   auto& rDoc = Core.GetDocument();
 
-  BOOST_REQUIRE(Core.AddTask("symbolic disassemble", rDoc.MakeAddress(0x0000, 0x00401000)));
+  auto FuncAddr = rDoc.MakeAddress(0x0000, 0x00401000);
+  BOOST_REQUIRE(Core.AddTask("symbolic disassemble", FuncAddr));
 
   Core.WaitForTasks();
+
+  auto pFunc = Core.GetMultiCell(FuncAddr);
+  BOOST_REQUIRE(pFunc != nullptr);
+
+  auto spFuncGraph = pFunc->GetGraph();
+  BOOST_REQUIRE(spFuncGraph != nullptr);
+
+  GraphData GD;
+  BOOST_REQUIRE(Core.FormatGraph(*spFuncGraph, GD));
 }
 
 //BOOST_AUTO_TEST_CASE(expr_tostr)

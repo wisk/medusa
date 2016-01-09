@@ -487,18 +487,13 @@ bool Architecture::FormatFunction(
 {
   auto FuncLabel = rDoc.GetLabelFromAddress(rAddr);
 
-  if (rFunc.GetSize() != 0 && rFunc.GetInstructionCounter() != 0)
-  {
-    std::ostringstream oss;
-    oss
-      << std::hex << std::showbase << std::left
-      << "; size=" << rFunc.GetSize()
-      << ", insn_cnt=" << rFunc.GetInstructionCounter();
+  std::ostringstream oss;
+  oss
+    << std::hex << std::showbase << std::left
+    << "; size=" << rFunc.GetSize()
+    << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
-    rPrintData.AppendComment(oss.str());
-  }
-  else
-    rPrintData.AppendComment("; imported");
+  rPrintData.AppendComment(oss.str());
 
   FunctionDetail FuncDtl;
   Id CurId;

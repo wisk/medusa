@@ -346,6 +346,8 @@ bool MappedMemoryArea::_RemoveCell(TOffset Offset, CellData::SPType spCellData)
 
     if (IsCellPresent(Offset + i))
     {
+      if (CellOffset + i >= m_Cells.size())
+        return false;
       auto spNextCellData = m_Cells[CellOffset + i];
       if (spNextCellData == spCellData)
         m_Cells[CellOffset + i] = nullptr;

@@ -1,6 +1,7 @@
 #include "medusa/analyzer.hpp"
 #include "medusa/module.hpp"
 #include "medusa/expression_visitor.hpp"
+#include "medusa/graph.hpp"
 
 namespace medusa
 {
@@ -625,9 +626,11 @@ namespace medusa
     if (Lbl.IsImported())
       return true;
 
-    Address::List Addresses;
-    typedef std::tuple<Address, Address, BasicBlockEdgeProperties::Type> TupleEdge;
-    std::vector<TupleEdge> Branches;
+    Address::Vector Addresses;
+    typedef std::tuple<Address, Address, Graph::EdgeProperties::Type> TupleEdge;
+    std::vector<TupleEdge> Branches, AllBranches;
+    std::unordered_map<Address, bool> VisitedAddresses;
+    Address::Vector ExitAddrs;
     std::stack<std::tuple<SymbolicVisitor, Address>> CallStack;
     Address::Vector FuncAddr;
     Address CurAddr = m_Addr;
@@ -650,108 +653,154 @@ namespace medusa
       CurAddr = std::get<1>(CallStack.top());
       CallStack.pop();
 
-      Addresses.push_back(CurAddr);
-
       auto ArchTag = m_rDoc.GetArchitectureTag(CurAddr);
       auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
+      if (spArch == nullptr)
+      {
+        Log::Write("core") << "no architecture for: " << CurAddr << LogEnd;
+        continue;
+      }
       auto Mode = m_rDoc.GetMode(CurAddr);
-
-      TOffset Off;
-      m_rDoc.ConvertAddressToFileOffset(CurAddr, Off);
-      auto spInsn = std::make_shared<Instruction>();
-
-      if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), Off, *spInsn, Mode))
+      if (Mode == 0)
       {
-        Log::Write("core").Level(LogError) << "failed to disassemble instruction at: " << CurAddr << LogEnd;
-        break;
-      }
-
-      if (!m_rDoc.SetCell(CurAddr, spInsn, true))
-      {
-        Log::Write("core").Level(LogError) << "failed to set instruction at: " << CurAddr << LogEnd;
-        break;
-      }
-
-      auto InsnExprs = spInsn->GetSemantic();
-
-      // If we don't have semantic, we're gonna ignore this instruction
-      if (InsnExprs.empty())
-      {
-        Log::Write("core").Level(LogWarning) << "no semantic for instruction: " << spInsn->GetName() << LogEnd;
-        CurAddr += spInsn->GetLength();
+        Log::Write("core") << "no mode for: " << CurAddr << LogEnd;
         continue;
       }
 
-      if (!SymVst.UpdateAddress(*spArch, CurAddr))
-      {
-        return false;
-      }
-      for (auto Expr : InsnExprs)
-      {
-        Expr->Visit(&SymVst);
-      }
-
-      //Log::Write("dbg") << SymVst.ToString() << LogEnd;
-
       int NumOfPathFound;
-      if (!SymVst.FindAllPaths(NumOfPathFound, *spArch, [&](Expression::SPType spDstExpr, Expression::VSPType spCondExprs)
+
+      while (true)
       {
-        Log::Write("dbg") << "DST: " << spDstExpr->ToString();
-        for (auto spCondExpr : spCondExprs)
-          Log::Write("dbg") << ", COND: " << spCondExpr->ToString();
-         Log::Write("dbg") << LogEnd;
+        if (VisitedAddresses[CurAddr])
+          break;
+        Addresses.push_back(CurAddr);
+        VisitedAddresses[CurAddr] = true;
 
+        TOffset Off;
+        m_rDoc.ConvertAddressToFileOffset(CurAddr, Off);
+        auto spInsn = std::make_shared<Instruction>();
 
-         // NOTE(wisk): Ignore symbolic branches
-         // LATER(wisk): We may want to undefine some registers according the calling convention and fix the stack if needed
-         // FIXME(wisk): It won't work with code like: cond_branch <extfunc>
-         if (auto spSymExpr = expr_cast<SymbolicExpression>(spDstExpr))
-         {
-           Address DstAddr = CurAddr + spInsn->GetLength();
-           CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
-           Branches.push_back(std::make_tuple(CurAddr, DstAddr, BasicBlockEdgeProperties::Unknown));
-         }
+        if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), Off, *spInsn, Mode))
+        {
+          Log::Write("core").Level(LogError) << "failed to disassemble instruction at: " << CurAddr << LogEnd;
+          break;
+        }
 
-         else if (auto spBvExpr = expr_cast<BitVectorExpression>(spDstExpr))
-         {
-           // LATER(wisk): We method is not fully generic
-           Address DstAddr = CurAddr;
-           DstAddr.SetOffset(spBvExpr->GetInt().ConvertTo<TOffset>());
-           CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
-           Branches.push_back(std::make_tuple(CurAddr, DstAddr, BasicBlockEdgeProperties::Unknown));
-         }
+        if (!m_rDoc.SetCell(CurAddr, spInsn, true))
+        {
+          Log::Write("core").Level(LogError) << "failed to set instruction at: " << CurAddr << LogEnd;
+          break;
+        }
 
-         else
-         {
-           Log::Write("core").Level(LogWarning) << "unknown destination type: " << CurAddr << LogEnd;
-         }
-      }))
-      {
-        Log::Write("core").Level(LogWarning) << "unknown destination: " << CurAddr << LogEnd;
+        auto InsnExprs = spInsn->GetSemantic();
+
+        // If we don't have semantic, we're gonna ignore this instruction
+        if (InsnExprs.empty())
+        {
+          Log::Write("core").Level(LogWarning) << "no semantic for instruction: " << spInsn->GetName() << LogEnd;
+          CurAddr += spInsn->GetLength();
+          continue;
+        }
+
+        if (!SymVst.UpdateAddress(*spArch, CurAddr))
+        {
+          return false;
+        }
+        for (auto Expr : InsnExprs)
+        {
+          Expr->Visit(&SymVst);
+        }
+
+        //Log::Write("dbg") << SymVst.ToString() << LogEnd;
+
+        Address DstAddr;
+        bool EndOfBlk = false;
+
+        if (!SymVst.FindAllPaths(NumOfPathFound, *spArch, [&](Expression::SPType spDstExpr, Expression::VSPType spCondExprs)
+        {
+          Log::Write("dbg") << "DST: " << spDstExpr->ToString();
+          std::string CondExprStr;
+          for (auto spCondExpr : spCondExprs)
+          {
+            Log::Write("dbg") << ", COND: " << spCondExpr->ToString();
+            CondExprStr += spCondExpr->ToString();
+            CondExprStr += " ; ";
+          }
+          Log::Write("dbg") << LogEnd;
+
+          // NOTE(wisk): Ignore symbolic branches
+          // LATER(wisk): We may want to undefine some registers according the calling convention and fix the stack if needed
+          // FIXME(wisk): It won't work with code like: cond_branch <extfunc>
+          if (auto spSymExpr = expr_cast<SymbolicExpression>(spDstExpr))
+          {
+            m_rDoc.SetComment(CurAddr, spDstExpr->ToString());
+            DstAddr = CurAddr + spInsn->GetLength();
+            //CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
+            //Branches.push_back(std::make_tuple(CurAddr, DstAddr, Graph::EdgeProperties::Next));
+          }
+
+          else if (auto spBvExpr = expr_cast<BitVectorExpression>(spDstExpr))
+          {
+            // LATER(wisk): The way this address is made is not fully generic
+            DstAddr = CurAddr;
+            DstAddr.SetOffset(spBvExpr->GetInt().ConvertTo<TOffset>());
+            m_rDoc.SetComment(DstAddr, CondExprStr);
+
+            // FIXME(wisk): we have to cheat here because there's not way to distinct next insn from direct uncond jump
+            if (spInsn->GetSubType() & Instruction::JumpType)
+            {
+              CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
+              Branches.push_back(std::make_tuple(DstAddr, CurAddr, Graph::EdgeProperties::Unknown));
+              EndOfBlk = true;
+            }
+          }
+
+          else
+          {
+            Log::Write("core").Level(LogWarning) << "unknown destination type: " << CurAddr << LogEnd;
+          }
+        }))
+        {
+          Log::Write("core").Level(LogWarning) << "unknown destination: " << CurAddr << LogEnd;
+          ExitAddrs.push_back(CurAddr);
+          break; // We need to exit the loop to find another branches
+        }
+
+        if (!EndOfBlk)
+        {
+          CurAddr = DstAddr;
+          continue;
+        }
+
+        break;
       }
 
       switch (Branches.size())
       {
-      case 0: // 0 path means we don't where we're going... (usually it's a ret type insn)
+      case 0:
+        ExitAddrs.push_back(CurAddr);
         break;
 
       case 1: // 1 path means it's a simple branch
         //Log::Write("dbg") << "it's a simple branch" << LogEnd;
-        std::get<2>(Branches.front()) = BasicBlockEdgeProperties::Unconditional;
+        std::get<2>(Branches[0]) = Graph::EdgeProperties::Unconditional;
         break;
 
       case 2: // 2 paths mean it's a conditional branch
         //Log::Write("dbg") << "it's a conditional branch" << LogEnd;
-        std::get<2>(Branches[0]) = BasicBlockEdgeProperties::True;
-        std::get<2>(Branches[1]) = BasicBlockEdgeProperties::False;
+        std::get<2>(Branches[0]) = Graph::EdgeProperties::True;
+        std::get<2>(Branches[1]) = Graph::EdgeProperties::False;
         break;
 
       default: // default means it's a multiple branch (branch table)
         //Log::Write("dbg") << "it's a multiple branch" << LogEnd;
         for (auto i = 0UL; i < Branches.size(); ++i)
-          std::get<2>(Branches[i]) = BasicBlockEdgeProperties::Multiple;
+          std::get<2>(Branches[i]) = Graph::EdgeProperties::Multiple;
         break;
       }
+
+      AllBranches.insert(std::end(AllBranches), std::begin(Branches), std::end(Branches));
+      Branches.clear();
 
       // NOTE(wisk): If we find new paths, we have to exit this loop so we
       // can use multiple symbolic context
@@ -760,18 +809,18 @@ namespace medusa
     }
 
     // Now we can build the control flow graph
-    ControlFlowGraph Cfg(m_rDoc);
-    BasicBlockVertexProperties FirstBasicBlock(m_rDoc, Addresses);
+    Graph::SPType spCfg = std::make_shared<Graph>();
+    Graph::VertexProperties FirstBasicBlock(Addresses);
 
     // This case is required because a jmp type insn can be located just before the entry point of a function,
     // thus nothing can split this part (which normally is done by the call <func>)
-    Address::List FirstSplitAddrs;
+    Address::Vector FirstSplitAddrs;
     if (FirstBasicBlock.Split(m_Addr, FirstSplitAddrs))
-      Cfg.AddBasicBlockVertex(BasicBlockVertexProperties(m_rDoc, FirstSplitAddrs));
+      spCfg->AddVertex(Graph::VertexProperties(FirstSplitAddrs));
 
-    Cfg.AddBasicBlockVertex(FirstBasicBlock);
+    spCfg->AddVertex(FirstBasicBlock);
 
-    for (auto const& rBranch : Branches)
+    for (auto const& rBranch : AllBranches)
     {
       static const char *TypeStr[] =
       {
@@ -782,14 +831,42 @@ namespace medusa
         "Next",
         "Multiple",
       };
-      bool Res = Cfg.SplitBasicBlock(std::get<0>(rBranch), std::get<1>(rBranch), std::get<2>(rBranch));
+      bool Res = spCfg->SplitVertex(std::get<0>(rBranch), std::get<1>(rBranch), std::get<2>(rBranch));
       Log::Write("core") << "dst: " << std::get<0>(rBranch) << ", src: " << std::get<1>(rBranch) << ", type: " << TypeStr[std::get<2>(rBranch)] << (Res ? ", succeed" : ", failed") << LogEnd;
     }
 
-    for (auto const& rBranch : Branches)
-      Cfg.AddBasicBlockEdge(BasicBlockEdgeProperties(std::get<2>(rBranch)), std::get<1>(rBranch), std::get<0>(rBranch));
+    for (auto const& rBranch : AllBranches)
+      spCfg->AddEdge(Graph::EdgeProperties(std::get<2>(rBranch)), std::get<1>(rBranch), std::get<0>(rBranch));
 
-    Cfg.Finalize(m_rDoc);
+    auto& rBoostGraph = (*spCfg)();
+
+    Graph::VertexDescriptor VtxHead;
+    if (spCfg->FindVertex(m_Addr, VtxHead))
+    {
+      auto& rVtxProp = rBoostGraph[VtxHead];
+      rVtxProp.MarkAsHead();
+    }
+
+    for (auto const& rAddr : ExitAddrs)
+    {
+      Graph::VertexDescriptor VtxExit;
+      if (!spCfg->FindVertex(rAddr, VtxExit))
+        continue;
+      auto& rVtxProp = rBoostGraph[VtxExit];
+      rVtxProp.MarkAsEnd();
+    }
+
+    spCfg->Finalize();
+
+    auto pFunc = m_rDoc.GetMultiCell(m_Addr);
+    if (pFunc == nullptr)
+    {
+      Label FuncLbl(m_Addr, Label::Function | Label::Global);
+      pFunc = new Function(FuncLbl.GetLabel(), 0, 0);
+    }
+
+    pFunc->SetGraph(spCfg);
+    m_rDoc.SetMultiCell(m_Addr, pFunc);
 
     return true;
   }

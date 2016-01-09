@@ -39,6 +39,7 @@ set(SRC
   ${INCROOT}/expression_visitor.hpp
   ${INCROOT}/extend.hpp
   ${INCROOT}/function.hpp
+  ${INCROOT}/graph.hpp
   ${INCROOT}/information.hpp
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp
@@ -96,6 +97,7 @@ set(SRC
   ${SRCROOT}/expression_simplifier.cpp
   ${SRCROOT}/expression_visitor.cpp
   ${SRCROOT}/function.cpp
+  ${SRCROOT}/graph.cpp
   ${SRCROOT}/instruction.cpp
   ${SRCROOT}/information.cpp
   ${SRCROOT}/label.cpp
@@ -133,7 +135,12 @@ endif ()
 
 # define libMedusa architecture target
 add_library(Medusa SHARED ${SRC})
-target_link_libraries(Medusa ${Boost_LIBRARIES})
+
+if (MEDUSA_BUILD_WITH_OGDF)
+  target_link_libraries(Medusa ${Boost_LIBRARIES} ogdf coin)
+else()
+  target_link_libraries(Medusa ${Boost_LIBRARIES})
+endif()
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
