@@ -90,7 +90,7 @@ qt5_wrap_ui(UI_INC ${UI})
 qt5_add_resources(RSRC_SRC ${RSRC})
 
 source_group("Forms"               FILES ${UI})
-source_group("Ressources"          FILES ${RSRC})
+source_group("Resources"           FILES ${RSRC})
 source_group("Generated Files\\ui" FILES ${UI_INC})
 
 add_executable(qMedusa ${GUI_TYPE}
