@@ -293,11 +293,11 @@ class St62ArchConvertion(ArchConvertion):
 
                 if func_name == 'ireg':
                     assert(len(func_args) == 1)
-                    return 'return Expr::MakeMem(8, Expr::MakeConst(16, 0x1000), Expr::MakeId(%s, &m_CpuInfo), true);' % self.parent.id_mapper[func_args[0]]
+                    return 'return Expr::MakeMem(8, Expr::MakeBitVector(16, 0x1000), Expr::MakeId(%s, &m_CpuInfo), true);' % self.parent.id_mapper[func_args[0]]
 
                 if func_name.startswith('const'):
                     assert(len(func_args) == 2)
-                    return 'return Expr::MakeConst(%s, %s);' % tuple(func_args)
+                    return 'return Expr::MakeBitVector(%s, %s);' % tuple(func_args)
 
                 if func_name == 'call':
                     assert(len(func_args) == 1)

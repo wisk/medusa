@@ -293,9 +293,9 @@ public:
   OperandFormatter(Document const& rDoc, PrintData& rPrintData, u8 Mode)
     : m_rDoc(rDoc), m_rPrintData(rPrintData), m_Mode(Mode) {}
 
-  virtual Expression::SPType VisitConstant(ConstantExpression::SPType spConstExpr)
+  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spBvExpr)
   {
-    Address const OprdAddr(spConstExpr->GetConstant().ConvertTo<TOffset>());
+    Address const OprdAddr(spBvExpr->GetInt().ConvertTo<TOffset>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -303,7 +303,7 @@ public:
       return nullptr;
     }
 
-    m_rPrintData.AppendImmediate(spConstExpr->GetConstant(), 16);
+    m_rPrintData.AppendImmediate(spBvExpr->GetInt(), 16);
     return nullptr;
   }
 
@@ -320,19 +320,19 @@ public:
 
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr)
   {
-    auto spBaseConst = expr_cast<ConstantExpression>(spMemExpr->GetBaseExpression());
-    auto spOffConst = expr_cast<ConstantExpression>(spMemExpr->GetOffsetExpression());
+    auto spBase = expr_cast<BitVectorExpression>(spMemExpr->GetBaseExpression());
+    auto spOff = expr_cast<BitVectorExpression>(spMemExpr->GetOffsetExpression());
 
     // offset isn't a constant, so it's a indirect reference
-    if (spOffConst == nullptr) {
+    if (spOff == nullptr) {
       m_rPrintData.AppendOperator("(");
       spMemExpr->GetOffsetExpression()->Visit(this);
       m_rPrintData.AppendOperator(")");
       return nullptr;
     }
 
-    Address rAddress = m_rDoc.MakeAddress(spBaseConst->GetConstant().ConvertTo<TBase>(),
-                                          spOffConst->GetConstant().ConvertTo<TOffset>());
+    Address rAddress = m_rDoc.MakeAddress(spBase->GetInt().ConvertTo<TBase>(),
+                                          spOff->GetInt().ConvertTo<TOffset>());
 
     auto OprdLbl = m_rDoc.GetLabelFromAddress(rAddress);
     if (OprdLbl.GetType() != Label::Unknown)
@@ -389,6 +389,6 @@ bool St62Architecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Addr
   u32 IdSz = m_CpuInfo.GetSizeOfRegisterInBit(Id);
   if (IdSz == 0)
     return false;
-  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeConst(IdSz, rAddr.GetOffset())));
+  rExprs.push_back(Expr::MakeAssign(Expr::MakeId(Id, &m_CpuInfo), Expr::MakeBitVector(IdSz, rAddr.GetOffset())));
   return true;
 }

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Sep 25 14:30:07 2015) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Jan 12 23:48:52 2016) */
 #include "st62_architecture.hpp"
 const char *St62Architecture::m_Mnemonic[0x1e] =
 {
@@ -158,7 +158,7 @@ bool St62Architecture::Table_1_00(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
-        Expr::MakeConst(1, 0x0),
+        Expr::MakeBitVector(1, 0x0),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -251,7 +251,7 @@ bool St62Architecture::Table_1_02(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x0),
+        Expr::MakeBitVector(1, 0x0),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -312,12 +312,12 @@ bool St62Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
           OperationExpression::OpLrs,
           rInsn.GetOperand(1),
-          rInsn.GetOperand(0)), Expr::MakeConst(1, 0x1))));
+          rInsn.GetOperand(0)), Expr::MakeBitVector(1, 0x1))));
       /* semantic: if __expr and cf.id == int1(1): program.id = op2.val */
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x1),
+        Expr::MakeBitVector(1, 0x1),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(2)), nullptr)
@@ -335,12 +335,12 @@ bool St62Architecture::Table_1_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeBinOp(
           OperationExpression::OpLrs,
           rInsn.GetOperand(1),
-          rInsn.GetOperand(0)), Expr::MakeConst(1, 0x1))));
+          rInsn.GetOperand(0)), Expr::MakeBitVector(1, 0x1))));
       /* semantic: if __expr and cf.id == int1(0): program.id = op2.val */
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x0),
+        Expr::MakeBitVector(1, 0x0),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(2)), nullptr)
@@ -413,7 +413,7 @@ bool St62Architecture::Table_1_06(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x1),
+        Expr::MakeBitVector(1, 0x1),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -464,7 +464,7 @@ bool St62Architecture::Table_1_08(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
-        Expr::MakeConst(1, 0x0),
+        Expr::MakeBitVector(1, 0x0),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -527,7 +527,7 @@ bool St62Architecture::Table_1_0a(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x0),
+        Expr::MakeBitVector(1, 0x0),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -579,7 +579,7 @@ bool St62Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, 
           rInsn.GetOperand(1),
           Expr::MakeBinOp(
             OperationExpression::OpLls,
-            Expr::MakeConst(8, 0x1),
+            Expr::MakeBitVector(8, 0x1),
             rInsn.GetOperand(0)))));
       rInsn.SetSemantic(AllExpr);
     }
@@ -597,7 +597,7 @@ bool St62Architecture::Table_1_0b(BinaryStream const& rBinStrm, TOffset Offset, 
             OperationExpression::OpNot,
             Expr::MakeBinOp(
               OperationExpression::OpLls,
-              Expr::MakeConst(8, 0x1),
+              Expr::MakeBitVector(8, 0x1),
               rInsn.GetOperand(0))))));
       rInsn.SetSemantic(AllExpr);
     }
@@ -629,7 +629,7 @@ bool St62Architecture::Table_1_0c(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
-        Expr::MakeConst(1, 0x1),
+        Expr::MakeBitVector(1, 0x1),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -680,7 +680,7 @@ bool St62Architecture::Table_1_0e(BinaryStream const& rBinStrm, TOffset Offset, 
       AllExpr.push_back(Expr::MakeIfElseCond(
         ConditionExpression::CondEq,
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
-        Expr::MakeConst(1, 0x1),
+        Expr::MakeBitVector(1, 0x1),
         Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
           rInsn.GetOperand(0)), nullptr)
@@ -748,7 +748,7 @@ bool St62Architecture::Table_5_01(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -761,8 +761,8 @@ bool St62Architecture::Table_5_01(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -823,8 +823,8 @@ bool St62Architecture::Table_5_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -878,7 +878,7 @@ bool St62Architecture::Table_5_05(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -891,8 +891,8 @@ bool St62Architecture::Table_5_05(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -953,8 +953,8 @@ bool St62Architecture::Table_5_07(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1008,7 +1008,7 @@ bool St62Architecture::Table_5_09(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -1021,8 +1021,8 @@ bool St62Architecture::Table_5_09(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1083,8 +1083,8 @@ bool St62Architecture::Table_5_0b(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1138,7 +1138,7 @@ bool St62Architecture::Table_5_0d(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -1151,8 +1151,8 @@ bool St62Architecture::Table_5_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1213,8 +1213,8 @@ bool St62Architecture::Table_5_0f(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1264,8 +1264,8 @@ bool St62Architecture::Table_7_00(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1315,8 +1315,8 @@ bool St62Architecture::Table_7_01(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1370,7 +1370,7 @@ bool St62Architecture::Table_7_02(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
@@ -1419,7 +1419,7 @@ bool St62Architecture::Table_7_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
@@ -1468,8 +1468,8 @@ bool St62Architecture::Table_7_04(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: call('carry_flag_add') */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
@@ -1496,8 +1496,8 @@ bool St62Architecture::Table_7_04(BinaryStream const& rBinStrm, TOffset Offset, 
                 rInsn.GetOperand(1)))),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1551,8 +1551,8 @@ bool St62Architecture::Table_7_05(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: call('carry_flag_add') */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
@@ -1579,8 +1579,8 @@ bool St62Architecture::Table_7_05(BinaryStream const& rBinStrm, TOffset Offset, 
                 rInsn.GetOperand(1)))),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1625,7 +1625,7 @@ bool St62Architecture::Table_7_06(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -1638,8 +1638,8 @@ bool St62Architecture::Table_7_06(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1700,8 +1700,8 @@ bool St62Architecture::Table_7_08(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -1764,8 +1764,8 @@ bool St62Architecture::Table_7_0a(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -1818,8 +1818,8 @@ bool St62Architecture::Table_7_0b(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -1872,8 +1872,8 @@ bool St62Architecture::Table_7_0c(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: cf.id = ite(op0.val < op1.val, int1(1), int1(0))
       op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
@@ -1881,7 +1881,7 @@ bool St62Architecture::Table_7_0c(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -1934,8 +1934,8 @@ bool St62Architecture::Table_7_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: cf.id = ite(op0.val < op1.val, int1(1), int1(0))
       op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
@@ -1943,7 +1943,7 @@ bool St62Architecture::Table_7_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -1987,7 +1987,7 @@ bool St62Architecture::Table_7_0e(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2000,8 +2000,8 @@ bool St62Architecture::Table_7_0e(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2060,8 +2060,8 @@ bool St62Architecture::Table_d_00(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2125,8 +2125,8 @@ bool St62Architecture::Table_d_02(BinaryStream const& rBinStrm, TOffset Offset, 
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: res = ~op0.val */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2143,8 +2143,8 @@ bool St62Architecture::Table_d_02(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
@@ -2189,8 +2189,8 @@ bool St62Architecture::Table_d_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2285,7 +2285,7 @@ bool St62Architecture::Table_d_05(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2298,8 +2298,8 @@ bool St62Architecture::Table_d_05(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2362,8 +2362,8 @@ bool St62Architecture::Table_d_07(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2417,7 +2417,7 @@ bool St62Architecture::Table_d_09(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2430,8 +2430,8 @@ bool St62Architecture::Table_d_09(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2480,8 +2480,8 @@ bool St62Architecture::Table_d_0a(BinaryStream const& rBinStrm, TOffset Offset, 
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: res.val = op0.val << int(op0.bit, 1) + bit_cast(cf.id, int(op0.bit, op0.bit)) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2490,8 +2490,8 @@ bool St62Architecture::Table_d_0a(BinaryStream const& rBinStrm, TOffset Offset, 
           rInsn.GetOperand(0),
           Expr::MakeBinOp(
             OperationExpression::OpAdd,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1),
-            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(ST62_Flg_C, &m_CpuInfo), Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1),
+            Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(ST62_Flg_C, &m_CpuInfo), Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()))))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2541,8 +2541,8 @@ bool St62Architecture::Table_d_0b(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2635,7 +2635,7 @@ bool St62Architecture::Table_d_0d(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -2648,8 +2648,8 @@ bool St62Architecture::Table_d_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2712,8 +2712,8 @@ bool St62Architecture::Table_d_0f(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2763,8 +2763,8 @@ bool St62Architecture::Table_f_00(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2814,8 +2814,8 @@ bool St62Architecture::Table_f_01(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -2869,7 +2869,7 @@ bool St62Architecture::Table_f_02(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
@@ -2918,7 +2918,7 @@ bool St62Architecture::Table_f_03(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeVar("res", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
@@ -2967,8 +2967,8 @@ bool St62Architecture::Table_f_04(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: call('carry_flag_add') */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
@@ -2995,8 +2995,8 @@ bool St62Architecture::Table_f_04(BinaryStream const& rBinStrm, TOffset Offset, 
                 rInsn.GetOperand(1)))),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3050,8 +3050,8 @@ bool St62Architecture::Table_f_05(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: call('carry_flag_add') */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(ST62_Flg_C, &m_CpuInfo),
@@ -3078,8 +3078,8 @@ bool St62Architecture::Table_f_05(BinaryStream const& rBinStrm, TOffset Offset, 
                 rInsn.GetOperand(1)))),
           Expr::MakeBinOp(
             OperationExpression::OpSub,
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
-            Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeConst(1, 0x1))));
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), rInsn.GetOperand(0)->GetBitSize()),
+            Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1))), Expr::MakeBitVector(1, 0x1))));
       /* semantic: op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3124,7 +3124,7 @@ bool St62Architecture::Table_f_06(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -3137,8 +3137,8 @@ bool St62Architecture::Table_f_06(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3185,7 +3185,7 @@ bool St62Architecture::Table_f_07(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val + op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -3198,8 +3198,8 @@ bool St62Architecture::Table_f_07(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3251,8 +3251,8 @@ bool St62Architecture::Table_f_08(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3302,8 +3302,8 @@ bool St62Architecture::Table_f_09(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3357,8 +3357,8 @@ bool St62Architecture::Table_f_0a(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -3411,8 +3411,8 @@ bool St62Architecture::Table_f_0b(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -3465,8 +3465,8 @@ bool St62Architecture::Table_f_0c(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: cf.id = ite(op0.val < op1.val, int1(1), int1(0))
       op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
@@ -3474,7 +3474,7 @@ bool St62Architecture::Table_f_0c(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -3527,8 +3527,8 @@ bool St62Architecture::Table_f_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: cf.id = ite(op0.val < op1.val, int1(1), int1(0))
       op0.val = res */
       AllExpr.push_back(Expr::MakeAssign(
@@ -3536,7 +3536,7 @@ bool St62Architecture::Table_f_0d(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeTernaryCond(ConditionExpression::CondUlt,
         rInsn.GetOperand(0),
         rInsn.GetOperand(1),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
         Expr::MakeVar("res", VariableExpression::Use)));
@@ -3580,7 +3580,7 @@ bool St62Architecture::Table_f_0e(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -3593,8 +3593,8 @@ bool St62Architecture::Table_f_0e(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3641,7 +3641,7 @@ bool St62Architecture::Table_f_0f(BinaryStream const& rBinStrm, TOffset Offset, 
       /* semantic: op1 = int(op0.bit, 1) */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("op1", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x1)));
       /* semantic: res = op0.val - op1 */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeVar("res", VariableExpression::Use),
@@ -3654,8 +3654,8 @@ bool St62Architecture::Table_f_0f(BinaryStream const& rBinStrm, TOffset Offset, 
         Expr::MakeId(ST62_Flg_Z, &m_CpuInfo),
         Expr::MakeTernaryCond(ConditionExpression::CondEq,
         Expr::MakeVar("res", VariableExpression::Use),
-        Expr::MakeConst(rInsn.GetOperand(0)->GetBitSize(), 0x0),
-        Expr::MakeConst(1, 0x1), Expr::MakeConst(1, 0x0))));
+        Expr::MakeBitVector(rInsn.GetOperand(0)->GetBitSize(), 0x0),
+        Expr::MakeBitVector(1, 0x1), Expr::MakeBitVector(1, 0x0))));
       /* semantic: op0.val = res.val */
       AllExpr.push_back(Expr::MakeAssign(
         rInsn.GetOperand(0),
@@ -3822,14 +3822,14 @@ Expression::SPType St62Architecture::Decode_pcr(BinaryStream const& rBinStrm, TO
 Expression::SPType St62Architecture::Decode_rX(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode)
 {
   // operand0: ireg('X')
-  return Expr::MakeMem(8, Expr::MakeConst(16, 0x1000), Expr::MakeId(ST62_Reg_X, &m_CpuInfo), true);
+  return Expr::MakeMem(8, Expr::MakeBitVector(16, 0x1000), Expr::MakeId(ST62_Reg_X, &m_CpuInfo), true);
 }
 
 /* decoder ["ireg('Y')"] */
 Expression::SPType St62Architecture::Decode_rY(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode)
 {
   // operand0: ireg('Y')
-  return Expr::MakeMem(8, Expr::MakeConst(16, 0x1000), Expr::MakeId(ST62_Reg_Y, &m_CpuInfo), true);
+  return Expr::MakeMem(8, Expr::MakeBitVector(16, 0x1000), Expr::MakeId(ST62_Reg_Y, &m_CpuInfo), true);
 }
 
 /* operand ['op0 = decode_direct'] */
