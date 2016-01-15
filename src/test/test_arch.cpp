@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE(arch_st62_test_case)
     medusa::PrintData Data;
     BOOST_CHECK(pSt62Disasm->FormatInstruction(Doc, Addr, Insn, Data));
     BOOST_TEST_MESSAGE("jp 0xC1, decoded as: " << Data.GetTexts());
-    BOOST_CHECK(Data.GetTexts() == "0000:0000000000000000  jp               0xC1");
+    BOOST_CHECK(Data.GetTexts() == "0000:0000000000000000  jp              0xC1");
   }
 
   delete pSt62Disasm;
