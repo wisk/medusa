@@ -112,6 +112,11 @@ else()
 endif()
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
+if (MEDUSA_CMAKE_USE_COTIRE)
+  cotire(qMedusa)
+endif()
+
+
 # I can't believe how hard it is to deploy qt5...
 # Inspired from http://pastebin.com/an3dyt51
 # ref: http://qt-project.org/doc/qt-5/windows-deployment.html#creating-the-application-package

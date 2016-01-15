@@ -15,4 +15,8 @@ find_package(Threads REQUIRED)
 target_link_libraries(emulator Medusa ${CMAKE_THREAD_LIBS_INIT})
 set_target_properties(emulator PROPERTIES FOLDER "Tools")
 
+if (MEDUSA_CMAKE_USE_COTIRE)
+  cotire(emulator)
+endif()
+
 install(TARGETS emulator RUNTIME DESTINATION .)

@@ -149,6 +149,10 @@ if (DL_LIBRARY)
   target_link_libraries(Medusa dl)
 endif ()
 
+if (MEDUSA_CMAKE_USE_COTIRE)
+  cotire(Medusa)
+endif()
+
 if (WIN32)
   install(TARGETS Medusa RUNTIME DESTINATION .)
   file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
