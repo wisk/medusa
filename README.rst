@@ -153,6 +153,7 @@ Options
 -------
 
 * MEDUSA_BUILD_WITH_OGDF: clone OGDF project and build it, this library allows qMedusa to display graph
+* MEDUSA_CMAKE_USE_COTIRE: use cotire for build.
 
 
 Screenshots

@@ -8,8 +8,16 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 4)
 
+## cotire
+option(MEDUSA_CMAKE_USE_COTIRE
+  "use cotire"
+  FALSE)
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-#include(cotire) # https://github.com/sakra/cotire
+if (MEDUSA_CMAKE_USE_COTIRE)
+  include(cotire) # https://github.com/sakra/cotire
+  message("Cotire was enabled")
+endif()
 
 enable_testing()
 
