@@ -1,8 +1,5 @@
 version: 0.5.{build}
-branches:
-  only:
-  - dev
-os: Unstable
+os: Windows Server 2012 R2
 configuration: Release
 platform: x64
 environment:
@@ -13,9 +10,8 @@ before_build:
 - git submodule update --init --recursive
 - md build
 - cd build
-- cmake -G"Visual Studio 12 Win64" -DQT5_CMAKE_PATH=%QTDIR% ..
+- cmake -G"Visual Studio 12 Win64" -DQT5_CMAKE_PATH=%QTDIR% -DMEDUSA_CMAKE_USE_COTIRE=TRUE ..
 build:
   project: C:\projects\medusa\build\Medusa.sln
+  parallel: true
   verbosity: minimal
-test_script:
-- ctest -VV -C Release
