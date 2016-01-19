@@ -99,7 +99,11 @@ public:
     Address       const& rAddr,
     Instruction   const& rInsn,
     PrintData          & rPrintData) const;
-  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+
+  virtual CpuInformation    const* GetCpuInformation(void) const                                         { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+  virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const;
+  virtual std::vector<std::string> GetCallingConventionNames(void) const                                 { return{ "aapcs" }; }
+
   virtual CpuContext*           MakeCpuContext(void) const                             { return new ARMCpuContext(*GetCpuInformation()); }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return new MemoryContext(*GetCpuInformation()); }
 

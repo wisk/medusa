@@ -1,4 +1,5 @@
 #include "arm_architecture.hpp"
+#include "arm_calling_convention.hpp"
 
 #include <medusa/expression_visitor.hpp>
 
@@ -524,6 +525,17 @@ bool ArmArchitecture::FormatInstruction(
   }
 
   return true;
+}
+
+CallingConvention const* ArmArchitecture::GetCallingConvention(std::string const& rCallConvName, u8 Mode) const
+{
+  if (rCallConvName == "aapcs")
+  {
+    static AapcsCallingConvention s_AapcsCallConv;
+    return &s_AapcsCallConv;
+  }
+
+  return nullptr;
 }
 
 bool ArmArchitecture::HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr)

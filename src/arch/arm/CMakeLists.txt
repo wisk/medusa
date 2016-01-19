@@ -7,8 +7,10 @@ set(SRC
 
   ${INCROOT}/arm_architecture.hpp
   ${INCROOT}/arm_def.hpp
+  ${INCROOT}/arm_calling_convention.hpp
   ${SRCROOT}/arm_architecture.cpp
   ${SRCROOT}/arm_opcode.cpp
+  ${SRCROOT}/arm_calling_convention.cpp
   )
 
 # define arm architecture target
