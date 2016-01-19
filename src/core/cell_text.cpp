@@ -352,6 +352,7 @@ bool GraphData::AddVertex(PrintData const& rPD, u16 X, u16 Y)
   if (m_Map.find(VtxAddr) != std::end(m_Map))
     return false;
   m_Map[VtxAddr] = std::make_tuple(rPD, X, Y);
+  return true;
 }
 
 bool GraphData::GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) const

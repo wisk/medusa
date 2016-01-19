@@ -1122,16 +1122,16 @@ semantic:
     cf.id = bit_cast((op0.val >> (bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int_type1);
 
   btc: &btc |
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     op0.val = (op0.val ^ ((int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     free_var('bit_set');
 
   bts: &bts |
     alloc_var('res', op0.bit);
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     res = (op0.val | ((int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     op0.val = res
@@ -1139,8 +1139,8 @@ semantic:
     free_var('res');
 
   btr: &btr |
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     op0.val = (op0.val & (~(int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     free_var('bit_set');

@@ -95,7 +95,7 @@ extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitCallInstructionHook(u8* pEmu
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset)
+extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset, Emulator::HookType HkTy)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
@@ -522,6 +522,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
       llvm::Type::getInt8PtrTy(rCtxt),  // pCpuCtxt
       llvm::Type::getInt16Ty(rCtxt),   // Base
       llvm::Type::getInt64Ty(rCtxt),  // Offset
+      llvm::Type::getInt32Ty(rCtxt), // Type
     };
     static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
