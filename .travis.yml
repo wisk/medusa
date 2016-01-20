@@ -1,32 +1,37 @@
 language: cpp
-
 sudo: false
-
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','boost-latest']
+          packages: ['gcc-4.9','g++-4.9','ccache','libboost1.55-all-dev']
+      env: COMPILERCXX=g++-4.9 COMPILERCC=gcc-4.9 TRAVIS_MEDUSA_BUILD_WITH_OGDF=FALSE BUILD_TYPE=Release
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','boost-latest']
+          packages: ['g++-5','ccache','libboost1.55-all-dev']
+      env: COMPILERCXX=g++-5 COMPILERCC=gcc-5 TRAVIS_MEDUSA_BUILD_WITH_OGDF=FALSE BUILD_TYPE=Release
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test','boost-latest','qt551']
+          packages: ['g++-5','ccache','libboost1.55-all-dev','qt-latest','qtcreator-latest']
+      env: TRAVIS_QT=V5.5 COMPILERCXX=g++-5 COMPILERCC=gcc-5 TRAVIS_MEDUSA_BUILD_WITH_OGDF=FALSE BUILD_TYPE=Release
 cache:
 - ccache
 - apt
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - boost-latest
-    packages:
-    - gcc-4.9
-    - g++-4.9
-    - ccache
-    - libboost1.55-all-dev
-
-compiler:
-  - gcc
-
 before_install:
   - git submodule update --init --recursive
-  - export CC="ccache gcc-4.9"
-  - export CXX="ccache g++-4.9"
   - cd .travis
   - wget --no-check-certificate -O cmake.tar.gz http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.tar.gz
-  - tar xvzf cmake.tar.gz
+  - tar xzf cmake.tar.gz
   - ls -la
   - export PATH=$(pwd)/cmake-3.2.1-Linux-x86_64/bin:$PATH
   - cd ..
@@ -34,7 +39,10 @@ before_install:
 before_script:
   - mkdir build_release
   - cd build_release
-  - cmake .. -DCMAKE_BUILD_TYPE=Release
+  - export CC="ccache $COMPILERCC"
+  - export CXX="ccache $COMPILERCXX"
+  - ccache -s
+  - cmake .. -DMEDUSA_BUILD_WITH_OGDF=$TRAVIS_MEDUSA_BUILD_WITH_OGDF -DCMAKE_BUILD_TYPE=$BUILD_TYPE
   - cd ..
 
 script:
