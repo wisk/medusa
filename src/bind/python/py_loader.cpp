@@ -12,7 +12,6 @@ void PydusaLoader(void)
 {
   bp::class_<Loader, boost::noncopyable>("Loader", bp::no_init)
     .add_property("mame", &Loader::GetName)
-    .def("map",           &Loader::Map    )
   ;
 
   bp::register_ptr_to_python<Loader::SPType>();

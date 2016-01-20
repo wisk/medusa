@@ -3,7 +3,7 @@
 
 #include <boost/format.hpp>
 
-PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0)
+PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0), m_ImageBase(0x0)
 {
 }
 
@@ -46,17 +46,78 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature) + sizeof(PeFileHeader), m_Magic))
     return false;
 
+  switch (m_Magic)
+  {
+  case PE_NT_OPTIONAL_HDR32_MAGIC:
+  {
+    PeTraits<32>::DosHeader DosHdr;
+    PeTraits<32>::NtHeaders NtHdrs;
+
+    if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
+    {
+      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      return false;
+    }
+    DosHdr.Swap(LittleEndian);
+
+    if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
+    {
+      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      return false;
+    }
+    NtHdrs.Swap(LittleEndian);
+
+    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    break;
+  }
+
+  case PE_NT_OPTIONAL_HDR64_MAGIC:
+  {
+    PeTraits<64>::DosHeader DosHdr;
+    PeTraits<64>::NtHeaders NtHdrs;
+
+    if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
+    {
+      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      return false;
+    }
+    DosHdr.Swap(LittleEndian);
+
+    if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
+    {
+      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      return false;
+    }
+    NtHdrs.Swap(LittleEndian);
+
+    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    break;
+  }
+
+  default:
+    Log::Write("ldr_pe").Level(LogError) << "unsupported magic" << LogEnd;
+    return false;
+  }
+
   return true;
 }
 
-void PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   switch (m_Magic)
   {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs); break;
-  case PE_NT_OPTIONAL_HDR64_MAGIC: _Map<64>(rDoc, rArchs); break;
+  case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs, m_ImageBase); break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: _Map<64>(rDoc, rArchs, m_ImageBase); break;
   default: assert(0 && "Unknown magic");
   }
+
+  return true;
+}
+
+bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  m_ImageBase = rImgBase.GetOffset();
+  return Map(rDoc, rArchs);
 }
 
 void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
@@ -123,7 +184,7 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   return false;
 }
 
-template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs)
+template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImgBase)
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
@@ -145,7 +206,6 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
   }
   NtHdrs.Swap(LittleEndian);
 
-  u64 ImgBase  = NtHdrs.OptionalHeader.ImageBase;
   u64 EpOff    = ImgBase + NtHdrs.OptionalHeader.AddressOfEntryPoint;
   u16 NumOfScn = NtHdrs.FileHeader.NumberOfSections;
   u64 ScnOff   = DosHdr.e_lfanew + offsetof(typename PeType::NtHeaders, OptionalHeader) + NtHdrs.FileHeader.SizeOfOptionalHeader;

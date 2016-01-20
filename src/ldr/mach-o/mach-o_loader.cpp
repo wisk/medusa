@@ -94,13 +94,20 @@ u8 MachOLoader::GetDepth(void) const
   return 1;
 }
 
-void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   if (m_Arch64) {
     Map<64>(rDoc, rArchs);
   } else {
     Map<32>(rDoc, rArchs);
   }
+
+  return true;
+}
+
+bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
 }
 
 template<int bit>

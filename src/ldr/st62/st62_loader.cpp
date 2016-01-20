@@ -50,7 +50,7 @@ bool ST62Loader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   auto itArch = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   {
@@ -62,7 +62,7 @@ void ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (itArch == std::end(rArchs))
   {
     Log::Write("ldr_st62") << "unable to find ST62 architecture" << LogEnd;
-    return;
+    return false;
   }
 
   Tag ArchTag = (*itArch)->GetTag();
@@ -70,7 +70,7 @@ void ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (ArchMode == 0)
   {
     Log::Write("ldr_st62") << "unable to set ST62x25 mode" << LogEnd;
-    return;
+    return false;
   }
 
   rDoc.AddMemoryArea(new MappedMemoryArea(
@@ -130,8 +130,14 @@ void ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD4, 16, 8), Label("TSCR", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD8, 16, 8), Label("WDT", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xFF, 16, 8), Label("A", Label::Data | Label::Global));
+
+  return true;
 }
 
+bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
+}
 
 void ST62Loader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {

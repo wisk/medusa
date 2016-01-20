@@ -27,7 +27,7 @@ bool GameBoyLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   auto itArch = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   {
@@ -39,7 +39,7 @@ void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (itArch == std::end(rArchs))
   {
     Log::Write("ldr_gb") << "unable to find Z80 architecture" << LogEnd;
-    return;
+    return false;
   }
 
   Tag ArchTag = (*itArch)->GetTag();
@@ -47,7 +47,7 @@ void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (ArchMode == 0)
   {
     Log::Write("ldr_gb") << "unable to set GameBoy mode" << LogEnd;
-    return;
+    return false;
   }
 
   rDoc.AddMemoryArea(new VirtualMemoryArea(
@@ -168,6 +168,13 @@ void GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   rDoc.AddLabel(Address(Address::BankType, 0x0, 0xff6b, 8, 16), Label("OBPD",                   Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::BankType, 0x0, 0xff70, 8, 16), Label("SVBK",                   Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::BankType, 0x0, 0xffff, 8, 16), Label("ISWITCH",                Label::Data | Label::Global));
+
+  return true;
+}
+
+bool GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
 }
 
 TBank GameBoyLoader::GetNumberOfBank(void) const

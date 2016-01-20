@@ -23,7 +23,7 @@ bool BootSectorLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   auto itArchX86 = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   {
@@ -32,7 +32,7 @@ void BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (itArchX86 == std::end(rArchs))
   {
     Log::Write("ldr_bs").Level(LogError) << "unable to find X86 architecture module" << LogEnd;
-    return;
+    return false;
   }
 
   rDoc.AddMemoryArea(new MappedMemoryArea(
@@ -44,6 +44,12 @@ void BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   ));
 
   rDoc.AddLabel(Address(Address::FlatType, 0x0, AddressOffset, 16, 16), Label("start", Label::Code | Label::Global));
+  return true;
+}
+
+bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
 }
 
 void BootSectorLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const

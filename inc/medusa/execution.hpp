@@ -37,6 +37,8 @@ public:
   // LATER: implement thread instead of cpu context
   CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
 
+  Architecture::SPType GetArchitecture(void) { return m_spArch; }
+
   bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamVal) const;
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
   bool ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const;

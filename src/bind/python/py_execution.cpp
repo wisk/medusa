@@ -4,6 +4,7 @@
 
 #include <medusa/document.hpp>
 #include <medusa/execution.hpp>
+#include <medusa/module.hpp>
 
 namespace bp = boost::python;
 
@@ -25,6 +26,68 @@ namespace pydusa
     std::string StrWrkDir = bp::extract<std::string>(WrkDir);
 
     return pExecution->Initialize(VecArgs, VecEnv, StrWrkDir);
+  }
+
+  bool Execution_MapModule(Execution* pExecution, bp::str pyModPath, Address const& rAddr)
+  {
+    Path ModPath = bp::extract<std::string>(pyModPath)().c_str();
+
+    auto* pMemCtxt = pExecution->GetMemoryContext();
+    auto* pCpuCtxt = pExecution->GetCpuContext();
+
+    if (pMemCtxt == nullptr)
+      return false;
+    if (pCpuCtxt == nullptr)
+      return false;
+
+    try
+    {
+      auto spModBinStrm = std::make_shared<FileBinaryStream>(ModPath);
+      Document ModDoc;
+
+      auto& rModMgr = ModuleManager::Instance();
+      auto const& rLdrs = rModMgr.GetLoaders();
+      auto spArch = pExecution->GetArchitecture();
+
+      if (spArch == nullptr)
+        return false;
+
+      for (auto spLdr : rLdrs)
+      {
+        if (!spLdr->IsCompatible(*spModBinStrm))
+          continue;
+
+        auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
+        if (pGetDbText == nullptr)
+          return false;
+        auto spDbText = medusa::Database::SPType(pGetDbText());
+
+        spDbText->SetBinaryStream(spModBinStrm);
+        ModDoc.Use(spDbText);
+
+        if (!spLdr->Map(ModDoc, { spArch }, rAddr))
+        {
+          Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << LogEnd;
+          return false;
+        }
+
+        if (!pMemCtxt->MapDocument(ModDoc, pCpuCtxt))
+        {
+          Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << " to memory context" << LogEnd;
+          return false;
+        }
+
+        return true;
+      }
+    }
+    catch (Exception const& e)
+    {
+      Log::Write("pydusa") << e.What() << LogEnd;
+      return false;
+    }
+
+    Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
+    return false;
   }
 
   struct HookCallbackProxy
@@ -92,6 +155,7 @@ void PydusaExecution(void)
     .def("set_emulator", &Execution::SetEmulator)
     .def("execute", &Execution::Execute)
     .def("invalidate_cache", &Execution::InvalidateCache)
+    .def("map_mod", pydusa::Execution_MapModule)
     .def("hook_insn", pydusa::Execution_HookInstruction)
     .def("hook_fn", pydusa::Execution_HookFunction)
     .def("hook_addr", pydusa::Execution_HookAddr)

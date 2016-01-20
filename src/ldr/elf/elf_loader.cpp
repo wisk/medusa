@@ -36,7 +36,7 @@ bool ElfLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-void ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   switch (m_Ident[EI_CLASS])
   {
@@ -44,6 +44,13 @@ void ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   case ELFCLASS64: Map<64>(rDoc, rArchs); break;
   default: assert(0 && "Unknown ELF class");
   }
+
+  return true;
+}
+
+bool ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
 }
 
 void ElfLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
