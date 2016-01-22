@@ -28,7 +28,7 @@ namespace pydusa
     return pExecution->Initialize(VecArgs, VecEnv, StrWrkDir);
   }
 
-  bool Execution_MapModule(Execution* pExecution, bp::str pyModPath, Address const& rAddr)
+  std::shared_ptr<Document> Execution_MapModule(Execution* pExecution, bp::str pyModPath, Address const& rAddr)
   {
     Path ModPath = bp::extract<std::string>(pyModPath)().c_str();
 
@@ -36,21 +36,21 @@ namespace pydusa
     auto* pCpuCtxt = pExecution->GetCpuContext();
 
     if (pMemCtxt == nullptr)
-      return false;
+      return nullptr;
     if (pCpuCtxt == nullptr)
-      return false;
+      return nullptr;
 
     try
     {
       auto spModBinStrm = std::make_shared<FileBinaryStream>(ModPath);
-      Document ModDoc;
 
-      auto& rModMgr = ModuleManager::Instance();
+      auto& rModMgr     = ModuleManager::Instance();
       auto const& rLdrs = rModMgr.GetLoaders();
-      auto spArch = pExecution->GetArchitecture();
+      auto spArch       = pExecution->GetArchitecture();
+      auto spModDoc     = std::make_shared<Document>();
 
       if (spArch == nullptr)
-        return false;
+        return nullptr;
 
       for (auto spLdr : rLdrs)
       {
@@ -59,25 +59,25 @@ namespace pydusa
 
         auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
         if (pGetDbText == nullptr)
-          return false;
+          return nullptr;
         auto spDbText = medusa::Database::SPType(pGetDbText());
 
         spDbText->SetBinaryStream(spModBinStrm);
-        ModDoc.Use(spDbText);
+        spModDoc->Use(spDbText);
 
-        if (!spLdr->Map(ModDoc, { spArch }, rAddr))
+        if (!spLdr->Map(*spModDoc, { spArch }, rAddr))
         {
           Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << LogEnd;
-          return false;
+          return nullptr;
         }
 
-        if (!pMemCtxt->MapDocument(ModDoc, pCpuCtxt))
+        if (!pMemCtxt->MapDocument(*spModDoc, pCpuCtxt))
         {
           Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << " to memory context" << LogEnd;
-          return false;
+          return nullptr;
         }
 
-        return true;
+        return spModDoc;
       }
     }
     catch (Exception const& e)

@@ -203,6 +203,22 @@ namespace pydusa
     return bp::object();
   }
 
+  // TODO(wisk): use a real conversion utf16 to utf8
+  bp::object MemoryContext_Read_utf16(MemoryContext* pMemCtxt, u64 LinAddr)
+  {
+    std::string Res;
+
+    char CurChr = '\0';
+    while (pMemCtxt->ReadMemory(LinAddr, CurChr))
+    {
+      if (CurChr == '\0')
+        return bp::str(Res);
+      Res += CurChr;
+      LinAddr += 2;
+    }
+    return bp::object();
+  }
+
   bool MemoryContext_WriteBuffer(MemoryContext* pMemCtxt, u64 LinAddr, bp::str Buf)
   {
     char *pBuf;
@@ -268,6 +284,7 @@ void PydusaContext(void)
     .def("read_u32",    pydusa::MemoryContext_Read_u32)
     .def("read_u64",    pydusa::MemoryContext_Read_u64)
     .def("read_utf8",   pydusa::MemoryContext_Read_utf8)
+    .def("read_utf16",  pydusa::MemoryContext_Read_utf16)
 
     .def("write",       pydusa::MemoryContext_WriteBuffer)
     .def("write_u8",    pydusa::MemoryContext_Write_u8)

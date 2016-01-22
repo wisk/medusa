@@ -33,10 +33,12 @@ namespace pydusa
 
 void PydusaDocument(void)
 {
-  bp::class_<Document, boost::noncopyable>("Document", bp::no_init)
+  bp::class_<Document, boost::noncopyable>("Document")
     .add_property("memory_areas", pydusa::Document_MemoryAreas)
     .add_property("labels", pydusa::Document_Labels)
     .def("get_label", &Document::GetLabelFromAddress)
     .def("get_label_addr", &Document::GetAddressFromLabelName)
   ;
+
+  bp::register_ptr_to_python<std::shared_ptr<Document>>();
 }

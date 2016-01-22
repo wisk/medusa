@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Jan 18 18:02:11 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jan 21 16:12:28 2016) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -31057,8 +31057,8 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x0),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(1),
-            rInsn.GetOperand(0)),
+            rInsn.GetOperand(0),
+            rInsn.GetOperand(1)),
           Expr::MakeIfElseCond(
             ConditionExpression::CondEq,
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
@@ -31093,8 +31093,8 @@ bool X86Architecture::Table_1_ac(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         /* block glb expressions */
         AllExpr.push_back(Expr::MakeAssign(
-          rInsn.GetOperand(1),
-          rInsn.GetOperand(0)));
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
         AllExpr.push_back(Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeId(X86_FlDf, &m_CpuInfo),
@@ -31156,8 +31156,8 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
           Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::CounterRegister, rInsn.GetMode())), 0x0),
           Expr::MakeBind({
           Expr::MakeAssign(
-            rInsn.GetOperand(1),
-            rInsn.GetOperand(0)),
+            rInsn.GetOperand(0),
+            rInsn.GetOperand(1)),
           Expr::MakeIfElseCond(
             ConditionExpression::CondEq,
             Expr::MakeId(X86_FlDf, &m_CpuInfo),
@@ -31192,8 +31192,8 @@ bool X86Architecture::Table_1_ad(BinaryStream const& rBinStrm, TOffset Offset, I
       {
         /* block glb expressions */
         AllExpr.push_back(Expr::MakeAssign(
-          rInsn.GetOperand(1),
-          rInsn.GetOperand(0)));
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
         AllExpr.push_back(Expr::MakeIfElseCond(
           ConditionExpression::CondEq,
           Expr::MakeId(X86_FlDf, &m_CpuInfo),

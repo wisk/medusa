@@ -33,11 +33,11 @@ public:
   std::string GetHookName(void) const;
   Address GetHookAddress(std::string const& rHkFuncName) const;
 
-  MemoryContext* GetMemoryContext(void) { return m_pMemCtxt; }
+  MemoryContext*       GetMemoryContext(void) { return m_pMemCtxt; }
   // LATER: implement thread instead of cpu context
-  CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
-
-  Architecture::SPType GetArchitecture(void) { return m_spArch; }
+  CpuContext*          GetCpuContext(void)    { return m_pCpuCtxt; }
+  Document&            GetDocument(void)      { return m_rDoc;     }
+  Architecture::SPType GetArchitecture(void)  { return m_spArch;   }
 
   bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamVal) const;
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
