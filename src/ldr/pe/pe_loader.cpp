@@ -209,6 +209,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
   u64 EpOff    = ImgBase + NtHdrs.OptionalHeader.AddressOfEntryPoint;
   u16 NumOfScn = NtHdrs.FileHeader.NumberOfSections;
   u64 ScnOff   = DosHdr.e_lfanew + offsetof(typename PeType::NtHeaders, OptionalHeader) + NtHdrs.FileHeader.SizeOfOptionalHeader;
+  u32 ScnAlign = NtHdrs.OptionalHeader.SectionAlignment;
 
   Log::Write("ldr_pe")
     <<   "ImageBase: "         << ImgBase
@@ -219,7 +220,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
   Address EpAddr(Address::FlatType, 0x0, EpOff, 0x10, bit);
   rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported));
 
-  _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn);
+  _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
   _ResolveImports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IMPORT].VirtualAddress,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
@@ -227,10 +228,14 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 }
 
-template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
+template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment)
 {
   Tag ArchTag  = MEDUSA_ARCH_UNK;
   u8  ArchMode = 0;
+
+  // TODO(wisk): verify how section alignment really works
+  if (SectionAlignment == 0)
+    SectionAlignment = 1;
 
   if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
     return;
@@ -262,6 +267,10 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     ScnHdr.Swap(LittleEndian);
 
     u32 ScnVirtSz = ScnHdr.Misc.VirtualSize ? ScnHdr.Misc.VirtualSize : ScnHdr.SizeOfRawData;
+    if ((ScnVirtSz % SectionAlignment) != 0)
+    {
+      ScnVirtSz += SectionAlignment - (ScnVirtSz % SectionAlignment);
+    }
     std::string ScnName(reinterpret_cast<char const*>(ScnHdr.Name), 0, PE_SIZEOF_SHORT_NAME);
 
     if (ScnHdr.Characteristics & PE_SCN_MEM_EXECUTE)

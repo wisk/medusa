@@ -42,7 +42,7 @@ private:
       ) const;
 
   template<int bit> void _Map(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase);
-  template<int bit> void _MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection);
+  template<int bit> void _MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment);
   template<int bit> void _ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva);
   template<int bit> void _ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva);
 };
