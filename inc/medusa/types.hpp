@@ -8,14 +8,12 @@
 
 #if defined WIN32 || defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
 
-# include <windows.h>
-
 MEDUSA_NAMESPACE_BEGIN
 
-typedef HANDLE            TFileHandle;
-#define INVALID_FILE_VALUE (HANDLE)-1;
-typedef HANDLE            TMapHandle;
-#define INVALID_MAP_VALUE (HANDLE)nullptr;
+typedef void*              TFileHandle;
+#define INVALID_FILE_VALUE (TFileHandle)-1;
+typedef void*              TMapHandle;
+#define INVALID_MAP_VALUE  (TMapHandle)nullptr;
 
 MEDUSA_NAMESPACE_END
 

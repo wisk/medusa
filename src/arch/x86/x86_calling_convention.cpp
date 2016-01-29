@@ -484,7 +484,7 @@ bool MsX64CallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
     u64 StkLinAddr;
     if (!pCpuCtxt->Translate(Address(0x0, StkVal), StkLinAddr))
       return false;
-    StkLinAddr += (0x20 + ParamNr * 0x8);
+    StkLinAddr += (ParamNr * 0x8);
     if (!pMemCtxt->ReadMemory(StkLinAddr, ParamVal))
       return false;
   }

@@ -258,10 +258,11 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       "\x41\x52"                     // push r10
       "\x98"                         // cwde
       "\x66\x98"                     // cbw
+      "\x41\x83\x65\x00\x00"         // 
       ;
 
-    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2);
-    medusa::Instruction InsnArr[13];
+    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2 + 5);
+    medusa::Instruction InsnArr[14];
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[1], X86_32_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6, InsnArr[2], X86_32_Mode));
@@ -275,6 +276,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6, InsnArr[10], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2, InsnArr[11], X86_64_Mode));
     BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1, InsnArr[12], X86_64_Mode));
+    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2, InsnArr[13], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
