@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
 BOOST_AUTO_TEST_CASE(arch_st62_test_case)
 {
-  BOOST_MESSAGE("Testing ST62 architecture");
+  BOOST_TEST_MESSAGE("Testing ST62 architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
