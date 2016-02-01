@@ -71,7 +71,7 @@ instruction:
       attribute: [ ]
 
     - opcode: 0x07
-      mnemonic: rlc
+      mnemonic: rlca
       operand: [ A ]
       test_flags: [ ]
       update_flags: [ ]
