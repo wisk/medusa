@@ -81,6 +81,7 @@ public:
   void SetMnemonic(char const* pMnem);
   void AddMnemonicPrefix(char const* pPrefix);
   void AddMnemonicSuffix(char const* pSuffix);
+  void AddAttribute(u32 Attr);
   void SetOpcode(u32 Opcd);
   void SetTestedFlags(u32 Flags);
   void SetUpdatedFlags(u32 Flags);
