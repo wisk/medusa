@@ -418,6 +418,17 @@ BOOST_AUTO_TEST_CASE(expr_x86_jmp_tbl)
   BOOST_REQUIRE(Core.FormatGraph(*spFuncGraph, GD));
 }
 
+BOOST_AUTO_TEST_CASE(expr_operator)
+{
+  auto spFlt = Expr::MakeBitVector(BitVector(1.0f));
+  auto spImm = Expr::MakeBitVector(BitVector(32, 0x3f800000)); // 1.0
+
+  auto spRes = spFlt + spImm;
+
+  BOOST_REQUIRE(spRes != nullptr);
+  std::cout << spRes->ToString() << std::endl;
+}
+
 //BOOST_AUTO_TEST_CASE(expr_tostr)
 //{
 //  Expression::SPType spExpr;

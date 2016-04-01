@@ -941,9 +941,12 @@ semantic:
     program.id = op0.val;
 
   call: &call |
+    alloc_var('call_dst', stack.bit);
+    call_dst = op0.val;
     stack.id -= stack.size;
     stack.mem = program.id;
-    program.id = op0.val;
+    program.id = call_dst;
+    free_var('call_dst');
 
   ret: &ret |
     program.id = stack.mem;
@@ -4297,6 +4300,7 @@ instruction:
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
       - opcode: 0x70
         sub_opcodes:
@@ -4457,6 +4461,7 @@ instruction:
             operand: [ Wx, Vx ]
             attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *mov
 
       - opcode: 0x80
         mnemonic: jo

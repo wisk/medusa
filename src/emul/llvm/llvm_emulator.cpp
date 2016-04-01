@@ -930,8 +930,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpUMod:
+  {
     pBinOpVal = m_rBuilder.CreateURem(LeftVal, RightVal, "umod");
     break;
+  }
 
   case OperationExpression::OpSext:
     pBinOpVal = m_rBuilder.CreateSExt(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "sext");

@@ -78,6 +78,9 @@ public:
   void               ForEachOperand(OperandCallback OprdCb) const;
 
   void SetName(char const* pName);
+  void SetMnemonic(char const* pMnem);
+  void AddMnemonicPrefix(char const* pPrefix);
+  void AddMnemonicSuffix(char const* pSuffix);
   void SetOpcode(u32 Opcd);
   void SetTestedFlags(u32 Flags);
   void SetUpdatedFlags(u32 Flags);
@@ -93,8 +96,11 @@ public:
 
 private:
   char const*         m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
-  u32                 m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
+  std::string         m_MnemonicPrefix;   /*! */
+  std::string         m_MnemonicSuffix;   /*! */
+  u32                 m_Opcode;           /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
   u32                 m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)                     */
+  u32                 m_Attributes;       /*! This integer holdes instruction attributes (support-it-block, ... ) */
   u32                 m_TestedFlags;      /*! This integer holds flags that are tested by the instruction         */
   u32                 m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
   u32                 m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Jan 21 16:12:28 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Feb 10 17:33:34 2016) */
 #include "x86_architecture.hpp"
 const char *X86Architecture::m_Mnemonic[0x2f6] =
 {
@@ -43615,9 +43615,12 @@ bool X86Architecture::Table_1_e7(BinaryStream const& rBinStrm, TOffset Offset, I
  * operand: ['Jz']
  * opcode: e8
  * operation_type: ['call']
- * semantic: stack.id -= stack.size;
+ * semantic: alloc_var('call_dst', stack.bit);
+call_dst = op0.val;
+stack.id -= stack.size;
 stack.mem = program.id;
-program.id = op0.val;
+program.id = call_dst;
+free_var('call_dst');
 
 **/
 bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
@@ -43631,6 +43634,12 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
     }
     {
       Expression::LSPType AllExpr;
+      /* semantic: alloc_var('call_dst', stack.bit) */
+      AllExpr.push_back(Expr::MakeVar("call_dst", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()))));
+      /* semantic: call_dst = op0.val */
+      AllExpr.push_back(Expr::MakeAssign(
+        Expr::MakeVar("call_dst", VariableExpression::Use),
+        rInsn.GetOperand(0)));
       /* semantic: stack.id -= stack.size */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -43645,10 +43654,12 @@ bool X86Architecture::Table_1_e8(BinaryStream const& rBinStrm, TOffset Offset, I
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
-      /* semantic: program.id = op0.val */
+      /* semantic: program.id = call_dst */
       AllExpr.push_back(Expr::MakeAssign(
         Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-        rInsn.GetOperand(0)));
+        Expr::MakeVar("call_dst", VariableExpression::Use)));
+      /* semantic: free_var('call_dst') */
+      AllExpr.push_back(Expr::MakeVar("call_dst", VariableExpression::Free));
       rInsn.SetSemantic(AllExpr);
     }
     return true;
@@ -46932,9 +46943,12 @@ free_var('res');
  *
  * mnemonic: call
  * operand: ['Ev']
- * semantic: stack.id -= stack.size;
+ * semantic: alloc_var('call_dst', stack.bit);
+call_dst = op0.val;
+stack.id -= stack.size;
 stack.mem = program.id;
-program.id = op0.val;
+program.id = call_dst;
+free_var('call_dst');
 
  * constraint: df64
  * operation_type: ['call']
@@ -47346,6 +47360,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
       }
       {
         Expression::LSPType AllExpr;
+        /* semantic: alloc_var('call_dst', stack.bit) */
+        AllExpr.push_back(Expr::MakeVar("call_dst", VariableExpression::Alloc, m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()))));
+        /* semantic: call_dst = op0.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          Expr::MakeVar("call_dst", VariableExpression::Use),
+          rInsn.GetOperand(0)));
         /* semantic: stack.id -= stack.size */
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo),
@@ -47360,10 +47380,12 @@ bool X86Architecture::Table_1_ff(BinaryStream const& rBinStrm, TOffset Offset, I
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeMem(m_CpuInfo.GetSizeOfRegisterInBit(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode())), nullptr, Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rInsn.GetMode()), &m_CpuInfo)),
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo)));
-        /* semantic: program.id = op0.val */
+        /* semantic: program.id = call_dst */
         AllExpr.push_back(Expr::MakeAssign(
           Expr::MakeId(m_CpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, rInsn.GetMode()), &m_CpuInfo),
-          rInsn.GetOperand(0)));
+          Expr::MakeVar("call_dst", VariableExpression::Use)));
+        /* semantic: free_var('call_dst') */
+        AllExpr.push_back(Expr::MakeVar("call_dst", VariableExpression::Free));
         rInsn.SetSemantic(AllExpr);
       }
       return true;
@@ -53709,6 +53731,8 @@ bool X86Architecture::Table_2_6e(BinaryStream const& rBinStrm, TOffset Offset, I
  * mnemonic: movdqu
  * operand: ['Vx', 'Wx']
  * prefix: f3
+ * semantic: op0.val = op1.val;
+
  * cpu_model: >= X86_Arch_Sse
  *
 **/
@@ -53721,6 +53745,14 @@ bool X86Architecture::Table_2_6f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Vx_Wx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }
@@ -54590,6 +54622,8 @@ bool X86Architecture::Table_2_7e(BinaryStream const& rBinStrm, TOffset Offset, I
  *
  * mnemonic: movdqu
  * operand: ['Wx', 'Vx']
+ * semantic: op0.val = op1.val;
+
  * attr: ['rep']
  * cpu_model: >= X86_Arch_Sse2
  *
@@ -54603,6 +54637,14 @@ bool X86Architecture::Table_2_7f(BinaryStream const& rBinStrm, TOffset Offset, I
       if (Operand__Wx_Vx(rBinStrm, Offset, rInsn, Mode) == false)
       {
         return false;
+      }
+      {
+        Expression::LSPType AllExpr;
+        /* semantic: op0.val = op1.val */
+        AllExpr.push_back(Expr::MakeAssign(
+          rInsn.GetOperand(0),
+          rInsn.GetOperand(1)));
+        rInsn.SetSemantic(AllExpr);
       }
       return true;
     }

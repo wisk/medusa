@@ -124,6 +124,34 @@ typename T::SPType expr_cast(Expression::SPType spExpr)
   static  Kind GetStaticClassKind(void) { return EXPR_KIND; }\
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == EXPR_KIND || BASE_EXPR_NAME::IsKindOf(ExprKind); }
 
+
+// unary operations
+/// src: http://en.cppreference.com/w/cpp/language/operator_incdec
+Medusa_EXPORT Expression::SPType operator++(Expression::SPType spExpr);
+Medusa_EXPORT Expression::SPType operator++(Expression::SPType spExpr, int);
+Medusa_EXPORT Expression::SPType operator--(Expression::SPType spExpr);
+Medusa_EXPORT Expression::SPType operator--(Expression::SPType spExpr, int);
+
+Medusa_EXPORT Expression::SPType operator~(Expression::SPType const spExpr);
+Medusa_EXPORT Expression::SPType operator-(Expression::SPType const spExpr);
+
+// binary operations
+Medusa_EXPORT Expression::SPType operator&(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator|(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator^(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+
+Medusa_EXPORT Expression::SPType operator+(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator-(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator*(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator/(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType SDIV     (Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator%(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType SREM     (Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+
+Medusa_EXPORT Expression::SPType operator<<(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType operator>>(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+Medusa_EXPORT Expression::SPType ARS       (Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
+
 // system expression //////////////////////////////////////////////////////////
 
 class Medusa_EXPORT SystemExpression : public Expression

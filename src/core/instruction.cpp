@@ -6,7 +6,7 @@ MEDUSA_NAMESPACE_BEGIN
 Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
   : Cell(Cell::InstructionType, NoneType)
   , m_pName(pName)
-  , m_Opcd(Opcode)
+  , m_Opcode(Opcode)
   , m_Prefix()
   , m_TestedFlags()
   , m_UpdatedFlags()
@@ -20,7 +20,7 @@ Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
 Instruction::Instruction(CellData::SPType spDna)
   : Cell(spDna)
   , m_pName(nullptr)
-  , m_Opcd(0x0)
+  , m_Opcode(0x0)
   , m_Prefix()
   , m_TestedFlags()
   , m_UpdatedFlags()
@@ -36,7 +36,7 @@ Instruction::~Instruction(void)
 std::string Instruction::ToString(void) const
 {
   std::string Res = (boost::format("mnem: %s(%08x), length: %d, prefix: %08x, oprd: %d")
-    % m_pName % m_Opcd % m_spDna->GetLength() % m_Prefix % m_Operands.size()).str();
+    % m_pName % m_Opcode % m_spDna->GetLength() % m_Prefix % m_Operands.size()).str();
   if (m_Operands.empty())
     return Res;
   Res += "\n";
@@ -55,7 +55,7 @@ char const* Instruction::GetName(void) const
 
 u32 Instruction::GetOpcode(void) const
 {
-  return m_Opcd;
+  return m_Opcode;
 }
 
 u32 Instruction::GetPrefix(void) const
@@ -151,9 +151,24 @@ void Instruction::SetName(char const* pName)
   m_pName = pName;
 }
 
+void Instruction::SetMnemonic(char const* pMnem)
+{
+  m_pName = pMnem;
+}
+
+void Instruction::AddMnemonicPrefix(char const* pPrefix)
+{
+  m_MnemonicPrefix += pPrefix;
+}
+
+void Instruction::AddMnemonicSuffix(char const* pSuffix)
+{
+  m_MnemonicSuffix += pSuffix;
+}
+
 void Instruction::SetOpcode(u32 Opcd)
 {
-  m_Opcd = Opcd;
+  m_Opcode = Opcd;
 }
 
 void Instruction::SetTestedFlags(u32 Flags)
