@@ -166,6 +166,11 @@ void Instruction::AddMnemonicSuffix(char const* pSuffix)
   m_MnemonicSuffix += pSuffix;
 }
 
+void Instruction::AddAttribute(u32 Attr)
+{
+  m_Attributes |= Attr;
+}
+
 void Instruction::SetOpcode(u32 Opcd)
 {
   m_Opcode = Opcd;
