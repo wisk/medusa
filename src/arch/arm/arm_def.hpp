@@ -84,4 +84,12 @@ enum ARM_Prefix
   ARM_Prefix_P = 1 << 4  /* Pre/Post indexing */
 };
 
+enum ARM_Attributes
+{
+  ARM_Attribute_None,
+  ARM_Attribute_SupportItBlock = 1 << 0,
+  ARM_Attribute_WriteBack = 1 << 1,
+
+};
+
 #endif // !ARM_DEF_HPP
