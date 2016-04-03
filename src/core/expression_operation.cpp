@@ -5,22 +5,26 @@ namespace medusa
 
   Expression::SPType operator++(Expression::SPType spExpr)
   {
-    return nullptr; // TODO(wisk):
+    auto ExprBitSz = spExpr->GetBitSize();
+    return Expr::MakeBinOp(OperationExpression::OpAdd, spExpr, Expr::MakeBitVector(ExprBitSz, 1));
   }
 
   Expression::SPType operator++(Expression::SPType spExpr, int)
   {
-    return nullptr; // TODO(wisk):
+    auto ExprBitSz = spExpr->GetBitSize();
+    return Expr::MakeBinOp(OperationExpression::OpAdd, spExpr, Expr::MakeBitVector(ExprBitSz, 1));
   }
 
   Expression::SPType operator--(Expression::SPType spExpr)
   {
-    return nullptr; // TODO(wisk):
+    auto ExprBitSz = spExpr->GetBitSize();
+    return Expr::MakeBinOp(OperationExpression::OpSub, spExpr, Expr::MakeBitVector(ExprBitSz, 1));
   }
 
   Expression::SPType operator--(Expression::SPType spExpr, int)
   {
-    return nullptr; // TODO(wisk):
+    auto ExprBitSz = spExpr->GetBitSize();
+    return Expr::MakeBinOp(OperationExpression::OpSub, spExpr, Expr::MakeBitVector(ExprBitSz, 1));
   }
 
   Expression::SPType operator~(Expression::SPType const spExpr)
@@ -98,4 +102,68 @@ namespace medusa
     return Expr::MakeBinOp(OperationExpression::OpArs, spLeftExpr, spRightExpr);
   }
 
+  Expression::SPType operator&(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr & Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator|(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr | Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator^(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr ^ Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator+(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr + Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator-(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr - Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator*(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr * Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator/(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr / Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType SDIV(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return SDIV(spLeftExpr, Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal));
+  }
+
+  Expression::SPType operator%(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr % Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType SREM(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return SREM(spLeftExpr, Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal));
+  }
+  
+  Expression::SPType operator<<(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr << Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType operator>>(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return spLeftExpr >> Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal);
+  }
+
+  Expression::SPType ARS(Expression::SPType const spLeftExpr, u32 RightVal)
+  {
+    return ARS(spLeftExpr, Expr::MakeBitVector(spLeftExpr->GetBitSize(), RightVal));
+  }
 }

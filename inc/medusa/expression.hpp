@@ -152,6 +152,22 @@ Medusa_EXPORT Expression::SPType operator<<(Expression::SPType const spLeftExpr,
 Medusa_EXPORT Expression::SPType operator>>(Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
 Medusa_EXPORT Expression::SPType ARS       (Expression::SPType const spLeftExpr, Expression::SPType const spRightExpr);
 
+Medusa_EXPORT Expression::SPType operator&(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator|(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator^(Expression::SPType const spLeftExpr, u32 RightVal);
+
+Medusa_EXPORT Expression::SPType operator+(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator-(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator*(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator/(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType SDIV     (Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator%(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType SREM     (Expression::SPType const spLeftExpr, u32 RightVal);
+
+Medusa_EXPORT Expression::SPType operator<<(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType operator>>(Expression::SPType const spLeftExpr, u32 RightVal);
+Medusa_EXPORT Expression::SPType ARS       (Expression::SPType const spLeftExpr, u32 RightVal);
+
 // system expression //////////////////////////////////////////////////////////
 
 class Medusa_EXPORT SystemExpression : public Expression

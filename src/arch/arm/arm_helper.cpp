@@ -34,4 +34,36 @@ namespace arm
 
     return 0;
   }
+
+  std::vector<medusa::u32> RegisterList(medusa::u32 RegListBitSize, medusa::u32 RegList)
+  {
+    std::vector<medusa::u32> Res;
+
+    return Res;
+  }
+
+  medusa::u32 ConditionFromValue(medusa::u32 CondVal)
+  {
+    return 0;
+  }
+
+  medusa::u32 ConditionFromName(char const* pCondName)
+  {
+    return 0;
+  }
+
+  medusa::u32 ExpandImm(medusa::u32 Imm)
+  {
+    return 0;
+  }
+
+  medusa::Expression::SPType DecodeRegWithSources(medusa::u32 Rm, medusa::u32 Type, medusa::u32 Rs)
+  {
+    return nullptr;
+  }
+
+  medusa::Expression::SPType DecodeImmShiftWithSource(medusa::u32 Rm, medusa::u32 Type, medusa::u32 Imm)
+  {
+    return nullptr;
+  }
 }
