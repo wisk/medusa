@@ -15,22 +15,27 @@ enum ARM_FeatureThumb
   ARM_ThumbEE,
 };
 
+// src: https://community.arm.com/groups/processors/blog/2010/07/16/condition-codes-1-condition-flags-and-codes
 enum ARM_Condition
 {
-  ARM_Cond_Eq,
-  ARM_Cond_Ne,
-  ARM_Cond_Cs,
-  ARM_Cond_Cc,
-  ARM_Cond_Mi,
-  ARM_Cond_Pl,
-  ARM_Cond_Vs,
-  ARM_Cond_Vc,
-  ARM_Cond_Hi,
-  ARM_Cond_Ls,
-  ARM_Cond_Ge,
-  ARM_Cond_Lt,
-  ARM_Cond_Gt,
-  ARM_Cond_Le
+  ARM_Cond_Eq, // EQual
+  ARM_Cond_Ne, // Not Equal
+  ARM_Cond_Cs, // Carry Set (unsigned >=)
+  ARM_Cond_Hs = ARM_Cond_Cs, // Higher or Same (unsigned >=)
+  ARM_Cond_Cc, // Carry Clear (unsigned <)
+  ARM_Cond_Lo = ARM_Cond_Cc, // LOwer (unsigned <)
+  ARM_Cond_Mi, // MInus (negative)
+  ARM_Cond_Pl, // PLus (positive)
+  ARM_Cond_Vs, // oVerflow Set
+  ARM_Cond_Vc, // oVerflow Clear
+  ARM_Cond_Hi, // HIgher (unsigned >)
+  ARM_Cond_Ls, // Lower or Same (unsigned <=)
+  ARM_Cond_Ge, // Greater or Equal (signed >=)
+  ARM_Cond_Lt, // Lesser Than (signed <)
+  ARM_Cond_Gt, // Greater Than (signed >)
+  ARM_Cond_Le, // Lesser or Equal (signed <=)
+  ARM_Cond_Al, // ALways
+  ARM_Cond_Unknown,
 };
 
 enum ARM_Register

@@ -59,6 +59,7 @@ public:
 
   std::string ToString(void) const;
 
+  char const* GetFormat(void) const;
   char const* GetName(void) const;
   u32         GetOpcode(void) const;
   u32         GetPrefix(void) const;
@@ -77,6 +78,7 @@ public:
   typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
   void               ForEachOperand(OperandCallback OprdCb) const;
 
+  void SetFormat(char const* pFormat);
   void SetName(char const* pName);
   void SetMnemonic(char const* pMnem);
   void AddMnemonicPrefix(char const* pPrefix);
@@ -96,6 +98,7 @@ public:
   u32& Prefix(void);
 
 private:
+  char const*         m_pFormat;          /*! This string holds the format of the instruction                     */
   char const*         m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
   std::string         m_MnemonicPrefix;   /*! */
   std::string         m_MnemonicSuffix;   /*! */

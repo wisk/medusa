@@ -27,6 +27,11 @@ namespace pydusa
     });
     return Oprds;
   }
+
+  bp::str Instruction_GetFormat(Instruction* pInsn)
+  {
+    return bp::str(pInsn->GetFormat());
+  }
 }
 
 void PydusaInstruction(void)
@@ -34,6 +39,7 @@ void PydusaInstruction(void)
   bp::class_<Instruction, bp::bases<Cell>, boost::noncopyable>("Instruction", bp::no_init)
     .def("__str__", &Instruction::ToString)
     .def("__len__", &Instruction::GetLength)
+    .add_property("fmt", pydusa::Instruction_GetFormat)
     .add_property("sem", pydusa::Instruction_Semantic)
     .add_property("oprds", pydusa::Instruction_Operands)
     ;

@@ -5,6 +5,7 @@ MEDUSA_NAMESPACE_BEGIN
 
 Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
   : Cell(Cell::InstructionType, NoneType)
+  , m_pFormat(nullptr)
   , m_pName(pName)
   , m_Opcode(Opcode)
   , m_Prefix()
@@ -19,6 +20,7 @@ Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
 
 Instruction::Instruction(CellData::SPType spDna)
   : Cell(spDna)
+  , m_pFormat(nullptr)
   , m_pName(nullptr)
   , m_Opcode(0x0)
   , m_Prefix()
@@ -46,6 +48,11 @@ std::string Instruction::ToString(void) const
     Res += "\n";
   }
   return Res;
+}
+
+char const* Instruction::GetFormat(void) const
+{
+  return m_pFormat;
 }
 
 char const* Instruction::GetName(void) const
@@ -144,6 +151,11 @@ void Instruction::ForEachOperand(Instruction::OperandCallback OprdCb) const
 {
   for (auto const& rspOprdExpr : m_Operands)
     OprdCb(rspOprdExpr);
+}
+
+void Instruction::SetFormat(char const* pFormat)
+{
+  m_pFormat = pFormat;
 }
 
 void Instruction::SetName(char const* pName)
