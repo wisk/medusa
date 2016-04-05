@@ -38,39 +38,39 @@ enum ARM_Condition
   ARM_Cond_Unknown,
 };
 
-enum ARM_Register
+enum ARM_Identifier
 {
-  ARM_RegUnknown,
+  ARM_Id_Unknown,
 
-  ARM_FlNf,
-  ARM_FlCf,
-  ARM_FlVf,
-  ARM_FlZf,
+  ARM_Fl_Nf,
+  ARM_Fl_Cf,
+  ARM_Fl_Vf,
+  ARM_Fl_Zf,
 
-  ARM_RegR0,
-  ARM_RegR1,
-  ARM_RegR2,
-  ARM_RegR3,
-  ARM_RegR4,
-  ARM_RegR5,
-  ARM_RegR6,
-  ARM_RegR7,
-  ARM_RegR8,
-  ARM_RegR9,
-  ARM_RegR10,
-  ARM_RegR11,
-  ARM_RegFP = ARM_RegR11,
-  ARM_RegR12,
-  ARM_RegIP = ARM_RegR12,
-  ARM_RegR13,
-  ARM_RegSP = ARM_RegR13,
-  ARM_RegR14,
-  ARM_RegLR = ARM_RegR14,
-  ARM_RegR15,
-  ARM_RegPC = ARM_RegR15,
+  ARM_Reg_R0,
+  ARM_Reg_R1,
+  ARM_Reg_R2,
+  ARM_Reg_R3,
+  ARM_Reg_R4,
+  ARM_Reg_R5,
+  ARM_Reg_R6,
+  ARM_Reg_R7,
+  ARM_Reg_R8,
+  ARM_Reg_R9,
+  ARM_Reg_R10,
+  ARM_Reg_R11,
+  ARM_Reg_Fp = ARM_Reg_R11,
+  ARM_Reg_R12,
+  ARM_Reg_Ip = ARM_Reg_R12,
+  ARM_Reg_R13,
+  ARM_Reg_Sp = ARM_Reg_R13,
+  ARM_Reg_R14,
+  ARM_Reg_Lr = ARM_Reg_R14,
+  ARM_Reg_R15,
+  ARM_Reg_Pc = ARM_Reg_R15,
 };
 
-enum CSPR_Flags
+enum ARM_CSPR
 {
   ARM_CSPR_T = 1 << 5,  //! State bit (Thumb)
   ARM_CSPR_V = 1 << 28, //! Overflow

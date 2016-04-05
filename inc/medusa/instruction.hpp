@@ -63,6 +63,7 @@ public:
   char const* GetName(void) const;
   u32         GetOpcode(void) const;
   u32         GetPrefix(void) const;
+  u32         GetAttributes(void) const;
 
   u32 GetTestedFlags(void) const;
   u32 GetUpdatedFlags(void) const;

@@ -10,17 +10,17 @@ bool AapcsCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
 
   switch (ParamNr)
   {
-  case 0: Result = pCpuCtxt->ReadRegister(ARM_RegR0, ParamVal); break;
-  case 1: Result = pCpuCtxt->ReadRegister(ARM_RegR1, ParamVal); break;
-  case 2: Result = pCpuCtxt->ReadRegister(ARM_RegR2, ParamVal); break;
-  case 3: Result = pCpuCtxt->ReadRegister(ARM_RegR3, ParamVal); break;
+  case 0: Result = pCpuCtxt->ReadRegister(ARM_Reg_R0, ParamVal); break;
+  case 1: Result = pCpuCtxt->ReadRegister(ARM_Reg_R1, ParamVal); break;
+  case 2: Result = pCpuCtxt->ReadRegister(ARM_Reg_R2, ParamVal); break;
+  case 3: Result = pCpuCtxt->ReadRegister(ARM_Reg_R3, ParamVal); break;
   default: break;
   }
 
   if (!Result)
   {
     u32 StkVal;
-    if (!pCpuCtxt->ReadRegister(ARM_RegSP, StkVal))
+    if (!pCpuCtxt->ReadRegister(ARM_Reg_Sp, StkVal))
       return false;
     if (!pMemCtxt->ReadMemory(StkVal + (ParamNr - 4) * 4, ParamVal))
       return false;
@@ -35,16 +35,16 @@ bool AapcsCallingConvention::GetParameter(CpuContext const* pCpuCtxt, MemoryCont
 bool AapcsCallingConvention::ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo) const
 {
   u32 LnkReg;
-  if (!pCpuCtxt->ReadRegister(ARM_RegLR, LnkReg))
+  if (!pCpuCtxt->ReadRegister(ARM_Reg_Lr, LnkReg))
     return false;
-  if (!pCpuCtxt->WriteRegister(ARM_RegPC, LnkReg))
+  if (!pCpuCtxt->WriteRegister(ARM_Reg_Pc, LnkReg))
     return false;
   return true;
 }
 
 bool AapcsCallingConvention::ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const
 {
-  if (!pCpuCtxt->WriteRegister(ARM_RegR0, rRetVal))
+  if (!pCpuCtxt->WriteRegister(ARM_Reg_R0, rRetVal))
     return false;
   return ReturnFromFunction(pCpuCtxt, pMemCtxt, ParamNo);
 }

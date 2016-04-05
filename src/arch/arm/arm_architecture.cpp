@@ -19,31 +19,30 @@ ArmArchitecture::ArmArchitecture(void)
 //http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0040d/ch06s02s01.html
 char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) const
 {
-  static std::map<u32, char const*> s_IdToName;
-  if (s_IdToName.empty())
+  static std::map<u32, char const*> s_IdToName
   {
-    s_IdToName[ARM_FlNf]   = "nf";
-    s_IdToName[ARM_FlCf]   = "cf";
-    s_IdToName[ARM_FlVf]   = "vf";
-    s_IdToName[ARM_FlZf]   = "zf";
+    { ARM_Fl_Nf,   "nf"  },
+    { ARM_Fl_Cf,   "cf"  },
+    { ARM_Fl_Vf,   "vf"  },
+    { ARM_Fl_Zf,   "zf"  },
 
-    s_IdToName[ARM_RegR0]  = "r0";
-    s_IdToName[ARM_RegR1]  = "r1";
-    s_IdToName[ARM_RegR2]  = "r2";
-    s_IdToName[ARM_RegR3]  = "r3";
-    s_IdToName[ARM_RegR4]  = "r4";
-    s_IdToName[ARM_RegR5]  = "r5";
-    s_IdToName[ARM_RegR6]  = "r6";
-    s_IdToName[ARM_RegR7]  = "r7";
-    s_IdToName[ARM_RegR8]  = "r8";
-    s_IdToName[ARM_RegR9]  = "r9";
-    s_IdToName[ARM_RegR10] = "r10";
-    s_IdToName[ARM_RegR11] = "fp";
-    s_IdToName[ARM_RegR12] = "ip";
-    s_IdToName[ARM_RegR13] = "sp";
-    s_IdToName[ARM_RegR14] = "lr";
-    s_IdToName[ARM_RegR15] = "pc";
-  }
+    { ARM_Reg_R0,  "r0"  },
+    { ARM_Reg_R1,  "r1"  },
+    { ARM_Reg_R2,  "r2"  },
+    { ARM_Reg_R3,  "r3"  },
+    { ARM_Reg_R4,  "r4"  },
+    { ARM_Reg_R5,  "r5"  },
+    { ARM_Reg_R6,  "r6"  },
+    { ARM_Reg_R7,  "r7"  },
+    { ARM_Reg_R8,  "r8"  },
+    { ARM_Reg_R9,  "r9"  },
+    { ARM_Reg_R10, "r10" },
+    { ARM_Reg_R11, "fp"  },
+    { ARM_Reg_R12, "ip"  },
+    { ARM_Reg_R13, "sp"  },
+    { ARM_Reg_R14, "lr"  },
+    { ARM_Reg_R15, "pc"  },
+  };
   auto itResult = s_IdToName.find(Id);
   if (itResult == std::end(s_IdToName))
     return nullptr;
@@ -53,36 +52,35 @@ char const* ArmArchitecture::ARMCpuInformation::ConvertIdentifierToName(u32 Id) 
 
 u32 ArmArchitecture::ARMCpuInformation::ConvertNameToIdentifier(std::string const& rName) const
 {
-  static std::map<std::string, u32> s_NameToId;
-  if (s_NameToId.empty())
+  static std::map<std::string, u32> s_NameToId
   {
-    s_NameToId["nf"]  = ARM_FlNf;
-    s_NameToId["cf"]  = ARM_FlCf;
-    s_NameToId["vf"]  = ARM_FlVf;
-    s_NameToId["zf"]  = ARM_FlZf;
+    { "nf",  ARM_Fl_Nf   },
+    { "cf",  ARM_Fl_Cf   },
+    { "vf",  ARM_Fl_Vf   },
+    { "zf",  ARM_Fl_Zf   },
 
-    s_NameToId["r0"]  = ARM_RegR0;
-    s_NameToId["r1"]  = ARM_RegR1;
-    s_NameToId["r2"]  = ARM_RegR2;
-    s_NameToId["r3"]  = ARM_RegR3;
-    s_NameToId["r4"]  = ARM_RegR4;
-    s_NameToId["r5"]  = ARM_RegR5;
-    s_NameToId["r6"]  = ARM_RegR6;
-    s_NameToId["r7"]  = ARM_RegR7;
-    s_NameToId["r8"]  = ARM_RegR8;
-    s_NameToId["r9"]  = ARM_RegR9;
-    s_NameToId["r10"] = ARM_RegR10;
-    s_NameToId["r11"] = ARM_RegR11;
-    s_NameToId["r12"] = ARM_RegR12;
-    s_NameToId["r13"] = ARM_RegR13;
-    s_NameToId["r14"] = ARM_RegR14;
-    s_NameToId["r15"] = ARM_RegR15;
-    s_NameToId["fp"]  = ARM_RegFP;
-    s_NameToId["ip"]  = ARM_RegIP;
-    s_NameToId["sp"]  = ARM_RegSP;
-    s_NameToId["lr"]  = ARM_RegLR;
-    s_NameToId["pc"]  = ARM_RegPC;
-  }
+    { "r0",  ARM_Reg_R0  },
+    { "r1",  ARM_Reg_R1  },
+    { "r2",  ARM_Reg_R2  },
+    { "r3",  ARM_Reg_R3  },
+    { "r4",  ARM_Reg_R4  },
+    { "r5",  ARM_Reg_R5  },
+    { "r6",  ARM_Reg_R6  },
+    { "r7",  ARM_Reg_R7  },
+    { "r8",  ARM_Reg_R8  },
+    { "r9",  ARM_Reg_R9  },
+    { "r10", ARM_Reg_R10 },
+    { "r11", ARM_Reg_R11 },
+    { "r12", ARM_Reg_R12 },
+    { "r13", ARM_Reg_R13 },
+    { "r14", ARM_Reg_R14 },
+    { "r15", ARM_Reg_R15 },
+    { "fp",  ARM_Reg_Fp  },
+    { "ip",  ARM_Reg_Ip  },
+    { "sp",  ARM_Reg_Sp  },
+    { "lr",  ARM_Reg_Lr  },
+    { "pc",  ARM_Reg_Pc  },
+  };
   auto itResult = s_NameToId.find(rName);
   if (itResult == std::end(s_NameToId))
     return 0;
@@ -94,9 +92,9 @@ u32 ArmArchitecture::ARMCpuInformation::GetRegisterByType(CpuInformation::Type R
 {
   switch (RegType)
   {
-  case StackPointerRegister:   return ARM_RegSP;
-  case ProgramPointerRegister: return ARM_RegPC;
-  default:                     return ARM_RegUnknown;
+  case StackPointerRegister:   return ARM_Reg_Sp;
+  case ProgramPointerRegister: return ARM_Reg_Pc;
+  default:                     return ARM_Id_Unknown;
   };
 }
 
@@ -104,13 +102,13 @@ u32 ArmArchitecture::ARMCpuInformation::GetSizeOfRegisterInBit(u32 Id) const
 {
   switch (Id)
   {
-  case ARM_FlNf: case ARM_FlCf: case ARM_FlVf: case ARM_FlZf:
+  case ARM_Fl_Nf: case ARM_Fl_Cf: case ARM_Fl_Vf: case ARM_Fl_Zf:
     return 1;
 
-  case ARM_RegR0:  case ARM_RegR1: case ARM_RegR2:  case ARM_RegR3:
-  case ARM_RegR4:  case ARM_RegR5: case ARM_RegR6:  case ARM_RegR7:
-  case ARM_RegR8:  case ARM_RegR9: case ARM_RegR10: case ARM_RegR11:
-  case ARM_RegR12: case ARM_RegR13:case ARM_RegR14: case ARM_RegR15:
+  case ARM_Reg_R0:  case ARM_Reg_R1: case ARM_Reg_R2:  case ARM_Reg_R3:
+  case ARM_Reg_R4:  case ARM_Reg_R5: case ARM_Reg_R6:  case ARM_Reg_R7:
+  case ARM_Reg_R8:  case ARM_Reg_R9: case ARM_Reg_R10: case ARM_Reg_R11:
+  case ARM_Reg_R12: case ARM_Reg_R13:case ARM_Reg_R14: case ARM_Reg_R15:
     return 32;
 
   default:
@@ -124,27 +122,27 @@ bool ArmArchitecture::ARMCpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_REGISTER(idx) if (BitSize != 32) return false; memcpy(pVal, &m_Context.Registers[idx], 4)
   switch (Reg)
   {
-  case ARM_FlNf: READ_FLAG(ARM_CSPR_N); break;
-  case ARM_FlCf: READ_FLAG(ARM_CSPR_C); break;
-  case ARM_FlVf: READ_FLAG(ARM_CSPR_V); break;
-  case ARM_FlZf: READ_FLAG(ARM_CSPR_Z); break;
+  case ARM_Fl_Nf: READ_FLAG(ARM_CSPR_N); break;
+  case ARM_Fl_Cf: READ_FLAG(ARM_CSPR_C); break;
+  case ARM_Fl_Vf: READ_FLAG(ARM_CSPR_V); break;
+  case ARM_Fl_Zf: READ_FLAG(ARM_CSPR_Z); break;
 
-  case ARM_RegR0:  READ_REGISTER(0);  break;
-  case ARM_RegR1:  READ_REGISTER(1);  break;
-  case ARM_RegR2:  READ_REGISTER(2);  break;
-  case ARM_RegR3:  READ_REGISTER(3);  break;
-  case ARM_RegR4:  READ_REGISTER(4);  break;
-  case ARM_RegR5:  READ_REGISTER(5);  break;
-  case ARM_RegR6:  READ_REGISTER(6);  break;
-  case ARM_RegR7:  READ_REGISTER(7);  break;
-  case ARM_RegR8:  READ_REGISTER(8);  break;
-  case ARM_RegR9:  READ_REGISTER(9);  break;
-  case ARM_RegR10: READ_REGISTER(10); break;
-  case ARM_RegR11: READ_REGISTER(11); break;
-  case ARM_RegR12: READ_REGISTER(12); break;
-  case ARM_RegR13: READ_REGISTER(13); break;
-  case ARM_RegR14: READ_REGISTER(14); break;
-  case ARM_RegR15: READ_REGISTER(15); break;
+  case ARM_Reg_R0:  READ_REGISTER(0);  break;
+  case ARM_Reg_R1:  READ_REGISTER(1);  break;
+  case ARM_Reg_R2:  READ_REGISTER(2);  break;
+  case ARM_Reg_R3:  READ_REGISTER(3);  break;
+  case ARM_Reg_R4:  READ_REGISTER(4);  break;
+  case ARM_Reg_R5:  READ_REGISTER(5);  break;
+  case ARM_Reg_R6:  READ_REGISTER(6);  break;
+  case ARM_Reg_R7:  READ_REGISTER(7);  break;
+  case ARM_Reg_R8:  READ_REGISTER(8);  break;
+  case ARM_Reg_R9:  READ_REGISTER(9);  break;
+  case ARM_Reg_R10: READ_REGISTER(10); break;
+  case ARM_Reg_R11: READ_REGISTER(11); break;
+  case ARM_Reg_R12: READ_REGISTER(12); break;
+  case ARM_Reg_R13: READ_REGISTER(13); break;
+  case ARM_Reg_R14: READ_REGISTER(14); break;
+  case ARM_Reg_R15: READ_REGISTER(15); break;
   default: return false;
   }
 #undef READ_REGISTER
@@ -158,27 +156,27 @@ bool ArmArchitecture::ARMCpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_REGISTER(idx) if (BitSize != 32) return false; memcpy(&m_Context.Registers[idx], pVal, 4)
   switch (Reg)
   {
-  case ARM_FlNf: WRITE_FLAG(ARM_CSPR_N); break;
-  case ARM_FlCf: WRITE_FLAG(ARM_CSPR_C); break;
-  case ARM_FlVf: WRITE_FLAG(ARM_CSPR_V); break;
-  case ARM_FlZf: WRITE_FLAG(ARM_CSPR_Z); break;
+  case ARM_Fl_Nf: WRITE_FLAG(ARM_CSPR_N); break;
+  case ARM_Fl_Cf: WRITE_FLAG(ARM_CSPR_C); break;
+  case ARM_Fl_Vf: WRITE_FLAG(ARM_CSPR_V); break;
+  case ARM_Fl_Zf: WRITE_FLAG(ARM_CSPR_Z); break;
 
-  case ARM_RegR0:  WRITE_REGISTER(0);  break;
-  case ARM_RegR1:  WRITE_REGISTER(1);  break;
-  case ARM_RegR2:  WRITE_REGISTER(2);  break;
-  case ARM_RegR3:  WRITE_REGISTER(3);  break;
-  case ARM_RegR4:  WRITE_REGISTER(4);  break;
-  case ARM_RegR5:  WRITE_REGISTER(5);  break;
-  case ARM_RegR6:  WRITE_REGISTER(6);  break;
-  case ARM_RegR7:  WRITE_REGISTER(7);  break;
-  case ARM_RegR8:  WRITE_REGISTER(8);  break;
-  case ARM_RegR9:  WRITE_REGISTER(9);  break;
-  case ARM_RegR10: WRITE_REGISTER(10); break;
-  case ARM_RegR11: WRITE_REGISTER(11); break;
-  case ARM_RegR12: WRITE_REGISTER(12); break;
-  case ARM_RegR13: WRITE_REGISTER(13); break;
-  case ARM_RegR14: WRITE_REGISTER(14); break;
-  case ARM_RegR15: WRITE_REGISTER(15); break;
+  case ARM_Reg_R0:  WRITE_REGISTER(0);  break;
+  case ARM_Reg_R1:  WRITE_REGISTER(1);  break;
+  case ARM_Reg_R2:  WRITE_REGISTER(2);  break;
+  case ARM_Reg_R3:  WRITE_REGISTER(3);  break;
+  case ARM_Reg_R4:  WRITE_REGISTER(4);  break;
+  case ARM_Reg_R5:  WRITE_REGISTER(5);  break;
+  case ARM_Reg_R6:  WRITE_REGISTER(6);  break;
+  case ARM_Reg_R7:  WRITE_REGISTER(7);  break;
+  case ARM_Reg_R8:  WRITE_REGISTER(8);  break;
+  case ARM_Reg_R9:  WRITE_REGISTER(9);  break;
+  case ARM_Reg_R10: WRITE_REGISTER(10); break;
+  case ARM_Reg_R11: WRITE_REGISTER(11); break;
+  case ARM_Reg_R12: WRITE_REGISTER(12); break;
+  case ARM_Reg_R13: WRITE_REGISTER(13); break;
+  case ARM_Reg_R14: WRITE_REGISTER(14); break;
+  case ARM_Reg_R15: WRITE_REGISTER(15); break;
   default: return false;
   }
 #undef WRITE_REGISTER
@@ -266,22 +264,22 @@ void* ArmArchitecture::ARMCpuContext::GetRegisterAddress(u32 Register)
 {
   switch (Register)
   {
-    case ARM_RegR0:  return &m_Context.Registers[0];
-    case ARM_RegR1:  return &m_Context.Registers[1];
-    case ARM_RegR2:  return &m_Context.Registers[2];
-    case ARM_RegR3:  return &m_Context.Registers[3];
-    case ARM_RegR4:  return &m_Context.Registers[4];
-    case ARM_RegR5:  return &m_Context.Registers[5];
-    case ARM_RegR6:  return &m_Context.Registers[6];
-    case ARM_RegR7:  return &m_Context.Registers[7];
-    case ARM_RegR8:  return &m_Context.Registers[8];
-    case ARM_RegR9:  return &m_Context.Registers[9];
-    case ARM_RegR10: return &m_Context.Registers[10];
-    case ARM_RegR11: return &m_Context.Registers[11];
-    case ARM_RegR12: return &m_Context.Registers[12];
-    case ARM_RegR13: return &m_Context.Registers[13];
-    case ARM_RegR14: return &m_Context.Registers[14];
-    case ARM_RegR15: return &m_Context.Registers[15];
+    case ARM_Reg_R0:  return &m_Context.Registers[0];
+    case ARM_Reg_R1:  return &m_Context.Registers[1];
+    case ARM_Reg_R2:  return &m_Context.Registers[2];
+    case ARM_Reg_R3:  return &m_Context.Registers[3];
+    case ARM_Reg_R4:  return &m_Context.Registers[4];
+    case ARM_Reg_R5:  return &m_Context.Registers[5];
+    case ARM_Reg_R6:  return &m_Context.Registers[6];
+    case ARM_Reg_R7:  return &m_Context.Registers[7];
+    case ARM_Reg_R8:  return &m_Context.Registers[8];
+    case ARM_Reg_R9:  return &m_Context.Registers[9];
+    case ARM_Reg_R10: return &m_Context.Registers[10];
+    case ARM_Reg_R11: return &m_Context.Registers[11];
+    case ARM_Reg_R12: return &m_Context.Registers[12];
+    case ARM_Reg_R13: return &m_Context.Registers[13];
+    case ARM_Reg_R14: return &m_Context.Registers[14];
+    case ARM_Reg_R15: return &m_Context.Registers[15];
     default: return nullptr;
   }
 }
@@ -298,27 +296,27 @@ u16 ArmArchitecture::ARMCpuContext::GetRegisterOffset(u32 Register)
 
 void ArmArchitecture::ARMCpuContext::GetRegisters(CpuContext::RegisterList& RegList) const
 {
-  RegList.push_back(ARM_FlNf);
-  RegList.push_back(ARM_FlCf);
-  RegList.push_back(ARM_FlVf);
-  RegList.push_back(ARM_FlZf);
+  RegList.push_back(ARM_Fl_Nf);
+  RegList.push_back(ARM_Fl_Cf);
+  RegList.push_back(ARM_Fl_Vf);
+  RegList.push_back(ARM_Fl_Zf);
 
-  RegList.push_back(ARM_RegR0);
-  RegList.push_back(ARM_RegR1);
-  RegList.push_back(ARM_RegR2);
-  RegList.push_back(ARM_RegR3);
-  RegList.push_back(ARM_RegR4);
-  RegList.push_back(ARM_RegR5);
-  RegList.push_back(ARM_RegR6);
-  RegList.push_back(ARM_RegR7);
-  RegList.push_back(ARM_RegR8);
-  RegList.push_back(ARM_RegR9);
-  RegList.push_back(ARM_RegR10);
-  RegList.push_back(ARM_RegR11);
-  RegList.push_back(ARM_RegR12);
-  RegList.push_back(ARM_RegR13);
-  RegList.push_back(ARM_RegR14);
-  RegList.push_back(ARM_RegR15);
+  RegList.push_back(ARM_Reg_R0);
+  RegList.push_back(ARM_Reg_R1);
+  RegList.push_back(ARM_Reg_R2);
+  RegList.push_back(ARM_Reg_R3);
+  RegList.push_back(ARM_Reg_R4);
+  RegList.push_back(ARM_Reg_R5);
+  RegList.push_back(ARM_Reg_R6);
+  RegList.push_back(ARM_Reg_R7);
+  RegList.push_back(ARM_Reg_R8);
+  RegList.push_back(ARM_Reg_R9);
+  RegList.push_back(ARM_Reg_R10);
+  RegList.push_back(ARM_Reg_R11);
+  RegList.push_back(ARM_Reg_R12);
+  RegList.push_back(ARM_Reg_R13);
+  RegList.push_back(ARM_Reg_R14);
+  RegList.push_back(ARM_Reg_R15);
 }
 
 Address ArmArchitecture::CurrentAddress(Address const& rAddr, Instruction const& rInsn) const
@@ -468,7 +466,7 @@ bool ArmArchitecture::FormatOperand(
   // HACK: We don't want to first PC register to be resolved (e.g. LDR PC, =XXXXX)
   auto spIdOprd = expr_cast<IdentifierExpression>(spCurOprd);
 
-  if (spIdOprd == nullptr || spIdOprd->GetId() != ARM_RegPC || OperandNo != 0)
+  if (spIdOprd == nullptr || spIdOprd->GetId() != ARM_Reg_Pc || OperandNo != 0)
   {
     u64 PcOff = rInsn.GetMode() == ARM_ModeThumb ? 4 : 8;
     EvaluateVisitor EvalVst(rDoc, rAddr + PcOff, rInsn.GetMode(), true);

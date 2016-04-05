@@ -70,6 +70,11 @@ u32 Instruction::GetPrefix(void) const
   return m_Prefix;
 }
 
+u32 Instruction::GetAttributes(void) const
+{
+  return m_Attributes;
+}
+
 u32 Instruction::GetTestedFlags(void) const
 {
   return m_TestedFlags;

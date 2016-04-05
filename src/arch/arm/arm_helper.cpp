@@ -90,22 +90,22 @@ namespace arm
     {
       switch (RegVal)
       {
-      case  0: return ARM_RegR0;
-      case  1: return ARM_RegR1;
-      case  2: return ARM_RegR2;
-      case  3: return ARM_RegR3;
-      case  4: return ARM_RegR4;
-      case  5: return ARM_RegR5;
-      case  6: return ARM_RegR6;
-      case  7: return ARM_RegR7;
-      case  8: return ARM_RegR8;
-      case  9: return ARM_RegR9;
-      case 10: return ARM_RegR10;
-      case 11: return ARM_RegR11;
-      case 12: return ARM_RegR12;
-      case 13: return ARM_RegR13;
-      case 14: return ARM_RegR14;
-      case 15: return ARM_RegR15;
+      case  0: return ARM_Reg_R0;
+      case  1: return ARM_Reg_R1;
+      case  2: return ARM_Reg_R2;
+      case  3: return ARM_Reg_R3;
+      case  4: return ARM_Reg_R4;
+      case  5: return ARM_Reg_R5;
+      case  6: return ARM_Reg_R6;
+      case  7: return ARM_Reg_R7;
+      case  8: return ARM_Reg_R8;
+      case  9: return ARM_Reg_R9;
+      case 10: return ARM_Reg_R10;
+      case 11: return ARM_Reg_R11;
+      case 12: return ARM_Reg_R12;
+      case 13: return ARM_Reg_R13;
+      case 14: return ARM_Reg_R14;
+      case 15: return ARM_Reg_R15;
       default: break;
       }
     }
@@ -121,22 +121,22 @@ namespace arm
       if (RegList & (1 << i))
         switch (i)
       {
-        case  0: Res.push_back(ARM_RegR0);
-        case  1: Res.push_back(ARM_RegR1);
-        case  2: Res.push_back(ARM_RegR2);
-        case  3: Res.push_back(ARM_RegR3);
-        case  4: Res.push_back(ARM_RegR4);
-        case  5: Res.push_back(ARM_RegR5);
-        case  6: Res.push_back(ARM_RegR6);
-        case  7: Res.push_back(ARM_RegR7);
-        case  8: Res.push_back(ARM_RegR8);
-        case  9: Res.push_back(ARM_RegR9);
-        case 10: Res.push_back(ARM_RegR10);
-        case 11: Res.push_back(ARM_RegR11);
-        case 12: Res.push_back(ARM_RegR12);
-        case 13: Res.push_back(ARM_RegR13);
-        case 14: Res.push_back(ARM_RegR14);
-        case 15: Res.push_back(ARM_RegR15);
+        case  0: Res.push_back(ARM_Reg_R0);  break;
+        case  1: Res.push_back(ARM_Reg_R1);  break;
+        case  2: Res.push_back(ARM_Reg_R2);  break;
+        case  3: Res.push_back(ARM_Reg_R3);  break;
+        case  4: Res.push_back(ARM_Reg_R4);  break;
+        case  5: Res.push_back(ARM_Reg_R5);  break;
+        case  6: Res.push_back(ARM_Reg_R6);  break;
+        case  7: Res.push_back(ARM_Reg_R7);  break;
+        case  8: Res.push_back(ARM_Reg_R8);  break;
+        case  9: Res.push_back(ARM_Reg_R9);  break;
+        case 10: Res.push_back(ARM_Reg_R10); break;
+        case 11: Res.push_back(ARM_Reg_R11); break;
+        case 12: Res.push_back(ARM_Reg_R12); break;
+        case 13: Res.push_back(ARM_Reg_R13); break;
+        case 14: Res.push_back(ARM_Reg_R14); break;
+        case 15: Res.push_back(ARM_Reg_R15); break;
       }
 
     return Res;
