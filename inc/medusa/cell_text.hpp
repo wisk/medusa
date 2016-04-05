@@ -26,6 +26,8 @@ public:
     UnknownType,
     UnprintableType,
     MnemonicType,
+    MnemonicPrefixType,
+    MnemonicSuffixType,
     RegisterType,
     ImmediateType,
     LabelType,
@@ -82,6 +84,10 @@ public:
 
   PrintData& AppendMnemonic (std::string const& rMnemonic)
   { _AppendText(rMnemonic, Mark::MnemonicType);   return *this; }
+  PrintData& AppendMnemonicPrefix (std::string const& rMnemonic)
+  { _AppendText(rMnemonic, Mark::MnemonicPrefixType);   return *this; }
+    PrintData& AppendMnemonicSuffix (std::string const& rMnemonic)
+  { _AppendText(rMnemonic, Mark::MnemonicSuffixType);   return *this; }
   PrintData& AppendRegister (std::string const& rRegister)
   { _AppendText(rRegister, Mark::RegisterType);   return *this; }
   PrintData& AppendImmediate(std::string const& rImmediate)

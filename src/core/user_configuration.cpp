@@ -106,6 +106,8 @@ std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefau
     { "color.background_node_begin", "#00368C" },
     { "color.background_node_end", "#3A346B" },
     { "color.instruction_mnemonic", "#9a86d6" },
+    { "color.instruction_mnemonic_prefix", "#bd86d6" },
+    { "color.instruction_mnemonic_suffix", "#ad5fb8" },
     { "color.instruction_register", "#00aa7f" },
     { "color.instruction_immediate", "#ffaa00" },
     { "color.comment", "#55aa00" },

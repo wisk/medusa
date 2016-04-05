@@ -218,8 +218,8 @@ namespace arm
     if (Shift == SRType_Unknown)
       return nullptr;
 
-    auto spRmExpr = medusa::Expr::MakeId(Rm, pCpuInfo);
-    auto spRsExpr = medusa::Expr::MakeId(Rs, pCpuInfo);
+    auto spRmExpr = medusa::Expr::MakeId(RegisterFromValue("GPR32", Rm), pCpuInfo);
+    auto spRsExpr = medusa::Expr::MakeId(RegisterFromValue("GPR32", Rs), pCpuInfo);
     switch (Shift)
     {
     case SRType_LSL: return medusa::Expr::MakeBinOp(medusa::OperationExpression::OpLls, spRmExpr, spRsExpr);
@@ -234,8 +234,29 @@ namespace arm
   {
     auto Result = DecodeImmShift(Type, Imm);
 
-    auto spRegExpr = medusa::Expr::MakeId(Rm, pCpuInfo);
+    auto spRegExpr = medusa::Expr::MakeId(RegisterFromValue("GPR32", Rm), pCpuInfo);
+    if (std::get<1>(Result) == 0x0)
+      return spRegExpr;
+
     auto spImmExpr = medusa::Expr::MakeBitVector(32, std::get<0>(Result));
-    return medusa::Expr::MakeBinOp(medusa::OperationExpression::OpAdd, spRegExpr, spImmExpr);
+    medusa::OperationExpression::Type Op = medusa::OperationExpression::OpUnk;
+    switch (std::get<0>(Result))
+    {
+    case SRType_LSL: Op = medusa::OperationExpression::OpLls; break;
+    case SRType_LSR: Op = medusa::OperationExpression::OpLrs; break;
+    case SRType_ASR: Op = medusa::OperationExpression::OpArs; break;
+    case SRType_ROR: Op = medusa::OperationExpression::OpRor; break;
+    case SRType_RRX:
+    {
+      auto spCarryExpr = medusa::Expr::MakeId(ARM_Fl_Cf, pCpuInfo);
+      auto spCarry32Expr = medusa::Expr::MakeBinOp(medusa::OperationExpression::OpBcast, spCarryExpr, medusa::Expr::MakeBitVector(32, 32));
+      auto spMsb = spCarry32Expr << 31;
+      auto spRes = (spRegExpr >> spImmExpr) | spMsb;
+      return spRes;
+    }
+    default: break;
+    }
+
+    return medusa::Expr::MakeBinOp(Op, spRegExpr, spImmExpr);
   }
 }

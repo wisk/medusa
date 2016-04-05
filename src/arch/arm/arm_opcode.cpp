@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 05 10:04:15 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Tue Apr 05 18:42:18 2016) */
 #include "arm_architecture.hpp"
 #include "arm_helper.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x13a] =
@@ -3365,7 +3365,7 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
     break;
   }
   if ((Opcode16 & 0x0000ff78) == 0x00004468)
-    // ADD<c> <Rdm>, SP - ['could_jmp'] - ['0', '1', '0', '0', '0', '1', '0', '0', 'DM#1', '1', '1', '0', '1', 'Rdm#3']
+    // ADD<c> <Rdm>, SP, <Rdm> - ['could_jmp'] - ['0', '1', '0', '0', '0', '1', '0', '0', 'DM#1', '1', '1', '0', '1', 'Rdm#3']
     return Instruction_ADD_T1_0000ff78_00004468(rBinStrm, Offset, Opcode16, rInsn);
   switch (Opcode16 & 0x0000ff87)
   {
@@ -6304,7 +6304,7 @@ bool ArmArchitecture::Instruction_BLX_A2_fe000000_fa000000(BinaryStream const& r
   rInsn.SetOpcode(ARM_Opcode_Blx);
   rInsn.SubType() |= Instruction::CallType;
   rInsn.SetMnemonic("blx");
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 23>(Opcode)) /* imm */ << 2);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 23>(Opcode)) << 2 | 0);
   return true;
 }
 // MCRR2<c> <coproc>, <opc1>, <Rt>, <Rt2>, <CRm> - ['could_jmp'] - ['1', '1', '1', '1', '1', '1', '0', '0', '0', '1', '0', '0', 'Rt2#4', 'Rt#4', 'coproc#4', 'opc1#4', 'CRm#4']
@@ -8030,7 +8030,7 @@ bool ArmArchitecture::Instruction_ADR_A1_0fff0000_028f0000(BinaryStream const& r
   rInsn.SetMnemonic("adr");
   rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
   rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 11>(Opcode)) /* imm */ << 2);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 11>(Opcode)) /* imm */);
   return true;
 }
 // ADD{S}<c> <Rd>, SP, #<arm_expand_imm> - ['could_jmp'] - ['cond#4', '0', '0', '1', '0', '1', '0', '0', 'S#1', '1', '1', '0', '1', 'Rd#4', 'imm#12']
@@ -9725,7 +9725,7 @@ bool ArmArchitecture::Instruction_B_A1_0f000000_0a000000(BinaryStream const& rBi
   rInsn.SubType() |= Instruction::JumpType;
   rInsn.SetMnemonic("b");
   rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 23>(Opcode)) /* imm */ << 2);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + SignExtend<u32, 26>((ExtractBits<0, 23>(Opcode)) << 2 | 0));
   return true;
 }
 // BL<c> <arm_branch_label> - ['call'] - ['cond#4', '1', '0', '1', '1', 'imm#24']
@@ -9737,7 +9737,7 @@ bool ArmArchitecture::Instruction_BL_A1_0f000000_0b000000(BinaryStream const& rB
   rInsn.SubType() |= Instruction::CallType;
   rInsn.SetMnemonic("bl");
   rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 23>(Opcode)) /* imm */ << 2);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + SignExtend<u32, 26>((ExtractBits<0, 23>(Opcode)) << 2 | 0));
   return true;
 }
 // MCRR<c> <coproc>, <opc1>, <Rt>, <Rt2>, <CRm> - ['could_jmp'] - ['cond#4', '1', '1', '0', '0', '0', '1', '0', '0', 'Rt2#4', 'Rt#4', 'coproc#4', 'opc1#4', 'CRm#4']
@@ -10746,16 +10746,17 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff87_00004485(BinaryStream const& r
   // FIXME: not_implemented: "operand SP,<Rm>";
   return true;
 }
-// ADD<c> <Rdm>, SP - ['could_jmp'] - ['0', '1', '0', '0', '0', '1', '0', '0', 'DM#1', '1', '1', '0', '1', 'Rdm#3']
+// ADD<c> <Rdm>, SP, <Rdm> - ['could_jmp'] - ['0', '1', '0', '0', '0', '1', '0', '0', 'DM#1', '1', '1', '0', '1', 'Rdm#3']
 bool ArmArchitecture::Instruction_ADD_T1_0000ff78_00004468(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)
 {
-  rInsn.SetFormat("ADD<c> <Rdm>, SP");
+  rInsn.SetFormat("ADD<c> <Rdm>, SP, <Rdm>");
   rInsn.Length() = 2;
   rInsn.SetOpcode(ARM_Opcode_Add);
   rInsn.SetMnemonic("add");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
-  rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 2>(Opcode)) /* Rdm */), &m_CpuInfo));
+  rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBit<7>(Opcode)) << 3 | (ExtractBits<0, 2>(Opcode))), &m_CpuInfo));
   rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
+  rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBit<7>(Opcode)) << 3 | (ExtractBits<0, 2>(Opcode))), &m_CpuInfo));
   return true;
 }
 // ADD<c> <Rdn>, <Rm> - ['could_jmp'] - ['0', '1', '0', '0', '0', '1', '0', '0', 'DN#1', 'Rm#4', 'Rdn#3']
@@ -11331,7 +11332,7 @@ bool ArmArchitecture::Instruction_B_T1_0000f000_0000d000(BinaryStream const& rBi
   rInsn.SubType() |= Instruction::JumpType;
   rInsn.SetMnemonic("b");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 7>(Opcode)) /* imm */ << 1);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 7>(Opcode)) << 1 | 0);
   return true;
 }
 // B<c> <thumb_branch_label> - ['jmp'] - ['1', '1', '1', '0', '0', 'imm#11']
@@ -11343,7 +11344,7 @@ bool ArmArchitecture::Instruction_B_T2_0000f800_0000e000(BinaryStream const& rBi
   rInsn.SubType() |= Instruction::JumpType;
   rInsn.SetMnemonic("b");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode)) /* imm */ << 1);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode)) << 1 | 0);
   return true;
 }
 // STREX<c> <Rd>, <Rt>, [<Rn>{, #<disp>}] - [] - ['1', '1', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', 'Rn#4', 'Rt#4', 'Rd#4', 'imm#8']
@@ -11573,7 +11574,7 @@ bool ArmArchitecture::Instruction_STRD_T1_fe500000_e8400000(BinaryStream const& 
   rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
   rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rt2 */), &m_CpuInfo));
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(64, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 
@@ -11594,7 +11595,7 @@ bool ArmArchitecture::Instruction_LDRD_T1_fe500000_e8500000(BinaryStream const& 
   rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
   rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rt2 */), &m_CpuInfo));
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(64, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 
@@ -12148,7 +12149,7 @@ bool ArmArchitecture::Instruction_STC_T1_fe100000_ec000000(BinaryStream const& r
   // FIXME: not_implemented: "operand <coproc>";
   // FIXME: not_implemented: "operand <CRd>";
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 
@@ -12224,7 +12225,7 @@ bool ArmArchitecture::Instruction_LDC_T1_fe100000_ec100000(BinaryStream const& r
   // FIXME: not_implemented: "operand <coproc>";
   // FIXME: not_implemented: "operand <CRd>";
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 
@@ -13406,7 +13407,7 @@ bool ArmArchitecture::Instruction_B_T3_f800d000_f0008000(BinaryStream const& rBi
   rInsn.SetMnemonic("b");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
   rInsn.AddMnemonicSuffix(".w");
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) /* imm */ << 1);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 21>(Opcode) << 11) << 1 | 0);
   return true;
 }
 // B<c>.W <thumb_branch_label> - ['jmp'] - ['1', '1', '1', '1', '0', 'S#1', 'imm#10', '1', '0', 'J1#1', '1', 'J2#1', 'imm#11']
@@ -13419,7 +13420,7 @@ bool ArmArchitecture::Instruction_B_T4_f800d000_f0009000(BinaryStream const& rBi
   rInsn.SetMnemonic("b");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
   rInsn.AddMnemonicSuffix(".w");
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) /* imm */ << 1);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1 | 0);
   return true;
 }
 // BL<c> <thumb_branch_label> - ['call'] - ['1', '1', '1', '1', '0', 'S#1', 'imm#10', '1', '1', 'J1#1', '1', 'J2#1', 'imm#11']
@@ -13431,7 +13432,7 @@ bool ArmArchitecture::Instruction_BL_T1_f800d000_f000d000(BinaryStream const& rB
   rInsn.SubType() |= Instruction::CallType;
   rInsn.SetMnemonic("bl");
   rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
-  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) /* imm */ << 1);
+  rInsn.AddOperand(Expr::MakeId(ARM_Reg_Pc, &m_CpuInfo) + (ExtractBits<0, 10>(Opcode) | ExtractBits<16, 25>(Opcode) << 11) << 1 | 0);
   return true;
 }
 // BLX<c> <label> - ['thumb_branch_label'] - ['1', '1', '1', '1', '0', 'S#1', 'imm_h#10', '1', '1', 'J1#1', '0', 'J2#1', 'imm_l#10', '0']
@@ -15754,7 +15755,7 @@ bool ArmArchitecture::Instruction_STC2_T2_fe100000_fc000000(BinaryStream const& 
   // FIXME: not_implemented: "operand <coproc>";
   // FIXME: not_implemented: "operand <CRd>";
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 
@@ -15796,7 +15797,7 @@ bool ArmArchitecture::Instruction_LDC2_T2_fe100000_fc100000(BinaryStream const& 
   // FIXME: not_implemented: "operand <coproc>";
   // FIXME: not_implemented: "operand <CRd>";
   auto spOffExpr = Expr::MakeVar("off", VariableExpression::Alloc, 32);
-  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) /* imm */ << 2);
+  spOffExpr = Expr::MakeBitVector(32, (ExtractBits<0, 7>(Opcode)) << 2 | 0);
   if ((ExtractBit<23>(Opcode)) /* U */)
     rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + spOffExpr));
 

@@ -294,6 +294,8 @@ void DisassemblyView::paintText(QPainter& p)
 
   medusa::UserConfiguration UserCfg;
   QColor MnClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic")));
+  QColor PfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_prefix")));
+  QColor SfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_suffix")));
   QColor KwClr(QString::fromStdString(UserCfg.GetOption("color.keyword")));
   QColor ImClr(QString::fromStdString(UserCfg.GetOption("color.instruction_immediate")));
   QColor OpClr(QString::fromStdString(UserCfg.GetOption("color.operator")));
@@ -318,15 +320,17 @@ void DisassemblyView::paintText(QPainter& p)
       {
         switch (rMark.GetType())
         {
-        case medusa::Mark::MnemonicType:  MarkClr = MnClr; break;
-        case medusa::Mark::KeywordType:   MarkClr = KwClr; break;
-        case medusa::Mark::ImmediateType: MarkClr = ImClr; break;
-        case medusa::Mark::OperatorType:  MarkClr = OpClr; break;
-        case medusa::Mark::RegisterType:  MarkClr = RgClr; break;
-        case medusa::Mark::LabelType:     MarkClr = LbClr; break;
-        case medusa::Mark::StringType:    MarkClr = SzClr; break;
-        case medusa::Mark::CommentType:   MarkClr = CmClr; break;
-        default:                          MarkClr = DfClr; break;
+        case medusa::Mark::MnemonicType:       MarkClr = MnClr; break;
+        case medusa::Mark::MnemonicPrefixType: MarkClr = PfClr; break;
+        case medusa::Mark::MnemonicSuffixType: MarkClr = SfClr; break;
+        case medusa::Mark::KeywordType:        MarkClr = KwClr; break;
+        case medusa::Mark::ImmediateType:      MarkClr = ImClr; break;
+        case medusa::Mark::OperatorType:       MarkClr = OpClr; break;
+        case medusa::Mark::RegisterType:       MarkClr = RgClr; break;
+        case medusa::Mark::LabelType:          MarkClr = LbClr; break;
+        case medusa::Mark::StringType:         MarkClr = SzClr; break;
+        case medusa::Mark::CommentType:        MarkClr = CmClr; break;
+        default:                               MarkClr = DfClr; break;
         };
         p.setPen(MarkClr);
         QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());

@@ -350,6 +350,7 @@ public:
       m_rPrintData.AppendRegister(pRegName);
 
       bool IncReg = false;
+      bool CommaInserted = false;
 
       if ((itReg + 1) != std::end(rRegs) && *itReg + 1 == *(itReg + 1))
       {
@@ -363,17 +364,22 @@ public:
         m_rPrintData.AppendOperator("-").AppendRegister(pRegName);
         ++itReg;
         if (itReg != itEnd)
+        {
           m_rPrintData.AppendOperator(",").AppendSpace();
+          CommaInserted = true;
+        }
       }
       else
         IncReg = true;
       if (itReg == itEnd)
         break;
-      if (itReg + 1 != itEnd)
+      if (!CommaInserted && itReg + 1 != itEnd)
         m_rPrintData.AppendOperator(",").AppendSpace();
 
       if (IncReg)
         ++itReg;
+
+      CommaInserted = false;
     }
 
     m_rPrintData.AppendSpace().AppendOperator("}");
@@ -491,16 +497,20 @@ bool ArmArchitecture::FormatInstruction(
   PrintData          & rPrintData) const
 {
   static char const* Suffix[] = { "eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "", "" };
-  std::string Mnem;
-
-  Mnem =  m_Mnemonic[rInsn.GetOpcode()];
-  Mnem += Suffix[rInsn.GetTestedFlags() & 0xf];
-  if (rInsn.GetPrefix() & ARM_Prefix_S)
-    Mnem += "s";
 
   char const* Sep = nullptr;
 
+  // TODO(wisk): mnemonic prefix
+
+  std::string Mnem = m_Mnemonic[rInsn.GetOpcode()];
   rPrintData.AppendMnemonic(Mnem);
+
+  // TODO(wisk): mnemonic suffix
+  if (rInsn.GetPrefix() & ARM_Prefix_S)
+    rPrintData.AppendMnemonicSuffix("s");
+  std::string CondSuffix = Suffix[rInsn.GetTestedFlags() & 0xf];
+  if (!CondSuffix.empty())
+    rPrintData.AppendMnemonicSuffix(CondSuffix);
 
   auto const OprdNo = rInsn.GetNumberOfOperand();
   for (u8 OprdIdx = 0; OprdIdx < OprdNo; ++OprdIdx)

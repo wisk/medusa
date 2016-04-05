@@ -20,6 +20,8 @@ Appearance::MapType& Appearance::GetColors(void)
     s_Colors["color.background_node_begin"] = Information("Background Node Begin", "");
     s_Colors["color.background_node_end"] = Information("Background Node End", "");
     s_Colors["color.instruction_mnemonic"] = Information("Instruction mnemonic", "");
+    s_Colors["color.instruction_mnemonic_prefix"] = Information("Instruction mnemonic prefix", "");
+    s_Colors["color.instruction_mnemonic_suffix"] = Information("Instruction mnemonic suffix", "");
     s_Colors["color.instruction_register"] = Information("Instruction register", "");
     s_Colors["color.instruction_immediate"] = Information("Instruction immediate", "");
     s_Colors["color.comment"] = Information("Comment", "");
