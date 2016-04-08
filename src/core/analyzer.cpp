@@ -315,6 +315,7 @@ bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData&
   auto const& rBoostGraph = rGraph();
   auto EdgesRange = boost::edges(rBoostGraph);
   std::vector<std::tuple<Graph::EdgeDescriptor, ogdf::edge>> Edges;
+  //double Factor = 1.8;
   for (auto itEdge = EdgesRange.first; itEdge != EdgesRange.second; ++itEdge)
   {
     auto const& rSrcVtx = rBoostGraph[itEdge->m_source];
@@ -338,15 +339,15 @@ bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData&
 
   // Let OGDF finds a layout for the graph
   auto OHL = new ogdf::OptimalHierarchyLayout;
-  OHL->nodeDistance(1.0);
-  OHL->layerDistance(1.0);
+  OHL->nodeDistance(30.0);
+  OHL->layerDistance(10.0);
   OHL->weightBalancing(0.0);
   OHL->weightSegments(0.0);
 
   ogdf::SugiyamaLayout SL;
   SL.setRanking(new ogdf::OptimalRanking);
   SL.setCrossMin(new ogdf::MedianHeuristic);
-  SL.alignSiblings(false);
+  SL.alignSiblings(true);
   SL.setLayout(OHL);
   SL.call(OgdfGraphAttr);
 
@@ -355,7 +356,9 @@ bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData&
   {
     auto VtxX = OgdfGraphAttr.x(std::get<1>(OgdfNode));
     auto VtxY = OgdfGraphAttr.y(std::get<1>(OgdfNode));
-    if (!rGraphData.SetVertexPosition(std::get<0>(OgdfNode), static_cast<u16>(VtxX), static_cast<u16>(VtxY)))
+    if (!rGraphData.SetVertexPosition(
+      std::get<0>(OgdfNode), static_cast<u16>(VtxX), static_cast<u16>(VtxY))
+    )
       return false;
   }
 

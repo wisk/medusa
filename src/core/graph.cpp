@@ -43,7 +43,7 @@ namespace medusa
     return std::find(std::begin(m_Addresses), std::end(m_Addresses), rAddr) != std::end(m_Addresses);
   }
 
-  bool Graph::VertexProperties::Split(Address const& rAddr, Address::Vector& rSplittedAddrs)
+  bool Graph::VertexProperties::Split(Address const& rAddr, Address::Vector& rSplittedAddrs, Address* pPrevAddr)
   {
     if (m_Addresses.empty())
       return false;
@@ -55,6 +55,11 @@ namespace medusa
     auto itAddr = std::find(std::begin(m_Addresses), std::end(m_Addresses), rAddr);
     if (itAddr == std::end(m_Addresses))
       return false;
+    if (itAddr != std::begin(m_Addresses) && pPrevAddr != nullptr)
+    {
+      auto itPrevAddr = itAddr - 1;
+      *pPrevAddr = *itPrevAddr;
+    }
 
     // LATER(wisk): optimize this if possible
     rSplittedAddrs = Address::Vector{ itAddr, std::end(m_Addresses) };
@@ -158,7 +163,7 @@ namespace medusa
     return true;
   }
 
-  bool Graph::SplitVertex(Address const& rDstAddr, Address const& rSrcAddr, Graph::EdgeProperties::Type EdgeType)
+  bool Graph::SplitVertex(Address const& rDstAddr, Address const& rSrcAddr, Graph::EdgeProperties::Type EdgeType, Address* pPrevAddr)
   {
     for (auto const& rVtxPair : m_VertexMap)
     {
@@ -166,7 +171,7 @@ namespace medusa
       {
         Address::Vector NewVtxAddrs;
 
-        if (!m_Graph[rVtxPair.second].Split(rDstAddr, NewVtxAddrs))
+        if (!m_Graph[rVtxPair.second].Split(rDstAddr, NewVtxAddrs, pPrevAddr))
           break;
 
         if (NewVtxAddrs.empty())

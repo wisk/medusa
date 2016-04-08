@@ -220,9 +220,17 @@ void FormatDisassembly::_FormatXref(Address const& rAddress, u32 Flags)
   Address::List AddrFrom;
   std::list<std::string> AddrFromStr;
   m_rCore.GetDocument().GetCrossReferenceFrom(rAddress, AddrFrom);
+  auto XrefLimit = 5ul;
   for (auto const& rAddr : AddrFrom)
+  {
     AddrFromStr.push_back(rAddr.ToString());
+    if (XrefLimit == 0)
+      break;
+    --XrefLimit;
+  }
   std::string Buffer = "; xref: " + boost::algorithm::join(AddrFromStr, ", ");
+  if (XrefLimit == 0)
+    Buffer += ", ...";
   m_rPrintData.AppendComment(Buffer);
 }
 

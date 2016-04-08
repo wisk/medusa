@@ -816,7 +816,12 @@ namespace medusa
     // thus nothing can split this part (which normally is done by the call <func>)
     Address::Vector FirstSplitAddrs;
     if (FirstBasicBlock.Split(m_Addr, FirstSplitAddrs))
+    {
+      Address PrevAddr;
+      FirstBasicBlock.GetLastAddress(PrevAddr);
+      spCfg->AddEdge(Graph::EdgeProperties(Graph::EdgeProperties::Next), PrevAddr, FirstSplitAddrs.front());
       spCfg->AddVertex(Graph::VertexProperties(FirstSplitAddrs));
+    }
 
     spCfg->AddVertex(FirstBasicBlock);
 
@@ -831,8 +836,22 @@ namespace medusa
         "Next",
         "Multiple",
       };
-      bool Res = spCfg->SplitVertex(std::get<0>(rBranch), std::get<1>(rBranch), std::get<2>(rBranch));
-      Log::Write("core") << "dst: " << std::get<0>(rBranch) << ", src: " << std::get<1>(rBranch) << ", type: " << TypeStr[std::get<2>(rBranch)] << (Res ? ", succeed" : ", failed") << LogEnd;
+      auto const& rDstAddr = std::get<0>(rBranch);
+      auto const& rSrcAddr = std::get<1>(rBranch);
+      Address     PrevAddr;
+      auto Edge            = std::get<2>(rBranch);
+      bool SameVertex = false;
+      Graph::VertexDescriptor DstVtxDesc;
+      Graph::VertexDescriptor SrcVtxDesc;
+      if (spCfg->FindVertex(rDstAddr, DstVtxDesc) && spCfg->FindVertex(rSrcAddr, SrcVtxDesc))
+        if (DstVtxDesc == SrcVtxDesc)
+          SameVertex = true;
+      bool Res = spCfg->SplitVertex(rDstAddr, rSrcAddr, Edge, &PrevAddr);
+      Log::Write("core") << "dst: " << rDstAddr << ", src: " << rSrcAddr << ", type: " << TypeStr[Edge] << (Res ? ", succeed" : ", failed") << LogEnd;
+      if (SameVertex)
+      {
+        AllBranches.push_back(std::make_tuple(PrevAddr, rDstAddr, Graph::EdgeProperties::Next));
+      }
     }
 
     for (auto const& rBranch : AllBranches)

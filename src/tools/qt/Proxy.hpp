@@ -95,31 +95,31 @@ public:
   virtual void Do(void);
 };
 
-class AddControlFlowGraphViewAction : public medusa::Action
-{
-public:
-  AddControlFlowGraphViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
-
-  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
-  { return std::make_shared<AddControlFlowGraphViewAction>(rCore, pView); }
-
-  static char const* GetBindingName(void)
-  { return "action.add_control_flow_graph_view"; }
-
-  virtual std::string GetName(void) const
-  { return "Add CFG view"; }
-
-  virtual std::string GetDescription(void) const
-  { return "Add a new control flow graph view"; }
-
-  virtual std::string GetIconName(void) const
-  { return "view-graph.png"; }
-
-  virtual bool IsCompatible(void) const
-  { return true; }
-
-  virtual void Do(void);
-};
+//class AddControlFlowGraphViewAction : public medusa::Action
+//{
+//public:
+//  AddControlFlowGraphViewAction(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView) : Action(rCore, pView) {}
+//
+//  static SPType Create(medusa::Medusa& rCore, medusa::FullDisassemblyView* pView)
+//  { return std::make_shared<AddControlFlowGraphViewAction>(rCore, pView); }
+//
+//  static char const* GetBindingName(void)
+//  { return "action.add_control_flow_graph_view"; }
+//
+//  virtual std::string GetName(void) const
+//  { return "Add CFG view"; }
+//
+//  virtual std::string GetDescription(void) const
+//  { return "Add a new control flow graph view"; }
+//
+//  virtual std::string GetIconName(void) const
+//  { return "view-graph.png"; }
+//
+//  virtual bool IsCompatible(void) const
+//  { return true; }
+//
+//  virtual void Do(void);
+//};
 
 class ShowLabelDialog : public medusa::Action
 {

@@ -524,7 +524,7 @@ bool ArmArchitecture::FormatInstruction(
     if (!FormatOperand(rDoc, rAddr, rInsn, OprdIdx, rPrintData))
       return false;
 
-    if (rInsn.GetPrefix() & ARM_Prefix_W)
+    if (rInsn.GetAttributes() & ARM_Attribute_WriteBack)
     {
       auto spMemOprd = expr_cast<MemoryExpression>(rInsn.GetOperand(OprdIdx));
       if (spMemOprd != nullptr)

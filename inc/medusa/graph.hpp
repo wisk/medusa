@@ -38,7 +38,7 @@ namespace medusa
       bool                   GetLastAddress(Address& rAddr)  const;
       size_t                 GetSize(void)                   const { return m_Addresses.size(); }
       bool                   Contains(Address const& rAddr)  const;
-      bool                   Split(Address const& rAddr, Address::Vector& rSplittedAddrs);
+      bool                   Split(Address const& rAddr, Address::Vector& rSplittedAddrs, Address* pPrevAddr = nullptr);
 
       bool                   GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const;
       bool                   GetNextAddress(Address const& rAddr, Address& rNextAddr) const;
@@ -103,7 +103,7 @@ namespace medusa
     bool AddEdge(EdgeProperties const& rEdge, Address const& rSrcAddr, Address const& rDstAddr);
     bool FindVertex(Address const& rAddr, VertexDescriptor& rVtxDesc) const;
     bool FindVertexConnections(Address const& rSrcVtxAddr, Address::Vector& rDstVstAddrs) const;
-    bool SplitVertex(Address const& rDstAddr, Address const& rSrcAddr, EdgeProperties::Type EdgeType);
+    bool SplitVertex(Address const& rDstAddr, Address const& rSrcAddr, EdgeProperties::Type EdgeType, Address* pPrevAddr = nullptr);
     void Finalize(void);
 
     void ForEachVertex(std::function<void(VertexProperties const&)> Predicat) const;
