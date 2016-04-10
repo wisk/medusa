@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Fri Apr 08 18:52:00 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Apr 10 21:54:52 2016) */
 #include "arm_architecture.hpp"
 #include "arm_helper.hpp"
 const char *ArmArchitecture::m_Mnemonic[0x13a] =
@@ -2406,9 +2406,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xffffa000) == 0xe8ad0000)
-    // PUSH<c>.W <registers> - [] - ['1', '1', '1', '0', '1', '0', '0', '0', '1', '0', '1', '0', '1', '1', '0', '1', '(0)', 'M#1', '(0)', 'register_list#13']
-    return Instruction_PUSH_T2_ffffa000_e8ad0000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xfff0f0c0)
   {
   case 0xfa00f080:
@@ -2483,6 +2480,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xffb00ef0) == 0xeeb00a00)
     // VMOV<c>.F64 <Dd>, #<imm> - ['support it block'] - ['1', '1', '1', '0', '1', '1', '1', '0', '1', 'D#1', '1', '1', 'imm_h#4', 'Vd#4', '1', '0', '1', 'sz#1', '(0)', '0', '(0)', '0', 'imm_l#4']
     return Instruction_VMOV_T2_ffb00ef0_eeb00a00(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0xffffa000) == 0xe8ad0000)
+    // PUSH<c>.W <registers> - [] - ['1', '1', '1', '0', '1', '0', '0', '0', '1', '0', '1', '0', '1', '1', '0', '1', '(0)', 'M#1', '(0)', 'register_list#13']
+    return Instruction_PUSH_T2_ffffa000_e8ad0000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff100f1f) == 0xee100b10)
     // VMOV<c>.<dt> <Rt>, <Dn[x]> - ['support it block'] - ['1', '1', '1', '0', '1', '1', '1', '0', 'U#1', 'opc1#2', '1', 'Vn#4', 'Rt#4', '1', '0', '1', '1', 'N#1', 'opc2#2', '1', '(0)', '(0)', '(0)', '(0)']
     return Instruction_VMOV_T1_ff100f1f_ee100b10(rBinStrm, Offset, Opcode32, rInsn);
@@ -2707,6 +2707,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode32 & 0xfff0f000) == 0xf990f000)
+    // PLI<c> [<Rn>, #<disp>] - [] - ['1', '1', '1', '1', '1', '0', '0', '1', '1', '0', '0', '1', 'Rn#4', '1', '1', '1', '1', 'imm#12']
+    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xffef8000)
   {
   case 0xea6f0000:
@@ -2758,9 +2761,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xfff0f000) == 0xf990f000)
-    // PLI<c> [<Rn>, #<disp>] - [] - ['1', '1', '1', '1', '1', '0', '0', '1', '1', '0', '0', '1', 'Rn#4', '1', '1', '1', '1', 'imm#12']
-    return Instruction_PLI_T1_fff0f000_f990f000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode16 & 0x0000ffff)
   {
   case 0x0000bf00:
@@ -2815,6 +2815,26 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xee100a00:
     // VNMLA<c>.F64 <Dd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', '0', '1', '1', '1', '0', '0', 'D#1', '0', '1', 'Vn#4', 'Vd#4', '1', '0', '1', 'sz#1', 'N#1', 'op#1', 'M#1', '0', 'Vm#4']
     return Instruction_VNMLA_T1_ffb00e10_ee100a00(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0xff7f0000)
+  {
+  case 0xf81f0000:
+    // LDRB<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '0', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
+    return Instruction_LDRB_T1_ff7f0000_f81f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf83f0000:
+    // LDRH<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '0', '1', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
+    return Instruction_LDRH_T1_ff7f0000_f83f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf85f0000:
+    // LDR<c>.W <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '1', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
+    return Instruction_LDR_T2_ff7f0000_f85f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf91f0000:
+    // LDRSB<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '1', 'U#1', '0', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
+    return Instruction_LDRSB_T1_ff7f0000_f91f0000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xf93f0000:
+    // LDRSH<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '1', 'U#1', '0', '1', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
+    return Instruction_LDRSH_T1_ff7f0000_f93f0000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -2882,29 +2902,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xff7f0000)
-  {
-  case 0xf81f0000:
-    // LDRB<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '0', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
-    return Instruction_LDRB_T1_ff7f0000_f81f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf83f0000:
-    // LDRH<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '0', '1', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
-    return Instruction_LDRH_T1_ff7f0000_f83f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf85f0000:
-    // LDR<c>.W <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '0', 'U#1', '1', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
-    return Instruction_LDR_T2_ff7f0000_f85f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf91f0000:
-    // LDRSB<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '1', 'U#1', '0', '0', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
-    return Instruction_LDRSB_T1_ff7f0000_f91f0000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xf93f0000:
-    // LDRSH<c> <Rt>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '1', '1', '0', '0', '1', 'U#1', '0', '1', '1', '1', '1', '1', '1', 'Rt#4', 'imm#12']
-    return Instruction_LDRSH_T1_ff7f0000_f93f0000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
-    // SETEND <endian_specifier> - [] - ['1', '0', '1', '1', '0', '1', '1', '0', '0', '1', '0', '(1)', 'E#1', '(0)', '(0)', '(0)']
-    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   switch (Opcode32 & 0xfbef8000)
   {
   case 0xf04f0000:
@@ -2922,6 +2919,9 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
+  if ((Opcode16 & 0x0000fff7) == 0x0000b650)
+    // SETEND <endian_specifier> - [] - ['1', '0', '1', '1', '0', '1', '1', '0', '0', '1', '0', '(1)', 'E#1', '(0)', '(0)', '(0)']
+    return Instruction_SETEND_T1_0000fff7_0000b650(rBinStrm, Offset, Opcode16, rInsn);
   if ((Opcode32 & 0xfff08010) == 0xeac00000)
     // PKHTB<c> <Rd>, <Rn>, <Rm>{,ASR #<imm>} - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '1', '0', '1', '1', '0', '0', 'Rn#4', '(0)', 'imm#3', 'Rd#4', 'imm#2', 'tb#1', '0', 'Rm#4']
     return Instruction_PKHTB_T1_fff08010_eac00000(rBinStrm, Offset, Opcode32, rInsn);
@@ -2939,9 +2939,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  if ((Opcode32 & 0xfe7f0000) == 0xe85f0000)
-    // LDRD<c> <Rt>, <Rt2>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', 'P#1', 'U#1', '1', '(0)', '1', '1', '1', '1', '1', 'Rt#4', 'Rt2#4', 'imm#8']
-    return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode32, rInsn);
   switch (Opcode32 & 0xfff000c0)
   {
   case 0xfb100000:
@@ -2972,26 +2969,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xef800030:
     // VBIC<c>.<dt> <Qd>, #<imm> - ['support it block'] - ['1', '1', '1', 'imm#1', '1', '1', '1', '1', '1', 'D#1', '0', '0', '0', 'imm#3', 'Vd#4', 'cmode#4', '0', 'Q#1', '1', '1', 'imm#4']
     return Instruction_VBIC_T1_efb800b0_ef800030(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
-  switch (Opcode32 & 0xef800f50)
-  {
-  case 0xef800c40:
-    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'Q#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '1', '0', '0', 'N#1', '1', 'M#1', '0', 'Vm#4']
-    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800d40:
-    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'Q#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '1', '0', '1', 'N#1', '1', 'M#1', '0', 'Vm#4']
-    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800500:
-    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '0', '1', '0', '1', 'N#1', '0', 'M#1', '0', 'Vm#4']
-    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800700:
-    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '0', '1', '1', '1', 'N#1', '0', 'M#1', '0', 'Vm#4']
-    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xef800a40:
-    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '0', '1', '0', 'N#1', '1', 'M#1', '0', 'Vm#4']
-    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -3068,9 +3045,32 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   if ((Opcode32 & 0xffb00c10) == 0xffb00800)
     // V<op><c>.8 <Dd>, <list>, <Dm> - ['support it block'] - ['1', '1', '1', '1', '1', '1', '1', '1', '1', 'D#1', '1', '1', 'Vn#4', 'Vd#4', '1', '0', 'len#2', 'N#1', 'op#1', 'M#1', '0', 'Vm#4']
     return Instruction_V_T1_ffb00c10_ffb00800(rBinStrm, Offset, Opcode32, rInsn);
+  if ((Opcode32 & 0xfe7f0000) == 0xe85f0000)
+    // LDRD<c> <Rt>, <Rt2>, [PC,#-0] - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', 'P#1', 'U#1', '1', '(0)', '1', '1', '1', '1', '1', 'Rt#4', 'Rt2#4', 'imm#8']
+    return Instruction_LDRD_T1_fe7f0000_e85f0000(rBinStrm, Offset, Opcode32, rInsn);
   if ((Opcode32 & 0xff800d50) == 0xef800900)
     // VQD<op><c>.<dt> <Qd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', '0', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '0', 'op#1', '1', 'N#1', '0', 'M#1', '0', 'Vm#4']
     return Instruction_VQD_T1_ff800d50_ef800900(rBinStrm, Offset, Opcode32, rInsn);
+  switch (Opcode32 & 0xef800f50)
+  {
+  case 0xef800c40:
+    // VQDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'Q#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '1', '0', '0', 'N#1', '1', 'M#1', '0', 'Vm#4']
+    return Instruction_VQDMULH_T2_ef800f50_ef800c40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800d40:
+    // VQRDMULH<c>.<dt> <Qd>, <Qn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'Q#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '1', '0', '1', 'N#1', '1', 'M#1', '0', 'Vm#4']
+    return Instruction_VQRDMULH_T2_ef800f50_ef800d40(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800500:
+    // VABAL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '0', '1', '0', '1', 'N#1', '0', 'M#1', '0', 'Vm#4']
+    return Instruction_VABAL_T2_ef800f50_ef800500(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800700:
+    // VABDL<c>.<dt> <Qd>, <Dn>, <Dm> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '0', '1', '1', '1', 'N#1', '0', 'M#1', '0', 'Vm#4']
+    return Instruction_VABDL_T2_ef800f50_ef800700(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xef800a40:
+    // VMULL<c>.<dt> <Qd>, <Dn>, <Dm[x]> - ['support it block'] - ['1', '1', '1', 'U#1', '1', '1', '1', '1', '1', 'D#1', 'size#2', 'Vn#4', 'Vd#4', '1', '0', '1', '0', 'N#1', '1', 'M#1', '0', 'Vm#4']
+    return Instruction_VMULL_T2_ef800f50_ef800a40(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
   switch (Opcode32 & 0xffb00300)
   {
   case 0xf9800000:
@@ -3325,17 +3325,6 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   default:
     break;
   }
-  switch (Opcode32 & 0xffd02000)
-  {
-  case 0xe8900000:
-    // LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', '0', '1', '0', 'W#1', '1', 'Rn#4', 'P#1', 'M#1', '(0)', 'register_list#13']
-    return Instruction_LDM_T2_ffd02000_e8900000(rBinStrm, Offset, Opcode32, rInsn);
-  case 0xe9100000:
-    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', '1', '0', '0', 'W#1', '1', 'Rn#4', 'P#1', 'M#1', '(0)', 'register_list#13']
-    return Instruction_LDMDB_T1_ffd02000_e9100000(rBinStrm, Offset, Opcode32, rInsn);
-  default:
-    break;
-  }
   switch (Opcode32 & 0xfbf08000)
   {
   case 0xf2000000:
@@ -3350,6 +3339,17 @@ bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Off
   case 0xf2c00000:
     // MOVT<c> <Rd>, #<imm> - ['could_jmp'] - ['1', '1', '1', '1', '0', 'imm#1', '1', '0', '1', '1', '0', '0', 'imm#4', '0', 'imm#3', 'Rd#4', 'imm#8']
     return Instruction_MOVT_T1_fbf08000_f2c00000(rBinStrm, Offset, Opcode32, rInsn);
+  default:
+    break;
+  }
+  switch (Opcode32 & 0xffd02000)
+  {
+  case 0xe8900000:
+    // LDM<c>.W <Rn>{!}, <registers> - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', '0', '1', '0', 'W#1', '1', 'Rn#4', 'P#1', 'M#1', '(0)', 'register_list#13']
+    return Instruction_LDM_T2_ffd02000_e8900000(rBinStrm, Offset, Opcode32, rInsn);
+  case 0xe9100000:
+    // LDMDB<c> <Rn>{!}, <registers> - ['could_jmp'] - ['1', '1', '1', '0', '1', '0', '0', '1', '0', '0', 'W#1', '1', 'Rn#4', 'P#1', 'M#1', '(0)', 'register_list#13']
+    return Instruction_LDMDB_T1_ffd02000_e9100000(rBinStrm, Offset, Opcode32, rInsn);
   default:
     break;
   }
@@ -7156,7 +7156,7 @@ bool ArmArchitecture::Instruction_PLI_A1_ff70f010_f650f000(BinaryStream const& r
     rInsn.Length() = 4;
     rInsn.SetOpcode(ARM_Opcode_Pli);
     rInsn.SetMnemonic("pli");
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -7477,7 +7477,7 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00090_00000010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7500,7 +7500,7 @@ bool ArmArchitecture::Instruction_AND_A1_0fe00010_00000000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7547,7 +7547,7 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00090_00200010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7570,7 +7570,7 @@ bool ArmArchitecture::Instruction_EOR_A1_0fe00010_00200000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7614,7 +7614,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fef0010_004d0000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7637,7 +7637,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00090_00400010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7660,7 +7660,7 @@ bool ArmArchitecture::Instruction_SUB_A1_0fe00010_00400000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7705,7 +7705,7 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00090_00600010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7728,7 +7728,7 @@ bool ArmArchitecture::Instruction_RSB_A1_0fe00010_00600000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7751,7 +7751,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fef0010_008d0000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7798,7 +7798,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00090_00800010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7821,7 +7821,7 @@ bool ArmArchitecture::Instruction_ADD_A1_0fe00010_00800000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7868,7 +7868,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00090_00a00010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7891,7 +7891,7 @@ bool ArmArchitecture::Instruction_ADC_A1_0fe00010_00a00000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -7938,7 +7938,7 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00090_00c00010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -7961,7 +7961,7 @@ bool ArmArchitecture::Instruction_SBC_A1_0fe00010_00c00000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8008,7 +8008,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00090_00e00010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8031,7 +8031,7 @@ bool ArmArchitecture::Instruction_RSC_A1_0fe00010_00e00000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8303,7 +8303,7 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f090_01100010(BinaryStream const& r
     rInsn.SetMnemonic("tst");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8322,7 +8322,7 @@ bool ArmArchitecture::Instruction_TST_A1_0ff0f010_01100000(BinaryStream const& r
     rInsn.SetMnemonic("tst");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8341,7 +8341,7 @@ bool ArmArchitecture::Instruction_BX_A1_0ffffff0_012fff10(BinaryStream const& rB
     rInsn.SubType() |= Instruction::CallType;
     rInsn.SetMnemonic("bx");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
-    rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("Rm"), &m_CpuInfo));
+    rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo));
   }
   {
     // semantic
@@ -8507,7 +8507,7 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f090_01300010(BinaryStream const& r
     rInsn.SetMnemonic("teq");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8526,7 +8526,7 @@ bool ArmArchitecture::Instruction_TEQ_A1_0ff0f010_01300000(BinaryStream const& r
     rInsn.SetMnemonic("teq");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8598,7 +8598,7 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f090_01500010(BinaryStream const& r
     rInsn.SetMnemonic("cmp");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8617,7 +8617,7 @@ bool ArmArchitecture::Instruction_CMP_A1_0ff0f010_01500000(BinaryStream const& r
     rInsn.SetMnemonic("cmp");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8707,7 +8707,7 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f090_01700010(BinaryStream const& r
     rInsn.SetMnemonic("cmn");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8726,7 +8726,7 @@ bool ArmArchitecture::Instruction_CMN_A1_0ff0f010_01700000(BinaryStream const& r
     rInsn.SetMnemonic("cmn");
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -8811,7 +8811,7 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00090_01800010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -8834,7 +8834,7 @@ bool ArmArchitecture::Instruction_ORR_A1_0fe00010_01800000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -9165,7 +9165,7 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00090_01c00010(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -9188,7 +9188,7 @@ bool ArmArchitecture::Instruction_BIC_A1_0fe00010_01c00000(BinaryStream const& r
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -9249,7 +9249,7 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0090_01e00010(BinaryStream const& r
 
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue((ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
+    rInsn.AddOperand(arm::DecodeRegShiftWithSources(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rs */), &m_CpuInfo)));
   }
   {
     // semantic
@@ -9271,7 +9271,7 @@ bool ArmArchitecture::Instruction_MVN_A1_0fef0010_01e00000(BinaryStream const& r
 
     rInsn.SetTestedFlags(arm::ConditionFromValue((ExtractBits<28, 31>(Opcode)) /* cond */));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rd */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -11555,7 +11555,7 @@ bool ArmArchitecture::Instruction_STRT_A2_0f700010_06200000(BinaryStream const& 
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -11577,7 +11577,7 @@ bool ArmArchitecture::Instruction_LDRT_A2_0f700010_06300000(BinaryStream const& 
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(16, nullptr, Expr::MakeId(arm::RegisterFromValue("Rn"), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("Rm"), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(16, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -11599,7 +11599,7 @@ bool ArmArchitecture::Instruction_STRBT_A2_0f700010_06600000(BinaryStream const&
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -11621,7 +11621,7 @@ bool ArmArchitecture::Instruction_LDRBT_A2_0f700010_06700000(BinaryStream const&
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("Rn"), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("Rm"), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -11981,7 +11981,7 @@ bool ArmArchitecture::Instruction_STR_A1_0e500010_06000000(BinaryStream const& r
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -12004,7 +12004,7 @@ bool ArmArchitecture::Instruction_LDR_A1_0e500010_06100000(BinaryStream const& r
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
     if ((ExtractBit<23>(Opcode)) /* U */)
-        rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+        rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
 
   }
   {
@@ -12027,7 +12027,7 @@ bool ArmArchitecture::Instruction_STRB_A1_0e500010_06400000(BinaryStream const& 
         rInsn.AddAttribute(ARM_Attribute_WriteBack);
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
   }
   {
     // semantic
@@ -12050,10 +12050,10 @@ bool ArmArchitecture::Instruction_LDRB_A1_0e500010_06500000(BinaryStream const& 
 
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
     if ((ExtractBit<23>(Opcode)) /* U */)
-      rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("Rn"), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("Rm"), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+      rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
 
     else
-      rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("Rn"), &m_CpuInfo) - arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("Rm"), &m_CpuInfo), (ExtractBits<7, 11>(Opcode)) /* imm */)));
+      rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) - arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<5, 6>(Opcode)) /* type */, (ExtractBits<7, 11>(Opcode)) /* imm */)));
 
   }
   {
@@ -13843,7 +13843,7 @@ bool ArmArchitecture::Instruction_ADD_T2_0000ff87_00004485(BinaryStream const& r
     rInsn.SetMnemonic("add");
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue((ExtractBits<3, 6>(Opcode)) /* Rm */), &m_CpuInfo));
+    rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<3, 6>(Opcode)) /* Rm */), &m_CpuInfo));
   }
   {
     // semantic
@@ -15193,7 +15193,7 @@ bool ArmArchitecture::Instruction_TST_T2_fff08f00_ea100f00(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15217,7 +15217,7 @@ bool ArmArchitecture::Instruction_AND_T2_ffe08000_ea000000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15241,7 +15241,7 @@ bool ArmArchitecture::Instruction_BIC_T2_ffe08000_ea200000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15405,7 +15405,7 @@ bool ArmArchitecture::Instruction_ORR_T2_ffe08000_ea400000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15428,7 +15428,7 @@ bool ArmArchitecture::Instruction_MVN_T2_ffef8000_ea6f0000(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15451,7 +15451,7 @@ bool ArmArchitecture::Instruction_ORN_T1_ffe08000_ea600000(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15470,7 +15470,7 @@ bool ArmArchitecture::Instruction_TEQ_T1_fff08f00_ea900f00(BinaryStream const& r
     rInsn.SetMnemonic("teq");
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15494,7 +15494,7 @@ bool ArmArchitecture::Instruction_EOR_T2_ffe08000_ea800000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15535,7 +15535,7 @@ bool ArmArchitecture::Instruction_CMN_T2_fff08f00_eb100f00(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15559,7 +15559,7 @@ bool ArmArchitecture::Instruction_ADD_T3_ffef8000_eb0d0000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15583,7 +15583,7 @@ bool ArmArchitecture::Instruction_ADD_T3_ffe08000_eb000000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15607,7 +15607,7 @@ bool ArmArchitecture::Instruction_ADC_T2_ffe08000_eb400000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15631,7 +15631,7 @@ bool ArmArchitecture::Instruction_SBC_T2_ffe08000_eb600000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15675,7 +15675,7 @@ bool ArmArchitecture::Instruction_SUB_T1_ffef8000_ebad0000(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(ARM_Reg_Sp, &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15699,7 +15699,7 @@ bool ArmArchitecture::Instruction_SUB_T2_ffe08000_eba00000(BinaryStream const& r
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -15722,7 +15722,7 @@ bool ArmArchitecture::Instruction_RSB_T1_ffe08000_ebc00000(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<8, 11>(Opcode)) /* Rd */), &m_CpuInfo));
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo));
-    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
+    rInsn.AddOperand(arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* type */, (ExtractBits<6, 7>(Opcode) | ExtractBits<12, 14>(Opcode) << 2) /* imm */));
   }
   {
     // semantic
@@ -18492,7 +18492,7 @@ bool ArmArchitecture::Instruction_LDRB_T2_fff00fc0_f8100000(BinaryStream const& 
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + arm::DecodeImmShiftWithSource(&m_CpuInfo, Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo), (ExtractBits<4, 5>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(8, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo) << (ExtractBits<4, 5>(Opcode)) /* imm */));
   }
   {
     // semantic
@@ -18772,7 +18772,7 @@ bool ArmArchitecture::Instruction_LDR_T2_fff00fc0_f8500000(BinaryStream const& r
     rInsn.AddAttribute(ARM_Attribute_SupportItBlock);
     rInsn.AddMnemonicSuffix(".w");
     rInsn.AddOperand(Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<12, 15>(Opcode)) /* Rt */), &m_CpuInfo));
-    rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue((ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue((ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo) << Expr::MakeBitVector(32, (ExtractBits<4, 5>(Opcode)) /* imm */)));
+    rInsn.AddOperand(Expr::MakeMem(32, nullptr, Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<16, 19>(Opcode)) /* Rn */), &m_CpuInfo) + Expr::MakeId(arm::RegisterFromValue("GPR32", (ExtractBits<0, 3>(Opcode)) /* Rm */), &m_CpuInfo) << Expr::MakeBitVector(32, (ExtractBits<4, 5>(Opcode)) /* imm */)));
   }
   {
     // semantic

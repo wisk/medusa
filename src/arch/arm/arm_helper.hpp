@@ -31,7 +31,7 @@ namespace arm
   medusa::u32 ConditionFromValue(medusa::u32 CondVal);
   medusa::u32 ConditionFromName(char const* pCondName);
   medusa::u32 ArmExpandImm(medusa::u32 Imm);
-  medusa::Expression::SPType DecodeRegShiftWithSources(medusa::CpuInformation const* pCpuInfo, medusa::Expression::SPType spLeftExpr, medusa::u32 Type, medusa::Expression::SPType spRightExpr);
+  medusa::Expression::SPType DecodeRegShiftWithSources(medusa::Expression::SPType spLeftExpr, medusa::u32 Type, medusa::Expression::SPType spRightExpr);
   medusa::Expression::SPType DecodeImmShiftWithSource(medusa::CpuInformation const* pCpuInfo, medusa::Expression::SPType spExpr, medusa::u32 Type, medusa::u32 Imm);
 }
 
