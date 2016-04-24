@@ -825,6 +825,7 @@ namespace medusa
 
     spCfg->AddVertex(FirstBasicBlock);
 
+    decltype(AllBranches) NextBranches;
     for (auto const& rBranch : AllBranches)
     {
       static const char *TypeStr[] =
@@ -850,14 +851,28 @@ namespace medusa
       Log::Write("core") << "dst: " << rDstAddr << ", src: " << rSrcAddr << ", type: " << TypeStr[Edge] << (Res ? ", succeed" : ", failed") << LogEnd;
       if (SameVertex)
       {
-        AllBranches.push_back(std::make_tuple(PrevAddr, rDstAddr, Graph::EdgeProperties::Next));
+        NextBranches.push_back(std::make_tuple(PrevAddr, rDstAddr, Graph::EdgeProperties::Next));
       }
     }
 
+    auto& rBoostGraph = (*spCfg)();
+
     for (auto const& rBranch : AllBranches)
       spCfg->AddEdge(Graph::EdgeProperties(std::get<2>(rBranch)), std::get<1>(rBranch), std::get<0>(rBranch));
+    for (auto const& rBranch : NextBranches)
+    {
+      Graph::VertexDescriptor PrevVtxDesc;
 
-    auto& rBoostGraph = (*spCfg)();
+      if (!spCfg->FindVertex(std::get<0>(rBranch), PrevVtxDesc))
+        continue;
+      auto& rPrevVtxProp = rBoostGraph[PrevVtxDesc];
+      Address LastAddr;
+      if (!rPrevVtxProp.GetLastAddress(LastAddr))
+        continue;
+      if (std::find(std::begin(ExitAddrs), std::end(ExitAddrs), LastAddr) != std::end(ExitAddrs))
+        continue;
+      spCfg->AddEdge(Graph::EdgeProperties(std::get<2>(rBranch)), std::get<1>(rBranch), std::get<0>(rBranch));
+    }
 
     Graph::VertexDescriptor VtxHead;
     if (spCfg->FindVertex(m_Addr, VtxHead))

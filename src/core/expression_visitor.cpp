@@ -1783,6 +1783,7 @@ Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)
 
 Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
 {
+  Log::Write("dbg") << ToString() << LogEnd;
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = GetExpression(rSymPair.first);
