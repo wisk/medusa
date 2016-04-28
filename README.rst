@@ -154,7 +154,7 @@ Options
 
 * MEDUSA_BUILD_WITH_OGDF: clone OGDF project and build it, this library allows qMedusa to display graph
 * MEDUSA_CMAKE_USE_COTIRE: use cotire for build.
-
+* MEDUSA_BUILD_X86_ARCH_AND_LOADER_ONLY: build x86 loader and architecture only
 
 Screenshots
 ===========
