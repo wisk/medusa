@@ -23,25 +23,6 @@ enable_testing()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-if (MSVC)
-  # https://stackoverflow.com/questions/9742003/platform-detection-in-cmake
-  macro(GET_WIN32_WINNT version)
-    if (WIN32 AND CMAKE_SYSTEM_VERSION)
-      set(ver ${CMAKE_SYSTEM_VERSION})
-      string(REPLACE "." "" ver ${ver})
-      string(REGEX REPLACE "([0-9])" "0\\1" ver ${ver})
-
-      set(${version} "0x${ver}")
-    endif()
-  endmacro()
-
-  GET_WIN32_WINNT(WIN_VER)
-  add_definitions(-D_WIN32_WINNT=${WIN_VER})
-  message(STATUS "MS Visual Studio generator detected, define _WIN32_WINNT=${WIN_VER}")
-endif()
-
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
 # features
 
 ## C++
@@ -66,8 +47,7 @@ set(MEDUSA_PYTHON_VERSION 2.7)
 ## Boost
 set(MEDUSA_BOOST_MIN_VERSION 1.55)
 
-set(Boost_USE_STATIC_LIBS OFF) # We want to link boost dynamically
-add_definitions(-DBOOST_ALL_DYN_LINK)
+set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 ## OGDF
@@ -77,28 +57,35 @@ option(MEDUSA_BUILD_WITH_OGDF
 
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
+  include(ExternalProject)
 
-  if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf")
-    find_package(Git)
-    if (NOT GIT_FOUND)
-      message(FATAL_ERROR "Unable to find Git executable")
-    endif()
+  ExternalProject_add(ogdf
+    PREFIX         "ogdf"
 
-  execute_process(
-    COMMAND "${GIT_EXECUTABLE}" clone https://github.com/wisk/ogdf
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/deps")
-  endif()
+    GIT_REPOSITORY "https://github.com/ogdf/ogdf"
+    GIT_TAG        "master"
 
-  if (NOT EXISTS "${CMAKE_SOURCE_DIR}/deps/ogdf/")
-    message(FATAL_ERROR "OGDF folder is missing")
-  endif()
-  add_subdirectory("${CMAKE_SOURCE_DIR}/deps/ogdf")
-  include_directories("${CMAKE_SOURCE_DIR}/deps/ogdf/include")
-  set_target_properties(coin PROPERTIES FOLDER "Dependencies")
-  set_target_properties(ogdf PROPERTIES FOLDER "Dependencies")
-  set_target_properties(ogdf-test PROPERTIES FOLDER "Dependencies")
+    SOURCE_DIR     "${CMAKE_SOURCE_DIR}/deps/ogdf"
+    INSTALL_DIR    "${CMAKE_BINARY_DIR}"
+  )
 
   set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
+  set(OGDF_INCLUDE_DIRS
+    "${CMAKE_SOURCE_DIR}/deps/ogdf/include"
+    "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/include")
+  if (MSVC)
+    set(OGDF_LIBRARIES
+      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib"
+      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib"
+      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib"
+      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib"
+    )
+  else()
+    set(OGDF_LIBRARIES
+      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a"
+      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a"
+    )
+  endif()
 
 endif()
 
@@ -137,9 +124,9 @@ add_subdirectory(package)
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
   message("Doxygen found, I'll generate documentations for you")
-  set(DOCROOT ${CMAKE_SOURCE_DIR}/doc/api)
+  set(DOCROOT "${CMAKE_SOURCE_DIR}/doc/api")
 
-  configure_file(${DOCROOT}/Doxyfile.in ${DOCROOT}/Doxyfile @ONLY)
+  configure_file("${DOCROOT}/Doxyfile.in ${DOCROOT}/Doxyfile" @ONLY)
 
   set(DOC_TARGET_NAME "doc")
   if (MSVC_IDE)

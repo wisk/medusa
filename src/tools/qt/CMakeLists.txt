@@ -106,7 +106,9 @@ qt5_use_modules(qMedusa Widgets)
 
 # TODO(wisk): ogdf must be only used by medusa itself, not by tools
 if (MEDUSA_BUILD_WITH_OGDF)
-  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
+  add_dependencies(qMedusa ogdf)
+  include_directories("${OGDF_INCLUDE_DIRS}")
+  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES})
 else()
   target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT})
 endif()
