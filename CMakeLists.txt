@@ -8,11 +8,17 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 4)
 
-## cotire
+# options
 option(MEDUSA_CMAKE_USE_COTIRE
   "use cotire"
   FALSE)
 
+option(MEDUSA_BUILD_WITH_OGDF
+  "OGDF library allows medusa to display graph"
+  FALSE)
+
+
+## cotire
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 if (MEDUSA_CMAKE_USE_COTIRE)
   include(cotire) # https://github.com/sakra/cotire
@@ -51,10 +57,6 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 ## OGDF
-option(MEDUSA_BUILD_WITH_OGDF
-  "OGDF library allows medusa to display graph"
-  FALSE)
-
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
   include(ExternalProject)

@@ -1,0 +1,4 @@
+#ifndef PYDUSA_DOCUMENT
+#define PYDUSA_DOCUMENT
+
+#endif // !PYDUSA_DOCUMENT

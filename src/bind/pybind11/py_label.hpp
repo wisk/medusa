@@ -1,0 +1,4 @@
+#ifndef PYDUSA_LABEL_HPP
+#define PYDUSA_LABEL_HPP
+
+#endif // !PYDUSA_LABEL_HPP
