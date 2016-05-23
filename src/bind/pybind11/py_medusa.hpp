@@ -1,4 +1,0 @@
-#ifndef PYDUSA_MEDUSA_HPP
-#define PYDUSA_MEDUSA_HPP
-
-#endif // !PYDUSA_MEDUSA_HPP

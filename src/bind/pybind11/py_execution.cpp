@@ -1,6 +1,8 @@
-#include "py_execution.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
 
 #include <medusa/document.hpp>
 #include <medusa/execution.hpp>
@@ -73,6 +75,16 @@ namespace pydusa
     Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
     return false;
   }
+
+  bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, u32 Type, Emulator::HookCallback Callback)
+  {
+    return pExecution->Hook(rAddress, Type, Callback);
+  }
+
+  bool Execution_HookLabel(Execution* pExecution, std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback)
+  {
+    return pExecution->Hook(rLabelName, Type, Callback);
+  }
 }
 
 void PydusaExecution(py::module& rMod)
@@ -92,19 +104,22 @@ void PydusaExecution(py::module& rMod)
     ;
 
   py::class_<Execution>(rMod, "Execution")
+    .def(py::init<Document&>())
+
     .def("init", &Execution::Initialize)
     .def("set_emulator", &Execution::SetEmulator)
     .def("execute", &Execution::Execute)
     .def("invalidate_cache", &Execution::InvalidateCache)
     .def("map_module", pydusa::Execution_MapModule)
     .def("hook_instruction", &Execution::HookInstruction)
-    //.def("hook_address", &Execution::Hook)
+    .def("hook_address", pydusa::Execution_HookAddress)
+    .def("hook_label", pydusa::Execution_HookLabel)
     .def("hook_imported_function", &Execution::HookFunction)
     .def("get_hook_name", &Execution::GetHookName)
     .def("get_hook_address", &Execution::GetHookAddress)
     .def("get_function_parameter", &Execution::GetFunctionParameter)
     .def("return_from_function", &Execution::ReturnFromFunction)
-    .def_property_readonly("cpu", &Execution::GetCpuContext)
-    .def_property_readonly("mem", &Execution::GetMemoryContext)
+    .def_property_readonly("cpu", &Execution::GetCpuContext, py::return_value_policy::reference_internal)
+    .def_property_readonly("mem", &Execution::GetMemoryContext, py::return_value_policy::reference_internal)
     ;
 }

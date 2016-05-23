@@ -43,67 +43,26 @@ include_directories("${PYTHON_INCLUDE_DIR}")
 
 set(SRC
   pydusa.cpp
-  pydusa.hpp
-
   py_address.cpp
-  py_address.hpp
-
   py_label.cpp
-  py_label.hpp
-
   py_binary_stream.cpp
-  py_binary_stream.hpp
-
   py_expression.cpp
-  py_expression.hpp
-
   py_cell.cpp
-  py_cell.hpp
-
   py_configuration.cpp
-  py_configuration.hpp
-
   py_memory_area.cpp
-  py_memory_area.hpp
-
   py_database.cpp
-  py_database.hpp
-
   py_exception.cpp
-  py_exception.hpp
-
   py_architecture.cpp
-  py_architecture.hpp
-
   py_loader.cpp
-  py_loader.hpp
-
   py_logger.cpp
-  py_logger.hpp
-
   py_instruction.cpp
-  py_instruction.hpp
-
   py_document.cpp
-  py_document.hpp
-
   py_medusa.cpp
-  py_medusa.hpp
-
   py_xrefs.cpp
-  py_xrefs.hpp
-
   py_context.cpp
-  py_context.hpp
-
   py_execution.cpp
-  py_execution.hpp
-
   py_symbolic.cpp
-  py_symbolic.hpp
-
   py_cpu_information.cpp
-  py_cpu_information.hpp
 )
 
 add_library(bind_python SHARED bind_python.cpp bind_python.hpp)

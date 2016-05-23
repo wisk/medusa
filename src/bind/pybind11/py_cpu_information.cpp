@@ -1,4 +1,4 @@
-#include "py_cpu_information.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
 

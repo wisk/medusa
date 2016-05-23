@@ -1,4 +1,4 @@
-#include "py_instruction.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
 
@@ -36,7 +36,7 @@ namespace pydusa
 
 void PydusaInstruction(py::module& rMod)
 {
-  py::class_<Instruction>(rMod, "Instruction", py::base<Cell>())
+  py::class_<Instruction, Instruction::SPType>(rMod, "Instruction", py::base<Cell>())
     .def("__str__", &Instruction::ToString)
     .def("__len__", &Instruction::GetLength)
     .def_property_readonly("format", pydusa::Instruction_GetFormat)

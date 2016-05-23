@@ -1,4 +1,4 @@
-#include "py_cell.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
 
@@ -17,7 +17,7 @@ void PydusaCell(py::module& rMod)
     .value("STRING",      Cell::StringType)
     ;
 
-  py::class_<Cell>(rMod, "Cell")
+  py::class_<Cell, Cell::SPType>(rMod, "Cell")
     .def_property_readonly("type", &Cell::GetType)
     .def("__len__",       &Cell::GetLength)
   ;

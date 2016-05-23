@@ -1,4 +1,0 @@
-#ifndef PYDUSA_ADDRESS_HPP
-#define PYDUSA_ADDRESS_HPP
-
-#endif // !PYDUSA_ADDRESS_HPP

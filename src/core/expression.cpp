@@ -555,9 +555,9 @@ std::string OperationExpression::ToString(void) const
     // unary
   case OpNot:          return "~";
   case OpNeg:          return "-";
-  case OpSwap:         return "⇄";
-  case OpBsf:          return "bsf";
-  case OpBsr:          return "bsr";
+  case OpSwap:         return "<byte_swap>";
+  case OpBsf:          return "<bsf>";
+  case OpBsr:          return "<bsr>";
 
   case OpFNeg:         return "-{f}";
 
@@ -577,8 +577,8 @@ std::string OperationExpression::ToString(void) const
   case OpUDiv:         return "/{u}";
   case OpSMod:         return "%{s}";
   case OpUMod:         return "%{u}";
-  case OpSext:         return "↗{s}";
-  case OpZext:         return "↗{z}";
+  case OpSext:         return "<sign_extend>";
+  case OpZext:         return "<zero_extend>";
   case OpInsertBits:   return "<insert_bits>";
   case OpExtractBits:  return "<extract_bits>";
   case OpBcast:        return "<bcast>";

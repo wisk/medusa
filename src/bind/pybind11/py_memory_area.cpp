@@ -1,4 +1,4 @@
-#include "py_memory_area.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
 

@@ -9,6 +9,7 @@ PYBIND11_PLUGIN(pydusa)
   py::module m("pydusa", "pydusa is python binding for medusa");
 
   PydusaLogger(m);
+
   PydusaException(m);
 
   PydusaAddress(m);

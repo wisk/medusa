@@ -5,6 +5,8 @@
 
 namespace py = pybind11;
 
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+
 void PydusaLogger(py::module& rPyMod);
 void PydusaException(py::module& rPyMod);
 

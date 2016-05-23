@@ -1,6 +1,7 @@
-#include "py_document.hpp"
+#include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include <medusa/document.hpp>
 

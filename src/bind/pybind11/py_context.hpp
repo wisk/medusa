@@ -1,4 +1,0 @@
-#ifndef PYDUSA_CONTEXT_HPP
-#define PYDUSA_CONTEXT_HPP
-
-#endif // !PYDUSA_CONTEXT_HPP
