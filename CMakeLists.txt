@@ -1,14 +1,21 @@
 cmake_minimum_required(VERSION 3.1)
 
 # project name
+
 project(Medusa)
 
 # medusa version
+
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_PATCH 4)
 
 # options
+
+option(MEDUSA_BUILD_TESTS
+  "Build Medusa tests"
+  FALSE)
+
 option(MEDUSA_CMAKE_USE_COTIRE
   "use cotire"
   FALSE)
@@ -17,19 +24,43 @@ option(MEDUSA_BUILD_WITH_OGDF
   "OGDF library allows medusa to display graph"
   FALSE)
 
+option(MEDUSA_BUILD_WITH_LLVM
+  "LLVM library allows medusa to compile to code (emul_llvm)"
+  FALSE)
+
+# variables
+
+set(MEDUSA_MODULES_TO_BUILD "all"
+  CACHE STRING "Semicolon-separated list of modules to build, or \"all\"")
+list(REMOVE_DUPLICATES MEDUSA_MODULES_TO_BUILD)
+list(SORT MEDUSA_MODULES_TO_BUILD)
+
+if ("${MEDUSA_MODULES_TO_BUILD}" MATCHES "all")
+  message("Compile all modules")
+else()
+  foreach (medusa_module ${MEDUSA_MODULES_TO_BUILD})
+    # TODO(wisk): check if the module if correct
+    message("Compile module ${medusa_module}")
+  endforeach()
+endif()
 
 ## cotire
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 if (MEDUSA_CMAKE_USE_COTIRE)
   include(cotire) # https://github.com/sakra/cotire
   message("Cotire was enabled")
 endif()
 
-enable_testing()
+if (MEDUSA_BUILD_TESTS)
+  enable_testing()
+endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # features
+
+include(ExternalProject)
 
 ## C++
 set(CMAKE_CXX_STANDARD 11)
@@ -47,16 +78,15 @@ endif()
 ##   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
 ## endif()
 
-## Python
-set(MEDUSA_PYTHON_VERSION 2.7)
-
 ## Boost
+
 set(MEDUSA_BOOST_MIN_VERSION 1.55)
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 ## OGDF
+
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
   include(ExternalProject)
@@ -89,6 +119,24 @@ if (MEDUSA_BUILD_WITH_OGDF)
     )
   endif()
 
+endif()
+
+## LLVM
+
+if (MEDUSA_BUILD_WITH_LLVM)
+  ExternalProject_add(llvm
+    PREFIX llvm
+    GIT_REPOSITORY https://github.com/llvm-mirror/llvm
+    GIT_TAG origin/release_37
+
+    SOURCE_DIR  "${CMAKE_SOURCE_DIR}/deps/llvm"
+    INSTALL_DIR "${CMAKE_BINARY_DIR}"
+  )
+
+  ExternalProject_get_property(llvm INSTALL_DIR)
+  #set(LLVM_ROOT ${INSTALL_DIR})
+  #set(LLVM_ROOT_DEBUG ${INSTALL_DIR})
+  #set(LLVM_ROOT_RELEASE ${INSTALL_DIR})
 endif()
 
 # all generated files are going to bin folder
@@ -128,7 +176,7 @@ if (DOXYGEN_FOUND)
   message("Doxygen found, I'll generate documentations for you")
   set(DOCROOT "${CMAKE_SOURCE_DIR}/doc/api")
 
-  configure_file("${DOCROOT}/Doxyfile.in ${DOCROOT}/Doxyfile" @ONLY)
+  configure_file("${DOCROOT}/Doxyfile.in" "${DOCROOT}/Doxyfile" @ONLY)
 
   set(DOC_TARGET_NAME "doc")
   if (MSVC_IDE)
