@@ -134,7 +134,7 @@ void PydusaMedusa(py::module& rMod)
 
     .def("wait_for_tasks", &Medusa::WaitForTasks)
 
-    .def_property_readonly("document", pydusa::Medusa_GetDocument)
+    .def_property_readonly("document", pydusa::Medusa_GetDocument, py::return_value_policy::reference_internal)
 
     .def("make_address", pydusa::Medusa_MakeAddress)
 
