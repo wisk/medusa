@@ -3,6 +3,7 @@
 #include <sstream>
 #include <boost/format.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
 MEDUSA_NAMESPACE_USE
@@ -555,9 +556,9 @@ std::string OperationExpression::ToString(void) const
     // unary
   case OpNot:          return "~";
   case OpNeg:          return "-";
-  case OpSwap:         return "<byte_swap>";
-  case OpBsf:          return "<bsf>";
-  case OpBsr:          return "<bsr>";
+  case OpSwap:         return "byte_swap()";
+  case OpBsf:          return "bsf()";
+  case OpBsr:          return "bsr()";
 
   case OpFNeg:         return "-{f}";
 
@@ -568,8 +569,8 @@ std::string OperationExpression::ToString(void) const
   case OpLls:          return "<<";
   case OpLrs:          return ">>{u}";
   case OpArs:          return ">>{s}";
-  case OpRol:          return "rol";
-  case OpRor:          return "ror";
+  case OpRol:          return "rol()";
+  case OpRor:          return "ror()";
   case OpAdd:          return "+";
   case OpSub:          return "-";
   case OpMul:          return "*";
@@ -577,11 +578,11 @@ std::string OperationExpression::ToString(void) const
   case OpUDiv:         return "/{u}";
   case OpSMod:         return "%{s}";
   case OpUMod:         return "%{u}";
-  case OpSext:         return "<sign_extend>";
-  case OpZext:         return "<zero_extend>";
-  case OpInsertBits:   return "<insert_bits>";
-  case OpExtractBits:  return "<extract_bits>";
-  case OpBcast:        return "<bcast>";
+  case OpSext:         return "sign_extend()";
+  case OpZext:         return "zero_extend()";
+  case OpInsertBits:   return "insert_bits()";
+  case OpExtractBits:  return "extract_bits()";
+  case OpBcast:        return "bcast()";
 
   case OpFAdd:         return "+{f}";
   case OpFSub:         return "-{f}";
@@ -660,7 +661,10 @@ UnaryOperationExpression::~UnaryOperationExpression(void)
 
 std::string UnaryOperationExpression::ToString(void) const
 {
-  return (boost::format("%1%(%2%)") % OperationExpression::ToString() % m_spExpr->ToString()).str();
+  auto OpStr = OperationExpression::ToString();
+  if (boost::algorithm::ends_with(OpStr, "()"))
+    OpStr.erase(OpStr.length() - 2, 2);
+  return OpStr + "(" + m_spExpr->ToString() + ")";
 }
 
 Expression::SPType UnaryOperationExpression::Clone(void) const
@@ -715,15 +719,29 @@ BinaryOperationExpression::~BinaryOperationExpression(void)
 
 std::string BinaryOperationExpression::ToString(void) const
 {
-  std::string Res("(");
-  Res += m_spLeftExpr->ToString();
-  Res += " ";
-  Res += OperationExpression::ToString();
-  Res += " ";
-  Res += m_spRightExpr->ToString();
-  Res += ")";
+  std::string Res;
+  auto OpStr = OperationExpression::ToString();
+  if (boost::algorithm::ends_with(OpStr, "()"))
+  {
+    OpStr.erase(OpStr.length() - 2, 2);
+    Res = OpStr;
+    Res += "(";
+    Res += m_spLeftExpr->ToString();
+    Res += ", ";
+    Res += m_spRightExpr->ToString();
+    Res += ")";
+  }
+  else
+  {
+    Res = "(";
+    Res += m_spLeftExpr->ToString();
+    Res += " ";
+    Res += OperationExpression::ToString();
+    Res += " ";
+    Res += m_spRightExpr->ToString();
+    Res += ")";
+  }
   return Res;
-  //return (boost::format("(%1% %2% %3%)") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
 }
 
 Expression::SPType BinaryOperationExpression::Clone(void) const

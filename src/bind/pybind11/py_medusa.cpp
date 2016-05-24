@@ -132,6 +132,8 @@ void PydusaMedusa(py::module& rMod)
     .def("open_executable", pydusa::Medusa_OpenExecutable)
     .def("open_database",  pydusa::Medusa_OpenDatabase)
 
+    .def("add_task", (bool (Medusa::*)(std::string const&))&Medusa::AddTask)
+    .def("add_task", (bool (Medusa::*)(std::string const&, Address const&))&Medusa::AddTask)
     .def("wait_for_tasks", &Medusa::WaitForTasks)
 
     .def_property_readonly("document", pydusa::Medusa_GetDocument, py::return_value_policy::reference_internal)

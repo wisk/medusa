@@ -965,9 +965,15 @@ Expression::SPType SymbolicVisitor::VisitTernaryCondition(TernaryConditionExpres
 
   if (spConstRefExpr == nullptr || spConstTestExpr == nullptr)
   {
+    auto spTrueExpr = spTernExpr->GetTrueExpression()->Visit(this);
+    if (spTrueExpr == nullptr)
+      return nullptr;
+    auto spFalseExpr = spTernExpr->GetFalseExpression()->Visit(this);
+    if (spFalseExpr == nullptr)
+      return nullptr;
     return Expr::MakeTernaryCond(spTernExpr->GetType(),
       spConstRefExpr != nullptr ? spConstRefExpr : spRefExpr, spConstTestExpr != nullptr ? spConstTestExpr : spTestExpr,
-      spTernExpr->GetTrueExpression()->Visit(this), spTernExpr->GetFalseExpression()->Visit(this));
+      spTrueExpr, spFalseExpr);
   }
 
   bool Res;
@@ -1065,9 +1071,15 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
   if (m_spCond != nullptr)
   {
     m_Update = true;
+    auto spFalseExpr = spDstExpr->Visit(this);
+    if (spFalseExpr == nullptr)
+    {
+      m_Update = OldUpdate;
+      return nullptr;
+    }
     auto spTernExpr = Expr::MakeTernaryCond(
       m_spCond->GetType(), m_spCond->GetReferenceExpression(), m_spCond->GetTestExpression(),
-      spSrcExpr, spDstExpr->Visit(this));
+      spSrcExpr, spFalseExpr);
     spSrcExpr = spTernExpr;
   }
 
