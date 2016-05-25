@@ -10,7 +10,7 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaArchitecture(py::module& rMod)
 {
-  py::class_<Architecture>(rMod, "Architecture")
+  py::class_<Architecture, Architecture::SPType>(rMod, "Architecture")
     .def_property_readonly("name", &Architecture::GetName)
     .def("translate",      &Architecture::Translate)
     .def("disassemble",    &Architecture::Disassemble)

@@ -35,5 +35,7 @@ PYBIND11_PLUGIN(pydusa)
 
   PydusaCpuInformation(m);
 
+  PydusaModule(m);
+
   return m.ptr();
 }

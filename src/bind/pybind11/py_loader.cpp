@@ -10,7 +10,7 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaLoader(py::module& rMod)
 {
-  py::class_<Loader>(rMod, "Loader")
+  py::class_<Loader, Loader::SPType>(rMod, "Loader")
     .def_property_readonly("name", &Loader::GetName)
   ;
 }

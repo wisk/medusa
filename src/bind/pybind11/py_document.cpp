@@ -45,6 +45,44 @@ namespace pydusa
       pDoc->SetCellWithArchMode(rAddr, arch, Mode);
     }
   }
+  /*
+  bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  bool                          GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
+  bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
+  */
+
+  py::object Document_MoveAddress(Document const* pDocument, Address const& rAddr, s64 Offset)
+  {
+    Address MovedAddr;
+    if (!pDocument->MoveAddress(rAddr, MovedAddr, Offset))
+      return py::object();
+    return py::cast(MovedAddr);
+  }
+
+  py::object Document_GetPreviousAddress(Document const* pDocument, Address const& rAddr)
+  {
+    Address PrevAddr;
+    if (!pDocument->GetPreviousAddress(rAddr, PrevAddr))
+      return py::object();
+    return py::cast(PrevAddr);
+  }
+
+  py::object Document_GetNextAddress(Document const* pDocument, Address const& rAddr)
+  {
+    Address NextAddr;
+    if (!pDocument->GetNextAddress(rAddr, NextAddr))
+      return py::object();
+    return py::cast(NextAddr);
+  }
+
+  py::object Document_GetNearestAddress(Document const* pDocument, Address const& rAddr)
+  {
+    Address NearestAddr;
+    if (!pDocument->GetNearestAddress(rAddr, NearestAddr))
+      return py::object();
+    return py::cast(NearestAddr);
+  }
 }
 
 void PydusaDocument(py::module& rMod)
@@ -55,6 +93,14 @@ void PydusaDocument(py::module& rMod)
     .def("get_label", &Document::GetLabelFromAddress)
     .def("get_label_address", &Document::GetAddressFromLabelName)
     .def("set_address_architecture_mode", pydusa::Set_Addr_Arch_Mode)
+
+    .def("get_architecture_tag", &Document::GetArchitectureTag)
+    .def("get_mode", &Document::GetMode)
+
+    .def("move_address", pydusa::Document_MoveAddress)
+    .def("get_previous_address", pydusa::Document_GetPreviousAddress)
+    .def("get_next_address", pydusa::Document_GetNextAddress)
+    .def("get_nearest_address", pydusa::Document_GetNearestAddress)
   ;
 
   py::enum_<Document::ESetArchMode>(rMod, "ESetArchMode")

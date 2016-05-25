@@ -33,7 +33,6 @@ void TaskManager::Start(void)
         m_CondVar.wait(Lock);
 
       pCurTask = m_Tasks.front();
-      m_Tasks.pop();
       }
 
       if (pCurTask == nullptr)
@@ -42,6 +41,10 @@ void TaskManager::Start(void)
         break;
       }
       pCurTask->Run();
+
+      { std::unique_lock<std::mutex> Lock(m_Mutex);
+        m_Tasks.pop();
+      }
       m_Notify(pCurTask);
       delete pCurTask;
 
@@ -79,8 +82,10 @@ void TaskManager::Stop(void)
 
 void TaskManager::Wait(void)
 {
+  { std::unique_lock<std::mutex> Lock(m_Mutex);
   if (m_Tasks.empty())
     return;
+  }
   m_Running = false;
   if (m_Thread.joinable())
     m_Thread.join();

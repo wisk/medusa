@@ -149,6 +149,15 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
 
 Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address const& rAddr)
 {
+  if (rTaskName == "disassemble one instruction")
+  {
+    return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)
+    {
+      AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
+      AnlzDisasm.DisassembleOneInstruction();
+    });
+  }
+
   if (rTaskName == "disassemble")
   {
     return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)

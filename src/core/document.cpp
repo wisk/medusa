@@ -734,7 +734,7 @@ bool Document::ContainsUnknown(Address const& rAddress) const
   return CurCellData.GetType() == Cell::ValueType && CurCellData.GetLength() == 1;
 }
 
-bool                          Document::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
+bool Document::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
 {
   return m_spDatabase->SetCellWithArchMode(rAddress, tagArch, Mode);
 }
@@ -775,7 +775,8 @@ u8 Document::GetMode(Address const& rAddress) const
   auto const spCell = GetCell(rAddress);
   if (spCell != nullptr)
   {
-    auto spCellArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
+    auto const& rModMgr = ModuleManager::Instance();
+    auto spCellArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
     if (spCellArch != nullptr)
     {
       Mode = spCellArch->GetDefaultMode(rAddress);

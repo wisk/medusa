@@ -14,6 +14,6 @@ namespace pydusa
 
 void PydusaDatabase(py::module& rMod)
 {
-  py::class_<Database>(rMod, "Database")
+  py::class_<Database, Database::SPType>(rMod, "Database")
   ;
 }

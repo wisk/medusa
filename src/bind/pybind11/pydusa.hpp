@@ -33,4 +33,6 @@ void PydusaSymbolic(py::module& rPyMod);
 
 void PydusaCpuInformation(py::module& rPyMod);
 
+void PydusaModule(py::module& rPyMod);
+
 #endif // !PYDUSA_HPP

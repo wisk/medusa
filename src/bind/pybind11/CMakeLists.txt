@@ -63,6 +63,7 @@ set(SRC
   py_execution.cpp
   py_symbolic.cpp
   py_cpu_information.cpp
+  py_module.cpp
 )
 
 add_library(bind_python SHARED bind_python.cpp bind_python.hpp)

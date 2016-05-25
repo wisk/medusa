@@ -1,8 +1,11 @@
 #include "pydusa.hpp"
 
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
 
 #include <medusa/expression.hpp>
+#include <medusa/expression_visitor.hpp>
 
 namespace py = pybind11;
 
@@ -22,9 +25,20 @@ void PydusaExpression(py::module& rMod)
 
   // base expression class
 
-  py::class_<Expression, Expression::SPType>(rMod, "Expression")
+  py::class_<Expression, Expression::SPType> pyExpr(rMod, "Expression");
+  pyExpr
     .def("__str__", &Expression::ToString)
-    .def_property_readonly("size", &Expression::GetBitSize)
+    .def("update_child", &Expression::UpdateChild)
+    .def("compare", &Expression::Compare)
+    .def("visit", &Expression::Visit)
+    .def_property_readonly("bit_size", &Expression::GetBitSize)
+    ;
+
+  py::enum_<Expression::CompareType>(pyExpr, "Compare")
+    .value("UNKNOWN", Expression::CmpUnknown)
+    .value("DIFFERENT", Expression::CmpDifferent)
+    .value("SAME_EXPRESSION", Expression::CmpSameExpression)
+    .value("IDENTICAL", Expression::CmpIdentical)
     ;
 
   // constant expression class inherited from base expression class
@@ -77,8 +91,12 @@ void PydusaExpression(py::module& rMod)
 
   // helpers used to create instance of a specific expression type
 
-  //py::def("expr_make_const", Expr::MakeInt);
-  rMod.def("expr_make_id", Expr::MakeId);
+  rMod
+    .def("expr_make_bv", (Expression::SPType(*)(u16, ap_int))&Expr::MakeBitVector)
+    .def("expr_make_bool", &Expr::MakeBoolean)
+    .def("expr_make_id", &Expr::MakeId)
+    .def("expr_make_mem", &Expr::MakeMem)
+    ;
 
   // exposing enumerations
 
@@ -111,4 +129,31 @@ void PydusaExpression(py::module& rMod)
     .value("OP_BCAST", OperationExpression::OpBcast)
     ;
   rMod.def("expr_op_get_name", expr_op_get_name);
+
+  py::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
+
+  py::class_<NormalizeIdentifier>(rMod, "NormalizeIdentifier", py::base<ExpressionVisitor>())
+    .def(py::init<CpuInformation const&, u8>())
+    ;
+
+  py::class_<IdentifierToVariable>(rMod, "IdentifierToVariable", py::base<ExpressionVisitor>())
+    .def(py::init<>())
+    ;
+
+  py::class_<FilterVisitor>(rMod, "FilterVisitor", py::base<ExpressionVisitor>())
+    .def(py::init<FilterVisitor::Matcher, size_t>())
+    .def("get_matched_expressions", &FilterVisitor::GetMatchedExpressions)
+    ;
+
+  py::class_<SymbolicVisitor>(rMod, "SymbolicVisitor", py::base<ExpressionVisitor>())
+    .def(py::init<Document const&, u8, bool>())
+    .def("fork", &SymbolicVisitor::Fork)
+    .def("get_expression", &SymbolicVisitor::GetExpression)
+    .def("find_expression", &SymbolicVisitor::FindExpression)
+    .def("bind_expression", &SymbolicVisitor::BindExpression)
+    .def("update_address", &SymbolicVisitor::UpdateAddress)
+    .def("find_all_paths", &SymbolicVisitor::FindAllPaths)
+    .def("__str__", &SymbolicVisitor::ToString)
+    .def_property_readonly("expressions", &SymbolicVisitor::GetExpressions)
+    ;
 }

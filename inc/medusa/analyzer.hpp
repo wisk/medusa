@@ -73,6 +73,7 @@ class AnalyzerDisassemble : public AnalyzerPass
 public:
   AnalyzerDisassemble(Document& rDoc, Address const& rAddr) : AnalyzerPass("disassemble", rDoc, rAddr) {}
 
+  bool DisassembleOneInstruction(void);
   bool Disassemble(void);
   bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock);
 

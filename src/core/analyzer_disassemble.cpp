@@ -5,6 +5,59 @@
 
 namespace medusa
 {
+  bool AnalyzerDisassemble::DisassembleOneInstruction(void)
+  {
+    Address CurAddr = m_Addr;
+    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+
+    if (pMemArea == nullptr)
+    {
+      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
+      return false;
+    }
+
+    auto spInsn = std::make_shared<Instruction>();
+
+    TOffset PhysicalOffset;
+
+    if (!pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset))
+    {
+      Log::Write("core").Level(LogWarning) << "unable to convert address: " << CurAddr << " to offset" << LogEnd;
+      return false;
+    }
+
+    auto Tag = m_rDoc.GetArchitectureTag(CurAddr);
+    auto spArch = ModuleManager::Instance().GetArchitecture(Tag);
+    if (spArch == nullptr)
+    {
+      Log::Write("core").Level(LogWarning) << "unable to find architecture module for: " << CurAddr << LogEnd;
+      return false;
+    }
+
+    u8 Mode = m_rDoc.GetMode(CurAddr);
+
+    // If something bad happens, we quit
+    if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
+    {
+      Log::Write("core").Level(LogWarning) << "unable to disassemble instruction at " << CurAddr << LogEnd;
+      return false;
+    }
+
+    if (spInsn->GetLength() == 0)
+    {
+      Log::Write("core").Level(LogWarning) << "0 length instruction at " << CurAddr << LogEnd;
+      return false;
+    }
+
+    if (!m_rDoc.SetCell(CurAddr, spInsn, true))
+    {
+      Log::Write("core").Level(LogWarning) << "failed to set cell at " << CurAddr << LogEnd;
+      return false;
+    }
+
+    return true;
+  }
+
   bool AnalyzerDisassemble::Disassemble(void)
   {
     auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
@@ -718,15 +771,15 @@ namespace medusa
 
         if (!SymVst.FindAllPaths(NumOfPathFound, *spArch, [&](Expression::SPType spDstExpr, Expression::VSPType spCondExprs)
         {
-          Log::Write("dbg") << "DST: " << spDstExpr->ToString();
+          //Log::Write("dbg") << "DST: " << spDstExpr->ToString();
           std::string CondExprStr;
           for (auto spCondExpr : spCondExprs)
           {
-            Log::Write("dbg") << ", COND: " << spCondExpr->ToString();
+            //Log::Write("dbg") << ", COND: " << spCondExpr->ToString();
             CondExprStr += spCondExpr->ToString();
             CondExprStr += " ; ";
           }
-          Log::Write("dbg") << LogEnd;
+          //Log::Write("dbg") << LogEnd;
 
           // NOTE(wisk): Ignore symbolic branches
           // LATER(wisk): We may want to undefine some registers according the calling convention and fix the stack if needed
