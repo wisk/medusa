@@ -93,6 +93,8 @@ public:
 
   static ModuleManager& Instance(void)
   {
+    static std::mutex		mutex;
+    std::lock_guard<std::mutex> lock(mutex);
     static ModuleManager ModMgr;
 
     return ModMgr;
@@ -123,8 +125,25 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
+  template<typename pTypeModule>
+  bool ActionLoad(pTypeModule pModule,
+                               std::string const MsgModule,
+                               std::string const MsgError,
+                               std::function<void (pTypeModule)> pFct)
+  {
+    Log::Write("core") << MsgModule << LogEnd;
+    if (pModule == nullptr)
+    {
+      Log::Write("core") << MsgError << LogEnd;
+      return false;
+    }
+    pFct(pModule);
+    return true;
+}
+
   void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
+  bool LoadCommonFromModule(void * const pModule, Module & rModule);
   void UnloadModules(void);
 
   // Architecture

@@ -24,6 +24,16 @@ MemoryArea::~MemoryArea(void)
 {
 }
 
+void                       MemoryArea::SetDefaultArchitectureTag(Tag arch)
+{
+  m_DefaultArchitectureTag = arch;
+}
+
+void                       MemoryArea::SetDefaultArchitectureMode(u8 mode)
+{
+  m_DefaultArchitectureMode = mode;
+}
+
 MappedMemoryArea::~MappedMemoryArea(void)
 {
   m_Cells.clear();
@@ -72,10 +82,10 @@ CellData::SPType MappedMemoryArea::GetCellData(TOffset Offset) const
 {
   if (!IsCellPresent(Offset))
     return nullptr;
-
   size_t CellOff = static_cast<size_t>(Offset - m_VirtualBase.GetOffset());
-  if (CellOff >= m_Cells.size())
+  if (CellOff >= m_Cells.size()) {
     return std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+  }
 
   auto spCellData = m_Cells[CellOff];
   if (spCellData == nullptr)
@@ -93,9 +103,16 @@ bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPType spCellData, 
   return _InsertCell(Offset, spCellData);
 }
 
+bool MappedMemoryArea::SetCellData(TOffset Offset, CellData::SPType spCellData)
+{
+   if (spCellData == nullptr)
+     return _RemoveCell(Offset, spCellData);
+
+   return _InsertCell(Offset, spCellData);
+}
+
 void MappedMemoryArea::ForEachCellData(CellDataPredicat Predicat) const
 {
-  auto itCellDataEnd = std::end(m_Cells);
   TOffset CurOff = 0x0;
   std::for_each(std::begin(m_Cells), std::end(m_Cells), [&CurOff, &Predicat](CellData::SPType spCellData)
   {
@@ -244,13 +261,23 @@ bool MappedMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMov
   }
 
   TOffset MovedOffset = rAddress.GetOffset();
-  while (Offset--)
+  for (; Offset; --Offset)
   {
     while (true)
     {
       auto spCellData = GetCellData(MovedOffset);
       if (spCellData != nullptr)
-        MovedOffset += spCellData->GetLength(); // TODO: check intoverflow here
+      {
+        // TODO: check intoverflow here
+        // Check intoverflow
+        auto CellDataLength = spCellData->GetLength();
+        auto OffsetAfterMove = MovedOffset + spCellData->GetLength();
+	bool is_ovf = (MovedOffset > 0 && CellDataLength > 0 && OffsetAfterMove < 0)
+	  || (MovedOffset < 0 && CellDataLength < 0 && OffsetAfterMove > 0);
+
+	if (!is_ovf)
+	  MovedOffset += spCellData->GetLength();
+      }
       else
         ++MovedOffset;
       if (IsCellPresent(MovedOffset))
@@ -308,10 +335,9 @@ bool MappedMemoryArea::_InsertCell(TOffset Offset, CellData::SPType spCellData)
     m_Cells.resize(NewSize);
 
     // LATER(KS): Is it really necessary?
-    for (size_t Idx = OldSize; Idx < NewSize; ++Idx)
-    {
-      m_Cells[Idx] = nullptr;
-    }
+    // A resize initialize element using
+    // default constructor or with the zero value
+    // for primitive types
   }
 
   u16 CellLen = spCellData->GetLength();
@@ -398,6 +424,11 @@ TOffset VirtualMemoryArea::GetFileOffset(void) const
 u32 VirtualMemoryArea::GetFileSize(void) const
 {
   return 0;
+}
+
+bool VirtualMemoryArea::SetCellData(TOffset, CellData::SPType)
+{
+ return false;
 }
 
 CellData::SPType VirtualMemoryArea::GetCellData(TOffset Offset) const

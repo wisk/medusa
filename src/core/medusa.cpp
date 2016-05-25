@@ -120,7 +120,7 @@ bool Medusa::Start(
 }
 
 bool Medusa::IgnoreDatabasePath(
-  Path& rDatabasePath,
+        Path& rDatabasePath,
   std::list<Filter> const& rExtensionFilter)
 {
   rDatabasePath = boost::filesystem::unique_path();
@@ -140,7 +140,9 @@ bool Medusa::DefaultModuleSelector(BinaryStream::SPType spBinStrm, Database::SPT
     return false;
   rspLoader = AllLdrs.front();
   rspArchitectures = rModMgr.GetArchitectures();
-  rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+
+  rspLoader->FilterAndConfigureArchitectures(rspArchitectures); // It filters architecture for GetArchitectureTag
+
   if (rspArchitectures.empty())
     return false;
   rspOperatingSystem = rModMgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
@@ -284,7 +286,6 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
     Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
 
     m_Document.Use(spDb);
-
     auto const& ArchTags = spDb->GetArchitectureTags();
     auto const& AllArchs = rModMgr.GetArchitectures();
     for (auto itArchTag = std::begin(ArchTags), itEnd = std::end(ArchTags); itArchTag != itEnd; ++itArchTag)
@@ -317,7 +318,6 @@ bool Medusa::CloseDocument(void)
 void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
 {
   Cell::SPType spCell = nullptr;
-
   if (Mode == 0)
   {
     spCell = GetCell(rAddr);
@@ -334,7 +334,6 @@ void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
       if (spCell == nullptr)
         return;
     }
-
     spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
     if (spArch == nullptr)
       return;

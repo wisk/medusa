@@ -18,6 +18,31 @@ Execution::~Execution(void)
   delete m_pMemCtxt;
 }
 
+bool Execution::SetCpuMemContext(Address const& StartAddr)
+{
+  m_pCpuCtxt = m_spArch->MakeCpuContext();
+  m_pMemCtxt = m_spArch->MakeMemoryContext();
+  if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "failed to make context for execution" << LogEnd;
+    return false;
+  }
+    m_pCpuCtxt->SetMode(m_rDoc.GetMode(StartAddr));
+  m_pCpuInfo = &m_pCpuCtxt->GetCpuInformation();
+  if (m_pCpuInfo == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "unable to get cpu information for execution" << LogEnd;
+    return false;
+  }
+
+  if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt))
+  {
+    Log::Write("core").Level(LogError) << "unable to map document for execution" << LogEnd;
+    return false;
+  }
+  return true;
+}
+
 bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir)
 {
   delete m_pCpuCtxt;
@@ -31,34 +56,40 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
     Log::Write("core").Level(LogError) << "unable to get architecture module for execution" << LogEnd;
     return false;
   }
-
-  m_pCpuCtxt = m_spArch->MakeCpuContext();
-  m_pMemCtxt = m_spArch->MakeMemoryContext();
-  if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "failed to make context for execution" << LogEnd;
+  if (SetCpuMemContext(StartAddr) == false)
     return false;
-  }
-  m_pCpuCtxt->SetMode(m_rDoc.GetMode(StartAddr));
-
-  m_pCpuInfo = &m_pCpuCtxt->GetCpuInformation();
-  if (m_pCpuInfo == nullptr)
-  {
-    Log::Write("core").Level(LogError) << "unable to get cpu information for execution" << LogEnd;
-    return false;
-  }
-
-  if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt))
-  {
-    Log::Write("core").Level(LogError) << "unable to map document for execution" << LogEnd;
-    return false;
-  }
-
   m_spOs = rModMgr.GetOperatingSystem(m_rDoc.GetOperatingSystemName());
   if (m_spOs == nullptr)
-    return true;
+    return SetStackMemory();
 
   return m_spOs->InitializeContext(m_rDoc, *m_pCpuCtxt, *m_pMemCtxt, rArgs, rEnv, rCurWrkDir);
+}
+
+bool Execution::SetStackMemory()
+{
+  auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
+  u64 const StkPtr = 0xdeadbeaf;
+  u64 const StkLen = 0x1000;
+  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+
+  void* pStkMem;
+  if (!m_pMemCtxt->AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem)) {
+    return false;
+  }
+
+  u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, m_pCpuCtxt->GetMode());
+  if (StkReg == CpuInformation::InvalidRegister)
+    return false;
+  u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
+  if (StkRegSize < 8)
+    return false;
+  StkRegSize /= 8;
+
+  u64 StkOff = 0;
+  u64 StackRegisterValue = StkPtr + StkLen - StkOff;
+  if (m_pCpuCtxt->WriteRegister(StkReg, &StackRegisterValue, StkRegSize * 8) == false)
+    return false;
+  return true;
 }
 
 bool Execution::SetEmulator(std::string const& rEmulatorName)

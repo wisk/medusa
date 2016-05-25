@@ -35,6 +35,9 @@ public:
 
   std::string Dump(void) const;
 
+  void SetDefaultArchitectureTag(Tag archTag);
+  void SetDefaultMode(u8 mode);
+
   u8  GetType(void)            const { return m_Type;        }
   u8  GetSubType(void)         const { return m_SubType;     }
   u16 GetLength(void)          const { return m_Length;      }

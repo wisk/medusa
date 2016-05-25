@@ -21,6 +21,8 @@ public:
 
   bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
+  bool SetStackMemory();
+  bool SetCpuMemContext(Address const& rAddr);
 
   bool Execute(Address const& rAddr);
 

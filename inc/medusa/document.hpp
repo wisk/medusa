@@ -27,8 +27,8 @@ MEDUSA_NAMESPACE_BEGIN
 //! Document handles cell, multicell, xref, label and memory area.
 class Medusa_EXPORT Document
 {
-  Document(Document const&);
-  Document& operator=(Document const&);
+  Document(Document const&) = delete;
+  Document& operator=(Document const&) = delete;
 
 public:
   typedef std::set<MemoryArea*, MemoryArea::Compare> MemoryAreaSetType;
@@ -37,6 +37,11 @@ public:
   typedef boost::bimap<Address, Label>               LabelBimapType;
   typedef boost::signals2::connection                ConnectionType;
 
+  enum	ESetArchMode
+  {
+      ByMemoryArea,
+      ByCell,
+  };
 
   class Medusa_EXPORT Subscriber
   {
@@ -176,6 +181,9 @@ public:
                                  */
   bool                          SetCell(Address const& rAddr, Cell::SPType spCell, bool Force = false);
   bool                          SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force = false);
+  bool                          SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode);
+
+  void                          SetArchMemoryArea(Address const& rAddr, Tag TagArch, u8 Mode);
 
   bool                          DeleteCell(Address const& rAddr);
 

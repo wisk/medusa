@@ -69,11 +69,11 @@ namespace pydusa
     catch (Exception const& e)
     {
       Log::Write("pydusa") << e.What() << LogEnd;
-      return false;
+      return nullptr;
     }
 
     Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
-    return false;
+    return nullptr;
   }
 
   bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, u32 Type, Emulator::HookCallback Callback)

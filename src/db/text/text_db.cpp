@@ -451,6 +451,19 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
   return nullptr;
 }
 
+void              TextDatabase::SetArchMemoryArea(Address const &rAddress, Tag TagArch, u8 Mode)
+{
+  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  for (MemoryArea* pMemArea : m_MemoryAreas)
+  {
+    if (pMemArea->IsCellPresent(rAddress))
+    {
+      pMemArea->SetDefaultArchitectureTag(TagArch);
+      pMemArea->SetDefaultArchitectureMode(Mode);
+    }
+  }
+}
+
 bool TextDatabase::GetFirstAddress(Address& rAddress) const
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
@@ -681,6 +694,29 @@ bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
   rCellData = *spCellData;
   return true;
 }
+
+  bool TextDatabase::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
+  {
+    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+
+    for (MemoryArea* pMemArea : m_MemoryAreas)
+    {
+      if (pMemArea->IsCellPresent(rAddress))
+      {
+        if (pMemArea->IsCellPresent(rAddress.GetOffset()) == true)
+        {
+          auto spCell = pMemArea->GetCellData(rAddress.GetOffset());
+          if (spCell == nullptr)
+	    return false;
+          spCell->SetDefaultArchitectureTag(tagArch);
+          spCell->SetDefaultMode(Mode);
+          pMemArea->SetCellData(rAddress.GetOffset(), spCell);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
 bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force)
 {

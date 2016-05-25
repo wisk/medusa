@@ -72,8 +72,9 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
 
 MemoryArea const* Document::GetMemoryArea(Address const& rAddr) const
 {
-  if (m_spDatabase == nullptr)
+  if (m_spDatabase == nullptr) {
     return nullptr;
+  }
   return m_spDatabase->GetMemoryArea(rAddr);
 }
 
@@ -371,6 +372,11 @@ u8 Document::GetCellSubType(Address const& rAddr) const
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
     return Cell::CellType;
   return CurCellData.GetSubType();
+}
+
+void  Document::SetArchMemoryArea(Address const &rAddr, Tag TagArch, u8 Mode)
+{
+  m_spDatabase->SetArchMemoryArea(rAddr, TagArch, Mode);
 }
 
 bool Document::SetCell(Address const& rAddr, Cell::SPType spCell, bool Force)
@@ -728,6 +734,11 @@ bool Document::ContainsUnknown(Address const& rAddress) const
   return CurCellData.GetType() == Cell::ValueType && CurCellData.GetLength() == 1;
 }
 
+bool                          Document::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
+{
+  m_spDatabase->SetCellWithArchMode(rAddress, tagArch, Mode);
+}
+
 Tag Document::GetArchitectureTag(Address const& rAddress) const
 {
   Tag ArchTag = MEDUSA_ARCH_UNK;
@@ -736,8 +747,9 @@ Tag Document::GetArchitectureTag(Address const& rAddress) const
   if (spCell != nullptr)
   {
     ArchTag = spCell->GetArchitectureTag();
-    if (ArchTag != MEDUSA_ARCH_UNK)
+    if (ArchTag != MEDUSA_ARCH_UNK) {
       return ArchTag;
+    }
   }
   auto const pMemArea = GetMemoryArea(rAddress);
   if (pMemArea != nullptr)
@@ -746,7 +758,6 @@ Tag Document::GetArchitectureTag(Address const& rAddress) const
     if (ArchTag != MEDUSA_ARCH_UNK)
       return ArchTag;
   }
-
   return ArchTag;
 }
 
@@ -768,11 +779,11 @@ u8 Document::GetMode(Address const& rAddress) const
     if (spCellArch != nullptr)
     {
       Mode = spCellArch->GetDefaultMode(rAddress);
-      if (Mode != 0)
+      if (Mode != 0 && Mode != 1)
         return Mode;
     }
     Mode = spCell->GetMode();
-    if (Mode != 0)
+    if (Mode != 0 && Mode != 1)
       return Mode;
   }
 

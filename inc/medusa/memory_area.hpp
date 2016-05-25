@@ -54,12 +54,17 @@ public:
   /*    */Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag; }
   /*    */u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
 
+  // Set Architecture Tag and Mode
+  void                       SetDefaultArchitectureTag(Tag arch);
+  void                       SetDefaultArchitectureMode(u8 mode);
+
   virtual TOffset            GetFileOffset(void) const = 0;
   virtual u32                GetFileSize(void)   const = 0;
 
   // Cell methods
   virtual CellData::SPType GetCellData(TOffset Offset) const = 0;
   virtual bool           SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData) = 0;
   virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
 
   bool IsCellPresent(Address const& rAddress) const
@@ -68,6 +73,7 @@ public:
       return false;
     return IsCellPresent(rAddress.GetOffset());
   }
+
   bool IsCellPresent(TOffset Offset) const
   { return GetBaseAddress().IsBetween(GetSize(), Offset); }
 
@@ -118,6 +124,8 @@ public:
 
   virtual CellData::SPType GetCellData(TOffset Offset) const;
   virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
+
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;
@@ -172,7 +180,9 @@ public:
   virtual u32         GetFileSize(void)   const;
 
   virtual CellData::SPType GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
+virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
+virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
+bool                   SetCellWithArchMode(TOffset Offset, Tag Arch, u8 Mode); //
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;

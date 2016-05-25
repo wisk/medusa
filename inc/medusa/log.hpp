@@ -73,7 +73,7 @@ private:
 
   LoggerCallback   m_pLog;
   std::string      m_Name;
-  std::string&     m_rBuffer;
+  std::string      m_rBuffer;
   static MutexType m_Mutex;
   LogLevelType     m_Level;
 };

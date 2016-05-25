@@ -7,6 +7,70 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
+bool ModuleManager::LoadCommonFromModule(void * const pMod, Module & rModule)
+{
+  auto pGetArchitecture = rModule.Load<TGetArchitecture>(pMod, "GetArchitecture");
+  if (pGetArchitecture != nullptr)
+  {
+    return ActionLoad<medusa::Architecture*>(pGetArchitecture(),
+                                             "is an architecture", "unable to get architecture",
+                                             [this](medusa::Architecture* const pArchitecture)
+                                             {
+                                                 Architecture::SPType ArchitecturePtr(pArchitecture);
+                                                 m_Architectures.push_back(ArchitecturePtr);
+                                             });
+  }
+
+  auto pGetBinding = rModule.Load<TGetBinding>(pMod, "GetBinding");
+  if (pGetBinding != nullptr)
+  {
+    return ActionLoad<medusa::Binding*>(pGetBinding(), "is a binding", "unable to get binding",
+                                        [this, pGetBinding](medusa::Binding* const pBinding)
+                                        {
+                                            m_Bindings[pBinding->GetName()] = pGetBinding;
+                                            delete pBinding;
+                                        });
+  }
+
+  auto pGetDatabase = rModule.Load<TGetDatabase>(pMod, "GetDatabase");
+  if (pGetDatabase != nullptr)
+  {
+    return ActionLoad<medusa::Database*>(pGetDatabase(),
+                                         "is a database", "unable to get database",
+                                         [this](medusa::Database* const pDatabase)
+                                         {
+                                             Database::SPType spDatabase(pDatabase);
+                                             m_Databases.push_back(spDatabase);
+                                             return true;
+                                         });
+  }
+
+  auto pGetEmulator = rModule.Load<TGetEmulator>(pMod, "GetEmulator");
+  if (pGetEmulator != nullptr)
+  {
+    return ActionLoad<medusa::Emulator*>(pGetEmulator(nullptr, nullptr, nullptr),
+                                         "is an emulator", "unable to get emulator",
+                                         [this, pGetEmulator](medusa::Emulator* const pEmulator)
+                                         {
+                                             m_Emulators[pEmulator->GetName()] = pGetEmulator;
+                                             delete pEmulator;
+                                         });
+  }
+
+  auto pGetOperatingSystem = rModule.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
+  if (pGetOperatingSystem != nullptr)
+  {
+    return ActionLoad<medusa::OperatingSystem*>(pGetOperatingSystem(),
+                                                "is an operating system", "unable to get operating system",
+                                                [this](medusa::OperatingSystem* const pOperatingSystem)
+                                                {
+                                                    OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
+                                                    m_OperatingSystems.push_back(spOperatingSystem);
+                                                });
+  }
+  return false;
+}
+
 void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
 {
   try
@@ -18,9 +82,8 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
 
     boost::filesystem::directory_iterator End;
     for (boost::filesystem::directory_iterator It(CurDir);
-      It != End; ++It)
-    {
-      auto const& rFilename = It->path().string();
+      It != End; ++It) {
+      auto const &rFilename = It->path().string();
 
       if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
@@ -28,95 +91,14 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
       auto FullPath = boost::filesystem::system_complete(*It);
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
-      void* pMod = Module.Load(FullPath);
-      if (pMod == nullptr)
-      {
+      void *pMod = Module.Load(FullPath);
+      if (pMod == nullptr) {
         Log::Write("core") << "can't be loaded" << LogEnd;
         continue;
       }
 
-      auto pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
-      if (pGetArchitecture != nullptr)
-      {
-        Log::Write("core") << "is an architecture" << LogEnd;
-
-        auto pArchitecture = pGetArchitecture();
-        if (pArchitecture == nullptr)
-        {
-          Log::Write("core") << "unable to get architecture" << LogEnd;
-          continue;
-        }
-        Architecture::SPType ArchitecturePtr(pArchitecture);
-        m_Architectures.push_back(ArchitecturePtr);
-        continue;
-      }
-
-      auto pGetBinding = Module.Load<TGetBinding>(pMod, "GetBinding");
-      if (pGetBinding != nullptr)
-      {
-        Log::Write("core") << "is a binding" << LogEnd;
-
-        auto pBinding = pGetBinding();
-        if (pBinding == nullptr)
-        {
-          Log::Write("core") << "unable to get binding" << LogEnd;
-          continue;
-        }
-        m_Bindings[pBinding->GetName()] = pGetBinding;
-        delete pBinding;
-        
-        continue;
-      }
-
-      auto pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
-      if (pGetDatabase != nullptr)
-      {
-        Log::Write("core") << "is a database" << LogEnd;
-
-        auto pDatabase = pGetDatabase();
-        if (pDatabase == nullptr)
-        {
-          Log::Write("core") << "unable to get database" << LogEnd;
-          continue;
-        }
-        Database::SPType spDatabase(pDatabase);
-        m_Databases.push_back(spDatabase);
-        continue;
-      }
-
-      auto pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
-      if (pGetEmulator != nullptr)
-      {
-        Log::Write("core") << "is an emulator" << LogEnd;
-
-        auto pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
-        if (pEmulator == nullptr)
-        {
-          Log::Write("core") << "unable to get emulator" << LogEnd;
-          continue;
-        }
-        m_Emulators[pEmulator->GetName()] = pGetEmulator;
-        delete pEmulator;
-        continue;
-      }
-
-      auto pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
-      if (pGetOperatingSystem != nullptr)
-      {
-        Log::Write("core") << "is an operating system" << LogEnd;
-
-        auto pOperatingSystem = pGetOperatingSystem();
-        if (pOperatingSystem == nullptr)
-        {
-          Log::Write("core") << "unable to get operating system" << LogEnd;
-          continue;
-        }
-        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-        m_OperatingSystems.push_back(spOperatingSystem);
-        continue;
-      }
-
-      Log::Write("core") << "is unknown (ignored)" << LogEnd;
+      if (LoadCommonFromModule(pMod, Module) == false)
+        Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
   catch (std::exception &e)
@@ -173,88 +155,8 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
       }
 
-      auto pGetArchitecture = Module.Load<TGetArchitecture>(pMod, "GetArchitecture");
-      if (pGetArchitecture != nullptr)
-      {
-        Log::Write("core") << "is an architecture" << LogEnd;
-
-        auto pArchitecture = pGetArchitecture();
-        if (pArchitecture == nullptr)
-        {
-          Log::Write("core") << "unable to get architecture" << LogEnd;
-          continue;
-        }
-        Architecture::SPType ArchitecturePtr(pArchitecture);
-        m_Architectures.push_back(ArchitecturePtr);
-        continue;
-      }
-
-      auto pGetBinding = Module.Load<TGetBinding>(pMod, "GetBinding");
-      if (pGetBinding != nullptr)
-      {
-        Log::Write("core") << "is a binding" << LogEnd;
-
-        auto pBinding = pGetBinding();
-        if (pBinding == nullptr)
-        {
-          Log::Write("core") << "unable to get binding" << LogEnd;
-          continue;
-        }
-        m_Bindings[pBinding->GetName()] = pGetBinding;
-        delete pBinding;
-
-        continue;
-      }
-
-      auto pGetDatabase = Module.Load<TGetDatabase>(pMod, "GetDatabase");
-      if (pGetDatabase != nullptr)
-      {
-        Log::Write("core") << "is a database" << LogEnd;
-
-        auto pDatabase = pGetDatabase();
-        if (pDatabase == nullptr)
-        {
-          Log::Write("core") << "unable to get database" << LogEnd;
-          continue;
-        }
-        Database::SPType spDatabase(pDatabase);
-        m_Databases.push_back(spDatabase);
-        continue;
-      }
-
-      auto pGetEmulator = Module.Load<TGetEmulator>(pMod, "GetEmulator");
-      if (pGetEmulator != nullptr)
-      {
-        Log::Write("core") << "is an emulator" << LogEnd;
-
-        auto pEmulator = pGetEmulator(nullptr, nullptr, nullptr);
-        if (pEmulator == nullptr)
-        {
-          Log::Write("core") << "unable to get emulator" << LogEnd;
-          continue;
-        }
-        m_Emulators[pEmulator->GetName()] = pGetEmulator;
-        delete pEmulator;
-        continue;
-      }
-
-      auto pGetOperatingSystem = Module.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
-      if (pGetOperatingSystem != nullptr)
-      {
-        Log::Write("core") << "is an operating system" << LogEnd;
-
-        auto pOperatingSystem = pGetOperatingSystem();
-        if (pOperatingSystem == nullptr)
-        {
-          Log::Write("core") << "unable to get operating system" << LogEnd;
-          continue;
-        }
-        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-        m_OperatingSystems.push_back(spOperatingSystem);
-        continue;
-      }
-
-      Log::Write("core") << "is unknown (ignored)" << LogEnd;
+      if (LoadCommonFromModule(pMod, Module) == false)
+        Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
   catch (std::exception &e)
@@ -281,13 +183,19 @@ void ModuleManager::UnloadModules(void)
 
 Architecture::SPType ModuleManager::GetArchitecture(Tag ArchTag) const
 {
-  if (ArchTag == MEDUSA_ARCH_UNK)
+  if (ArchTag == MEDUSA_ARCH_UNK) {
     ArchTag = m_DefaultArchitectureTag;
+  }
 
-  auto itArch = m_TaggedArchitectures.find(ArchTag);
+  // UPDATE replace :
+  //auto itArch = m_TaggedArchitectures.find(ArchTag);
+  auto itArch = std::find_if(std::begin(m_TaggedArchitectures),
+                             std::end(m_TaggedArchitectures),
+                             [ArchTag](const std::pair<const unsigned int, std::shared_ptr<medusa::Architecture> > arch)
+                             { return (arch.first & ArchTag) == ArchTag;});
+
   if (itArch == std::end(m_TaggedArchitectures))
     return Architecture::SPType();
-
   return itArch->second;
 }
 
@@ -307,7 +215,6 @@ bool ModuleManager::RegisterArchitecture(Architecture::SPType spArch)
 {
   u8 Id = 0;
   bool FoundId = false;
-
   for (u8 i = 0; i < 32; ++i)
     if (!(m_ArchIdPool & (1 << i)))
     {
@@ -317,22 +224,34 @@ bool ModuleManager::RegisterArchitecture(Architecture::SPType spArch)
       break;
     }
 
-    if (FoundId == false)
-      return false;
+  if (FoundId == false)
+    return false;
 
-    spArch->UpdateId(Id);
+  spArch->UpdateId(Id);
 
-    m_TaggedArchitectures[spArch->GetTag()] = spArch;
+  m_TaggedArchitectures[spArch->GetTag()] = spArch;
 
-    if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
-      m_DefaultArchitectureTag = spArch->GetTag();
-
-    return true;
+  if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
+    m_DefaultArchitectureTag = spArch->GetTag();
+  return true;
 }
 
+// TODO: test this function
 bool ModuleManager::UnregisterArchitecture(Architecture::SPType spArch)
 {
-  return false; /* Not implemented */
+  Tag ArchTag = spArch->GetTag();
+  auto itArch = std::find_if(std::begin(m_TaggedArchitectures),
+                             std::end(m_TaggedArchitectures),
+                             [ArchTag](const std::pair<const unsigned int,
+                                       std::shared_ptr<medusa::Architecture> > arch)
+                             {
+                                 return (arch.first & ArchTag) == ArchTag;
+                             });
+
+  if (itArch == std::end(m_TaggedArchitectures))
+    return false;
+  m_TaggedArchitectures.erase(itArch);
+  return true; /* Not implemented */
 }
 
 void ModuleManager::ResetArchitecture(void)
@@ -375,9 +294,9 @@ OperatingSystem::SPType ModuleManager::GetOperatingSystem(Loader::SPType spLdr, 
 
 Database::SPType ModuleManager::GetDatabase(std::string const& rDatabaseName)
 {
-  for (auto itDb = std::begin(m_Databases); itDb != std::end(m_Databases); ++itDb)
-    if ((*itDb)->GetName() == rDatabaseName)
-      return *itDb;
+  for (auto itDb: m_Databases)
+    if (itDb->GetName() == rDatabaseName)
+      return itDb;
   return Database::SPType();
 }
 

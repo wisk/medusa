@@ -83,11 +83,11 @@ namespace pydusa
     catch (Exception const& e)
     {
       Log::Write("pydusa") << e.What() << LogEnd;
-      return false;
+      return nullptr;
     }
 
     Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
-    return false;
+    return nullptr;
   }
 
   struct HookCallbackProxy
@@ -144,11 +144,11 @@ void PydusaExecution(void)
     ;
 
   bp::enum_<Emulator::ReturnType>("Emulator")
-    .value("ERROR",    Emulator::Error)
-    .value("BREAK",    Emulator::Break)
-    .value("CONTINUE", Emulator::Continue)
-    .value("STOP",     Emulator::Stop)
-    ;
+          .value("ERROR",    Emulator::Error)
+          .value("BREAK",    Emulator::Break)
+          .value("CONTINUE", Emulator::Continue)
+          .value("STOP",     Emulator::Stop)
+          ;
 
   bp::class_<Execution, boost::noncopyable>("Execution", bp::init<Document&>())
     .def("init", pydusa::Execution_Initialize)

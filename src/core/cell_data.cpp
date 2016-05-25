@@ -20,4 +20,14 @@ std::string CellData::Dump(void) const
   return oss.str();
 }
 
+void    CellData::SetDefaultArchitectureTag(Tag archTag)
+{
+  m_ArchTag = archTag;
+}
+
+void    CellData::SetDefaultMode(u8 mode)
+{
+  m_Mode = mode;
+}
+
 MEDUSA_NAMESPACE_END
