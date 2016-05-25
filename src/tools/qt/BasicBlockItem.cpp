@@ -59,6 +59,8 @@ QVariant BasicBlockItem::itemChange(GraphicsItemChange change, const QVariant &v
     m_NeedRepaint = true;
     update();
     break;
+  default:
+    break;
   }
   return value;
 }

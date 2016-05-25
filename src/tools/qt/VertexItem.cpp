@@ -60,6 +60,8 @@ QVariant VertexItem::itemChange(GraphicsItemChange change, const QVariant &value
     m_NeedRepaint = true;
     update();
     break;
+  default:
+    break;
   }
   return value;
 }

@@ -816,14 +816,14 @@ bool TextDatabase::_MoveAddressBackward(Address const& rAddress, Address& rMoved
 
   u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
   if (static_cast<u64>(-Offset) <= CurMemAreaOff)
-    if (!(*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset))
     {
-      // TODO(wisk): this behavior is incorrect...
-      rMovedAddress = (*itMemArea)->GetBaseAddress();
+      if (!(*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset))
+	{
+	  // TODO(wisk): this behavior is incorrect...
+	  rMovedAddress = (*itMemArea)->GetBaseAddress();
+	}
       return true;
     }
-    else
-      return true;
   Offset += CurMemAreaOff;
 
   if (itMemArea == std::begin(m_MemoryAreas))

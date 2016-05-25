@@ -57,6 +57,7 @@ bool Architecture::FormatTypeDetail(TypeDetail const& rTypeDtl, PrintData& rPrin
   case TypeDetail::ClassType:     rPrintData.AppendKeyword("class").AppendSpace(); break;
   case TypeDetail::EnumType:      rPrintData.AppendKeyword("enum").AppendSpace(); break;
   case TypeDetail::StructureType: rPrintData.AppendKeyword("struct").AppendSpace(); break;
+  default:	break;
   }
 
   rPrintData.AppendKeyword(rTypeDtl.GetName());
@@ -65,6 +66,7 @@ bool Architecture::FormatTypeDetail(TypeDetail const& rTypeDtl, PrintData& rPrin
   {
   case TypeDetail::PointerType:   rPrintData.AppendOperator("*").AppendSpace(); break;
   case TypeDetail::ReferenceType: rPrintData.AppendOperator("&").AppendSpace(); break;
+  default:	break;
   }
 
   return true;

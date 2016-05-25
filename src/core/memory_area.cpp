@@ -272,8 +272,8 @@ bool MappedMemoryArea::MoveAddressForward(Address const& rAddress, Address& rMov
         // Check intoverflow
         auto CellDataLength = spCellData->GetLength();
         auto OffsetAfterMove = MovedOffset + spCellData->GetLength();
-	bool is_ovf = (MovedOffset > 0 && CellDataLength > 0 && OffsetAfterMove < 0)
-	  || (MovedOffset < 0 && CellDataLength < 0 && OffsetAfterMove > 0);
+	bool is_ovf = ((MovedOffset > 0) && (CellDataLength > 0) && (OffsetAfterMove < 0))
+	  || ((MovedOffset < 0) && (CellDataLength < 0) && (OffsetAfterMove > 0));
 
 	if (!is_ovf)
 	  MovedOffset += spCellData->GetLength();

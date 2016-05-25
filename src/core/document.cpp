@@ -736,7 +736,7 @@ bool Document::ContainsUnknown(Address const& rAddress) const
 
 bool                          Document::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
 {
-  m_spDatabase->SetCellWithArchMode(rAddress, tagArch, Mode);
+  return m_spDatabase->SetCellWithArchMode(rAddress, tagArch, Mode);
 }
 
 Tag Document::GetArchitectureTag(Address const& rAddress) const

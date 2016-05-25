@@ -18823,7 +18823,8 @@ stack.id -= int32(4);stack.mem = edi.id;
 **/
 bool X86Architecture::Table_1_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80186 && Mode != X86_Bit_64 && (Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
+  if (((m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80186) && (Mode != X86_Bit_64) && (Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize))
+      || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Pushad);
@@ -19076,7 +19077,8 @@ eax.id = stack.mem;stack.id += int32(4);
 **/
 bool X86Architecture::Table_1_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
 {
-    if (m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80186 && Mode != X86_Bit_64 && (Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize) || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
+  if (((m_CfgMdl.GetEnum("Architecture") >= X86_Arch_80186) && (Mode != X86_Bit_64) && (Mode == X86_Bit_16 && rInsn.Prefix() & X86_Prefix_AdSize))
+      || (Mode != X86_Bit_16 && !(rInsn.Prefix() & X86_Prefix_AdSize)))
     {
       rInsn.Length()++;
       rInsn.SetOpcode(X86_Opcode_Popad);

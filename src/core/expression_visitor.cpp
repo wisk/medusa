@@ -1278,10 +1278,12 @@ Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType
     if (auto spSymIdExpr = expr_cast<IdentifierExpression>(spCurExpr))
     {
       if (spSymIdExpr->GetId() == spIdExpr->GetId())
-        if (m_Update)
-          return rSymPair.second;
-        else
-          return rSymPair.first;
+	{
+	  if (m_Update)
+	    return rSymPair.second;
+	  else
+	    return rSymPair.first;
+	}
     }
   }
 

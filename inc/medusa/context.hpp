@@ -20,6 +20,8 @@ class Medusa_EXPORT CpuContext
 public:
   typedef std::list<u32> RegisterList;
 
+  virtual ~CpuContext() {}
+
   enum AddressKind
   {
     AddressUnknown,
