@@ -92,10 +92,13 @@ void PydusaExpression(py::module& rMod)
   // helpers used to create instance of a specific expression type
 
   rMod
-    .def("expr_make_bv", (Expression::SPType(*)(u16, ap_int))&Expr::MakeBitVector)
+    .def("expr_make_bv", (Expression::SPType(*)(BitVector const&))&Expr::MakeBitVector)
     .def("expr_make_bool", &Expr::MakeBoolean)
     .def("expr_make_id", &Expr::MakeId)
     .def("expr_make_mem", &Expr::MakeMem)
+    .def("expr_make_un_op", &Expr::MakeUnOp)
+    .def("expr_make_bin_op", &Expr::MakeBinOp)
+    .def("expr_make_assign", &Expr::MakeAssign)
     ;
 
   // exposing enumerations
@@ -137,6 +140,10 @@ void PydusaExpression(py::module& rMod)
     ;
 
   py::class_<IdentifierToVariable>(rMod, "IdentifierToVariable", py::base<ExpressionVisitor>())
+    .def(py::init<>())
+    ;
+
+  py::class_<SimplifyVisitor>(rMod, "SimplifyVisitor", py::base<ExpressionVisitor>())
     .def(py::init<>())
     ;
 

@@ -15,7 +15,7 @@ void PydusaAddress(py::module& rMod)
     .def(py::init<TBase, TOffset>())
 
     .def("__str__", &Address::ToString)
-    .def_property_readonly("base", &Address::GetBase)
-    .def_property_readonly("offset", &Address::GetOffset)
+    .def_property("base", &Address::GetBase, &Address::SetBase)
+    .def_property("offset", &Address::GetOffset, &Address::SetOffset)
   ;
 }

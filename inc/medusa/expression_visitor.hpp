@@ -152,6 +152,7 @@ public:
   bool FindAllPaths(int& rNumOfPathFound, Architecture& rArch, DestinationPathCallbackType DstPathCb);
 
 protected:
+  void _InsertExpression(Expression::SPType spKeyExpr, Expression::SPType spValExpr);
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
   typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;

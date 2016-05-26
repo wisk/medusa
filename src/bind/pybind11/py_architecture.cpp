@@ -17,5 +17,6 @@ void PydusaArchitecture(py::module& rMod)
     .def("get_endianness", &Architecture::GetEndianness)
     .def("format_cell",       &Architecture::FormatCell)
     .def("format_multicell",  &Architecture::FormatMultiCell)
+    .def_property_readonly("information", &Architecture::GetCpuInformation, py::return_value_policy::reference_internal)
     ;
 }

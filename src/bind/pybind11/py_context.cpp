@@ -239,13 +239,13 @@ void PydusaContext(py::module& rMod)
     .def("add_mapping", &CpuContext::AddMapping)
     .def("remove_mapping", &CpuContext::RemoveMapping)
     .def("translate",   pydusa::CpuContext_Translate)
-    .def_property_readonly("info", &CpuContext::GetCpuInformation, py::return_value_policy::reference_internal)
+    .def_property_readonly("information", &CpuContext::GetCpuInformation, py::return_value_policy::reference_internal)
     ;
 
   py::class_<MemoryContext>(rMod, "MemoryContext")
     .def("__str__",     &MemoryContext::ToString)
 
-    .def("alloc",       pydusa::MemoryContext_Allocate)
+    .def("allocate",       pydusa::MemoryContext_Allocate)
     .def("free",        &MemoryContext::FreeMemory)
     .def("size",        pydusa::MemoryContext_Size)
 

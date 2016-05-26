@@ -236,7 +236,8 @@ Expression::SPType CloneVisitor::VisitSymbolic(SymbolicExpression::SPType spSymE
   return Expr::MakeSym(
     spSymExpr->GetType(),
     spSymExpr->GetValue(),
-    spSymExpr->GetAddress());
+    spSymExpr->GetAddress(),
+    spSymExpr->GetExpression());
 }
 
 Expression::SPType FilterVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
@@ -1098,10 +1099,7 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
       }
     }
 
-    ExpressionRewriter ER(spSrcExpr);
-    ER.Execute();
-
-    m_SymCtxt[spDstExprVst] = spSrcExpr;
+    _InsertExpression(spDstExpr, spSrcExpr);
   }
 
   m_Update = OldUpdate;
@@ -1278,12 +1276,10 @@ Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType
     if (auto spSymIdExpr = expr_cast<IdentifierExpression>(spCurExpr))
     {
       if (spSymIdExpr->GetId() == spIdExpr->GetId())
-	{
-	  if (m_Update)
-	    return rSymPair.second;
-	  else
-	    return rSymPair.first;
-	}
+        if (m_Update)
+          return rSymPair.second;
+        else
+          return rSymPair.first;
     }
   }
 
@@ -1527,7 +1523,7 @@ std::string SymbolicVisitor::ToString(void) const
 
 bool SymbolicVisitor::BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate)
 {
-  m_SymCtxt[spKeyExpr] = spValueExpr;
+  _InsertExpression(spKeyExpr, spValueExpr);
 
   if (!Propagate)
     return true;
@@ -1541,7 +1537,7 @@ bool SymbolicVisitor::BindExpression(Expression::SPType spKeyExpr, Expression::S
       continue;
 
     Res = true;
-    m_SymCtxt[rSymPair.first] = spClonedExpr;
+    _InsertExpression(rSymPair.first, spClonedExpr);
   }
 
   return Res;
@@ -1620,7 +1616,7 @@ bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVis
       auto spClonedExpr = rSymPair.second->Clone();
       if (!updt(spClonedExpr))
         return false;
-      m_SymCtxt[rSymPair.first] = spClonedExpr;
+      _InsertExpression(rSymPair.first, spClonedExpr);
       return true;
     }
   }
@@ -1788,11 +1784,21 @@ bool SymbolicVisitor::FindAllPaths(int& rNumOfPathFound, Architecture& rArch, Sy
 
 Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)
 {
-  if (auto spTrkExpr = expr_cast<TrackExpression>(spExpr))
-    return spTrkExpr->GetTrackedExpression();
-  if (auto spSymExpr = expr_cast<SymbolicExpression>(spExpr))
-    return spSymExpr->GetExpression();
-  return spExpr;
+  class RemoveTrackOrSymbolicExpression : public CloneVisitor
+  {
+  public:
+    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr)
+    {
+      return spTrkExpr->GetTrackedExpression()->Visit(this);
+    }
+
+    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr)
+    {
+      return spSymExpr->GetExpression()->Visit(this);
+    }
+  } RemTrkOrSymVst;
+  auto p = spExpr->Visit(&RemTrkOrSymVst);
+  return p;
 }
 
 Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
@@ -1805,6 +1811,18 @@ Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
       return rSymPair.second;
   }
   return nullptr;
+}
+
+void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression::SPType spValExpr)
+{
+  ExpressionRewriter ER(spValExpr);
+  ER.Execute();
+
+  SimplifyVisitor SimVst;
+  auto spSimValExpr = spValExpr->Visit(&SimVst);
+  auto spSimKeyExpr = spKeyExpr->Visit(&SimVst);
+
+  m_SymCtxt[spSimKeyExpr] = spSimValExpr;
 }
 
 bool SymbolicVisitor::_EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const
@@ -1928,12 +1946,91 @@ Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::S
 
 Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  return nullptr;
+  auto spLeft  = spBinOpExpr->GetLeftExpression() ->Visit(this);
+  auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
+
+  auto spBvLeft  = expr_cast<BitVectorExpression>(spLeft );
+  auto spBvRight = expr_cast<BitVectorExpression>(spRight);
+
+  // NOTE(wisk): this expression should be evaluate before
+  if (spBvLeft != nullptr && spBvRight != nullptr)
+    return Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spLeft, spRight);
+
+  auto TestZero = [](BitVectorExpression::SPType spBv)
+  {
+    return (spBv != nullptr && spBv->GetInt().GetUnsignedValue() == 0x0);
+  };
+
+  auto TestOne = [](BitVectorExpression::SPType spBv)
+  {
+    return (spBv != nullptr && spBv->GetInt().GetUnsignedValue() == 0x1);
+  };
+
+  auto TestMinusOne = [](BitVectorExpression::SPType spBv)
+  {
+    return (spBv != nullptr && spBv->GetInt().GetSignedValue() == -1);
+  };
+
+  switch (spBinOpExpr->GetOperation())
+  {
+  default: break;
+
+  // a | 0 = a // 0 | b = b
+  // a + 0 = a // 0 + b = b
+  case OperationExpression::OpOr:
+  case OperationExpression::OpAdd:
+  {
+    if (TestZero(spBvLeft))
+      return spRight;
+    if (TestZero(spBvRight))
+      return spLeft;
+    break;
+  }
+
+  // a - 0 = a
+  case OperationExpression::OpSub:
+  {
+    if (TestZero(spBvRight))
+      return spLeft;
+  }
+
+  // a * 1 = a // 1 * b = b
+  case OperationExpression::OpMul:
+  {
+    if (TestOne(spBvLeft))
+      return spRight;
+    if (TestOne(spBvRight))
+      return spLeft;
+    break;
+  }
+
+  // a & -1 = a // -1 & b = b
+  case OperationExpression::OpAnd:
+  {
+    if (TestMinusOne(spBvLeft))
+      return spRight;
+    if (TestMinusOne(spBvRight))
+      return spLeft;
+    break;
+  }
+
+  // a ^ b = 0 if a == b
+  case OperationExpression::OpXor:
+  {
+    if (spLeft->Compare(spRight) == Expression::CmpIdentical)
+      return Expr::MakeBitVector(spLeft->GetBitSize(), 0x0);
+    break;
+  }
+
+  }
+
+  return Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spLeft, spRight);
 }
 
 Expression::SPType SimplifyVisitor::VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr)
 {
-  return nullptr;
+  // TODO(wisk): evaluate condition if possible
+  return spIfElseExpr;
 }
 
 MEDUSA_NAMESPACE_END

@@ -124,8 +124,23 @@ namespace pydusa
   }
 }
 
+void InitBitVector(BitVector& rInstance, u16 BitSize, py::int_& rValue)
+{
+  rInstance = BitVector(BitSize, rValue.cast<u64>());
+}
+
 void PydusaMedusa(py::module& rMod)
 {
+
+  // TODO(wisk): move this to py_types.cpp
+  py::class_<ap_int>(rMod, "ap_int")
+    .def("__init__", [](ap_int& rInstance, py::int_& rValue) { rInstance = ap_int(rValue.cast<u64>()); })
+    ;
+  py::class_<BitVector>(rMod, "BitVector")
+    .def("__init__", &InitBitVector)
+    .def("__str__", &BitVector::ToString)
+    ;
+
   py::class_<Medusa>(rMod, "Medusa")
     .def(py::init<>())
 
