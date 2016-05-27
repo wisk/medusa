@@ -15,7 +15,7 @@ namespace pydusa
   {
     T RegVal;
     if (!pCpuCtxt->ReadRegister(Reg, RegVal))
-      return py::object();
+      return py::none();
     return py::cast(RegVal);
   }
 
@@ -23,7 +23,7 @@ namespace pydusa
   {
     Address ExecAddr;
     if (!pCpuCtxt->GetAddress(CpuContext::AddressExecution, ExecAddr))
-      return py::object();
+      return py::none();
     return py::cast(ExecAddr);
   }
 
@@ -38,7 +38,7 @@ namespace pydusa
 
     auto Reg = rCpuInfo.ConvertNameToIdentifier(rAttrName);
     if (Reg == 0)
-      return py::object();
+      return py::none();
 
     auto RegSize = rCpuInfo.GetSizeOfRegisterInBit(Reg);
     switch (RegSize)
@@ -48,7 +48,7 @@ namespace pydusa
     case 16: return ReadRegister<u16 >(pCpuCtxt, Reg);
     case 32: return ReadRegister<u32 >(pCpuCtxt, Reg);
     case 64: return ReadRegister<u64 >(pCpuCtxt, Reg);
-    default: return py::object();
+    default: return py::none();
     }
   }
 
@@ -97,16 +97,16 @@ namespace pydusa
   {
     u64 LinAddr = 0;
     if (!pCpuCtxt->Translate(rAddr, LinAddr))
-      return py::object();
+      return py::none();
     return py::cast(LinAddr);
   }
 
-  py::object MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size, u32 Flags)
+  py::bytes MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size, u32 Flags)
   {
     void* pRawMem = nullptr;
     if (!pMemCtxt->AllocateMemory(LinAddr, Size, Flags, &pRawMem))
-      return py::object();
-    return py::cast(std::string(reinterpret_cast<char const*>(pRawMem), 0, Size));
+      return py::none();
+    return py::bytes(std::string(reinterpret_cast<char const*>(pRawMem), 0, Size));
   }
 
   py::object MemoryContext_Size(MemoryContext* pMemCtxt, u64 LinAddr)
@@ -124,7 +124,7 @@ namespace pydusa
     });
 
     if (!Found)
-      return py::object();
+      return py::none();
     return py::cast(Size);
   }
 
@@ -143,12 +143,12 @@ namespace pydusa
     return MemChunks;
   }
 
-  py::object MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
+  py::bytes MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
   {
     std::unique_ptr<char[]> upBuffer(new char[Size]);
     if (!pMemCtxt->ReadMemory(LinAddr, upBuffer.get(), Size))
-      return py::object();
-    return py::cast(std::string(upBuffer.get(), 0, Size));
+      return py::none();
+    return std::string(upBuffer.get(), Size);
   }
 
   template<typename _Ty>
@@ -156,7 +156,7 @@ namespace pydusa
   {
     _Ty Val;
     if (!pMemCtxt->ReadMemory(LinAddr, Val))
-      return py::object();
+      return py::none();
     return py::cast(Val);
   }
 
@@ -184,7 +184,7 @@ namespace pydusa
       Res += CurChr;
       ++LinAddr;
     }
-    return py::object();
+    return py::none();
   }
 
   // TODO(wisk): use a real conversion utf16 to utf8
@@ -200,7 +200,7 @@ namespace pydusa
       Res += CurChr;
       LinAddr += 2;
     }
-    return py::object();
+    return py::none();
   }
 
   bool MemoryContext_WriteBuffer(MemoryContext* pMemCtxt, u64 LinAddr, std::string const& rBuf)

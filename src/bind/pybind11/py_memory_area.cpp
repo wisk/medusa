@@ -14,7 +14,7 @@ namespace pydusa
   {
     Address MovedAddr;
     if (!pMemArea->MoveAddress(rAddress, MovedAddr, Offset))
-      return py::object();
+      return py::none();
     return py::cast(MovedAddr);
   }
 }

@@ -161,22 +161,25 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
     return false;
 
   static u64 s_FakeAddr = 0xdead7700; // FIXME: this is a dirty hack
-  auto const& rAddr   = m_rDoc.GetAddressFromLabelName(rFuncName);
-  auto const& rLbl    = m_rDoc.GetLabelFromAddress(rAddr);
+  auto const& rAddr     = m_rDoc.GetAddressFromLabelName(rFuncName);
+  auto const& rLbl      = m_rDoc.GetLabelFromAddress(rAddr);
 
-  if (rLbl.GetType() & (Label::Imported | Label::Function))
-  {
-    auto const* pCpuInfo = m_spArch->GetCpuInformation();
-    if (pCpuInfo == nullptr)
-      return false;
+  if (!rLbl.IsImported())
+    return false;
+  // FIXME(wisk): sometime it's almost impossible to determine if a imported symbol is a function or a variable...
+  //if (!rLbl.IsFunction())
+  //  return false;
 
-    auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
-    if (PcSize == 0)
-      return false;
+  auto const* pCpuInfo = m_spArch->GetCpuInformation();
+  if (pCpuInfo == nullptr)
+    return false;
 
-    if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
-      return false;
-  }
+  auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
+  if (PcSize == 0)
+    return false;
+
+  if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
+    return false;
 
   {
     std::lock_guard<std::mutex> Lock(m_HookMutex);

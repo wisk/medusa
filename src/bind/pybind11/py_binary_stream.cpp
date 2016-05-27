@@ -16,7 +16,7 @@ namespace pydusa
   {
     std::unique_ptr<char[]> upBuffer(new char[Size]);
     if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
-      return py::object();
+      return py::none();
     return py::str(std::string(upBuffer.get(), 0, Size));
   }
 
@@ -29,7 +29,7 @@ namespace pydusa
   {
     std::unique_ptr<char[]> upBuffer(new char[Size]);
     if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
-      return py::object();
+      return py::none();
     return py::str(std::string(upBuffer.get(), 0, Size));
   }
 }

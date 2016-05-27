@@ -45,7 +45,10 @@ namespace pydusa
 
         auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
         if (pGetDbText == nullptr)
+        {
+          Log::Write("pydusa") << "failed to get db_text" << LogEnd;
           return nullptr;
+        }
         auto spDbText = medusa::Database::SPType(pGetDbText());
 
         spDbText->SetBinaryStream(spModBinStrm);
@@ -85,6 +88,14 @@ namespace pydusa
   {
     return pExecution->Hook(rLabelName, Type, Callback);
   }
+
+  u64 Execution_GetFunctionParameter(Execution* pExecution, std::string const& rCallConv, u32 ParamNo)
+  {
+    BitVector ParamVal;
+    if (!pExecution->GetFunctionParameter(rCallConv, ParamNo, ParamVal))
+      return py::none();
+    return ParamVal.ConvertTo<u64>();
+  }
 }
 
 void PydusaExecution(py::module& rMod)
@@ -117,7 +128,7 @@ void PydusaExecution(py::module& rMod)
     .def("hook_imported_function", &Execution::HookFunction)
     .def("get_hook_name", &Execution::GetHookName)
     .def("get_hook_address", &Execution::GetHookAddress)
-    .def("get_function_parameter", &Execution::GetFunctionParameter)
+    .def("get_function_parameter", pydusa::Execution_GetFunctionParameter)
     .def("return_from_function", &Execution::ReturnFromFunction)
     .def_property_readonly("cpu", &Execution::GetCpuContext, py::return_value_policy::reference_internal)
     .def_property_readonly("mem", &Execution::GetMemoryContext, py::return_value_policy::reference_internal)

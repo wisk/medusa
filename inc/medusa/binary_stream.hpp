@@ -141,11 +141,11 @@ public:
   {
     if (Position > m_Size)
       return 0;
-    u16 Limit = static_cast<u16>(static_cast<u64>(m_Size) - Position); // TODO m_Size should be u64?
+    auto Limit = static_cast<TOffset>(m_Size) - Position; // TODO m_Size should be u64?
     if (Limit == 0)
       return 0;
     char const* pDst = static_cast<char const*>(m_pBuffer) + Position;
-    u16 StrLen = static_cast<u16>(::strnlen(pDst, Limit));
+    auto StrLen = static_cast<u16>(::strnlen(pDst, Limit));
     if (pDst[StrLen] != '\0')
       return 0;
     return StrLen;

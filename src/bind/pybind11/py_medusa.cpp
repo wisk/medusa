@@ -59,20 +59,20 @@ namespace pydusa
     return pCore->GetCell(rAddress);
   }
 
-  static py::object Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
+  static py::str Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
   {
     if (spCell == nullptr)
-      return py::object();
+      return py::none();
 
     auto const& rModMgr = ModuleManager::Instance();
     auto spArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
     if (spArch == nullptr)
-      return py::object();
+      return py::none();
 
     PrintData PD;
     PD.PrependAddress(false);
     if (!spArch->FormatCell(pCore->GetDocument(), rAddress, *spCell, PD))
-      return py::object();
+      return py::none();
 
     return py::cast(PD.GetTexts());
   }

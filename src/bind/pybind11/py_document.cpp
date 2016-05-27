@@ -45,18 +45,12 @@ namespace pydusa
       pDoc->SetCellWithArchMode(rAddr, arch, Mode);
     }
   }
-  /*
-  bool                          MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool                          GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
-  bool                          GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  bool                          GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
-  */
 
   py::object Document_MoveAddress(Document const* pDocument, Address const& rAddr, s64 Offset)
   {
     Address MovedAddr;
     if (!pDocument->MoveAddress(rAddr, MovedAddr, Offset))
-      return py::object();
+      return py::none();
     return py::cast(MovedAddr);
   }
 
@@ -64,7 +58,7 @@ namespace pydusa
   {
     Address PrevAddr;
     if (!pDocument->GetPreviousAddress(rAddr, PrevAddr))
-      return py::object();
+      return py::none();
     return py::cast(PrevAddr);
   }
 
@@ -72,7 +66,7 @@ namespace pydusa
   {
     Address NextAddr;
     if (!pDocument->GetNextAddress(rAddr, NextAddr))
-      return py::object();
+      return py::none();
     return py::cast(NextAddr);
   }
 
@@ -80,14 +74,14 @@ namespace pydusa
   {
     Address NearestAddr;
     if (!pDocument->GetNearestAddress(rAddr, NearestAddr))
-      return py::object();
+      return py::none();
     return py::cast(NearestAddr);
   }
 }
 
 void PydusaDocument(py::module& rMod)
 {
-  py::class_<Document>(rMod, "Document")
+  py::class_<Document, std::shared_ptr<Document>>(rMod, "Document")
     .def_property_readonly("memory_areas", pydusa::Document_MemoryAreas)
     .def_property_readonly("labels", pydusa::Document_Labels)
     .def("get_label", &Document::GetLabelFromAddress)
