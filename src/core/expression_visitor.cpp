@@ -1966,9 +1966,13 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return (spBv != nullptr && spBv->GetInt().GetUnsignedValue() == 0x1);
   };
 
-  auto TestMinusOne = [](BitVectorExpression::SPType spBv)
+  auto TestAllOnes = [](BitVectorExpression::SPType spBv)
   {
-    return (spBv != nullptr && spBv->GetInt().GetSignedValue() == -1);
+    if (spBv == nullptr)
+      return false;
+    BitVector Mask(spBv->GetBitSize(), 0);
+    Mask -= BitVector(spBv->GetBitSize(), 1);
+    return spBv->GetInt().GetUnsignedValue() == Mask.GetUnsignedValue();
   };
 
   switch (spBinOpExpr->GetOperation())
@@ -2007,9 +2011,9 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   // a & -1 = a // -1 & b = b
   case OperationExpression::OpAnd:
   {
-    if (TestMinusOne(spBvLeft))
+    if (TestAllOnes(spBvLeft))
       return spRight;
-    if (TestMinusOne(spBvRight))
+    if (TestAllOnes(spBvRight))
       return spLeft;
     break;
   }

@@ -124,16 +124,7 @@ endif()
 ## LLVM
 
 if (MEDUSA_BUILD_WITH_LLVM)
-  ExternalProject_add(llvm
-    PREFIX llvm
-    GIT_REPOSITORY https://github.com/llvm-mirror/llvm
-    GIT_TAG origin/release_37
 
-    SOURCE_DIR  "${CMAKE_SOURCE_DIR}/deps/llvm"
-    INSTALL_DIR "${CMAKE_BINARY_DIR}"
-  )
-
-  ExternalProject_get_property(llvm INSTALL_DIR)
   #set(LLVM_ROOT ${INSTALL_DIR})
   #set(LLVM_ROOT_DEBUG ${INSTALL_DIR})
   #set(LLVM_ROOT_RELEASE ${INSTALL_DIR})
