@@ -100,7 +100,7 @@ namespace pydusa
 
 void PydusaExecution(py::module& rMod)
 {
-  py::enum_<u32>(rMod, "Hook")
+  py::enum_<Emulator::HookType>(rMod, "Hook")
     .value("UNKNOWN", Emulator::HookUnknown)
     .value("READ",    Emulator::HookOnRead)
     .value("WRITE",   Emulator::HookOnWrite)

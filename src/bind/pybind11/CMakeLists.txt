@@ -1,11 +1,14 @@
-cmake_minimum_required(VERSION 2.8)
-
 include(ExternalProject)
+
 ExternalProject_add(pybind11
-  PREFIX pybind11
-  GIT_REPOSITORY https://github.com/pybind/pybind11
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
+  PREFIX            "pybind11"
+
+  GIT_REPOSITORY    "https://github.com/pybind/pybind11"
+  GIT_TAG           "master"
+
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
 )
 ExternalProject_get_property(pybind11 SOURCE_DIR)
 include_directories("${SOURCE_DIR}/include")
@@ -73,6 +76,7 @@ set_target_properties(bind_python PROPERTIES FOLDER "Bindings")
 add_library(pydusa SHARED ${SRC})
 target_link_libraries(pydusa Medusa ${PYTHON_LIBRARY})
 set_target_properties(pydusa PROPERTIES FOLDER "Bindings")
+add_dependencies(pydusa pybind11)
 
 set_target_properties(pydusa PROPERTIES PREFIX "")
 
