@@ -37,12 +37,6 @@ public:
   typedef boost::bimap<Address, Label>               LabelBimapType;
   typedef boost::signals2::connection                ConnectionType;
 
-  enum	ESetArchMode
-  {
-      ByMemoryArea,
-      ByCell,
-  };
-
   class Medusa_EXPORT Subscriber
   {
     friend class Document;
@@ -181,9 +175,7 @@ public:
                                  */
   bool                          SetCell(Address const& rAddr, Cell::SPType spCell, bool Force = false);
   bool                          SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force = false);
-  bool                          SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode);
-
-  void                          SetArchMemoryArea(Address const& rAddr, Tag TagArch, u8 Mode);
+  bool                          SetArchitecture(Address const& rAddr, Tag TagArch, u8 Mode, Database::SetArchitectureModeType SetArchMode);
 
   bool                          DeleteCell(Address const& rAddr);
 

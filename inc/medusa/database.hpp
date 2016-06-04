@@ -21,6 +21,12 @@ MEDUSA_NAMESPACE_BEGIN
 class Medusa_EXPORT Database : public IsConfigurable
 {
 public:
+  enum SetArchitectureModeType
+  {
+    ByCell,
+    ByMemoryArea,
+  };
+
   typedef std::shared_ptr<Database> SPType;
   typedef std::vector<SPType> VSPType;
 
@@ -59,8 +65,7 @@ public:
   virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const = 0;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const = 0;
-  virtual void              SetArchMemoryArea(Address const& rAddress, Tag TagArch, u8 Mode) = 0;
-  virtual bool              SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode) = 0;
+  virtual bool              SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, SetArchitectureModeType SetArchMode) = 0;
 
   // Address
   virtual bool GetFirstAddress(Address& rAddress) const = 0;

@@ -31,19 +31,12 @@ namespace pydusa
     return Labels;
   }
 
-  static void   Set_Addr_Arch_Mode(Document* pDoc, Address const& rAddr, const char* s_TagArch, u8 Mode,
-                                   Document::ESetArchMode Flag)
+  static bool Document_SetAddressArchitectureMode(Document* pDoc, Address const& rAddr, const char* pTagArch, u8 Mode,
+                                   Database::SetArchitectureModeType SetArchMode)
   {
-    //const char* s_TagArch = bp::extract<char*>(TagArch);
-    Tag arch = static_cast<Tag>(MEDUSA_MAKE_TAG(s_TagArch[0], s_TagArch[1], s_TagArch[2], 0));
+    Tag ArchTag = static_cast<Tag>(MEDUSA_MAKE_TAG(pTagArch[0], pTagArch[1], pTagArch[2], 0));
 
-    if (Flag == Document::ByMemoryArea) {
-      pDoc->SetArchMemoryArea(rAddr, arch, Mode);
-
-    }
-    else if (Flag == Document::ByCell) {
-      pDoc->SetCellWithArchMode(rAddr, arch, Mode);
-    }
+    return pDoc->SetArchitecture(rAddr, ArchTag, Mode, SetArchMode);
   }
 
   py::object Document_MoveAddress(Document const* pDocument, Address const& rAddr, s64 Offset)
@@ -86,7 +79,7 @@ void PydusaDocument(py::module& rMod)
     .def_property_readonly("labels", pydusa::Document_Labels)
     .def("get_label", &Document::GetLabelFromAddress)
     .def("get_label_address", &Document::GetAddressFromLabelName)
-    .def("set_address_architecture_mode", pydusa::Set_Addr_Arch_Mode)
+    .def("set_address_architecture_mode", pydusa::Document_SetAddressArchitectureMode)
 
     .def("get_architecture_tag", &Document::GetArchitectureTag)
     .def("get_mode", &Document::GetMode)
@@ -97,8 +90,8 @@ void PydusaDocument(py::module& rMod)
     .def("get_nearest_address", pydusa::Document_GetNearestAddress)
   ;
 
-  py::enum_<Document::ESetArchMode>(rMod, "ESetArchMode")
-    .value("MEMORY", Document::ESetArchMode::ByMemoryArea)
-    .value("CELL", Document::ESetArchMode::ByCell)
+  py::enum_<Database::SetArchitectureModeType>(rMod, "SetArchMode")
+    .value("MEMORY", Database::SetArchitectureModeType::ByMemoryArea)
+    .value("CELL", Database::SetArchitectureModeType::ByCell)
     ;
 }

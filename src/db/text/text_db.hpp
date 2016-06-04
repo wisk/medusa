@@ -60,6 +60,8 @@ public:
   virtual bool UnregisterArchitectureTag(Tag ArchitectureTag);
   virtual std::list<Tag> GetArchitectureTags(void) const;
 
+  virtual bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode);
+
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea);
   //virtual RemoveMemoryArea // not implemented
@@ -67,7 +69,6 @@ public:
   virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const;
 
   virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const;
-  virtual void              SetArchMemoryArea(Address const& rAddress, Tag TagArch, u8 Mode);
 
   // Address
   virtual bool GetFirstAddress(Address& rAddress) const;
@@ -105,7 +106,6 @@ public:
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData);
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode);
   virtual bool DeleteCellData(Address const& rAddress);
 
   // Comment

@@ -374,9 +374,11 @@ u8 Document::GetCellSubType(Address const& rAddr) const
   return CurCellData.GetSubType();
 }
 
-void  Document::SetArchMemoryArea(Address const &rAddr, Tag TagArch, u8 Mode)
+bool Document:: SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, Database::SetArchitectureModeType SetArchMode)
 {
-  m_spDatabase->SetArchMemoryArea(rAddr, TagArch, Mode);
+  if (m_spDatabase == nullptr)
+    return false;
+  return m_spDatabase->SetArchitecture(rAddress, TagArch, Mode, SetArchMode);
 }
 
 bool Document::SetCell(Address const& rAddr, Cell::SPType spCell, bool Force)
@@ -732,11 +734,6 @@ bool Document::ContainsUnknown(Address const& rAddress) const
     return false;
 
   return CurCellData.GetType() == Cell::ValueType && CurCellData.GetLength() == 1;
-}
-
-bool Document::SetCellWithArchMode(Address const& rAddress, Tag tagArch, u8 Mode)
-{
-  return m_spDatabase->SetCellWithArchMode(rAddress, tagArch, Mode);
 }
 
 Tag Document::GetArchitectureTag(Address const& rAddress) const

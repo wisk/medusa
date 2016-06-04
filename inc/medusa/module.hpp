@@ -21,7 +21,7 @@ public:
   Module(void) {}
   ~Module(void) {}
 
-  void* Load(boost::filesystem::path const& ModulePath)
+  void* Load(Path const& ModulePath)
   {
     return ImplLoadLibrary(ModulePath);
   }
@@ -29,7 +29,7 @@ public:
   static char const* GetExtension(void);
 
   template<typename FuncType>
-  FuncType Load(boost::filesystem::path const& ModulePath, std::string const& FunctionName)
+  FuncType Load(Path const& ModulePath, std::string const& FunctionName)
   {
     void* pModule = ImplLoadLibrary(ModulePath);
     if (pModule == nullptr)
@@ -125,13 +125,15 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
-  template<typename pTypeModule>
-  bool ActionLoad(pTypeModule pModule,
-                               std::string const MsgModule,
-                               std::string const MsgError,
-                               std::function<void (pTypeModule)> pFct)
+  template<typename ModuleType>
+  bool ActionLoad(
+      Path const& rModulePath,
+      ModuleType pModule,
+      std::string const MsgModule,
+      std::string const MsgError,
+      std::function<void (ModuleType)> pFct)
   {
-    Log::Write("core") << MsgModule << LogEnd;
+    Log::Write("core") << rModulePath.string() << MsgModule << LogEnd;
     if (pModule == nullptr)
     {
       Log::Write("core") << MsgError << LogEnd;
@@ -143,7 +145,7 @@ public:
 
   void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
-  bool LoadCommonFromModule(void * const pModule, Module & rModule);
+  bool LoadCommonFromModule(Path const& rModulePath, void* const pModule, Module & rModule);
   void UnloadModules(void);
 
   // Architecture

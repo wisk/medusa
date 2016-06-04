@@ -7,71 +7,82 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-bool ModuleManager::LoadCommonFromModule(void * const pMod, Module & rModule)
+bool ModuleManager::LoadCommonFromModule(Path const& rModulePath, void* const pMod, Module & rModule)
 {
   auto pGetArchitecture = rModule.Load<TGetArchitecture>(pMod, "GetArchitecture");
   if (pGetArchitecture != nullptr)
   {
-    return ActionLoad<medusa::Architecture*>(pGetArchitecture(),
-                                             "is an architecture", "unable to get architecture",
-                                             [this](medusa::Architecture* const pArchitecture)
-                                             {
-                                                 Architecture::SPType ArchitecturePtr(pArchitecture);
-                                                 m_Architectures.push_back(ArchitecturePtr);
-                                             });
+    return ActionLoad<medusa::Architecture*>(
+      rModulePath,
+      pGetArchitecture(),
+      "is an architecture", "unable to get architecture",
+      [this](medusa::Architecture* const pArchitecture)
+      {
+        Architecture::SPType ArchitecturePtr(pArchitecture);
+        m_Architectures.push_back(ArchitecturePtr);
+      });
   }
 
   auto pGetBinding = rModule.Load<TGetBinding>(pMod, "GetBinding");
   if (pGetBinding != nullptr)
   {
-    return ActionLoad<medusa::Binding*>(pGetBinding(), "is a binding", "unable to get binding",
-                                        [this, pGetBinding](medusa::Binding* const pBinding)
-                                        {
-                                            m_Bindings[pBinding->GetName()] = pGetBinding;
-                                            delete pBinding;
-                                        });
+    return ActionLoad<medusa::Binding*>(
+      rModulePath,
+      pGetBinding(),
+      "is a binding", "unable to get binding",
+      [this, pGetBinding](medusa::Binding* const pBinding)
+      {
+      m_Bindings[pBinding->GetName()] = pGetBinding;
+      delete pBinding;
+      });
   }
 
   auto pGetDatabase = rModule.Load<TGetDatabase>(pMod, "GetDatabase");
   if (pGetDatabase != nullptr)
   {
-    return ActionLoad<medusa::Database*>(pGetDatabase(),
-                                         "is a database", "unable to get database",
-                                         [this](medusa::Database* const pDatabase)
-                                         {
-                                             Database::SPType spDatabase(pDatabase);
-                                             m_Databases.push_back(spDatabase);
-                                             return true;
-                                         });
+    return ActionLoad<medusa::Database*>(
+      rModulePath,
+      pGetDatabase(),
+      "is a database", "unable to get database",
+      [this](medusa::Database* const pDatabase)
+      {
+        Database::SPType spDatabase(pDatabase);
+        m_Databases.push_back(spDatabase);
+        return true;
+      });
   }
 
   auto pGetEmulator = rModule.Load<TGetEmulator>(pMod, "GetEmulator");
   if (pGetEmulator != nullptr)
   {
-    return ActionLoad<medusa::Emulator*>(pGetEmulator(nullptr, nullptr, nullptr),
-                                         "is an emulator", "unable to get emulator",
-                                         [this, pGetEmulator](medusa::Emulator* const pEmulator)
-                                         {
-                                             m_Emulators[pEmulator->GetName()] = pGetEmulator;
-                                             delete pEmulator;
-                                         });
+    return ActionLoad<medusa::Emulator*>(
+      rModulePath,
+      pGetEmulator(nullptr, nullptr, nullptr),
+      "is an emulator", "unable to get emulator",
+      [this, pGetEmulator](medusa::Emulator* const pEmulator)
+      {
+        m_Emulators[pEmulator->GetName()] = pGetEmulator;
+        delete pEmulator;
+      });
   }
 
   auto pGetOperatingSystem = rModule.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
   if (pGetOperatingSystem != nullptr)
   {
-    return ActionLoad<medusa::OperatingSystem*>(pGetOperatingSystem(),
-                                                "is an operating system", "unable to get operating system",
-                                                [this](medusa::OperatingSystem* const pOperatingSystem)
-                                                {
-                                                    OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-                                                    m_OperatingSystems.push_back(spOperatingSystem);
-                                                });
+    return ActionLoad<medusa::OperatingSystem*>(
+      rModulePath,
+      pGetOperatingSystem(),
+      "is an operating system", "unable to get operating system",
+      [this](medusa::OperatingSystem* const pOperatingSystem)
+      {
+        OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
+        m_OperatingSystems.push_back(spOperatingSystem);
+      });
   }
   return false;
 }
 
-void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
+void ModuleManager::LoadDatabases(Path const& rModPath)
 {
   try
   {
@@ -97,7 +108,7 @@ void ModuleManager::LoadDatabases(boost::filesystem::path const& rModPath)
         continue;
       }
 
-      if (LoadCommonFromModule(pMod, Module) == false)
+      if (LoadCommonFromModule(rModPath, pMod, Module) == false)
         Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
@@ -155,7 +166,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
       }
 
-      if (LoadCommonFromModule(pMod, Module) == false)
+      if (LoadCommonFromModule(rModPath, pMod, Module) == false)
         Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
