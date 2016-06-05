@@ -82,7 +82,9 @@ endif()
 
 set(MEDUSA_BOOST_MIN_VERSION 1.55)
 
-set(Boost_USE_STATIC_LIBS OFF)
+if (MSVC)
+  set(Boost_USE_STATIC_LIBS TRUE)
+endif()
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 ## OGDF

@@ -51,7 +51,7 @@ public:
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
-  Expression::LSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
+  Expression::VSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
 
 protected:
   void _Evaluate(Expression::SPType spExpr);
@@ -60,7 +60,7 @@ protected:
 
   Matcher m_ExprMatcher;
   size_t m_NbrOfResult;
-  Expression::LSPType m_MatchedExprs;
+  Expression::VSPType m_MatchedExprs;
 };
 
 class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
@@ -137,9 +137,11 @@ public:
   bool IsRelative(void) const { return m_IsRelative; }
   bool IsMemoryReference(void) const { return m_IsMemoryReference; }
 
-  Expression::SPType  GetExpression(Expression::SPType spExpr);
-  Expression::VSPType GetExpressions(void) const;
-  Expression::SPType  FindExpression(Expression::SPType spExpr);
+  static Expression::SPType  RemoveExpressionAnnotations(Expression::SPType spExpr);
+  Expression::SPType         GetValue(Expression::SPType spExpr) const;
+  Expression::VSPType        FindExpressionsByKey(Expression::SPType spPatExpr) const;
+  Expression::VSPType        FindExpressionsByValue(Expression::SPType spPatExpr) const;
+  Expression::VSPType        FindExpressionsByUse(Expression::SPType spPatExpr) const;
 
   std::string ToString(void) const;
   bool BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate = false);

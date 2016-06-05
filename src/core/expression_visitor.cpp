@@ -1088,7 +1088,7 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
   {
     for (auto const& rSymPair : m_SymCtxt)
     {
-      auto spCurExpr = GetExpression(rSymPair.first);
+      auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
       if (spCurExpr == nullptr)
         continue;
 
@@ -1271,7 +1271,7 @@ Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType
 {
   for (auto const& rSymPair : m_SymCtxt)
   {
-    auto spCurExpr = GetExpression(rSymPair.first);
+    auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
 
     if (auto spSymIdExpr = expr_cast<IdentifierExpression>(spCurExpr))
     {
@@ -1333,7 +1333,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
 
       for (auto const& rSymPair : m_SymCtxt)
       {
-        auto spCurExpr = GetExpression(rSymPair.first);
+        auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
         if (auto spSymVarExpr = expr_cast<VariableExpression>(spCurExpr))
         {
           if (spSymVarExpr->GetName() == spVarExpr->GetName())
@@ -1347,7 +1347,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
       m_VarPool.erase(spVarExpr->GetName());
       for (auto const& rSymPair : m_SymCtxt)
       {
-        auto spCurExpr = GetExpression(rSymPair.first);
+        auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
         if (auto spSymVarExpr = expr_cast<VariableExpression>(spCurExpr))
         {
           if (spSymVarExpr->GetName() == spVarExpr->GetName())
@@ -1388,7 +1388,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     if (!m_Update)
       return spMemExprVst;
 
-    auto spFoundExpr = FindExpression(spMemExprVst);
+    auto spFoundExpr = GetValue(spMemExprVst);
     if (spFoundExpr == nullptr)
       return spMemExprVst;
     return spFoundExpr;
@@ -1415,7 +1415,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     if (!m_Update)
       return spMemExprVst;
 
-    auto spFoundExpr = FindExpression(spMemExprVst);
+    auto spFoundExpr = GetValue(spMemExprVst);
     if (spFoundExpr == nullptr)
       return spMemExprVst;
     return spFoundExpr;
@@ -1487,14 +1487,6 @@ SymbolicVisitor SymbolicVisitor::Fork(void) const
   Forked.m_CurPos  = m_CurPos;
 
   return Forked;
-}
-
-Expression::VSPType SymbolicVisitor::GetExpressions(void) const
-{
-  Expression::VSPType Res;
-  for (auto const& rSymPair : m_SymCtxt)
-    Res.push_back(rSymPair.second);
-  return Res;
 }
 
 std::string SymbolicVisitor::ToString(void) const
@@ -1610,7 +1602,7 @@ bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVis
 {
   for (auto const& rSymPair : m_SymCtxt)
   {
-    auto spCurExpr = GetExpression(rSymPair.first);
+    auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
     if (spKeyExpr->Compare(spCurExpr) == Expression::CmpIdentical)
     {
       auto spClonedExpr = rSymPair.second->Clone();
@@ -1634,7 +1626,7 @@ bool SymbolicVisitor::FindAllPaths(int& rNumOfPathFound, Architecture& rArch, Sy
   if (PcId == 0)
     return false;
 
-  auto spPcExpr = FindExpression(Expr::MakeId(PcId, pCpuInfo));
+  auto spPcExpr = GetValue(Expr::MakeId(PcId, pCpuInfo));
   if (spPcExpr == nullptr)
     return false;
 
@@ -1782,7 +1774,7 @@ bool SymbolicVisitor::FindAllPaths(int& rNumOfPathFound, Architecture& rArch, Sy
   return true;
 }
 
-Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)
+Expression::SPType SymbolicVisitor::RemoveExpressionAnnotations(Expression::SPType spExpr)
 {
   class RemoveTrackOrSymbolicExpression : public CloneVisitor
   {
@@ -1801,16 +1793,71 @@ Expression::SPType SymbolicVisitor::GetExpression(Expression::SPType spExpr)
   return p;
 }
 
-Expression::SPType SymbolicVisitor::FindExpression(Expression::SPType spExpr)
+Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
 {
   //Log::Write("dbg") << ToString() << LogEnd;
   for (auto const& rSymPair : m_SymCtxt)
   {
-    auto spCurExpr = GetExpression(rSymPair.first);
+    auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
     if (spExpr->Compare(spCurExpr) == Expression::CmpIdentical)
       return rSymPair.second;
   }
   return nullptr;
+}
+
+Expression::VSPType SymbolicVisitor::FindExpressionsByKey(Expression::SPType spPatExpr) const
+{
+  Expression::VSPType FoundExprs;
+  for (auto spExprPair : m_SymCtxt)
+  {
+    FilterVisitor FltVst([&](Expression::SPType spExpr)
+    {
+      return spPatExpr->Compare(spExpr) == Expression::CmpIdentical ? spExprPair.first : nullptr;
+    });
+
+    spExprPair.first->Visit(&FltVst);
+    auto Res = FltVst.GetMatchedExpressions();
+    FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
+  }
+
+  return FoundExprs;
+}
+
+Expression::VSPType SymbolicVisitor::FindExpressionsByValue(Expression::SPType spPatExpr) const
+{
+  Expression::VSPType FoundExprs;
+  for (auto spExprPair : m_SymCtxt)
+  {
+    FilterVisitor FltVst([&](Expression::SPType spExpr)
+    {
+      return spPatExpr->Compare(spExpr) == Expression::CmpIdentical ? spExprPair.second : nullptr;
+    });
+
+    spExprPair.second->Visit(&FltVst);
+    auto Res = FltVst.GetMatchedExpressions();
+    FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
+  }
+
+  return FoundExprs;
+}
+
+Expression::VSPType SymbolicVisitor::FindExpressionsByUse(Expression::SPType spPatExpr) const
+{
+  Expression::VSPType FoundExprs;
+  for (auto spExprPair : m_SymCtxt)
+  {
+    auto spTmpExpr = Expr::MakeAssign(spExprPair.first, spExprPair.second);
+    FilterVisitor FltVst([&](Expression::SPType spExpr)
+    {
+      return spPatExpr->Compare(spExpr) == Expression::CmpIdentical ? spTmpExpr : nullptr;
+    });
+
+    spTmpExpr->Visit(&FltVst);
+    auto Res = FltVst.GetMatchedExpressions();
+    FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
+  }
+
+  return FoundExprs;
 }
 
 void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression::SPType spValExpr)
