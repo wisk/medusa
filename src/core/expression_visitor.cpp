@@ -1049,6 +1049,10 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
     return nullptr;
   }
 
+  auto spSrcExprVal = GetValue(spSrcExpr);
+  if (spSrcExprVal != nullptr)
+    spSrcExpr = spSrcExprVal;
+
   auto spDstExpr = spAssignExpr->GetDestinationExpression();
   // NOTE(wisk): If the destination is an identifier, we don't want to transform it
   // to a bitvector if it's present on the symbolic context (e.g. pc register)
@@ -1099,7 +1103,7 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
       }
     }
 
-    _InsertExpression(spDstExpr, spSrcExpr);
+    _InsertExpression(spDstExprVst, spSrcExpr);
   }
 
   m_Update = OldUpdate;
@@ -1796,10 +1800,11 @@ Expression::SPType SymbolicVisitor::RemoveExpressionAnnotations(Expression::SPTy
 Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
 {
   //Log::Write("dbg") << ToString() << LogEnd;
+  auto spExprToFind = RemoveExpressionAnnotations(spExpr);
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
-    if (spExpr->Compare(spCurExpr) == Expression::CmpIdentical)
+    if (spExprToFind->Compare(spCurExpr) == Expression::CmpIdentical)
       return rSymPair.second;
   }
   return nullptr;
@@ -1820,6 +1825,7 @@ Expression::VSPType SymbolicVisitor::FindExpressionsByKey(Expression::SPType spP
     FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
   }
 
+  FoundExprs.erase(std::unique(std::begin(FoundExprs), std::end(FoundExprs)), std::end(FoundExprs));
   return FoundExprs;
 }
 
@@ -1838,6 +1844,7 @@ Expression::VSPType SymbolicVisitor::FindExpressionsByValue(Expression::SPType s
     FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
   }
 
+  FoundExprs.erase(std::unique(std::begin(FoundExprs), std::end(FoundExprs)), std::end(FoundExprs));
   return FoundExprs;
 }
 
@@ -1857,6 +1864,7 @@ Expression::VSPType SymbolicVisitor::FindExpressionsByUse(Expression::SPType spP
     FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
   }
 
+  FoundExprs.erase(std::unique(std::begin(FoundExprs), std::end(FoundExprs)), std::end(FoundExprs));
   return FoundExprs;
 }
 
