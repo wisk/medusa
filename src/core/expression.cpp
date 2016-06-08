@@ -1512,7 +1512,9 @@ Expression::SPType SymbolicExpression::Clone(void) const
 
 u32 SymbolicExpression::GetBitSize(void) const
 {
-  return 0;
+  if (m_spExpr == nullptr)
+    return 0;
+  return m_spExpr->GetBitSize();
 }
 
 Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
