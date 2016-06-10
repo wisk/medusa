@@ -25,14 +25,17 @@ void TaskManager::Start(void)
   {
     Task* pCurTask = nullptr;
 
-    while (m_Running)
+    while (true)
     {
       { std::unique_lock<std::mutex> Lock(m_Mutex);
 
-      while (m_Tasks.empty())
-        m_CondVar.wait(Lock);
+        if (!m_Running && m_Tasks.empty())
+          break;
 
-      pCurTask = m_Tasks.front();
+        while (m_Tasks.empty())
+          m_CondVar.wait(Lock);
+
+        pCurTask = m_Tasks.front();
       }
 
       if (pCurTask == nullptr)
@@ -47,20 +50,6 @@ void TaskManager::Start(void)
       }
       m_Notify(pCurTask);
       delete pCurTask;
-
-      while (!m_Tasks.empty())
-      {
-        { std::unique_lock<std::mutex> Lock(m_Mutex);
-        pCurTask = m_Tasks.front();
-        m_Tasks.pop();
-        }
-
-        if (pCurTask)
-        {
-          pCurTask->Run();
-          delete pCurTask;
-        }
-      }
     }
   });
 }
@@ -83,8 +72,8 @@ void TaskManager::Stop(void)
 void TaskManager::Wait(void)
 {
   { std::unique_lock<std::mutex> Lock(m_Mutex);
-  if (m_Tasks.empty())
-    return;
+    if (m_Tasks.empty())
+      return;
   }
   m_Running = false;
   if (m_Thread.joinable())
@@ -99,8 +88,9 @@ bool TaskManager::AddTask(Task* pTask)
   if (pTask == nullptr)
     return false;
 
-  std::unique_lock<std::mutex> Lock(m_Mutex);
-  m_Tasks.push(pTask);
+  { std::unique_lock<std::mutex> Lock(m_Mutex);
+    m_Tasks.push(pTask);
+  }
   m_CondVar.notify_one();
   return true;
 }

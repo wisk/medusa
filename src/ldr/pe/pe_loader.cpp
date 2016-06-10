@@ -459,14 +459,14 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     if (!rBinStrm.Read(OrdOff + i * sizeof(Ord), Ord))
     {
       Log::Write("ldr_pe") << "unable to read ordinal: " << i << LogEnd;
-      continue;
+      return;
     }
 
     u32 FuncRva;
     if (!rBinStrm.Read(FuncOff + Ord * sizeof(FuncRva), FuncRva))
     {
       Log::Write("ldr_pe") << "unable to read function rva: " << i << LogEnd;
-      continue;
+      return;
     }
 
     std::string SymName;
@@ -477,18 +477,18 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       if (!rBinStrm.Read(NameOff + i * sizeof(SymNameRva), SymNameRva))
       {
         Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
-        continue;
+        return;
       }
       TOffset SymNameOff;
       if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
       {
         Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
-        continue;
+        return;
       }
       if (!rBinStrm.Read(SymNameOff, SymName))
       {
         Log::Write("ldr_pe") << "unable to read export name" << LogEnd;
-        continue;
+        return;
       }
     }
     else

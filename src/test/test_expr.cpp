@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(expr_x86_id_nrm_trk_eval)
 
   std::cout << SymVst.ToString() << std::endl;
 
-  auto spRes = expr_cast<BitVectorExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
+  auto spRes = expr_cast<BitVectorExpression>(SymVst.GetValue(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
   BOOST_REQUIRE(spRes != nullptr);
   std::cout << "res: " << spRes->ToString() << std::endl;
   BOOST_REQUIRE(spRes->GetInt().ConvertTo<u32>() == 0x000000EE);
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE(expr_push_pop)
   }
 
   // Result must be EAX = 0xFFFFFFFF
-  auto spRes = expr_cast<BitVectorExpression>(SymVst.FindExpression(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
+  auto spRes = expr_cast<BitVectorExpression>(SymVst.GetValue(Expr::MakeId(EAX, pX86Disasm->GetCpuInformation())));
 
   BOOST_REQUIRE(spRes != nullptr);
   BOOST_REQUIRE(spRes->GetInt().ConvertTo<u32>() == 0xFFFFFFFF);
