@@ -79,14 +79,17 @@ void PydusaExpression(py::module& rMod)
 
   // UnaryOperationExpression expression class inherited from operation expression class
 
-  py::class_<UnaryOperationExpression, UnaryOperationExpression::SPType>(rMod, "UnaryOperationExpression", py::base<Expression>())
+  py::class_<UnaryOperationExpression, UnaryOperationExpression::SPType>(rMod, "UnaryOperationExpression", py::base<OperationExpression>())
     .def("__str__", &UnaryOperationExpression::ToString)
+    .def_property_readonly("expr", &UnaryOperationExpression::GetExpression)
     ;
 
   // BinaryOperationExpression expression class inherited from operation expression class
 
-  py::class_<BinaryOperationExpression, BinaryOperationExpression::SPType>(rMod, "BinaryOperationExpression", py::base<Expression>())
+  py::class_<BinaryOperationExpression, BinaryOperationExpression::SPType>(rMod, "BinaryOperationExpression", py::base<OperationExpression>())
     .def("__str__", &BinaryOperationExpression::ToString)
+    .def_property_readonly("left", &BinaryOperationExpression::GetLeftExpression)
+    .def_property_readonly("right", &BinaryOperationExpression::GetRightExpression)
     ;
 
   // helpers used to create instance of a specific expression type
