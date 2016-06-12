@@ -416,6 +416,7 @@ semantic:
     call('parity_flag');
     call('adjust_flag');
     op0.val = res;
+    free_var('op1');
     free_var('res');
 
   neg: &neg |
