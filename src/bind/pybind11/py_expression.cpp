@@ -70,6 +70,13 @@ void PydusaExpression(py::module& rMod)
     .def_property_readonly("expr", &MemoryExpression::GetAddressExpression)
     ;
 
+  // symbolic expression class inherited from base expression class
+
+  py::class_<SymbolicExpression, SymbolicExpression::SPType>(rMod, "SymbolicExpression", py::base<Expression>())
+    .def("__str__", &SymbolicExpression::ToString)
+    .def_property_readonly("expr", &SymbolicExpression::GetExpression)
+    ;
+
   // operation expression class inherited from base expression class
 
   py::class_<OperationExpression, OperationExpression::SPType>(rMod, "OperationExpression", py::base<Expression>())
@@ -102,6 +109,7 @@ void PydusaExpression(py::module& rMod)
     .def("expr_make_un_op", &Expr::MakeUnOp)
     .def("expr_make_bin_op", &Expr::MakeBinOp)
     .def("expr_make_assign", &Expr::MakeAssign)
+    .def("expr_make_sym", &Expr::MakeSym)
     ;
 
   // exposing enumerations
@@ -135,6 +143,15 @@ void PydusaExpression(py::module& rMod)
     .value("OP_BCAST", OperationExpression::OpBcast)
     ;
   rMod.def("expr_op_get_name", expr_op_get_name);
+
+  py::enum_<SymbolicExpression::Type>(rMod, "SymbolicType")
+    .value("SYM_UNK", SymbolicExpression::Unknown)
+    .value("SYM_RET_VAL", SymbolicExpression::ReturnedValue)
+    .value("SYM_FRM_PRM", SymbolicExpression::FromParameter)
+    .value("SYM_EXT_VAL", SymbolicExpression::ExternalValue)
+    .value("SYM_EXT_FN", SymbolicExpression::ExternalFunction)
+    .value("SYM_UNDEF", SymbolicExpression::Undefined)
+    ;
 
   py::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
 
