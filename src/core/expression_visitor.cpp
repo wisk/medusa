@@ -437,7 +437,11 @@ Expression::SPType FilterVisitor::VisitSymbolic(SymbolicExpression::SPType spSym
   if (_IsDone())
     return nullptr;
 
-  spSymExpr->GetExpression()->Visit(this);
+  auto spExpr = spSymExpr->GetExpression();
+  if (spExpr == nullptr)
+    return nullptr;
+
+  spExpr->Visit(this);
   return nullptr;
 }
 
@@ -1236,6 +1240,14 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
     Result = Left.Ars(Right);
     break;
 
+  case OperationExpression::OpRor:
+    Result = Left.Ror(Right);
+    break;
+
+  case OperationExpression::OpRol:
+    Result = Left.Rol(Right);
+    break;
+
   case OperationExpression::OpSext:
     Result = Left;
     Result.SignExtend(Right.ConvertTo<u16>());
@@ -1607,6 +1619,8 @@ bool SymbolicVisitor::UpdateExpression(Expression::SPType spKeyExpr, SymbolicVis
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
+    if (spCurExpr == nullptr)
+        continue;
     if (spKeyExpr->Compare(spCurExpr) == Expression::CmpIdentical)
     {
       auto spClonedExpr = rSymPair.second->Clone();
@@ -1790,6 +1804,9 @@ Expression::SPType SymbolicVisitor::RemoveExpressionAnnotations(Expression::SPTy
 
     virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr)
     {
+      auto spExpr = spSymExpr->GetExpression();
+      if (spExpr == nullptr)
+        return nullptr;
       return spSymExpr->GetExpression()->Visit(this);
     }
   } RemTrkOrSymVst;
@@ -1801,9 +1818,13 @@ Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
 {
   //Log::Write("dbg") << ToString() << LogEnd;
   auto spExprToFind = RemoveExpressionAnnotations(spExpr);
+  if (spExprToFind == nullptr)
+        return nullptr;
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
+    if (spCurExpr == nullptr)
+        continue;
     if (spExprToFind->Compare(spCurExpr) == Expression::CmpIdentical)
       return rSymPair.second;
   }
@@ -2051,6 +2072,7 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   {
     if (TestZero(spBvRight))
       return spLeft;
+    break;
   }
 
   // a * 1 = a // 1 * b = b
