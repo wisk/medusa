@@ -1524,6 +1524,9 @@ Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool SymbolicExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
+  if (m_spExpr == nullptr)
+    return false;
+
   if (m_spExpr->Compare(spOldExpr) == Expression::CmpIdentical)
   {
     m_spExpr = spNewExpr;
