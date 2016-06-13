@@ -28,12 +28,14 @@ public:
     std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
-  virtual Expression::LSPType  ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
+  virtual Expression::VSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
 
   virtual bool ProvideDetails(Document& rDoc) const;
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const;
   virtual bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const;
   virtual bool GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const;
+
+  virtual bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const;
 };
 
 extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem(void);

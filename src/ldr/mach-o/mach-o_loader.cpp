@@ -466,7 +466,7 @@ void MachOLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs)
   switch (m_Machine)
   {
   case CPU_TYPE_X86:
-  case CPU_TYPE_X86_64: ArchName = "Intel x86"; break;
+  case CPU_TYPE_X86_64: ArchName = "x86"; break;
   case CPU_TYPE_ARM:    ArchName = "ARM";       break;
   default:                                      return;
   }
@@ -484,12 +484,12 @@ bool MachOLoader::_FindArchitectureTagAndModeByMachine(
   switch (m_Machine)
   {
   case CPU_TYPE_X86:
-    ArchTagName  = "Intel x86";
+    ArchTagName  = "x86";
     ArchModeName = "32-bit";
     break;
 
   case CPU_TYPE_X86_64:
-    ArchTagName  = "Intel x86";
+    ArchTagName  = "x86";
     ArchModeName = "64-bit";
     break;
 

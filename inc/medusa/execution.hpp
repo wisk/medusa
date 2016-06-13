@@ -41,6 +41,7 @@ public:
   Document&            GetDocument(void)      { return m_rDoc;     }
   Architecture::SPType GetArchitecture(void)  { return m_spArch;   }
 
+  bool GetCallingConvention(std::string& rCallingConvention, Address const& rAddress) const;
   bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamVal) const;
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
   bool ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const;

@@ -27,7 +27,7 @@ bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   auto itArchX86 = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
   {
-    return spArch->GetName() == "Intel x86";
+    return spArch->GetName() == "x86";
   });
   if (itArchX86 == std::end(rArchs))
   {
@@ -55,5 +55,5 @@ bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, 
 void BootSectorLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
 {
   rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
-  { return (spArch->GetName() != "Intel x86"); }), std::end(rArchs));
+  { return (spArch->GetName() != "x86"); }), std::end(rArchs));
 }

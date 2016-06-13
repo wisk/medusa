@@ -86,7 +86,7 @@ public:
   X86Architecture(void);
   ~X86Architecture(void) {}
 
-  virtual std::string           GetName(void) const { return "Intel x86"; }
+  virtual std::string           GetName(void) const { return "x86"; }
   virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);

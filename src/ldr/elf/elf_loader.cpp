@@ -77,12 +77,12 @@ bool ElfLoader::FindArchitectureTagAndModeByMachine(
   switch (m_Machine)
   {
   case EM_386:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "32-bit";
     break;
 
   case EM_X86_64:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "64-bit";
     break;
 

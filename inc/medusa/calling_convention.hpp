@@ -29,7 +29,9 @@ public:
   {
     UnknownType,
     IntegerType,
-    FloatingPoBitVector,
+    FloatingPointType,
+    VectorType,
+    VariableArgumentsType,
   };
 
   // TODO(wisk): handle the difference between int and float parameter (e.g. MS x64 param0 could be either rcx or xmm0)

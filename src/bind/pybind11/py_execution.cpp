@@ -96,6 +96,14 @@ namespace pydusa
       return py::none();
     return ParamVal.ConvertTo<u64>();
   }
+
+  py::object Execution_GetCallingConvention(Execution const* pExecution, Address const& rAddress)
+  {
+    std::string CallConv;
+    if (!pExecution->GetCallingConvention(CallConv, rAddress))
+      return py::none();
+    return py::cast(CallConv);
+  }
 }
 
 void PydusaExecution(py::module& rMod)
@@ -128,6 +136,7 @@ void PydusaExecution(py::module& rMod)
     .def("hook_imported_function", &Execution::HookFunction)
     .def("get_hook_name", &Execution::GetHookName)
     .def("get_hook_address", &Execution::GetHookAddress)
+    .def("get_calling_convention", pydusa::Execution_GetCallingConvention)
     .def("get_function_parameter", pydusa::Execution_GetFunctionParameter)
     .def("return_from_function", &Execution::ReturnFromFunction)
     .def_property_readonly("cpu", &Execution::GetCpuContext, py::return_value_policy::reference_internal)

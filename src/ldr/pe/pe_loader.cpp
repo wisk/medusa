@@ -128,7 +128,7 @@ void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) co
   {
   case PE_FILE_MACHINE_I386:
   case PE_FILE_MACHINE_AMD64:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     break;
 
   case PE_FILE_MACHINE_ARM:
@@ -154,12 +154,12 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   switch (m_Machine)
   {
   case PE_FILE_MACHINE_I386:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "32-bit";
     break;
 
   case PE_FILE_MACHINE_AMD64:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "64-bit";
     break;
 

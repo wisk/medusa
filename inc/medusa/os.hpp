@@ -39,7 +39,7 @@ public:
     std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const = 0;
 
   virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress) = 0;
-  virtual Expression::LSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr) = 0;
+  virtual Expression::VSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr) = 0;
 
   virtual bool HandleException(CpuContext& rCpuCtxt) { return false; }
 
@@ -47,6 +47,8 @@ public:
   virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const = 0;
   virtual bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const = 0;
   virtual bool GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const = 0;
+
+  virtual bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const = 0;
 };
 
 typedef OperatingSystem* (*TGetOperatingSystem)(void);

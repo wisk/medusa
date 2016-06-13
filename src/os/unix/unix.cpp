@@ -164,9 +164,9 @@ bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddres
   return true;
 }
 
-Expression::LSPType UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+Expression::VSPType UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
 {
-  return Expression::LSPType();
+  return {};
 }
 
 bool UnixOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
@@ -184,3 +184,32 @@ bool UnixOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail& rS
   return false;
 }
 
+bool UnixOperatingSystem::GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const
+{
+  auto spInsn = rDoc.GetCell(rAddress); // TODO(wisk): make sure this is an instruction
+  if (spInsn == nullptr)
+    return false;
+  auto ArchTag = spInsn->GetArchitectureTag();
+  auto Mode = spInsn->GetMode();
+
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spArch = rModMgr.GetArchitecture(ArchTag);
+
+  if (spArch->GetName() == "x86")
+  {
+    switch (Mode)
+    {
+    default:
+      return false;
+    case 16:
+    case 32:
+      rCallingConvention = "cdecl";
+      return true;
+    case 64:
+      rCallingConvention = "system_v";
+      return true;
+    }
+  }
+
+  return false;
+}

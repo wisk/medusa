@@ -238,12 +238,20 @@ Address Execution::GetHookAddress(std::string const& rHkFuncName) const
   return Address();
 }
 
+bool Execution::GetCallingConvention(std::string& rCallingConvention, Address const& rAddress) const
+{
+  // TODO(wisk): try to retrieve function detail first
+  if (m_spOs == nullptr)
+    return false;
+  return m_spOs->GetDefaultCallingConvention(m_rDoc, rCallingConvention, rAddress);
+}
+
 bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamValue) const
 {
   auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
   if (pCallConv == nullptr)
   {
-    Log::Write("core").Level(LogError) << "unable to find callinv convention: " << rCallConv << LogEnd;
+    Log::Write("core").Level(LogError) << "unable to find calling convention: " << rCallConv << LogEnd;
     return false;
   }
 
@@ -255,7 +263,7 @@ bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) co
   auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
   if (pCallConv == nullptr)
   {
-    Log::Write("core").Level(LogError) << "unable to find callinv convention: " << rCallConv << LogEnd;
+    Log::Write("core").Level(LogError) << "unable to find calling convention: " << rCallConv << LogEnd;
     return false;
   }
 
@@ -267,7 +275,7 @@ bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamN
   auto pCallConv = m_spArch->GetCallingConvention(rCallConv, m_pCpuCtxt->GetMode());
   if (pCallConv == nullptr)
   {
-    Log::Write("core").Level(LogError) << "unable to find callinv convention: " << rCallConv << LogEnd;
+    Log::Write("core").Level(LogError) << "unable to find calling convention: " << rCallConv << LogEnd;
     return false;
   }
 
