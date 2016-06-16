@@ -12,11 +12,13 @@ set(SRC
 
 # define mach-o loader target
 add_library(ldr_mach-o SHARED ${SRC})
-target_link_libraries(ldr_mach-o Medusa)
-set_target_properties(ldr_mach-o PROPERTIES FOLDER "Loaders")
+target_link_libraries(ldr_mach-o medusa)
+set_target_properties(ldr_mach-o PROPERTIES
+  FOLDER "Loaders"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_mach-o RUNTIME DESTINATION .)
+  install(TARGETS ldr_mach-o RUNTIME DESTINATION lib)
 else()
-  install(TARGETS ldr_mach-o LIBRARY DESTINATION .)
+  install(TARGETS ldr_mach-o LIBRARY DESTINATION lib)
 endif()

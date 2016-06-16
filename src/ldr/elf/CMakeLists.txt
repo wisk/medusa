@@ -12,11 +12,13 @@ set(SRC
 
 # define elf loader target
 add_library(ldr_elf SHARED ${SRC})
-target_link_libraries(ldr_elf Medusa)
-set_target_properties(ldr_elf PROPERTIES FOLDER "Loaders")
+target_link_libraries(ldr_elf medusa)
+set_target_properties(ldr_elf PROPERTIES
+  FOLDER "Loaders"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_elf RUNTIME DESTINATION .)
+  install(TARGETS ldr_elf RUNTIME DESTINATION lib)
 else()
-  install(TARGETS ldr_elf LIBRARY DESTINATION .)
+  install(TARGETS ldr_elf LIBRARY DESTINATION lib)
 endif()

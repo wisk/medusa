@@ -10,11 +10,13 @@ set(SRC
 
 # define db text target
 add_library(db_text SHARED ${SRC})
-target_link_libraries(db_text Medusa)
-set_target_properties(db_text PROPERTIES FOLDER "Databases")
+target_link_libraries(db_text medusa)
+set_target_properties(db_text PROPERTIES
+  FOLDER "Databases"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS db_text RUNTIME DESTINATION .)
+  install(TARGETS db_text RUNTIME DESTINATION lib)
 else()
-  install(TARGETS db_text LIBRARY DESTINATION .)
+  install(TARGETS db_text LIBRARY DESTINATION lib)
 endif()

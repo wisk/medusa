@@ -9,11 +9,13 @@ set(SRC
   )
 
 add_library(ldr_st62 SHARED ${SRC})
-target_link_libraries(ldr_st62 Medusa)
-set_target_properties(ldr_st62 PROPERTIES FOLDER "Loaders")
+target_link_libraries(ldr_st62 medusa)
+set_target_properties(ldr_st62 PROPERTIES
+  FOLDER "Loaders"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_st62 RUNTIME DESTINATION .)
+  install(TARGETS ldr_st62 RUNTIME DESTINATION lib)
 else()
-  install(TARGETS ldr_st62 LIBRARY DESTINATION .)
+  install(TARGETS ldr_st62 LIBRARY DESTINATION lib)
 endif()

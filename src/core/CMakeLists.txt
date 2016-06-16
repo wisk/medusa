@@ -135,22 +135,18 @@ else ()
     )
 endif ()
 
-# define libMedusa architecture target
-add_library(Medusa SHARED ${SRC})
+# define medusa architecture target
+add_library(medusa SHARED ${SRC})
 
 if (MEDUSA_BUILD_WITH_OGDF)
-  add_dependencies(Medusa ogdf)
-  include_directories("${OGDF_INCLUDE_DIRS}")
-  target_link_libraries(Medusa ${Boost_LIBRARIES} ${OGDF_LIBRARIES})
-else()
-  target_link_libraries(Medusa ${Boost_LIBRARIES})
+  add_dependencies(medusa ogdf)
 endif()
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
 if (DL_LIBRARY)
-  target_link_libraries(Medusa dl)
+  target_link_libraries(medusa dl)
 endif ()
 
 if (MEDUSA_CMAKE_USE_COTIRE)
@@ -158,10 +154,10 @@ if (MEDUSA_CMAKE_USE_COTIRE)
 endif()
 
 if (WIN32)
-  install(TARGETS Medusa RUNTIME DESTINATION .)
+  install(TARGETS medusa RUNTIME DESTINATION lib)
   file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
   file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
-  install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION .)
+  install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION lib)
 else ()
-  install(TARGETS Medusa LIBRARY DESTINATION .)
+  install(TARGETS medusa LIBRARY DESTINATION lib)
 endif ()

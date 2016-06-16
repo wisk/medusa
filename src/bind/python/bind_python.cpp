@@ -2,13 +2,11 @@
 #include <medusa/user_configuration.hpp>
 
 #include <Python.h>
-#include <pybind11/pybind11.h>
 
 #include <mutex>
 
 MEDUSA_NAMESPACE_USE
 
-namespace py = pybind11;
 std::once_flag g_PythonInit;
 
 BindingPython::BindingPython(void)

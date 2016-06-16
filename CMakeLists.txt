@@ -44,6 +44,10 @@ else()
   endforeach()
 endif()
 
+set(MEDUSA_BINARY_PATH bin)
+set(MEDUSA_MODULE_PATH lib/medusa)
+set(MEDUSA_RESOURCE_PATH share/medusa)
+
 ## cotire
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -78,14 +82,23 @@ endif()
 ##   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
 ## endif()
 
+set(MEDUSA_NEEDED_LIBRARIES)
+
+## thread
+
+find_package(Threads REQUIRED)
+list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+
 ## Boost
 
-set(MEDUSA_BOOST_MIN_VERSION 1.55)
+set(MEDUSA_BOOST_MIN_VERSION 1.54)
 
 if (MSVC)
   set(Boost_USE_STATIC_LIBS TRUE)
 endif()
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
+
+list(APPEND MEDUSA_NEEDED_LIBRARIES ${Boost_LIBRARIES})
 
 ## OGDF
 
@@ -94,13 +107,16 @@ if (MEDUSA_BUILD_WITH_OGDF)
   include(ExternalProject)
 
   ExternalProject_add(ogdf
-    PREFIX         "ogdf"
+    PREFIX          "ogdf"
 
-    GIT_REPOSITORY "https://github.com/ogdf/ogdf"
-    GIT_TAG        "master"
+    GIT_REPOSITORY  "https://github.com/ogdf/ogdf"
+    GIT_TAG         "master"
 
-    SOURCE_DIR     "${CMAKE_SOURCE_DIR}/deps/ogdf"
-    INSTALL_DIR    "${CMAKE_BINARY_DIR}"
+    SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/ogdf"
+    INSTALL_DIR     "${CMAKE_BINARY_DIR}"
+
+    UPDATE_COMMAND  ""
+    INSTALL_COMMAND ""
   )
 
   set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
@@ -114,11 +130,18 @@ if (MEDUSA_BUILD_WITH_OGDF)
       optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib"
       optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib"
     )
+
+    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib")
   else()
     set(OGDF_LIBRARIES
       "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a"
       "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a"
     )
+    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a)
+    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a)
   endif()
 
 endif()
@@ -133,8 +156,8 @@ if (MEDUSA_BUILD_WITH_LLVM)
 endif()
 
 # all generated files are going to bin folder
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # add include directory
@@ -143,6 +166,10 @@ include_directories(
   ${CMAKE_BINARY_DIR}/inc
   ${Boost_INCLUDE_DIRS}
   )
+
+if (MEDUSA_BUILD_WITH_OGDF)
+  include_directories("${OGDF_INCLUDE_DIRS}")
+endif()
 
 link_directories(
   ${Boost_LIBRARY_DIRS}

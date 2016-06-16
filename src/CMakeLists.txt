@@ -25,7 +25,7 @@ medusa_include_module_if_needed(arch z80)          # Zilog80 (GameBoy)
 
 # binding
 
-medusa_include_module_if_needed(bind pybind11)     # Python
+medusa_include_module_if_needed(bind python)       # Python
 
 # database
 

@@ -15,15 +15,15 @@ include_directories("${SOURCE_DIR}/include")
 
 # src: https://github.com/pybind/pybind11/blob/master/docs/compiling.rst
 
-set(PYDUSA_PYTHON_VERSION "" CACHE STRING
-  "Python version to use for compiling pydusa"
+set(MEDUSA_PYTHON_VERSION "" CACHE STRING
+  "Python version to use"
 )
 
 set(Python_ADDITIONAL_VERSIONS 2.7 3.4 3.5 3.6 3.7)
-if (NOT "${PYDUSA_PYTHON_VERSION}" STREQUAL "")
-  find_package(PythonLibs "${PYDUSA_PYTHON_VERSION}" EXACT)
+if (NOT "${MEDUSA_PYTHON_VERSION}" STREQUAL "")
+  find_package(PythonLibs "${MEDUSA_PYTHON_VERSION}" EXACT)
   if (NOT PYTHONLIBS_FOUND)
-    find_package(PythonLibs "${PYDUSA_PYTHON_VERSION}" REQUIRED)
+    find_package(PythonLibs "${MEDUSA_PYTHON_VERSION}" REQUIRED)
   endif()
 else()
   find_package(PythonLibs REQUIRED)
@@ -32,7 +32,7 @@ endif()
 string(REPLACE "+" "" PYTHONLIBS_VERSION_STRING "+${PYTHONLIBS_VERSION_STRING}")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
+  if (NOT ${CMAKE_BUILD_TYPE} MATCHES DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 
     CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
@@ -69,13 +69,9 @@ set(SRC
   py_module.cpp
 )
 
-add_library(bind_python SHARED bind_python.cpp bind_python.hpp)
-target_link_libraries(bind_python Medusa ${PYTHON_LIBRARY})
-set_target_properties(bind_python PROPERTIES FOLDER "Bindings")
-
 add_library(pydusa SHARED ${SRC})
 target_link_libraries(pydusa Medusa ${PYTHON_LIBRARY})
-set_target_properties(pydusa PROPERTIES FOLDER "Bindings")
+set_target_properties(pydusa PROPERTIES FOLDER "Tools")
 add_dependencies(pydusa pybind11)
 
 set_target_properties(pydusa PROPERTIES PREFIX "")
@@ -84,7 +80,7 @@ if(WIN32)
   if (MSVC)
     set_target_properties(pydusa PROPERTIES SUFFIX ".pyd")
   endif()
-  install(TARGETS bind_python pydusa RUNTIME DESTINATION .)
+  install(TARGETS pydusa RUNTIME DESTINATION .)
 else()
-  install(TARGETS bind_python pydusa LIBRARY DESTINATION .)
+  install(TARGETS pydusa LIBRARY DESTINATION .)
 endif()

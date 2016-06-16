@@ -12,11 +12,13 @@ set(SRC
 
 # define z80 architecture target
 add_library(arch_st62 SHARED ${SRC})
-target_link_libraries(arch_st62 Medusa)
-set_target_properties(arch_st62 PROPERTIES FOLDER "Architectures")
+target_link_libraries(arch_st62 medusa)
+set_target_properties(arch_st62 PROPERTIES
+  FOLDER "Architectures"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS arch_st62 RUNTIME DESTINATION .)
+  install(TARGETS arch_st62 RUNTIME DESTINATION lib)
 else()
-  install(TARGETS arch_st62 LIBRARY DESTINATION .)
+  install(TARGETS arch_st62 LIBRARY DESTINATION lib)
 endif()

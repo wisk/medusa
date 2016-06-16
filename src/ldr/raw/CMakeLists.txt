@@ -10,11 +10,13 @@ set(SRC
 
 # define raw architecture target
 add_library(ldr_raw SHARED ${SRC})
-target_link_libraries(ldr_raw Medusa)
-set_target_properties(ldr_raw PROPERTIES FOLDER "Loaders")
+target_link_libraries(ldr_raw medusa)
+set_target_properties(ldr_raw PROPERTIES
+  FOLDER "Loaders"
+  PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_raw RUNTIME DESTINATION .)
+  install(TARGETS ldr_raw RUNTIME DESTINATION lib)
 else()
-  install(TARGETS ldr_raw LIBRARY DESTINATION .)
+  install(TARGETS ldr_raw LIBRARY DESTINATION lib)
 endif()

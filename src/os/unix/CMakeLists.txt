@@ -9,11 +9,13 @@ set(SRC
   )
 
 add_library(os_unix SHARED ${SRC})
-target_link_libraries(os_unix Medusa)
-set_target_properties(os_unix PROPERTIES FOLDER "Operating Systems")
+target_link_libraries(os_unix medusa)
+set_target_properties(os_unix PROPERTIES
+  FOLDER "Operating Systems"
+  PREFIX "")
 
 if (WIN32)
-  install(TARGETS os_unix RUNTIME DESTINATION .)
+  install(TARGETS os_unix RUNTIME DESTINATION lib)
 else()
-  install(TARGETS os_unix LIBRARY DESTINATION .)
+  install(TARGETS os_unix LIBRARY DESTINATION lib)
 endif()

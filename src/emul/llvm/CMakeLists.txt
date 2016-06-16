@@ -28,10 +28,12 @@ if (UNIX AND LLVM_ROOT)
   link_directories(${LLVM_LIBRARY_DIRS})
   add_definitions(${LLVM_DEFINITIONS})
   llvm_map_components_to_libnames(LLVM_LIBRARIES ${MEDUSA_LLVM_LIBS})
-  target_link_libraries(emul_llvm Medusa "-L ${LLVM_LIBRARY_DIRS}" ${LLVM_LIBRARIES}) # -L should not be here, but link_directories doesn't seem to work...
+  target_link_libraries(emul_llvm medusa "-L ${LLVM_LIBRARY_DIRS}" ${LLVM_LIBRARIES}) # -L should not be here, but link_directories doesn't seem to work...
 
-  install(TARGETS emul_llvm LIBRARY DESTINATION .)
-  set_target_properties(emul_llvm PROPERTIES FOLDER "Emulations")
+  install(TARGETS emul_llvm LIBRARY DESTINATION lib)
+  set_target_properties(emul_llvm PROPERTIES
+    FOLDER "Emulations"
+    PREFIX "")
 
 elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
 
@@ -64,10 +66,12 @@ elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
     list(APPEND LLVM_ALL_LIBRARIES optimized "${LLVM_LIBRARY_DIRS}/${LIB}.lib")
   endforeach()
 
-  target_link_libraries(emul_llvm Medusa ${LLVM_ALL_LIBRARIES})
+  target_link_libraries(emul_llvm medusa ${LLVM_ALL_LIBRARIES})
 
-  install(TARGETS emul_llvm RUNTIME DESTINATION .)
-  set_target_properties(emul_llvm PROPERTIES FOLDER "Emulations")
+  install(TARGETS emul_llvm RUNTIME DESTINATION lib)
+  set_target_properties(emul_llvm PROPERTIES
+    FOLDER "Emulations"
+    PREFIX "")
 
 endif()
 
