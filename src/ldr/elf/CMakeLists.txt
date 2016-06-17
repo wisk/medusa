@@ -18,7 +18,7 @@ set_target_properties(ldr_elf PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_elf RUNTIME DESTINATION lib)
+  install(TARGETS ldr_elf RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS ldr_elf LIBRARY DESTINATION lib)
+  install(TARGETS ldr_elf LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

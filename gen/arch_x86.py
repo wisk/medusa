@@ -357,7 +357,8 @@ class X86ArchConvertion(ArchConvertion):
         return res
 
     def GenerateSource(self):
-        res = ''
+	tbl = {}
+	res = ''
         arch_name = self.GetArchName()
 
         for name in sorted(self.arch['instruction']['table']):
@@ -373,6 +374,9 @@ class X86ArchConvertion(ArchConvertion):
             res += ',\n'.join(tbl_elm)
             res += '\n};\n\n'
 
+            tbl[name] = res
+            res = ''
+
         for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name: opcd_no = 0xc0
             else:            opcd_no = 0x00
@@ -384,7 +388,10 @@ class X86ArchConvertion(ArchConvertion):
                 res += '\n'
                 opcd_no += 1
 
-        return res
+            tbl[name] += res
+            res = ''
+
+        return tbl
 
     def GenerateOpcodeEnum(self):
         res = ',\n'.join('X86_Opcode_%s' % x.capitalize() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'

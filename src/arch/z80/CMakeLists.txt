@@ -17,7 +17,7 @@ set_target_properties(arch_z80 PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS arch_z80 RUNTIME DESTINATION lib)
+  install(TARGETS arch_z80 RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS arch_z80 LIBRARY DESTINATION lib)
+  install(TARGETS arch_z80 LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

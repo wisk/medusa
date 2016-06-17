@@ -23,9 +23,9 @@ set_target_properties(os_windows PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS os_windows RUNTIME DESTINATION lib)
+  install(TARGETS os_windows RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS os_windows LIBRARY DESTINATION lib)
+  install(TARGETS os_windows LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()
 
-install(FILES windows.db DESTINATION share/medusa)
+install(FILES windows.db DESTINATION ${MEDUSA_RESOURCE_PATH})

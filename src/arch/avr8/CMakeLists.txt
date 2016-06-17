@@ -18,7 +18,7 @@ set_target_properties(arch_avr8 PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS arch_avr8 RUNTIME DESTINATION lib)
+  install(TARGETS arch_avr8 RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS arch_avr8 LIBRARY DESTINATION lib)
+  install(TARGETS arch_avr8 LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

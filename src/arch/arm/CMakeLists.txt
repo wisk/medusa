@@ -23,7 +23,7 @@ set_target_properties(arch_arm PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS arch_arm RUNTIME DESTINATION lib)
+  install(TARGETS arch_arm RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS arch_arm LIBRARY DESTINATION lib)
+  install(TARGETS arch_arm LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

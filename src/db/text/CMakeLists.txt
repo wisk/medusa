@@ -16,7 +16,7 @@ set_target_properties(db_text PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS db_text RUNTIME DESTINATION lib)
+  install(TARGETS db_text RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS db_text LIBRARY DESTINATION lib)
+  install(TARGETS db_text LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

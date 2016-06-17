@@ -18,7 +18,7 @@ set_target_properties(ldr_mach-o PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS ldr_mach-o RUNTIME DESTINATION lib)
+  install(TARGETS ldr_mach-o RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS ldr_mach-o LIBRARY DESTINATION lib)
+  install(TARGETS ldr_mach-o LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

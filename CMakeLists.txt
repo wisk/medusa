@@ -44,7 +44,8 @@ else()
   endforeach()
 endif()
 
-set(MEDUSA_BINARY_PATH bin)
+set(MEDUSA_EXECUTABLE_PATH bin)
+set(MEDUSA_LIBRARY_PATH lib)
 set(MEDUSA_MODULE_PATH lib/medusa)
 set(MEDUSA_RESOURCE_PATH share/medusa)
 
@@ -93,9 +94,7 @@ list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
 
 set(MEDUSA_BOOST_MIN_VERSION 1.54)
 
-if (MSVC)
-  set(Boost_USE_STATIC_LIBS TRUE)
-endif()
+set(Boost_USE_STATIC_LIBS TRUE)
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 list(APPEND MEDUSA_NEEDED_LIBRARIES ${Boost_LIBRARIES})

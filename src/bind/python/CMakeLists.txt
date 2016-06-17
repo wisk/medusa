@@ -34,7 +34,7 @@ set_target_properties(bind_python PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS bind_python RUNTIME DESTINATION lib)
+  install(TARGETS bind_python RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS bind_python LIBRARY DESTINATION lib)
+  install(TARGETS bind_python LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

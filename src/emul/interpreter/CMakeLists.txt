@@ -14,7 +14,7 @@ set_target_properties(emul_interpreter PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS emul_interpreter RUNTIME DESTINATION lib)
+  install(TARGETS emul_interpreter RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS emul_interpreter LIBRARY DESTINATION lib)
+  install(TARGETS emul_interpreter LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

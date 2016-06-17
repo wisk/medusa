@@ -19,9 +19,24 @@ set(SRC
   ${SRCROOT}/x86_architecture.cpp
   ${SRCROOT}/x86_calling_convention.cpp
   ${SRCROOT}/x86_cpu.cpp
-  ${SRCROOT}/x86_opcode.cpp
   ${SRCROOT}/x86_operand.cpp
   ${SRCROOT}/x86_format.cpp
+
+  ${SRCROOT}/x86_opcode.ipp
+  ${SRCROOT}/x86_opcode_table_1.cpp
+  ${SRCROOT}/x86_opcode_table_2.cpp
+  ${SRCROOT}/x86_opcode_table_3_38.cpp
+  ${SRCROOT}/x86_opcode_table_3_3A.cpp
+  ${SRCROOT}/x86_opcode_table_3DNOW1.cpp
+  ${SRCROOT}/x86_opcode_table_FP1.cpp
+  ${SRCROOT}/x86_opcode_table_FP2.cpp
+  ${SRCROOT}/x86_opcode_table_FP3.cpp
+  ${SRCROOT}/x86_opcode_table_FP4.cpp
+  ${SRCROOT}/x86_opcode_table_FP5.cpp
+  ${SRCROOT}/x86_opcode_table_FP6.cpp
+  ${SRCROOT}/x86_opcode_table_FP7.cpp
+  ${SRCROOT}/x86_opcode_table_FP8.cpp
+  ${SRCROOT}/x86_opcode_table_sse5a.cpp
   )
 
 # define x86 architecture target
@@ -32,7 +47,8 @@ set_target_properties(arch_x86 PROPERTIES
   PREFIX "")
 
 if(WIN32)
-  install(TARGETS arch_x86 RUNTIME DESTINATION lib)
+  install(TARGETS arch_x86 RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS arch_x86 LIBRARY DESTINATION lib)
+  install(TARGETS arch_x86 LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()
+

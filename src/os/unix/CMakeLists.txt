@@ -15,7 +15,7 @@ set_target_properties(os_unix PROPERTIES
   PREFIX "")
 
 if (WIN32)
-  install(TARGETS os_unix RUNTIME DESTINATION lib)
+  install(TARGETS os_unix RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS os_unix LIBRARY DESTINATION lib)
+  install(TARGETS os_unix LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

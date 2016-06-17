@@ -108,10 +108,8 @@ qt5_use_modules(qMedusa Widgets)
 if (MEDUSA_BUILD_WITH_OGDF)
   add_dependencies(qMedusa ogdf)
   include_directories("${OGDF_INCLUDE_DIRS}")
-  target_link_libraries(qMedusa medusa ${CMAKE_THREAD_LIBS_INIT} ${OGDF_LIBRARIES})
-else()
-  target_link_libraries(qMedusa medusa ${CMAKE_THREAD_LIBS_INIT})
 endif()
+target_link_libraries(qMedusa medusa ${MEDUSA_NEEDED_LIBRARIES})
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
 # I can't believe how hard it is to deploy qt5...
@@ -152,4 +150,4 @@ if (WIN32)
 
 endif ()
 
-install(TARGETS qMedusa RUNTIME DESTINATION bin)
+install(TARGETS qMedusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})

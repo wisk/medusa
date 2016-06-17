@@ -18,4 +18,4 @@ add_executable(medusa_text
 target_link_libraries(medusa_text medusa ${MEDUSA_NEEDED_LIBRARIES})
 set_target_properties(medusa_text PROPERTIES FOLDER "Tools")
 
-install(TARGETS medusa_text RUNTIME DESTINATION bin)
+install(TARGETS medusa_text RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})
