@@ -13,16 +13,15 @@ set(SRC
 
   ${INCROOT}/x86_calling_convention.hpp
 
-  #${INCROOT}/x86_opcode.ipp
-  #${INCROOT}/x86_operand.ipp
-
   ${SRCROOT}/x86_architecture.cpp
   ${SRCROOT}/x86_calling_convention.cpp
   ${SRCROOT}/x86_cpu.cpp
   ${SRCROOT}/x86_operand.cpp
   ${SRCROOT}/x86_format.cpp
+  ${SRCROOT}/x86_decoder.cpp
 
   ${SRCROOT}/x86_opcode.ipp
+  ${SRCROOT}/x86_mnemonic.cpp
   ${SRCROOT}/x86_opcode_table_1.cpp
   ${SRCROOT}/x86_opcode_table_2.cpp
   ${SRCROOT}/x86_opcode_table_3_38.cpp

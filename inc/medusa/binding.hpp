@@ -10,7 +10,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Binding
+class MEDUSA_EXPORT Binding
 {
 public:
   Binding(void);

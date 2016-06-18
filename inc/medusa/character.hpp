@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Character : public Cell
+class MEDUSA_EXPORT Character : public Cell
 {
 public:
   enum

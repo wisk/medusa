@@ -16,7 +16,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Emulator
+class MEDUSA_EXPORT Emulator
 {
 public:
   typedef std::shared_ptr<Emulator> SPType;

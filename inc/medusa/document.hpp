@@ -25,7 +25,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Document handles cell, multicell, xref, label and memory area.
-class Medusa_EXPORT Document
+class MEDUSA_EXPORT Document
 {
   Document(Document const&) = delete;
   Document& operator=(Document const&) = delete;
@@ -37,7 +37,7 @@ public:
   typedef boost::bimap<Address, Label>               LabelBimapType;
   typedef boost::signals2::connection                ConnectionType;
 
-  class Medusa_EXPORT Subscriber
+  class MEDUSA_EXPORT Subscriber
   {
     friend class Document;
 

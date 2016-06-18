@@ -36,22 +36,22 @@ def main():
         arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
         arch_cpp.write(mns)
 
-	arch_cpp = open('%s_operand.cpp' % arch_name, 'w')
-	arch_cpp.write(conv.GenerateBanner())
-	arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+        arch_cpp = open('%s_operand.cpp' % arch_name, 'w')
+        arch_cpp.write(conv.GenerateBanner())
+        arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
         arch_cpp.write(opc)
 
-	if isinstance(src, dict):
-		for name, code in src.items():
-			arch_cpp = open('%s_opcode_%s.cpp' % (arch_name, name), 'w')
-			arch_cpp.write(conv.GenerateBanner())
-			arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-			arch_cpp.write(code)
-	else:
-		arch_cpp = open('%s_opcode.cpp' % arch_name, 'w')
-		arch_cpp.write(conv.GenerateBanner())
-		arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-		arch_cpp.write(src)
+        if isinstance(src, dict):
+            for name, code in src.items():
+                arch_cpp = open('%s_opcode_%s.cpp' % (arch_name, name), 'w')
+                arch_cpp.write(conv.GenerateBanner())
+                arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+                arch_cpp.write(code)
+        else:
+            arch_cpp = open('%s_opcode.cpp' % arch_name, 'w')
+            arch_cpp.write(conv.GenerateBanner())
+            arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+            arch_cpp.write(src)
 
 if __name__ == "__main__":
     main()

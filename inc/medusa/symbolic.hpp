@@ -13,7 +13,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Symbolic
+class MEDUSA_EXPORT Symbolic
 {
 private:
 
@@ -59,7 +59,7 @@ private:
 
 
 public:
-  class Medusa_EXPORT Context
+  class MEDUSA_EXPORT Context
   {
   public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
@@ -98,7 +98,7 @@ private:
   bool m_FollowFunction;
 };
 
-class Medusa_EXPORT Symbolic2
+class MEDUSA_EXPORT Symbolic2
 {
 public:
   Symbolic2(Document& rDoc);

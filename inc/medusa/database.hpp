@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Database : public IsConfigurable
+class MEDUSA_EXPORT Database : public IsConfigurable
 {
 public:
   enum SetArchitectureModeType

@@ -20,7 +20,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! BinaryStream is a generic class to handle memory access.
-class Medusa_EXPORT BinaryStream
+class MEDUSA_EXPORT BinaryStream
 {
 public:
   typedef std::shared_ptr<BinaryStream> SPType;
@@ -301,7 +301,7 @@ protected:
 };
 
 //! FileBinaryStream is a generic class for file access.
-class Medusa_EXPORT FileBinaryStream : public BinaryStream
+class MEDUSA_EXPORT FileBinaryStream : public BinaryStream
 {
 public:
   FileBinaryStream(Path const& rFilePath = Path());
@@ -347,7 +347,7 @@ protected:
 };
 
 //! MemoryBinaryStream handle memory from a raw pointer but its duplicated first.
-class Medusa_EXPORT MemoryBinaryStream : public BinaryStream
+class MEDUSA_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
   MemoryBinaryStream(void const* pMem = nullptr, u32 MemSize = 0);

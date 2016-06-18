@@ -10,13 +10,13 @@
 namespace medusa
 {
 
-  class Medusa_EXPORT Graph
+  class MEDUSA_EXPORT Graph
   {
   public:
 
     typedef std::shared_ptr<Graph> SPType;
 
-    class Medusa_EXPORT VertexProperties
+    class MEDUSA_EXPORT VertexProperties
     {
       enum Type
       {
@@ -56,7 +56,7 @@ namespace medusa
       u32 m_Flags;
     };
 
-    class Medusa_EXPORT EdgeProperties
+    class MEDUSA_EXPORT EdgeProperties
     {
     public:
       enum Type
@@ -77,7 +77,7 @@ namespace medusa
       Type m_Type;
     };
 
-    class Medusa_EXPORT GraphProperties
+    class MEDUSA_EXPORT GraphProperties
     {
     public:
 

@@ -34,7 +34,7 @@ MEDUSA_NAMESPACE_BEGIN
 /*! This class defines what an architecture plug-in must implement.
  * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function
  */
-class Medusa_EXPORT Architecture : public IsConfigurable
+class MEDUSA_EXPORT Architecture : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<Architecture> SPType;

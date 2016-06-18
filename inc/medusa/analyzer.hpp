@@ -122,7 +122,7 @@ public:
 };
 
 //! Analyzer handles all analysis operations.
-class Medusa_EXPORT Analyzer
+class MEDUSA_EXPORT Analyzer
 {
 public:
 

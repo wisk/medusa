@@ -9,7 +9,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT BasicBlockVertexProperties
+class MEDUSA_EXPORT BasicBlockVertexProperties
 {
 public:
   enum Type
@@ -45,7 +45,7 @@ private:
   mutable u32 m_TestedFlags;
 };
 
-class Medusa_EXPORT BasicBlockEdgeProperties
+class MEDUSA_EXPORT BasicBlockEdgeProperties
 {
 public:
   enum Type

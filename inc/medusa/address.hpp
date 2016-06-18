@@ -20,7 +20,7 @@ MEDUSA_NAMESPACE_BEGIN
  * This class holds an address in a generic way.
  */
 
-class Medusa_EXPORT Address
+class MEDUSA_EXPORT Address
 {
 public:
   typedef enum
@@ -180,7 +180,7 @@ namespace std
   };
 }
 
-Medusa_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
-Medusa_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
+MEDUSA_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
+MEDUSA_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
 
 #endif // MEDUSA_ADDRESS_HPP

@@ -22,7 +22,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT OperatingSystem : public IsConfigurable
+class MEDUSA_EXPORT OperatingSystem : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<OperatingSystem> SPType;

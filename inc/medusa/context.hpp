@@ -15,7 +15,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CpuContext
+class MEDUSA_EXPORT CpuContext
 {
 public:
   typedef std::list<u32> RegisterList;
@@ -75,13 +75,13 @@ protected:
   mutable std::mutex m_CpuLock;
 };
 
-template<> Medusa_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
-template<> Medusa_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal);
+template<> MEDUSA_EXPORT bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const;
+template<> MEDUSA_EXPORT bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal);
 
-template<> Medusa_EXPORT bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const;
-template<> Medusa_EXPORT bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal);
+template<> MEDUSA_EXPORT bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const;
+template<> MEDUSA_EXPORT bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal);
 
-class Medusa_EXPORT MemoryContext
+class MEDUSA_EXPORT MemoryContext
 {
 public:
   struct MemoryChunk
@@ -146,8 +146,8 @@ private:
   MemoryContext const& operator=(MemoryContext const&);
 };
 
-template<> Medusa_EXPORT bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const;
-template<> Medusa_EXPORT bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal);
+template<> MEDUSA_EXPORT bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const;
+template<> MEDUSA_EXPORT bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal);
 
 MEDUSA_NAMESPACE_END
 

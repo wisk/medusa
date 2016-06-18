@@ -5,7 +5,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT ExpressionSimplifier
+class MEDUSA_EXPORT ExpressionSimplifier
 {
 public:
   ExpressionSimplifier(void) : m_IsDone(false) {}
@@ -19,7 +19,7 @@ protected:
   bool m_IsDone;
 };
 
-class Medusa_EXPORT TrackedIdPropagation : public ExpressionSimplifier
+class MEDUSA_EXPORT TrackedIdPropagation : public ExpressionSimplifier
 {
 public:
   TrackedIdPropagation(Expression::LSPType& rExprs, u32 Id);
@@ -35,7 +35,7 @@ private:
   Expression::SPType __FindTrackedIdExpression(u32 Id, Address const& rAddr);
 };
 
-class Medusa_EXPORT TrackedIdMerger : public ExpressionSimplifier
+class MEDUSA_EXPORT TrackedIdMerger : public ExpressionSimplifier
 {
 public:
   TrackedIdMerger(Expression::SPType spToBeMerged, Expression::VSPType const& rExprsPool);
@@ -49,7 +49,7 @@ protected:
 };
 
 //https://english.stackexchange.com/questions/35860/normalization-vs-canonicalization
-class Medusa_EXPORT NormalizeExpression : public ExpressionSimplifier
+class MEDUSA_EXPORT NormalizeExpression : public ExpressionSimplifier
 {
 public:
   NormalizeExpression(Expression::SPType spExpr);
@@ -61,7 +61,7 @@ protected:
   Expression::SPType m_spExpr;
 };
 
-class Medusa_EXPORT ConstantPropagation : public ExpressionSimplifier
+class MEDUSA_EXPORT ConstantPropagation : public ExpressionSimplifier
 {
 public:
   ConstantPropagation(Expression::SPType spExpr);
@@ -73,7 +73,7 @@ protected:
   Expression::SPType m_spExpr;
 };
 
-class Medusa_EXPORT ExpressionRewriter : public ExpressionSimplifier
+class MEDUSA_EXPORT ExpressionRewriter : public ExpressionSimplifier
 {
 public:
   ExpressionRewriter(Expression::SPType& rspExpr);

@@ -16,7 +16,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! ControlFlowGraph is a graph which contains BasicBlock.
-class Medusa_EXPORT ControlFlowGraph
+class MEDUSA_EXPORT ControlFlowGraph
 {
   struct ControlFlowGraphProperties{};
 

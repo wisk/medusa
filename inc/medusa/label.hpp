@@ -13,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Label is a string associated with an Address.
-class Medusa_EXPORT Label
+class MEDUSA_EXPORT Label
 {
 public:
   enum Type

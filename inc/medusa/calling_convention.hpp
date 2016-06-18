@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CallingConvention
+class MEDUSA_EXPORT CallingConvention
 {
 public:
   enum StackCleanerType

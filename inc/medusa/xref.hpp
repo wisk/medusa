@@ -13,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! XRefs handles a cross-reference.
-class Medusa_EXPORT XRefs
+class MEDUSA_EXPORT XRefs
 {
 public:
    XRefs(void) {}

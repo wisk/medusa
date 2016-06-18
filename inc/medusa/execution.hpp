@@ -13,7 +13,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Execution
+class MEDUSA_EXPORT Execution
 {
 public:
   Execution(Document& rDoc);

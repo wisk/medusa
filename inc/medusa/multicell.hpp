@@ -16,7 +16,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! MultiCell is a group of cell.
-class Medusa_EXPORT MultiCell
+class MEDUSA_EXPORT MultiCell
 {
 public:
   typedef std::map<Address, MultiCell*> Map;

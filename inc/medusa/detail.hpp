@@ -12,7 +12,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Detail
+class MEDUSA_EXPORT Detail
 {
 public:
   enum Kind
@@ -53,7 +53,7 @@ private:
   Id     m_Id;
 };
 
-class Medusa_EXPORT TypeDetail : public Detail
+class MEDUSA_EXPORT TypeDetail : public Detail
 {
 public:
   enum Type
@@ -107,7 +107,7 @@ private:
     NotType         = 0x10,
     NegateType      = 0x20,
 */
-class Medusa_EXPORT ValueDetail : public Detail
+class MEDUSA_EXPORT ValueDetail : public Detail
 {
 public:
   /*!
@@ -161,7 +161,7 @@ private:
   Id          m_RefId;
 };
 
-class Medusa_EXPORT TypedValueDetail : public Detail
+class MEDUSA_EXPORT TypedValueDetail : public Detail
 {
 public:
   typedef std::list<TypedValueDetail> List;
@@ -182,7 +182,7 @@ protected:
   ValueDetail        m_Value;
 };
 
-//class Medusa_EXPORT UnionDetail : public Detail
+//class MEDUSA_EXPORT UnionDetail : public Detail
 //{
 //public:
 //  typedef std::function<TypedValueDetail(Detail const* pParentDetail)> SelecterType;
@@ -191,7 +191,7 @@ protected:
 //private:
 //};
 
-class Medusa_EXPORT StaticArrayDetail : public TypeDetail
+class MEDUSA_EXPORT StaticArrayDetail : public TypeDetail
 {
 public:
   StaticArrayDetail(TypeDetail::SPType spElementType, u32 NumberOfElements);
@@ -208,7 +208,7 @@ private:
   u32 m_NumberOfElements;
 };
 
-//class Medusa_EXPORT DynamicArrayDetail : public Detail
+//class MEDUSA_EXPORT DynamicArrayDetail : public Detail
 //{
 //public:
 //  typedef std::function<u32(Detail const* pParentDetail)> SizerType;
@@ -220,7 +220,7 @@ private:
 
 // TODO: don't copy
 // TODO: use shared_ptr
-class Medusa_EXPORT StructureDetail : public TypeDetail
+class MEDUSA_EXPORT StructureDetail : public TypeDetail
 {
 public:
   StructureDetail(std::string const& rName = "", u32 Alignment = 0);
@@ -243,7 +243,7 @@ private:
   std::map<u32, TypedValueDetail> m_OffsetToField;
 };
 
-class Medusa_EXPORT FunctionDetail : public Detail
+class MEDUSA_EXPORT FunctionDetail : public Detail
 {
 public:
   enum Attribute

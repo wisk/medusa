@@ -15,7 +15,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Module is only used to load medusa modules.
-class Medusa_EXPORT Module
+class MEDUSA_EXPORT Module
 {
 public:
   Module(void) {}
@@ -78,7 +78,7 @@ DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",   "G
 
 #undef DECL_MODULE_TRAITS
 
-class Medusa_EXPORT ModuleManager
+class MEDUSA_EXPORT ModuleManager
 {
 private:
   ModuleManager(void) : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}

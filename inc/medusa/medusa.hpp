@@ -27,7 +27,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Medusa is a main class, it's able to handle almost all sub-classes.
-class Medusa_EXPORT Medusa
+class MEDUSA_EXPORT Medusa
 {
 public:
                                   Medusa(void);

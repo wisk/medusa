@@ -16,7 +16,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Appearance
+class MEDUSA_EXPORT Appearance
 {
 public:
   struct Information
@@ -34,7 +34,7 @@ public:
   static MapType& GetFonts(void);
 };
 
-class Medusa_EXPORT FormatDisassembly
+class MEDUSA_EXPORT FormatDisassembly
 {
 public:
   enum Flags
@@ -64,7 +64,7 @@ private:
   PrintData&    m_rPrintData;
 };
 
-class Medusa_EXPORT DisassemblyView : public View
+class MEDUSA_EXPORT DisassemblyView : public View
 {
 public:
   DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress);
@@ -83,7 +83,7 @@ protected:
   PrintData         m_PrintData;
 };
 
-class Medusa_EXPORT FullDisassemblyView : public View
+class MEDUSA_EXPORT FullDisassemblyView : public View
 {
 public:
   FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress);

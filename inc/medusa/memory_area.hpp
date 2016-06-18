@@ -16,7 +16,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT MemoryArea
+class MEDUSA_EXPORT MemoryArea
 {
 public:
   enum Access
@@ -96,7 +96,7 @@ protected:
   u8          m_DefaultArchitectureMode;
 };
 
-class Medusa_EXPORT MappedMemoryArea : public MemoryArea
+class MEDUSA_EXPORT MappedMemoryArea : public MemoryArea
 {
 public:
   MappedMemoryArea(
@@ -155,7 +155,7 @@ protected:
   mutable MutexType m_Mutex;
 };
 
-class Medusa_EXPORT VirtualMemoryArea : public MemoryArea
+class MEDUSA_EXPORT VirtualMemoryArea : public MemoryArea
 {
 public:
   VirtualMemoryArea(

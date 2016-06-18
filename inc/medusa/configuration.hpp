@@ -67,7 +67,7 @@ namespace Configuration
 }
 
 //! ConfigurationModel class defines available information to configure both Architecture and Loader.
-class Medusa_EXPORT ConfigurationModel
+class MEDUSA_EXPORT ConfigurationModel
 {
 public:
   // Boolean type
@@ -134,7 +134,7 @@ private:
   VariantNamedValueMapType m_Values;
 };
 
-class Medusa_EXPORT IsConfigurable
+class MEDUSA_EXPORT IsConfigurable
 {
 public:
   ConfigurationModel& GetConfigurationModel(void);

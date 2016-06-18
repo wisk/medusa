@@ -17,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define P_NONE 0x0
 
 //! Instruction is a Cell which handles an instruction for any Architecture.
-class Medusa_EXPORT Instruction : public Cell
+class MEDUSA_EXPORT Instruction : public Cell
 {
 public:
   typedef std::shared_ptr<Instruction> SPType;

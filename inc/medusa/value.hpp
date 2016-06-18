@@ -13,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Value is a cell which handles a value, this is a default cell type.
-class Medusa_EXPORT Value : public Cell
+class MEDUSA_EXPORT Value : public Cell
 {
 public:
   typedef std::shared_ptr<Value> SPType;

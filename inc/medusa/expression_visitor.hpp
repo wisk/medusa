@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT CloneVisitor : public ExpressionVisitor
 {
 public:
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
@@ -28,7 +28,7 @@ public:
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 };
 
-class Medusa_EXPORT FilterVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT FilterVisitor : public ExpressionVisitor
 {
 public:
   typedef std::function <Expression::SPType(Expression::SPType spExpr)> Matcher;
@@ -63,7 +63,7 @@ protected:
   Expression::VSPType m_MatchedExprs;
 };
 
-class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT EvaluateVisitor : public ExpressionVisitor
 {
 public:
   // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
@@ -109,7 +109,7 @@ protected:
   Expression::SPType m_spResExpr;
 };
 
-class Medusa_EXPORT SymbolicVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT SymbolicVisitor : public ExpressionVisitor
 {
 public:
   SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef = true);
@@ -174,7 +174,7 @@ protected:
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackExpression.
-class Medusa_EXPORT TrackVisitor : public CloneVisitor
+class MEDUSA_EXPORT TrackVisitor : public CloneVisitor
 {
 public:
   TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt);
@@ -195,7 +195,7 @@ private:
 //! If the expression contains a track id, GetResult will return true
 //! Visit always return nullptr
 //! BackTrackContext is updated with the source
-class Medusa_EXPORT BackTrackVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT BackTrackVisitor : public ExpressionVisitor
 {
 public:
   BackTrackVisitor(Track::BackTrackContext& rBtCtxt)
@@ -214,7 +214,7 @@ private:
   bool m_Result;
 };
 
-class Medusa_EXPORT NormalizeIdentifier : public CloneVisitor
+class MEDUSA_EXPORT NormalizeIdentifier : public CloneVisitor
 {
 public:
   NormalizeIdentifier(CpuInformation const& rCpuinfo, u8 Mode);
@@ -227,7 +227,7 @@ protected:
   u8 m_Mode;
 };
 
-class Medusa_EXPORT IdentifierToVariable : public CloneVisitor
+class MEDUSA_EXPORT IdentifierToVariable : public CloneVisitor
 {
 public:
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
@@ -237,7 +237,7 @@ private:
   std::set<u32> m_UsedId;
 };
 
-class Medusa_EXPORT SimplifyVisitor : public CloneVisitor
+class MEDUSA_EXPORT SimplifyVisitor : public CloneVisitor
 {
 public:
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);

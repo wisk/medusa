@@ -32,7 +32,6 @@ set(SRC
   ${INCROOT}/event_queue.hpp
   ${INCROOT}/exception.hpp
   ${INCROOT}/execution.hpp
-  ${INCROOT}/export.hpp
   ${INCROOT}/expression.hpp
   ${INCROOT}/expression_filter.hpp
   ${INCROOT}/expression_operation.hpp
@@ -127,16 +126,23 @@ if (WIN32)
     ${SRCROOT}/windows_binary_stream.cpp
     ${SRCROOT}/windows_module.cpp
     )
-else ()
+else()
   set(SRC
     ${SRC}
     ${SRCROOT}/unix_binary_stream.cpp
     ${SRCROOT}/unix_module.cpp
     )
-endif ()
+endif()
+
+include(GenerateExportHeader)
 
 # define medusa architecture target
 add_library(medusa SHARED ${SRC})
+
+# generate export file
+generate_export_header(medusa
+  EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
+)
 
 if (MEDUSA_BUILD_WITH_OGDF)
   add_dependencies(medusa ogdf)

@@ -11,7 +11,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Cell is a base element of a memory entity.
-class Medusa_EXPORT Cell
+class MEDUSA_EXPORT Cell
 {
 public:
   enum Type

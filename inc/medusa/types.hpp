@@ -68,7 +68,7 @@ typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
 // boost::multiprecision::cpp_int doesn't support arbitrary unsigned int
 typedef ap_int ap_uint;
 
-class Medusa_EXPORT BitVector
+class MEDUSA_EXPORT BitVector
 {
 public:
   BitVector(void) : m_BitSize(0), m_Value() {}

@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Loader : public IsConfigurable
+class MEDUSA_EXPORT Loader : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<Loader> SPType;

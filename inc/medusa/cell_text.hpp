@@ -50,7 +50,7 @@ private:
   u16 m_Length;
 };
 
-class Medusa_EXPORT LineData
+class MEDUSA_EXPORT LineData
 {
 public:
   LineData(Address const& rAddress = Address(), std::string const& rText = "", Mark::List const& rMarks = Mark::List(), std::set<u16> const& rOperandsOffset = std::set<u16>())
@@ -69,7 +69,7 @@ private:
   std::set<u16> m_OperandsOffset;
 };
 
-class Medusa_EXPORT PrintData
+class MEDUSA_EXPORT PrintData
 {
 public:
   PrintData(void);
@@ -165,7 +165,7 @@ private:
   mutable MutexType m_Mutex;
 };
 
-class Medusa_EXPORT GraphData
+class MEDUSA_EXPORT GraphData
 {
 public:
   typedef std::tuple<PrintData, u16 /* X */, u16 /* Y */> VertexDataType;
