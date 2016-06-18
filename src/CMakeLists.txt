@@ -13,7 +13,6 @@ macro(medusa_include_module_if_needed module_type module_name)
 endmacro()
 
 add_subdirectory(core)
-add_subdirectory(tools)
 
 # architectures
 
@@ -50,6 +49,12 @@ medusa_include_module_if_needed(ldr st62)          # ST62
 
 medusa_include_module_if_needed(os unix)           # UNIX
 medusa_include_module_if_needed(os windows)        # Windows
+
+# tool
+
+if (MEDUSA_BUILD_TOOLS)
+  add_subdirectory(tools)
+endif()
 
 # test
 

@@ -3,14 +3,14 @@ os: Windows Server 2012 R2
 configuration: Release
 platform: x64
 environment:
-  BOOST_ROOT: C:\Libraries\boost
-  BOOST_LIBRARYDIR: C:\Libraries\boost\lib64-msvc-12.0
-  QTDIR: C:\Qt\5.4\msvc2013_64_opengl
+  BOOST_ROOT: C:\Libraries\boost_1_60_0
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
+  QTDIR: C:\Qt\5.4\msvc2015_64_opengl
 before_build:
 - git submodule update --init --recursive
 - md build
 - cd build
-- cmake -G"Visual Studio 12 Win64" -DQT5_CMAKE_PATH=%QTDIR% -DMEDUSA_CMAKE_USE_COTIRE=TRUE ..
+- cmake -G"Visual Studio 14 Win64" -DQT5_CMAKE_PATH=%QTDIR% -DMEDUSA_CMAKE_USE_COTIRE=TRUE ..
 build:
   project: C:\projects\medusa\build\Medusa.sln
   parallel: true

@@ -12,9 +12,13 @@ set(VERSION_PATCH 4)
 
 # options
 
+option(MEDUSA_BUILD_TOOLS
+  "Build Medusa tools"
+  TRUE)
+
 option(MEDUSA_BUILD_TESTS
   "Build Medusa tests"
-  FALSE)
+  TRUE)
 
 option(MEDUSA_CMAKE_USE_COTIRE
   "use cotire"
