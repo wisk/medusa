@@ -98,11 +98,12 @@ list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
 
 set(MEDUSA_BOOST_MIN_VERSION 1.54)
 
-set(Boost_USE_STATIC_LIBS TRUE)
+#set(Boost_USE_STATIC_LIBS TRUE)
 find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 
 list(APPEND MEDUSA_NEEDED_LIBRARIES ${Boost_LIBRARIES})
 
+add_definitions(-DBOOST_TEST_DYN_LINK=1)
 ## OGDF
 
 if (MEDUSA_BUILD_WITH_OGDF)

@@ -244,6 +244,32 @@ public:
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
 };
 
+class MEDUSA_EXPORT ConstantFoldingVisitor : public CloneVisitor
+{
+public:
+  ConstantFoldingVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef = true)
+          : m_rDoc(rDoc), m_CurAddr(rCurAddr), m_Mode(Mode)
+  {}
+
+  enum  Position
+  {
+      Left = 0,
+      Right,
+  };
+
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+  bool                       IsCommutative(BinaryOperationExpression::SPType spBinOpExpr);
+  bool                       IsAssociative(Expression::SPType spBinOpExpr);
+  Expression::SPType         GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand);
+  Expression::SPType         SimplifyAssociativeOrCommutative(BinaryOperationExpression::SPType spBinOpExpr);
+  Expression::SPType         SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+
+protected:
+  Document const&                   m_rDoc;
+  u8                                m_Mode;
+  Address                           m_CurAddr;
+};
+
 MEDUSA_NAMESPACE_END
 
 #endif // !MEDUSA_EXPRESSION_VISITOR_HPP

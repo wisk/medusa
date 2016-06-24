@@ -2,6 +2,12 @@
 #include "medusa/expression_visitor.hpp"
 #include "medusa/expression_filter.hpp"
 
+#define RESET   "\033[0m"
+#define MAGENTA "\033[35m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define RED     "\033[31m"
+
 MEDUSA_NAMESPACE_BEGIN
 
 Expression::SPType ExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
@@ -579,6 +585,7 @@ Expression::SPType EvaluateVisitor::VisitWhileCondition(WhileConditionExpression
 Expression::SPType EvaluateVisitor::VisitAssignment(AssignmentExpression::SPType spAssignExpr)
 {
   m_spResExpr = spAssignExpr->GetSourceExpression()->Visit(this);
+  std::cerr << GREEN << "EvaluateVisitor - VisitAssignment : " << RESET << spAssignExpr->ToString() << std::endl;
   return nullptr;
 }
 
@@ -586,8 +593,9 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
 {
   auto spExpr = expr_cast<BitVectorExpression>(spUnOpExpr->GetExpression()->Visit(this));
 
+  m_spResExpr = spUnOpExpr;
   if (spExpr == nullptr)
-    return nullptr;
+    return spUnOpExpr;
 
   u32 Bit = spExpr->GetBitSize();
   auto Value = spExpr->GetInt();
@@ -616,30 +624,40 @@ Expression::SPType EvaluateVisitor::VisitUnaryOperation(UnaryOperationExpression
     break;
 
   default:
-    return nullptr;
+    return spUnOpExpr;
   }
 
   m_spResExpr = Expr::MakeBitVector(Result);
-  return m_spResExpr;
+  auto spResultExpr = Expr::MakeBitVector(Result);
+  return spResultExpr;
 }
 
 Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
+  m_spResExpr = spBinOpExpr;
+
+  if (spBinOpExpr == nullptr)
+    std::cerr << "*********************************** EXPRESSION IS NULLPTR " << std::endl;
   auto spLExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetLeftExpression()->Visit(this));
   auto spRExpr = expr_cast<BitVectorExpression>(spBinOpExpr->GetRightExpression()->Visit(this));
 
   if (spLExpr == nullptr || spRExpr == nullptr)
-    return nullptr;
+    return spBinOpExpr;
 
   auto Left = spLExpr->GetInt();
   auto Right = spRExpr->GetInt();
+
   BitVector Result;
 
   switch (spBinOpExpr->GetOperation())
   {
-  case OperationExpression::OpAdd:
+  case OperationExpression::OpAdd: {
     Result = Left + Right;
+    std::cerr << YELLOW << "ADD - OPERAND LEFT : " << Left.ToString() << std::endl;
+    std::cerr << YELLOW << "ADD - OPERAND RIGHT : " << Right.ToString() << std::endl;
+    std::cerr << YELLOW << "RES - SIGNED VALUE : " << Result.GetSignedValue() << std::endl;
     break;
+  }
 
   case OperationExpression::OpSub:
     Result = Left - Right;
@@ -721,10 +739,11 @@ Expression::SPType EvaluateVisitor::VisitBinaryOperation(BinaryOperationExpressi
     break;
 
   default:
-    return nullptr;
+    return spBinOpExpr;
   }
 
   m_spResExpr = Expr::MakeBitVector(Result);
+  std::cerr << RED << "Result of : " << spBinOpExpr->ToString() << " is : " << m_spResExpr->ToString() << RESET << std::endl;
   return m_spResExpr;
 }
 
@@ -803,6 +822,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     if (spBaseConst == nullptr)
     {
       m_IsSymbolic = true;
+      std::cerr << GREEN << "EvaluateVisitor - VisitMemory : " << RESET << spMemExpr->ToString() << std::endl;
       return nullptr;
     }
   }
@@ -811,6 +831,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   if (spOffConst == nullptr)
   {
     m_IsSymbolic = true;
+    std::cerr << GREEN << "EvaluateVisitor - VisitMemory : " << RESET << spMemExpr->ToString() << std::endl;
     return nullptr;
   }
 
@@ -823,8 +844,10 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   Address CurAddr(Base, spOffConst->GetInt().ConvertTo<u64>());
 
   TOffset FileOff;
-  if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
+  if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff)) {
+    std::cerr << GREEN << "EvaluateVisitor - VisitMemory : " << RESET << spMemExpr->ToString() << std::endl;
     return nullptr;
+  }
   auto const& rBinStrm = m_rDoc.GetBinaryStream();
   u64 Value;
 
@@ -850,7 +873,8 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
       return nullptr;
     break;
 
-  default:
+    default:
+    std::cerr << GREEN << "EvaluateVisitor - VisitMemory : " << RESET << spMemExpr->ToString() << std::endl;
     return nullptr;
   }
 
@@ -864,6 +888,7 @@ Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spS
   if (spRes == nullptr)
   {
     m_IsSymbolic = true;
+    std::cerr << GREEN << "EvaluateVisitor - VisitSymbolic : " << RESET << spSymExpr->ToString() << std::endl;
     return nullptr;
   }
   m_spResExpr = spRes;
@@ -1894,9 +1919,17 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
   ExpressionRewriter ER(spValExpr);
   ER.Execute();
 
-  SimplifyVisitor SimVst;
-  auto spSimValExpr = spValExpr->Visit(&SimVst);
-  auto spSimKeyExpr = spKeyExpr->Visit(&SimVst);
+  ConstantFoldingVisitor ConstantFoldingVst(m_rDoc, m_CurAddr, m_Mode);
+  SimplifyVisitor        SimVst;
+
+  auto spConstantFoldingValExpr = spValExpr->Visit(&ConstantFoldingVst);
+  auto spConstantFoldingKeyExpr = spKeyExpr->Visit(&ConstantFoldingVst);
+
+  auto spSimValExpr = spConstantFoldingValExpr->Visit(&SimVst);
+  auto spSimKeyExpr = spConstantFoldingKeyExpr->Visit(&SimVst);
+
+  //auto spSimValExpr = spEvalValExpr->Visit(&SimVst);
+  //auto spSimKeyExpr = spEvalKeyExpr->Visit(&SimVst);
 
   m_SymCtxt[spSimKeyExpr] = spSimValExpr;
 }
@@ -2020,17 +2053,318 @@ Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::S
   return Expr::MakeVar(pCpuInfo->ConvertIdentifierToName(Id), VariableExpression::Use);
 }
 
+Expression::SPType               ConstantFoldingVisitor::SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+{
+  EvaluateVisitor EvalVst(m_rDoc, m_CurAddr, m_Mode);
+
+  if (spLeftExpr && spLeftExpr->IsClassOf<BitVectorExpression>())
+  {
+    if (spRightExpr && (spRightExpr->IsClassOf<UnaryOperationExpression>() || spRightExpr->IsClassOf<BitVectorExpression>()))
+    {
+      auto ret = Expr::MakeBinOp(static_cast<OperationExpression::Type>(Operation), spLeftExpr, spRightExpr);
+      ret->Visit(&EvalVst);
+      auto Result = EvalVst.GetResultExpression();
+      return Result;
+    }
+  }
+  else if (spLeftExpr && spLeftExpr->IsClassOf<UnaryOperationExpression>())
+  {
+    auto ret = Expr::MakeBinOp(static_cast<OperationExpression::Type>(Operation), spLeftExpr, spRightExpr);
+    ret->Visit(&EvalVst);
+    auto Result = EvalVst.GetResultExpression();
+    return Result;
+  }
+  return nullptr;
+}
+
+bool               ConstantFoldingVisitor::IsCommutative(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  bool  commutativity = false;
+
+  switch(spBinOpExpr->GetOperation())
+  {
+    case OperationExpression::OpMul:
+    case OperationExpression::OpAdd:
+    case OperationExpression::OpOr:
+    case OperationExpression::OpXor:
+    case OperationExpression::OpAnd: {
+      commutativity = true;
+      break;
+    }
+    default: {
+      commutativity = false;
+      break;
+    }
+  }
+  return commutativity;
+}
+
+bool               ConstantFoldingVisitor::IsAssociative(Expression::SPType spBinOpExpr) {
+
+  auto spLeft = expr_cast<BinaryOperationExpression>(spBinOpExpr)->GetLeftExpression();
+  auto spRight = expr_cast<BinaryOperationExpression>(spBinOpExpr)->GetRightExpression();
+  BinaryOperationExpression::SPType spLeftBinOpExpr = nullptr;
+  BinaryOperationExpression::SPType spRightBinOpExpr = nullptr;
+
+  if (spLeft && spLeft->IsClassOf<BinaryOperationExpression>())
+    spLeftBinOpExpr = expr_cast<BinaryOperationExpression>(spLeft);
+  else if (spRight && spRight->IsClassOf<BinaryOperationExpression>())
+    spRightBinOpExpr = expr_cast<BinaryOperationExpression>(spRight);
+
+  auto TestAssociativity = [spBinOpExpr](OperationExpression::Type ExprOperation) {
+      bool  associativity = false;
+      switch (ExprOperation) {
+        case OperationExpression::OpMul:
+        case OperationExpression::OpAdd:
+        case OperationExpression::OpOr:
+        case OperationExpression::OpXor:
+        case OperationExpression::OpAnd: {
+          associativity = true;
+          break;
+        }
+        default: {
+          associativity = false;
+          break;
+        }
+      }
+      return associativity;
+  };
+
+  auto BinOpExprOperation = expr_cast<BinaryOperationExpression>(spBinOpExpr)->GetOperation();
+  if (spLeftBinOpExpr && (BinOpExprOperation == spLeftBinOpExpr->GetOperation()))
+    return TestAssociativity(static_cast<OperationExpression::Type>(BinOpExprOperation));
+  else if (spRightBinOpExpr && (BinOpExprOperation == spRightBinOpExpr->GetOperation()))
+    return TestAssociativity(static_cast<OperationExpression::Type>(BinOpExprOperation));
+  std::cerr << RED << "THERE IS NO BINARY-OPERATION" << RESET << std::endl;
+  return false;
+}
+
+Expression::SPType               ConstantFoldingVisitor::GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand)
+{
+  if (nullptr == spBinOpExpr)
+    return nullptr;
+
+  auto spLeftExpr = spBinOpExpr->GetLeftExpression();
+  auto spRightExpr = spBinOpExpr->GetRightExpression();
+
+  if (!Operand)
+    return spLeftExpr;
+  else if (1 == Operand)
+    return spRightExpr;
+  return nullptr;
+}
+
+Expression::SPType               ConstantFoldingVisitor::SimplifyAssociativeOrCommutative(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  bool             changed = false;
+
+  // Used to transform (A + C1) - C2 ==> (A + C1) + -C2
+  // It transform the non commutative operation Sub to the commutative operation Add
+  auto TransformOperationSub = [] (BinaryOperationExpression::SPType spBinOpExpr)
+  {
+      auto spRightExpr = spBinOpExpr->GetRightExpression();
+      auto spBvRightExpr = expr_cast<BitVectorExpression>(spRightExpr);
+
+      if (spBvRightExpr)
+      {
+        spRightExpr = Expr::MakeUnOp(OperationExpression::Type::OpNeg, spBvRightExpr);
+        auto spLeftExpr = spBinOpExpr->GetLeftExpression();
+
+        spBinOpExpr = expr_cast<BinaryOperationExpression>(Expr::MakeBinOp(static_cast<OperationExpression::Type>(OperationExpression::OpAdd), spLeftExpr, spRightExpr));
+      }
+      return spBinOpExpr;
+  };
+
+  do
+  {
+    changed = false;
+    auto spLeftExpr = GetOperand(spBinOpExpr, Position::Left);
+    auto spRightExpr = GetOperand(spBinOpExpr, Position::Right);
+    auto spBinOpLeftExpr = expr_cast<BinaryOperationExpression>(spLeftExpr);
+    auto spBinOpRightExpr = expr_cast<BinaryOperationExpression>(spRightExpr);
+    if (!IsCommutative(spBinOpExpr))
+    {
+      std::cerr << MAGENTA <<  "--------------------- SimplifyAssociativeOrCommutative : Expression is NO COMMUTATIVE : " << spBinOpExpr->ToString() << RESET << std::endl;
+      if (spBinOpExpr->GetOperation() == OperationExpression::OpSub)
+      {
+        auto NewOp = TransformOperationSub(spBinOpExpr);
+        spBinOpExpr = expr_cast<BinaryOperationExpression>(NewOp);
+      }
+      else if (spBinOpLeftExpr && spBinOpLeftExpr->GetOperation() == OperationExpression::OpSub)
+      {
+        auto NewOpLeft = TransformOperationSub(spBinOpLeftExpr);
+        spBinOpExpr = expr_cast<BinaryOperationExpression>(Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), NewOpLeft, spRightExpr));
+      }
+      else if (spBinOpRightExpr && spBinOpRightExpr->GetOperation() == OperationExpression::OpSub)
+      {
+        auto NewOpRight = TransformOperationSub(spBinOpRightExpr);
+        spBinOpExpr = expr_cast<BinaryOperationExpression>(Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spLeftExpr, NewOpRight));
+      }
+    }
+
+    std::cerr << MAGENTA <<  "--------------------- SimplifyAssociativeOrCommutative : Expression is : " << spBinOpExpr->ToString() << RESET << std::endl;
+
+    if (IsAssociative(spBinOpExpr)) {
+      std::cerr << MAGENTA << "----------------------------- SimplifyAssociativeOrCommutative LEFT : Expression is associative : " << spBinOpExpr->ToString()
+      << RESET << std::endl;
+      // SubOperationLeft == A op B
+      // Case : (A op B) op C ==> A op (B op C)
+      // Simplify B op C
+      if (spBinOpLeftExpr && spBinOpLeftExpr->GetOperation() == spBinOpExpr->GetOperation()) {
+        auto spBinOpLeftOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spLeftExpr), Position::Left);
+        auto spBinOpLeftOperandRightExpr = GetOperand(expr_cast<BinaryOperationExpression>(spLeftExpr), Position::Right);
+        auto spValueRight = spBinOpExpr->GetRightExpression();
+
+        if (auto spValueRes = SimplifyBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                            spBinOpLeftOperandRightExpr, spValueRight)) {
+          // Simplifies to spValueRes form LeftOpLeft OP spValueRes
+          auto spSimplifiedExpr = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                                  spBinOpLeftOperandLeftExpr, spValueRes);
+          std::cerr << MAGENTA << "----------------------------- SimplifyAssociativeOrCommutative : Associative LEFT after : " <<
+          spSimplifiedExpr->ToString() << RESET << std::endl;
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(spSimplifiedExpr);
+          changed = true;
+          continue;
+        }
+      }
+
+      if (spBinOpRightExpr && spBinOpRightExpr->GetOperation() == spBinOpExpr->GetOperation()) {
+        // SubOperationRight == B op C
+        // Case : A op (B op C) ==> (A op B) op C
+        // Simplify A op B
+        auto spValueLeft = spBinOpExpr->GetLeftExpression();
+        auto spBinOpRightOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spRightExpr), Position::Left);
+        auto spBinOpRightOperandRightExpr = GetOperand(expr_cast<BinaryOperationExpression>(spRightExpr), Position::Right);
+
+        std::cerr << MAGENTA << "----------------------------- SimplifyAssociativeOrCommutative RIGHT : Expression is associative : " << spBinOpExpr->ToString()
+        << RESET << std::endl;
+        if (auto spValueRes = SimplifyBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                            spValueLeft, spBinOpRightOperandLeftExpr)) {
+          auto spSimplifiedExpr = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                                  spValueRes, spBinOpRightOperandRightExpr);
+          std::cerr << MAGENTA << "----------------------------- SimplifyAssociativeOrCommutative : Associative RIGHT after : " <<
+          spSimplifiedExpr->ToString() << RESET << std::endl;
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(spSimplifiedExpr);
+          changed = true;
+          continue;
+        }
+      }
+    }
+
+    if (IsAssociative(spBinOpExpr) && IsCommutative(spBinOpExpr))
+    {
+      spBinOpLeftExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetLeftExpression());
+      spBinOpRightExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetRightExpression());
+
+      if (spBinOpRightExpr && spBinOpRightExpr->GetOperation() == spBinOpExpr->GetOperation()) {
+        // SubOperationRightExpr == B op C
+        // Case : A op (B op C) ==> B op (C op A)
+        // Simplify C op A
+        auto spRightExpr = spBinOpExpr->GetRightExpression();
+        auto spValueLeft = spBinOpExpr->GetLeftExpression();
+        auto spBinOpRightOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spRightExpr), Position::Left);
+        auto spBinOpRightOperandRightExpr = GetOperand(expr_cast<BinaryOperationExpression>(spRightExpr), Position::Right);
+
+        if (auto spValueRes = SimplifyBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                            spBinOpRightOperandRightExpr, spValueLeft)) {
+          // Simplifies to spValueRes form LeftOpLeft OP spValueRes
+          auto spSimplifiedExpr = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                                  spBinOpRightOperandLeftExpr, spValueRes);
+          std::cerr << MAGENTA <<
+          "----------------------------- SimplifyAssociativeOrCommutative : Associative and Commutative RIGHTOPERATION after : " <<
+          spSimplifiedExpr->ToString() << RESET << std::endl;
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(spSimplifiedExpr);
+          changed = true;
+          continue;
+        }
+      }
+
+      if (spBinOpLeftExpr && spBinOpLeftExpr->GetOperation() == spBinOpExpr->GetOperation())
+      {
+        // SubOperationLeftExpr == A op B
+        // Case : (A op B) op C ==> (C op A) op B
+        // Simplify C op A
+        auto spLeft = spBinOpExpr->GetLeftExpression();
+        auto spValueRight = spBinOpExpr->GetRightExpression();
+        auto spBinOpLeftOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spLeft), Position::Left);
+        auto spBinOpLeftOperandRightExpr = GetOperand(expr_cast<BinaryOperationExpression>(spLeft), Position::Right);
+
+        if (auto spValueRes = SimplifyBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                            spValueRight, spBinOpLeftOperandLeftExpr)) {
+          // Simplifies to spValueRes form LeftOpLeft OP spValueRes
+          auto spSimplifiedExpr = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                                  spValueRes, spBinOpLeftOperandRightExpr);
+          std::cerr << MAGENTA <<
+          "----------------------------- SimplifyAssociativeOrCommutative : Associative and Commutative LEFTOPERATION after : " <<
+          spSimplifiedExpr->ToString() << RESET << std::endl;
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(spSimplifiedExpr);
+          changed = true;
+          continue;
+        }
+      }
+
+      spBinOpLeftExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetLeftExpression());
+      spBinOpRightExpr = expr_cast<BinaryOperationExpression>(spBinOpExpr->GetRightExpression());
+      if (spBinOpLeftExpr&& spBinOpRightExpr && (spBinOpLeftExpr->GetOperation() == spBinOpRightExpr->GetOperation())
+          && (spBinOpLeftExpr->GetOperation() == spBinOpExpr->GetOperation())
+          && GetOperand(spBinOpLeftExpr, Position::Right)->IsClassOf<BitVectorExpression>()
+          && GetOperand(spBinOpRightExpr, Position::Right)->IsClassOf<BitVectorExpression>())
+      {
+        // SubOperationLeft == A op C1
+        // SubOperationRight == B op C2
+        // (A op C1) op (B op C2) ==> (A op B) op (C1 op C2)
+        // Fold C1 op C2
+        auto spLeft = spBinOpExpr->GetLeftExpression();
+        auto spRight = spBinOpExpr->GetRightExpression();
+        auto spBinOpLeftOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spLeft), Position::Left);
+        auto spBvBinOpLeftOperandRightExpr = expr_cast<BitVectorExpression>(GetOperand(expr_cast<BinaryOperationExpression>(spLeft), Position::Right));
+        auto spBinOpRightOperandLeftExpr = GetOperand(expr_cast<BinaryOperationExpression>(spRight), Position::Left);
+        auto spBvBinOpRightOperandRight = expr_cast<BitVectorExpression>(GetOperand(expr_cast<BinaryOperationExpression>(spRight), Position::Right));
+
+        auto spVarBinOpLeftExpr = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                           spBinOpLeftOperandLeftExpr, spBinOpRightOperandLeftExpr);
+        auto spConstantFoldExpr = SimplifyBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()),
+                                        spBvBinOpLeftOperandRightExpr, spBvBinOpRightOperandRight);
+
+        if (spConstantFoldExpr == nullptr)
+        {
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spVarBinOpLeftExpr,
+          Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spBvBinOpLeftOperandRightExpr, spBvBinOpRightOperandRight)));
+        }
+        else if (spConstantFoldExpr)
+          spBinOpExpr = expr_cast<BinaryOperationExpression>(Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spVarBinOpLeftExpr, spConstantFoldExpr));
+
+        changed = true;
+      }
+    }
+  } while (changed);
+  return spBinOpExpr;
+}
+
+Expression::SPType   ConstantFoldingVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+{
+  auto Left = spBinOpExpr->GetLeftExpression();
+  auto Right = spBinOpExpr->GetRightExpression();
+  auto Test = Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), Left, Right);
+  auto Ret = SimplifyAssociativeOrCommutative(expr_cast<BinaryOperationExpression>(Test));
+  return Ret;
+}
+
 Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
+
   auto spLeft  = spBinOpExpr->GetLeftExpression() ->Visit(this);
   auto spRight = spBinOpExpr->GetRightExpression()->Visit(this);
 
+  std::cerr << GREEN << "SimplifyVisitor - VisitBinaryOperation : " << RESET << spBinOpExpr->ToString() << std::endl;
   auto spBvLeft  = expr_cast<BitVectorExpression>(spLeft );
   auto spBvRight = expr_cast<BitVectorExpression>(spRight);
 
   // NOTE(wisk): this expression should be evaluate before
-  if (spBvLeft != nullptr && spBvRight != nullptr)
+  if (spBvLeft != nullptr && spBvRight != nullptr) {
+    std::cerr << GREEN << "SimplifyVisitor : Expression should be evaluate Before" << RESET << std::endl;
     return Expr::MakeBinOp(static_cast<OperationExpression::Type>(spBinOpExpr->GetOperation()), spLeft, spRight);
+  }
 
   auto TestZero = [](BitVectorExpression::SPType spBv)
   {
@@ -2060,6 +2394,12 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   case OperationExpression::OpOr:
   case OperationExpression::OpAdd:
   {
+    std::cerr << YELLOW << "SimplifyVisitor : ADD ";
+    if (spBvLeft)
+      std::cerr << " LEFT : " << spBvLeft->ToString();
+    if (spBvRight)
+      std::cerr << " RIGHT : " << spBvRight->ToString();
+    std::cerr << RESET << std::endl;
     if (TestZero(spBvLeft))
       return spRight;
     if (TestZero(spBvRight))
@@ -2068,12 +2408,13 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   }
 
   // a - 0 = a
-  case OperationExpression::OpSub:
-  {
-    if (TestZero(spBvRight))
-      return spLeft;
-    break;
-  }
+    case OperationExpression::OpSub:
+    {
+      std::cerr << YELLOW << "SimplifyVisitor : SUB" << RESET << std::endl;
+      if (TestZero(spBvRight))
+        return spLeft;
+      break;
+    }
 
   // a * 1 = a // 1 * b = b
   case OperationExpression::OpMul:
@@ -2098,6 +2439,7 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   // a ^ b = 0 if a == b
   case OperationExpression::OpXor:
   {
+    std::cerr << YELLOW << "SimplifyVisitor : XOR" << RESET << std::endl;
     if (spLeft->Compare(spRight) == Expression::CmpIdentical)
       return Expr::MakeBitVector(spLeft->GetBitSize(), 0x0);
     break;
