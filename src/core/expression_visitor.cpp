@@ -947,18 +947,20 @@ SymbolicVisitor::SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef)
 
 Expression::SPType SymbolicVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
-  return nullptr;
+  Log::Write("core").Level(LogDebug) << "symbolic visitor visits a system expression" << LogEnd;
+  return spSysExpr;
 }
 
 Expression::SPType SymbolicVisitor::VisitBind(BindExpression::SPType spBindExpr)
 {
   for (auto const& rspExpr : spBindExpr->GetBoundExpressions())
     rspExpr->Visit(this);
-  return nullptr;
+  return spBindExpr;
 }
 
 Expression::SPType SymbolicVisitor::VisitCondition(ConditionExpression::SPType spCondExpr)
 {
+  Log::Write("core").Level(LogDebug) << "symbolic visitor visits a condition expression" << LogEnd;
   return nullptr;
 }
 
@@ -1029,7 +1031,7 @@ Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpressi
   if (Res)
   {
     auto spThenExpr = spIfElseExpr->GetThenExpression();
-    return spThenExpr != nullptr ? spThenExpr->Visit(this) : nullptr;
+    return spThenExpr->Visit(this);
   }
   else
   {
@@ -1040,6 +1042,7 @@ Expression::SPType SymbolicVisitor::VisitIfElseCondition(IfElseConditionExpressi
 
 Expression::SPType SymbolicVisitor::VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr)
 {
+  Log::Write("core").Level(LogDebug) << "symbolic visitor visits a while expression" << LogEnd;
   return nullptr;
 }
 
@@ -1158,6 +1161,7 @@ Expression::SPType SymbolicVisitor::VisitUnaryOperation(UnaryOperationExpression
     break;
 
   default:
+    Log::Write("core").Level(LogError) << "unknown/unsupported unary operation" << LogEnd;
     return nullptr;
   }
 
@@ -1199,25 +1203,37 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
 
   case OperationExpression::OpUDiv:
     if (Right.GetUnsignedValue() == 0)
+    {
+      Log::Write("core").Level(LogError) << "unsigned division by zero" << LogEnd;
       return nullptr;
+    }
     Result = Left.UDiv(Right);
     break;
 
   case OperationExpression::OpSDiv:
     if (Right.GetSignedValue() == 0)
+    {
+      Log::Write("core").Level(LogError) << "signed division by zero" << LogEnd;
       return nullptr;
+    }
     Result = Left.SDiv(Right);
     break;
 
   case OperationExpression::OpUMod:
     if (Right.GetUnsignedValue() == 0)
+    {
+      Log::Write("core").Level(LogError) << "unsigned modulo by zero" << LogEnd;
       return nullptr;
+    }
     Result = Left.UMod(Right);
     break;
 
   case OperationExpression::OpSMod:
     if (Right.GetSignedValue() == 0)
+    {
+      Log::Write("core").Level(LogError) << "signed modulo by zero" << LogEnd;
       return nullptr;
+    }
     Result = Left.SMod(Right);
     break;
 
@@ -1277,6 +1293,7 @@ Expression::SPType SymbolicVisitor::VisitBinaryOperation(BinaryOperationExpressi
     break;
 
   default:
+    Log::Write("core").Level(LogError) << "unknown/unsupported binary operation" << LogEnd;
     return nullptr;
   }
 
@@ -1316,6 +1333,7 @@ Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType
 
 Expression::SPType SymbolicVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)
 {
+  Log::Write("core").Level(LogDebug) << "symbolic visitor visits vector identifier" << LogEnd;
   return nullptr;
 }
 
@@ -1381,7 +1399,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
       break;
     }
   }
-  return nullptr;
+  return spVarExpr;
 }
 
 Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
@@ -1444,7 +1462,10 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
   TOffset FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
+  {
+    Log::Write("core").Level(LogError) << "symbolic visitor: failed to convert address: " << CurAddr << LogEnd;
     return nullptr;
+  }
   auto const& rBinStrm = m_rDoc.GetBinaryStream();
   u64 Value;
 
@@ -1452,28 +1473,41 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   {
   case 8:
     if (!ReadType<u8>(rBinStrm, FileOff, Value))
-      return nullptr;
+    {
+      Log::Write("core").Level(LogError) << "symbolic visitor: failed to read 8-bit at: " << CurAddr << LogEnd;
+      return spMemExpr;
+    }
     break;
 
   case 16:
     if (!ReadType<u16>(rBinStrm, FileOff, Value))
-      return nullptr;
+    {
+      Log::Write("core").Level(LogError) << "symbolic visitor: failed to read 16-bit at: " << CurAddr << LogEnd;
+      return spMemExpr;
+    }
     break;
 
   case 32:
     if (!ReadType<u32>(rBinStrm, FileOff, Value))
-      return nullptr;
+    {
+      Log::Write("core").Level(LogError) << "symbolic visitor: failed to read 32-bit at: " << CurAddr << LogEnd;
+      return spMemExpr;
+    }
     break;
 
   case 64:
     if (!ReadType<u64>(rBinStrm, FileOff, Value))
-      return nullptr;
+    {
+      Log::Write("core").Level(LogError) << "symbolic visitor: failed to read 64-bit at: " << CurAddr << LogEnd;
+      return spMemExpr;
+    }
     break;
 
   // LATER(wisk): rely on BitVector to support any read size
 
   default:
-    return nullptr;
+    Log::Write("core").Level(LogError) << "symbolic visitor: invalid memory access size" << LogEnd;
+    return spMemExpr;
   }
 
   return Expr::MakeBitVector(spMemExpr->GetAccessSizeInBit(), Value);
@@ -1821,7 +1855,6 @@ Expression::SPType SymbolicVisitor::RemoveExpressionAnnotations(Expression::SPTy
 
 Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
 {
-  //Log::Write("dbg") << ToString() << LogEnd;
   auto spExprToFind = RemoveExpressionAnnotations(spExpr);
   if (spExprToFind == nullptr)
         return nullptr;
@@ -1907,6 +1940,12 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
 
   auto spSimValExpr = spConstantFoldingValExpr->Visit(&SimVst);
   auto spSimKeyExpr = spConstantFoldingKeyExpr->Visit(&SimVst);
+
+  if (spSimKeyExpr == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "try to insert null expression with key: " << spKeyExpr->ToString() << LogEnd;
+    return;
+  }
 
   m_SymCtxt[spSimKeyExpr] = spSimValExpr;
 }
@@ -2030,7 +2069,7 @@ Expression::SPType IdentifierToVariable::VisitIdentifier(IdentifierExpression::S
   return Expr::MakeVar(pCpuInfo->ConvertIdentifierToName(Id), VariableExpression::Use);
 }
 
-Expression::SPType               ConstantFoldingVisitor::SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
+Expression::SPType ConstantFoldingVisitor::SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr)
 {
   EvaluateVisitor EvalVst(m_rDoc, m_CurAddr, m_Mode);
 
@@ -2054,9 +2093,9 @@ Expression::SPType               ConstantFoldingVisitor::SimplifyBinOp(Operation
   return nullptr;
 }
 
-bool               ConstantFoldingVisitor::IsCommutative(BinaryOperationExpression::SPType spBinOpExpr)
+bool ConstantFoldingVisitor::IsCommutative(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  bool  commutativity = false;
+  bool commutativity = false;
 
   switch(spBinOpExpr->GetOperation())
   {
@@ -2076,7 +2115,7 @@ bool               ConstantFoldingVisitor::IsCommutative(BinaryOperationExpressi
   return commutativity;
 }
 
-bool               ConstantFoldingVisitor::IsAssociative(Expression::SPType spBinOpExpr) {
+bool ConstantFoldingVisitor::IsAssociative(Expression::SPType spBinOpExpr) {
 
   auto spLeft = expr_cast<BinaryOperationExpression>(spBinOpExpr)->GetLeftExpression();
   auto spRight = expr_cast<BinaryOperationExpression>(spBinOpExpr)->GetRightExpression();
@@ -2115,7 +2154,7 @@ bool               ConstantFoldingVisitor::IsAssociative(Expression::SPType spBi
   return false;
 }
 
-Expression::SPType               ConstantFoldingVisitor::GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand)
+Expression::SPType ConstantFoldingVisitor::GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand)
 {
   if (nullptr == spBinOpExpr)
     return nullptr;
@@ -2130,9 +2169,9 @@ Expression::SPType               ConstantFoldingVisitor::GetOperand(BinaryOperat
   return nullptr;
 }
 
-Expression::SPType               ConstantFoldingVisitor::SimplifyAssociativeOrCommutative(BinaryOperationExpression::SPType spBinOpExpr)
+Expression::SPType ConstantFoldingVisitor::SimplifyAssociativeOrCommutative(BinaryOperationExpression::SPType spBinOpExpr)
 {
-  bool             changed = false;
+  bool changed = false;
 
   // Used to transform (A + C1) - C2 ==> (A + C1) + -C2
   // It transform the non commutative operation Sub to the commutative operation Add
@@ -2300,7 +2339,7 @@ Expression::SPType               ConstantFoldingVisitor::SimplifyAssociativeOrCo
   return spBinOpExpr;
 }
 
-Expression::SPType   ConstantFoldingVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
+Expression::SPType ConstantFoldingVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
   auto Left = spBinOpExpr->GetLeftExpression();
   auto Right = spBinOpExpr->GetRightExpression();
