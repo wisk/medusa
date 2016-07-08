@@ -1083,6 +1083,10 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
   if (spDstExpr == nullptr || spDstExprVst == nullptr)
     return nullptr;
 
+  // FIXME(wisk): It seems that sometime the visited destination is a bitvector expression
+  if (expr_cast<BitVectorExpression>(spDstExprVst))
+    spDstExprVst = spDstExpr;
+
   // If we have a conditional expression, we need to transform the source to a ternary expression
   // We allow this operation even if update flag is false since we keep the conditional part
   if (m_spCond != nullptr)
@@ -1941,6 +1945,12 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
   auto spSimValExpr = spConstantFoldingValExpr->Visit(&SimVst);
   auto spSimKeyExpr = spConstantFoldingKeyExpr->Visit(&SimVst);
 
+  if (expr_cast<BitVectorExpression>(spSimKeyExpr))
+  {
+    Log::Write("core").Level(LogError) << "try to insert a bitvector expression as key: " << spKeyExpr->ToString() << "=" << spValExpr->ToString() << LogEnd;
+    return;
+  }
+
   if (spSimKeyExpr == nullptr)
   {
     Log::Write("core").Level(LogError) << "try to insert null expression with key: " << spKeyExpr->ToString() << LogEnd;
@@ -2429,6 +2439,33 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   {
     if (spLeft->Compare(spRight) == Expression::CmpIdentical)
       return Expr::MakeBitVector(spLeft->GetBitSize(), 0x0);
+    break;
+  }
+
+  // useless extension/cast e.g. zext(bv32(...), 32)
+  // op(op(..., xxx), xxx) where both op and xxx are the same
+  case OperationExpression::OpSext:
+  case OperationExpression::OpZext:
+  case OperationExpression::OpBcast:
+  {
+    // current extension/cast size
+    if (spBvRight == nullptr)
+      break;
+    // size if encoded in both value and bitsize
+    if (spLeft->GetBitSize() == spBvRight->GetBitSize())
+      return spLeft;
+    // sub expression
+    auto spSubBinOp = expr_cast<BinaryOperationExpression>(spLeft);
+    if (spSubBinOp == nullptr)
+      break;
+    // sub extension/cast size
+    auto spSubBv = expr_cast<BitVectorExpression>(spSubBinOp->GetRightExpression());
+    if (spSubBv == nullptr)
+      break;
+    // check if both op and size are the same
+    if (spBinOpExpr->GetOperation() == spSubBinOp->GetOperation() && spBvRight->Compare(spSubBv) == Expression::CmpIdentical)
+      return spSubBinOp;
+
     break;
   }
 
