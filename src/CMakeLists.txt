@@ -29,6 +29,7 @@ medusa_include_module_if_needed(bind python)       # Python
 # database
 
 medusa_include_module_if_needed(db text)           # Text
+medusa_include_module_if_needed(db soci)           # SOCI
 
 # emulation
 

@@ -108,7 +108,7 @@ void ModuleManager::LoadDatabases(Path const& rModPath)
         continue;
       }
 
-      if (LoadCommonFromModule(rModPath, pMod, Module) == false)
+      if (!LoadCommonFromModule(rFilename, pMod, Module))
         Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }
@@ -166,7 +166,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
       }
 
-      if (LoadCommonFromModule(rModPath, pMod, Module) == false)
+      if (!LoadCommonFromModule(rFilename, pMod, Module))
         Log::Write("core") << "is unknown (ignored)" << LogEnd;
     }
   }

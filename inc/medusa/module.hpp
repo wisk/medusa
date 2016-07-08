@@ -133,7 +133,7 @@ public:
       std::string const MsgError,
       std::function<void (ModuleType)> pFct)
   {
-    Log::Write("core") << rModulePath.string() << MsgModule << LogEnd;
+    Log::Write("core") << rModulePath.string() << " " << MsgModule << LogEnd;
     if (pModule == nullptr)
     {
       Log::Write("core") << MsgError << LogEnd;

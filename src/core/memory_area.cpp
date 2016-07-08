@@ -24,14 +24,14 @@ MemoryArea::~MemoryArea(void)
 {
 }
 
-void                       MemoryArea::SetDefaultArchitectureTag(Tag arch)
+void MemoryArea::SetDefaultArchitectureTag(Tag Arch)
 {
-  m_DefaultArchitectureTag = arch;
+  m_DefaultArchitectureTag = Arch;
 }
 
-void                       MemoryArea::SetDefaultArchitectureMode(u8 mode)
+void MemoryArea::SetDefaultArchitectureMode(u8 Mode)
 {
-  m_DefaultArchitectureMode = mode;
+  m_DefaultArchitectureMode = Mode;
 }
 
 MappedMemoryArea::~MappedMemoryArea(void)
