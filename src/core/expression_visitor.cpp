@@ -1087,6 +1087,10 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
   if (expr_cast<BitVectorExpression>(spDstExprVst))
     spDstExprVst = spDstExpr;
 
+  // Update track address/position if needed
+  else if (auto spTrkExpr = expr_cast<TrackExpression>(spDstExprVst))
+    spDstExprVst = Expr::MakeTrack(spTrkExpr->GetTrackedExpression(), m_CurAddr, m_CurPos);
+
   // If we have a conditional expression, we need to transform the source to a ternary expression
   // We allow this operation even if update flag is false since we keep the conditional part
   if (m_spCond != nullptr)
@@ -1331,7 +1335,7 @@ Expression::SPType SymbolicVisitor::VisitIdentifier(IdentifierExpression::SPType
   m_IsSymbolic = true;
   auto spTrkId = Expr::MakeTrack(spIdExpr, m_CurAddr, m_CurPos);
   auto spSymId = Expr::MakeSym(SymbolicExpression::Undefined, "sym_vst", m_CurAddr, spIdExpr);
-  m_SymCtxt[spTrkId] = spSymId;
+  _InsertExpression(spTrkId, spSymId);
   return spSymId;
 }
 
@@ -1422,6 +1426,18 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
   spOffExpr = spMemExpr->GetOffsetExpression()->Visit(this);
   m_Update = OldUpdateState;
+
+  auto spVstMemExpr = Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemExpr->IsDereferencable());
+  SimplifyVisitor SimVst;
+  spVstMemExpr = spVstMemExpr->Visit(&SimVst);
+
+  if (!spMemExpr->IsDereferencable())
+  {
+    return spVstMemExpr;
+  }
+
+  if (auto spValMemExpr = GetValue(spVstMemExpr))
+    return spValMemExpr;
 
   // Sometimes, we don't want to evaluate memory reference or we can't
   auto spOffConstExpr = expr_cast<BitVectorExpression>(spOffExpr);
@@ -2478,6 +2494,23 @@ Expression::SPType SimplifyVisitor::VisitIfElseCondition(IfElseConditionExpressi
 {
   // TODO(wisk): evaluate condition if possible
   return spIfElseExpr;
+}
+
+Expression::SPType SimplifyVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
+{
+  auto spVstBaseExpr = spMemExpr->GetBaseExpression() != nullptr ? spMemExpr->GetBaseExpression()->Visit(this) : nullptr;
+  auto spVstOffExpr  = spMemExpr->GetOffsetExpression()->Visit(this);
+
+  if (!spMemExpr->IsDereferencable())
+  {
+    // TODO(wisk): at this time we don't support logical address conversion
+    if (spMemExpr->GetBaseExpression() == nullptr)
+    {
+      return spVstOffExpr;
+    }
+  }
+
+  return Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spVstBaseExpr, spVstOffExpr, spMemExpr->IsDereferencable());
 }
 
 MEDUSA_NAMESPACE_END

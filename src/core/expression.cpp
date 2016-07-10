@@ -1238,7 +1238,22 @@ Expression::CompareType TrackExpression::Compare(Expression::SPType spExpr) cons
 {
   auto spCmpExpr = expr_cast<TrackExpression>(spExpr);
   if (spCmpExpr == nullptr)
+  {
+    // Track and symbolic are actually same expression
+    if (auto spSymExpr = expr_cast<SymbolicExpression>(spExpr))
+    {
+      if (spSymExpr->GetExpression() == nullptr)
+        return CmpDifferent;
+      if (m_spTrkExpr == nullptr)
+        return CmpDifferent;
+      if (m_CurAddr != spSymExpr->GetAddress())
+        return CmpDifferent;
+      if (m_spTrkExpr->Compare(spSymExpr->GetExpression()) != CmpIdentical)
+        return CmpDifferent;
+      return CmpIdentical;
+    }
     return CmpDifferent;
+  }
   if (m_CurAddr != spCmpExpr->GetTrackAddress())
     return CmpSameExpression;
   if (m_Pos != spCmpExpr->GetTrackPosition())
@@ -1540,7 +1555,21 @@ Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) c
 {
   auto spCmpExpr = expr_cast<SymbolicExpression>(spExpr);
   if (spCmpExpr == nullptr)
+  {
+    if (auto spTrkExpr = expr_cast<TrackExpression>(spExpr))
+    {
+      if (m_spExpr == nullptr)
+        return CmpDifferent;
+      if (spTrkExpr->GetTrackedExpression() == nullptr)
+        return CmpDifferent;
+      if (m_Address != spTrkExpr->GetTrackAddress())
+        return CmpDifferent;
+      if (m_spExpr->Compare(spTrkExpr->GetTrackedExpression()) != CmpIdentical)
+        return CmpDifferent;
+      return CmpIdentical;
+    }
     return CmpDifferent;
+  }
   if (m_Address != spCmpExpr->GetAddress())
     return CmpSameExpression;
   if (m_Value != spCmpExpr->GetValue())
