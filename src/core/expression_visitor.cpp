@@ -1066,6 +1066,9 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
     spSrcExpr = spSrcExprVal;
 
   auto spDstExpr = spAssignExpr->GetDestinationExpression();
+  SimplifyVisitor SimVst;
+  spDstExpr = spDstExpr->Visit(&SimVst);
+
   // NOTE(wisk): If the destination is an identifier, we don't want to transform it
   // to a bitvector if it's present on the symbolic context (e.g. pc register)
   if (auto spDstIdExpr = expr_cast<IdentifierExpression>(spDstExpr))
@@ -1085,7 +1088,18 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
 
   // FIXME(wisk): It seems that sometime the visited destination is a bitvector expression
   if (expr_cast<BitVectorExpression>(spDstExprVst))
+  {
     spDstExprVst = spDstExpr;
+
+    // FIXME(wisk): If the visited destination expression is a memory area but was converted to
+    // an bit vector expression, we need to keep information (track/symbolic) on bot base and offset
+    if (auto spMemDstExprVst = expr_cast<MemoryExpression>(spDstExprVst))
+    {
+      auto spBaseExpr = spMemDstExprVst->GetBaseExpression() != nullptr ? spMemDstExprVst->Visit(this) : nullptr;
+      auto spOffExpr  = spMemDstExprVst->GetOffsetExpression()->Visit(this);
+      spDstExprVst = Expr::MakeMem(spMemDstExprVst->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemDstExprVst->IsDereferencable());
+    }
+  }
 
   // Update track address/position if needed
   else if (auto spTrkExpr = expr_cast<TrackExpression>(spDstExprVst))
@@ -1110,16 +1124,28 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
 
   if (m_Update)
   {
+    auto spNoAnnDstExpr = RemoveExpressionAnnotations(spDstExpr);
+    auto spNoAnnDstExprVst = RemoveExpressionAnnotations(spDstExprVst);
     for (auto const& rSymPair : m_SymCtxt)
     {
-      auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
-      if (spCurExpr == nullptr)
-        continue;
+      auto spCurExpr = rSymPair.first;
 
-      if ((spCurExpr->Compare(spDstExpr) == Expression::CmpIdentical) || (spCurExpr->Compare(spDstExprVst) == Expression::CmpIdentical))
+      if (auto spIdExpr = expr_cast<IdentifierExpression>(RemoveExpressionAnnotations(spCurExpr)))
       {
-        m_SymCtxt.erase(rSymPair.first);
-        break;
+        if ((spIdExpr->Compare(spNoAnnDstExpr) == Expression::CmpIdentical) || (spIdExpr->Compare(spNoAnnDstExprVst) == Expression::CmpIdentical))
+        {
+          m_SymCtxt.erase(rSymPair.first);
+          break;
+        }
+      }
+
+      else
+      {
+        if ((spCurExpr->Compare(spDstExpr) == Expression::CmpIdentical) || (spCurExpr->Compare(spDstExprVst) == Expression::CmpIdentical))
+        {
+          m_SymCtxt.erase(rSymPair.first);
+          break;
+        }
       }
     }
 
@@ -1435,6 +1461,10 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   {
     return spVstMemExpr;
   }
+
+  // FIXME(wisk): we should be able to only used the visited version of memory expression
+  //if (auto spValMemExpr = GetValue(spMemExpr))
+  //  return spValMemExpr;
 
   if (auto spValMemExpr = GetValue(spVstMemExpr))
     return spValMemExpr;
@@ -1878,6 +1908,7 @@ Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
   auto spExprToFind = RemoveExpressionAnnotations(spExpr);
   if (spExprToFind == nullptr)
         return nullptr;
+  // TODO(wisk): handle memory aliasing
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
@@ -2423,16 +2454,27 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   }
 
   // a - 0 = a
-    case OperationExpression::OpSub:
+  // a <shift> 0 = a
+  case OperationExpression::OpSub:
+  case OperationExpression::OpLls:
+  case OperationExpression::OpLrs:
+  case OperationExpression::OpArs:
+  case OperationExpression::OpRol:
+  case OperationExpression::OpRor:
     {
       if (TestZero(spBvRight))
         return spLeft;
       break;
     }
 
+  // a * 0 = 0 // 0 * b = 0
   // a * 1 = a // 1 * b = b
   case OperationExpression::OpMul:
   {
+    if (TestZero(spBvLeft))
+      return spBvLeft;
+    if (TestZero(spBvRight))
+      return spBvRight;
     if (TestOne(spBvLeft))
       return spRight;
     if (TestOne(spBvRight))
@@ -2440,11 +2482,36 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
     break;
   }
 
+  // 0 / b = 0
+  // 0 % b = 0
+  case OperationExpression::OpUDiv:
+  case OperationExpression::OpSDiv:
+  case OperationExpression::OpUMod:
+  case OperationExpression::OpSMod:
+  {
+    if (TestZero(spBvLeft))
+      return spBvLeft;
+    break;
+  }
+
   // a & -1 = a // -1 & b = b
+  // a &  0 = 0 //  0 & b = 0
   case OperationExpression::OpAnd:
   {
     if (TestAllOnes(spBvLeft))
       return spRight;
+    if (TestAllOnes(spBvRight))
+      return spLeft;
+    if (TestZero(spBvLeft))
+      return spBvLeft;
+    if (TestZero(spBvRight))
+      return spBvRight;
+    break;
+  }
+
+  case OperationExpression::OpInsertBits:
+  case OperationExpression::OpExtractBits:
+  {
     if (TestAllOnes(spBvRight))
       return spLeft;
     break;
