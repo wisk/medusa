@@ -240,6 +240,7 @@ private:
 class MEDUSA_EXPORT SimplifyVisitor : public CloneVisitor
 {
 public:
+  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);

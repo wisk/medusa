@@ -2405,6 +2405,28 @@ Expression::SPType ConstantFoldingVisitor::VisitBinaryOperation(BinaryOperationE
   return Ret;
 }
 
+Expression::SPType SimplifyVisitor::VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr)
+{
+  auto spExpr = spUnOpExpr->GetExpression();
+
+  auto spBvExpr = expr_cast<BitVectorExpression>(spExpr);
+
+  switch (spUnOpExpr->GetOperation())
+  {
+  case OperationExpression::OpNeg:
+  {
+    if (spBvExpr != nullptr && spBvExpr->GetInt().GetUnsignedValue() == 0x0)
+      return spBvExpr;
+    break;
+  }
+
+  default:
+    break;
+  }
+
+  return spUnOpExpr;
+}
+
 Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
 {
 
