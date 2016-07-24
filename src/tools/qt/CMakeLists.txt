@@ -1,5 +1,3 @@
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_CMAKE_PATH})
-
 # We require qt5 widgets
 find_package(Qt5Widgets)
 
@@ -102,14 +100,7 @@ add_executable(qMedusa ${GUI_TYPE}
   ${QM}
 )
 
-qt5_use_modules(qMedusa Widgets)
-
-# TODO(wisk): ogdf must be only used by medusa itself, not by tools
-if (MEDUSA_BUILD_WITH_OGDF)
-  add_dependencies(qMedusa ogdf)
-  include_directories("${OGDF_INCLUDE_DIRS}")
-endif()
-target_link_libraries(qMedusa medusa ${MEDUSA_NEEDED_LIBRARIES})
+target_link_libraries(qMedusa medusa Qt5::Widgets)
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
 # I can't believe how hard it is to deploy qt5...

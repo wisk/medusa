@@ -138,6 +138,11 @@ include(GenerateExportHeader)
 
 # define medusa architecture target
 add_library(medusa SHARED ${SRC})
+target_include_directories(medusa
+  PUBLIC "${CMAKE_SOURCE_DIR}/inc"
+  PUBLIC "${CMAKE_BINARY_DIR}/inc")
+target_link_libraries(medusa
+  PUBLIC Boost::system Boost::filesystem Boost::thread Boost::date_time Boost::program_options)
 
 # generate export file
 generate_export_header(medusa
@@ -163,11 +168,55 @@ if (MEDUSA_CMAKE_USE_COTIRE)
   cotire(Medusa)
 endif()
 
+# Build OGDF if needed
+if (MEDUSA_BUILD_WITH_OGDF)
+  message("Build medusa with OGDF")
+  include(ExternalProject)
+
+  ExternalProject_add(ogdf
+    PREFIX          "ogdf"
+
+    GIT_REPOSITORY  "https://github.com/wisk/ogdf"
+    GIT_TAG         "master"
+
+    SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/ogdf"
+    INSTALL_DIR     "${CMAKE_BINARY_DIR}"
+
+    UPDATE_COMMAND  ""
+    INSTALL_COMMAND ""
+  )
+
+  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
+  set(OGDF_INCLUDE_DIRS
+    "${CMAKE_SOURCE_DIR}/deps/ogdf/include"
+    "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/include")
+  if (MSVC)
+    set(OGDF_LIBRARIES
+      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib"
+      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib"
+      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib"
+      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib"
+    )
+
+    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib")
+    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib")
+  else()
+    set(OGDF_LIBRARIES
+      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a"
+      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a"
+    )
+    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a)
+    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a)
+  endif()
+endif()
+
 if (WIN32)
   install(TARGETS medusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})
-  file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
-  file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
-  install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION ${MEDUSA_EXECUTABLE_PATH})
+  # file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
+  # file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
+  # install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION ${MEDUSA_EXECUTABLE_PATH})
 else ()
   install(TARGETS medusa LIBRARY DESTINATION ${MEDUSA_LIBRARY_PATH})
 endif ()
