@@ -15,7 +15,7 @@ add_executable(medusa_text
   ${SRC}
 )
 
-target_link_libraries(medusa_text medusa ${MEDUSA_NEEDED_LIBRARIES})
+target_link_libraries(medusa_text medusa ${Boost_LIBRARIES})
 set_target_properties(medusa_text PROPERTIES FOLDER "Tools")
 
 install(TARGETS medusa_text RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})

@@ -8,18 +8,18 @@ set(SRC
   ${SRCROOT}/soci_db.cpp
   )
 
-ExternalProject_add(soci
-  PREFIX          "soci"
+# ExternalProject_add(soci
+#   PREFIX          "soci"
 
-  GIT_REPOSITORY  "https://github.com/SOCI/soci"
-  GIT_TAG         "master"
+#   GIT_REPOSITORY  "https://github.com/SOCI/soci"
+#   GIT_TAG         "master"
 
-  SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/soci"
-  INSTALL_DIR     "${CMAKE_BINARY_DIR}"
+#   SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/soci"
+#   INSTALL_DIR     "${CMAKE_BINARY_DIR}"
 
-  UPDATE_COMMAND  ""
-  INSTALL_COMMAND ""
-)
+#   UPDATE_COMMAND  ""
+#   INSTALL_COMMAND ""
+# )
 
 set(SQLITE3_INCLUDE_DIRS
   "${CMAKE_SOURCE_DIR}/deps/sqlite3"
@@ -38,7 +38,9 @@ set(SOCI_LIBRARIES)
   )
 else()
   set(SOCI_LIBRARIES
-    "${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/lib/soci_core_4_0.a"
+    #"${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/lib/libsoci_core.a"
+    "${SOCI_ROOT}/lib64/libsoci_core.a"
+    "${SOCI_ROOT}/lib64/libsoci_sqlite3.a"
   )
 endif()
 
@@ -51,7 +53,7 @@ set_target_properties(db_soci PROPERTIES
   FOLDER "Databases"
   PREFIX "")
 
-add_dependencies(db_soci soci)
+#add_dependencies(db_soci soci)
 
 if(WIN32)
   install(TARGETS db_soci RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})

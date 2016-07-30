@@ -140,18 +140,16 @@ include(GenerateExportHeader)
 add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc"
-  PUBLIC "${CMAKE_BINARY_DIR}/inc")
-target_link_libraries(medusa
-  PUBLIC Boost::system Boost::filesystem Boost::thread Boost::date_time Boost::program_options)
+	 "${CMAKE_BINARY_DIR}/inc")
 
 # generate export file
 generate_export_header(medusa
   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
 )
 
-if (MEDUSA_BUILD_WITH_OGDF)
-  add_dependencies(medusa ogdf)
-endif()
+# if (MEDUSA_BUILD_WITH_OGDF)
+#   add_dependencies(medusa ogdf)
+# endif()
 
 if (MSVC)
   target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES})
@@ -161,7 +159,7 @@ endif()
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
 if (DL_LIBRARY)
-  target_link_libraries(medusa dl)
+  target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES} dl)
 endif ()
 
 if (MEDUSA_CMAKE_USE_COTIRE)
@@ -172,20 +170,6 @@ endif()
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
   include(ExternalProject)
-
-  ExternalProject_add(ogdf
-    PREFIX          "ogdf"
-
-    GIT_REPOSITORY  "https://github.com/wisk/ogdf"
-    GIT_TAG         "master"
-
-    SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/ogdf"
-    INSTALL_DIR     "${CMAKE_BINARY_DIR}"
-
-    UPDATE_COMMAND  ""
-    INSTALL_COMMAND ""
-  )
-
   set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
   set(OGDF_INCLUDE_DIRS
     "${CMAKE_SOURCE_DIR}/deps/ogdf/include"

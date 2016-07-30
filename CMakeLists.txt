@@ -72,10 +72,13 @@ option(MEDUSA_BUILD_WITH_BOOST
 if (MEDUSA_BUILD_WITH_BOOST)
   hunter_add_package(Boost COMPONENTS system filesystem thread date_time program_options test)
 endif()
+
 find_package(Boost COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
 if (NOT Boost_FOUND)
   message(FATAL_ERROR "Unable to find Boost")
 endif()
+
+list(APPEND MEDUSA_NEEDED_LIBRARIES ${Boost_LIBRARIES})
 
 ## OGDF
 option(MEDUSA_BUILD_WITH_OGDF
@@ -98,6 +101,14 @@ option(MEDUSA_BUILD_WITH_QT
   TRUE)
 if (MEDUSA_BUILD_WITH_QT)
   hunter_add_package(Qt)
+endif()
+
+## SQLite3
+option(MEDUSA_BUILD_WITH_SQLITE3
+  "SQLite3 library allows to build db_soci"
+  TRUE)
+if (MEDUSA_BUILD_WITH_SQLITE3)
+  hunter_add_package(SQLite3)
 endif()
 
 ## SOCI
