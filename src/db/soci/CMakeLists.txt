@@ -8,26 +8,12 @@ set(SRC
   ${SRCROOT}/soci_db.cpp
   )
 
-# ExternalProject_add(soci
-#   PREFIX          "soci"
-
-#   GIT_REPOSITORY  "https://github.com/SOCI/soci"
-#   GIT_TAG         "master"
-
-#   SOURCE_DIR      "${CMAKE_SOURCE_DIR}/deps/soci"
-#   INSTALL_DIR     "${CMAKE_BINARY_DIR}"
-
-#   UPDATE_COMMAND  ""
-#   INSTALL_COMMAND ""
-# )
-
 set(SQLITE3_INCLUDE_DIRS
-  "${CMAKE_SOURCE_DIR}/deps/sqlite3"
+  "${SOCI_ROOT}/include/"
 )
 
 set(SOCI_INCLUDE_DIRS
-  "${CMAKE_SOURCE_DIR}/deps/soci/include"
-  "${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/include"
+  "${SOCI_ROOT}/include/soci/"
 )
 
 set(SOCI_LIBRARIES)
@@ -38,9 +24,8 @@ set(SOCI_LIBRARIES)
   )
 else()
   set(SOCI_LIBRARIES
-    #"${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/lib/libsoci_core.a"
     "${SOCI_ROOT}/lib64/libsoci_core.a"
-    "${SOCI_ROOT}/lib64/libsoci_sqlite3.a"
+    "${SOCI_ROOT}/lib64/libsoci_sqlite3.so"
   )
 endif()
 
