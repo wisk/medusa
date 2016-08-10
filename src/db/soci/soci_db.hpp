@@ -17,6 +17,7 @@
 
 #include <soci/soci.h>
 #include <soci/sqlite3/soci-sqlite3.h>
+#include "soci_serializer.hpp"
 
 MEDUSA_NAMESPACE_USE
 
@@ -29,6 +30,245 @@ MEDUSA_NAMESPACE_USE
 #else
 #define DB_SOCI_EXPORT
 #endif
+
+namespace soci
+{
+  template<>
+  struct type_conversion<BinaryStream>
+  {
+    typedef values base_type;
+
+    static void from_base(values const& val, indicator ind, BinaryStream& rBinaryStream)
+    {
+      if (ind == i_null)
+    	{
+    	  throw soci_error("BinaryStream: Null value not allowed for this type");
+    	}
+      rBinaryStream.SetEndianness(val.get<EEndianness>("endianness"));
+    }
+
+    static void to_base(BinaryStream const& rBinaryStream, values& val, indicator& ind)
+    {
+      //      val.set("path", rBinaryStream.GetPath());
+      val.set("size", rBinaryStream.GetSize());
+      val.set("sha1", rBinaryStream.GetSha1());
+      ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<Address>
+  {
+    typedef values base_type;
+
+    static void from_base(values const& val, indicator ind, Address& rAddress)
+    {
+      if (ind == i_null)
+    	{
+    	  throw soci_error("Address: Null value not allowed for this type");
+    	}
+      rAddress.SetAddressingType(val.get<medusa::Address::Type>("addressing_type"));
+      rAddress.SetBase(val.get<u16>("base"));
+      rAddress.SetOffset(val.get<u32>("offset"));
+      rAddress.SetBaseSize(val.get<u8>("base_size"));
+      rAddress.SetOffsetSize(val.get<u8>("offset_size"));
+    }
+
+    static void to_base(Address const& rAddress, values& val, indicator& ind)
+    {
+      val.set("type", static_cast<u32>(rAddress.GetAddressingType()));
+      val.set("base", rAddress.GetBase());
+      val.set("offset", rAddress.GetOffset());
+      val.set("base_size", rAddress.GetBaseSize());
+      val.set("offset_size", rAddress.GetOffsetSize());
+      val.set("label_addr", rAddress.Dump());
+      ind = i_ok;
+    }
+  };
+  
+  template<>
+  struct type_conversion<CellData::SPType>
+  {
+    typedef values base_type;
+    
+    static void from_base(values const& val, indicator ind, CellData::SPType spCellData)
+    {
+      if (ind == i_null)
+	throw soci_error("CellData: Null value not allowed for this type");
+
+      spCellData->SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
+      spCellData->SetDefaultMode(val.get<u8>("architecture_mode"));
+    }
+
+    static void to_base(CellData::SPType const& spCellData, values& val, indicator& ind)
+    {
+      val.set("type", spCellData->GetType());
+      val.set("sub_type", spCellData->GetSubType());
+      val.set("length", spCellData->GetLength());
+      val.set("format_style", spCellData->GetFormatStyle());
+      val.set("architecture_tag", spCellData->GetArchitectureTag());
+      val.set("architecture_mode", spCellData->GetMode());
+    }
+  };
+
+  template<>
+  struct type_conversion<std::pair<Address::SPType, Address::SPType> >
+  {
+    static void from_base(values const& val, indicator ind, std::pair<Address::SPType,
+			  Address::SPType>& rPairAddress)
+    {
+      if (ind == i_null)
+	throw soci_error("CrossReference : Null value not allowed for this type");
+      type_conversion<Address>::from_base(val, ind, *(rPairAddress.first));
+      type_conversion<Address>::from_base(val, ind, *(rPairAddress.second));
+    }
+
+    static void to_base(std::pair<Address::SPType, Address::SPType> const& rPairAddress, values& val, indicator& ind)
+    {
+      type_conversion<Address>::to_base(*(rPairAddress.first), val, ind);
+      type_conversion<Address>::to_base(*(rPairAddress.second), val, ind);
+    }
+    
+  };
+  
+  template<>
+  struct type_conversion<Label>
+  {
+    typedef values base_type;
+
+    static void from_base(values const& val, indicator ind, Label& rLabel)
+    {
+      if (ind == i_null)
+	throw soci_error("Label: Null value not allowed for this type");
+      
+      rLabel.SetType(val.get<u16>("type"));
+    }
+
+    static void to_base(Label const& rLabel, values& val, indicator& ind)
+    {
+      val.set("name", rLabel.GetName());
+      val.set("label_type", rLabel.GetType());
+      val.set("label", rLabel.GetLabel());
+      ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<MemoryArea>
+  {
+    typedef values base_type;
+    
+    static void from_base(values const& val, indicator ind, MemoryArea& rMemArea)
+    {
+      if (ind == i_null)
+    	throw soci_error("MemoryArea: Null value not allowed for this type");
+      
+      rMemArea.SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
+      rMemArea.SetDefaultArchitectureMode(val.get<u8>("architecture_mode"));
+      rMemArea.SetName(val.get<std::string>("name"));
+      rMemArea.SetAccess(val.get<u32>("access"));
+      // SetCellData
+    }
+
+    static void to_base(MemoryArea& rMemArea, values& val, indicator& ind)
+    {
+      val.set("name", rMemArea.GetName());
+      val.set("access", rMemArea.GetAccess());
+      val.set("size", rMemArea.GetSize());
+      val.set("architecture_tag", rMemArea.GetArchitectureTag());
+      val.set("architecture_mode", rMemArea.GetArchitectureMode());
+      val.set("file_offset", rMemArea.GetFileOffset());
+      val.set("file_size", rMemArea.GetFileSize());
+      //GetBaseAddress
+      //GetCellData
+      ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<MappedMemoryArea>
+  {
+    typedef values base_type;
+    
+    static void from_base(values const& val, indicator ind, MappedMemoryArea& rMemArea)
+    {
+      if (ind == i_null)
+    	throw soci_error("MappedMemoryArea: Null value not allowed for this type");
+      
+      rMemArea.SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
+      rMemArea.SetDefaultArchitectureMode(val.get<u8>("architecture_mode"));
+      rMemArea.SetName(val.get<std::string>("name"));
+      rMemArea.SetAccess(val.get<u32>("access"));
+      rMemArea.SetFileOffset(val.get<TOffset>("file_offset"));
+      rMemArea.SetFileSize(val.get<u32>("file_size"));
+      rMemArea.SetVirtualSize(val.get<u32>("virtual_size"));
+      // Get Address virtual base
+
+      // SetCellData
+    }
+
+    static void to_base(MappedMemoryArea& rMemArea, values& val, indicator& ind)
+    {
+      val.set("name", rMemArea.GetName());
+      val.set("access", rMemArea.GetAccess());
+      val.set("virtual_size", rMemArea.GetSize());
+      val.set("architecture_tag", rMemArea.GetArchitectureTag());
+      val.set("architecture_mode", rMemArea.GetArchitectureMode());
+      val.set("file_offset", rMemArea.GetFileOffset());
+      val.set("file_size", rMemArea.GetFileSize());
+      //GetBaseAddress
+      //GetCellData
+      ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<VirtualMemoryArea>
+  {
+    typedef values base_type;
+    
+    static void from_base(values const& val, indicator ind, VirtualMemoryArea& rMemArea)
+    {
+      if (ind == i_null)
+    	throw soci_error("VirtualMemoryArea: Null value not allowed for this type");
+      
+      rMemArea.SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
+      rMemArea.SetDefaultArchitectureMode(val.get<u8>("architecture_mode"));
+      rMemArea.SetVirtualSize(val.get<u32>("virtual_size"));
+      // SetCellData
+    }
+
+    static void to_base(VirtualMemoryArea& rMemArea, values& val, indicator& ind)
+    {
+      val.set("name", rMemArea.GetName());
+      val.set("access", rMemArea.GetAccess());
+      val.set("virtual_size", rMemArea.GetSize());
+      val.set("architecture_tag", rMemArea.GetArchitectureTag());
+      val.set("architecture_mode", rMemArea.GetArchitectureMode());
+      val.set("file_offset", rMemArea.GetFileOffset());
+      val.set("file_size", rMemArea.GetFileSize());
+      //GetBaseAddress
+      //GetCellData
+      ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<std::pair<Address, Label> >
+  {
+    static void from_base(values const& val, indicator ind, std::pair<Address, Label>& rPair)
+    {
+      type_conversion<Address>::from_base(val, ind, rPair.first);
+      type_conversion<Label>::from_base(val, ind, rPair.second);
+    }
+
+    static void to_base(std::pair<Address, Label>& rPair, values& val, indicator& ind)
+    {
+      type_conversion<Address>::to_base(rPair.first, val, ind);
+      type_conversion<Label>::to_base(rPair.second, val, ind);
+    }
+  };
+}
 
 class SociDatabase : public medusa::Database
 {
@@ -120,7 +360,13 @@ public:
   virtual bool UnbindDetailId(Address const& rAddress, u8 Index);
 
 private:
-  soci::session m_Session;
+  mutable soci::session	     m_Session;
+  mutable std::mutex m_MemoryAreaLock;
+  mutable std::recursive_mutex m_LabelLock;
+  mutable std::mutex m_CrossReferencesLock;
+
+  static bool _FileExists(boost::filesystem::path const& rFilePath);
+  static bool _FileRemoves(boost::filesystem::path const& rFilePath);
 };
 
 extern "C" DB_SOCI_EXPORT Database* GetDatabase(void);

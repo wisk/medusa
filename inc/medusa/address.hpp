@@ -118,8 +118,12 @@ public:
   u8        GetBaseSize(void) const         { return m_BaseSize;                   }
   u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
 
+  // Set
+  void	    SetAddressingType(Type AddressingType) { m_Type = AddressingType;	   }
   void      SetBase(TBase Base)             { m_Base = Base;                       }
   void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
+  void	    SetBaseSize(u8 BaseSize)	    { m_BaseSize = BaseSize;		   }
+  void	    SetOffsetSize(u8 OffsetSize)    { m_OffsetSize = OffsetSize;	   }
 
   /*! \param Size is the size of the boundary.
    * \param Off is the offset of the boundary.

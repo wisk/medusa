@@ -48,6 +48,7 @@ bool Database::Close(void)
 
 Database& Database::SetBinaryStream(BinaryStream::SPType spBinStrm)
 {
+  std::cerr << "------------------------------------------------ SETBINARY!" << std::endl;
   m_spBinStrm = spBinStrm;
   return *this;
 }

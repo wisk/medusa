@@ -37,6 +37,8 @@ public:
 
   typedef std::function<void (TOffset, CellData::SPType)> CellDataPredicat;
 
+  MemoryArea();
+
   MemoryArea(
     std::string const& rName,
     u32 Access,
@@ -57,6 +59,10 @@ public:
   // Set Architecture Tag and Mode
   void                       SetDefaultArchitectureTag(Tag arch);
   void                       SetDefaultArchitectureMode(u8 mode);
+
+  // Set
+  void			     SetName(std::string const& Name) { m_Name = Name;     }
+  void			     SetAccess(u32 Access)	      { m_Access = Access; }
 
   virtual TOffset            GetFileOffset(void) const = 0;
   virtual u32                GetFileSize(void)   const = 0;
@@ -99,6 +105,12 @@ protected:
 class MEDUSA_EXPORT MappedMemoryArea : public MemoryArea
 {
 public:
+  MappedMemoryArea()
+    : MemoryArea("", 0, 0, 0), m_FileOffset(0),
+    m_FileSize(0)
+    {
+    }
+
   MappedMemoryArea(
     std::string const& rName,
     TOffset FileOffset, u32 FileSize,
@@ -139,6 +151,12 @@ public:
   virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const;
   virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
 
+  // Set
+  void		  SetFileOffset(TOffset FileOffset)    { m_FileOffset = FileOffset;   }
+  void		  SetFileSize(u32 FileSize)	       { m_FileSize = FileSize;       }
+  void		  SetVirtualBase(Address const& rAddress) { m_VirtualBase = rAddress;     }
+  void		  SetVirtualSize(u32 VirtualSize)      { m_VirtualSize = VirtualSize; }
+
 protected:
   bool _InsertCell(TOffset Offset, CellData::SPType spCellData);
   bool _RemoveCell(TOffset Offset, CellData::SPType spCellData);
@@ -158,6 +176,11 @@ protected:
 class MEDUSA_EXPORT VirtualMemoryArea : public MemoryArea
 {
 public:
+  VirtualMemoryArea()
+    : MemoryArea("", 0, 0, 0)
+    {
+    }
+
   VirtualMemoryArea(
     std::string const& rName,
     Address const& rVirtualBase,  u32 VirtualSize,
@@ -178,6 +201,9 @@ public:
 
   virtual TOffset     GetFileOffset(void) const;
   virtual u32         GetFileSize(void)   const;
+
+  // Set
+  void		      SetVirtualSize(u32 VirtualSize)	{ m_VirtualSize = VirtualSize; }
 
   virtual CellData::SPType GetCellData(TOffset Offset) const;
 virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
