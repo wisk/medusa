@@ -96,8 +96,13 @@ namespace soci
       if (ind == i_null)
 	throw soci_error("CellData: Null value not allowed for this type");
 
-      spCellData->SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
+      spCellData->Type() = val.get<u8>("type");
+      spCellData->SubType() = val.get<u8>("sub_type");
+      spCellData->Length() = val.get<u16>("length");
+      spCellData->FormatStyle() = val.get<u16>("format_style");
+      spCellData->Flags() = val.get<u8>("flags");
       spCellData->SetDefaultMode(val.get<u8>("architecture_mode"));
+      spCellData->SetDefaultArchitectureTag(val.get<Tag>("architecture_tag"));
     }
 
     static void to_base(CellData::SPType const& spCellData, values& val, indicator& ind)
@@ -106,6 +111,7 @@ namespace soci
       val.set("sub_type", spCellData->GetSubType());
       val.set("length", spCellData->GetLength());
       val.set("format_style", spCellData->GetFormatStyle());
+      val.set("flags", spCellData->Flags());
       val.set("architecture_tag", spCellData->GetArchitectureTag());
       val.set("architecture_mode", spCellData->GetMode());
     }
@@ -276,6 +282,42 @@ public:
   SociDatabase(void);
   virtual ~SociDatabase(void);
 
+  bool	_CreateTable()
+  {
+    m_Session << "CREATE TABLE IF NOT EXISTS BinaryStream("
+      "size INTEGER, buffer BLOB)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS Architecture(architecture_tag INTEGER)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS MemoryArea("
+      "name TEXT, access INTEGER, size INTEGER, architecture_tag INTEGER, "
+      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS MappedMemoryArea("
+      "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
+      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS Label(type INTEGER,"
+      "base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER,"
+      "label_addr TEXT, name TEXT, label_type INTEGER, label TEXT, instance_label BLOB)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS CellData("
+      "id INTEGER, type INTEGER, sub_type INTEGER, length INTEGER, format_style INTEGER, "
+      "flags INTEGER, architecture_tag INTEGER, architecture_mode INTEGER, label_addr TEXT)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS MultiCell("
+      "dump TEXT, MultiCell BLOB)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS CrossReference("
+      "type_from INTEGER, sub_type_from INTEGER, length_from INTEGER, format_style_from INTEGER, "
+      "architecture_tag_from INTEGER, architecture_mode_from INTEGER,"
+      "type_to INTEGER, sub_type_to INTEGER, length_to INTEGER, format_style_to INTEGER, "
+      "architecture_tag_to INTEGER, architecture_mode_to INTEGER)";
+  }
+
+  bool _PrintColumnProperties(soci::row const& row) const;
+  bool _MoveAddressForward(Address const& rAddress, Address& rMovedAddress,
+			   s64 Offset) const;
   virtual std::string GetName(void) const;
   virtual std::string GetExtension(void) const;
   virtual bool IsCompatible(boost::filesystem::path const& rDatabasePath) const;
@@ -338,6 +380,7 @@ public:
 
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData);
+  virtual bool GetCellData(Address const& rAddress, CellData& rCellData) const;
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force);
   virtual bool DeleteCellData(Address const& rAddress);
 

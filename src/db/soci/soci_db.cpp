@@ -55,14 +55,105 @@ bool SociDatabase::Open(boost::filesystem::path const& rDatabasePath)
   return true;
 }
 
-bool  SociDatabase::_FileExists(boost::filesystem::path const& rFilePath)
+bool	SociDatabase::_PrintColumnProperties(soci::row const& row) const
+{
+  for (std::size_t i = 0; i < row.size(); ++i)
+    {
+      const soci::column_properties & props = row.get_properties(i);
+      std::cerr << " index: " << i << " - name: " << props.get_name() << std::endl;
+    }
+  return true;
+}
+
+bool SociDatabase::_FileExists(boost::filesystem::path const& rFilePath)
 {
   return boost::filesystem::exists(rFilePath);
 }
 
-bool  SociDatabase::_FileRemoves(boost::filesystem::path const& rFilePath)
+bool SociDatabase::_FileRemoves(boost::filesystem::path const& rFilePath)
 {
   return boost::filesystem::remove(rFilePath);
+}
+
+bool SociDatabase::_MoveAddressForward(Address const& rAddress, Address& rMovedAddress,
+				       s64 Offset) const
+{
+  std::cerr << "-------------------------- MoveAddressForward" << std::endl;
+  //Find the correct memory area, according to the address.
+  auto MemArea = GetMemoryArea(rAddress);
+  if (!MemArea->IsCellPresent(rAddress))
+    {
+      std::cerr << "-------------------------- MoveAddressForward : TRUE" << std::endl;
+      return false;
+    }
+  //Compute the offset of the current memory area and check if we can move forward
+  //the address
+  u64 CurMemAreaOff = rAddress.GetOffset() - MemArea->GetBaseAddress().GetOffset();
+  if (CurMemAreaOff + Offset < MemArea->GetSize())
+    {
+      if (Offset == 0)
+	{
+	  rMovedAddress = rAddress;
+	}
+      else
+	{
+	  TOffset MovedOffset = rAddress.GetOffset();
+	  for (; Offset; --Offset)
+	    {
+	      while (true)
+		{
+		  CellData::SPType spCellData = std::make_shared<CellData>(CellData());
+		  if (GetCellData(rAddress, *spCellData))
+		    {
+		      auto CellDataLength = spCellData->GetLength();
+		      std::cerr << "************************************** LENGTH : "
+				<< CellDataLength << std::endl;
+
+		      auto OffsetAfterMove = MovedOffset + spCellData->GetLength();
+		      bool is_ovf = ((MovedOffset > 0) && (CellDataLength > 0)
+				     && (OffsetAfterMove < 0))
+			|| ((MovedOffset < 0) && (CellDataLength < 0)
+			    && (OffsetAfterMove > 0));
+		      
+		      if (!is_ovf)
+			MovedOffset += spCellData->GetLength();
+
+		    }
+		  else
+		    {
+		      ++MovedOffset;
+		    }
+		  if (MemArea->IsCellPresent(MovedOffset))
+		    break;
+		  if (MovedOffset > MemArea->GetBaseAddress().GetOffset() + MemArea->GetSize())
+		    return false;
+		}
+	    }
+	  rMovedAddress = MemArea->MakeAddress(MovedOffset);
+	}
+    }
+    // if (MemArea->MoveAddressForward(rAddress, rMovedAddress, Offset))
+    //   {
+    // 	std::cerr << "-------------------------- MoveAddressForward : TRUE : Address "
+    // 		  << rAddress.Dump()
+    // 		  << "  -  Moved Address : "
+    // 		  << rMovedAddress.Dump()
+    // 		  << "  -  Offset : " << Offset
+    // 		  << std::endl;
+    // 	return true;
+    //   }
+
+  std::cerr << "-------------------------- MoveAddressForward : STEP 2" << std::endl;
+  s64 DiffOffset = MemArea->GetSize() - CurMemAreaOff;
+  if (DiffOffset >= Offset)
+    Offset = 0;
+  else
+    Offset -= DiffOffset;
+  
+
+  //Compute the size - current_memory_area_offset
+  //  std::cerr << "-------------------------- MoveAddressForward : FALSE" << std::endl;  
+  return true;
 }
 
 bool SociDatabase::Create(boost::filesystem::path const& rDatabasePath, bool Force)
@@ -82,36 +173,7 @@ bool SociDatabase::Create(boost::filesystem::path const& rDatabasePath, bool For
     }
 
     m_Session.open("sqlite3", "dbname=" + rDatabasePath.string());
-
-    m_Session << "CREATE TABLE IF NOT EXISTS BinaryStream("
-      "size INTEGER, buffer BLOB)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS Architecture(architecture_tag INTEGER)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS MemoryArea("
-      "name TEXT, access INTEGER, size INTEGER, architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS MappedMemoryArea("
-      "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS Label(type INTEGER,"
-      "base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER,"
-      "label_addr TEXT, name TEXT, label_type INTEGER, label TEXT, instance_label BLOB)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS CellData("
-      "type INTEGER, sub_type INTEGER, length INTEGER, format_style INTEGER, "
-      "architecture_tag INTEGER, architecture_mode INTEGER)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS MultiCell("
-      "dump TEXT, MultiCell BLOB)";
-
-    m_Session << "CREATE TABLE IF NOT EXISTS CrossReference("
-      "type_from INTEGER, sub_type_from INTEGER, length_from INTEGER, format_style_from INTEGER, "
-      "architecture_tag_from INTEGER, architecture_mode_from INTEGER,"
-      "type_to INTEGER, sub_type_to INTEGER, length_to INTEGER, format_style_to INTEGER, "
-      "architecture_tag_to INTEGER, architecture_mode_to INTEGER)";
+    _CreateTable();
   }
   catch (std::exception const& e)
   {
@@ -128,7 +190,8 @@ bool SociDatabase::Flush(void)
   std::cerr << "---------------------------- Flush" << std::endl;
   try
   {
-    m_Session.commit();
+    //m_Session.commit();
+    return true;
   }
   catch (std::exception const& e)
   {
@@ -337,12 +400,7 @@ MemoryArea const* SociDatabase::GetMemoryArea(Address const& rAddress) const
   for(soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
     {
       soci::row const& row = *it;
-      
-      // for (std::size_t i = 0; i < row.size(); ++i)
-      // 	{
-      // 	  const soci::column_properties & props = row.get_properties(i);
-      // 	  std::cerr << " index: " << i << " - name: " << props.get_name() << std::endl;
-      // 	}
+
       std::string Name = row.get<std::string>(0);
       u32 Access = row.get<int>(1);
       u32 VirtualSize = row.get<int>(2);
@@ -389,8 +447,19 @@ bool SociDatabase::GetLastAddress(Address& rAddress) const
 bool SociDatabase::MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const
 {
   std::cerr << "---------------------------- Move Address" << std::endl;
-  return false;
+  if (Offset < 0)
+    return false;
+  if (Offset > 0)
+    return _MoveAddressForward(rAddress, rMovedAddress, Offset);
+
+  auto pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    return false;
+
+  std::cerr << "---------------------------- Get Nearest Address" << std::endl;
+  return pMemArea->GetNearestAddress(rAddress, rMovedAddress);
 }
+
 bool SociDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const
 {
   std::cerr << "---------------------------- Convert Address to Position" << std::endl;
@@ -579,11 +648,103 @@ bool SociDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
   std::cerr << "---------------------------- GetCellData" << std::endl;
   auto pMemArea = GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
-    return false;
+    {
+      std::cerr << "---------------------------- GetCellData: FALSE" << std::endl;
+      return false;
+    }
   auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+  u8  Type;
+  soci::rowset<soci::row> rowset = (m_Session.prepare << "SELECT type,"
+  				    "sub_type, length, format_style, flags,"
+  				    " architecture_tag,"
+  				    "architecture_mode FROM CellData WHERE label_addr = :label_addr"
+  				    , soci::use(pMemArea->GetBaseAddress().Dump(), "label_addr"));
+
+  for(soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;  
+      // for (std::size_t i = 0; i < row.size(); ++i)
+      // 	{
+      // 	  const soci::column_properties & props = row.get_properties(i);
+      // 	  std::cerr << " index: " << i << " - name: " << props.get_name() << std::endl;
+      // 	}
+      u8 Type = row.get<int>(0);
+      u8 SubType = row.get<int>(1);
+      u16 Length = row.get<int>(2);
+      u16 FormatStyle = row.get<int>(3);
+      u8 Flags = row.get<int>(4);
+      Tag ArchTag = row.get<int>(5);
+      u16 Mode = row.get<int>(6);
+
+      spCellData->Type() = Type;
+      spCellData->SubType() = SubType;
+      spCellData->Length() = Length;
+      spCellData->FormatStyle() = FormatStyle;
+      spCellData->Flags() = Flags;
+      spCellData->SetDefaultMode(Mode);
+      spCellData->SetDefaultArchitectureTag(ArchTag);
+    }
+
   if (spCellData == nullptr)
-    return false;
+    {
+      std::cerr << "---------------------------- GetCellData: FALSE" << std::endl;
+      return false;
+    }
   rCellData = *spCellData;
+  std::cerr << "---------------------------- GetCellData: TRUE - Length : " << rCellData.GetLength() << std::endl;
+  return true;
+}
+
+bool SociDatabase::GetCellData(Address const& rAddress, CellData& rCellData) const
+{
+  std::cerr << "---------------------------- GetCellData" << std::endl;
+  auto pMemArea = GetMemoryArea(rAddress);
+  if (pMemArea == nullptr)
+    {
+      std::cerr << "---------------------------- GetCellData: FALSE" << std::endl;
+      return false;
+    }
+
+  auto spCellData = std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+  u8  Type;
+  soci::rowset<soci::row> rowset = (m_Session.prepare << "SELECT type,"
+  				    "sub_type, length, format_style, flags,"
+  				    " architecture_tag,"
+  				    "architecture_mode FROM CellData WHERE label_addr = :label_addr AND id = :offset"
+  				    , soci::use(pMemArea->GetBaseAddress().Dump(), "label_addr"), soci::use(rAddress.GetOffset() - pMemArea->GetBaseAddress().GetOffset(), "offset"));
+
+  for(soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;  
+      // for (std::size_t i = 0; i < row.size(); ++i)
+      // 	{
+      // 	  const soci::column_properties & props = row.get_properties(i);
+      // 	  std::cerr << " index: " << i << " - name: " << props.get_name() << std::endl;
+      // 	}
+      u8 Type = row.get<int>(0);
+      u8 SubType = row.get<int>(1);
+      u16 Length = row.get<int>(2);
+      u16 FormatStyle = row.get<int>(3);
+      u8 Flags = row.get<int>(4);
+      Tag ArchTag = row.get<int>(5);
+      u16 Mode = row.get<int>(6);
+
+      spCellData->Type() = Type;
+      spCellData->SubType() = SubType;
+      spCellData->Length() = Length;
+      spCellData->FormatStyle() = FormatStyle;
+      spCellData->Flags() = Flags;
+      spCellData->SetDefaultMode(Mode);
+      spCellData->SetDefaultArchitectureTag(ArchTag);
+    }
+ if (spCellData == nullptr)
+    {
+      std::cerr << "---------------------------- GetCellData: FALSE" << std::endl;
+      return false;
+    }
+
+  rCellData = *spCellData;
+  std::cerr << "---------------------------- GetCellData: TRUE - Length : " << rCellData.GetLength() << std::endl;
   return true;
 }
 
@@ -591,7 +752,7 @@ bool SociDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
 {
   std::cerr << "---------------------------- SetCellData" << std::endl;
   MemoryArea* pCurMemArea = const_cast<MemoryArea*>(GetMemoryArea(rAddress));
-  std::cerr << pCurMemArea->Dump() << std::endl;
+  std::cerr << " * COUNT *" << std::endl;
   if (!pCurMemArea || !pCurMemArea->IsCellPresent(rAddress))
     {
       std::cerr << "---------------------------- SetCellData: CurMemArea is EMPTY or "
@@ -599,8 +760,21 @@ bool SociDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
 		<< std::endl;
       return false;
     }
-  std::cerr << " * COUNT *" << std::endl;
+  std::cerr << pCurMemArea->Dump() << std::endl;
+  size_t CellOffset = static_cast<size_t>(rAddress.GetOffset() - pCurMemArea->GetBaseAddress().GetOffset());
   CellData::SPType spCellData = std::make_shared<CellData>(rCellData);
+  m_Session << "INSERT INTO CellData(id, type, sub_type, length, format_style, flags,"
+    "architecture_tag,"
+    "architecture_mode, label_addr)"
+    "VALUES(:id, :type, :sub_type, :length, :format_style, :flags,"
+    ":architecture_tag, :architecture_mode, :label_addr)"
+    , soci::use (CellOffset, "id"), soci::use (spCellData->GetType(), "type"), soci::use(spCellData->GetSubType(), "sub_type")
+    , soci::use (spCellData->GetLength(), "length"), soci::use(spCellData->GetFormatStyle(), "format_style")
+    , soci::use (spCellData->Flags(), "flags")
+    , soci::use (spCellData->GetArchitectureTag(), "architecture_tag"), soci::use(spCellData->GetMode(), "architecture_mode")
+    , soci::use(pCurMemArea->GetBaseAddress().Dump(), "label_addr");
+  std::cerr << " * OK *  ======== Length : " << spCellData->GetLength() << std::endl;
+  std::cerr << " * OK *" << std::endl;
   return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses,
 				  Force);
 }

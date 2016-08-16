@@ -51,7 +51,7 @@ public:
   u8&  Flags(void)           { return m_Flags;       }
   Tag& ArchitectureTag(void) { return m_ArchTag;     }
   u8&  Mode(void)            { return m_Mode;        }
-
+  u8&  Type(void)	     { return m_Type;	     }
 protected:
   u8  m_Type;         //! This field defines the type of cell
   u8  m_SubType;      //! This field defines the subtype of cell and is cell dependant
