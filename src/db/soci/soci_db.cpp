@@ -6,8 +6,6 @@
 
 SociDatabase::SociDatabase(void)
 {
-  SociSerializer	toto(m_Session);
-  toto.print();
 }
 
 SociDatabase::~SociDatabase(void)
@@ -171,6 +169,12 @@ bool SociDatabase::Create(boost::filesystem::path const& rDatabasePath, bool For
       Log::Write("db_soci") << "db already exists and force is false" << LogEnd;
       return false;
     }
+    if (rDatabasePath.string().empty())
+      {
+	Log::Write("db_soci") << "db path is empty" << LogEnd;
+	exit(0);
+	return false;
+      }
 
     m_Session.open("sqlite3", "dbname=" + rDatabasePath.string());
     _CreateTable();
@@ -178,6 +182,7 @@ bool SociDatabase::Create(boost::filesystem::path const& rDatabasePath, bool For
   catch (std::exception const& e)
   {
     Log::Write("soci").Level(LogError) << e.what() << LogEnd;
+    std::cerr << "----------------- DB Soci : Error" << std::endl;
     exit(0);
     return false;
   }
@@ -338,15 +343,25 @@ bool SociDatabase::AddMemoryArea(MemoryArea* pMemArea)
 	    << std::endl
 ;
   MappedMemoryArea*	pMappedMemArea = dynamic_cast<MappedMemoryArea*>(pMemArea);
+  VirtualMemoryArea*	pVirtualMemArea = dynamic_cast<VirtualMemoryArea*>(pMemArea);
+
   if (pMappedMemArea)
     std::cerr << "------------------------------- DYN_CAST : SUCCESS" << std::endl;
+  else if (pVirtualMemArea)
+    {
+      std::cerr << "------------------------------- DYN_CAST : SUCCESS - VirtualMemoryArea" << std::endl;
+    }
   else
-    std::cerr << "------------------------------- DYN_CAST : FAIL" << std::endl;
+    {
+      std::cerr << "------------------------------- DYN_CAST : FAIL - "
+		<< typeid(decltype(pMemArea)).name() << std::endl;
+      return false;
+    }
   std::lock_guard<std::mutex>	Lock(m_MemoryAreaLock);
   std::string	res;
   try
     {
-      if (nullptr != pMemArea)
+      if (nullptr != pMemArea && pMappedMemArea)
 	{
 	  soci::blob	blob(m_Session);
 	  Address add = pMappedMemArea->GetBaseAddress();
@@ -370,6 +385,19 @@ bool SociDatabase::AddMemoryArea(MemoryArea* pMemArea)
 	  // std::cerr << "----------------------- NAME : " << name << std::endl;
 
 	}
+      else if (nullptr != pMemArea && pVirtualMemArea)
+	{
+	  std::cerr << "--------------------- VIRTUAL MEMORY AREA - " << __PRETTY_FUNCTION__
+		    << pVirtualMemArea->GetBaseAddress().Dump() << std::endl;
+	  soci::blob	blob(m_Session);
+	  Address add = pVirtualMemArea->GetBaseAddress();
+	  blob.write(400, reinterpret_cast<char*>(&add), sizeof(Address));
+
+	  m_Session << "INSERT INTO VirtualMemoryArea(name, access, virtual_size, architecture_tag,"
+	    "architecture_mode, file_offset, file_size, virtual_address)"
+	    "VALUES(:name, :access, :virtual_size, :architecture_tag, "
+	    ":architecture_mode, :file_offset, :file_size, :virtual_address)", soci::use (*pVirtualMemArea), soci::use(blob, "virtual_address");
+	}
     }
   catch (soci::soci_error& rErr)
     {
@@ -383,6 +411,76 @@ bool SociDatabase::AddMemoryArea(MemoryArea* pMemArea)
 void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
 {
   std::cerr << "---------------------------- ForEachMemoryArea" << std::endl;
+  MappedMemoryArea	*MemArea = new MappedMemoryArea;
+  
+  soci::blob	blob(m_Session);
+  std::string name;
+  soci::rowset<soci::row> rowset = (m_Session.prepare << "Select name, access, virtual_size,"
+				    "architecture_tag, architecture_mode,"
+				    "file_offset, file_size FROM MappedMemoryArea");
+
+  for(soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;
+      std::string Name = row.get<std::string>(0);
+      u32 Access = row.get<int>(1);
+      u32 VirtualSize = row.get<int>(2);
+      u32 ArchitectureTag = row.get<int>(3);
+      u8 ArchitectureMode = row.get<int>(4);
+      TOffset FileOffset = row.get<int>(5);
+      u32 FileSize = row.get<int>(6);
+
+      m_Session << "Select virtual_address FROM MappedMemoryArea WHERE name = :name"
+	, soci::use(row.get<std::string>(0)), soci::into(blob);
+
+      Address	addr;
+      blob.read(0, reinterpret_cast<char*>(&addr), sizeof(Address));
+      MemArea->SetName(Name);
+      MemArea->SetAccess(Access);
+      MemArea->SetVirtualSize(VirtualSize);
+      MemArea->SetDefaultArchitectureTag(ArchitectureTag);
+      MemArea->SetDefaultArchitectureMode(ArchitectureMode);
+      MemArea->SetFileOffset(FileOffset);
+      MemArea->SetFileSize(FileSize);
+      MemArea->SetVirtualBase(addr);
+      Callback(*MemArea);
+      std::cerr << "------------------------------------- FOR EACH MemoryArea : "
+		<< MemArea->Dump() << std::endl;
+    }
+
+  rowset = (m_Session.prepare << "Select name, access, virtual_size,"
+	    "architecture_tag, architecture_mode,"
+	    "file_offset, file_size FROM VirtualMemoryArea");
+
+  for(soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;
+      std::string Name = row.get<std::string>(0);
+      u32 Access = row.get<int>(1);
+      u32 VirtualSize = row.get<int>(2);
+      u32 ArchitectureTag = row.get<int>(3);
+      u8 ArchitectureMode = row.get<int>(4);
+      TOffset FileOffset = row.get<int>(5);
+      u32 FileSize = row.get<int>(6);
+
+      m_Session << "Select virtual_address FROM VirtualMemoryArea WHERE name = :name"
+	, soci::use(row.get<std::string>(0)), soci::into(blob);
+
+      Address	addr;
+      blob.read(400, reinterpret_cast<char*>(&addr), sizeof(Address));
+      MemArea->SetName(Name);
+      MemArea->SetAccess(Access);
+      MemArea->SetVirtualSize(VirtualSize);
+      MemArea->SetDefaultArchitectureTag(ArchitectureTag);
+      MemArea->SetDefaultArchitectureMode(ArchitectureMode);
+      MemArea->SetFileOffset(FileOffset);
+      MemArea->SetFileSize(FileSize);
+      MemArea->SetVirtualBase(addr);
+      Callback(*MemArea);
+      std::cerr << "------------------------------------- FOR EACH MemoryArea : "
+		<< MemArea->Dump() << std::endl;
+    }
+  std::cerr << "------------------------------------- FOR EACH MemoryArea : End " << std::endl;
 }
 
 MemoryArea const* SociDatabase::GetMemoryArea(Address const& rAddress) const
@@ -435,6 +533,33 @@ MemoryArea const* SociDatabase::GetMemoryArea(Address const& rAddress) const
 bool SociDatabase::GetFirstAddress(Address& rAddress) const
 {
   std::cerr << "---------------------------- Get First Address" << std::endl;
+    Address	  address;
+
+  soci::rowset<soci::row>	rowset = (m_Session.prepare << "SELECT addressing_type, "
+  					  "base, offset, base_size, offset_size, MIN(id) "
+  					  "FROM Label");
+
+  for (soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;
+      
+      int AddressingType = row.get<int>(0);
+      u16 Base = row.get<int>(1);
+      u32 Offset = row.get<int>(2);
+      u8  BaseSize = row.get<int>(3);
+      u8  OffsetSize = row.get<int>(4);
+
+      address.SetAddressingType(static_cast<medusa::Address::Type>(AddressingType));
+      address.SetBase(Base);
+      address.SetOffset(Offset);
+      address.SetBaseSize(BaseSize);
+      address.SetOffsetSize(OffsetSize);
+      rAddress = address;
+      std::cerr << "-------------------- DUMP address FirstAddress: "
+      << rAddress.Dump() << std::endl;
+      return true;
+    }
+
   return false;
 }
 
@@ -482,10 +607,10 @@ bool SociDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
   soci::blob	blob(m_Session);
   Label tmpLabel = rLabel;
   blob.write(200, reinterpret_cast<char*>(&tmpLabel), sizeof(Label));
-  m_Session << "INSERT INTO Label(type,"
+  m_Session << "INSERT INTO Label(addressing_type,"
     "base, offset, base_size, offset_size,"
     "label_addr, name, label_type, label, instance_label)"
-    "VALUES(:type,"
+    "VALUES(:addressing_type,"
     ":base, :offset, :base_size, :offset_size,"
     ":label_addr, :name, :label_type, :label, :instance_label)", soci::use(rAddress), soci::use(rLabel), soci::use(blob, "instance_label");
 
@@ -527,29 +652,80 @@ bool SociDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
   soci::indicator ind;
   Address	  address;
-  m_Session << "SELECT name FROM Label WHERE name=:name",
-    soci::use(rLabel), soci::into(address, ind);
-  if (m_Session.got_data())
+
+  soci::rowset<soci::row>	rowset = (m_Session.prepare << "SELECT addressing_type, "
+  					  "base, offset, base_size, offset_size "
+  					  "FROM Label WHERE name=:name",
+					  soci::use(rLabel.GetName(), "name"));
+  for (soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
     {
-      switch (ind)
-  	{
-  	case soci::i_ok:
-  	  {
-  	    rAddress = address;
-  	    std::cerr << "-------------------- DB_Soci, LabelAddress : "
-  		      << rAddress.Dump() << std::endl;
-  	    return true;
-  	  }
-  	default:
-  	  return false;
-  	}
+      soci::row const& row = *it;
+      
+      int AddressingType = row.get<int>(0);
+      u16 Base = row.get<int>(1);
+      u32 Offset = row.get<int>(2);
+      u8  BaseSize = row.get<int>(3);
+      u8  OffsetSize = row.get<int>(4);
+
+      address.SetAddressingType(static_cast<medusa::Address::Type>(AddressingType));
+      address.SetBase(Base);
+      address.SetOffset(Offset);
+      address.SetBaseSize(BaseSize);
+      address.SetOffsetSize(OffsetSize);
+      rAddress = address;
+      std::cerr << "-------------------- DUMP address: "
+      << rAddress.Dump() << std::endl;
     }
+
+  // m_Session << "SELECT addressing_type"
+  //   //" base, offset, base_size, offset_size"
+  //   "FROM Label WHERE name=:name",
+  //   soci::use(rLabel.GetName(), "name"), soci::into(address, ind);
+  // if (m_Session.got_data())
+  //   {
+  //     switch (ind)
+  // 	{
+  // 	case soci::i_ok:
+  // 	  {
+  // 	    rAddress = address;
+  // 	    std::cerr << "-------------------- DB_Soci, LabelAddress : "
+  // 		      << rAddress.Dump() << std::endl;
+  // 	    return true;
+  // 	  }
+  // 	default:
+  // 	  return false;
+  // 	}
+  //   }
   return false;
 }
 
 void SociDatabase::ForEachLabel(LabelCallback Callback)
 {
   std::cerr << "---------------------------- ForEachLabel" << std::endl;
+  Address address;
+  soci::rowset<soci::row>	rowset = (m_Session.prepare << "SELECT addressing_type, "
+  					  "base, offset, base_size, offset_size "
+  					  "FROM Label");
+
+  for (soci::rowset<soci::row>::const_iterator it = rowset.begin(); it != rowset.end(); ++it)
+    {
+      soci::row const& row = *it;
+      
+      int AddressingType = row.get<int>(0);
+      u16 Base = row.get<int>(1);
+      u32 Offset = row.get<int>(2);
+      u8  BaseSize = row.get<int>(3);
+      u8  OffsetSize = row.get<int>(4);
+
+      address.SetAddressingType(static_cast<medusa::Address::Type>(AddressingType));
+      address.SetBase(Base);
+      address.SetOffset(Offset);
+      address.SetBaseSize(BaseSize);
+      address.SetOffsetSize(OffsetSize);
+      std::cerr << "-------------------- ------------- ----- FOR EACHLABEL: Row: "
+  		<< address.Dump() << std::endl;
+    }
+  std::cerr << "-------------------- ------------- ----- FOR EACHLABEL: END: " << std::endl;
 }
 
 bool SociDatabase::AddCrossReference(Address const& rTo, Address const& rFrom)
@@ -645,14 +821,15 @@ bool SociDatabase::GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) 
 
 bool SociDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 {
-  std::cerr << "---------------------------- GetCellData" << std::endl;
+  std::cerr << "---------------------------- GetCellData: NON CONST" << std::endl;
   auto pMemArea = GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
     {
       std::cerr << "---------------------------- GetCellData: FALSE" << std::endl;
       return false;
     }
-  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+  //  auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+  auto spCellData = std::make_shared<CellData>(Cell::ValueType, ValueDetail::HexadecimalType, 1);
   u8  Type;
   soci::rowset<soci::row> rowset = (m_Session.prepare << "SELECT type,"
   				    "sub_type, length, format_style, flags,"
@@ -697,7 +874,7 @@ bool SociDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 
 bool SociDatabase::GetCellData(Address const& rAddress, CellData& rCellData) const
 {
-  std::cerr << "---------------------------- GetCellData" << std::endl;
+  std::cerr << "---------------------------- GetCellData: CONST" << std::endl;
   auto pMemArea = GetMemoryArea(rAddress);
   if (pMemArea == nullptr)
     {
@@ -775,8 +952,9 @@ bool SociDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
     , soci::use(pCurMemArea->GetBaseAddress().Dump(), "label_addr");
   std::cerr << " * OK *  ======== Length : " << spCellData->GetLength() << std::endl;
   std::cerr << " * OK *" << std::endl;
-  return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses,
-				  Force);
+  return true;
+  // return pCurMemArea->SetCellData(rAddress.GetOffset(), spCellData, rDeletedCellAddresses,
+  // 				  Force);
 }
 
 bool SociDatabase::DeleteCellData(Address const& rAddress)

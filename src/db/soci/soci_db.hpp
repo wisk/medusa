@@ -76,7 +76,7 @@ namespace soci
 
     static void to_base(Address const& rAddress, values& val, indicator& ind)
     {
-      val.set("type", static_cast<u32>(rAddress.GetAddressingType()));
+      val.set("addressing_type", static_cast<u32>(rAddress.GetAddressingType()));
       val.set("base", rAddress.GetBase());
       val.set("offset", rAddress.GetOffset());
       val.set("base_size", rAddress.GetBaseSize());
@@ -147,12 +147,16 @@ namespace soci
       if (ind == i_null)
 	throw soci_error("Label: Null value not allowed for this type");
       
-      rLabel.SetType(val.get<u16>("type"));
+      rLabel.SetName(val.get<std::shared_ptr<char> >("name"));
+      rLabel.SetNameLength(val.get<u16>("name_length"));
+      rLabel.SetType(val.get<u16>("label_type"));
+      rLabel.SetVersion(val.get<u32>("version"));
     }
 
     static void to_base(Label const& rLabel, values& val, indicator& ind)
     {
       val.set("name", rLabel.GetName());
+      val.set("name_length", rLabel.GetNameLength());
       val.set("label_type", rLabel.GetType());
       val.set("label", rLabel.GetLabel());
       ind = i_ok;
@@ -297,7 +301,11 @@ public:
       "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
       "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
 
-    m_Session << "CREATE TABLE IF NOT EXISTS Label(type INTEGER,"
+    m_Session << "CREATE TABLE IF NOT EXISTS VirtualMemoryArea("
+      "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
+      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS Label(id INTEGER PRIMARY KEY, addressing_type INTEGER,"
       "base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER,"
       "label_addr TEXT, name TEXT, label_type INTEGER, label TEXT, instance_label BLOB)";
 
