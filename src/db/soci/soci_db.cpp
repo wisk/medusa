@@ -616,17 +616,20 @@ bool SociDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
   //	    << std::endl;
   std::lock_guard<std::recursive_mutex>	Lock(m_LabelLock);
 
-  //FIXME(lemme): we don't need blob to store the label
-  soci::blob blob(m_Session);
-  Label TmpLabel = rLabel;
-  blob.write(200, reinterpret_cast<char*>(&TmpLabel), sizeof(Label));
-  m_Session << "INSERT INTO Label(addressing_type,"
-    "base, offset, base_size, offset_size,"
-    "label_addr, name, label_type, label, instance_label)"
-    "VALUES(:addressing_type,"
-    ":base, :offset, :base_size, :offset_size,"
-    ":label_addr, :name, :label_type, :label, :instance_label)",
-    soci::use(rAddress), soci::use(rLabel), soci::use(blob, "instance_label");
+  m_Session << "INSERT INTO Label(name, name_length, label_type, version, label_addr,"
+    "addressing_type, base, offset, base_size, offset_size)"
+    "VALUES(:name, :name_length, :label_type, :version, :label_addr,"
+    ":addressing_type, :base, :offset, :base_size, :offset_size)"
+    , soci::use(rLabel.GetName(), "name")
+    , soci::use(rLabel.GetNameLength(), "name_length")
+    , soci::use(rLabel.GetType(), "label_type")
+    , soci::use(rLabel.GetVersion(), "version")
+    , soci::use(rAddress.Dump(), "label_addr")
+    , soci::use(static_cast<int>(rAddress.GetAddressingType()), "addressing_type")
+    , soci::use(rAddress.GetBase(), "base")
+    , soci::use(rAddress.GetOffset(), "offset")
+    , soci::use(rAddress.GetBaseSize(), "base_size")
+    , soci::use(rAddress.GetOffsetSize(), "offset_size");
   return true;
 }
 
@@ -635,9 +638,7 @@ bool SociDatabase::RemoveLabel(Address const& rAddress)
   //std::cerr << "----------------------- DB_Soci: RemoveLabel --------------------"
   //	    << std::endl;
   std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
-  m_Session << "Delete FROM Label WHERE type = :type AND base = :base AND"
-    " offset = :offset AND base_size = :base_size AND offset_size = :offset_size AND"
-    " label_addr = :label_addr ", soci::use(rAddress);
+  m_Session << "Delete FROM Label WHERE label_addr = :label_addr ", soci::use(rAddress.Dump());
   return true;
 }
 
@@ -647,15 +648,25 @@ bool SociDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
 
   std::cerr << "----------------------- DB_Soci: GetLabel --------------------"
   	    << std::endl;
-  //FIXME(lemme): we don't need blob to store the label
-  soci::blob blob(m_Session);
-  m_Session << "SELECT instance_label FROM Label WHERE label_addr = :label_addr"
-    , soci::use(rAddress.Dump()), soci::into(blob);
-  if (m_Session.got_data())
+  Label	label;
+  soci::rowset<soci::row> rowset =   (m_Session.prepare << "SELECT name, name_length, "
+				      "label_type, version "
+				      "FROM Label WHERE label_addr = :label_addr"
+				      , soci::use(rAddress.Dump()));
+
+  for (auto it = rowset.begin(); it != rowset.end(); ++it)
     {
-      Label	label;
-      blob.read(200, reinterpret_cast<char*>(&label), sizeof(Label));
+      soci::row const& row = *it;
+      std::string Name = row.get<std::string>(0);
+      u16 NameLength = row.get<int>(1);
+      u16 LabelType = row.get<int>(2);
+      u32 Version = row.get<int>(3);
+
+      label.SetType(LabelType);
+      label.SetVersion(Version);
+      label.SetName(Name);
       rLabel = label;
+      std::cerr << "--------------------------- DB_Soci: GetLabel FOUND" << std::endl;
       return true;
     }
   std::cerr << "--------------------------- DB_Soci: GetLabel is EMPTY" << std::endl;
@@ -688,8 +699,6 @@ bool SociDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
       Address.SetBaseSize(BaseSize);
       Address.SetOffsetSize(OffsetSize);
       rAddress = Address;
-      //std::cerr << "-------------------- DUMP address: "
-      //      << rAddress.Dump() << std::endl;
     }
 
   // m_Session << "SELECT addressing_type"

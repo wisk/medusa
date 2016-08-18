@@ -147,7 +147,7 @@ namespace soci
       if (ind == i_null)
 	throw soci_error("Label: Null value not allowed for this type");
       
-      rLabel.SetName(val.get<std::shared_ptr<char> >("name"));
+      rLabel.SetName(val.get<std::string>("name"));
       rLabel.SetNameLength(val.get<u16>("name_length"));
       rLabel.SetType(val.get<u16>("label_type"));
       rLabel.SetVersion(val.get<u32>("version"));
@@ -309,9 +309,9 @@ public:
       "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
       "offset_size INTEGER)";
 
-    m_Session << "CREATE TABLE IF NOT EXISTS Label(id INTEGER PRIMARY KEY, addressing_type INTEGER,"
-      "base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER,"
-      "label_addr TEXT, name TEXT, label_type INTEGER, label TEXT, instance_label BLOB)";
+    m_Session << "CREATE TABLE IF NOT EXISTS Label(id INTEGER PRIMARY KEY, name TEXT, "
+      "name_length INTEGER, label_type INTEGER, version INTEGER, addressing_type INTEGER,"
+      " base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER, label_addr TEXT)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellData("
       "id INTEGER, type INTEGER, sub_type INTEGER, length INTEGER, format_style INTEGER, "

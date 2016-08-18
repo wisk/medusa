@@ -41,7 +41,13 @@ public:
   std::string GetName(void) const { return m_spName.get(); }
   u16         GetType(void) const { return m_Type; }
   u16	      GetNameLength() const { return m_NameLength; }
-  void	      SetName(std::shared_ptr<char> spName) { m_spName = spName; }
+  u16	      GetVersion() const    { return m_Version;    }
+  void	      SetName(std::string const& Name)
+  {
+    m_NameLength = static_cast<u16>(Name.length() + 1);
+    m_spName.reset(new char[m_NameLength], [](char *pName) { delete [] pName; });
+    memcpy(m_spName.get(), Name.c_str(), m_NameLength);
+  }
   void	      SetNameLength(u16 Length)		    { m_NameLength = Length; }
   void	      SetVersion(u16 Version)		    { m_Version = Version;   }
   void        SetType(u16 Type) { m_Type = Type; }
