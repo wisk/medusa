@@ -68,9 +68,9 @@ public:
   virtual u32                GetFileSize(void)   const = 0;
 
   // Cell methods
-  virtual CellData::SPType GetCellData(TOffset Offset) const = 0;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData) = 0;
+  /* deprecated */ virtual CellData::SPType GetCellData(TOffset Offset) const = 0;
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData) = 0;
   virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
 
   bool IsCellPresent(Address const& rAddress) const
@@ -134,9 +134,9 @@ public:
   virtual TOffset     GetFileOffset(void) const;
   virtual u32         GetFileSize(void)   const;
 
-  virtual CellData::SPType GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
+  /* deprecated */ virtual CellData::SPType GetCellData(TOffset Offset) const;
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
 
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
@@ -203,12 +203,13 @@ public:
   virtual u32         GetFileSize(void)   const;
 
   // Set
-  void		      SetVirtualSize(u32 VirtualSize)	{ m_VirtualSize = VirtualSize; }
+  void		      SetBaseAddress(Address const& rAddr) { m_VirtualBase = rAddr;       }
+  void		      SetVirtualSize(u32 VirtualSize)	   { m_VirtualSize = VirtualSize; }
 
-  virtual CellData::SPType GetCellData(TOffset Offset) const;
-virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
-virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
-bool                   SetCellWithArchMode(TOffset Offset, Tag Arch, u8 Mode); //
+  /* deprecated */ virtual CellData::SPType GetCellData(TOffset Offset) const;
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
+  /* deprecated */ virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData);
+  bool                   SetCellWithArchMode(TOffset Offset, Tag Arch, u8 Mode); //
   virtual void           ForEachCellData(CellDataPredicat Predicat) const;
 
   virtual Address GetBaseAddress(void) const;

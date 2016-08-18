@@ -299,11 +299,15 @@ public:
 
     m_Session << "CREATE TABLE IF NOT EXISTS MappedMemoryArea("
       "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
+      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
+      "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
+      "offset_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS VirtualMemoryArea("
       "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER, virtual_address BLOB)";
+      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
+      "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
+      "offset_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS Label(id INTEGER PRIMARY KEY, addressing_type INTEGER,"
       "base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER,"

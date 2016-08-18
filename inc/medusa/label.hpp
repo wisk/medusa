@@ -40,6 +40,10 @@ public:
 
   std::string GetName(void) const { return m_spName.get(); }
   u16         GetType(void) const { return m_Type; }
+  u16	      GetNameLength() const { return m_NameLength; }
+  void	      SetName(std::shared_ptr<char> spName) { m_spName = spName; }
+  void	      SetNameLength(u16 Length)		    { m_NameLength = Length; }
+  void	      SetVersion(u16 Version)		    { m_Version = Version;   }
   void        SetType(u16 Type) { m_Type = Type; }
   std::string GetLabel(void) const;
 
