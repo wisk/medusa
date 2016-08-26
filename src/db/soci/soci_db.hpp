@@ -145,8 +145,8 @@ namespace soci
     static void from_base(values const& val, indicator ind, Label& rLabel)
     {
       if (ind == i_null)
-	throw soci_error("Label: Null value not allowed for this type");
-      
+       	throw soci_error("Label: Null value not allowed for this type");
+
       rLabel.SetName(val.get<std::string>("name"));
       rLabel.SetNameLength(val.get<u16>("name_length"));
       rLabel.SetType(val.get<u16>("label_type"));
@@ -212,6 +212,7 @@ namespace soci
       rMemArea.SetFileOffset(val.get<TOffset>("file_offset"));
       rMemArea.SetFileSize(val.get<u32>("file_size"));
       rMemArea.SetVirtualSize(val.get<u32>("virtual_size"));
+      rMemArea.SetId(val.get<u32>("id"));
       // Get Address virtual base
 
       // SetCellData
@@ -226,9 +227,24 @@ namespace soci
       val.set("architecture_mode", rMemArea.GetArchitectureMode());
       val.set("file_offset", rMemArea.GetFileOffset());
       val.set("file_size", rMemArea.GetFileSize());
+      val.set("id", rMemArea.GetId());
       //GetBaseAddress
       //GetCellData
       ind = i_ok;
+    }
+  };
+
+  template<>
+  struct type_conversion<MultiCell>
+  {
+    static void from_base(values const& val, indicator ind, MultiCell& rMultiCell)
+    {
+      ;
+    }
+
+    static void to_base(MultiCell& rMultiCell, values& val, indicator& ind)
+    {
+      ;
     }
   };
 
@@ -245,6 +261,7 @@ namespace soci
       rMemArea.SetDefaultArchitectureTag(val.get<u32>("architecture_tag"));
       rMemArea.SetDefaultArchitectureMode(val.get<u8>("architecture_mode"));
       rMemArea.SetVirtualSize(val.get<u32>("virtual_size"));
+      rMemArea.SetId(val.get<u32>("id"));
       // SetCellData
     }
 
@@ -257,25 +274,10 @@ namespace soci
       val.set("architecture_mode", rMemArea.GetArchitectureMode());
       val.set("file_offset", rMemArea.GetFileOffset());
       val.set("file_size", rMemArea.GetFileSize());
+      val.set("id", rMemArea.GetId());
       //GetBaseAddress
       //GetCellData
       ind = i_ok;
-    }
-  };
-
-  template<>
-  struct type_conversion<std::pair<Address, Label> >
-  {
-    static void from_base(values const& val, indicator ind, std::pair<Address, Label>& rPair)
-    {
-      type_conversion<Address>::from_base(val, ind, rPair.first);
-      type_conversion<Label>::from_base(val, ind, rPair.second);
-    }
-
-    static void to_base(std::pair<Address, Label>& rPair, values& val, indicator& ind)
-    {
-      type_conversion<Address>::to_base(rPair.first, val, ind);
-      type_conversion<Label>::to_base(rPair.second, val, ind);
     }
   };
 }
@@ -286,7 +288,7 @@ public:
   SociDatabase(void);
   virtual ~SociDatabase(void);
 
-  bool	_CreateTable()
+  void	_CreateTable()
   {
     m_Session << "CREATE TABLE IF NOT EXISTS BinaryStream("
       "size INTEGER, buffer BLOB)";
@@ -298,13 +300,15 @@ public:
       "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS MappedMemoryArea("
-      "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
+      "id_memory_area INTEGER PRIMARY KEY, name TEXT, access INTEGER, virtual_size INTEGER, "
+      "architecture_tag INTEGER, "
       "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
       "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
       "offset_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS VirtualMemoryArea("
-      "name TEXT, access INTEGER, virtual_size INTEGER, architecture_tag INTEGER, "
+      "id_memory_area INTEGER PRIMARY KEY, name TEXT, access INTEGER, virtual_size INTEGER,"
+      " architecture_tag INTEGER, "
       "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
       "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
       "offset_size INTEGER)";
@@ -315,8 +319,13 @@ public:
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellData("
       "id INTEGER, type INTEGER, sub_type INTEGER, length INTEGER, format_style INTEGER, "
-      "flags INTEGER, architecture_tag INTEGER, architecture_mode INTEGER, label_addr TEXT)";
+      "flags INTEGER, architecture_tag INTEGER, architecture_mode INTEGER, label_addr TEXT"
+      ", address_base INTEGER, base_offset INTEGER, address_base_size INTEGER"
+      ", address_offset_size INTEGER, id_memory_area INTEGER)";
 
+    m_Session << "CREATE TABLE IF NOT EXISTS CellDataLayout(id_memory_area INTEGER," 
+        "cell_offset INTEGER)";
+        
     m_Session << "CREATE TABLE IF NOT EXISTS MultiCell("
       "dump TEXT, MultiCell BLOB)";
 
