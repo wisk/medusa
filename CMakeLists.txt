@@ -108,7 +108,11 @@ option(MEDUSA_BUILD_WITH_SQLITE3
   "SQLite3 library allows to build db_soci"
   TRUE)
 if (MEDUSA_BUILD_WITH_SQLITE3)
-  hunter_add_package(SQLite3)
+  if (MSVC)
+    hunter_add_package(SQLite3-cmake)
+  else()
+    hunter_add_package(SQLite3)
+  endif()
 endif()
 
 ## SOCI

@@ -1,15 +1,16 @@
-#ifndef SOCI_SERIALIZER_HPP
-# define SOCI_SERIALIZER_HPP
+#ifndef SERIALIZER_HPP
+# define SERIALIZER_HPP
 
-#include <medusa/serializer.hpp>
-#include "soci_db.hpp"
+#include "medusa/namespace.hpp"
+#include "medusa/types.hpp"
+#include "medusa/address.hpp"
 
-class SociSerializer : public medusa::Serializer
+MEDUSA_NAMESPACE_BEGIN
+
+class Serializer
 {
 public:
-  SociSerializer(soci::session& Session);
-  virtual ~SociSerializer(){}
-  virtual void print(){ std::cout << "Hello, Soci serializer" << std::endl; }
+  virtual ~Serializer(){}
   virtual bool LoadField(char const* pFieldName, medusa::Address const& rAddress, medusa::MemoryArea const& rMemArea);
   virtual bool LoadField(char const* pFieldName, medusa::Address const& rAddress, medusa::Address const& rAddr);
   virtual bool LoadField(char const* pFieldName, medusa::Address const& rAddress, medusa::Label const& rLabel);
@@ -23,9 +24,8 @@ public:
   virtual bool SaveField(char const* pFieldName, medusa::Address const& rAddress, medusa::CellData const& rCellData);
   virtual bool SaveField(char const* pFieldName, medusa::Address const& rAddress, medusa::MappedMemoryArea const& rMappedMemArea);
   virtual bool SaveField(char const* pFieldName, medusa::Address const& rAddress, medusa::VirtualMemoryArea const& rVirtualMemArea);
-
-private:
-  soci::session& m_Session;
 };
 
-#endif // !SOCI_SERIALIZER_HPP
+MEDUSA_NAMESPACE_END
+
+#endif // !SERIALIZER_HPP

@@ -139,17 +139,21 @@ include(GenerateExportHeader)
 # define medusa architecture target
 add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
-  PUBLIC "${CMAKE_SOURCE_DIR}/inc"
-	 "${CMAKE_BINARY_DIR}/inc")
+  PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
+)
+target_link_libraries(medusa
+  Boost::boost
+  Boost::system
+  Boost::filesystem
+  Boost::thread # TODO:(wisk) might be useless now
+  Boost::date_time
+  Boost::program_options
+)
 
 # generate export file
 generate_export_header(medusa
   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
 )
-
-# if (MEDUSA_BUILD_WITH_OGDF)
-#   add_dependencies(medusa ogdf)
-# endif()
 
 if (MSVC)
   target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES})
@@ -167,6 +171,7 @@ if (MEDUSA_CMAKE_USE_COTIRE)
 endif()
 
 # Build OGDF if needed
+# TODO(wisk): use FindOGDF.cmake instead
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
   include(ExternalProject)
@@ -198,9 +203,6 @@ endif()
 
 if (WIN32)
   install(TARGETS medusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})
-  # file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
-  # file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
-  # install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION ${MEDUSA_EXECUTABLE_PATH})
 else ()
   install(TARGETS medusa LIBRARY DESTINATION ${MEDUSA_LIBRARY_PATH})
 endif ()
