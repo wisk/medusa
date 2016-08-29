@@ -10,4 +10,4 @@ set(SRC
   ${SRCROOT}/interpreter_emulator.cpp
 )
 
-medusa_add_module(emul interpreter ${HDR} ${SRC})
+medusa_add_module(emul interpreter "${HDR}" "${SRC}")

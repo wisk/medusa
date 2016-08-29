@@ -11,4 +11,4 @@ set(SRC
   ${SRCROOT}/raw_loader.cpp
 )
 
-medusa_add_module(ldr raw ${HDR} ${SRC})
+medusa_add_module(ldr raw "${HDR}" "${SRC}")

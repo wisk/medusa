@@ -11,4 +11,4 @@ set(SRC
   ${SRCROOT}/st62_loader.cpp
 )
 
-medusa_add_module(ldr st62 ${HDR} ${SRC})
+medusa_add_module(ldr st62 "${HDR}" "${SRC}")

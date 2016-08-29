@@ -11,4 +11,4 @@ set(SRC
   ${SRCROOT}/text_db.cpp
 )
 
-medusa_add_module(db text ${HDR} ${SRC})
+medusa_add_module(db text "${HDR}" "${SRC}")

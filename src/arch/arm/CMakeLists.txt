@@ -18,4 +18,4 @@ set(SRC
   ${SRCROOT}/arm_helper.cpp
 )
 
-medusa_add_module(arch arm ${HDR} ${SRC})
+medusa_add_module(arch arm "${HDR}" "${SRC}")

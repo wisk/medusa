@@ -11,4 +11,4 @@ set(SRC
   ${SRCROOT}/bootsector_loader.cpp
 )
 
-medusa_add_module(ldr bs ${HDR} ${SRC})
+medusa_add_module(ldr bs "${HDR}" "${SRC}")

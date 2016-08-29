@@ -12,4 +12,4 @@ set(SRC
   ${SRCROOT}/z80_opcode.cpp
 )
 
-medusa_add_module(arch z80 ${INC} ${SRC})
+medusa_add_module(arch z80 "${HDR}" "${SRC}")

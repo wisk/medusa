@@ -15,4 +15,4 @@ set(SRC
   ${CMAKE_SOURCE_DIR}/deps/sqlite3/sqlite3.c
 )
 
-medusa_add_module(os windows ${HDR} ${SRC})
+medusa_add_module(os windows "${HDR}" "${SRC}")

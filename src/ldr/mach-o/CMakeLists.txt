@@ -13,4 +13,4 @@ set(SRC
   ${SRCROOT}/mach-o_loader.cpp
 )
 
-medusa_add_module(ldr mach-o ${HDR} ${SRC})
+medusa_add_module(ldr mach-o "${HDR}" "${SRC}")

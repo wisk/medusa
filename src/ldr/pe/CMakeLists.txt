@@ -13,4 +13,4 @@ set(SRC
   ${SRCROOT}/pe_loader.cpp
 )
 
-medusa_add_module(ldr pe ${HDR} ${SRC})
+medusa_add_module(ldr pe "${HDR}" "${SRC}")

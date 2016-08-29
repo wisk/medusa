@@ -4,10 +4,11 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/arch/x86)
 
 # all source files
 set(HDR
+  ${INCROOT}/x86_opcode.ipp
+  ${INCROOT}/x86_operand.ipp
   ${INCROOT}/x86.hpp
   ${INCROOT}/x86_const.hpp
   ${INCROOT}/x86_architecture.hpp
-
   ${INCROOT}/x86_calling_convention.hpp
 )
 set(SRC
@@ -38,4 +39,4 @@ set(SRC
   ${SRCROOT}/x86_opcode_table_sse5a.cpp
   )
 
-medusa_add_module(arch x86 ${INC} ${SRC})
+medusa_add_module(arch x86 "${HDR}" "${SRC}")

@@ -12,4 +12,4 @@ set(SRC
   ${SRCROOT}/gameboy_loader.cpp
 )
 
-medusa_add_module(ldr gb ${HDR} ${SRC})
+medusa_add_module(ldr gb "${HDR}" "${SRC}")

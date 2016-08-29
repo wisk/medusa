@@ -10,4 +10,4 @@ set(SRC
   ${SRCROOT}/main.cpp
 )
 
-medusa_add_module(os unix ${HDR} ${SRC})
+medusa_add_module(os unix "${HDR}" "${SRC}")

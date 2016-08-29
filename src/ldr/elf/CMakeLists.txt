@@ -13,4 +13,4 @@ set(SRC
   ${SRCROOT}/elf_loader.cpp
 )
 
-medusa_add_module(ldr elf ${HDR} ${SRC})
+medusa_add_module(ldr elf "${HDR}" "${SRC}")
