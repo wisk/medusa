@@ -249,7 +249,7 @@ bool SociDatabase::SetArchitecture(Address const& rAddress, Tag ArchitectureTag,
     case ByCell:
       {
 	soci::indicator indicator;
-        soci::row row
+        soci::row row;
         m_Session << "Select * from CellData", soci::into(row, indicator);
         if (!m_Session.got_data())
           {
@@ -484,6 +484,7 @@ bool SociDatabase::GetFirstAddress(Address& rAddress) const
       std::cerr << "-------------------- DUMP address FirstAddress: "
 		<< Address.Dump() << std::endl;
       rAddress = Address;
+      return true;
     }
   std::cerr << "--------------------------- FirstAddress: return FALSE";
   return false;
