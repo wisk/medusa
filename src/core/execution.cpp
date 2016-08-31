@@ -57,10 +57,16 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
     return false;
   }
   if (SetCpuMemContext(StartAddr) == false)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "set cpu memory context failed" << LogEnd;
+      return false;
+    }
   m_spOs = rModMgr.GetOperatingSystem(m_rDoc.GetOperatingSystemName());
   if (m_spOs == nullptr)
-    return SetStackMemory();
+    {
+      Log::Write("core").Level(LogError) << "operating system was not found" << LogEnd;
+      return SetStackMemory();
+    }
 
   return m_spOs->InitializeContext(m_rDoc, *m_pCpuCtxt, *m_pMemCtxt, rArgs, rEnv, rCurWrkDir);
 }
@@ -74,36 +80,60 @@ bool Execution::SetStackMemory()
 
   void* pStkMem;
   if (!m_pMemCtxt->AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem)) {
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cannot allocate stack memory" << LogEnd;
+      return false;
+    }
   }
 
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, m_pCpuCtxt->GetMode());
   if (StkReg == CpuInformation::InvalidRegister)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "invalid stack register" << LogEnd;
+      return false;
+    }
   u32 StkRegSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
   if (StkRegSize < 8)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "invalid size of stack register" << LogEnd;
+      return false;
+    }
   StkRegSize /= 8;
 
   u64 StkOff = 0;
   u64 StackRegisterValue = StkPtr + StkLen - StkOff;
   if (m_pCpuCtxt->WriteRegister(StkReg, &StackRegisterValue, StkRegSize * 8) == false)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cannot write register in cpu context" << LogEnd;
+      return false;
+    }
   return true;
 }
 
 bool Execution::SetEmulator(std::string const& rEmulatorName)
 {
   if (m_spArch == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "architecture was not found" << LogEnd;
+      return false;
+    }
   if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cpu context or memory context is null" << LogEnd;
+      return false;
+    }
   auto pGetEmulator = ModuleManager::Instance().GetEmulator(rEmulatorName);
   if (pGetEmulator == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cannot get emulator" << LogEnd;
+      return false;
+    }
   auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
   if (pEmul == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cannot get emulator" << LogEnd;
+      return false;
+    }
   m_spEmul = Emulator::SPType(pEmul);
   return true;
 }
@@ -158,28 +188,43 @@ bool Execution::HookInstruction(Emulator::HookCallback HkCb)
 bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb)
 {
   if (m_spEmul == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "emulator is null" << LogEnd;
+      return false;
+    }
 
   static u64 s_FakeAddr = 0xdead7700; // FIXME: this is a dirty hack
   auto const& rAddr     = m_rDoc.GetAddressFromLabelName(rFuncName);
   auto const& rLbl      = m_rDoc.GetLabelFromAddress(rAddr);
 
   if (!rLbl.IsImported())
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "function: " << rFuncName << " is not imported" << LogEnd;
+      return false;
+    }
   // FIXME(wisk): sometime it's almost impossible to determine if a imported symbol is a function or a variable...
   //if (!rLbl.IsFunction())
   //  return false;
 
   auto const* pCpuInfo = m_spArch->GetCpuInformation();
   if (pCpuInfo == nullptr)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "cpu info is null" << LogEnd;
+      return false;
+    }
 
   auto PcSize = pCpuInfo->GetSizeOfRegisterInBit(pCpuInfo->GetRegisterByType(CpuInformation::ProgramPointerRegister, m_rDoc.GetMode(rAddr))) / 8;
   if (PcSize == 0)
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "pc size is null zero" << LogEnd;
+      return false;
+    }
 
   if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "can't write memory" << LogEnd;
+      return false;
+    }
 
   {
     std::lock_guard<std::mutex> Lock(m_HookMutex);
@@ -187,7 +232,10 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
   }
 
   if (!m_spEmul->AddHook(s_FakeAddr, Emulator::HookOnExecute, HkCb))
-    return false;
+    {
+      Log::Write("core").Level(LogError) << "can't add hook" << LogEnd;
+      return false;
+    }
 
   s_FakeAddr += 4;
 

@@ -1,7 +1,7 @@
 function(medusa_add_core include_files source_files)
 endfunction()
 
-function(medusa_add_module type name include_files source_files)
+macro(medusa_add_module type name include_files source_files)
 
   set(MEDUSA_FOLDER "")
   if ("${type}" STREQUAL "arch")
@@ -23,8 +23,8 @@ function(medusa_add_module type name include_files source_files)
   set(MEDUSA_MODULE "${type}_${name}")
   message(STATUS "Build ${MEDUSA_MODULE} (${MEDUSA_FOLDER})")
 
-  add_library(${MEDUSA_MODULE} SHARED ${source_files})
-  target_include_directories(${MEDUSA_MODULE} PRIVATE ${include_files})
+  add_library(${MEDUSA_MODULE} SHARED ${source_files} ${include_files})
+# target_include_directories(${MEDUSA_MODULE} PRIVATE ${include_files})
   target_link_libraries(${MEDUSA_MODULE} medusa)
   set_target_properties(${MEDUSA_MODULE} PROPERTIES
     LINKER_LANGUAGE CXX
@@ -37,7 +37,7 @@ function(medusa_add_module type name include_files source_files)
     LIBRARY DESTINATION ${MEDUSA_MODULE_PATH}
   )
 
-endfunction()
+endmacro()
 
 function(medusa_add_tool target include_files source_files)
 endfunction()

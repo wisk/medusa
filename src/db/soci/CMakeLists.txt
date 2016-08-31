@@ -25,7 +25,7 @@ set(SOCI_LIBRARIES)
 else()
   set(SOCI_LIBRARIES
     "${SOCI_ROOT}/lib64/libsoci_core.a"
-    "${SOCI_ROOT}/lib64/libsoci_sqlite3.so"
+    "${SOCI_ROOT}/lib64/libsoci_sqlite3.a"
   )
 endif()
 

@@ -95,7 +95,11 @@ public:
   virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const = 0;
   virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const = 0;
 
+  void            SetId(u32 Id)  { m_Id = Id; }
+  u32             GetId(void) const    { return m_Id; }
+
 protected:
+  u32         m_Id; 
   std::string m_Name;
   u32         m_Access;
   Tag         m_DefaultArchitectureTag;
