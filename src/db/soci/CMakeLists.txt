@@ -38,7 +38,7 @@ set(SOCI_LIBRARIES)
   )
 else()
   set(SOCI_LIBRARIES
-    "${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/lib/soci_core_4_0.a"
+    "${CMAKE_CURRENT_BINARY_DIR}/soci/src/soci-build/lib/libsoci_core.so.4.0"
   )
 endif()
 

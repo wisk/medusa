@@ -21,7 +21,7 @@ namespace pydusa
 
 void PydusaMemoryArea(py::module& rMod)
 {
-  py::enum_<u32>(rMod, "MemoryAccess")
+    py::enum_<MemoryArea::Access>(rMod, "MemoryAccess")
     .value("READ",    MemoryArea::Read)
     .value("WRITE",   MemoryArea::Write)
     .value("EXECUTE", MemoryArea::Execute)
