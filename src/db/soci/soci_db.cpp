@@ -4,6 +4,8 @@
 #include <medusa/log.hpp>
 #include <medusa/util.hpp>
 
+#include <soci/sqlite3/soci-sqlite3.h>
+
 SociDatabase::SociDatabase(void)
 {
 }
@@ -31,7 +33,7 @@ bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
 {
   try
   {
-    m_Session.open("sqlite3", "dbname=" + rDatabasePath.string());
+    m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
   }
   catch (std::exception const &e)
   {
@@ -65,6 +67,11 @@ bool SociDatabase::_MoveAddressForward(Address const &rAddress, Address &rMovedA
                                        s64 Offset) const
 {
   auto MemArea = GetMemoryArea(rAddress);
+  if (MemArea == nullptr)
+  {
+    Log::Write("db_soci").Level(LogError) << "unable to find memory area for " << rAddress << LogEnd;
+    return false;
+  }
   if (!MemArea->IsCellPresent(rAddress))
   {
     Log::Write("soci").Level(LogError) << "memory cell was not found" << LogEnd;
@@ -149,7 +156,7 @@ bool SociDatabase::Create(boost::filesystem::path const &rDatabasePath, bool For
       return false;
     }
 
-    m_Session.open("sqlite3", "dbname=" + rDatabasePath.string());
+    m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
     _CreateTable();
   }
   catch (std::exception const &e)
@@ -353,7 +360,7 @@ void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
       Address VirtualBaseAddress;
       VirtualBaseAddress.SetAddressingType(static_cast<medusa::Address::Type>(row.get<int>(7)));
       VirtualBaseAddress.SetBase(row.get<int>(8));
-      VirtualBaseAddress.SetOffset(row.get<int>(9));
+      VirtualBaseAddress.SetOffset(row.get<int64_t>(9));
       VirtualBaseAddress.SetBaseSize(row.get<int>(10));
       VirtualBaseAddress.SetOffsetSize(row.get<int>(11));
 
@@ -362,7 +369,7 @@ void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
       MemArea->SetVirtualSize(row.get<int>(2));
       MemArea->SetDefaultArchitectureTag(row.get<int>(3));
       MemArea->SetDefaultArchitectureMode(row.get<int>(4));
-      MemArea->SetFileOffset(row.get<int>(5));
+      MemArea->SetFileOffset(row.get<int64_t>(5));
       MemArea->SetFileSize(row.get<int>(6));
       MemArea->SetId(row.get<int>(12));
       MemArea->SetVirtualBase(VirtualBaseAddress);
@@ -381,7 +388,7 @@ void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
       Address VirtualBaseAddress;
       VirtualBaseAddress.SetAddressingType(static_cast<medusa::Address::Type>(row.get<int>(7)));
       VirtualBaseAddress.SetBase(row.get<int>(8));
-      VirtualBaseAddress.SetOffset(row.get<int>(9));
+      VirtualBaseAddress.SetOffset(row.get<int64_t>(9));
       VirtualBaseAddress.SetBaseSize(row.get<int>(10));
       VirtualBaseAddress.SetOffsetSize(row.get<int>(11));
 
@@ -390,7 +397,7 @@ void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
       MemArea->SetVirtualSize(row.get<int>(2));
       MemArea->SetDefaultArchitectureTag(row.get<int>(3));
       MemArea->SetDefaultArchitectureMode(row.get<int>(4));
-      MemArea->SetFileOffset(row.get<int>(5));
+      MemArea->SetFileOffset(row.get<int64_t>(5));
       MemArea->SetFileSize(row.get<int>(6));
       MemArea->SetId(row.get<int>(12));
       MemArea->SetVirtualBase(VirtualBaseAddress);
@@ -426,7 +433,7 @@ MemoryArea const *SociDatabase::GetMemoryArea(Address const &rAddress) const
 
       VirtualBaseAddress.SetAddressingType(static_cast<medusa::Address::Type>(row.get<int>(7)));
       VirtualBaseAddress.SetBase(row.get<int>(8));
-      VirtualBaseAddress.SetOffset(row.get<int>(9));
+      VirtualBaseAddress.SetOffset(row.get<int64_t>(9));
       VirtualBaseAddress.SetBaseSize(row.get<int>(10));
       VirtualBaseAddress.SetOffsetSize(row.get<int>(11));
 
@@ -435,7 +442,7 @@ MemoryArea const *SociDatabase::GetMemoryArea(Address const &rAddress) const
       MemArea->SetVirtualSize(row.get<int>(2));
       MemArea->SetDefaultArchitectureTag(row.get<int>(3));
       MemArea->SetDefaultArchitectureMode(row.get<int>(4));
-      MemArea->SetFileOffset(row.get<int>(5));
+      MemArea->SetFileOffset(row.get<int64_t>(5));
       MemArea->SetFileSize(row.get<int>(6));
       MemArea->SetId(row.get<int>(12));
       MemArea->SetVirtualBase(VirtualBaseAddress);
@@ -474,7 +481,7 @@ bool SociDatabase::GetFirstAddress(Address &rAddress) const
       if (row.get_indicator(1) != soci::i_null)
         Address.SetBase(row.get<int>(1));
       if (row.get_indicator(2) != soci::i_null)
-        Address.SetOffset(row.get<int>(2));
+        Address.SetOffset(row.get<int64_t>(2));
       if (row.get_indicator(3) != soci::i_null)
         Address.SetBaseSize(row.get<int>(3));
       if (row.get_indicator(4) != soci::i_null)
@@ -622,7 +629,7 @@ bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
 
       Address.SetAddressingType(static_cast<medusa::Address::Type>(row.get<int>(0)));
       Address.SetBase(row.get<int>(1));
-      Address.SetOffset(row.get<int>(2));
+      Address.SetOffset(row.get<int64_t>(2));
       Address.SetBaseSize(row.get<int>(3));
       Address.SetOffsetSize(row.get<int>(4));
       rAddress = Address;
@@ -676,10 +683,10 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
       soci::row const &row = *it;
 
       int AddressingType = row.get<int>(0);
-      u16 Base = row.get<int>(1);
-      u32 Offset = row.get<int>(2);
-      u8 BaseSize = row.get<int>(3);
-      u8 OffsetSize = row.get<int>(4);
+      auto Base = row.get<int>(1);
+      auto Offset = row.get<int64_t>(2);
+      auto BaseSize = row.get<int>(3);
+      auto OffsetSize = row.get<int>(4);
 
       Label.SetType(row.get<int>(6));
       Label.SetVersion(row.get<int>(7));

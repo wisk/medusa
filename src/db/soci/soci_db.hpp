@@ -209,7 +209,7 @@ namespace soci
       rMemArea.SetDefaultArchitectureMode(val.get<u8>("architecture_mode"));
       rMemArea.SetName(val.get<std::string>("name"));
       rMemArea.SetAccess(val.get<u32>("access"));
-      rMemArea.SetFileOffset(val.get<TOffset>("file_offset"));
+      rMemArea.SetFileOffset(val.get<int64_t>("file_offset"));
       rMemArea.SetFileSize(val.get<u32>("file_size"));
       rMemArea.SetVirtualSize(val.get<u32>("virtual_size"));
       rMemArea.SetId(val.get<u32>("id"));
@@ -297,25 +297,25 @@ public:
 
     m_Session << "CREATE TABLE IF NOT EXISTS MemoryArea("
       "name TEXT, access INTEGER, size INTEGER, architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER)";
+      "architecture_mode INTEGER, file_offset BIGINT, file_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS MappedMemoryArea("
       "id_memory_area INTEGER PRIMARY KEY, name TEXT, access INTEGER, virtual_size INTEGER, "
       "architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
-      "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
+      "architecture_mode INTEGER, file_offset BIGINT, file_size INTEGER,"
+      "addressing_type INTEGER, base INTEGER, offset BIGINT, base_size INTEGER,"
       "offset_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS VirtualMemoryArea("
       "id_memory_area INTEGER PRIMARY KEY, name TEXT, access INTEGER, virtual_size INTEGER,"
       " architecture_tag INTEGER, "
-      "architecture_mode INTEGER, file_offset INTEGER, file_size INTEGER,"
-      "addressing_type INTEGER, base INTEGER, offset INTEGER, base_size INTEGER,"
+      "architecture_mode INTEGER, file_offset BIGINT, file_size INTEGER,"
+      "addressing_type INTEGER, base INTEGER, offset BIGINT, base_size INTEGER,"
       "offset_size INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS Label(id INTEGER PRIMARY KEY, name TEXT, "
       "name_length INTEGER, label_type INTEGER, version INTEGER, addressing_type INTEGER,"
-      " base INTEGER, offset INTEGER, base_size INTEGER, offset_size INTEGER, label_addr TEXT)";
+      " base INTEGER, offset BIGINT, base_size INTEGER, offset_size INTEGER, label_addr TEXT)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellData("
       "id INTEGER, type INTEGER, sub_type INTEGER, length INTEGER, format_style INTEGER, "
