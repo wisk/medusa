@@ -65,7 +65,7 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
           return;
 
         BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
-        TOffset StrOff;
+        OffsetType StrOff;
 
         if (!rDoc.ConvertAddressToFileOffset(rAddress, StrOff))
           return;

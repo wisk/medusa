@@ -141,12 +141,10 @@ add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
 )
+
 target_link_libraries(medusa
-  Boost::boost
   Boost::system
   Boost::filesystem
-  Boost::thread # TODO:(wisk) might be useless now
-  Boost::date_time
   Boost::program_options
 )
 
@@ -155,50 +153,21 @@ generate_export_header(medusa
   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
 )
 
-if (MSVC)
-  target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES})
-endif()
-
 # Thank ogre, I would never find this myself
+# NOTE(wisk): are these lines are still mandatory?
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
 if (DL_LIBRARY)
-  target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES} dl)
+  target_link_libraries(medusa dl)
 endif ()
 
 if (MEDUSA_CMAKE_USE_COTIRE)
-  cotire(Medusa)
+  cotire(medusa)
 endif()
 
 # Build OGDF if needed
-# TODO(wisk): use FindOGDF.cmake instead
 if (MEDUSA_BUILD_WITH_OGDF)
   message("Build medusa with OGDF")
-  include(ExternalProject)
-  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
-  set(OGDF_INCLUDE_DIRS
-    "${CMAKE_SOURCE_DIR}/deps/ogdf/include"
-    "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/include")
-  if (MSVC)
-    set(OGDF_LIBRARIES
-      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib"
-      debug     "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib"
-      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib"
-      optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib"
-    )
-
-    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/COIN.lib")
-    list(APPEND MEDUSA_NEEDED_LIBRARIES debug "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Debug/OGDF.lib")
-    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/COIN.lib")
-    list(APPEND MEDUSA_NEEDED_LIBRARIES optimized "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/Release/OGDF.lib")
-  else()
-    set(OGDF_LIBRARIES
-      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a"
-      "${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a"
-    )
-    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libOGDF.a)
-    list(APPEND MEDUSA_NEEDED_LIBRARIES ${CMAKE_BINARY_DIR}/ogdf/src/ogdf-build/libCOIN.a)
-  endif()
 endif()
 
 if (WIN32)

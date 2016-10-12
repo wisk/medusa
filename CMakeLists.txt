@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/wisk/hunter/archive/test.tar.gz"
-    SHA1 "44bbd84f6355e6235ba8c27e35f8536ace8b0744"
+    URL "https://github.com/wisk/hunter/archive/medusa-deps.tar.gz"
+    SHA1 "7b6ced4c4cb8cada49f4572fff69a01629c5c61c"
 )
 
 # project name
@@ -61,24 +61,23 @@ option(MEDUSA_CMAKE_USE_COTIRE
   "use cotire"
   FALSE)
 if (MEDUSA_CMAKE_USE_COTIRE)
-  include(cotire) # https://github.com/sakra/cotire
+  include(${CMAKE_SOURCE_DIR}/cmake/cotire.cmake) # https://github.com/sakra/cotire
   message("Cotire was enabled")
 endif()
 
 ## Boost
+add_definitions("-DBOOST_ALL_NO_LIB=1") # HACK(wisk): disable auto-link
 option(MEDUSA_BUILD_WITH_BOOST
   "Boost library is required to build medusa"
   TRUE)
 if (MEDUSA_BUILD_WITH_BOOST)
-  hunter_add_package(Boost COMPONENTS system filesystem thread date_time program_options test)
+  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options)
 endif()
 
-find_package(Boost COMPONENTS system filesystem thread date_time program_options unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS system atomic filesystem program_options REQUIRED)
 if (NOT Boost_FOUND)
   message(FATAL_ERROR "Unable to find Boost")
 endif()
-
-list(APPEND MEDUSA_NEEDED_LIBRARIES ${Boost_LIBRARIES})
 
 ## OGDF
 option(MEDUSA_BUILD_WITH_OGDF

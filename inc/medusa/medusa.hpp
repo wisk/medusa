@@ -101,16 +101,12 @@ public:
                                    */
   bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
 
-  Cell::SPType                      GetCell(Address const& rAddr);
-  Cell::SPType const                GetCell(Address const& rAddr) const;
   bool FormatCell(
     Address       const& rAddress,
     Cell          const& rCell,
     PrintData          & rPrintData) const;
 
-  MultiCell*                      GetMultiCell(Address const& rAddr);
-  MultiCell const*                GetMultiCell(Address const& rAddr) const;
-  bool FormatMultiCell(
+  bool              FormatMultiCell(
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
     PrintData          & rPrintData) const;
@@ -120,10 +116,10 @@ public:
     GraphData& rGraphData) const;
 
                                   //! This method makes a fully filled Address if possible. @see Address
-  Address                         MakeAddress(TOffset Offset);
-  Address                         MakeAddress(TBase Base, TOffset Offset);
-  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TOffset Offset);
-  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset);
+  Address                         MakeAddress(OffsetType Offset);
+  Address                         MakeAddress(BaseType Base, OffsetType Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, OffsetType Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, BaseType Base, OffsetType Offset);
 
   bool                            CreateFunction(Address const& rAddr);
   bool                            CreateUtf8String(Address const& rAddr);

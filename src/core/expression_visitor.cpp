@@ -787,7 +787,7 @@ Expression::SPType EvaluateVisitor::VisitVariable(VariableExpression::SPType spV
 }
 
 template<typename T>
-bool ReadType(BinaryStream const& rBinStrm, TOffset FileOff, u64& rValue)
+bool ReadType(BinaryStream const& rBinStrm, OffsetType FileOff, u64& rValue)
 {
   T Value;
   if (!rBinStrm.Read(FileOff, Value))
@@ -826,7 +826,7 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
   Address CurAddr(Base, spOffConst->GetInt().ConvertTo<u64>());
 
-  TOffset FileOff;
+  OffsetType FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
     return nullptr;
 
@@ -1483,11 +1483,11 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return spFoundExpr;
   }
 
-  auto Offset = spOffConstExpr->GetInt().ConvertTo<TOffset>();
+  auto Offset = spOffConstExpr->GetInt().ConvertTo<OffsetType>();
 
-  TBase Base = 0;
+  BaseType Base = 0;
   if (auto spBaseConstExpr = expr_cast<BitVectorExpression>(spBaseExpr))
-    Base = spBaseConstExpr->GetInt().ConvertTo<TBase>();
+    Base = spBaseConstExpr->GetInt().ConvertTo<BaseType>();
 
   Address CurAddr(Base, Offset);
 
@@ -1510,7 +1510,7 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return spFoundExpr;
   }
 
-  TOffset FileOff;
+  OffsetType FileOff;
   if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, FileOff))
   {
     Log::Write("core").Level(LogError) << "symbolic visitor: failed to convert address: " << CurAddr << LogEnd;
@@ -1867,7 +1867,7 @@ bool SymbolicVisitor::FindAllPaths(int& rNumOfPathFound, Architecture& rArch, Sy
 
       // TODO(wisk): this address is not fully generic since it doesn't update the base address
       Address DstAddr = m_CurAddr;
-      DstAddr.SetOffset(spDstResExpr->GetInt().ConvertTo<TOffset>());
+      DstAddr.SetOffset(spDstResExpr->GetInt().ConvertTo<OffsetType>());
       auto spAssumedExpr = Expr::MakeAssign(spIdxRegExpr, Expr::MakeBitVector(Idx));
       ++rNumOfPathFound;
       DstPathCb(spDstResExpr, { spAssumedExpr });

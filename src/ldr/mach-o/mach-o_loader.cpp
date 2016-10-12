@@ -189,7 +189,7 @@ void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
       m_EntryPoint = m_TextSectionVMAddr + m_EntryPoint;
     }
   }
-  rDoc.AddLabel(Address(Address::FlatType, 0x0, m_EntryPoint, 0x10, bit),
+  rDoc.AddLabel(Address(Address::VirtualType, 0x0, m_EntryPoint, 0x10, bit),
     Label("start", Label::Code | Label::Exported));
 }
 
@@ -202,7 +202,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
   typename MachOType::Section Section;
   std::string                 SegmentName;
   std::string                 FullSectionName;
-  u32                         MemAreaFlags;
+  auto                        MemAreaFlags = MemoryArea::NoAccess;
 
   if (!rBinStrm.Read(LoadCmdOff, &Segment, sizeof(Segment))) {
     LOG_WR << "Cannot read segment command" << LogEnd;
@@ -246,28 +246,28 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
     }
 
     MemoryArea* pNewMemArea = nullptr;
+    bool Res;
 
     if ((Section.flags & SECTION_TYPE) == S_ZEROFILL) {
-      pNewMemArea = new VirtualMemoryArea(
-        FullSectionName,
-        Address(Address::FlatType, 0x0, Section.addr, 16, bit),
+      Res = rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
+        FullSectionName, MemAreaFlags,
+        Address(Address::VirtualType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
-        MemAreaFlags,
         ArchTag, ArchMode
-        );
+        ));
     } else {
-      pNewMemArea = new MappedMemoryArea(
-        FullSectionName,
+      Res = rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+        FullSectionName, MemAreaFlags,
         Section.offset,
         static_cast<u32>(Section.size),
-        Address(Address::FlatType, 0x0, Section.addr, 16, bit),
+        Address(Address::VirtualType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
-        MemAreaFlags,
         ArchTag, ArchMode
-        );
+        ));
     }
 
-    rDoc.AddMemoryArea(pNewMemArea);
+    if (!Res)
+      LOG_WR << "failed to add memory area" << LogEnd;
 
     if ((Section.flags & SECTION_TYPE) == S_CSTRING_LITERALS)
       for (Address CurAddr = pNewMemArea->GetBaseAddress(), EndAddr = pNewMemArea->GetBaseAddress() + pNewMemArea->GetSize();
@@ -292,7 +292,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
       m_SymbolsIndex   = Section.reserved1;
     }
 
-      LoadCmdOff += sizeof(Section);
+    LoadCmdOff += sizeof(Section);
   }
 }
 
@@ -454,7 +454,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     }
 
     rDoc.AddLabel(
-      Address(Address::FlatType, 0x0, ImpAddr, 0x10, bit),
+      Address(Address::VirtualType, 0x0, ImpAddr, 0x10, bit),
       Label(SymName, Label::Imported | Label::Data));
   }
 }

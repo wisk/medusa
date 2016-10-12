@@ -19,6 +19,6 @@ void PydusaCell(py::module& rMod)
 
   py::class_<Cell, Cell::SPType>(rMod, "Cell")
     .def_property_readonly("type", &Cell::GetType)
-    .def("__len__",       &Cell::GetLength)
+    .def("__len__",       &Cell::GetSize)
   ;
 }

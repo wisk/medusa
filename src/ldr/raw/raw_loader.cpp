@@ -12,14 +12,11 @@ bool RawLoader::IsCompatible(BinaryStream const& rBinStrm)
 
 bool RawLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
-  rDoc.AddMemoryArea(new MappedMemoryArea(
-    "raw",
+  return rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+    "raw", MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
     0x0, rDoc.GetBinaryStream().GetSize(),
-    Address(Address::FlatType, 0x0), rDoc.GetBinaryStream().GetSize(),
-    MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write
+    Address(Address::VirtualType, 0x0), rDoc.GetBinaryStream().GetSize()
     ));
-
-  return true;
 }
 
 bool RawLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)

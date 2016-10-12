@@ -1,10 +1,11 @@
 #include "medusa/instruction.hpp"
 #include "medusa/expression_visitor.hpp"
+#include <boost/format.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
-  : Cell(Cell::InstructionType, NoneType)
+Instruction::Instruction(char const* pName, u32 Opcode, u16 Size)
+  : Cell(Cell::InstructionType, NoneType, Size)
   , m_pFormat(nullptr)
   , m_pName(pName)
   , m_Opcode(Opcode)
@@ -15,7 +16,6 @@ Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
   , m_FixedFlags()
   , m_Expressions()
 {
-  m_spDna->Length() = Length;
 }
 
 Instruction::Instruction(CellData::SPType spDna)
@@ -38,7 +38,7 @@ Instruction::~Instruction(void)
 std::string Instruction::ToString(void) const
 {
   std::string Res = (boost::format("mnem: %s(%08x), length: %d, prefix: %08x, oprd: %d")
-    % m_pName % m_Opcode % m_spDna->GetLength() % m_Prefix % m_Operands.size()).str();
+    % m_pName % m_Opcode % m_spDna->GetSize() % m_Prefix % m_Operands.size()).str();
   if (m_Operands.empty())
     return Res;
   Res += "\n";
@@ -127,12 +127,12 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   {
     auto spBaseExpr = expr_cast<BitVectorExpression>(spMemExpr->GetBaseExpression());
     if (spBaseExpr != nullptr)
-      rDstAddr.SetBase(spBaseExpr->GetInt().ConvertTo<TBase>());
+      rDstAddr.SetBase(spBaseExpr->GetInt().ConvertTo<BaseType>());
 
     auto spOffExpr = expr_cast<BitVectorExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
-    rDstAddr.SetOffset(spOffExpr->GetInt().ConvertTo<TOffset>());
+    rDstAddr.SetOffset(spOffExpr->GetInt().ConvertTo<OffsetType>());
     return true;
   }
 
@@ -140,7 +140,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   auto spConstExpr = expr_cast<BitVectorExpression>(spResExpr);
   if (spConstExpr != nullptr && spConstExpr->GetBitSize() > 8)
   {
-    rDstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<TOffset>());
+    rDstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<OffsetType>());
     return true;
   }
 
@@ -234,9 +234,9 @@ void Instruction::AddPostSemantic(Expression::SPType spExpr)
   m_Expressions.push_back(spExpr);
 }
 
-u16& Instruction::Length(void)
+u16& Instruction::Size(void)
 {
-  return m_spDna->Length();
+  return m_spDna->Size();
 }
 
 u32& Instruction::Prefix(void)

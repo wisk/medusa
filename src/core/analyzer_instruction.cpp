@@ -41,7 +41,11 @@ namespace medusa
         continue;
 
       // Add XRef
-      m_rDoc.AddCrossReference(DstAddr, m_Addr);
+      if (!m_rDoc.AddCrossReference(DstAddr, m_Addr))
+        return false;
+      MemoryArea MemArea;
+      if (!m_rDoc.GetMemoryArea(DstAddr, MemArea))
+        return false;
 
       u16 LblTy = Label::Unknown;
 
@@ -49,7 +53,7 @@ namespace medusa
       {
       case Instruction::CallType: LblTy = Label::Code | Label::Local; break;
       case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
-      case Instruction::NoneType: LblTy = (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute) ?
+      case Instruction::NoneType: LblTy = (MemArea.GetAccess() & MemoryArea::Execute) ?
         Label::Code | Label::Local : Label::Data | Label::Global;
       default: break;
       } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))

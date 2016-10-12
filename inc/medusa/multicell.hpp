@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT MultiCell
 {
 public:
-  typedef std::map<Address, MultiCell*> Map;
+  typedef std::shared_ptr<MultiCell> SPType;
   typedef boost::uuids::uuid Id;
 
   enum Type

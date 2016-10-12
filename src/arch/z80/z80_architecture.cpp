@@ -100,7 +100,7 @@ bool Z80Architecture::Z80CpuInformation::IsRegisterAliased(u32 Id0, u32 Id1) con
   return false;
 }
 
-bool Z80Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
+bool Z80Architecture::Translate(Address const& rVirtAddr, OffsetType& rPhysOff)
 {
   return false;
 }

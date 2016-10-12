@@ -8,19 +8,12 @@ namespace medusa
   bool AnalyzerDisassemble::DisassembleOneInstruction(void)
   {
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
-    if (pMemArea == nullptr)
-    {
-      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-      return false;
-    }
 
     auto spInsn = std::make_shared<Instruction>();
 
-    TOffset PhysicalOffset;
+    OffsetType PhysicalOffset;
 
-    if (!pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset))
+    if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, PhysicalOffset))
     {
       Log::Write("core").Level(LogWarning) << "unable to convert address: " << CurAddr << " to offset" << LogEnd;
       return false;
@@ -43,7 +36,7 @@ namespace medusa
       return false;
     }
 
-    if (spInsn->GetLength() == 0)
+    if (spInsn->GetSize() == 0)
     {
       Log::Write("core").Level(LogWarning) << "0 length instruction at " << CurAddr << LogEnd;
       return false;
@@ -67,13 +60,6 @@ namespace medusa
     std::stack<Address> CallStack;
     Address::List FuncAddr;
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
-    if (pMemArea == nullptr)
-    {
-      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-      return false;
-    }
 
     // Push entry point
     CallStack.push(CurAddr);
@@ -137,7 +123,7 @@ namespace medusa
 
           auto InsnType = spInsn->GetSubType();
           if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
-            CurAddr += spInsn->GetLength();
+            CurAddr += spInsn->GetSize();
         }
 
         if (FunctionIsFinished)
@@ -178,7 +164,7 @@ namespace medusa
           // We ignore conditional ret
           if (spLastInsn->GetSubType() & Instruction::ConditionalType)
           {
-            CurAddr += spLastInsn->GetLength();
+            CurAddr += spLastInsn->GetSize();
             continue;
           }
 
@@ -196,7 +182,7 @@ namespace medusa
 
           // Save untaken branch address
           if (spLastInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + spLastInsn->GetLength());
+            CallStack.push(CurAddr + spLastInsn->GetSize());
 
           // Sometime, we can't determine the destination address, so we give up
           if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
@@ -229,13 +215,6 @@ namespace medusa
     std::stack<Address> CallStack;
     Address::List FuncAddr;
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
-    if (pMemArea == nullptr)
-    {
-      //Log::Write("core") << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-      return false;
-    }
 
     // Push entry point
     CallStack.push(CurAddr);
@@ -299,7 +278,7 @@ namespace medusa
 
           auto InsnType = spInsn->GetSubType();
           if (InsnType == Instruction::NoneType || InsnType == Instruction::ConditionalType)
-            CurAddr += spInsn->GetLength();
+            CurAddr += spInsn->GetSize();
         }
 
         if (FunctionIsFinished)
@@ -340,7 +319,7 @@ namespace medusa
           // We ignore conditional ret
           if (spLastInsn->GetSubType() & Instruction::ConditionalType)
           {
-            CurAddr += spLastInsn->GetLength();
+            CurAddr += spLastInsn->GetSize();
             continue;
           }
 
@@ -358,7 +337,7 @@ namespace medusa
 
           // Save untaken branch address
           if (spLastInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + spLastInsn->GetLength());
+            CallStack.push(CurAddr + spLastInsn->GetSize());
 
           // Sometime, we can't determine the destination address, so we give up
           if (!spLastInsn->GetOperandReference(m_rDoc, 0, spArch->CurrentAddress(CurAddr, *spLastInsn), DstAddr))
@@ -385,7 +364,7 @@ namespace medusa
   bool AnalyzerDisassemble::DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock)
   {
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+    //MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
     bool DisasmBscBlkOnly = true;
 
     try
@@ -394,19 +373,19 @@ namespace medusa
       if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
         throw std::string("Label \"") + Lbl.GetName() + std::string("\" ") + Lbl.GetLabel() + std::string(" is imported");
 
-      if (pMemArea == nullptr)
-        throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
+      //if (pMemArea == nullptr)
+      //  throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
       while (/*m_rDoc.IsPresent(CurAddr)*/ true)
       {
         // If we changed the current memory area, we must update it
-        if (!pMemArea->IsCellPresent(CurAddr))
-          if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
-            throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
+        //if (!pMemArea->IsCellPresent(CurAddr))
+        //  if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
+        //    throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
         // If the current memory area is not executable, we skip this execution flow
-        if (!(pMemArea->GetAccess() & MemoryArea::Execute))
-          throw std::string("memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
+        //if (!(pMemArea->GetAccess() & MemoryArea::Execute))
+        //  throw std::string("memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
 
         if (m_rDoc.ContainsCode(CurAddr))
           return true;
@@ -417,9 +396,9 @@ namespace medusa
         // We create a new entry and disassemble it
         auto spInsn = std::make_shared<Instruction>();
 
-        TOffset PhysicalOffset;
+        OffsetType PhysicalOffset;
 
-        if (!pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset))
+        if (!m_rDoc.ConvertAddressToFileOffset(CurAddr, PhysicalOffset))
           throw std::string("unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
         auto Tag = m_rDoc.GetArchitectureTag(CurAddr);
@@ -433,11 +412,11 @@ namespace medusa
         if (!spArch->Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
           throw std::string("unable to disassemble instruction at ") + CurAddr.ToString();
 
-        if (spInsn->GetLength() == 0)
+        if (spInsn->GetSize() == 0)
           throw std::string("0 length instruction at ") + CurAddr.ToString();
 
         // We try to retrieve the current instruction, if it's true we go to the next function
-        for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
+        for (size_t InsnLen = 0; InsnLen < spInsn->GetSize(); ++InsnLen)
           if (m_rDoc.ContainsCode(CurAddr + InsnLen))
             return true;
 
@@ -452,7 +431,7 @@ namespace medusa
           return true;
         }
 
-        CurAddr += spInsn->GetLength();
+        CurAddr += spInsn->GetSize();
       } // !while (m_rDoc.IsPresent(CurAddr))
     }
 
@@ -472,7 +451,7 @@ namespace medusa
   bool AnalyzerDisassemble::DisassembleBasicBlockWith(Architecture& rArch, u8 Mode, std::list<Instruction::SPType>& rBasicBlock)
   {
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
+    //MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
 
     try
     {
@@ -480,19 +459,19 @@ namespace medusa
       if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
         throw std::string("Label \"") + Lbl.GetName() + std::string("\" ") + Lbl.GetLabel() + std::string(" is imported");
 
-      if (pMemArea == nullptr)
-        throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
+      //if (pMemArea == nullptr)
+      //  throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
       while (/*m_rDoc.IsPresent(CurAddr)*/ true)
       {
         // If we changed the current memory area, we must update it
-        if (!pMemArea->IsCellPresent(CurAddr))
-          if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
-            throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
+        //if (!pMemArea->IsAddressPresent(CurAddr))
+        //  if ((pMemArea = m_rDoc.GetMemoryArea(CurAddr)) == nullptr)
+        //    throw std::string("unable to get memory area for address: ") + CurAddr.ToString();
 
         // If the current memory area is not executable, we skip this execution flow
-        if (!(pMemArea->GetAccess() & MemoryArea::Execute))
-          throw std::string("memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
+        //if (!(pMemArea->GetAccess() & MemoryArea::Execute))
+        //  throw std::string("memory access \"") + pMemArea->GetName() + std::string("\" is not executable");
 
         if (m_rDoc.ContainsCode(CurAddr))
           return true;
@@ -503,21 +482,21 @@ namespace medusa
         // We create a new entry and disassemble it
         auto spInsn = std::make_shared<Instruction>();
 
-        TOffset PhysicalOffset;
+        OffsetType PhysicalOffset;
 
-        if (!pMemArea->ConvertOffsetToFileOffset(CurAddr.GetOffset(), PhysicalOffset))
+        if (!m_rDoc.ConvertAddressToFileOffset(CurAddr.GetOffset(), PhysicalOffset))
           throw std::string("unable to convert address ") + CurAddr.ToString() + std::string(" to offset");
 
         // If something bad happens, we quit
         if (!rArch.Disassemble(m_rDoc.GetBinaryStream(), PhysicalOffset, *spInsn, Mode))
           throw std::string("unable to disassemble instruction at ") + CurAddr.ToString();
 
-        if (spInsn->GetLength() == 0)
+        if (spInsn->GetSize() == 0)
           throw std::string("0 length instruction at ") + CurAddr.ToString();
 
         // We try to retrieve the current instruction, if it's true we go to the next function
-        for (size_t InsnLen = 0; InsnLen < spInsn->GetLength(); ++InsnLen)
-          if (m_rDoc.ContainsCode(CurAddr + InsnLen))
+        for (size_t InsnSz = 0; InsnSz < spInsn->GetSize(); ++InsnSz)
+          if (m_rDoc.ContainsCode(CurAddr + InsnSz))
             return true;
 
         rBasicBlock.push_back(spInsn);
@@ -531,7 +510,7 @@ namespace medusa
           return true;
         }
 
-        CurAddr += spInsn->GetLength();
+        CurAddr += spInsn->GetSize();
       } // !while (m_rDoc.IsPresent(CurAddr))
     }
 
@@ -561,11 +540,6 @@ namespace medusa
 
     Address CurAddr = m_Addr;
 
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
-    if (pMemArea == nullptr)
-      return false;
-
     CallStack.push(CurAddr);
 
     while (!CallStack.empty())
@@ -592,7 +566,7 @@ namespace medusa
             break;
 
           // if not, we try with the next address.
-          CurAddr += spInsn->GetLength();
+          CurAddr += spInsn->GetSize();
           continue;
         }
 
@@ -612,7 +586,7 @@ namespace medusa
 
           if (spInsn->GetSubType() & Instruction::ConditionalType)
           {
-            Address NextAddr = CurAddr + spInsn->GetLength();
+            Address NextAddr = CurAddr + spInsn->GetSize();
             Edges.push_back(TupleEdge(DstAddr, CurAddr, BasicBlockEdgeProperties::True));
             Edges.push_back(TupleEdge(NextAddr, CurAddr, BasicBlockEdgeProperties::False));
             CallStack.push(NextAddr);
@@ -632,7 +606,7 @@ namespace medusa
           break;
         }
 
-        CurAddr += spInsn->GetLength();
+        CurAddr += spInsn->GetSize();
       } // end while (m_Document.IsPresent(CurAddr))
     } // while (!CallStack.empty())
 
@@ -687,15 +661,7 @@ namespace medusa
     std::stack<std::tuple<SymbolicVisitor, Address>> CallStack;
     Address::Vector FuncAddr;
     Address CurAddr = m_Addr;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
-
     std::map<Address, bool> VisitedInstruction;
-
-    if (pMemArea == nullptr)
-    {
-      Log::Write("core").Level(LogWarning) << "unable to get memory area for address " << CurAddr.ToString() << LogEnd;
-      return false;
-    }
 
     // Push entry point
     CallStack.push(std::make_tuple(SymbolicVisitor(m_rDoc, m_rDoc.GetMode(CurAddr)), CurAddr));
@@ -729,7 +695,7 @@ namespace medusa
         Addresses.push_back(CurAddr);
         VisitedAddresses[CurAddr] = true;
 
-        TOffset Off;
+        OffsetType Off;
         m_rDoc.ConvertAddressToFileOffset(CurAddr, Off);
         auto spInsn = std::make_shared<Instruction>();
 
@@ -751,7 +717,7 @@ namespace medusa
         if (InsnExprs.empty())
         {
           Log::Write("core").Level(LogWarning) << "no semantic for instruction: " << spInsn->GetName() << LogEnd;
-          CurAddr += spInsn->GetLength();
+          CurAddr += spInsn->GetSize();
           continue;
         }
 
@@ -787,7 +753,7 @@ namespace medusa
           if (auto spSymExpr = expr_cast<SymbolicExpression>(spDstExpr))
           {
             m_rDoc.SetComment(CurAddr, spDstExpr->ToString());
-            DstAddr = CurAddr + spInsn->GetLength();
+            DstAddr = CurAddr + spInsn->GetSize();
             //CallStack.push(std::make_tuple(SymVst.Fork(), DstAddr));
             //Branches.push_back(std::make_tuple(CurAddr, DstAddr, Graph::EdgeProperties::Next));
           }
@@ -796,7 +762,7 @@ namespace medusa
           {
             // LATER(wisk): The way this address is made is not fully generic
             DstAddr = CurAddr;
-            DstAddr.SetOffset(spBvExpr->GetInt().ConvertTo<TOffset>());
+            DstAddr.SetOffset(spBvExpr->GetInt().ConvertTo<OffsetType>());
             m_rDoc.SetComment(DstAddr, CondExprStr);
 
             // FIXME(wisk): we have to cheat here because there's not way to distinct next insn from direct uncond jump
@@ -945,15 +911,15 @@ namespace medusa
 
     spCfg->Finalize();
 
-    auto pFunc = m_rDoc.GetMultiCell(m_Addr);
-    if (pFunc == nullptr)
+    auto spFunc = m_rDoc.GetMultiCell(m_Addr);
+    if (spFunc == nullptr)
     {
       Label FuncLbl(m_Addr, Label::Function | Label::Global);
-      pFunc = new Function(FuncLbl.GetLabel(), 0, 0);
+      spFunc = std::make_shared<Function>(FuncLbl.GetLabel(), 0, 0);
     }
 
-    pFunc->SetGraph(spCfg);
-    m_rDoc.SetMultiCell(m_Addr, pFunc);
+    spFunc->SetGraph(spCfg);
+    m_rDoc.SetMultiCell(m_Addr, spFunc);
 
     return true;
   }

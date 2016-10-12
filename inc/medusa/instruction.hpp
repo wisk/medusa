@@ -95,7 +95,7 @@ public:
   void AddPreSemantic(Expression::SPType spExpr);
   void AddPostSemantic(Expression::SPType spExpr);
 
-  u16& Length(void);
+  u16& Size(void);
   u32& Prefix(void);
 
 private:

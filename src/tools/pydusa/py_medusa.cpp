@@ -56,7 +56,7 @@ namespace pydusa
 
   static Cell::SPType Medusa_GetCell(Medusa* pCore, Address const& rAddress)
   {
-    return pCore->GetCell(rAddress);
+    return pCore->GetDocument().GetCell(rAddress);
   }
 
   static py::str Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
@@ -115,7 +115,7 @@ namespace pydusa
 
   static Instruction::SPType Medusa_GetInstruction(Medusa* pCore, Address const& rAddress)
   {
-    auto spCell = pCore->GetCell(rAddress);
+    auto spCell = pCore->GetDocument().GetCell(rAddress);
     if (spCell == nullptr)
       return nullptr;
     if (spCell->GetType() != Cell::InstructionType)

@@ -163,7 +163,7 @@ bool St62Architecture::St62CpuContext::GetAddress(CpuContext::AddressKind AddrKi
   switch (AddrKind)
   {
     case AddressExecution:
-      rAddr = Address(Address::BankType, 0, m_Context.Pc, 8, 16);
+      rAddr = Address(Address::LogicalType, 0, m_Context.Pc, 8, 16);
       return true;
 
     default:
@@ -272,10 +272,10 @@ void St62Architecture::St62CpuContext::GetRegisters(CpuContext::RegisterList& Re
 }
 
 
-bool St62Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool St62Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
-  rInsn.GetData()->ArchitectureTag() = GetTag();
-  rInsn.Mode() = Mode;
+  rInsn.SetArchitectureTag(GetTag());
+  rInsn.SetMode(Mode);
 
   u8 Opcode;
   if (!rBinStrm.Read(Offset, Opcode))
@@ -295,7 +295,7 @@ public:
 
   virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spBvExpr)
   {
-    Address const OprdAddr(spBvExpr->GetInt().ConvertTo<TOffset>());
+    Address const OprdAddr(spBvExpr->GetInt().ConvertTo<OffsetType>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -331,8 +331,8 @@ public:
       return nullptr;
     }
 
-    Address rAddress = m_rDoc.MakeAddress(spBase->GetInt().ConvertTo<TBase>(),
-                                          spOff->GetInt().ConvertTo<TOffset>());
+    Address rAddress = m_rDoc.MakeAddress(spBase->GetInt().ConvertTo<BaseType>(),
+                                          spOff->GetInt().ConvertTo<OffsetType>());
 
     auto OprdLbl = m_rDoc.GetLabelFromAddress(rAddress);
     if (OprdLbl.GetType() != Label::Unknown)
@@ -341,10 +341,10 @@ public:
       return nullptr;
     }
 
-    auto const pMemArea = m_rDoc.GetMemoryArea(rAddress);
-    if (pMemArea != nullptr)
+    MemoryArea MemArea;
+    if (m_rDoc.GetMemoryArea(rAddress, MemArea))
     {
-      m_rPrintData.AppendOperator(pMemArea->GetName());
+      m_rPrintData.AppendOperator(MemArea.GetName());
       m_rPrintData.AppendOperator(":");
     }
     spMemExpr->GetOffsetExpression()->Visit(this);
@@ -370,7 +370,7 @@ bool St62Architecture::FormatOperand(
     return false;
 
   // TODO: rAddr+InsnLen is not always equivalent to PC!
-  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode(), false);
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetSize(), rInsn.GetMode(), false);
   auto spEvalRes = spCurOprd->Visit(&EvalVst);
   if (spEvalRes != nullptr)
     spCurOprd = spEvalRes;

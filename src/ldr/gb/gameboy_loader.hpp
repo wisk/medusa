@@ -28,8 +28,8 @@ public:
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
 
 private:
-  typedef u16 BankType;
-  BankType GetNumberOfBank(void) const;
+  typedef u16 LogicalType;
+  BaseType GetNumberOfBank(void) const;
   enum     { BankSize = 0x4000 };
 
   GameBoyRom m_GameBoyRom;

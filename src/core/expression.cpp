@@ -1439,10 +1439,10 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, OffsetData) == false)
     return false;
 
-  TBase Base = BaseData.size() != 1 ? 0x0 : BaseData.front().ConvertTo<TBase>();
+  BaseType Base = BaseData.size() != 1 ? 0x0 : BaseData.front().ConvertTo<BaseType>();
   if (OffsetData.size() != 1)
     return false;
-  TOffset OffsetValue = OffsetData.front().ConvertTo<TOffset>();
+  OffsetType OffsetValue = OffsetData.front().ConvertTo<OffsetType>();
   rAddress = Address(Base, OffsetValue);
   return true;
 }

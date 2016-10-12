@@ -31,7 +31,7 @@ PrintData::PrintData(void)
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
   , m_Indent(2)
-  , m_CurrentCommentOffset()
+  , m_CurrentCommenOffsetType()
 {
 }
 
@@ -41,7 +41,7 @@ PrintData::PrintData(PrintData const& rPD)
   , m_CurrentText(rPD.m_CurrentText)
   , m_CurrentMarks(rPD.m_CurrentMarks)
   , m_CurrentOperandsOffset(rPD.m_CurrentOperandsOffset)
-  , m_CurrentCommentOffset(rPD.m_CurrentCommentOffset)
+  , m_CurrentCommenOffsetType(rPD.m_CurrentCommenOffsetType)
   , m_Lines(rPD.m_Lines)
   , m_Width(rPD.m_Width)
   , m_LineWidth(rPD.m_LineWidth)
@@ -66,7 +66,7 @@ PrintData& PrintData::operator=(PrintData const& rPD)
   m_CurrentText           = rPD.m_CurrentText;
   m_CurrentMarks          = rPD.m_CurrentMarks;
   m_CurrentOperandsOffset = rPD.m_CurrentOperandsOffset;
-  m_CurrentCommentOffset  = rPD.m_CurrentCommentOffset;
+  m_CurrentCommenOffsetType  = rPD.m_CurrentCommenOffsetType;
 
   m_Lines     = rPD.m_Lines;
   m_Width     = rPD.m_Width;

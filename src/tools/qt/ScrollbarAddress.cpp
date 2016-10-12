@@ -41,7 +41,7 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
     if (!doc.ConvertAddressToPosition(addr, pos))
       return;
     auto cell = doc.GetCell(addr);
-    size_t cellLen = cell->GetLength();
+    size_t cellLen = cell->GetSize();
     auto y = static_cast<int>(static_cast<medusa::u64>(pos) * _img.height() / _maxPos);
     QColor CurClr(_CellTypeToColor(doc.GetCellType(addr)));
     QColor LastClr = _img.toImage().pixel(QPoint(0, y));
@@ -60,40 +60,41 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressLis
 
 void ScrollbarAddress::Refresh(void)
 {
-  auto const& rDoc = _core.GetDocument();
-  _maxPos = rDoc.GetNumberOfAddress();
-  _mutex.lock();
-  QPainter p(&_img);
-  rDoc.ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
-  {
-    rMemArea.ForEachCellData([&](medusa::TOffset Offset, medusa::CellData::SPType spCellData)
-    {
-      medusa::Address CurAddr = rMemArea.GetBaseAddress() + rMemArea.MakeAddress(Offset);
-      medusa::u32 Pos;
-      if (!rDoc.ConvertAddressToPosition(CurAddr, Pos))
-        return;
+  // FIXME(wisk):
+  //auto const& rDoc = _core.GetDocument();
+  //_maxPos = rDoc.GetNumberOfAddress();
+  //_mutex.lock();
+  //QPainter p(&_img);
+  //rDoc.ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
+  //{
+  //  rMemArea.ForEachCellData([&](medusa::OffsetType Offset, medusa::CellData::SPType spCellData)
+  //  {
+  //    medusa::Address CurAddr = rMemArea.GetBaseAddress() + rMemArea.MakeAddress(Offset);
+  //    medusa::u32 Pos;
+  //    if (!rDoc.ConvertAddressToPosition(CurAddr, Pos))
+  //      return;
 
-      size_t CellLen = spCellData->GetLength();
-      auto h = static_cast<int>(static_cast<medusa::u64>(CellLen) * _img.height() / _maxPos);
-      if (h == 0)
-        h = 1;
+  //    size_t CellLen = spCellData->GetSize();
+  //    auto h = static_cast<int>(static_cast<medusa::u64>(CellLen) * _img.height() / _maxPos);
+  //    if (h == 0)
+  //      h = 1;
 
-      auto y = static_cast<int>(static_cast<medusa::u64>(Pos) * _img.height() / _maxPos);
+  //    auto y = static_cast<int>(static_cast<medusa::u64>(Pos) * _img.height() / _maxPos);
 
-      QColor CurClr(_CellTypeToColor(spCellData->GetType()));
-      QColor LastClr = _img.toImage().pixel(QPoint(0, y));
-        CurClr.setRgbF(
-          (CurClr.redF() + LastClr.redF()) / 2,
-          (CurClr.greenF() + LastClr.greenF()) / 2,
-          (CurClr.blueF() + LastClr.blueF()) / 2);
+  //    QColor CurClr(_CellTypeToColor(spCellData->GetType()));
+  //    QColor LastClr = _img.toImage().pixel(QPoint(0, y));
+  //      CurClr.setRgbF(
+  //        (CurClr.redF() + LastClr.redF()) / 2,
+  //        (CurClr.greenF() + LastClr.greenF()) / 2,
+  //        (CurClr.blueF() + LastClr.blueF()) / 2);
 
-      p.setPen(CurClr);
-      p.setBrush(CurClr);
+  //    p.setPen(CurClr);
+  //    p.setBrush(CurClr);
 
-      p.drawRect(0, y, _width * 3, h); // LATER: see above about * 3
-    });
-  });
-  _mutex.unlock();
+  //    p.drawRect(0, y, _width * 3, h); // LATER: see above about * 3
+  //  });
+  //});
+  //_mutex.unlock();
 }
 
 void ScrollbarAddress::paintEvent(QPaintEvent * evt)

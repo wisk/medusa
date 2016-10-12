@@ -35,7 +35,7 @@ class St62ArchConvertion(ArchConvertion):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, TOffset, Instruction&, u8);\n' % self.GetArchName())
+        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, OffsetType, Instruction&, u8);\n' % self.GetArchName())
 
         for name in sorted(self.arch['instruction']['table']):
             opcd_no = 0x00
@@ -79,9 +79,9 @@ class St62ArchConvertion(ArchConvertion):
 
     # Architecture dependant methods
     def _ST62_GenerateMethodName(self, type_name, opcd_no, in_class = False):
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)' % self.GetArchName()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)' % self.GetArchName()
 
         if opcd_no == None:
             return meth_fmt % 'Invalid'
@@ -115,7 +115,7 @@ class St62ArchConvertion(ArchConvertion):
         if 'invalid' in opcd:
             return 'return false; /* INVALID */\n'
 
-        res += 'rInsn.Length()++;\n'
+        res += 'rInsn.Size()++;\n'
 
         if 'alternate' in opcd:
             res += self._GenerateRead('Value', 'Offset', 8)
@@ -202,9 +202,9 @@ class St62ArchConvertion(ArchConvertion):
         for oprd_name in self.arch['operand']:
             oprd_name = str(oprd_name)
             if oprd_name.startswith('decode_'):
-                res += Indent('Expression::SPType %s(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name[0].upper() + oprd_name[1:]))
+                res += Indent('Expression::SPType %s(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name[0].upper() + oprd_name[1:]))
             else:
-                res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name))
+                res += Indent('bool Operand__%s(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);\n' % (oprd_name))
         return res
 
 
@@ -318,10 +318,10 @@ class St62ArchConvertion(ArchConvertion):
 
             if is_decoder:
                 res += '/* decoder %s */\n' % oprd_code
-                res += 'Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:])
+                res += 'Expression::SPType %sArchitecture::%s(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name[0].upper() + oprd_name[1:])
             else:
                 res += '/* operand %s */\n' % oprd_code
-                res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name)
+                res += 'bool %sArchitecture::Operand__%s(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode)\n' % (self.GetArchName(), oprd_name)
 
             v = OprdVisitor(self)
             oprd_no = 0

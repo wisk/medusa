@@ -42,15 +42,15 @@ public:
 
   virtual ~Cell(void) { }
 
-  //! This method returns the size of this cell.
-  virtual size_t        GetLength(void) const { return m_spDna->GetLength(); }
+  size_t GetSize(void)    const { return m_spDna->GetSize(); }
+  u8     GetType(void)    const { return m_spDna->GetType(); }
+  u8     GetSubType(void) const { return m_spDna->GetSubType(); }
+  u8     GetMode(void)    const { return m_spDna->GetMode(); }
 
-  //! This method returns the type of this cell.
-  u8 GetType(void) const { return m_spDna->GetType(); }
-  u8 GetSubType(void) const { return m_spDna->GetSubType(); }
-  u8 GetMode(void) const { return m_spDna->GetMode(); }
+  void SetArchitectureTag(Tag ArchTag) { m_spDna->SetArchitectureTag(ArchTag); }
+  void SetMode(u8 Mode)                { m_spDna->SetMode(Mode);               }
+
   u8& SubType(void) { return m_spDna->SubType(); }
-  u8& Mode(void) { return m_spDna->Mode(); }
 
   //! This method returns the used architecture tag.
   Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }

@@ -157,11 +157,11 @@ public:
     // TODO: iterate
     {
       auto const& rAddr = m_pView->GetCursorAddress();
-      auto pCell = m_rCore.GetCell(rAddr);
-      if (pCell == nullptr) return;
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
+      if (spCell == nullptr) return;
 
       u8 NewSize = 0;
-      switch (pCell->GetLength())
+      switch (spCell->GetSize())
       {
       case 1: NewSize = 2; break;
       case 2: NewSize = 4; break;
@@ -674,7 +674,7 @@ public:
     //    auto pStr = m_rCore.GetCell(rAddr);
     //    if (pStr == nullptr) return;
     //    OldAddr = rAddr;
-    //    StrLen = pStr->GetLength();
+    //    StrLen = pStr->GetSize();
     //  }
     //}
     // TODO: iterate
@@ -717,7 +717,7 @@ public:
     //    auto pStr = m_rCore.GetCell(rAddr);
     //    if (pStr == nullptr) return;
     //    OldAddr = rAddr;
-    //    StrLen = pStr->GetLength();
+    //    StrLen = pStr->GetSize();
     //  }
     //}
     // TODO: iterate

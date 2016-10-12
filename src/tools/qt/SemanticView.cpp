@@ -7,7 +7,7 @@ SemanticView::SemanticView(QWidget *parent, medusa::Medusa& core, medusa::Addres
 
   auto const& doc = core.GetDocument();
 
-  auto func = dynamic_cast<medusa::Function const*>(doc.GetMultiCell(funcAddr));
+  auto func = std::dynamic_pointer_cast<medusa::Function const>(doc.GetMultiCell(funcAddr));
   if (func == nullptr)
     return;
 
@@ -18,7 +18,7 @@ SemanticView::SemanticView(QWidget *parent, medusa::Medusa& core, medusa::Addres
   cfg.ForEachInstruction([&](medusa::Address const& addr)
   {
     QString addrStr = QString::fromStdString(addr.ToString()) + ": ";
-    auto insn = std::dynamic_pointer_cast<medusa::Instruction const>(core.GetCell(addr));
+    auto insn = std::dynamic_pointer_cast<medusa::Instruction const>(doc.GetCell(addr));
     if (insn == nullptr)
     {
       append(addrStr + "(not an instruction)\n");

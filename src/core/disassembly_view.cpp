@@ -112,8 +112,8 @@ void FormatDisassembly::_Format(Address const& rAddress, u32 Flags)
   }
 
   // MemoryArea
-  auto pMemArea = rDoc.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
+  MemoryArea MemArea;
+  if (rDoc.GetMemoryArea(rAddress, MemArea) && MemArea.GetBaseAddress() == rAddress)
   {
     _FormatMemoryArea(rAddress, Flags);
     m_rPrintData.AppendNewLine();
@@ -171,11 +171,11 @@ void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
 {
   if (Flags & Indent)
     m_rPrintData.AppendSpace(4);
-  auto pCell = m_rCore.GetCell(rAddress);
-  if (pCell == nullptr)
+  auto spCell = m_rCore.GetDocument().GetCell(rAddress);
+  if (spCell == nullptr)
     m_rPrintData.AppendComment(";; invalid cell!");
   else
-    m_rCore.FormatCell(rAddress, *pCell, m_rPrintData);
+    m_rCore.FormatCell(rAddress, *spCell, m_rPrintData);
 
   std::string Cmt;
   u16 CurTextWidth = static_cast<u16>(m_rPrintData.GetCurrentText().length()) + 1;
@@ -199,11 +199,11 @@ void FormatDisassembly::_FormatMultiCell(Address const& rAddress, u32 Flags)
 {
   if (Flags & Indent)
     m_rPrintData.AppendSpace(2);
-  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
-  if (pMultiCell == nullptr)
+  auto spMultiCell = m_rCore.GetDocument().GetMultiCell(rAddress);
+  if (spMultiCell == nullptr)
     m_rPrintData.AppendComment(";; invalid multicell!");
   else
-    m_rCore.FormatMultiCell(rAddress, *pMultiCell, m_rPrintData);
+    m_rCore.FormatMultiCell(rAddress, *spMultiCell, m_rPrintData);
 }
 
 void FormatDisassembly::_FormatLabel(Address const& rAddress, u32 Flags)
@@ -237,11 +237,11 @@ void FormatDisassembly::_FormatXref(Address const& rAddress, u32 Flags)
 void FormatDisassembly::_FormatMemoryArea(Address const& rAddress, u32 Flags)
 {
   m_rPrintData.AppendNewLine();
-  auto pMemArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
+  MemoryArea MemArea;
+  if (!m_rCore.GetDocument().GetMemoryArea(rAddress, MemArea))
     m_rPrintData.AppendComment(";; invalid memory area!");
   else
-    m_rPrintData.AppendComment(pMemArea->ToString());
+    m_rPrintData.AppendComment(MemArea.ToString());
 }
 
 DisassemblyView::DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress)

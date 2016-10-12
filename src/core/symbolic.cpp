@@ -378,7 +378,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
       ModifyPc = true;
     }
 
-    CurAddr += spInsn->GetLength();
+    CurAddr += spInsn->GetSize();
   } while (!ModifyPc);
 
   return true;
@@ -389,7 +389,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   auto PcExprs = rSymCtxt.BacktrackRegister(rCurAddr, m_PcRegId);
   if (PcExprs.empty())
   {
-    rNextAddresses.push_back(rCurAddr + rInsn.GetLength());
+    rNextAddresses.push_back(rCurAddr + rInsn.GetSize());
     return true;
   }
 
@@ -413,7 +413,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   ConstProp.Execute();
 
   Log::Write("core").Level(LogDebug) << "next addr expr " << spPcExpr->ToString() << LogEnd;
-  EvaluateVisitor EvalVst(m_rDoc, rCurAddr + rInsn.GetLength(), rInsn.GetMode());
+  EvaluateVisitor EvalVst(m_rDoc, rCurAddr + rInsn.GetSize(), rInsn.GetMode());
   spPcExpr->Visit(&EvalVst);
 
   auto spResExpr = EvalVst.GetResultExpression();
@@ -424,7 +424,7 @@ bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction 
   {
     // HACK:
     Address DstAddr = rCurAddr;
-    DstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<TOffset>());
+    DstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<OffsetType>());
     rNextAddresses.push_back(DstAddr);
     return true;
   }

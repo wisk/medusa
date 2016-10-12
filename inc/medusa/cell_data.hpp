@@ -26,7 +26,7 @@ public:
       u8  Mode = 0)
     : m_Type(Type)
     , m_SubType(SubType)
-    , m_Length(Size)
+    , m_Size(Size)
     , m_FormatStyle(FormatStyle)
     , m_Flags(Flags)
     , m_Mode(Mode)
@@ -35,27 +35,25 @@ public:
 
   std::string Dump(void) const;
 
-  void SetDefaultArchitectureTag(Tag archTag);
-  void SetDefaultMode(u8 mode);
 
   u8  GetType(void)            const { return m_Type;        }
   u8  GetSubType(void)         const { return m_SubType;     }
-  u16 GetLength(void)          const { return m_Length;      }
+  u16 GetSize(void)            const { return m_Size;        }
   u16 GetFormatStyle(void)     const { return m_FormatStyle; }
+  u8  GetFlags(void)           const { return m_Flags;       }
   Tag GetArchitectureTag(void) const { return m_ArchTag;     }
   u8  GetMode(void)            const { return m_Mode;        }
 
-  u8&  SubType(void)         { return m_SubType;     }
-  u16& Length(void)          { return m_Length;      }
-  u16& FormatStyle(void)     { return m_FormatStyle; }
-  u8&  Flags(void)           { return m_Flags;       }
-  Tag& ArchitectureTag(void) { return m_ArchTag;     }
-  u8&  Mode(void)            { return m_Mode;        }
-  u8&  Type(void)	     { return m_Type;	     }
+  void SetArchitectureTag(Tag ArchTag) { m_ArchTag = ArchTag; }
+  void SetMode(u8 Mode)                { m_Mode = Mode; }
+
+  u8& SubType(void) { return m_SubType; }
+  u16& Size(void)   { return m_Size;    }
+
 protected:
   u8  m_Type;         //! This field defines the type of cell
   u8  m_SubType;      //! This field defines the subtype of cell and is cell dependant
-  u16 m_Length;       //! This field contains the size of cell
+  u16 m_Size;         //! This field contains the size of cell
 
   u16 m_FormatStyle;  //! This field is reserved
   u8  m_Flags;        //! This field is reserved

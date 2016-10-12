@@ -419,7 +419,7 @@ public:
 
   virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
+    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<OffsetType>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {

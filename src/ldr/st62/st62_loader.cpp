@@ -73,18 +73,16 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     return false;
   }
 
-  rDoc.AddMemoryArea(new MappedMemoryArea(
-    "ROM",
+  rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+    "ROM", MemoryArea::Execute,
     0x0, rDoc.GetBinaryStream().GetSize(),
-    Address(Address::BankType, 0x0, 0x0, 12, 12), rDoc.GetBinaryStream().GetSize(),
-    MemoryArea::Execute,
+    Address(Address::LogicalType, 0x0, 0x0, 12, 12), rDoc.GetBinaryStream().GetSize(),
     ArchTag, ArchMode
     ));
 
-  rDoc.AddMemoryArea(new VirtualMemoryArea(
-    "DATA",
-    Address(Address::BankType, 0x1000, 0x00, 16, 8), 0x100,
-    MemoryArea::Read | MemoryArea::Write,
+  rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
+    "DATA", MemoryArea::Read | MemoryArea::Write,
+    Address(Address::LogicalType, 0x1000, 0x00, 16, 8), 0x100,
     ArchTag, ArchMode
     ));
 
@@ -101,35 +99,35 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     }
   }
 
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFF0, 12, 12), Label("ADC_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFF2, 12, 12), Label("TIMER_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFF4, 12, 12), Label("PORTB_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFF6, 12, 12), Label("PORTA_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFFC, 12, 12), Label("NMI_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::FlatType, 0x000, 0xFFE, 12, 12), Label("RESET_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF0, 12, 12), Label("ADC_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF2, 12, 12), Label("TIMER_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF4, 12, 12), Label("PORTB_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF6, 12, 12), Label("PORTA_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFFC, 12, 12), Label("NMI_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFFE, 12, 12), Label("RESET_vec", Label::Code | Label::Global));
 
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0x80, 16, 8), Label("X", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0x81, 16, 8), Label("Y", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0x82, 16, 8), Label("V", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0x83, 16, 8), Label("W", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC0, 16, 8), Label("DRA", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC1, 16, 8), Label("DRB", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC2, 16, 8), Label("DRC", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC4, 16, 8), Label("DDRA", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC5, 16, 8), Label("DDRB", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC6, 16, 8), Label("DDRC", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xCC, 16, 8), Label("ORA", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xCD, 16, 8), Label("ORB", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xCE, 16, 8), Label("ORC", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC8, 16, 8), Label("IOR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xC9, 16, 8), Label("DRWR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD0, 16, 8), Label("ADR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD1, 16, 8), Label("ACR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD2, 16, 8), Label("TIMR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD3, 16, 8), Label("TDR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD4, 16, 8), Label("TSCR", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xD8, 16, 8), Label("WDT", Label::Data | Label::Global));
-  rDoc.AddLabel(Address(Address::BankType, 0x1000, 0xFF, 16, 8), Label("A", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x80, 16, 8), Label("X", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x81, 16, 8), Label("Y", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x82, 16, 8), Label("V", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x83, 16, 8), Label("W", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC0, 16, 8), Label("DRA", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC1, 16, 8), Label("DRB", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC2, 16, 8), Label("DRC", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC4, 16, 8), Label("DDRA", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC5, 16, 8), Label("DDRB", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC6, 16, 8), Label("DDRC", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xCC, 16, 8), Label("ORA", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xCD, 16, 8), Label("ORB", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xCE, 16, 8), Label("ORC", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC8, 16, 8), Label("IOR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xC9, 16, 8), Label("DRWR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD0, 16, 8), Label("ADR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD1, 16, 8), Label("ACR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD2, 16, 8), Label("TIMR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD3, 16, 8), Label("TDR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD4, 16, 8), Label("TSCR", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD8, 16, 8), Label("WDT", Label::Data | Label::Global));
+  rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xFF, 16, 8), Label("A", Label::Data | Label::Global));
 
   return true;
 }

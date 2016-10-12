@@ -2,14 +2,13 @@
 #define LDR_ELF_HPP
 
 #include <medusa/namespace.hpp>
+#include <medusa/bits.hpp>
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
 #include <medusa/log.hpp>
 
 #include "elf.h"
 #include "elf_traits.hpp"
-
-#include <boost/foreach.hpp> // TODO: Use c++11 foreach instead of BOOST_FOREACH
 
 MEDUSA_NAMESPACE_USE
 
@@ -100,7 +99,7 @@ private:
         return; // FIXME: We should continue anyway...
       }
 
-      rDoc.AddLabel(Address(Address::FlatType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
+      rDoc.AddLabel(Address(Address::VirtualType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
 
       ElfType::EndianSwap(ShStrShdr, Endianness);
 
@@ -200,18 +199,17 @@ private:
           ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
           "<invalid>" : upShStrTbl.get() + rShdr.sh_name;
 
-        u32 MemAreaFlags = MemoryArea::Read;
+        auto MemAreaFlags = MemoryArea::Read;
 
         if (rShdr.sh_flags & SHF_WRITE)
           MemAreaFlags |= MemoryArea::Write;
         if (rShdr.sh_flags & SHF_EXECINSTR)
           MemAreaFlags |= MemoryArea::Execute;
 
-        rDoc.AddMemoryArea(new MappedMemoryArea(
-          pShName,
+        rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+          pShName, MemAreaFlags,
           0x0,  static_cast<u32>(rShdr.sh_size),
-          Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
-          MemAreaFlags,
+          Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
           ArchTag, ArchMode
           ));
       }
@@ -237,7 +235,7 @@ private:
             ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
             "" : upShStrTbl.get() + rShdr.sh_name;
 
-          u32 MemAreaFlags = MemoryArea::Read;
+          auto MemAreaFlags = MemoryArea::Read;
 
           if (rShdr.sh_flags & SHF_WRITE)
             MemAreaFlags |= MemoryArea::Write;
@@ -246,20 +244,18 @@ private:
 
           if (rShdr.sh_type == SHT_NOBITS)
           {
-            rDoc.AddMemoryArea(new VirtualMemoryArea(
-              pShName,
-              Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
-              MemAreaFlags,
+            rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
+              pShName, MemAreaFlags,
+              Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               ArchMode, ArchMode
               ));
           }
           else
           {
-            rDoc.AddMemoryArea(new MappedMemoryArea(
-              pShName,
+            rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+              pShName, MemAreaFlags,
               rShdr.sh_offset, static_cast<u32>(rShdr.sh_size),
-              Address(Address::FlatType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
-              MemAreaFlags,
+              Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               ArchTag, ArchMode
               ));
           }
@@ -271,7 +267,7 @@ private:
         u32 PhdrNo = 0;
         for (auto const& rPhdr : Segments)
         {
-          u32 MemAreaFlags = 0x0;
+          auto MemAreaFlags = MemoryArea::NoAccess;
 
           if (rPhdr.p_flags & PF_X)
             MemAreaFlags |= MemoryArea::Execute;
@@ -283,11 +279,10 @@ private:
           std::ostringstream ShName;
           ShName << "phdr" << PhdrNo++;
 
-          rDoc.AddMemoryArea(new MappedMemoryArea(
-                ShName.str(),
+          rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+                ShName.str(), MemAreaFlags,
                 rPhdr.p_offset, static_cast<u32>(rPhdr.p_filesz),
-                Address(Address::FlatType, 0x0, rPhdr.p_vaddr, 16, bit), static_cast<u32>(rPhdr.p_memsz),
-                MemAreaFlags,
+                Address(Address::VirtualType, 0x0, rPhdr.p_vaddr, 16, bit), static_cast<u32>(rPhdr.p_memsz),
                 ArchTag, ArchMode
                 ));
         }
@@ -342,14 +337,14 @@ private:
         if (SymTbl == 0x0 || JmpRelTbl == 0x0)
           break;
 
-        TOffset SymTblOff     = 0x0;
-        TOffset JmpRelTblOff  = 0x0;
-        TOffset DynStrOff     = 0x0;
-        TOffset RelaTblOff    = 0x0;
-        rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, SymTbl),    SymTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, JmpRelTbl), JmpRelTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, DynStr),    DynStrOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::FlatType, 0x0, RelaTbl),   RelaTblOff);
+        OffsetType SymTblOff     = 0x0;
+        OffsetType JmpRelTblOff  = 0x0;
+        OffsetType DynStrOff     = 0x0;
+        OffsetType RelaTblOff    = 0x0;
+        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, SymTbl),    SymTblOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, JmpRelTbl), JmpRelTblOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, DynStr),    DynStrOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, RelaTbl),   RelaTblOff);
 
         std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
         std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
@@ -389,7 +384,7 @@ private:
                 SymIdx = static_cast<u32>(pRel->r_info >> 8);
               else
                 SymIdx = static_cast<u64>(pRel->r_info) >> 32;
-              TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
+              OffsetType CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
               if (!rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym)))
               {
@@ -400,7 +395,7 @@ private:
               if (CurSym.st_name >= DynStrSz || upDynSymStr[CurSym.st_name] == '\0')
                 continue;
 
-              TOffset FuncOff;
+              OffsetType FuncOff;
               if (!rDoc.ConvertAddressToFileOffset(pRel->r_offset, FuncOff))
               {
                 Log::Write("ldr_elf") << "Can't convert address of REL" << LogEnd;
@@ -414,7 +409,7 @@ private:
                 continue;
               }
 
-              Address FuncPltAddr(Address::FlatType, 0x0, FuncPlt, 0, bit);
+              Address FuncPltAddr(Address::VirtualType, 0x0, FuncPlt, 0, bit);
 
               Log::Write("ldr_elf")
                 << "Symbol found"
@@ -423,7 +418,7 @@ private:
                 << ", name=" << upDynSymStr.get() + CurSym.st_name
                 << LogEnd;
 
-              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRel->r_offset), 0, bit);
+              Address FuncAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRel->r_offset), 0, bit);
               std::string FuncName(upDynSymStr.get() + CurSym.st_name); // NOTE: st_name was checked before
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
@@ -444,7 +439,7 @@ private:
                 SymIdx = static_cast<u32>(pRela->r_info >> 8);
               else
                 SymIdx = static_cast<u64>(pRela->r_info) >> 32;
-              TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
+              OffsetType CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
               if (!rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym)))
               {
@@ -456,7 +451,7 @@ private:
               if (CurSym.st_name >= DynStrSz || upDynSymStr[CurSym.st_name] == '\0')
                 continue;
 
-              TOffset FuncOff;
+              OffsetType FuncOff;
               if (!rDoc.ConvertAddressToFileOffset(pRela->r_offset, FuncOff))
               {
                 Log::Write("ldr_elf") << "Can't convert address of RELA" << LogEnd;
@@ -479,7 +474,7 @@ private:
                 << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
                 << LogEnd;
 
-              Address FuncAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
+              Address FuncAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
               std::string FuncName(upDynSymStr.get() + CurSym.st_name);
 
               rDoc.ChangeValueSize(FuncAddr, bit, true);
@@ -499,7 +494,7 @@ private:
 
             typename ElfType::Sym CurSym;
             u32     SymIdx    = pRela->r_info >> (sizeof(pRela->r_info) * 8 / 2);
-            TOffset CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
+            OffsetType CurSymOff = SymTblOff + SymIdx * sizeof(CurSym);
 
             if (!rBinStrm.Read(CurSymOff, &CurSym, sizeof(CurSym)))
             {
@@ -517,7 +512,7 @@ private:
               << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
               << LogEnd;
 
-            Address SymAddr(Address::FlatType, 0x0, static_cast<TOffset>(pRela->r_offset), 0x10, bit);
+            Address SymAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
             std::string SymName(upDynSymStr.get() + CurSym.st_name);
 
             // TODO: Use ELFXX_ST_TYPE instead

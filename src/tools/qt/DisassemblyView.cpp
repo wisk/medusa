@@ -315,7 +315,7 @@ void DisassemblyView::paintText(QPainter& p)
     std::string::size_type TextOff = 0;
     for (auto const& rMark : rMarks)
     {
-      auto MarkLen = rMark.GetLength();
+      auto MarkSz = rMark.GetSize();
       if (rMark.GetType() != medusa::Mark::UnprintableType)
       {
         switch (rMark.GetType())
@@ -333,10 +333,10 @@ void DisassemblyView::paintText(QPainter& p)
         default:                               MarkClr = DfClr; break;
         };
         p.setPen(MarkClr);
-        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());
+        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkSz).c_str());
         p.drawText(static_cast<int>(TextOff * _wChar), Line, Text);
       }
-      TextOff += MarkLen;
+      TextOff += MarkSz;
     }
     Line += _hChar;
   });

@@ -94,10 +94,10 @@ bool BasicBlockVertexProperties::IsHead(void) const
     return (m_Flags & kIsHead) ? true : false;
   m_TestedFlags |= kIsHead;
 
-  MultiCell const* pCurFunc = m_pDoc->GetMultiCell(m_Addresses.front());
-  if (pCurFunc == nullptr)
+  auto spCurFunc = m_pDoc->GetMultiCell(m_Addresses.front());
+  if (spCurFunc == nullptr)
     return false;
-  if (pCurFunc->GetType() != MultiCell::FunctionType)
+  if (spCurFunc->GetType() != MultiCell::FunctionType)
     return false;
 
   m_Flags |= kIsHead;

@@ -6,7 +6,7 @@ namespace medusa
   {
     static Utf8StringTrait Utf8Str;
     s8 CurChar;
-    TOffset Offset;
+    OffsetType Offset;
     u16 RawLen = 0;
     std::string StrData;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
@@ -44,7 +44,7 @@ namespace medusa
   {
     static Utf16StringTrait Utf16Str;
     Utf16StringTrait::CharType Utf16Char;
-    TOffset StrOff;
+    OffsetType StrOff;
     u16 RawLen = 0;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
 

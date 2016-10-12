@@ -233,7 +233,7 @@ class ArmArchConvertion(ArchConvertion):
         res = ''
         res += 'rInsn.SetName("%s");\n' % self._ARM_GetMnemonic(insn)
         res += 'rInsn.SetOpcode(ARM_Opcode_%s);\n' % self._ARM_GetMnemonic(insn).capitalize()
-        res += 'rInsn.Length() += %d;\n' % (self._ARM_GetSize(insn) / 8)
+        res += 'rInsn.Size() += %d;\n' % (self._ARM_GetSize(insn) / 8)
 
         ## Handle SubType (jmp / call)
         map_op_type = { 'jmp' : 'Instruction::JumpType', 'call' : 'Instruction::CallType' }
@@ -580,9 +580,9 @@ class ArmArchConvertion(ArchConvertion):
 
     def _ARM_GenerateMethodPrototype(self, insn, in_class = False):
         mnem = self._ARM_GetMnemonic(insn)
-        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)'
+        meth_fmt = 'bool %s(BinaryStream const& rBinStrm, OffsetType Offset, u32 Opcode, Instruction& rInsn)'
         if in_class == False:
-            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, TOffset Offset, u32 Opcode, Instruction& rInsn)' % self.GetArchName()
+            meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, OffsetType Offset, u32 Opcode, Instruction& rInsn)' % self.GetArchName()
 
         return meth_fmt % self._ARM_GenerateMethodName(insn)
 
@@ -593,17 +593,17 @@ class ArmArchConvertion(ArchConvertion):
         for insn in sorted(self.arch['instruction'], key=lambda a:self._ARM_GetMnemonic(a)):
             res += self._ARM_GenerateMethodPrototype(insn, True) + ';\n'
 
-        res += 'bool DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
-        res += 'bool DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn);\n'
+        res += 'bool DisassembleArm(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn);\n'
+        res += 'bool DisassembleThumb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn);\n'
 
         return res
 
     def GenerateSource(self):
         res = ''
 
-        res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n'
+        res += 'bool ArmArchitecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)\n'
         res += self._GenerateBrace(
-                'rInsn.GetData()->ArchitectureTag() = GetTag();\n'+
+                'rInsn.SetArchitectureTag(GetTag());\n'+
                 'rInsn.Mode() = Mode;\n\n'+
                 self._GenerateSwitch('Mode',
                     [('ARM_ModeArm',   'return DisassembleArm(rBinStrm, Offset, rInsn);\n',   False),
@@ -641,14 +641,14 @@ class ArmArchConvertion(ArchConvertion):
 
             return res
 
-        res += 'bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res += 'bool ArmArchitecture::DisassembleArm(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn)\n'
         res += self._GenerateBrace(
                 self._GenerateRead('Opcode32', 'Offset', 32)+
                 _ARM_GenerateDispatcher(self, self.arm_insns)+
                 'return false;\n'
                 )
 
-        res += 'bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn)\n'
+        res += 'bool ArmArchitecture::DisassembleThumb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn)\n'
         res += self._GenerateBrace(
                 self._GenerateRead('Opcode16Low', 'Offset & ~1', 16)+
                 self._GenerateRead('Opcode16High', '(Offset + 2) & ~1', 16)+

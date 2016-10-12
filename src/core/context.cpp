@@ -315,8 +315,8 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (MemAreaFileSize == 0x0)
       return;
 
-    TOffset MemAreaFileOff;
-    if (rMemArea.ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
+    OffsetType MemAreaFileOff;
+    if (rDoc.ConvertAddressToFileOffset(rMemAreaAddr, MemAreaFileOff) == false)
       return;
 
     if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))

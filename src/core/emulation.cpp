@@ -208,7 +208,7 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
       break;
 
     // Go to the next instruction
-    InsnAddr += spCurInsn->GetLength();
+    InsnAddr += spCurInsn->GetSize();
   }
 
   return true;

@@ -119,7 +119,7 @@ void VertexItem::paintText(QPainter& p)
     std::string::size_type TextOff = 0;
     for (auto const& rMark : rMarks)
     {
-      auto MarkLen = rMark.GetLength();
+      auto MarkLen = rMark.GetSize();
       if (rMark.GetType() != medusa::Mark::UnprintableType)
       {
         switch (rMark.GetType())

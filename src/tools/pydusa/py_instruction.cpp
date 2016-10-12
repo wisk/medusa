@@ -38,7 +38,7 @@ void PydusaInstruction(py::module& rMod)
 {
   py::class_<Instruction, Instruction::SPType>(rMod, "Instruction", py::base<Cell>())
     .def("__str__", &Instruction::ToString)
-    .def("__len__", &Instruction::GetLength)
+    .def("__len__", &Instruction::GetSize)
     .def_property_readonly("format", pydusa::Instruction_GetFormat)
     .def_property_readonly("semantic", pydusa::Instruction_Semantic)
     .def_property_readonly("operands", pydusa::Instruction_Operands)

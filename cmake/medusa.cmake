@@ -37,6 +37,10 @@ macro(medusa_add_module type name include_files source_files)
     LIBRARY DESTINATION ${MEDUSA_MODULE_PATH}
   )
 
+  if (MEDUSA_CMAKE_USE_COTIRE)
+    cotire(${MEDUSA_MODULE})
+  endif()
+
 endmacro()
 
 function(medusa_add_tool target include_files source_files)

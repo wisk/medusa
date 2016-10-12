@@ -52,7 +52,7 @@ namespace pydusa
         auto spDbText = medusa::Database::SPType(pGetDbText());
 
         spDbText->SetBinaryStream(spModBinStrm);
-        spModDoc->Use(spDbText);
+        spModDoc->Open(spDbText);
 
         if (!spLdr->Map(*spModDoc, { spArch }, rAddr))
         {

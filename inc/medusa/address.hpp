@@ -23,15 +23,15 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Address
 {
 public:
+
   typedef enum
   {
-    UnknownType,  //! Unknown type, used only in case of error or request.
-    PhysicalType, //! Physical type, unused.
-    FlatType,     //! Flat type, unused.
-    SegmentType,  //! Segment type, unused (designed for real mode).
-    BankType,     //! Bank type, used for video games consoles.
-    VirtualType,  //! Virtual type, used for protected mode.
-    LogicalType,  //!
+    UnknownType,      //! Used only in case of error or default
+    PhysicalType,     //! Physical type or offset
+    ArchitectureType, //! Relies on architecture to convert address (e.g. segmented address, mirror address, ...)
+    VirtualType,      //! Used for protected mode (same as linear address)
+    RelativeType,     //! Relative to a image base (RVA)
+    LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
   } Type;
 
   typedef std::list<Address> List;
@@ -45,7 +45,7 @@ public:
    * \param BaseSize defines the base size in bits.
    * \param OffsetSize defines the offset size in bits.
    */
-  Address(Type Type, TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
+  Address(Type Type, BaseType Base, OffsetType Offset, u8 BaseSize, u8 OffsetSize)
     : m_Type(Type)
     , m_Base(Base)
     , m_Offset(Offset)
@@ -53,7 +53,7 @@ public:
     , m_OffsetSize(OffsetSize)
   { SanitizeOffset(); }
 
-  Address(TBase Base, TOffset Offset, u8 BaseSize, u8 OffsetSize)
+  Address(BaseType Base, OffsetType Offset, u8 BaseSize, u8 OffsetSize)
     : m_Type(LogicalType)
     , m_Base(Base)
     , m_Offset(Offset)
@@ -61,7 +61,7 @@ public:
     , m_OffsetSize(OffsetSize)
   { SanitizeOffset(); }
 
-  Address(Type Type, TBase Base, TOffset Offset)
+  Address(Type Type, BaseType Base, OffsetType Offset)
     : m_Type(Type)
     , m_Base(Base)
     , m_Offset(Offset)
@@ -69,7 +69,7 @@ public:
     , m_OffsetSize(64)
   {}
 
-  Address(TBase Base, TOffset Offset)
+  Address(BaseType Base, OffsetType Offset)
     : m_Type(LogicalType)
     , m_Base(Base)
     , m_Offset(Offset)
@@ -77,7 +77,7 @@ public:
     , m_OffsetSize(64)
   {}
 
-  Address(Type Type, TOffset Offset)
+  Address(Type Type, OffsetType Offset)
     : m_Type(Type)
     , m_Base(0x0)
     , m_Offset(Offset)
@@ -85,8 +85,8 @@ public:
     , m_OffsetSize(64)
   {}
 
-  Address(TOffset Offset)
-    : m_Type(FlatType)
+  Address(OffsetType Offset)
+    : m_Type(VirtualType)
     , m_Base(0x0)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -109,27 +109,27 @@ public:
   std::string ToString(void) const;
 
   //! This method allows to mask an offset accordingly the current offset size.
-  TOffset SanitizeOffset(TOffset Offset) const;
-  void SanitizeOffset(TOffset& rOffset);
+  OffsetType SanitizeOffset(OffsetType Offset) const;
+  void SanitizeOffset(OffsetType& rOffset);
 
-  Type      GetAddressingType(void) const   { return m_Type;                       }
-  TBase     GetBase(void) const             { return m_Base;                       }
-  TOffset   GetOffset(void) const           { return m_Offset;                     }
-  u8        GetBaseSize(void) const         { return m_BaseSize;                   }
-  u8        GetOffsetSize(void) const       { return m_OffsetSize;                 }
+  Type       GetAddressingType(void) const { return m_Type;       }
+  BaseType   GetBase(void)           const { return m_Base;       }
+  OffsetType GetOffset(void)         const { return m_Offset;     }
+  u8         GetBaseSize(void)       const { return m_BaseSize;   }
+  u8         GetOffsetSize(void)     const { return m_OffsetSize; }
 
   // Set
-  void	    SetAddressingType(Type AddressingType) { m_Type = AddressingType;	   }
-  void      SetBase(TBase Base)             { m_Base = Base;                       }
-  void      SetOffset(TOffset Offset)       { m_Offset = Offset; SanitizeOffset(); }
-  void	    SetBaseSize(u8 BaseSize)	    { m_BaseSize = BaseSize;		   }
-  void	    SetOffsetSize(u8 OffsetSize)    { m_OffsetSize = OffsetSize;	   }
+  void      SetAddressingType(Type AddressingType) { m_Type       = AddressingType;             }
+  void      SetBase(BaseType Base)                 { m_Base       = Base;                       }
+  void      SetOffset(OffsetType Offset)           { m_Offset     = Offset; SanitizeOffset();   }
+  void      SetBaseSize(u8 BaseSize)               { m_BaseSize   = BaseSize;                   }
+  void      SetOffsetSize(u8 OffsetSize)           { m_OffsetSize = OffsetSize;                 }
 
   /*! \param Size is the size of the boundary.
    * \param Off is the offset of the boundary.
    * \return Returns true if this address is contained in [Off:Off+Size].
    */
-  bool IsBetween(u64 Size, TOffset Off) const;
+  bool IsBetween(u64 Size, OffsetType Off) const;
   bool IsBetween(u64 Size, Address const& Addr) const;
 
   //! This method returns true if base and offset are egal.
@@ -139,11 +139,11 @@ public:
   bool operator!=(Address const& rAddr) const;
 
   //! This method returns an address where its offset is the current offset plus Off.
-  Address operator+(TOffset Off) const;
+  Address operator+(OffsetType Off) const;
   Address operator+(Address const& Addr) const;
 
   //! This method add a offset to the current address offset.
-  Address operator+=(TOffset Off);
+  Address operator+=(OffsetType Off);
 
   //! This method returns true if both base and offset are inferior to rAddr.
   bool operator<(Address const& rAddr) const;
@@ -161,11 +161,11 @@ protected:
   void SanitizeOffset(void) { SanitizeOffset(m_Offset); }
 
 private:
-  Type      m_Type;
-  TBase     m_Base;
-  TOffset   m_Offset;
-  u8        m_BaseSize;
-  u8        m_OffsetSize;
+  Type       m_Type;
+  BaseType   m_Base;
+  OffsetType m_Offset;
+  u8         m_BaseSize;
+  u8         m_OffsetSize;
 };
 
 MEDUSA_NAMESPACE_END

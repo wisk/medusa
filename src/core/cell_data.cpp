@@ -11,23 +11,13 @@ std::string CellData::Dump(void) const
     << std::hex
     << "dna("   << static_cast<int>(m_Type)
     << " "     << static_cast<int>(m_SubType)
-    << " "     << m_Length
+    << " "     << m_Size
     << " "     << m_FormatStyle
     << " "     << static_cast<int>(m_Flags)
     << " "     << static_cast<int>(m_Mode)
     << " "     << m_ArchTag
     << ")";
   return oss.str();
-}
-
-void    CellData::SetDefaultArchitectureTag(Tag archTag)
-{
-  m_ArchTag = archTag;
-}
-
-void    CellData::SetDefaultMode(u8 mode)
-{
-  m_Mode = mode;
 }
 
 MEDUSA_NAMESPACE_END

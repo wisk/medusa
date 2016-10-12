@@ -113,55 +113,7 @@ bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
 
 bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
 {
-  auto const pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rAddress));
-  if (pFunc == nullptr)
-    return false;
-
-  if (pFunc->GetInstructionCounter() != 3)
-    return false;
-
-  auto Tag = rDoc.GetArchitectureTag(rAddress);
-  auto const spArch = ModuleManager::Instance().GetArchitecture(Tag);
-  if (spArch == nullptr)
-    return false;
-
-  if (spArch->GetName() != "ARM")
-    return false;
-
-  auto const spAdrIpImm   = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 0));
-  auto const spAddIpIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 4));
-  auto const spLdrPcIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 8));
-  if (spAdrIpImm == nullptr || spAddIpIpImm == nullptr || spLdrPcIpImm == nullptr)
-    return true;
-
-  // TODO: execute this part
-  auto spBase = expr_cast<BitVectorExpression>(spAdrIpImm->GetOperand(1));
-  auto spDisp = expr_cast<BitVectorExpression>(spAddIpIpImm->GetOperand(2));
-  auto spMem  = expr_cast<MemoryExpression>(spLdrPcIpImm->GetOperand(1));
-
-  if (spBase == nullptr || spDisp == nullptr || spMem == nullptr)
-    return true;
-
-  auto spBinOp = expr_cast<BinaryOperationExpression>(spMem->GetOffsetExpression());
-  if (spBinOp == nullptr)
-    return true;
-  auto spOff = expr_cast<BitVectorExpression>(spBinOp->GetRightExpression());
-
-  Address DstAddr(
-    Address::FlatType,
-    0x0,
-    static_cast<u32>(spBase->GetInt().ConvertTo<u32>() + spDisp->GetInt().ConvertTo<u32>() + spOff->GetInt().ConvertTo<u32>()),
-    0, 32);
-
-  EvaluateVisitor EvalVst(rDoc, spArch->CurrentAddress(rAddress, *spAdrIpImm), spAdrIpImm->GetMode(), true);
-
-  auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
-  if (DstLbl.GetType() == Label::Unknown)
-    return true;
-
-  rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetLabel(), Label::Function | Label::Global));
-
-  return true;
+  return false;
 }
 
 Expression::VSPType UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)

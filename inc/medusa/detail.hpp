@@ -236,7 +236,7 @@ public:
   void ForEachField(std::function <bool (u32 Offset, TypedValueDetail const& rField)> Callback) const;
 
 private:
-  bool _DetermineNextOffset(u32& rNextOffset) const;
+  bool _DetermineNexOffsetType(u32& rNexOffsetType) const;
 
   u32 m_Alignment;
   std::unordered_map<std::string, u32> m_NameToOffset;

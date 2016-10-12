@@ -370,7 +370,7 @@ void MainWindow::addDisassemblyView(medusa::Address const& startAddr)
 
 void MainWindow::addSemanticView(medusa::Address const& funcAddr)
 {
-  auto func = _medusa.GetMultiCell(funcAddr);
+  auto func = _medusa.GetDocument().GetMultiCell(funcAddr);
   if (func == nullptr || func->GetType() != medusa::MultiCell::FunctionType)
     return;
 
@@ -498,7 +498,7 @@ void MainWindow::goTo(medusa::Address const& addr)
 
 void MainWindow::setCurrentAddress(medusa::Address const& addr)
 {
-  medusa::TOffset Off;
+  medusa::OffsetType Off;
   QString OffStr = "";
   if (!_medusa.GetDocument().ConvertAddressToFileOffset(addr, Off))
     OffStr = "(unknown)";

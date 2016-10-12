@@ -1,4 +1,5 @@
-#include "medusa/medusa.hpp"
+#include <medusa/bits.hpp>
+#include <medusa/medusa.hpp>
 #include "pe_loader.hpp"
 
 #include <boost/format.hpp>
@@ -217,7 +218,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     << ", Number of section: " << NumOfScn
     << LogEnd;
 
-  Address EpAddr(Address::FlatType, 0x0, EpOff, 0x10, bit);
+  Address EpAddr(Address::VirtualType, 0x0, EpOff, 0x10, bit);
   rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported));
 
   _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
@@ -248,17 +249,16 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   // ref: https://code.google.com/p/corkami/wiki/PE#SizeOfHeaders
   auto HdrLen = std::min<u32>(0x1000, rBinStrm.GetSize());
 
-  rDoc.AddMemoryArea(new MappedMemoryArea(
-    "hdr",
+  rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+    "hdr", MemoryArea::Read | MemoryArea::Write,
     0x0, HdrLen,
-    Address(Address::FlatType, 0x0, ImageBase, 0x10, bit), HdrLen,
-    MemoryArea::Read | MemoryArea::Write,
+    Address(Address::VirtualType, 0x0, ImageBase, 0x10, bit), HdrLen,
     ArchTag, ArchMode
     ));
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
-    u32 Flags = MemoryArea::Read;
+    auto Flags = MemoryArea::Read;
     if (!rBinStrm.Read(SectionHeadersOffset + ScnIdx * sizeof(ScnHdr), &ScnHdr, sizeof(ScnHdr)))
     {
       Log::Write("ldr_pe") << "unable to read IMAGE_SECTION_HEADER" << LogEnd;
@@ -285,11 +285,10 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     if (ScnHdr.Characteristics & PE_SCN_MEM_WRITE)
       Flags |= MemoryArea::Write;
 
-    rDoc.AddMemoryArea(new MappedMemoryArea(
-      ScnName,
+    rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+      ScnName, Flags,
       ScnHdr.PointerToRawData, ScnHdr.SizeOfRawData,
-      Address(Address::FlatType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
-      Flags,
+      Address(Address::VirtualType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
       ArchTag, ArchMode
       ));
 
@@ -303,7 +302,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
   typename PeType::ImportDescriptor CurImp, EndImp;
   ::memset(&EndImp, 0x0, sizeof(EndImp));
 
-  TOffset ImpOff;
+  OffsetType ImpOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ImportDirectoryRva, ImpOff))
   {
     Log::Write("ldr_pe") << "unable to convert address import directory" << LogEnd;
@@ -322,7 +321,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     if (!memcmp(&CurImp, &EndImp, sizeof(CurImp)))
       break;
 
-    TOffset ImpNameOff;
+    OffsetType ImpNameOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurImp.Name, ImpNameOff))
     {
       Log::Write("ldr_pe") << "unable to convert import name address to offset" << LogEnd;
@@ -340,19 +339,19 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
 
     // For each thunks (imported symbol) ...
     std::string       FuncName;
-    TOffset           OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
+    OffsetType           OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
       ThunkRva = CurImp.FirstThunk,
       FuncOff;
     typename PeType::ThunkData CurOrgThunk, CurThunk, EndThunk = { 0 };
 
-    TOffset OrgThunkOff;
+    OffsetType OrgThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + OrgThunkRva, OrgThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert thunk address to offset" << LogEnd;
       return;
     }
 
-    TOffset ThunkOff;
+    OffsetType ThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + ThunkRva, ThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert original thunk address to offset" << LogEnd;
@@ -406,14 +405,14 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
         SymName += ThunkName;
       }
 
-      Address SymAddr(Address::FlatType, 0x0, ImageBase + ThunkRva, 0, bit);
+      Address SymAddr(Address::VirtualType, 0x0, ImageBase + ThunkRva, 0, bit);
       ThunkRva += sizeof(typename PeType::ThunkData);
       Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
       rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
-      auto pFunc = new Function(SymName, 0, 0);
-      rDoc.SetMultiCell(SymAddr, pFunc, true);
+      auto spFunc = std::make_shared<Function>(SymName, 0, 0);
+      rDoc.SetMultiCell(SymAddr, spFunc, true);
     }
   }
 }
@@ -424,7 +423,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
   typedef PeTraits<bit> PeType;
 
   typename PeType::ExportDirectory ExpDir;
-  TOffset ExpDirOff;
+  OffsetType ExpDirOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
   {
     Log::Write("ldr_pe") << "unable to convert export directory address to offset" << LogEnd;
@@ -436,7 +435,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     return;
   }
 
-  TOffset FuncOff, NameOff, OrdOff;
+  OffsetType FuncOff, NameOff, OrdOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfFunctions, FuncOff))
   {
     Log::Write("ldr_pe") << "unable to convert functions address to offset" << LogEnd;
@@ -479,7 +478,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
         Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
         return;
       }
-      TOffset SymNameOff;
+      OffsetType SymNameOff;
       if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
       {
         Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
@@ -494,7 +493,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     else
       SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
 
-    Address SymAddr(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit);
+    Address SymAddr(Address::VirtualType, 0x0, ImageBase + FuncRva, 0x10, bit);
     rDoc.AddLabel(
       SymAddr,
        // We assume we only export function which is definitely false,

@@ -82,8 +82,8 @@ public:
   St62Architecture(void) : Architecture(MEDUSA_ARCH_TAG('S','T','6')) {}
 
   virtual std::string           GetName(void) const { return "ST62"; }
-  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff) { return false; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff) { return false; }
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const
   {
     NamedModeVector Modes;
@@ -107,12 +107,12 @@ private:
 #include "st62_opcode.ipp"
 #include "st62_operand.ipp"
 
-  Expression::SPType __Decode_ext(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_pcr(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_ee(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_direct(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_imm(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
-  Expression::SPType __Decode_bitdirect(BinaryStream const& rBinStrm, TOffset& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_ext(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_pcr(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_ee(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_direct(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_imm(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
+  Expression::SPType __Decode_bitdirect(BinaryStream const& rBinStrm, OffsetType& Offset, Instruction& rInsn, u8 Mode);
 
 private:
   static const char * m_Mnemonic[];

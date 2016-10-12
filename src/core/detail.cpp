@@ -148,7 +148,7 @@ u32 StructureDetail::GetSize(void) const
   u32 StructSize = 0;
   // Actually, the next offset is also the structure size
   // NOTE: What about alignment?
-  if (!_DetermineNextOffset(StructSize))
+  if (!_DetermineNexOffsetType(StructSize))
   {
     m_IsValid = false;
     return 0;
@@ -173,10 +173,10 @@ std::string StructureDetail::Dump(void) const
 
 bool StructureDetail::GetFieldByName(std::string const& rFieldName, TypedValueDetail& rField)
 {
-  auto itOffset = m_NameToOffset.find(rFieldName);
-  if (itOffset == std::end(m_NameToOffset))
+  auto iOffsetType = m_NameToOffset.find(rFieldName);
+  if (iOffsetType == std::end(m_NameToOffset))
     return false;
-  return GetFieldByOffset(itOffset->second, rField);
+  return GetFieldByOffset(iOffsetType->second, rField);
 }
 
 bool StructureDetail::GetFieldByOffset(u32 Offset, TypedValueDetail& rField)
@@ -190,36 +190,36 @@ bool StructureDetail::GetFieldByOffset(u32 Offset, TypedValueDetail& rField)
 
 StructureDetail& StructureDetail::AddField(TypeDetail::SPType spFieldType, std::string const& rFieldName, ValueDetail::Type FieldType, Id FieldRefId)
 {
-  auto itOffset = m_NameToOffset.find(rFieldName);
-  if (itOffset != std::end(m_NameToOffset))
+  auto iOffsetType = m_NameToOffset.find(rFieldName);
+  if (iOffsetType != std::end(m_NameToOffset))
   {
     m_IsValid = false;
     return *this;
   }
 
-  u32 NextOffset = 0;
-  if (!_DetermineNextOffset(NextOffset))
+  u32 NexOffsetType = 0;
+  if (!_DetermineNexOffsetType(NexOffsetType))
   {
     m_IsValid = false;
     return *this;
   }
 
-  auto itField = m_OffsetToField.find(NextOffset);
+  auto itField = m_OffsetToField.find(NexOffsetType);
   if (itField != std::end(m_OffsetToField))
   {
     m_IsValid = false;
     return *this;
   }
 
-  m_NameToOffset[rFieldName] = NextOffset;
+  m_NameToOffset[rFieldName] = NexOffsetType;
 
   if (spFieldType->GetKind() == Detail::Structure)
   {
-    m_OffsetToField[NextOffset] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, ValueDetail::CompositeType, spFieldType->GetId()));
+    m_OffsetToField[NexOffsetType] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, ValueDetail::CompositeType, spFieldType->GetId()));
     return *this;
   }
 
-  m_OffsetToField[NextOffset] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, FieldType, FieldRefId));
+  m_OffsetToField[NexOffsetType] = TypedValueDetail(spFieldType, ValueDetail(rFieldName, FieldType, FieldRefId));
 
   return *this;
 }
@@ -233,21 +233,21 @@ void StructureDetail::ForEachField(std::function <bool(u32 Offset, TypedValueDet
   }
 }
 
-bool StructureDetail::_DetermineNextOffset(u32& rNextOffset) const
+bool StructureDetail::_DetermineNexOffsetType(u32& rNexOffsetType) const
 {
   if (m_OffsetToField.empty())
   {
-    rNextOffset = 0;
+    rNexOffsetType = 0;
     return true;
   }
   auto itLastField = m_OffsetToField.end();
   --itLastField;
-  u32 LastOffset = itLastField->first;
+  u32 LasOffsetType = itLastField->first;
   auto const& rspField = itLastField->second;
   u32 LastFieldSize = rspField.GetType()->GetSize();
   if (LastFieldSize == 0)
     return false;
-  rNextOffset = LastOffset + LastFieldSize;
+  rNexOffsetType = LasOffsetType + LastFieldSize;
   // TODO: implement alignment
   return true;
 }

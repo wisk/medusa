@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sat Jun 18 16:42:30 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct  5 22:56:59 2016) */
 #include "x86_architecture.hpp"
 const X86Architecture::TDisassembler X86Architecture::m_Table_sse5a[0x100] =
 {
@@ -264,7 +264,7 @@ const X86Architecture::TDisassembler X86Architecture::m_Table_sse5a[0x100] =
  * opcode: 00
  * invalid
 **/
-bool X86Architecture::Table_sse5a_00(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_00(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -273,7 +273,7 @@ bool X86Architecture::Table_sse5a_00(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 01
  * invalid
 **/
-bool X86Architecture::Table_sse5a_01(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_01(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -282,7 +282,7 @@ bool X86Architecture::Table_sse5a_01(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 02
  * invalid
 **/
-bool X86Architecture::Table_sse5a_02(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_02(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -291,7 +291,7 @@ bool X86Architecture::Table_sse5a_02(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 03
  * invalid
 **/
-bool X86Architecture::Table_sse5a_03(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_03(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -300,7 +300,7 @@ bool X86Architecture::Table_sse5a_03(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 04
  * invalid
 **/
-bool X86Architecture::Table_sse5a_04(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_04(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -309,7 +309,7 @@ bool X86Architecture::Table_sse5a_04(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 05
  * invalid
 **/
-bool X86Architecture::Table_sse5a_05(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_05(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -318,7 +318,7 @@ bool X86Architecture::Table_sse5a_05(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 06
  * invalid
 **/
-bool X86Architecture::Table_sse5a_06(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_06(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -327,7 +327,7 @@ bool X86Architecture::Table_sse5a_06(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 07
  * invalid
 **/
-bool X86Architecture::Table_sse5a_07(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_07(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -336,7 +336,7 @@ bool X86Architecture::Table_sse5a_07(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 08
  * invalid
 **/
-bool X86Architecture::Table_sse5a_08(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_08(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -345,7 +345,7 @@ bool X86Architecture::Table_sse5a_08(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 09
  * invalid
 **/
-bool X86Architecture::Table_sse5a_09(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_09(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -354,7 +354,7 @@ bool X86Architecture::Table_sse5a_09(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -363,7 +363,7 @@ bool X86Architecture::Table_sse5a_0a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -372,7 +372,7 @@ bool X86Architecture::Table_sse5a_0b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -381,7 +381,7 @@ bool X86Architecture::Table_sse5a_0c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -390,7 +390,7 @@ bool X86Architecture::Table_sse5a_0d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -399,7 +399,7 @@ bool X86Architecture::Table_sse5a_0e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 0f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_0f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_0f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -408,7 +408,7 @@ bool X86Architecture::Table_sse5a_0f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 10
  * invalid
 **/
-bool X86Architecture::Table_sse5a_10(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_10(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -417,7 +417,7 @@ bool X86Architecture::Table_sse5a_10(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 11
  * invalid
 **/
-bool X86Architecture::Table_sse5a_11(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_11(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -426,7 +426,7 @@ bool X86Architecture::Table_sse5a_11(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 12
  * invalid
 **/
-bool X86Architecture::Table_sse5a_12(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_12(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -435,7 +435,7 @@ bool X86Architecture::Table_sse5a_12(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 13
  * invalid
 **/
-bool X86Architecture::Table_sse5a_13(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_13(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -444,7 +444,7 @@ bool X86Architecture::Table_sse5a_13(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 14
  * invalid
 **/
-bool X86Architecture::Table_sse5a_14(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_14(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -453,7 +453,7 @@ bool X86Architecture::Table_sse5a_14(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 15
  * invalid
 **/
-bool X86Architecture::Table_sse5a_15(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_15(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -462,7 +462,7 @@ bool X86Architecture::Table_sse5a_15(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 16
  * invalid
 **/
-bool X86Architecture::Table_sse5a_16(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_16(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -471,7 +471,7 @@ bool X86Architecture::Table_sse5a_16(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 17
  * invalid
 **/
-bool X86Architecture::Table_sse5a_17(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_17(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -480,7 +480,7 @@ bool X86Architecture::Table_sse5a_17(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 18
  * invalid
 **/
-bool X86Architecture::Table_sse5a_18(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_18(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -489,7 +489,7 @@ bool X86Architecture::Table_sse5a_18(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 19
  * invalid
 **/
-bool X86Architecture::Table_sse5a_19(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_19(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -498,7 +498,7 @@ bool X86Architecture::Table_sse5a_19(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -507,7 +507,7 @@ bool X86Architecture::Table_sse5a_1a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -516,7 +516,7 @@ bool X86Architecture::Table_sse5a_1b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -525,7 +525,7 @@ bool X86Architecture::Table_sse5a_1c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -534,7 +534,7 @@ bool X86Architecture::Table_sse5a_1d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -543,7 +543,7 @@ bool X86Architecture::Table_sse5a_1e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 1f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_1f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_1f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -552,7 +552,7 @@ bool X86Architecture::Table_sse5a_1f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 20
  * invalid
 **/
-bool X86Architecture::Table_sse5a_20(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_20(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -561,7 +561,7 @@ bool X86Architecture::Table_sse5a_20(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 21
  * invalid
 **/
-bool X86Architecture::Table_sse5a_21(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_21(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -570,7 +570,7 @@ bool X86Architecture::Table_sse5a_21(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 22
  * invalid
 **/
-bool X86Architecture::Table_sse5a_22(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_22(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -579,7 +579,7 @@ bool X86Architecture::Table_sse5a_22(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 23
  * invalid
 **/
-bool X86Architecture::Table_sse5a_23(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_23(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -588,7 +588,7 @@ bool X86Architecture::Table_sse5a_23(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 24
  * invalid
 **/
-bool X86Architecture::Table_sse5a_24(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_24(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -597,7 +597,7 @@ bool X86Architecture::Table_sse5a_24(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 25
  * invalid
 **/
-bool X86Architecture::Table_sse5a_25(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_25(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -606,7 +606,7 @@ bool X86Architecture::Table_sse5a_25(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 26
  * invalid
 **/
-bool X86Architecture::Table_sse5a_26(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_26(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -615,7 +615,7 @@ bool X86Architecture::Table_sse5a_26(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 27
  * invalid
 **/
-bool X86Architecture::Table_sse5a_27(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_27(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -624,7 +624,7 @@ bool X86Architecture::Table_sse5a_27(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 28
  * invalid
 **/
-bool X86Architecture::Table_sse5a_28(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_28(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -633,7 +633,7 @@ bool X86Architecture::Table_sse5a_28(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 29
  * invalid
 **/
-bool X86Architecture::Table_sse5a_29(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_29(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -642,7 +642,7 @@ bool X86Architecture::Table_sse5a_29(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -651,7 +651,7 @@ bool X86Architecture::Table_sse5a_2a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -660,7 +660,7 @@ bool X86Architecture::Table_sse5a_2b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -669,7 +669,7 @@ bool X86Architecture::Table_sse5a_2c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -678,7 +678,7 @@ bool X86Architecture::Table_sse5a_2d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -687,7 +687,7 @@ bool X86Architecture::Table_sse5a_2e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 2f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_2f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_2f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -696,7 +696,7 @@ bool X86Architecture::Table_sse5a_2f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 30
  * invalid
 **/
-bool X86Architecture::Table_sse5a_30(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_30(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -705,7 +705,7 @@ bool X86Architecture::Table_sse5a_30(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 31
  * invalid
 **/
-bool X86Architecture::Table_sse5a_31(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_31(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -714,7 +714,7 @@ bool X86Architecture::Table_sse5a_31(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 32
  * invalid
 **/
-bool X86Architecture::Table_sse5a_32(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_32(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -723,7 +723,7 @@ bool X86Architecture::Table_sse5a_32(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 33
  * invalid
 **/
-bool X86Architecture::Table_sse5a_33(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_33(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -732,7 +732,7 @@ bool X86Architecture::Table_sse5a_33(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 34
  * invalid
 **/
-bool X86Architecture::Table_sse5a_34(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_34(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -741,7 +741,7 @@ bool X86Architecture::Table_sse5a_34(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 35
  * invalid
 **/
-bool X86Architecture::Table_sse5a_35(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_35(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -750,7 +750,7 @@ bool X86Architecture::Table_sse5a_35(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 36
  * invalid
 **/
-bool X86Architecture::Table_sse5a_36(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_36(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -759,7 +759,7 @@ bool X86Architecture::Table_sse5a_36(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 37
  * invalid
 **/
-bool X86Architecture::Table_sse5a_37(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_37(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -768,7 +768,7 @@ bool X86Architecture::Table_sse5a_37(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 38
  * invalid
 **/
-bool X86Architecture::Table_sse5a_38(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_38(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -777,7 +777,7 @@ bool X86Architecture::Table_sse5a_38(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 39
  * invalid
 **/
-bool X86Architecture::Table_sse5a_39(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_39(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -786,7 +786,7 @@ bool X86Architecture::Table_sse5a_39(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -795,7 +795,7 @@ bool X86Architecture::Table_sse5a_3a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -804,7 +804,7 @@ bool X86Architecture::Table_sse5a_3b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -813,7 +813,7 @@ bool X86Architecture::Table_sse5a_3c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -822,7 +822,7 @@ bool X86Architecture::Table_sse5a_3d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -831,7 +831,7 @@ bool X86Architecture::Table_sse5a_3e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 3f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_3f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_3f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -840,7 +840,7 @@ bool X86Architecture::Table_sse5a_3f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 40
  * invalid
 **/
-bool X86Architecture::Table_sse5a_40(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_40(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -849,7 +849,7 @@ bool X86Architecture::Table_sse5a_40(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 41
  * invalid
 **/
-bool X86Architecture::Table_sse5a_41(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_41(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -858,7 +858,7 @@ bool X86Architecture::Table_sse5a_41(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 42
  * invalid
 **/
-bool X86Architecture::Table_sse5a_42(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_42(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -867,7 +867,7 @@ bool X86Architecture::Table_sse5a_42(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 43
  * invalid
 **/
-bool X86Architecture::Table_sse5a_43(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_43(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -876,7 +876,7 @@ bool X86Architecture::Table_sse5a_43(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 44
  * invalid
 **/
-bool X86Architecture::Table_sse5a_44(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_44(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -885,7 +885,7 @@ bool X86Architecture::Table_sse5a_44(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 45
  * invalid
 **/
-bool X86Architecture::Table_sse5a_45(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_45(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -894,7 +894,7 @@ bool X86Architecture::Table_sse5a_45(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 46
  * invalid
 **/
-bool X86Architecture::Table_sse5a_46(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_46(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -903,7 +903,7 @@ bool X86Architecture::Table_sse5a_46(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 47
  * invalid
 **/
-bool X86Architecture::Table_sse5a_47(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_47(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -912,7 +912,7 @@ bool X86Architecture::Table_sse5a_47(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 48
  * invalid
 **/
-bool X86Architecture::Table_sse5a_48(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_48(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -921,7 +921,7 @@ bool X86Architecture::Table_sse5a_48(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 49
  * invalid
 **/
-bool X86Architecture::Table_sse5a_49(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_49(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -930,7 +930,7 @@ bool X86Architecture::Table_sse5a_49(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -939,7 +939,7 @@ bool X86Architecture::Table_sse5a_4a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -948,7 +948,7 @@ bool X86Architecture::Table_sse5a_4b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -957,7 +957,7 @@ bool X86Architecture::Table_sse5a_4c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -966,7 +966,7 @@ bool X86Architecture::Table_sse5a_4d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -975,7 +975,7 @@ bool X86Architecture::Table_sse5a_4e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 4f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_4f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_4f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -984,7 +984,7 @@ bool X86Architecture::Table_sse5a_4f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 50
  * invalid
 **/
-bool X86Architecture::Table_sse5a_50(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_50(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -993,7 +993,7 @@ bool X86Architecture::Table_sse5a_50(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 51
  * invalid
 **/
-bool X86Architecture::Table_sse5a_51(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_51(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1002,7 +1002,7 @@ bool X86Architecture::Table_sse5a_51(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 52
  * invalid
 **/
-bool X86Architecture::Table_sse5a_52(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_52(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1011,7 +1011,7 @@ bool X86Architecture::Table_sse5a_52(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 53
  * invalid
 **/
-bool X86Architecture::Table_sse5a_53(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_53(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1020,7 +1020,7 @@ bool X86Architecture::Table_sse5a_53(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 54
  * invalid
 **/
-bool X86Architecture::Table_sse5a_54(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_54(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1029,7 +1029,7 @@ bool X86Architecture::Table_sse5a_54(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 55
  * invalid
 **/
-bool X86Architecture::Table_sse5a_55(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_55(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1038,7 +1038,7 @@ bool X86Architecture::Table_sse5a_55(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 56
  * invalid
 **/
-bool X86Architecture::Table_sse5a_56(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_56(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1047,7 +1047,7 @@ bool X86Architecture::Table_sse5a_56(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 57
  * invalid
 **/
-bool X86Architecture::Table_sse5a_57(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_57(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1056,7 +1056,7 @@ bool X86Architecture::Table_sse5a_57(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 58
  * invalid
 **/
-bool X86Architecture::Table_sse5a_58(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_58(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1065,7 +1065,7 @@ bool X86Architecture::Table_sse5a_58(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 59
  * invalid
 **/
-bool X86Architecture::Table_sse5a_59(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_59(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1074,7 +1074,7 @@ bool X86Architecture::Table_sse5a_59(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1083,7 +1083,7 @@ bool X86Architecture::Table_sse5a_5a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1092,7 +1092,7 @@ bool X86Architecture::Table_sse5a_5b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1101,7 +1101,7 @@ bool X86Architecture::Table_sse5a_5c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1110,7 +1110,7 @@ bool X86Architecture::Table_sse5a_5d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1119,7 +1119,7 @@ bool X86Architecture::Table_sse5a_5e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 5f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_5f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_5f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1128,7 +1128,7 @@ bool X86Architecture::Table_sse5a_5f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 60
  * invalid
 **/
-bool X86Architecture::Table_sse5a_60(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_60(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1137,7 +1137,7 @@ bool X86Architecture::Table_sse5a_60(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 61
  * invalid
 **/
-bool X86Architecture::Table_sse5a_61(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_61(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1146,7 +1146,7 @@ bool X86Architecture::Table_sse5a_61(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 62
  * invalid
 **/
-bool X86Architecture::Table_sse5a_62(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_62(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1155,7 +1155,7 @@ bool X86Architecture::Table_sse5a_62(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 63
  * invalid
 **/
-bool X86Architecture::Table_sse5a_63(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_63(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1164,7 +1164,7 @@ bool X86Architecture::Table_sse5a_63(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 64
  * invalid
 **/
-bool X86Architecture::Table_sse5a_64(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_64(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1173,7 +1173,7 @@ bool X86Architecture::Table_sse5a_64(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 65
  * invalid
 **/
-bool X86Architecture::Table_sse5a_65(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_65(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1182,7 +1182,7 @@ bool X86Architecture::Table_sse5a_65(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 66
  * invalid
 **/
-bool X86Architecture::Table_sse5a_66(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_66(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1191,7 +1191,7 @@ bool X86Architecture::Table_sse5a_66(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 67
  * invalid
 **/
-bool X86Architecture::Table_sse5a_67(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_67(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1200,7 +1200,7 @@ bool X86Architecture::Table_sse5a_67(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 68
  * invalid
 **/
-bool X86Architecture::Table_sse5a_68(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_68(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1209,7 +1209,7 @@ bool X86Architecture::Table_sse5a_68(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 69
  * invalid
 **/
-bool X86Architecture::Table_sse5a_69(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_69(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1218,7 +1218,7 @@ bool X86Architecture::Table_sse5a_69(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1227,7 +1227,7 @@ bool X86Architecture::Table_sse5a_6a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1236,7 +1236,7 @@ bool X86Architecture::Table_sse5a_6b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1245,7 +1245,7 @@ bool X86Architecture::Table_sse5a_6c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1254,7 +1254,7 @@ bool X86Architecture::Table_sse5a_6d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1263,7 +1263,7 @@ bool X86Architecture::Table_sse5a_6e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 6f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_6f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_6f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1272,7 +1272,7 @@ bool X86Architecture::Table_sse5a_6f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 70
  * invalid
 **/
-bool X86Architecture::Table_sse5a_70(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_70(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1281,7 +1281,7 @@ bool X86Architecture::Table_sse5a_70(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 71
  * invalid
 **/
-bool X86Architecture::Table_sse5a_71(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_71(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1290,7 +1290,7 @@ bool X86Architecture::Table_sse5a_71(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 72
  * invalid
 **/
-bool X86Architecture::Table_sse5a_72(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_72(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1299,7 +1299,7 @@ bool X86Architecture::Table_sse5a_72(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 73
  * invalid
 **/
-bool X86Architecture::Table_sse5a_73(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_73(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1308,7 +1308,7 @@ bool X86Architecture::Table_sse5a_73(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 74
  * invalid
 **/
-bool X86Architecture::Table_sse5a_74(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_74(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1317,7 +1317,7 @@ bool X86Architecture::Table_sse5a_74(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 75
  * invalid
 **/
-bool X86Architecture::Table_sse5a_75(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_75(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1326,7 +1326,7 @@ bool X86Architecture::Table_sse5a_75(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 76
  * invalid
 **/
-bool X86Architecture::Table_sse5a_76(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_76(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1335,7 +1335,7 @@ bool X86Architecture::Table_sse5a_76(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 77
  * invalid
 **/
-bool X86Architecture::Table_sse5a_77(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_77(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1344,7 +1344,7 @@ bool X86Architecture::Table_sse5a_77(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 78
  * invalid
 **/
-bool X86Architecture::Table_sse5a_78(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_78(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1353,7 +1353,7 @@ bool X86Architecture::Table_sse5a_78(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 79
  * invalid
 **/
-bool X86Architecture::Table_sse5a_79(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_79(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1362,7 +1362,7 @@ bool X86Architecture::Table_sse5a_79(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1371,7 +1371,7 @@ bool X86Architecture::Table_sse5a_7a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1380,7 +1380,7 @@ bool X86Architecture::Table_sse5a_7b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1389,7 +1389,7 @@ bool X86Architecture::Table_sse5a_7c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1398,7 +1398,7 @@ bool X86Architecture::Table_sse5a_7d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1407,7 +1407,7 @@ bool X86Architecture::Table_sse5a_7e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 7f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_7f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_7f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1416,7 +1416,7 @@ bool X86Architecture::Table_sse5a_7f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 80
  * invalid
 **/
-bool X86Architecture::Table_sse5a_80(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_80(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1425,7 +1425,7 @@ bool X86Architecture::Table_sse5a_80(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 81
  * invalid
 **/
-bool X86Architecture::Table_sse5a_81(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_81(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1434,7 +1434,7 @@ bool X86Architecture::Table_sse5a_81(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 82
  * invalid
 **/
-bool X86Architecture::Table_sse5a_82(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_82(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1443,7 +1443,7 @@ bool X86Architecture::Table_sse5a_82(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 83
  * invalid
 **/
-bool X86Architecture::Table_sse5a_83(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_83(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1452,7 +1452,7 @@ bool X86Architecture::Table_sse5a_83(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 84
  * invalid
 **/
-bool X86Architecture::Table_sse5a_84(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_84(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1461,7 +1461,7 @@ bool X86Architecture::Table_sse5a_84(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 85
  * invalid
 **/
-bool X86Architecture::Table_sse5a_85(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_85(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1470,7 +1470,7 @@ bool X86Architecture::Table_sse5a_85(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 86
  * invalid
 **/
-bool X86Architecture::Table_sse5a_86(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_86(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1479,7 +1479,7 @@ bool X86Architecture::Table_sse5a_86(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 87
  * invalid
 **/
-bool X86Architecture::Table_sse5a_87(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_87(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1488,7 +1488,7 @@ bool X86Architecture::Table_sse5a_87(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 88
  * invalid
 **/
-bool X86Architecture::Table_sse5a_88(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_88(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1497,7 +1497,7 @@ bool X86Architecture::Table_sse5a_88(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 89
  * invalid
 **/
-bool X86Architecture::Table_sse5a_89(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_89(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1506,7 +1506,7 @@ bool X86Architecture::Table_sse5a_89(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1515,7 +1515,7 @@ bool X86Architecture::Table_sse5a_8a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1524,7 +1524,7 @@ bool X86Architecture::Table_sse5a_8b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1533,7 +1533,7 @@ bool X86Architecture::Table_sse5a_8c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1542,7 +1542,7 @@ bool X86Architecture::Table_sse5a_8d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1551,7 +1551,7 @@ bool X86Architecture::Table_sse5a_8e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 8f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_8f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_8f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1560,7 +1560,7 @@ bool X86Architecture::Table_sse5a_8f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 90
  * invalid
 **/
-bool X86Architecture::Table_sse5a_90(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_90(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1569,7 +1569,7 @@ bool X86Architecture::Table_sse5a_90(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 91
  * invalid
 **/
-bool X86Architecture::Table_sse5a_91(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_91(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1578,7 +1578,7 @@ bool X86Architecture::Table_sse5a_91(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 92
  * invalid
 **/
-bool X86Architecture::Table_sse5a_92(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_92(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1587,7 +1587,7 @@ bool X86Architecture::Table_sse5a_92(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 93
  * invalid
 **/
-bool X86Architecture::Table_sse5a_93(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_93(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1596,7 +1596,7 @@ bool X86Architecture::Table_sse5a_93(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 94
  * invalid
 **/
-bool X86Architecture::Table_sse5a_94(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_94(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1605,7 +1605,7 @@ bool X86Architecture::Table_sse5a_94(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 95
  * invalid
 **/
-bool X86Architecture::Table_sse5a_95(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_95(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1614,7 +1614,7 @@ bool X86Architecture::Table_sse5a_95(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 96
  * invalid
 **/
-bool X86Architecture::Table_sse5a_96(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_96(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1623,7 +1623,7 @@ bool X86Architecture::Table_sse5a_96(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 97
  * invalid
 **/
-bool X86Architecture::Table_sse5a_97(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_97(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1632,7 +1632,7 @@ bool X86Architecture::Table_sse5a_97(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 98
  * invalid
 **/
-bool X86Architecture::Table_sse5a_98(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_98(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1641,7 +1641,7 @@ bool X86Architecture::Table_sse5a_98(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 99
  * invalid
 **/
-bool X86Architecture::Table_sse5a_99(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_99(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1650,7 +1650,7 @@ bool X86Architecture::Table_sse5a_99(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9a
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9a(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1659,7 +1659,7 @@ bool X86Architecture::Table_sse5a_9a(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9b
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9b(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9b(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1668,7 +1668,7 @@ bool X86Architecture::Table_sse5a_9b(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9c
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9c(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1677,7 +1677,7 @@ bool X86Architecture::Table_sse5a_9c(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9d
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9d(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1686,7 +1686,7 @@ bool X86Architecture::Table_sse5a_9d(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9e
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9e(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1695,7 +1695,7 @@ bool X86Architecture::Table_sse5a_9e(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: 9f
  * invalid
 **/
-bool X86Architecture::Table_sse5a_9f(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_9f(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1704,7 +1704,7 @@ bool X86Architecture::Table_sse5a_9f(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1713,7 +1713,7 @@ bool X86Architecture::Table_sse5a_a0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1722,7 +1722,7 @@ bool X86Architecture::Table_sse5a_a1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1731,7 +1731,7 @@ bool X86Architecture::Table_sse5a_a2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1740,7 +1740,7 @@ bool X86Architecture::Table_sse5a_a3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1749,7 +1749,7 @@ bool X86Architecture::Table_sse5a_a4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1758,7 +1758,7 @@ bool X86Architecture::Table_sse5a_a5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1767,7 +1767,7 @@ bool X86Architecture::Table_sse5a_a6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1776,7 +1776,7 @@ bool X86Architecture::Table_sse5a_a7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1785,7 +1785,7 @@ bool X86Architecture::Table_sse5a_a8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: a9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_a9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_a9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1794,7 +1794,7 @@ bool X86Architecture::Table_sse5a_a9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: aa
  * invalid
 **/
-bool X86Architecture::Table_sse5a_aa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_aa(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1803,7 +1803,7 @@ bool X86Architecture::Table_sse5a_aa(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ab
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ab(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ab(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1812,7 +1812,7 @@ bool X86Architecture::Table_sse5a_ab(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ac
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ac(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ac(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1821,7 +1821,7 @@ bool X86Architecture::Table_sse5a_ac(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ad
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ad(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ad(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1830,7 +1830,7 @@ bool X86Architecture::Table_sse5a_ad(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ae
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ae(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ae(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1839,7 +1839,7 @@ bool X86Architecture::Table_sse5a_ae(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: af
  * invalid
 **/
-bool X86Architecture::Table_sse5a_af(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_af(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1848,7 +1848,7 @@ bool X86Architecture::Table_sse5a_af(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1857,7 +1857,7 @@ bool X86Architecture::Table_sse5a_b0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1866,7 +1866,7 @@ bool X86Architecture::Table_sse5a_b1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1875,7 +1875,7 @@ bool X86Architecture::Table_sse5a_b2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1884,7 +1884,7 @@ bool X86Architecture::Table_sse5a_b3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1893,7 +1893,7 @@ bool X86Architecture::Table_sse5a_b4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1902,7 +1902,7 @@ bool X86Architecture::Table_sse5a_b5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1911,7 +1911,7 @@ bool X86Architecture::Table_sse5a_b6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1920,7 +1920,7 @@ bool X86Architecture::Table_sse5a_b7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1929,7 +1929,7 @@ bool X86Architecture::Table_sse5a_b8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: b9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_b9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_b9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1938,7 +1938,7 @@ bool X86Architecture::Table_sse5a_b9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ba
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ba(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ba(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1947,7 +1947,7 @@ bool X86Architecture::Table_sse5a_ba(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: bb
  * invalid
 **/
-bool X86Architecture::Table_sse5a_bb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_bb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1956,7 +1956,7 @@ bool X86Architecture::Table_sse5a_bb(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: bc
  * invalid
 **/
-bool X86Architecture::Table_sse5a_bc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_bc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1965,7 +1965,7 @@ bool X86Architecture::Table_sse5a_bc(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: bd
  * invalid
 **/
-bool X86Architecture::Table_sse5a_bd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_bd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1974,7 +1974,7 @@ bool X86Architecture::Table_sse5a_bd(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: be
  * invalid
 **/
-bool X86Architecture::Table_sse5a_be(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_be(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1983,7 +1983,7 @@ bool X86Architecture::Table_sse5a_be(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: bf
  * invalid
 **/
-bool X86Architecture::Table_sse5a_bf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_bf(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -1992,7 +1992,7 @@ bool X86Architecture::Table_sse5a_bf(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2001,7 +2001,7 @@ bool X86Architecture::Table_sse5a_c0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2010,7 +2010,7 @@ bool X86Architecture::Table_sse5a_c1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2019,7 +2019,7 @@ bool X86Architecture::Table_sse5a_c2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2028,7 +2028,7 @@ bool X86Architecture::Table_sse5a_c3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2037,7 +2037,7 @@ bool X86Architecture::Table_sse5a_c4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2046,7 +2046,7 @@ bool X86Architecture::Table_sse5a_c5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2055,7 +2055,7 @@ bool X86Architecture::Table_sse5a_c6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2064,7 +2064,7 @@ bool X86Architecture::Table_sse5a_c7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2073,7 +2073,7 @@ bool X86Architecture::Table_sse5a_c8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: c9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_c9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_c9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2082,7 +2082,7 @@ bool X86Architecture::Table_sse5a_c9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ca
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ca(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ca(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2091,7 +2091,7 @@ bool X86Architecture::Table_sse5a_ca(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: cb
  * invalid
 **/
-bool X86Architecture::Table_sse5a_cb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_cb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2100,7 +2100,7 @@ bool X86Architecture::Table_sse5a_cb(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: cc
  * invalid
 **/
-bool X86Architecture::Table_sse5a_cc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_cc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2109,7 +2109,7 @@ bool X86Architecture::Table_sse5a_cc(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: cd
  * invalid
 **/
-bool X86Architecture::Table_sse5a_cd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_cd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2118,7 +2118,7 @@ bool X86Architecture::Table_sse5a_cd(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ce
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ce(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ce(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2127,7 +2127,7 @@ bool X86Architecture::Table_sse5a_ce(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: cf
  * invalid
 **/
-bool X86Architecture::Table_sse5a_cf(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_cf(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2136,7 +2136,7 @@ bool X86Architecture::Table_sse5a_cf(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2145,7 +2145,7 @@ bool X86Architecture::Table_sse5a_d0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2154,7 +2154,7 @@ bool X86Architecture::Table_sse5a_d1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2163,7 +2163,7 @@ bool X86Architecture::Table_sse5a_d2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2172,7 +2172,7 @@ bool X86Architecture::Table_sse5a_d3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2181,7 +2181,7 @@ bool X86Architecture::Table_sse5a_d4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2190,7 +2190,7 @@ bool X86Architecture::Table_sse5a_d5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2199,7 +2199,7 @@ bool X86Architecture::Table_sse5a_d6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2208,7 +2208,7 @@ bool X86Architecture::Table_sse5a_d7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2217,7 +2217,7 @@ bool X86Architecture::Table_sse5a_d8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: d9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_d9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_d9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2226,7 +2226,7 @@ bool X86Architecture::Table_sse5a_d9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: da
  * invalid
 **/
-bool X86Architecture::Table_sse5a_da(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_da(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2235,7 +2235,7 @@ bool X86Architecture::Table_sse5a_da(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: db
  * invalid
 **/
-bool X86Architecture::Table_sse5a_db(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_db(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2244,7 +2244,7 @@ bool X86Architecture::Table_sse5a_db(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: dc
  * invalid
 **/
-bool X86Architecture::Table_sse5a_dc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_dc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2253,7 +2253,7 @@ bool X86Architecture::Table_sse5a_dc(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: dd
  * invalid
 **/
-bool X86Architecture::Table_sse5a_dd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_dd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2262,7 +2262,7 @@ bool X86Architecture::Table_sse5a_dd(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: de
  * invalid
 **/
-bool X86Architecture::Table_sse5a_de(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_de(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2271,7 +2271,7 @@ bool X86Architecture::Table_sse5a_de(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: df
  * invalid
 **/
-bool X86Architecture::Table_sse5a_df(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_df(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2280,7 +2280,7 @@ bool X86Architecture::Table_sse5a_df(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2289,7 +2289,7 @@ bool X86Architecture::Table_sse5a_e0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2298,7 +2298,7 @@ bool X86Architecture::Table_sse5a_e1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2307,7 +2307,7 @@ bool X86Architecture::Table_sse5a_e2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2316,7 +2316,7 @@ bool X86Architecture::Table_sse5a_e3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2325,7 +2325,7 @@ bool X86Architecture::Table_sse5a_e4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2334,7 +2334,7 @@ bool X86Architecture::Table_sse5a_e5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2343,7 +2343,7 @@ bool X86Architecture::Table_sse5a_e6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2352,7 +2352,7 @@ bool X86Architecture::Table_sse5a_e7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2361,7 +2361,7 @@ bool X86Architecture::Table_sse5a_e8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: e9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_e9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_e9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2370,7 +2370,7 @@ bool X86Architecture::Table_sse5a_e9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ea
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ea(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ea(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2379,7 +2379,7 @@ bool X86Architecture::Table_sse5a_ea(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: eb
  * invalid
 **/
-bool X86Architecture::Table_sse5a_eb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_eb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2388,7 +2388,7 @@ bool X86Architecture::Table_sse5a_eb(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ec
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ec(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ec(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2397,7 +2397,7 @@ bool X86Architecture::Table_sse5a_ec(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ed
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ed(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ed(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2406,7 +2406,7 @@ bool X86Architecture::Table_sse5a_ed(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ee
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ee(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ee(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2415,7 +2415,7 @@ bool X86Architecture::Table_sse5a_ee(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ef
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ef(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ef(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2424,7 +2424,7 @@ bool X86Architecture::Table_sse5a_ef(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f0
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f0(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2433,7 +2433,7 @@ bool X86Architecture::Table_sse5a_f0(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f1
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f1(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2442,7 +2442,7 @@ bool X86Architecture::Table_sse5a_f1(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f2
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f2(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2451,7 +2451,7 @@ bool X86Architecture::Table_sse5a_f2(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f3
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f3(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2460,7 +2460,7 @@ bool X86Architecture::Table_sse5a_f3(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f4
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f4(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2469,7 +2469,7 @@ bool X86Architecture::Table_sse5a_f4(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f5
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f5(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2478,7 +2478,7 @@ bool X86Architecture::Table_sse5a_f5(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f6
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f6(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2487,7 +2487,7 @@ bool X86Architecture::Table_sse5a_f6(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f7
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f7(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2496,7 +2496,7 @@ bool X86Architecture::Table_sse5a_f7(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f8
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f8(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2505,7 +2505,7 @@ bool X86Architecture::Table_sse5a_f8(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: f9
  * invalid
 **/
-bool X86Architecture::Table_sse5a_f9(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_f9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2514,7 +2514,7 @@ bool X86Architecture::Table_sse5a_f9(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: fa
  * invalid
 **/
-bool X86Architecture::Table_sse5a_fa(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_fa(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2523,7 +2523,7 @@ bool X86Architecture::Table_sse5a_fa(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: fb
  * invalid
 **/
-bool X86Architecture::Table_sse5a_fb(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_fb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2532,7 +2532,7 @@ bool X86Architecture::Table_sse5a_fb(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: fc
  * invalid
 **/
-bool X86Architecture::Table_sse5a_fc(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_fc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2541,7 +2541,7 @@ bool X86Architecture::Table_sse5a_fc(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: fd
  * invalid
 **/
-bool X86Architecture::Table_sse5a_fd(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_fd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2550,7 +2550,7 @@ bool X86Architecture::Table_sse5a_fd(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: fe
  * invalid
 **/
-bool X86Architecture::Table_sse5a_fe(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_fe(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }
@@ -2559,7 +2559,7 @@ bool X86Architecture::Table_sse5a_fe(BinaryStream const& rBinStrm, TOffset Offse
  * opcode: ff
  * invalid
 **/
-bool X86Architecture::Table_sse5a_ff(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Table_sse5a_ff(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     return false; /* INVALID */
 }

@@ -43,7 +43,7 @@ public:
   {}
 
   u16 GetType(void)   const { return m_Type;   }
-  u16 GetLength(void) const { return m_Length; }
+  u16 GetSize(void) const { return m_Length; }
 
 private:
   u16 m_Type;
@@ -153,7 +153,7 @@ private:
   std::string         m_CurrentText;
   Mark::List          m_CurrentMarks;
   std::set<u16>       m_CurrentOperandsOffset;
-  u16                 m_CurrentCommentOffset;
+  u16                 m_CurrentCommenOffsetType;
 
   std::list<LineData> m_Lines;
   u16                 m_Width;

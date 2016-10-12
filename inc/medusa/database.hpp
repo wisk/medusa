@@ -47,7 +47,7 @@ public:
 
   // BinaryStream
   Database& SetBinaryStream(BinaryStream::SPType spBinStrm);
-  BinaryStream::SPType const GetBinaryStream(void) const;
+  BinaryStream& GetBinaryStream(void);
 
   // Architecture
   virtual bool RegisterArchitectureTag(Tag ArchitectureTag) = 0;
@@ -59,15 +59,18 @@ public:
   std::string GetOperatingSystemName(void) const;
 
   // MemoryArea
-  virtual bool AddMemoryArea(MemoryArea* pMemArea) = 0;
-  //virtual RemoveMemoryArea // not implemented
-  //virtual MoveMemoryArea // not implemented
+  virtual bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const = 0;
   virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const = 0;
+  virtual bool AddMemoryArea(MemoryArea const& rMemArea) = 0;
+  virtual bool RemoveMemoryArea(MemoryArea const& rMemArea) = 0;
+  virtual bool MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress) = 0;
 
-  virtual MemoryArea const* GetMemoryArea(Address const& rAddress) const = 0;
-  virtual bool              SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, SetArchitectureModeType SetArchMode) = 0;
+  virtual bool SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, SetArchitectureModeType SetArchMode) = 0;
 
   // Address
+  virtual bool GetImageBase(ImageBaseType& rImageBase) const = 0;
+  virtual bool SetImageBase(ImageBaseType ImageBase) = 0;
+  virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const = 0;
   virtual bool GetFirstAddress(Address& rAddress) const = 0;
   virtual bool GetLastAddress(Address& rAddress)  const = 0;
   virtual bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
@@ -93,16 +96,15 @@ public:
   virtual bool HasCrossReferenceTo(Address const& rFrom) const = 0;
   virtual bool GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const = 0;
 
-  // MultiCell
-  virtual bool AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell) = 0;
-  virtual bool RemoveMultiCell(Address const& rAddress) = 0;
-
-  virtual bool GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const = 0;
-
   // Cell (data)
-  virtual bool GetCellData(Address const& rAddress, CellData& rCellData) = 0;
+  virtual bool GetCellData(Address const& rAddress, CellData& rCellData) const = 0;
   virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force) = 0;
   virtual bool DeleteCellData(Address const& rAddress) = 0;
+
+  // MultiCell
+  virtual MultiCell::SPType GetMultiCell(Address const& rAddress) const = 0;
+  virtual bool              SetMultiCell(Address const& rAddress, MultiCell::SPType spMultiCell) = 0;
+  virtual bool              DeleteMultiCell(Address const& rAddress) = 0;
 
   // Comment
   virtual bool GetComment(Address const& rAddress, std::string& rComment) const = 0;
