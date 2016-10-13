@@ -186,8 +186,8 @@ namespace soci
         Address BaseAddress;
         type_conversion<Address>::from_base(val, ind, BaseAddress);
         rMemArea = MemoryArea::CreateVirtual(
-          val.get<std::string>("name"), static_cast<MemoryArea::Access>(val.get<int>("access")),
-          BaseAddress, val.get<int>("size"),
+          val.get<std::string>("name"),     static_cast<MemoryArea::Access>(val.get<int>("access")),
+          BaseAddress,                      val.get<long long>("size"),
           val.get<int>("architecture_tag"), val.get<int>("architecture_mode")
         );
         rMemArea.SetId(val.get<int>("id"));
@@ -199,10 +199,10 @@ namespace soci
         Address BaseAddress;
         type_conversion<Address>::from_base(val, ind, BaseAddress);
         rMemArea = MemoryArea::CreateMapped(
-          val.get<std::string>("name"), static_cast<MemoryArea::Access>(val.get<int>("access")),
-          val.get<long long>("file_offset"), val.get<int>("file_size"),
-          BaseAddress, val.get<int>("size"),
-          val.get<int>("architecture_tag"), val.get<int>("architecture_mode")
+          val.get<std::string>("name"),      static_cast<MemoryArea::Access>(val.get<int>("access")),
+          val.get<long long>("file_offset"), val.get<long long>("file_size"),
+          BaseAddress,                       val.get<long long>("size"),
+          val.get<int>("architecture_tag"),  val.get<int>("architecture_mode")
         );
         rMemArea.SetId(val.get<int>("id"));
         return;
@@ -211,9 +211,9 @@ namespace soci
       case MemoryArea::PhysicalType:
       {
         rMemArea = MemoryArea::CreatePhysical(
-          val.get<std::string>("name"), static_cast<MemoryArea::Access>(val.get<int>("access")),
-          val.get<int>("file_offset"), val.get<int>("file_size"),
-          val.get<int>("architecture_tag"), val.get<int>("architecture_mode")
+          val.get<std::string>("name"),      static_cast<MemoryArea::Access>(val.get<int>("access")),
+          val.get<long long>("file_offset"), val.get<long long>("file_size"),
+          val.get<int>("architecture_tag"),  val.get<int>("architecture_mode")
         );
         rMemArea.SetId(val.get<int>("id"));
         return;

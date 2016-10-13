@@ -96,6 +96,8 @@ public:
     MemArea.m_Type = PhysicalType;
     MemArea.m_FileOffset = FileOffset;
     MemArea.m_FileSize = FileSize;
+    MemArea.m_BaseAddress = Address(Address::PhysicalType, 0xffff, FileOffset);
+    MemArea.m_Size = FileSize;
     return MemArea;
   }
 

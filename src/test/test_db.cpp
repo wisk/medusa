@@ -5,8 +5,14 @@
 #include <medusa/database.hpp>
 #include <medusa/module.hpp>
 
-TEST_CASE("load", "[db_soci]") {
+TEST_CASE("load", "[db_soci]")
+{
     INFO("Testing SOCI database");
+
+    medusa::Log::SetLog([](std::string const& rMsg)
+    {
+      INFO("log: " << rMsg.c_str());
+    });
 
     auto& rModMgr = medusa::ModuleManager::Instance();
     rModMgr.LoadDatabases(".");
@@ -62,10 +68,10 @@ TEST_CASE("load", "[db_soci]") {
     INFO("Comment");
     std::string Cmt0, Cmt1;
     CHECK(!spSociDb->GetComment(BaseAddr, Cmt0));
-    CHECK(spSociDb->SetComment(BaseAddr, "test \\o/"));
-    CHECK(spSociDb->GetComment(BaseAddr, Cmt0));
-    CHECK(spSociDb->SetComment(BaseAddr, "test /o\\"));
-    CHECK(spSociDb->GetComment(BaseAddr, Cmt1));
+    CHECK( spSociDb->SetComment(BaseAddr, "test \\o/"));
+    CHECK( spSociDb->GetComment(BaseAddr, Cmt0));
+    CHECK( spSociDb->SetComment(BaseAddr, "test /o\\"));
+    CHECK( spSociDb->GetComment(BaseAddr, Cmt1));
     CHECK(Cmt0 != Cmt1);
     CHECK(Cmt0 == "test \\o/");
     CHECK(Cmt1 == "test /o\\");
@@ -87,6 +93,16 @@ TEST_CASE("load", "[db_soci]") {
     CHECK(spSociDb->GetLastAddress(LastAddr));
     INFO("First address: " << FirstAddr.ToString());
     INFO("Last address: " << LastAddr.ToString());
+
+    medusa::Address PrevAddr, NextAddr;
+    CHECK(spSociDb->MoveAddress(BaseAddr + 15, PrevAddr, -1));
+    CHECK(spSociDb->MoveAddress(BaseAddr + 15, NextAddr,  1));
+    CHECK(PrevAddr == (BaseAddr + 10));
+    CHECK(NextAddr == (BaseAddr + 20));
+    INFO("Next address: " << PrevAddr.ToString());
+    INFO("Previous address: " << NextAddr.ToString());
+
+
 }
 
 //TEST_CASE("all database modules", "[db_*]") {
