@@ -21,7 +21,7 @@ Address::Address(std::string const& rAddrName)
     {
     case 'p': m_Type = PhysicalType;     break;
     case 'a': m_Type = ArchitectureType; break;
-    case 'v': m_Type = VirtualType;      break;
+    case 'e': m_Type = LinearType;       break;
     case 'r': m_Type = RelativeType;     break;
     case 'l': m_Type = LogicalType;      break;
     }
@@ -56,7 +56,7 @@ std::string Address::Dump(void) const
   {
   case PhysicalType:     TypeChr = 'p'; break;
   case ArchitectureType: TypeChr = 'a'; break;
-  case VirtualType:      TypeChr = 'v'; break;
+  case LinearType:       TypeChr = 'e'; break;
   case RelativeType:     TypeChr = 'r'; break;
   case LogicalType:      TypeChr = 'l'; break;
   default:                          break;
@@ -67,7 +67,7 @@ std::string Address::Dump(void) const
 
   oss << "addr(" << TypeChr << " ";
 
-  if (m_Type != VirtualType && m_Type != UnknownType)
+  if (m_Type == LogicalType)
     oss << std::setw(m_BaseSize / 4) << m_Base << ":";
 
   oss << std::setw(m_OffsetSize / 4) << m_Offset << ")";

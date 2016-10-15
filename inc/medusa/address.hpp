@@ -86,7 +86,7 @@ public:
   {}
 
   Address(OffsetType Offset)
-    : m_Type(VirtualType)
+    : m_Type(LinearType)
     , m_Base(0x0)
     , m_Offset(Offset)
     , m_BaseSize(16)
