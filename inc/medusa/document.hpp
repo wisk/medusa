@@ -102,6 +102,10 @@ public:
 
   void Connect(u32 Type, Subscriber* pSubscriber);
 
+  // Image base
+  virtual bool GetImageBase(ImageBaseType& rImageBase) const;
+  virtual bool SetImageBase(ImageBaseType ImageBase);
+
   // Memory Area
   bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const;
   void ForEachMemoryArea(Database::MemoryAreaCallback Callback) const;

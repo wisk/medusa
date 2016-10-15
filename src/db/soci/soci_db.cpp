@@ -486,6 +486,42 @@ bool SociDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag,
   return false;
 }
 
+bool SociDatabase::GetImageBase(ImageBaseType& rImageBase) const
+{
+  try
+  {
+    soci::statement Stmt = (m_Session.prepare << "SELECT value FROM ImageBase", soci::into(rImageBase));
+    if (!Stmt.execute(true))
+      return false;
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
+bool SociDatabase::SetImageBase(ImageBaseType ImageBase)
+{
+  try
+  {
+    m_Session << "DELETE FROM ImageBase";
+    m_Session <<
+      "INSERT INTO ImageBase (value) "
+      "VALUES(:value)"
+      , soci::use(ImageBase);
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
 bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) const
 {
   std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
@@ -651,42 +687,6 @@ bool SociDatabase::MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBa
   return false;
 }
 
-bool SociDatabase::GetImageBase(ImageBaseType& rImageBase) const
-{
-  try
-  {
-    soci::statement Stmt = (m_Session.prepare << "SELECT value FROM ImageBase", soci::into(rImageBase));
-    if (!Stmt.execute(true))
-      return false;
-  }
-  catch (std::exception const& rErr)
-  {
-    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
-    return false;
-  }
-
-  return true;
-}
-
-bool SociDatabase::SetImageBase(ImageBaseType ImageBase)
-{
-  try
-  {
-    m_Session << "DELETE FROM ImageBase";
-    m_Session <<
-      "INSERT INTO ImageBase (value) "
-      "VALUES(:value)"
-      , soci::use(ImageBase);
-  }
-  catch (std::exception const& rErr)
-  {
-    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
-    return false;
-  }
-
-  return true;
-}
-
 // Implemented possibilities:
 // - Logical Address → Virtual Address → (Relative Address → Physical address)
 // - (Physical Address → Relative Address) → Virtual Address → Logical Address (might not normalized)
@@ -698,23 +698,23 @@ bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToCon
   switch (rAddress.GetAddressingType())
   {
   case Address::PhysicalType:
-    if (ToConvert != Address::VirtualType || ToConvert != Address::RelativeType)
+    if (ToConvert != Address::LinearType || ToConvert != Address::RelativeType)
       break;
 
     break;
 
-  case Address::VirtualType:
+  case Address::LinearType:
     if (ToConvert != Address::RelativeType || ToConvert != Address::PhysicalType)
       break;
     break;
 
   case Address::RelativeType:
-    if (ToConvert != Address::VirtualType || ToConvert != Address::PhysicalType)
+    if (ToConvert != Address::LinearType || ToConvert != Address::PhysicalType)
       break;
     break;
 
   case Address::LogicalType:
-    if (ToConvert != Address::VirtualType || ToConvert != Address::RelativeType || ToConvert != Address::PhysicalType)
+    if (ToConvert != Address::LinearType || ToConvert != Address::RelativeType || ToConvert != Address::PhysicalType)
       break;
     break;
 

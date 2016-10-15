@@ -217,7 +217,7 @@ bool ArmArchitecture::ARMCpuContext::GetAddress(CpuContext::AddressKind AddrKind
   switch (AddrKind)
   {
     case AddressExecution:
-      rAddr = Address(Address::VirtualType, 0, m_Context.Registers[15], 0, 32);
+      rAddr = Address(Address::LinearType, 0, m_Context.Registers[15], 0, 32);
       return true;
 
     default:

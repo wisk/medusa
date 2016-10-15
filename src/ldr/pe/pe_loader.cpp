@@ -218,7 +218,7 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     << ", Number of section: " << NumOfScn
     << LogEnd;
 
-  Address EpAddr(Address::VirtualType, 0x0, EpOff, 0x10, bit);
+  Address EpAddr(Address::LinearType, 0x0, EpOff, 0x10, bit);
   rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported));
 
   _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
@@ -252,7 +252,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   rDoc.AddMemoryArea(MemoryArea::CreateMapped(
     "hdr", MemoryArea::Read | MemoryArea::Write,
     0x0, HdrLen,
-    Address(Address::VirtualType, 0x0, ImageBase, 0x10, bit), HdrLen,
+    Address(Address::LinearType, 0x0, ImageBase, 0x10, bit), HdrLen,
     ArchTag, ArchMode
     ));
 
@@ -288,7 +288,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     rDoc.AddMemoryArea(MemoryArea::CreateMapped(
       ScnName, Flags,
       ScnHdr.PointerToRawData, ScnHdr.SizeOfRawData,
-      Address(Address::VirtualType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
+      Address(Address::LinearType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
       ArchTag, ArchMode
       ));
 
@@ -338,8 +338,8 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     Log::Write("ldr_pe") << "found import: " << ImpName << LogEnd;
 
     // For each thunks (imported symbol) ...
-    std::string       FuncName;
-    OffsetType           OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
+    std::string  FuncName;
+    OffsetType   OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
       ThunkRva = CurImp.FirstThunk,
       FuncOff;
     typename PeType::ThunkData CurOrgThunk, CurThunk, EndThunk = { 0 };
@@ -405,7 +405,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
         SymName += ThunkName;
       }
 
-      Address SymAddr(Address::VirtualType, 0x0, ImageBase + ThunkRva, 0, bit);
+      Address SymAddr(Address::LinearType, 0x0, ImageBase + ThunkRva, 0, bit);
       ThunkRva += sizeof(typename PeType::ThunkData);
       Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
@@ -493,7 +493,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     else
       SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
 
-    Address SymAddr(Address::VirtualType, 0x0, ImageBase + FuncRva, 0x10, bit);
+    Address SymAddr(Address::LinearType, 0x0, ImageBase + FuncRva, 0x10, bit);
     rDoc.AddLabel(
       SymAddr,
        // We assume we only export function which is definitely false,

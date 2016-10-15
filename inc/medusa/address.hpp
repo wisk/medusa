@@ -29,7 +29,7 @@ public:
     UnknownType,      //! Used only in case of error or default
     PhysicalType,     //! Physical type or offset
     ArchitectureType, //! Relies on architecture to convert address (e.g. segmented address, mirror address, ...)
-    VirtualType,      //! Used for protected mode (same as linear address)
+    LinearType,       //! Used for protected mode
     RelativeType,     //! Relative to a image base (RVA)
     LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
   } Type;

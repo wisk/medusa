@@ -240,13 +240,13 @@ TEST_CASE("push pop", "[expr]")
 
   SymbolicVisitor SymVst(Document(), X86_32_Mode);
 
-  SymVst.UpdateAddress(*pX86Disasm, Address(Address::VirtualType, 0x0, 0x0, 16, 32));
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LinearType, 0x0, 0x0, 16, 32));
   for (auto const& rspExpr : PushFF)
   {
     rspExpr->Visit(&SymVst);
   }
 
-  SymVst.UpdateAddress(*pX86Disasm, Address(Address::VirtualType, 0x0, 0x2, 16, 32));
+  SymVst.UpdateAddress(*pX86Disasm, Address(Address::LinearType, 0x0, 0x2, 16, 32));
   for (auto const& rspExpr : PopEax)
   {
     rspExpr->Visit(&SymVst);

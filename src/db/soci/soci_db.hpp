@@ -289,6 +289,10 @@ public:
 
   virtual bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode);
 
+  // Image base
+  virtual bool GetImageBase(ImageBaseType& rImageBase) const;
+  virtual bool SetImageBase(ImageBaseType ImageBase);
+
   // MemoryArea
   virtual bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const;
   virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const;
@@ -298,8 +302,6 @@ public:
 
 
   // Address
-  virtual bool GetImageBase(ImageBaseType& rImageBase) const;
-  virtual bool SetImageBase(ImageBaseType ImageBase);
   virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
   virtual bool GetFirstAddress(Address& rAddress) const;
   virtual bool GetLastAddress(Address& rAddress) const;

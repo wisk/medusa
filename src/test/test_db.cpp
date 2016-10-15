@@ -23,7 +23,7 @@ TEST_CASE("load", "[db_soci]")
 
     REQUIRE(spSociDb->Create(TempBaseFile, true));
 
-    medusa::Address BaseAddr(medusa::Address::VirtualType, 0x7fffffffffULL);
+    medusa::Address BaseAddr(medusa::Address::LinearType, 0x7fffffffffULL);
 
     INFO("Memory area");
     CHECK(spSociDb->AddMemoryArea(medusa::MemoryArea::CreateVirtual("virtual", medusa::MemoryArea::Read,
@@ -64,6 +64,10 @@ TEST_CASE("load", "[db_soci]")
     CHECK(spSociDb->GetLabelAddress(DummyLbl, LblAddr));
     CHECK(Lbl == DummyLbl);
     CHECK(BaseAddr == LblAddr);
+    spSociDb->ForEachLabel([&](medusa::Address const& rAddr, medusa::Label const& rLbl)
+    {
+      INFO("label: " << rAddr.ToString() << ": " << rLbl.GetName());
+    });
 
     INFO("Comment");
     std::string Cmt0, Cmt1;

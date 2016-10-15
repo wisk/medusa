@@ -80,6 +80,16 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
     pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
 }
 
+bool Document::GetImageBase(ImageBaseType & rImageBase) const
+{
+  return false;
+}
+
+bool Document::SetImageBase(ImageBaseType ImageBase)
+{
+  return false;
+}
+
 bool Document::GetMemoryArea(Address const& rAddr, MemoryArea& rMemArea) const
 {
   if (m_spDatabase == nullptr) {

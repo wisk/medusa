@@ -38,12 +38,12 @@ bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
     "mem", MemoryArea::Read | MemoryArea::Write | MemoryArea::Execute,
     0x0, 0x200,
-    Address(Address::VirtualType, 0x0, AddressOffset, 16, 16), 0x200,
+    Address(Address::LinearType, 0x0, AddressOffset, 16, 16), 0x200,
     (*itArchX86)->GetTag(), (*itArchX86)->GetModeByName("16-bit")
   )))
     return false;
 
-  if (!rDoc.AddLabel(Address(Address::VirtualType, 0x0, AddressOffset, 16, 16), Label("start", Label::Code | Label::Global)))
+  if (!rDoc.AddLabel(Address(Address::LinearType, 0x0, AddressOffset, 16, 16), Label("start", Label::Code | Label::Global)))
     return false;
   return true;
 }

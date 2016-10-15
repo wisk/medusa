@@ -15,7 +15,7 @@ bool RawLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   return rDoc.AddMemoryArea(MemoryArea::CreateMapped(
     "raw", MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
     0x0, rDoc.GetBinaryStream().GetSize(),
-    Address(Address::VirtualType, 0x0), rDoc.GetBinaryStream().GetSize()
+    Address(Address::LinearType, 0x0), rDoc.GetBinaryStream().GetSize()
     ));
 }
 

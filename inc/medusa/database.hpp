@@ -58,6 +58,10 @@ public:
   Database& SetOperatingSystemName(std::string const& rOperatingSystemName);
   std::string GetOperatingSystemName(void) const;
 
+  // Image base
+  virtual bool GetImageBase(ImageBaseType& rImageBase) const = 0;
+  virtual bool SetImageBase(ImageBaseType ImageBase) = 0;
+
   // MemoryArea
   virtual bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const = 0;
   virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const = 0;
@@ -68,8 +72,6 @@ public:
   virtual bool SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, SetArchitectureModeType SetArchMode) = 0;
 
   // Address
-  virtual bool GetImageBase(ImageBaseType& rImageBase) const = 0;
-  virtual bool SetImageBase(ImageBaseType ImageBase) = 0;
   virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const = 0;
   virtual bool GetFirstAddress(Address& rAddress) const = 0;
   virtual bool GetLastAddress(Address& rAddress)  const = 0;

@@ -189,7 +189,7 @@ void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
       m_EntryPoint = m_TextSectionVMAddr + m_EntryPoint;
     }
   }
-  rDoc.AddLabel(Address(Address::VirtualType, 0x0, m_EntryPoint, 0x10, bit),
+  rDoc.AddLabel(Address(Address::LinearType, 0x0, m_EntryPoint, 0x10, bit),
     Label("start", Label::Code | Label::Exported));
 }
 
@@ -251,7 +251,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
     if ((Section.flags & SECTION_TYPE) == S_ZEROFILL) {
       Res = rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
         FullSectionName, MemAreaFlags,
-        Address(Address::VirtualType, 0x0, Section.addr, 16, bit),
+        Address(Address::LinearType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
         ArchTag, ArchMode
         ));
@@ -260,7 +260,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
         FullSectionName, MemAreaFlags,
         Section.offset,
         static_cast<u32>(Section.size),
-        Address(Address::VirtualType, 0x0, Section.addr, 16, bit),
+        Address(Address::LinearType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
         ArchTag, ArchMode
         ));
@@ -454,7 +454,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     }
 
     rDoc.AddLabel(
-      Address(Address::VirtualType, 0x0, ImpAddr, 0x10, bit),
+      Address(Address::LinearType, 0x0, ImpAddr, 0x10, bit),
       Label(SymName, Label::Imported | Label::Data));
   }
 }

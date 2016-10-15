@@ -99,12 +99,12 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     }
   }
 
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF0, 12, 12), Label("ADC_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF2, 12, 12), Label("TIMER_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF4, 12, 12), Label("PORTB_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFF6, 12, 12), Label("PORTA_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFFC, 12, 12), Label("NMI_vec", Label::Code | Label::Global));
-  rDoc.AddLabel(Address(Address::VirtualType, 0x000, 0xFFE, 12, 12), Label("RESET_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF0, 12, 12), Label("ADC_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF2, 12, 12), Label("TIMER_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF4, 12, 12), Label("PORTB_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF6, 12, 12), Label("PORTA_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFFC, 12, 12), Label("NMI_vec", Label::Code | Label::Global));
+  rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFFE, 12, 12), Label("RESET_vec", Label::Code | Label::Global));
 
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x80, 16, 8), Label("X", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x81, 16, 8), Label("Y", Label::Data | Label::Global));

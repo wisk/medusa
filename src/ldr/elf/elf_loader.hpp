@@ -99,7 +99,7 @@ private:
         return; // FIXME: We should continue anyway...
       }
 
-      rDoc.AddLabel(Address(Address::VirtualType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
+      rDoc.AddLabel(Address(Address::LinearType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
 
       ElfType::EndianSwap(ShStrShdr, Endianness);
 
@@ -209,7 +209,7 @@ private:
         rDoc.AddMemoryArea(MemoryArea::CreateMapped(
           pShName, MemAreaFlags,
           0x0,  static_cast<u32>(rShdr.sh_size),
-          Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
+          Address(Address::LinearType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
           ArchTag, ArchMode
           ));
       }
@@ -246,7 +246,7 @@ private:
           {
             rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
               pShName, MemAreaFlags,
-              Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
+              Address(Address::LinearType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               ArchMode, ArchMode
               ));
           }
@@ -255,7 +255,7 @@ private:
             rDoc.AddMemoryArea(MemoryArea::CreateMapped(
               pShName, MemAreaFlags,
               rShdr.sh_offset, static_cast<u32>(rShdr.sh_size),
-              Address(Address::VirtualType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
+              Address(Address::LinearType, 0x0, rShdr.sh_addr, 16, bit), static_cast<u32>(rShdr.sh_size),
               ArchTag, ArchMode
               ));
           }
@@ -282,7 +282,7 @@ private:
           rDoc.AddMemoryArea(MemoryArea::CreateMapped(
                 ShName.str(), MemAreaFlags,
                 rPhdr.p_offset, static_cast<u32>(rPhdr.p_filesz),
-                Address(Address::VirtualType, 0x0, rPhdr.p_vaddr, 16, bit), static_cast<u32>(rPhdr.p_memsz),
+                Address(Address::LinearType, 0x0, rPhdr.p_vaddr, 16, bit), static_cast<u32>(rPhdr.p_memsz),
                 ArchTag, ArchMode
                 ));
         }
@@ -341,10 +341,10 @@ private:
         OffsetType JmpRelTblOff  = 0x0;
         OffsetType DynStrOff     = 0x0;
         OffsetType RelaTblOff    = 0x0;
-        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, SymTbl),    SymTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, JmpRelTbl), JmpRelTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, DynStr),    DynStrOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::VirtualType, 0x0, RelaTbl),   RelaTblOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, SymTbl),    SymTblOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, DynStr),    DynStrOff);
+        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl),   RelaTblOff);
 
         std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
         std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
@@ -409,7 +409,7 @@ private:
                 continue;
               }
 
-              Address FuncPltAddr(Address::VirtualType, 0x0, FuncPlt, 0, bit);
+              Address FuncPltAddr(Address::LinearType, 0x0, FuncPlt, 0, bit);
 
               Log::Write("ldr_elf")
                 << "Symbol found"
@@ -418,7 +418,7 @@ private:
                 << ", name=" << upDynSymStr.get() + CurSym.st_name
                 << LogEnd;
 
-              Address FuncAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRel->r_offset), 0, bit);
+              Address FuncAddr(Address::LinearType, 0x0, static_cast<OffsetType>(pRel->r_offset), 0, bit);
               std::string FuncName(upDynSymStr.get() + CurSym.st_name); // NOTE: st_name was checked before
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
@@ -474,7 +474,7 @@ private:
                 << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
                 << LogEnd;
 
-              Address FuncAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
+              Address FuncAddr(Address::LinearType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
               std::string FuncName(upDynSymStr.get() + CurSym.st_name);
 
               rDoc.ChangeValueSize(FuncAddr, bit, true);
@@ -512,7 +512,7 @@ private:
               << ", name=" << upDynSymStr.get() + CurSym.st_name // NOTE: st_name was already checked
               << LogEnd;
 
-            Address SymAddr(Address::VirtualType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
+            Address SymAddr(Address::LinearType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
             std::string SymName(upDynSymStr.get() + CurSym.st_name);
 
             // TODO: Use ELFXX_ST_TYPE instead
