@@ -794,6 +794,11 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
       , soci::use(Id), soci::use(Offset);
     if (m_Session.got_data())
       Offset -= CellOffset;
+    else
+    {
+      CellOffset = 0;
+      CellSize = 0;
+    }
 
     // Forward
     if (Displacement > 0)
@@ -841,17 +846,17 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
 
           // Get the last offset
           m_Session <<
-            "SELECT memory_area_offset "
-            "FROM CellLayout "
-            "WHERE :memory_area_id == memory_area_id "
-            "ORDER BY memory_area_offset DESC LIMIT 1"
+            "SELECT size "
+            "FROM MemoryArea "
+            "WHERE :id == id "
             , soci::into(Offset)
             , soci::use(Id);
-          if (!m_Session.got_data())
+          if (!m_Session.got_data() || Offset == 0x0)
           {
-            Log::Write("db_soci").Level(LogError) << "failed to get last offset from cell layout" << LogEnd;
+            Log::Write("db_soci").Level(LogError) << "failed to find memory area size for id: " << Id << LogEnd;
             return false;
           }
+          --Offset;
         }
 
         m_Session <<
