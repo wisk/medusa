@@ -11,23 +11,18 @@ Address::Address(std::string const& rAddrName)
   boost::algorithm::trim(AddrStr);
   m_Base       = 0;
   m_Offset     = 0;
-  m_BaseSize   = 0;
-  m_OffsetSize = static_cast<u8>(AddrStr.length() * 4);
-  m_Type       = UnknownType;
+  m_BaseSize   = 16;
+  m_OffsetSize = 64;
+  m_Type       = DefaultType;
 
-  if (AddrStr.compare(0, 5, "addr(") == 0)
+  switch (AddrStr[0])
   {
-    switch (AddrStr[5])
-    {
-    case 'p': m_Type = PhysicalType;     break;
-    case 'a': m_Type = ArchitectureType; break;
-    case 'e': m_Type = LinearType;       break;
-    case 'r': m_Type = RelativeType;     break;
-    case 'l': m_Type = LogicalType;      break;
-    }
-    AddrStr.erase(std::begin(AddrStr),   std::begin(AddrStr) + 7); // erase ^addr(?\s
-    AddrStr.erase(std::end(AddrStr) - 1, std::end(AddrStr)      ); // erase )$
+  case '*': m_Type = PhysicalType;     break;
+  case '+': m_Type = ArchitectureType; break;
+  default:                             break;
   }
+  if (m_Type != DefaultType)
+    AddrStr.erase(std::begin(AddrStr), std::begin(AddrStr) + 1);
 
   if (AddrStr.compare(0, 2, "0x") == 0)
     AddrStr.erase(std::begin(AddrStr), std::begin(AddrStr) + 2); // erase 0x
@@ -49,31 +44,6 @@ Address::Address(std::string const& rAddrName)
   issOffset >> std::hex >> m_Offset;
 }
 
-std::string Address::Dump(void) const
-{
-  char TypeChr = '?';
-  switch (m_Type)
-  {
-  case PhysicalType:     TypeChr = 'p'; break;
-  case ArchitectureType: TypeChr = 'a'; break;
-  case LinearType:       TypeChr = 'e'; break;
-  case RelativeType:     TypeChr = 'r'; break;
-  case LogicalType:      TypeChr = 'l'; break;
-  default:                          break;
-  }
-  std::ostringstream oss;
-
-  oss << std::hex << std::noshowbase << std::setfill('0');
-
-  oss << "addr(" << TypeChr << " ";
-
-  if (m_Type == LogicalType)
-    oss << std::setw(m_BaseSize / 4) << m_Base << ":";
-
-  oss << std::setw(m_OffsetSize / 4) << m_Offset << ")";
-  return oss.str();
-}
-
 std::string Address::ToString(void) const
 {
   std::ostringstream oss;
@@ -83,10 +53,10 @@ std::string Address::ToString(void) const
   switch (m_Type)
   {
   case PhysicalType:
-    oss << "phys:";
+    oss << "*";
     break;
   case RelativeType:
-    oss << "rva:";
+    oss << "+";
     break;
   case LogicalType:
       oss << std::setw(m_BaseSize / 4) << m_Base << ":";
@@ -130,8 +100,8 @@ bool Address::IsBetween(u64 Size, OffsetType Off) const
 
 bool Address::IsBetween(u64 Size, Address const& Addr) const
 {
-  //if (m_Type != Addr.m_Type)
-  //  return false;
+  if (m_Type != Addr.m_Type)
+    return false;
   if (Addr.m_Type != Address::UnknownType && Addr.m_Base != m_Base)
     return false;
   return Addr.m_Offset >= m_Offset && Addr.m_Offset < m_Offset + Size;

@@ -19,9 +19,11 @@ bool SociDatabase::_CreateTable(void)
   try
   {
     m_Session << "CREATE TABLE IF NOT EXISTS BinaryStream("
-      "size INTEGER, buffer TEXT)";
+      "data BLOB, endianness INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS Architecture(architecture_tag INTEGER)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS DefaultAddressingType(value INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS ImageBase(value BIGINT)";
 
@@ -324,6 +326,20 @@ bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
   try
   {
     m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
+
+    // TODO(wisk): redesign this
+    soci::blob DataBinStrm(m_Session);
+    u32 Endianness;
+
+    m_Session <<
+      "SELECT data, endianness "
+      "FROM BinaryStream "
+      , soci::into(DataBinStrm), soci::into(Endianness);
+
+    auto DataSize = static_cast<u32>(DataBinStrm.get_len());
+    std::unique_ptr<u8[]> upBuf(new u8[DataSize]);
+    m_spBinStrm = std::make_shared<MemoryBinaryStream>(upBuf.get(), DataSize);
+    m_spBinStrm->SetEndianness(static_cast<EEndianness>(Endianness));
   }
   catch (std::exception const &e)
   {
@@ -384,6 +400,7 @@ bool SociDatabase::Close(void)
 {
   try
   {
+    // TODO(wisk): save binary stream
     m_Session.close();
   }
   catch (std::exception const &e)
@@ -687,41 +704,191 @@ bool SociDatabase::MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBa
   return false;
 }
 
+bool SociDatabase::GetDefaultAddressingType(Address::Type& rAddressType) const
+{
+  try
+  {
+    u32 Value;
+    m_Session.prepare <<
+      "SELECT value "
+      "FROM DefaultAddressingType"
+      , soci::into(Value);
+    if (!m_Session.got_data())
+      return false;
+    rAddressType = static_cast<Address::Type>(Value);
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
+bool SociDatabase::SetDefaultAddressingType(Address::Type AddressType)
+{
+  try
+  {
+    m_Session << "DELETE FROM DefaultAddressingType";
+    m_Session <<
+      "INSERT INTO DefaultAddressingType (value) "
+      "VALUES(:value)"
+      , soci::use(static_cast<int>(AddressType));
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
 // Implemented possibilities:
-// - Logical Address → Virtual Address → (Relative Address → Physical address)
+// - Logical Address → Virtual Address → (Relative Address → Physical address) WIP
 // - (Physical Address → Relative Address) → Virtual Address → Logical Address (might not normalized)
 // - Architecture Address → ? (depends on architecture)
 // - ? → Architecture Address (might not be normalized)
 // See document.hpp Document::Translate
 bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const
 {
-  switch (rAddress.GetAddressingType())
+  try
   {
-  case Address::PhysicalType:
-    if (ToConvert != Address::LinearType || ToConvert != Address::RelativeType)
+    switch (rAddress.GetAddressingType())
+    {
+    case Address::PhysicalType:
+    {
+      Address BaseAddr;
+      OffsetType FileOffset;
+      m_Session <<
+        "SELECT addressing_type, base, offset, base_size, offset_size "
+        "FROM MemoryArea "
+        "WHERE :file_offset >= file_offset AND :file_offset < (file_offset + file_size)"
+        , soci::into(BaseAddr)
+        , soci::use(rAddress.GetOffset());
+      if (!m_Session.got_data())
+        return false;
+      m_Session <<
+        "SELECT file_offset "
+        "FROM MemoryArea "
+        "WHERE :file_offset >= file_offset AND :file_offset < (file_offset + file_size)"
+        , soci::into(FileOffset)
+        , soci::use(rAddress.GetOffset());
+      if (!m_Session.got_data())
+        return false;
+      rTranslatedAddress = Address(
+        BaseAddr.GetAddressingType(),
+        BaseAddr.GetBase(), rAddress.GetOffset() - FileOffset + BaseAddr.GetOffset(),
+        BaseAddr.GetBaseSize(), rAddress.GetOffsetSize()
+      );
+      if (ToConvert != rTranslatedAddress.GetAddressingType())
+        return TranslateAddress(rTranslatedAddress, ToConvert, rTranslatedAddress);
+    }
       break;
 
-    break;
+    case Address::LinearType:
+      switch (ToConvert)
+      {
+      case Address::PhysicalType:
+      {
+        OffsetType Offset, FileOffset;
+        m_Session <<
+          "SELECT offset, file_offset "
+          "FROM MemoryArea "
+          "WHERE :addressing_type == addressing_type AND :offset >= offset AND :offset < (offset + size)"
+          , soci::into(Offset)
+          , soci::use(static_cast<u32>(rAddress.GetAddressingType())), soci::use(rAddress.GetOffset());
+        if (!m_Session.got_data())
+          return false;
+        rTranslatedAddress = Address(
+          Address::PhysicalType,
+          0x0, rAddress.GetOffset() - Offset + FileOffset,
+          0x0, 64);
+        break;
+      }
 
-  case Address::LinearType:
-    if (ToConvert != Address::RelativeType || ToConvert != Address::PhysicalType)
+      case Address::RelativeType:
+      {
+        ImageBaseType ImgBase;
+        if (!GetImageBase(ImgBase))
+          return false;
+        if (rAddress.GetOffset() < ImgBase)
+          return false;
+        rTranslatedAddress = Address(
+          Address::RelativeType,
+          0x0, rAddress.GetOffset() - ImgBase,
+          0x0, rAddress.GetOffsetSize()
+        );
+        break;
+      }
+
+      case Address::LogicalType: // TODO(wisk):
+
+      default:
+        Log::Write("db_soci").Level(LogError) << "unknown addressing type" << LogEnd;
+        return false;
+      }
       break;
-    break;
 
-  case Address::RelativeType:
-    if (ToConvert != Address::LinearType || ToConvert != Address::PhysicalType)
+    case Address::RelativeType:
+      switch (ToConvert)
+      {
+      case Address::PhysicalType:
+      {
+        OffsetType Offset, FileOffset;
+        m_Session <<
+          "SELECT offset, file_offset "
+          "FROM MemoryArea "
+          "WHERE :addressing_type == addressing_type AND :offset >= offset AND :offset < (offset + size)"
+          , soci::into(Offset), soci::into(FileOffset)
+          , soci::use(static_cast<u32>(rAddress.GetAddressingType())), soci::use(rAddress.GetOffset());
+        if (!m_Session.got_data())
+          return false;
+        rTranslatedAddress = Address(
+          Address::PhysicalType,
+          0x0, rAddress.GetOffset() - Offset + FileOffset,
+          0x0, 64);
+        break;
+      }
+
+      case Address::LinearType:
+      {
+        ImageBaseType ImgBase;
+        if (!GetImageBase(ImgBase))
+          return false;
+        rTranslatedAddress = Address(
+          Address::LinearType,
+          0x0, ImgBase + rAddress.GetOffset(),
+          0x0, rAddress.GetOffsetSize()
+        );
+        if (rTranslatedAddress.GetAddressingType() != ToConvert)
+          return TranslateAddress(rTranslatedAddress, ToConvert, rTranslatedAddress);
+        break;
+      }
+
+      default:
+        Log::Write("db_soci").Level(LogError) << "unknown addressing type" << LogEnd;
+        return false;
+      }
       break;
-    break;
 
-  case Address::LogicalType:
-    if (ToConvert != Address::LinearType || ToConvert != Address::RelativeType || ToConvert != Address::PhysicalType)
+    case Address::LogicalType: // TODO(wisk):
+      return false;
       break;
-    break;
 
-  default:
-    break;
+    default:
+      Log::Write("db_soci").Level(LogError) << "unknown addressing type" << LogEnd;
+      return false;
+    }
   }
-  return false;
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << "failed to translate address: " << rAddress << ": " << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
 }
 
 bool SociDatabase::GetFirstAddress(Address &rAddress) const
@@ -1005,7 +1172,6 @@ bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
 void SociDatabase::ForEachLabel(LabelCallback Callback)
 {
   std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
-  Address Address;
   Label Label;
 
   try
@@ -1014,26 +1180,30 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
       "SELECT * "
       "FROM Label");
 
+    /*
+      "CREATE TABLE IF NOT EXISTS Label("
+      "name TEXT, type INTEGER, version INTEGER,"
+      "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    */
     for (auto it = rowset.begin(); it != rowset.end(); ++it)
     {
       soci::row const &row = *it;
 
-      int AddressingType = row.get<int>(0);
-      auto Base = row.get<int>(1);
-      auto Offset = row.get<int64_t>(2);
-      auto BaseSize = row.get<int>(3);
-      auto OffsetSize = row.get<int>(4);
+      Label.SetName(row.get<std::string>(0));
+      Label.SetType(row.get<int>(1));
+      Label.SetVersion(row.get<int>(2));
 
-      Label.SetType(row.get<int>(6));
-      Label.SetVersion(row.get<int>(7));
-      Label.SetName(row.get<std::string>(5));
+      auto Id     = static_cast<u32>(row.get<int>(3));
+      auto Offset = static_cast<OffsetType>(row.get<long long>(4));
 
-      Address.SetAddressingType(static_cast<medusa::Address::Type>(AddressingType));
-      Address.SetBase(Base);
-      Address.SetOffset(Offset);
-      Address.SetBaseSize(BaseSize);
-      Address.SetOffsetSize(OffsetSize);
-      Callback(Address, Label);
+      Address Addr;
+      if (!_ConvertIdToAddress(Id, Offset, Addr))
+      {
+        Log::Write("db_soci").Level(LogError) << "failed to convert address label: " << Label.GetName() << LogEnd;
+        continue;
+      }
+
+      Callback(Addr, Label);
     }
   }
   catch (std::exception const& rErr)

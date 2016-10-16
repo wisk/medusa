@@ -72,6 +72,8 @@ public:
   virtual bool SetArchitecture(Address const& rAddress, Tag TagArch, u8 Mode, SetArchitectureModeType SetArchMode) = 0;
 
   // Address
+  virtual bool GetDefaultAddressingType(Address::Type& rAddressType) const = 0;
+  virtual bool SetDefaultAddressingType(Address::Type AddressType) = 0;
   virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const = 0;
   virtual bool GetFirstAddress(Address& rAddress) const = 0;
   virtual bool GetLastAddress(Address& rAddress)  const = 0;

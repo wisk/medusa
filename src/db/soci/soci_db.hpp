@@ -34,30 +34,6 @@ MEDUSA_NAMESPACE_USE
 namespace soci
 {
   template<>
-  struct type_conversion<BinaryStream>
-  {
-    typedef values base_type;
-
-    static void from_base(values const& val, indicator ind, BinaryStream& rBinaryStream)
-    {
-      if (ind == i_null)
-      {
-        throw soci_error("BinaryStream: null value not allowed for this type");
-      }
-
-      rBinaryStream.SetEndianness(val.get<EEndianness>("endianness"));
-    }
-
-    static void to_base(BinaryStream const& rBinaryStream, values& val, indicator& ind)
-    {
-      //      val.set("path", rBinaryStream.GetPath());
-      val.set("size", rBinaryStream.GetSize());
-      val.set("sha1", rBinaryStream.GetSha1());
-      ind = i_ok;
-    }
-  };
-
-  template<>
   struct type_conversion<Address>
   {
     typedef values base_type;
@@ -302,6 +278,8 @@ public:
 
 
   // Address
+  virtual bool GetDefaultAddressingType(Address::Type& rAddressType) const;
+  virtual bool SetDefaultAddressingType(Address::Type AddressType);
   virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
   virtual bool GetFirstAddress(Address& rAddress) const;
   virtual bool GetLastAddress(Address& rAddress) const;

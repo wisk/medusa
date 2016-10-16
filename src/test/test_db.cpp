@@ -31,7 +31,7 @@ TEST_CASE("load", "[db_soci]")
     )));
     medusa::MemoryArea DummyMemArea;
     CHECK(spSociDb->GetMemoryArea(BaseAddr, DummyMemArea));
-    INFO(DummyMemArea.Dump());
+    INFO(DummyMemArea.ToString());
     CHECK(DummyMemArea.GetBaseAddress() == BaseAddr);
     auto MappedMemArea = medusa::MemoryArea::CreateMapped(
       "mapped", medusa::MemoryArea::Execute | medusa::MemoryArea::Read,
@@ -106,7 +106,14 @@ TEST_CASE("load", "[db_soci]")
     INFO("Next address: " << PrevAddr.ToString());
     INFO("Previous address: " << NextAddr.ToString());
 
+    medusa::Address PhysAddr;
+    CHECK(spSociDb->TranslateAddress(medusa::Address(medusa::Address::RelativeType, 0x1005), medusa::Address::PhysicalType, PhysAddr));
+    CHECK(PhysAddr.GetOffset() == 0x5);
+    medusa::Address LinAddr;
+    CHECK(spSociDb->TranslateAddress(PhysAddr, medusa::Address::LinearType, LinAddr));
+    CHECK(LinAddr.GetOffset() == (ImgBase + 0x1000 + 0x5));
 
+    INFO("done");
 }
 
 //TEST_CASE("all database modules", "[db_*]") {

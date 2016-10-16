@@ -105,6 +105,16 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
 
 bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
+  if (!rDoc.SetImageBase(m_ImageBase))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to set image base: " << m_ImageBase << LogEnd;
+    return false;
+  }
+  if (!rDoc.SetDefaultAddressingType(Address::LinearType))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to set the default address type" << LogEnd;
+    return false;
+  }
   switch (m_Magic)
   {
   case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs, m_ImageBase); break;
@@ -218,15 +228,18 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     << ", Number of section: " << NumOfScn
     << LogEnd;
 
-  Address EpAddr(Address::LinearType, 0x0, EpOff, 0x10, bit);
-  rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported));
-
   _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
   _ResolveImports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IMPORT].VirtualAddress,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
   _ResolveExports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+
+  Address EpAddr(Address::LinearType, 0x0, EpOff, 0x10, bit);
+  if (!rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported)))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to add label start" << LogEnd;
+  }
 }
 
 template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment)
@@ -249,12 +262,16 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   // ref: https://code.google.com/p/corkami/wiki/PE#SizeOfHeaders
   auto HdrLen = std::min<u32>(0x1000, rBinStrm.GetSize());
 
-  rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+  if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
     "hdr", MemoryArea::Read | MemoryArea::Write,
     0x0, HdrLen,
     Address(Address::LinearType, 0x0, ImageBase, 0x10, bit), HdrLen,
     ArchTag, ArchMode
-    ));
+  )))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to add memory area" << LogEnd;
+    return;
+  }
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
@@ -285,12 +302,16 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     if (ScnHdr.Characteristics & PE_SCN_MEM_WRITE)
       Flags |= MemoryArea::Write;
 
-    rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+    if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
       ScnName, Flags,
       ScnHdr.PointerToRawData, ScnHdr.SizeOfRawData,
       Address(Address::LinearType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
       ArchTag, ArchMode
-      ));
+    )))
+    {
+      Log::Write("ldr_pe").Level(LogError) << "failed to add memory area: " << ScnName << LogEnd;
+      continue;
+    }
 
     Log::Write("ldr_pe") << "found section " << ScnName << LogEnd;
   }

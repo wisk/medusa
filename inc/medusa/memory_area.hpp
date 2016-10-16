@@ -101,7 +101,6 @@ public:
     return MemArea;
   }
 
-  std::string Dump(void) const;
   std::string ToString(void) const;
 
   // Information methods

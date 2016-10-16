@@ -212,6 +212,8 @@ public:
 
   // Address
 
+  bool GetDefaultAddressingType(Address::Type& rAddressType) const;
+  bool SetDefaultAddressingType(Address::Type AddressType);
           /*! This method makes an Address.
            *  \param Base is the base address.
            *  \param Offset is the offset address.

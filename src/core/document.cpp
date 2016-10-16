@@ -80,21 +80,24 @@ void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
     pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
 }
 
-bool Document::GetImageBase(ImageBaseType & rImageBase) const
+bool Document::GetImageBase(ImageBaseType& rImageBase) const
 {
-  return false;
+  if (m_spDatabase == nullptr)
+    return false;
+  return m_spDatabase->GetImageBase(rImageBase);
 }
 
 bool Document::SetImageBase(ImageBaseType ImageBase)
 {
-  return false;
+  if (m_spDatabase == nullptr)
+    return false;
+  return m_spDatabase->SetImageBase(ImageBase);
 }
 
 bool Document::GetMemoryArea(Address const& rAddr, MemoryArea& rMemArea) const
 {
-  if (m_spDatabase == nullptr) {
+  if (m_spDatabase == nullptr)
     return nullptr;
-  }
   return m_spDatabase->GetMemoryArea(rAddr, rMemArea);
 }
 
@@ -696,11 +699,27 @@ bool Document::UnbindDetailId(Address const& rAddress, u8 Index)
   return m_spDatabase->UnbindDetailId(rAddress, Index);
 }
 
+bool Document::GetDefaultAddressingType(Address::Type& rAddressType) const
+{
+  if (m_spDatabase == nullptr)
+    return false;
+  return m_spDatabase->GetDefaultAddressingType(rAddressType);
+}
+
+bool Document::SetDefaultAddressingType(Address::Type AddressType)
+{
+  if (m_spDatabase == nullptr)
+    return false;
+  return m_spDatabase->SetDefaultAddressingType(AddressType);
+}
+
 Address Document::MakeAddress(BaseType Base, OffsetType Offset) const
 {
-  // FIXME(wisk):
   MemoryArea MemArea;
-  if (!GetMemoryArea(Address(Base, Offset), MemArea))
+  Address::Type AddrType;
+  if (!GetDefaultAddressingType(AddrType))
+    return false;
+  if (!GetMemoryArea(Address(AddrType, Base, Offset), MemArea))
     return Address();
   Address Addr;
   Addr.SetOffset(Offset);
@@ -751,8 +770,11 @@ bool Document::ConvertAddressToFileOffset(Address const& rAddr, OffsetType& rFil
   if (m_spDatabase == nullptr)
     return false;
 
-  // FIXME(wisk):
-  return false;
+  Address PhysAddr;
+  if (!m_spDatabase->TranslateAddress(rAddr, Address::PhysicalType, PhysAddr))
+    return false;
+  rFileOffset = PhysAddr.GetOffset();
+  return true;
 }
 
 bool Document::ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const
@@ -942,7 +964,7 @@ bool Document::AddMemoryArea(MemoryArea const& rMemArea)
     return false;
   if (!m_spDatabase->AddMemoryArea(rMemArea))
   {
-    Log::Write("core") << "unable to add memory area: " << rMemArea.Dump() << LogEnd;
+    Log::Write("core") << "unable to add memory area: " << rMemArea.ToString() << LogEnd;
     return false;
   }
   m_MemoryAreaUpdatedSignal(rMemArea, false);
@@ -955,7 +977,7 @@ bool Document::RemoveMemoryArea(MemoryArea const& rMemArea)
     return false;
   if (!m_spDatabase->RemoveMemoryArea(rMemArea))
   {
-    Log::Write("core") << "unable to remove memory area: " << rMemArea.Dump() << LogEnd;
+    Log::Write("core") << "unable to remove memory area: " << rMemArea.ToString() << LogEnd;
     return false;
   }
   m_MemoryAreaUpdatedSignal(rMemArea, false);
@@ -968,7 +990,7 @@ bool Document::MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAd
     return false;
   if (!m_spDatabase->MoveMemoryArea(rMemArea, rBaseAddress))
   {
-    Log::Write("core") << "unable to move memory area: " << rMemArea.Dump() << LogEnd;
+    Log::Write("core") << "unable to move memory area: " << rMemArea.ToString() << LogEnd;
     return false;
   }
   m_MemoryAreaUpdatedSignal(rMemArea, false);

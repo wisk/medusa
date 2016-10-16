@@ -31,20 +31,6 @@ void MemoryArea::SetDefaultArchitectureMode(u8 Mode)
   m_DefaultArchitectureMode = Mode;
 }
 
-std::string MemoryArea::Dump(void) const
-{
-  char Buf[4];
-  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
-  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
-  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
-  Buf[3] = '\0';
-
-  std::ostringstream oss;
-  oss << std::hex << std::showbase;
-  oss << "ma(m " << m_Name << " " << m_FileOffset << " " << m_FileSize << " " << m_BaseAddress.Dump() << " " << m_Size << " " << Buf << ")";
-  return oss.str();
-}
-
 std::string MemoryArea::ToString(void) const
 {
   char Buf[4];

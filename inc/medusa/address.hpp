@@ -27,6 +27,7 @@ public:
   typedef enum
   {
     UnknownType,      //! Used only in case of error or default
+    DefaultType,      //! Defined by the loader
     PhysicalType,     //! Physical type or offset
     ArchitectureType, //! Relies on architecture to convert address (e.g. segmented address, mirror address, ...)
     LinearType,       //! Used for protected mode
@@ -86,7 +87,7 @@ public:
   {}
 
   Address(OffsetType Offset)
-    : m_Type(LinearType)
+    : m_Type(DefaultType)
     , m_Base(0x0)
     , m_Offset(Offset)
     , m_BaseSize(16)
@@ -102,8 +103,6 @@ public:
     , m_BaseSize(16)
     , m_OffsetSize(64)
   {}
-
-  std::string Dump(void) const;
 
   //! This method converts the current address to a string.
   std::string ToString(void) const;
