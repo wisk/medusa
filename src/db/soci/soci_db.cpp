@@ -797,7 +797,7 @@ bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToCon
           "SELECT offset, file_offset "
           "FROM MemoryArea "
           "WHERE :addressing_type == addressing_type AND :offset >= offset AND :offset < (offset + size)"
-          , soci::into(Offset)
+          , soci::into(Offset), soci::into(FileOffset)
           , soci::use(static_cast<u32>(rAddress.GetAddressingType())), soci::use(rAddress.GetOffset());
         if (!m_Session.got_data())
           return false;
