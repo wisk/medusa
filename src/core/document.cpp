@@ -771,7 +771,7 @@ bool Document::ConvertAddressToFileOffset(Address const& rAddr, OffsetType& rFil
     return false;
 
   Address PhysAddr;
-  if (!m_spDatabase->TranslateAddress(rAddr, Address::PhysicalType, PhysAddr))
+  if (!TranslateAddress(rAddr, Address::PhysicalType, PhysAddr))
     return false;
   rFileOffset = PhysAddr.GetOffset();
   return true;
@@ -806,6 +806,18 @@ bool Document::TranslateAddress(Address const& rAddress, Address::Type ToConvert
   {
   case Address::UnknownType:
     return false;
+
+  case Address::DefaultType:
+  {
+    Address::Type AddrType;
+    if (!m_spDatabase->GetDefaultAddressingType(AddrType))
+      return false;
+    return TranslateAddress(Address(
+      static_cast<Address::Type>(AddrType),
+      rAddress.GetBase(), rAddress.GetOffset(),
+      rAddress.GetBaseSize(), rAddress.GetOffsetSize()),
+      ToConvert, rTranslatedAddress);
+  }
 
   case Address::ArchitectureType:
   {
@@ -888,10 +900,12 @@ Tag Document::GetArchitectureTag(Address const& rAddress) const
 {
   Tag ArchTag = MEDUSA_ARCH_UNK;
 
-  auto const spCell = GetCell(rAddress);
-  if (spCell != nullptr)
+  if (m_spDatabase == nullptr)
+    return false;
+  CellData CD;
+  if (m_spDatabase->GetCellData(rAddress, CD))
   {
-    ArchTag = spCell->GetArchitectureTag();
+    ArchTag = CD.GetArchitectureTag();
     if (ArchTag != MEDUSA_ARCH_UNK) {
       return ArchTag;
     }

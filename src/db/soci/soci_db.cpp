@@ -153,26 +153,26 @@ bool SociDatabase::_ConvertAddressToId(Address const& rAddress, u32& rId, Offset
     if (rAddress.GetAddressingType() == Address::PhysicalType)
     {
       OffsetType MemoryAreaOffset;
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT id, file_offset "
-        "FROM MemoryArea AS ma "
-        "WHERE :type == ma.addressing_type AND :offset >= ma.file_offset AND :offset < (ma.file_offset + file_size)"
+        "FROM MemoryArea "
+        "WHERE :type == addressing_type AND :offset >= file_offset AND :offset < (file_offset + file_size)"
         , soci::into(rId), soci::into(MemoryAreaOffset)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
       rOffset = rAddress.GetOffset() - MemoryAreaOffset;
     }
     else
     {
       OffsetType MemoryAreaOffset;
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT id, offset "
-        "FROM MemoryArea AS ma "
-        "WHERE :addressing_type == ma.addressing_type AND :base == ma.base AND :offset >= ma.offset AND :offset < (ma.offset + ma.size)"
+        "FROM MemoryArea "
+        "WHERE :addressing_type == addressing_type AND :base == base AND :offset >= offset AND :offset < (offset + size)"
         , soci::into(rId), soci::into(MemoryAreaOffset)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
       rOffset = rAddress.GetOffset() - MemoryAreaOffset;
     }
@@ -193,25 +193,25 @@ bool SociDatabase::_ConvertAddressToId(Address const& rAddress, u32& rId, Offset
   {
     if (rAddress.GetAddressingType() == Address::PhysicalType)
     {
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT id, file_offset, file_size "
-        "FROM MemoryArea AS ma "
-        "WHERE :type == ma.addressing_type AND :offset >= ma.file_offset AND :offset < (ma.file_offset + file_size)"
+        "FROM MemoryArea "
+        "WHERE :type == addressing_type AND :offset >= file_offset AND :offset < (file_offset + file_size)"
         , soci::into(rId), soci::into(rMemoryAreaOffset), soci::into(rMemoryAreaSize)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
       rOffset = rAddress.GetOffset() - rMemoryAreaOffset;
     }
     else
     {
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT id, offset, size "
-        "FROM MemoryArea AS ma "
-        "WHERE :addressing_type == ma.addressing_type AND :base == ma.base AND :offset >= ma.offset AND :offset < (ma.offset + ma.size)"
+        "FROM MemoryArea "
+        "WHERE :addressing_type == addressing_type AND :base == base AND :offset >= offset AND :offset < (offset + size)"
         , soci::into(rId), soci::into(rMemoryAreaOffset), soci::into(rMemoryAreaSize)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
       rOffset = rAddress.GetOffset() - rMemoryAreaOffset;
     }
@@ -281,7 +281,7 @@ bool SociDatabase::_GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const
     m_Session <<
       "SELECT id "
       "FROM MemoryArea "
-      "WHERE :base >= base AND :offset > offset "
+      "WHERE :base >= base AND :offset >= offset "
       "ORDER BY base DESC, offset DESC LIMIT 1"
       , soci::into(rPreviousId)
       , soci::use(Base), soci::use(Offset);
@@ -327,6 +327,17 @@ bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
   {
     m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
 
+    m_Session <<
+      "PRAGMA synchronous        = OFF; "
+      "PRAGMA journal_mode       = OFF; "
+      "PRAGMA locking_mode       = EXCLUSIVE; "
+      "PRAGMA temp_store         = MEMORY; "
+      "PRAGMA count_changes      = OFF; "
+      "PRAGMA PAGE_SIZE          = 4096; "
+      "PRAGMA default_cache_size = 700000; "
+      "PRAGMA cache_size         = 700000; "
+      "PRAGMA compile_options; ";
+
     // TODO(wisk): redesign this
     soci::blob DataBinStrm(m_Session);
     u32 Endianness;
@@ -370,6 +381,16 @@ bool SociDatabase::Create(medusa::Path const &rDatabasePath, bool Force)
     }
 
     m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
+    m_Session <<
+      "PRAGMA synchronous        = OFF; "
+      "PRAGMA journal_mode       = OFF; "
+      "PRAGMA locking_mode       = EXCLUSIVE; "
+      "PRAGMA temp_store         = MEMORY; "
+      "PRAGMA count_changes      = OFF; "
+      "PRAGMA PAGE_SIZE          = 4096; "
+      "PRAGMA default_cache_size = 700000; "
+      "PRAGMA cache_size         = 700000; "
+      "PRAGMA compile_options; ";
     _CreateTable();
   }
   catch (std::exception const &e)
@@ -507,8 +528,8 @@ bool SociDatabase::GetImageBase(ImageBaseType& rImageBase) const
 {
   try
   {
-    soci::statement Stmt = (m_Session.prepare << "SELECT value FROM ImageBase", soci::into(rImageBase));
-    if (!Stmt.execute(true))
+    m_Session << "SELECT value FROM ImageBase", soci::into(rImageBase);
+    if (!m_Session.got_data())
       return false;
   }
   catch (std::exception const& rErr)
@@ -555,24 +576,24 @@ bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) 
   {
     if (rAddress.GetAddressingType() == Address::PhysicalType)
     {
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT * "
-        "FROM MemoryArea AS ma "
-        "WHERE :type == ma.addressing_type AND :offset >= ma.file_offset AND :offset < (ma.file_offset + file_size)"
+        "FROM MemoryArea "
+        "WHERE :type == addressing_type AND :offset >= file_offset AND :offset < (file_offset + file_size)"
         , soci::into(rMemArea)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
     }
     else
     {
-      soci::statement Stmt = (m_Session.prepare <<
+      m_Session <<
         "SELECT * "
-        "FROM MemoryArea AS ma "
-        "WHERE :addressing_type == ma.addressing_type AND :base == ma.base AND :offset >= ma.offset AND :offset < (ma.offset + ma.size)"
+        "FROM MemoryArea "
+        "WHERE :addressing_type == addressing_type AND :base == base AND :offset >= offset AND :offset < (offset + size)"
         , soci::into(rMemArea)
-        , soci::use(rAddress));
-      if (!Stmt.execute(true))
+        , soci::use(rAddress);
+      if (!m_Session.got_data())
         return false;
     }
   }
@@ -709,7 +730,7 @@ bool SociDatabase::GetDefaultAddressingType(Address::Type& rAddressType) const
   try
   {
     u32 Value;
-    m_Session.prepare <<
+    m_Session <<
       "SELECT value "
       "FROM DefaultAddressingType"
       , soci::into(Value);
@@ -970,6 +991,13 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
     // Forward
     if (Displacement > 0)
     {
+      soci::statement Stmt = (m_Session.prepare <<
+        "SELECT size "
+        "FROM CellLayout "
+        "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
+        , soci::into(CellSize)
+        , soci::use(Id), soci::use(Offset)
+        );
       do
       {
         // If we reached the end of the memory area, we must find the next one
@@ -983,13 +1011,9 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
           // Get the first offset, i.e. 0x0
           Offset = 0x0;
         }
-        m_Session <<
-          "SELECT size "
-          "FROM CellLayout "
-          "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
-          , soci::into(CellSize)
-          , soci::use(Id), soci::use(Offset);
-        if (!m_Session.got_data())
+
+
+        if (!Stmt.execute(true))
           CellSize = 1;
         Offset += CellSize;
 
@@ -1000,6 +1024,13 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
     // Backward
     else
     {
+      soci::statement Stmt = (m_Session.prepare <<
+        "SELECT size "
+        "FROM CellLayout "
+        "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
+        , soci::into(CellSize)
+        , soci::use(Id), soci::use(Offset)
+        );
       do
       {
         // If the offset is 0, we must get the previous memory area and the last offset
@@ -1026,13 +1057,7 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
           --Offset;
         }
 
-        m_Session <<
-          "SELECT size "
-          "FROM CellLayout "
-          "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
-          , soci::into(CellSize)
-          , soci::use(Id), soci::use(Offset);
-        if (!m_Session.got_data())
+        if (!Stmt.execute(true))
           CellSize = 1;
 
         Offset -= CellSize;
@@ -1074,11 +1099,10 @@ bool SociDatabase::AddLabel(Address const &rAddress, Label const &rLabel)
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "INSERT INTO Label( name,  type,  version,  memory_area_id,  memory_area_offset)"
       "VALUES           (:name, :type, :version, :memory_area_id, :memory_area_offset)"
-      , soci::use(rLabel), soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset"));
-    Stmt.execute(true);
+      , soci::use(rLabel), soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset");
   }
   catch (std::exception const& rErr)
   {
@@ -1098,11 +1122,10 @@ bool SociDatabase::RemoveLabel(Address const &rAddress)
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
-    soci::statement Stmt = (m_Session.prepare <<
-      "DELETE FROM Label AS lbl "
-      "WHERE lbl.memory_area_id == :memory_area_id AND lbl.memory_area_offset == :memory_area_offset"
-      , soci::use(Id), soci::use(Offset));
-    Stmt.execute(true);
+    m_Session <<
+      "DELETE FROM Label "
+      "WHERE memory_area_id == :memory_area_id AND memory_area_offset == :memory_area_offset"
+      , soci::use(Id), soci::use(Offset);
   }
   catch (std::exception const& rErr)
   {
@@ -1123,13 +1146,13 @@ bool SociDatabase::GetLabel(Address const &rAddress, Label &rLabel) const
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "SELECT name, type, version "
-      "FROM Label AS lbl "
-      "WHERE lbl.memory_area_id == :memory_area_id AND lbl.memory_area_offset == :memory_area_offset"
+      "FROM Label "
+      "WHERE memory_area_id == :memory_area_id AND memory_area_offset == :memory_area_offset"
       , soci::into(rLabel)
-      , soci::use(Id), soci::use(Offset));
-    if (!Stmt.execute(true))
+      , soci::use(Id), soci::use(Offset);
+    if (!m_Session.got_data())
       return false;
   }
   catch (std::exception const& rErr)
@@ -1149,13 +1172,13 @@ bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
   try
   {
     u32 Id, Offset;
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "SELECT memory_area_id, memory_area_offset "
       "FROM Label "
       "WHERE :name == name AND :version == version"
       , soci::into(Id), soci::into(Offset)
-      , soci::use(rLabel));
-    if (!Stmt.execute(true))
+      , soci::use(rLabel);
+    if (!m_Session.got_data())
       return false;
     if (!_ConvertIdToAddress(Id, Offset, rAddress))
       return false;
@@ -1468,13 +1491,13 @@ bool SociDatabase::GetCellData(Address const &rAddress, CellData &rCellData) con
       "architecture_tag INTEGER, architecture_mode INTEGER"
       "memory_area_id INTEGER, memory_area_offset INTEGER)"
     */
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "SELECT * "
       "FROM CellData "
       "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
       , soci::into(rCellData)
-      , soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset"));
-    if (!Stmt.execute(true))
+      , soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset");
+    if (!m_Session.got_data())
     {
       rCellData = CellData(Cell::ValueType, ValueDetail::HexadecimalType, 1);
       return true;
@@ -1500,6 +1523,7 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
 
+    m_Session << "BEGIN";
     /*
       "CREATE TABLE IF NOT EXISTS CellData("
       "type INTEGER, sub_type INTEGER, size INTEGER,"
@@ -1528,6 +1552,7 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
         , soci::use(Id,         "memory_area_id")
         , soci::use(Offset + i, "memory_area_offset");
     }
+    m_Session << "COMMIT";
   }
   catch (std::exception const& rErr)
   {
@@ -1568,13 +1593,13 @@ bool SociDatabase::GetComment(Address const &rAddress, std::string &rComment) co
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "SELECT data "
       "FROM Comment as cmt "
       "WHERE :memory_area_id == cmt.memory_area_id AND :memory_area_offset == cmt.memory_area_offset"
       , soci::into(rComment)
-      , soci::use(Id), soci::use(Offset));
-    if (!Stmt.execute(true))
+      , soci::use(Id), soci::use(Offset);
+    if (!m_Session.got_data())
       return false;
   }
   catch (soci::soci_error const& rErr)
@@ -1598,11 +1623,10 @@ bool SociDatabase::SetComment(Address const &rAddress, std::string const &rComme
       "DELETE FROM Comment "
       "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
       , soci::use(Id), soci::use(Offset);
-    soci::statement Stmt = (m_Session.prepare <<
+    m_Session <<
       "INSERT INTO Comment (data, memory_area_id, memory_area_offset) "
       "VALUES (:data, :memory_area_id, :memory_area_offset)"
-      , soci::use(rComment), soci::use(Id), soci::use(Offset));
-    Stmt.execute(true);
+      , soci::use(rComment), soci::use(Id), soci::use(Offset);
   }
   catch (soci::soci_error const& rErr)
   {
