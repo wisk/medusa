@@ -36,20 +36,24 @@ bool SociDatabase::_CreateTable(void)
     m_Session << "CREATE TABLE IF NOT EXISTS Label("
       "name TEXT, type INTEGER, version INTEGER,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX label_index ON Label (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellData("
       "type INTEGER, sub_type INTEGER, size INTEGER,"
       "format_style INTEGER, flags INTEGER,"
       "architecture_tag INTEGER, architecture_mode INTEGER,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX cell_data_index ON CellData (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellLayout("
       "offset INTEGER, size INTEGER, "
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX cell_layout_index ON CellLayout (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS MultiCell("
       "type INTEGER, size INTEGER,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX multicell_index ON MultiCell (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CrossReference("
       "memory_area_id_from INTEGER, memory_area_offset_from BIGINT,"
@@ -59,6 +63,7 @@ bool SociDatabase::_CreateTable(void)
     m_Session << "CREATE TABLE IF NOT EXISTS Comment("
       "data TEXT,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX comment_index ON Comment (memory_area_id, memory_area_offset)";
   }
   catch (std::exception& rErr)
   {
@@ -1022,7 +1027,7 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
     }
 
     // Backward
-    else
+    else if (Displacement < 0)
     {
       soci::statement Stmt = (m_Session.prepare <<
         "SELECT size "
