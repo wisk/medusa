@@ -56,8 +56,8 @@ bool SociDatabase::_CreateTable(void)
     m_Session << "CREATE INDEX multicell_index ON MultiCell (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CrossReference("
+      "memory_area_id_to   INTEGER, memory_area_offset_to   BIGINT,"
       "memory_area_id_from INTEGER, memory_area_offset_from BIGINT,"
-      "memory_area_id_to INTEGER,   memory_area_offset_to   BIGINT,"
       "type INTEGER)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS Comment("
@@ -1242,7 +1242,6 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
 
 bool SociDatabase::AddCrossReference(Address const &rTo, Address const &rFrom)
 {
-  //TODO: To implement
   std::lock_guard <std::mutex> Lock(m_CrossReferencesLock);
 
   try
@@ -1257,19 +1256,19 @@ bool SociDatabase::AddCrossReference(Address const &rTo, Address const &rFrom)
 
     /*
     "CREATE TABLE IF NOT EXISTS CrossReference("
+      "memory_area_id_to   INTEGER, memory_area_offset_to   INTEGER,"
       "memory_area_id_from INTEGER, memory_area_offset_from INTEGER,"
-      "memory_area_id_to INTEGER,   memory_area_offset_to   INTEGER,"
       "type INTEGER)";
     */
 
     m_Session <<
       "INSERT INTO CrossReference("
-      "memory_area_id_from, memory_area_offset_from ,"
       "memory_area_id_to,   memory_area_offset_to   ,"
+      "memory_area_id_from, memory_area_offset_from ,"
       "type)"
       "VALUES("
-      ":memory_area_id_from, :memory_area_offset_from ,"
-      ":memory_area_id_to,   :memory_area_offset_to   ,"
+      ":memory_area_id_to,   :memory_area_offset_to  ,"
+      ":memory_area_id_from, :memory_area_offset_from,"
       "0)"
       , soci::use(IdTo), soci::use(OffsetTo), soci::use(IdFrom), soci::use(OffsetFrom);
   }
@@ -1313,26 +1312,88 @@ bool SociDatabase::RemoveCrossReferences(void)
 
 bool SociDatabase::HasCrossReferenceFrom(Address const &rTo) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-  return false;
+  // TODO(wisk): optimize this
+  return GetCrossReferenceFrom(rTo, Address::List{});
 }
 
 bool SociDatabase::GetCrossReferenceFrom(Address const &rTo, Address::List &rFromList) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-  return false;
+  try
+  {
+    u32 IdTo, IdFrom;
+    OffsetType OffsetTo, OffsetFrom;
+    if (!_ConvertAddressToId(rTo, IdTo, OffsetTo))
+      return false;
+    soci::statement Stmt = (m_Session.prepare <<
+      "SELECT memory_area_id_from, memory_area_offset_from "
+      "FROM CrossReference "
+      "WHERE :memory_area_id_to == memory_area_id_to AND :memory_area_offset_to == memory_area_offset_to"
+      , soci::into(IdFrom), soci::into(OffsetFrom)
+      , soci::use(IdTo),    soci::use(OffsetTo)
+    );
+    if (!Stmt.execute(true))
+      return false;
+    do
+    {
+      Address From;
+      if (!_ConvertIdToAddress(IdFrom, OffsetFrom, From))
+      {
+        Log::Write("db_soci").Level(LogError) << "failed to convert: " << IdFrom << " " << OffsetFrom << LogEnd;
+        return false;
+      }
+      rFromList.push_back(From);
+    } while (Stmt.fetch());
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << "get xref from: " << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return rFromList.empty() ? false : true;
 }
 
 bool SociDatabase::HasCrossReferenceTo(Address const &rFrom) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-  return false;
+  // TODO(wisk): optimize this
+  return GetCrossReferenceTo(rFrom, Address::List{});
 }
 
 bool SociDatabase::GetCrossReferenceTo(Address const &rFrom, Address::List &rToList) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-  return false;
+  try
+  {
+    u32 IdTo, IdFrom;
+    OffsetType OffsetTo, OffsetFrom;
+    if (!_ConvertAddressToId(rFrom, IdFrom, OffsetFrom))
+      return false;
+    soci::statement Stmt = (m_Session.prepare <<
+      "SELECT memory_area_id_to, memory_area_offset_to "
+      "FROM CrossReference "
+      "WHERE :memory_area_id_from == memory_area_id_from AND :memory_area_offset_from == memory_area_offset_from"
+      , soci::into(IdTo),  soci::into(OffsetTo)
+      , soci::use(IdFrom), soci::use(OffsetFrom)
+      );
+    if (!Stmt.execute(true))
+      return false;
+    do
+    {
+      Address To;
+      if (!_ConvertIdToAddress(IdTo, OffsetTo, To))
+      {
+        Log::Write("db_soci").Level(LogError) << "failed to convert: " << IdTo << " " << OffsetTo << LogEnd;
+        return false;
+      }
+      rToList.push_back(To);
+    } while (Stmt.fetch());
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << "get xref to: " << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return rToList.empty() ? false : true;
 }
 
 MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
