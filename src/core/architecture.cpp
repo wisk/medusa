@@ -252,7 +252,7 @@ public:
 
   virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<OffsetType>());
+    Address const OprdAddr = Address(Address::LinearType, spConstExpr->GetInt().ConvertTo<OffsetType>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -438,7 +438,7 @@ bool Architecture::FormatValue(
   PrintData          & rPrintData) const
 {
   auto const&         rBinStrm = rDoc.GetBinaryStream();
-  OffsetType             Off;
+  OffsetType          Off;
   u8                  ValueModifier = rVal.GetSubType() & ValueDetail::ModifierMask;
   u8                  ValueType     = rVal.GetSubType() & ValueDetail::BaseMask;
   std::string         BasePrefix    = "";

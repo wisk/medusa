@@ -49,6 +49,7 @@ namespace soci
       rAddress.SetOffset        (static_cast<OffsetType>   (val.get<long long>("offset")         ));
       rAddress.SetBaseSize      (static_cast<u8>           (val.get<int>      ("base_size")      ));
       rAddress.SetOffsetSize    (static_cast<u8>           (val.get<int>      ("offset_size")    ));
+      val.skip(5);
     }
 
     static void to_base(Address const& rAddress, values& val, indicator& ind)
@@ -80,6 +81,7 @@ namespace soci
         static_cast<u8>( val.get<int>("format_style")),     static_cast<u8>(val.get<int>("flags")),
         static_cast<Tag>(val.get<int>("architecture_tag")), static_cast<u8>(val.get<int>("architecture_mode"))
       );
+      val.skip(7);
     }
 
     static void to_base(CellData const& cd, values& val, indicator& ind)
@@ -130,6 +132,7 @@ namespace soci
         val.get<int>        ("type"),
         val.get<int>        ("version")
       );
+      val.skip(3);
     }
 
     static void to_base(Label const& rLabel, values& val, indicator& ind)
@@ -244,6 +247,9 @@ private:
   bool _ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const;
   bool _GetNextMemoryAreaId(u32 Id, u32& rNextId) const;
   bool _GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const;
+  bool _AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& CellData);
+  bool _FlushCellDataCacheIfRequired(u32 MemoryAreaId, OffsetType MemoryAreaOffset) const;
+  bool _FlushCellDataCache(void) const;
 
 public:
   virtual std::string GetName(void) const;
@@ -337,12 +343,10 @@ public:
 
 private:
   mutable soci::session m_Session;
-  mutable std::mutex m_MemoryAreaLock;
-  mutable std::recursive_mutex m_CellLock;
-  mutable std::recursive_mutex m_MultiCellLock;
-  mutable std::recursive_mutex m_LabelLock;
-  mutable std::mutex m_CrossReferencesLock;
-  mutable std::mutex m_ArchitectureTagLock;
+  mutable std::mutex m_Lock;
+
+  typedef std::map<std::pair<u32, OffsetType>, CellData> CellDataCacheType;
+  mutable CellDataCacheType m_CellDataCache;
 
   static bool _FileExists(boost::filesystem::path const& rFilePath);
   static bool _FileRemoves(boost::filesystem::path const& rFilePath);

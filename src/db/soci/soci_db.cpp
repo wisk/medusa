@@ -151,8 +151,6 @@ bool SociDatabase::_ConvertIdToAddress(u32 Id, OffsetType Offset, Address& rAddr
 
 bool SociDatabase::_ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset) const
 {
-  std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
-
   try
   {
     if (rAddress.GetAddressingType() == Address::PhysicalType)
@@ -192,8 +190,6 @@ bool SociDatabase::_ConvertAddressToId(Address const& rAddress, u32& rId, Offset
 
 bool SociDatabase::_ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const
 {
-  std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
-
   try
   {
     if (rAddress.GetAddressingType() == Address::PhysicalType)
@@ -301,6 +297,96 @@ bool SociDatabase::_GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const
   return true;
 }
 
+bool SociDatabase::_AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& CellData)
+{
+  auto MemAreaPair = std::make_pair(MemoryAreaId, MemoryAreaOffset);
+  if (m_CellDataCache.size() > 0x2000)
+  {
+    if (!_FlushCellDataCache())
+      return false;
+  }
+  else if (m_CellDataCache.find(MemAreaPair) != std::end(m_CellDataCache))
+  {
+    if (!_FlushCellDataCache())
+      return false;
+  }
+
+  m_CellDataCache[MemAreaPair] = CellData;
+  return true;
+}
+
+bool SociDatabase::_FlushCellDataCacheIfRequired(u32 MemoryAreaId, OffsetType MemoryAreaOffset) const
+{
+  if (m_CellDataCache.find(std::make_pair(MemoryAreaId, MemoryAreaOffset)) == std::end(m_CellDataCache))
+    return true;
+  return _FlushCellDataCache();
+}
+
+bool SociDatabase::_FlushCellDataCache(void) const
+{
+  u8          CellType;
+  u8          CellSubType;
+  u16         CellSize;
+  u16         CellFmtStyle;
+  u8          CellFlags;
+  Tag         CellArchTag;
+  u8          CellArchMode;
+
+  u32         MemAreaId;
+  OffsetType  MemAreaOff;
+  OffsetType  CellOff;
+
+  try
+  {
+    soci::statement CellDataStmt = (m_Session.prepare <<
+      "INSERT INTO CellData( type,  sub_type,  size,  format_style,  flags,  architecture_tag,  architecture_mode,  memory_area_id,  memory_area_offset) "
+      "VALUES              (:type, :sub_type, :size, :format_style, :flags, :architecture_tag, :architecture_mode, :memory_area_id, :memory_area_offset)"
+      , soci::use(CellType, "type"), soci::use(CellSubType, "sub_type"), soci::use(CellSize, "size"), soci::use(CellFmtStyle, "format_style")
+      , soci::use(CellFlags, "flags"), soci::use(CellArchTag, "architecture_tag"), soci::use(CellArchMode, "architecture_mode")
+      , soci::use(MemAreaId, "memory_area_id"), soci::use(MemAreaOff, "memory_area_offset")
+      );
+    soci::statement CellLayoutStmt = (m_Session.prepare <<
+      "INSERT INTO CellLayout( offset,  size,  memory_area_id,  memory_area_offset) "
+      "VALUES                (:offset, :size, :memory_area_id, :memory_area_offset)"
+      , soci::use(CellOff,    "offset")
+      , soci::use(CellSize,   "size")
+      , soci::use(MemAreaId,  "memory_area_id")
+      , soci::use(MemAreaOff, "memory_area_offset")
+      );
+
+    m_Session << "BEGIN";
+    for (auto const& AddrCellDataPair : m_CellDataCache)
+    {
+      CellType     = AddrCellDataPair.second.GetType();
+      CellSubType  = AddrCellDataPair.second.GetSubType();
+      CellSize     = AddrCellDataPair.second.GetSize();
+      CellFmtStyle = AddrCellDataPair.second.GetFormatStyle();
+      CellFlags    = AddrCellDataPair.second.GetFlags();
+      CellArchTag  = AddrCellDataPair.second.GetArchitectureTag();
+      CellArchMode = AddrCellDataPair.second.GetMode();
+      MemAreaId    = AddrCellDataPair.first.first;
+      MemAreaOff   = AddrCellDataPair.first.second;
+      CellDataStmt.execute(true);
+
+      for (CellOff = 0; CellOff < CellSize; ++CellOff)
+      {
+        CellLayoutStmt.execute(true);
+        ++MemAreaOff;
+      }
+    }
+    m_Session << "COMMIT";
+    m_CellDataCache.clear();
+  }
+  catch (std::exception const& rErr)
+  {
+    m_Session << "ROLLBACK";
+    Log::Write("db_soci").Level(LogError) << "error while flushing cell data: " << rErr.what() << LogEnd;
+    return false;
+  }
+
+  return true;
+}
+
 std::string SociDatabase::GetName(void) const
 {
   return "SOCI";
@@ -328,8 +414,11 @@ bool SociDatabase::_FileRemoves(boost::filesystem::path const &rFilePath)
 
 bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
 {
+
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session.open(soci::sqlite3, "dbname=" + rDatabasePath.string());
 
     m_Session <<
@@ -357,9 +446,9 @@ bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
     m_spBinStrm = std::make_shared<MemoryBinaryStream>(upBuf.get(), DataSize);
     m_spBinStrm->SetEndianness(static_cast<EEndianness>(Endianness));
   }
-  catch (std::exception const &e)
+  catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
     return false;
   }
   return true;
@@ -367,8 +456,11 @@ bool SociDatabase::Open(boost::filesystem::path const &rDatabasePath)
 
 bool SociDatabase::Create(medusa::Path const &rDatabasePath, bool Force)
 {
+
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     if (Force)
     {
       Log::Write("db_soci") << "remove file " << rDatabasePath.string() << LogEnd;
@@ -398,9 +490,9 @@ bool SociDatabase::Create(medusa::Path const &rDatabasePath, bool Force)
       "PRAGMA compile_options; ";
     _CreateTable();
   }
-  catch (std::exception const &e)
+  catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
     return false;
   }
 
@@ -409,13 +501,18 @@ bool SociDatabase::Create(medusa::Path const &rDatabasePath, bool Force)
 
 bool SociDatabase::Flush(void)
 {
+
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
+    _FlushCellDataCache();
+
     return true;
   }
-  catch (std::exception const &e)
+  catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
     return false;
   }
 
@@ -424,14 +521,18 @@ bool SociDatabase::Flush(void)
 
 bool SociDatabase::Close(void)
 {
+
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     // TODO(wisk): save binary stream
+    Flush();
     m_Session.close();
   }
-  catch (std::exception const &e)
+  catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
     return false;
   }
 
@@ -440,18 +541,22 @@ bool SociDatabase::Close(void)
 
 bool SociDatabase::RegisterArchitectureTag(Tag ArchitectureTag)
 {
+
   try
   {
-    std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session <<
       "INSERT INTO Architecture(architecture_tag)"
       "VALUES(:tag)"
       , soci::use(ArchitectureTag);
   }
-  catch (std::exception const &e)
+  catch (std::exception const &rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
   }
+
   return true;
 }
 
@@ -459,39 +564,55 @@ bool SociDatabase::UnregisterArchitectureTag(Tag ArchitectureTag)
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session <<
       "DELETE FROM Architecture "
       "WHERE architecture_tag == :architecture_tag"
       , soci::use(ArchitectureTag);
   }
-  catch (std::exception const &e)
+  catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << e.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return false;
   }
+
   return true;
 }
 
 std::list <Tag> SociDatabase::GetArchitectureTags(void) const
 {
-  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  try
+  {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
+  }
+  catch (std::exception const& rErr)
+  {
+    Log::Write("db_soci").Level(LogError) << rErr.what() << LogEnd;
+    return {};
+  }
+
   return{};
 }
 
 bool SociDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag, u8 Mode,
   Database::SetArchitectureModeType SetArchMode)
 {
-  //TODO:To implement
   try
   {
     switch (SetArchMode)
     {
     case ByCell:
     {
+      std::lock_guard<std::mutex> Lock(m_Lock);
+
       soci::indicator indicator;
       soci::row row;
-      m_Session << "SELECT * FROM CellData", soci::into(row, indicator);
+      m_Session << "SELECT type FROM CellData", soci::into(row, indicator);
       if (!m_Session.got_data())
       {
+        m_Lock.unlock();
         CellData Cell;
         Address::List DeletedCell;
         Cell.SetArchitectureTag(ArchitectureTag);
@@ -505,19 +626,21 @@ bool SociDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag,
           , soci::use(ArchitectureTag, "architecture_tag")
           , soci::use(Mode, "architecture_mode");
       }
-      return true;
+      break;
     }
     case ByMemoryArea:
     {
-      std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
+      std::lock_guard<std::mutex> Lock(m_Lock);
+
       m_Session << "UPDATE MemoryArea set architecture_tag = :architecture_tag"
         ", architecture_mode = :architecture_mode", soci::use(ArchitectureTag, "architecture_tag")
         , soci::use(Mode, "architecture_mode");
-      return true;
+      break;
     }
 
     default:
-      break;
+      Log::Write("db_soci").Level(LogError) << "unknown set architecture tag type" << LogEnd;
+      return false;
     }
   }
   catch (std::exception const& rErr)
@@ -526,13 +649,15 @@ bool SociDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag,
     return false;
   }
 
-  return false;
+  return true;
 }
 
 bool SociDatabase::GetImageBase(ImageBaseType& rImageBase) const
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session << "SELECT value FROM ImageBase", soci::into(rImageBase);
     if (!m_Session.got_data())
       return false;
@@ -550,6 +675,8 @@ bool SociDatabase::SetImageBase(ImageBaseType ImageBase)
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session << "DELETE FROM ImageBase";
     m_Session <<
       "INSERT INTO ImageBase (value) "
@@ -567,8 +694,6 @@ bool SociDatabase::SetImageBase(ImageBaseType ImageBase)
 
 bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) const
 {
-  std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
-
   /*
     "CREATE TABLE IF NOT EXISTS MemoryArea("
     "id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type INTEGER, access INTEGER,"
@@ -579,6 +704,8 @@ bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) 
   */
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     if (rAddress.GetAddressingType() == Address::PhysicalType)
     {
       m_Session <<
@@ -614,68 +741,24 @@ bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) 
 
 void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
 {
-  std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
-
   try
   {
-    soci::rowset<soci::row> RowSet = (m_Session.prepare <<
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
+    MemoryArea MemArea;
+    soci::statement Stmt = (m_Session.prepare <<
       "SELECT * "
-      "FROM MemoryArea");
-
-    for (auto const& rRow : RowSet)
+      "FROM MemoryArea",
+      soci::into(MemArea)
+      );
+    if (!Stmt.execute(true))
+      return;
+    do
     {
-      MemoryArea CurMemArea;
-
-      auto Name = rRow.get<std::string>(1);
-      auto Access = static_cast<MemoryArea::Access>(rRow.get<int>(3));
-      auto ArchTag = static_cast<Tag>(rRow.get<int>(4));
-      auto ArchMode = static_cast<u8>(rRow.get<int>(5));
-
-      auto GetAddress = [&](void) -> Address
-      {
-        return Address(
-          static_cast<Address::Type>(rRow.get<int>(8)),
-          static_cast<BaseType>(rRow.get<int>(9)),
-          static_cast<OffsetType>(rRow.get<long long>(10)),
-          static_cast<u8>(rRow.get<int>(11)),
-          static_cast<u8>(rRow.get<int>(12))
-        );
-      };
-
-      switch (static_cast<MemoryArea::Type>(rRow.get<int>(2)))
-      {
-      case MemoryArea::VirtualType:
-        CurMemArea = MemoryArea::CreateVirtual(
-          Name, Access,
-          GetAddress(), static_cast<u32>(rRow.get<long long>(13)),
-          ArchTag, ArchMode
-        );
-        break;
-
-      case MemoryArea::MappedType:
-        CurMemArea = MemoryArea::CreateMapped(
-          Name, Access,
-          static_cast<u32>(rRow.get<long long>(6)), static_cast<u32>(rRow.get<long long>(7)),
-          GetAddress(), static_cast<u32>(rRow.get<long long>(13)),
-          ArchTag, ArchMode
-        );
-        break;
-
-      case MemoryArea::PhysicalType:
-        CurMemArea = MemoryArea::CreatePhysical(
-          Name, Access,
-          static_cast<u32>(rRow.get<long long>(6)), static_cast<u32>(rRow.get<long long>(7)),
-          ArchTag, ArchMode
-        );
-        break;
-
-      default:
-        Log::Write("db_soci").Level(LogWarning) << "unknown memory area type" << LogEnd;
-        continue;
-      }
-
-      Callback(CurMemArea);
-    }
+      m_Lock.unlock();
+      Callback(MemArea);
+      m_Lock.lock();
+    } while (Stmt.fetch());
   }
   catch (std::exception const& rErr)
   {
@@ -685,9 +768,10 @@ void SociDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
 
 bool SociDatabase::AddMemoryArea(MemoryArea const& rMemArea)
 {
-  std::lock_guard <std::mutex> Lock(m_MemoryAreaLock);
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     /*
     "CREATE TABLE IF NOT EXISTS MemoryArea("
       "id INTEGER PRIMARY KEY, name TEXT, type INTEGER, access INTEGER,"
@@ -734,6 +818,8 @@ bool SociDatabase::GetDefaultAddressingType(Address::Type& rAddressType) const
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Value;
     m_Session <<
       "SELECT value "
@@ -756,6 +842,8 @@ bool SociDatabase::SetDefaultAddressingType(Address::Type AddressType)
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     m_Session << "DELETE FROM DefaultAddressingType";
     m_Session <<
       "INSERT INTO DefaultAddressingType (value) "
@@ -785,6 +873,8 @@ bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToCon
     {
     case Address::PhysicalType:
     {
+      std::lock_guard<std::mutex> Lock(m_Lock);
+
       Address BaseAddr;
       OffsetType FileOffset;
       m_Session <<
@@ -818,6 +908,8 @@ bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToCon
       {
       case Address::PhysicalType:
       {
+        std::lock_guard<std::mutex> Lock(m_Lock);
+
         OffsetType Offset, FileOffset;
         m_Session <<
           "SELECT offset, file_offset "
@@ -862,6 +954,8 @@ bool SociDatabase::TranslateAddress(Address const& rAddress, Address::Type ToCon
       {
       case Address::PhysicalType:
       {
+        std::lock_guard<std::mutex> Lock(m_Lock);
+
         OffsetType Offset, FileOffset;
         m_Session <<
           "SELECT offset, file_offset "
@@ -921,6 +1015,8 @@ bool SociDatabase::GetFirstAddress(Address &rAddress) const
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     m_Session <<
       "SELECT id "
@@ -944,6 +1040,8 @@ bool SociDatabase::GetLastAddress(Address &rAddress) const
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     m_Session <<
@@ -970,6 +1068,8 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
   OffsetType Offset;
   OffsetType MemAreaOff;
   u32 MemAreaSize;
+
+  std::lock_guard<std::mutex> Lock(m_Lock);
 
   try
   {
@@ -1084,22 +1184,23 @@ bool SociDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress, 
 
 bool SociDatabase::ConvertAddressToPosition(Address const &rAddress, u32 &rPosition) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard<std::mutex> Lock(m_Lock);
   return false;
 }
 
 bool SociDatabase::ConvertPositionToAddress(u32 Position, Address &rAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard<std::mutex> Lock(m_Lock);
   return false;
 }
 
 bool SociDatabase::AddLabel(Address const &rAddress, Label const &rLabel)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
 
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1120,9 +1221,10 @@ bool SociDatabase::AddLabel(Address const &rAddress, Label const &rLabel)
 
 bool SociDatabase::RemoveLabel(Address const &rAddress)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1143,10 +1245,10 @@ bool SociDatabase::RemoveLabel(Address const &rAddress)
 
 bool SociDatabase::GetLabel(Address const &rAddress, Label &rLabel) const
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1171,11 +1273,10 @@ bool SociDatabase::GetLabel(Address const &rAddress, Label &rLabel) const
 
 bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
-  Address Address;
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id, Offset;
     m_Session <<
       "SELECT memory_area_id, memory_area_offset "
@@ -1199,31 +1300,31 @@ bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
 
 void SociDatabase::ForEachLabel(LabelCallback Callback)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_LabelLock);
-  Label Label;
+  std::string LabelName;
+  u16 LabelType, LabelVersion;
+  u32 Id;
+  OffsetType Offset;
 
   try
   {
-    soci::rowset<soci::row> rowset = (m_Session.prepare <<
-      "SELECT * "
-      "FROM Label");
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
+    soci::statement Stmt = (m_Session.prepare <<
+      "SELECT name, type, version, memory_area_id, memory_area_offset "
+      "FROM Label"
+      , soci::into(LabelName), soci::into(LabelType), soci::into(LabelVersion), soci::into(Id), soci::into(Offset)
+      );
+    if (!Stmt.execute(true))
+      return;
 
     /*
-      "CREATE TABLE IF NOT EXISTS Label("
-      "name TEXT, type INTEGER, version INTEGER,"
-      "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    "CREATE TABLE IF NOT EXISTS Label("
+    "name TEXT, type INTEGER, version INTEGER,"
+    "memory_area_id INTEGER, memory_area_offset BIGINT)";
     */
-    for (auto it = rowset.begin(); it != rowset.end(); ++it)
+    do
     {
-      soci::row const &row = *it;
-
-      Label.SetName(row.get<std::string>(0));
-      Label.SetType(row.get<int>(1));
-      Label.SetVersion(row.get<int>(2));
-
-      auto Id     = static_cast<u32>(row.get<int>(3));
-      auto Offset = static_cast<OffsetType>(row.get<long long>(4));
-
+      Label Label(LabelName, LabelType, LabelVersion);
       Address Addr;
       if (!_ConvertIdToAddress(Id, Offset, Addr))
       {
@@ -1231,8 +1332,10 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
         continue;
       }
 
+      m_Lock.unlock();
       Callback(Addr, Label);
-    }
+      m_Lock.lock();
+    } while (Stmt.fetch());
   }
   catch (std::exception const& rErr)
   {
@@ -1242,10 +1345,10 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
 
 bool SociDatabase::AddCrossReference(Address const &rTo, Address const &rFrom)
 {
-  std::lock_guard <std::mutex> Lock(m_CrossReferencesLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 IdTo, IdFrom;
     OffsetType OffsetTo, OffsetFrom;
 
@@ -1282,10 +1385,10 @@ bool SociDatabase::AddCrossReference(Address const &rTo, Address const &rFrom)
 
 bool SociDatabase::RemoveCrossReference(Address const &rFrom)
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rFrom, Id, Offset))
@@ -1306,7 +1409,7 @@ bool SociDatabase::RemoveCrossReference(Address const &rFrom)
 
 bool SociDatabase::RemoveCrossReferences(void)
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard<std::mutex> Lock(m_Lock);
   return false;
 }
 
@@ -1320,6 +1423,8 @@ bool SociDatabase::GetCrossReferenceFrom(Address const &rTo, Address::List &rFro
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 IdTo, IdFrom;
     OffsetType OffsetTo, OffsetFrom;
     if (!_ConvertAddressToId(rTo, IdTo, OffsetTo))
@@ -1363,6 +1468,8 @@ bool SociDatabase::GetCrossReferenceTo(Address const &rFrom, Address::List &rToL
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 IdTo, IdFrom;
     OffsetType OffsetTo, OffsetFrom;
     if (!_ConvertAddressToId(rFrom, IdFrom, OffsetFrom))
@@ -1398,10 +1505,11 @@ bool SociDatabase::GetCrossReferenceTo(Address const &rFrom, Address::List &rToL
 
 MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_MultiCellLock);
   MultiCell::SPType spRes;
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1447,10 +1555,10 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
 
 bool SociDatabase::SetMultiCell(Address const &rAddress, MultiCell::SPType spMultiCell)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_MultiCellLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1482,10 +1590,10 @@ bool SociDatabase::SetMultiCell(Address const &rAddress, MultiCell::SPType spMul
 
 bool SociDatabase::DeleteMultiCell(Address const &rAddress)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_MultiCellLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1527,13 +1635,17 @@ bool SociDatabase::DeleteMultiCell(Address const &rAddress)
 
 bool SociDatabase::GetCellData(Address const &rAddress, CellData &rCellData) const
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_CellLock);
+  u32 Id;
+  OffsetType Offset;
 
   try
   {
-    u32 Id;
-    OffsetType Offset;
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     if (!_ConvertAddressToId(rAddress, Id, Offset))
+      return false;
+
+    if (!_FlushCellDataCacheIfRequired(Id, Offset))
       return false;
 
     u16 CellOffset;
@@ -1580,45 +1692,48 @@ bool SociDatabase::GetCellData(Address const &rAddress, CellData &rCellData) con
 
 bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellData, Address::List &rDeletedCellAddresses, bool Force)
 {
-  std::lock_guard <std::recursive_mutex> Lock(m_CellLock);
-
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
 
-    m_Session << "BEGIN";
-    /*
-      "CREATE TABLE IF NOT EXISTS CellData("
-      "type INTEGER, sub_type INTEGER, size INTEGER,"
-      "format_style INTEGER, flags INTEGER,"
-      "architecture_tag INTEGER, architecture_mode INTEGER"
-      "memory_area_id INTEGER, memory_area_offset INTEGER)";
-    */
-    m_Session <<
-      "INSERT INTO CellData( type,  sub_type,  size,  format_style,  flags,  architecture_tag,  architecture_mode,  memory_area_id,  memory_area_offset) "
-      "VALUES              (:type, :sub_type, :size, :format_style, :flags, :architecture_tag, :architecture_mode, :memory_area_id, :memory_area_offset)"
-      , soci::use(rCellData), soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset");
+    if (!_AddCellDataToCache(Id, Offset, rCellData))
+      return false;
 
-    /*
-    "CREATE TABLE IF NOT EXISTS CellLayout("
-      "offset INTEGER, size INTEGER "
-      "memory_area_id INTEGER, memory_area_offset INTEGER)";
-    */
-    auto Size = rCellData.GetSize();
-    for (auto i = 0UL; i < Size; ++i)
-    {
-      m_Session <<
-        "INSERT INTO CellLayout( offset,  size,  memory_area_id,  memory_area_offset) "
-        "VALUES                (:offset, :size, :memory_area_id, :memory_area_offset)"
-        , soci::use(i,          "offset")
-        , soci::use(Size,       "size")
-        , soci::use(Id,         "memory_area_id")
-        , soci::use(Offset + i, "memory_area_offset");
-    }
-    m_Session << "COMMIT";
+    //m_Session << "BEGIN";
+    ///*
+    //  "CREATE TABLE IF NOT EXISTS CellData("
+    //  "type INTEGER, sub_type INTEGER, size INTEGER,"
+    //  "format_style INTEGER, flags INTEGER,"
+    //  "architecture_tag INTEGER, architecture_mode INTEGER"
+    //  "memory_area_id INTEGER, memory_area_offset INTEGER)";
+    //*/
+    //m_Session <<
+    //  "INSERT INTO CellData( type,  sub_type,  size,  format_style,  flags,  architecture_tag,  architecture_mode,  memory_area_id,  memory_area_offset) "
+    //  "VALUES              (:type, :sub_type, :size, :format_style, :flags, :architecture_tag, :architecture_mode, :memory_area_id, :memory_area_offset)"
+    //  , soci::use(rCellData), soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset");
+
+    ///*
+    //"CREATE TABLE IF NOT EXISTS CellLayout("
+    //  "offset INTEGER, size INTEGER "
+    //  "memory_area_id INTEGER, memory_area_offset INTEGER)";
+    //*/
+    //auto Size = rCellData.GetSize();
+    //for (auto i = 0UL; i < Size; ++i)
+    //{
+    //  m_Session <<
+    //    "INSERT INTO CellLayout( offset,  size,  memory_area_id,  memory_area_offset) "
+    //    "VALUES                (:offset, :size, :memory_area_id, :memory_area_offset)"
+    //    , soci::use(i,          "offset")
+    //    , soci::use(Size,       "size")
+    //    , soci::use(Id,         "memory_area_id")
+    //    , soci::use(Offset + i, "memory_area_offset");
+    //}
+    //m_Session << "COMMIT";
   }
   catch (std::exception const& rErr)
   {
@@ -1633,6 +1748,8 @@ bool SociDatabase::DeleteCellData(Address const &rAddress)
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1655,6 +1772,8 @@ bool SociDatabase::GetComment(Address const &rAddress, std::string &rComment) co
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
@@ -1680,6 +1799,8 @@ bool SociDatabase::SetComment(Address const &rAddress, std::string const &rComme
 {
   try
   {
+    std::lock_guard<std::mutex> Lock(m_Lock);
+
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
