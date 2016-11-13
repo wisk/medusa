@@ -11,13 +11,13 @@ BasicBlockVertexProperties::BasicBlockVertexProperties(void)
 {
 }
 
-BasicBlockVertexProperties::BasicBlockVertexProperties(Document const& rDoc, Address::List const& rAddresses)
+BasicBlockVertexProperties::BasicBlockVertexProperties(Document const& rDoc, Address::Vector const& rAddresses)
   : m_pDoc(&rDoc)
   , m_Addresses(rAddresses)
   , m_Flags()
   , m_TestedFlags()
 {
-  m_Addresses.sort();
+  std::sort(std::begin(m_Addresses), std::end(m_Addresses));
 }
 
 BasicBlockVertexProperties BasicBlockVertexProperties::operator=(BasicBlockVertexProperties const& rBscBlk)
@@ -48,7 +48,7 @@ bool BasicBlockVertexProperties::Contains(Address const& rAddr) const
   return std::find(std::begin(m_Addresses), std::end(m_Addresses), rAddr) != std::end(m_Addresses);
 }
 
-bool BasicBlockVertexProperties::Split(Address const& rAddr, Address::List& rAddresses)
+bool BasicBlockVertexProperties::Split(Address const& rAddr, Address::Vector& rAddresses)
 {
   if (GetFirstAddress() == rAddr)
     return false;
@@ -59,7 +59,8 @@ bool BasicBlockVertexProperties::Split(Address const& rAddr, Address::List& rAdd
   if (itAddr == std::end(m_Addresses))
     return false;
 
-  rAddresses.splice(std::begin(rAddresses), m_Addresses, itAddr, std::end(m_Addresses));
+  // TODO(wisk): splice vector
+  //rAddresses.splice(std::begin(rAddresses), m_Addresses, itAddr, std::end(m_Addresses));
 
   return true;
 }

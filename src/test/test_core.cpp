@@ -184,7 +184,7 @@ TEST_CASE("structure", "[core]")
   REQUIRE(rDoc.SetMultiCell(rDoc.GetFirstAddress(), spDosHdrStruct, true));
 
   int const Step = 20;
-  TextFullDisassemblyView tfdv(Core, medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddSpaceBeforeXref, 80, Step, rDoc.GetFirstAddress());
+  TextFullDisassemblyView tfdv(Core, medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddNewLineBeforeCrossReference, 80, Step, rDoc.GetFirstAddress());
   tfdv.Refresh();
   do tfdv.Print();
   while (tfdv.MoveView(0, Step));

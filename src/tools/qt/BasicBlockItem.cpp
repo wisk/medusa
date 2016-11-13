@@ -3,7 +3,7 @@
 #include <sstream>
 #include <medusa/user_configuration.hpp>
 
-BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address::List const& rAddresses)
+BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address::Vector const& rAddresses)
   : m_pParent(pParent)
   , medusa::DisassemblyView(rCore, medusa::FormatDisassembly::ShowAddress, rAddresses.front())
   , m_Addresses(rAddresses)

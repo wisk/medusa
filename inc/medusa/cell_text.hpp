@@ -113,7 +113,7 @@ public:
 
   PrintData& MarkOffset(void);
 
-  Address::List GetAddresses(void) const;
+  Address::Vector GetAddresses(void) const;
   bool          GetFirstAddress(Address& rAddress) const;
   bool          GetLastAddress(Address& rAddress) const;
   std::string   GetTexts(void) const;

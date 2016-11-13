@@ -158,7 +158,7 @@ void VertexItem::_Update(void)
   QFontMetrics fm(m_Font);
 
   // TODO(wisk): change list to vector in format
-  m_Format(medusa::Address::List(std::begin(m_Addresses), std::end(m_Addresses)), m_FormatFlags);
+  m_Format(medusa::Address::Vector(std::begin(m_Addresses), std::end(m_Addresses)), m_FormatFlags);
 
   medusa::u32 viewWidth, viewHeight;
   GetDimension(viewWidth, viewHeight);

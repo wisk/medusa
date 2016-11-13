@@ -35,9 +35,7 @@ namespace medusa
     ++RawLen;
 
     auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-    m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
-
-    return true;
+    return m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
   }
 
   bool AnalyzerString::CreateUtf16String(void)

@@ -73,12 +73,9 @@ class AnalyzerDisassemble : public AnalyzerPass
 public:
   AnalyzerDisassemble(Document& rDoc, Address const& rAddr) : AnalyzerPass("disassemble", rDoc, rAddr) {}
 
-  bool DisassembleOneInstruction(void);
-  bool Disassemble(void);
-  bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock);
-
-  bool DisassembleWith(Architecture& rArch, u8 Mode);
-  bool DisassembleBasicBlockWith(Architecture& rArch, u8 Mode, std::list<Instruction::SPType>& rBasicBlock);
+  bool DisassembleOneInstruction(Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
+  bool Disassemble(Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
+  bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock, Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
 
   bool BuildControlFlowGraph(ControlFlowGraph& rCfg);
 
@@ -88,10 +85,16 @@ public:
 class AnalyzerInstruction : public AnalyzerPass
 {
 public:
-  AnalyzerInstruction(Document& rDoc, Address const& rAddr) : AnalyzerPass("instruction", rDoc, rAddr) {}
+  AnalyzerInstruction(Document& rDoc, Address const& rAddr, Instruction const& rInsn)
+    : AnalyzerPass("instruction", rDoc, rAddr)
+    , m_rInsn(rInsn)
+  {}
 
   bool FindCrossReference(void);
   bool FindString(void);
+
+protected:
+  Instruction const& m_rInsn;
 };
 
 class AnalyzerBasicBlock : public AnalyzerPass

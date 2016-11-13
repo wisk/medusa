@@ -83,7 +83,7 @@ TEST_CASE("load", "[db_soci]")
     INFO("Cell data");
     medusa::CellData CellData(medusa::Cell::InstructionType, 0x0, 0x5);
     medusa::CellData DummyCellData;
-    std::list<medusa::Address> V;
+    medusa::Address::Vector V;
     CHECK(spSociDb->GetCellData(BaseAddr + 10, DummyCellData));
     CHECK(spSociDb->SetCellData(BaseAddr + 10, CellData, V, true));
     CHECK(spSociDb->GetCellData(BaseAddr + 10, DummyCellData));

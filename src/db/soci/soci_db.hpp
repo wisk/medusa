@@ -241,15 +241,21 @@ public:
   virtual ~SociDatabase(void);
 
 private:
+  bool _ConfigureDatabase(void);
   bool _CreateTable(void);
   bool _ConvertIdToAddress(u32 Id, OffsetType Offset, Address& rAddress) const;
   bool _ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset) const;
   bool _ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const;
   bool _GetNextMemoryAreaId(u32 Id, u32& rNextId) const;
   bool _GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const;
-  bool _AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& CellData);
-  bool _FlushCellDataCacheIfRequired(u32 MemoryAreaId, OffsetType MemoryAreaOffset) const;
+
+  bool _AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData);
+  bool _FlushCellDataCacheIfRequired(u32 MemoryAreaId, OffsetType MemoryAreaOffset, u16 CellSize) const;
   bool _FlushCellDataCache(void) const;
+  bool _GetCellDataFromCache(u32 MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const;
+
+  bool _AddLabelToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, Label const& rLabel);
+  bool _FlushLabelCache(void) const;
 
 public:
   virtual std::string GetName(void) const;
@@ -305,13 +311,8 @@ public:
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
   virtual bool RemoveCrossReference(Address const& rFrom);
-  virtual bool RemoveCrossReferences(void);
-
-  virtual bool HasCrossReferenceFrom(Address const& rTo) const;
-  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
-
-  virtual bool HasCrossReferenceTo(Address const& rFrom) const;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const;
+  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const;
+  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const;
 
   // MultiCell
   virtual MultiCell::SPType GetMultiCell(Address const& rAddress) const;
@@ -320,7 +321,7 @@ public:
 
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) const;
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force);
+  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::Vector& rDeletedCellAddresses, bool Force);
   virtual bool DeleteCellData(Address const& rAddress);
 
   // Comment
@@ -345,8 +346,14 @@ private:
   mutable soci::session m_Session;
   mutable std::mutex m_Lock;
 
-  typedef std::map<std::pair<u32, OffsetType>, CellData> CellDataCacheType;
+  typedef std::vector<std::tuple<u32, OffsetType, CellData>> CellDataCacheType;
   mutable CellDataCacheType m_CellDataCache;
+
+  typedef std::map<std::pair<u32, OffsetType>, bool> CellLayoutCacheType;
+  CellLayoutCacheType m_CellLayoutCache;
+
+  typedef std::map<std::pair<u32, OffsetType>, Label> LabelCacheType;
+  mutable LabelCacheType m_LabelCache;
 
   static bool _FileExists(boost::filesystem::path const& rFilePath);
   static bool _FileRemoves(boost::filesystem::path const& rFilePath);

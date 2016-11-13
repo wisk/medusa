@@ -92,17 +92,12 @@ public:
   // CrossRef
   virtual bool AddCrossReference(Address const& rTo, Address const& rFrom) = 0;
   virtual bool RemoveCrossReference(Address const& rFrom) = 0;
-  virtual bool RemoveCrossReferences(void) = 0;
-
-  virtual bool HasCrossReferenceFrom(Address const& rTo) const = 0;
-  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const = 0;
-
-  virtual bool HasCrossReferenceTo(Address const& rFrom) const = 0;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const = 0;
+  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const = 0;
+  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const = 0;
 
   // Cell (data)
   virtual bool GetCellData(Address const& rAddress, CellData& rCellData) const = 0;
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force) = 0;
+  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::Vector& rDeletedCellAddresses, bool Force) = 0;
   virtual bool DeleteCellData(Address const& rAddress) = 0;
 
   // MultiCell

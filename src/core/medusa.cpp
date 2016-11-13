@@ -14,7 +14,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
-  : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
+  : m_TaskManager([] (Task const* pTask) { })
   , m_Document()
   , m_Analyzer()
 {

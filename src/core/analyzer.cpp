@@ -93,15 +93,13 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
         if (Utf16Str.IsFinalCharacter(Utf16Char) && RawLen != 0x0)
         {
           RawLen += sizeof(Utf16Char);
-          auto pStrBuf = new u8[RawLen];
-          if (!rBinStrm.Read(StrOff, pStrBuf, RawLen))
+          auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
+          if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
           {
             Log::Write("core") << "Unable to read utf-16 string at " << rAddress << LogEnd;
-            delete[] pStrBuf;
             return;
           }
-          std::string CvtStr = Utf16Str.ConvertToUtf8(pStrBuf, RawLen);
-          delete[] pStrBuf;
+          std::string CvtStr = Utf16Str.ConvertToUtf8(upStrBuf.get(), RawLen);
           if (CvtStr.empty())
           {
             Log::Write("core") << "Unable to convert utf-16 string at " << rAddress << LogEnd;
@@ -212,9 +210,8 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address
   {
     return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [&rArch, Mode](Document& rDoc, Address const& rAddr)
     {
-      // LATER(wisk): rArch could be invalided, it'd be wiser to use architecture tag instead
       AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
-      AnlzDisasm.DisassembleWith(rArch, Mode);
+      AnlzDisasm.Disassemble(rArch.GetTag(), Mode);
     });
   }
 

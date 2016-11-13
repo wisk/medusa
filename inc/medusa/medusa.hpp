@@ -124,7 +124,7 @@ public:
   bool                            CreateFunction(Address const& rAddr);
   bool                            CreateUtf8String(Address const& rAddr);
   bool                            CreateUtf16String(Address const& rAddr);
-  void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
+  void                            FindFunctionAddressFromAddress(Address::Vector& rFunctionAddress, Address const& rAddress) const;
 
   bool                            AddTask(std::string const& rTaskName);
   bool                            AddTask(std::string const& rTaskName, Address const& rAddr);

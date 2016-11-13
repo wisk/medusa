@@ -29,7 +29,7 @@ public:
   DisassemblyView(QWidget * parent, medusa::Medusa * core);
   ~DisassemblyView(void);
 
-  virtual void OnDocumentUpdated(void);
+  virtual void OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses);
 
   bool goTo(medusa::Address const& address);
 

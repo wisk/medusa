@@ -146,9 +146,9 @@ PrintData& PrintData::MarkOffset(void)
   return *this;
 }
 
-Address::List PrintData::GetAddresses(void) const
+Address::Vector PrintData::GetAddresses(void) const
 {
-  Address::List Addrs;
+  Address::Vector Addrs;
 
   std::lock_guard<MutexType> Lock(m_Mutex);
   for (auto const& Line : m_Lines)

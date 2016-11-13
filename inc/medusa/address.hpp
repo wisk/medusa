@@ -35,9 +35,7 @@ public:
     LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
   } Type;
 
-  typedef std::list<Address> List;
   typedef std::vector<Address> Vector;
-  typedef std::shared_ptr<Address> SPType;
 
   /*!
    * \param Type defines the kind of address.

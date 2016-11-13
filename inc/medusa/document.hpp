@@ -62,7 +62,7 @@ public:
     typedef boost::signals2::signal<void (void)>                                                       QuitSignalType;
     typedef boost::signals2::signal<void (void)>                                                       DocumentUpdatedSignalType;
     typedef boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)>                   MemoryAreaUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address::List const& rAddressList)>                          AddressUpdatedSignalType;
+    typedef boost::signals2::signal<void (Address::Vector const& rAddresses)>                          AddressUpdatedSignalType;
     typedef boost::signals2::signal<void (Address const& rAddress, Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
     typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>                    TaskUpdatedSignalType;
 
@@ -84,7 +84,7 @@ public:
     virtual void OnQuit(void) {}
     virtual void OnDocumentUpdated(void) {}
     virtual void OnMemoryAreaUpdated(MemoryArea const& rMemArea, bool Removed) {}
-    virtual void OnAddressUpdated(Address::List const& rAddressList) {}
+    virtual void OnAddressUpdated(Address::Vector const& rAddresses) {}
     virtual void OnLabelUpdated(Address const& rAddress, Label const& rLabel, bool Removed) {}
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
@@ -131,16 +131,10 @@ public:
   void ForEachLabel(Database::LabelCallback Callback) const;
 
   // CrossRef
-
   bool AddCrossReference(Address const& rTo, Address const& rFrom);
   bool RemoveCrossReference(Address const& rFrom);
-  bool RemoveCrossReferences(void);
-
-  bool HasCrossReferenceFrom(Address const& rTo) const;
-  bool GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const;
-
-  bool HasCrossReferenceTo(Address const& rFrom) const;
-  bool GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const;
+  bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const;
+  bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const;
 
   // Comment
   bool GetComment(Address const& rAddress, std::string& rComment) const;

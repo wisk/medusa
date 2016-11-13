@@ -57,7 +57,7 @@ bool ControlFlowGraph::SplitBasicBlock(Address const& rDstAddr, Address const& r
   {
     if (m_Graph[itVertexPair->second].Contains(rDstAddr))
     {
-      Address::List NewBasicBlockAddresses;
+      Address::Vector NewBasicBlockAddresses;
 
       if (!m_Graph[itVertexPair->second].Split(rDstAddr, NewBasicBlockAddresses))
         break;
@@ -81,7 +81,7 @@ void ControlFlowGraph::Finalize(Document const& rDoc)
   for (auto itVertex = std::begin(m_VertexMap); itVertex != std::end(m_VertexMap); ++itVertex)
   {
     auto const& rBscBlk = m_Graph[itVertex->second];
-    Address::List const& rBlockAddrs = rBscBlk.GetAddresses();
+    Address::Vector const& rBlockAddrs = rBscBlk.GetAddresses();
 
     auto spLastInsn = std::dynamic_pointer_cast<Instruction>(rDoc.GetCell(rBscBlk.GetLastAddress()));
     if (spLastInsn == nullptr)
@@ -216,7 +216,7 @@ void ControlFlowGraph::ForEachInstruction(std::function<bool (Address const&)> P
   }
 }
 
-bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::List& rPrevAddr) const
+bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::Vector& rPrevAddr) const
 {
   auto itRange = boost::vertices(m_Graph);
   for (auto it = itRange.first; it != itRange.second; ++it)
@@ -249,7 +249,7 @@ bool ControlFlowGraph::GetPreviousAddress(Address const& rAddr, Address::List& r
   return false;
 }
 
-bool ControlFlowGraph::GetNextAddress(Address const& rAddr, Address::List& rNextAddr) const
+bool ControlFlowGraph::GetNextAddress(Address const& rAddr, Address::Vector& rNextAddr) const
 {
   auto itRange = boost::vertices(m_Graph);
   for (auto it = itRange.first; it != itRange.second; ++it)

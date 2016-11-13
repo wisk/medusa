@@ -23,19 +23,19 @@ ScrollbarAddress::~ScrollbarAddress(void)
 {
 }
 
-void ScrollbarAddress::OnAddressUpdated(medusa::Address::List const& rAddressList)
+void ScrollbarAddress::OnAddressUpdated(medusa::Address::Vector const& rAddresses)
 {
   auto const& doc = _core.GetDocument();
 
-  if (!rAddressList.empty())
+  if (!rAddresses.empty())
   {
-    doc.ConvertAddressToPosition(*rAddressList.crbegin(), _lastPos);
+    doc.ConvertAddressToPosition(*rAddresses.crbegin(), _lastPos);
     emit updated();
   }
 
   _mutex.lock();
   QPainter p(&_img);
-  std::for_each(std::begin(rAddressList), std::end(rAddressList), [&](medusa::Address const& addr)
+  std::for_each(std::begin(rAddresses), std::end(rAddresses), [&](medusa::Address const& addr)
   {
     medusa::u32 pos;
     if (!doc.ConvertAddressToPosition(addr, pos))

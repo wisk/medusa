@@ -265,7 +265,7 @@ namespace medusa
     }
   }
 
-  bool Graph::GetPreviousAddress(Address const& rAddr, Address::List& rPrevAddr) const
+  bool Graph::GetPreviousAddress(Address const& rAddr, Address::Vector& rPrevAddr) const
   {
     auto itRange = boost::vertices(m_Graph);
     for (auto it = itRange.first; it != itRange.second; ++it)
@@ -306,7 +306,7 @@ namespace medusa
     return false;
   }
 
-  bool Graph::GetNextAddress(Address const& rAddr, Address::List& rNextAddr) const
+  bool Graph::GetNextAddress(Address const& rAddr, Address::Vector& rNextAddr) const
   {
     auto itRange = boost::vertices(m_Graph);
     for (auto it = itRange.first; it != itRange.second; ++it)

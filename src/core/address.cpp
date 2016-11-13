@@ -13,7 +13,7 @@ Address::Address(std::string const& rAddrName)
   m_Offset     = 0;
   m_BaseSize   = 16;
   m_OffsetSize = 64;
-  m_Type       = DefaultType;
+  m_Type       = LinearType;
 
   switch (AddrStr[0])
   {
@@ -21,7 +21,7 @@ Address::Address(std::string const& rAddrName)
   case '+': m_Type = ArchitectureType; break;
   default:                             break;
   }
-  if (m_Type != DefaultType)
+  if (m_Type != LinearType)
     AddrStr.erase(std::begin(AddrStr), std::begin(AddrStr) + 1);
 
   if (AddrStr.compare(0, 2, "0x") == 0)

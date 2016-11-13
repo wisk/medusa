@@ -168,6 +168,11 @@ bool Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
   return true;
 }
 
+//bool Document::AddLabels(std::vector<std::pair<Address const&, Label const&>> const & rAddressLabelPairs, bool Force)
+//{
+//  return false;
+//}
+
 bool Document::RemoveLabel(Address const& rAddr)
 {
   if (m_spDatabase == nullptr)
@@ -217,54 +222,24 @@ bool Document::RemoveCrossReference(Address const& rFrom)
   return m_spDatabase->RemoveCrossReference(rFrom);
 }
 
-bool Document::RemoveCrossReferences(void)
+bool Document::GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const
 {
   if (m_spDatabase == nullptr)
   {
     Log::Write("core") << "database is null" << LogEnd;
     return false;
   }
-  return m_spDatabase->RemoveCrossReferences();
+  return m_spDatabase->GetCrossReferenceFrom(rTo, rFrom);
 }
 
-bool Document::HasCrossReferenceFrom(Address const& rTo) const
+bool Document::GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const
 {
   if (m_spDatabase == nullptr)
   {
     Log::Write("core") << "database is null" << LogEnd;
     return false;
   }
-  return m_spDatabase->HasCrossReferenceFrom(rTo);
-}
-
-bool Document::GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const
-{
-  if (m_spDatabase == nullptr)
-  {
-    Log::Write("core") << "database is null" << LogEnd;
-    return false;
-  }
-  return m_spDatabase->GetCrossReferenceFrom(rTo, rFromList);
-}
-
-bool Document::HasCrossReferenceTo(Address const& rFrom) const
-{
-  if (m_spDatabase == nullptr)
-  {
-    Log::Write("core") << "database is null" << LogEnd;
-    return false;
-  }
-  return m_spDatabase->HasCrossReferenceTo(rFrom);
-}
-
-bool Document::GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const
-{
-  if (m_spDatabase == nullptr)
-  {
-    Log::Write("core") << "database is null" << LogEnd;
-    return false;
-  }
-  return m_spDatabase->GetCrossReferenceTo(rFrom, rToList);
+  return m_spDatabase->GetCrossReferenceTo(rFrom, rTo);
 }
 
 bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force)
@@ -467,33 +442,28 @@ bool Document::SetCell(Address const& rAddr, Cell::SPType spCell, bool Force)
     Log::Write("core") << "database is null" << LogEnd;
     return false;
   }
-  Address::List ErasedAddresses;
+  Address::Vector ErasedAddresses;
+  ErasedAddresses.push_back(rAddr);
   if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))
     return false;
   RemoveLabelIfNeeded(rAddr);
 
   for (Address const& rErsdAddr : ErasedAddresses)
-    if (GetCell(rErsdAddr) == nullptr)
-    {
-      if (HasCrossReferenceTo(rErsdAddr))
-        RemoveCrossReference(rErsdAddr);
+  {
+    Address::Vector Addrs;
+    if (GetCrossReferenceFrom(rErsdAddr, Addrs))
+      for (auto const& rAddr : Addrs)
+        RemoveCrossReference(rAddr);
+    if (GetCrossReferenceTo(rErsdAddr, Addrs))
+      RemoveCrossReference(rErsdAddr);
 
-      if (HasCrossReferenceFrom(rErsdAddr))
-      {
-        auto Label = GetLabelFromAddress(rErsdAddr);
-        if (Label.GetType() != Label::Unknown)
-        {
-          m_LabelUpdatedSignal(rErsdAddr, Label, true);
-        }
-      }
-    }
-
-  Address::List AddressList;
-  AddressList.push_back(rAddr);
-  AddressList.merge(ErasedAddresses);
-
-  m_DocumentUpdatedSignal();
-  m_AddressUpdatedSignal(AddressList);
+    //auto Label = GetLabelFromAddress(rErsdAddr);
+    //if (Label.GetType() != Label::Unknown)
+    //{
+    //  m_LabelUpdatedSignal(rErsdAddr, Label, true);
+    //}
+  }
+  m_AddressUpdatedSignal(ErasedAddresses);
 
   return true;
 }
@@ -505,7 +475,8 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label
     Log::Write("core") << "database is null" << LogEnd;
     return false;
   }
-  Address::List ErasedAddresses;
+  Address::Vector ErasedAddresses;
+  ErasedAddresses.push_back(rAddr);
   if (!m_spDatabase->SetCellData(rAddr, *spCell->GetData(), ErasedAddresses, Force))
     return false;
 
@@ -514,22 +485,14 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label
   for (Address const& rErsdAddr : ErasedAddresses)
     if (GetCell(rErsdAddr) == nullptr)
     {
-      if (HasCrossReferenceTo(rErsdAddr))
-        RemoveCrossReference(rErsdAddr);
+      RemoveCrossReference(rErsdAddr);
 
-      if (HasCrossReferenceFrom(rErsdAddr))
+      auto Label = GetLabelFromAddress(rErsdAddr);
+      if (Label.GetType() != Label::Unknown)
       {
-        auto Label = GetLabelFromAddress(rErsdAddr);
-        if (Label.GetType() != Label::Unknown)
-        {
-          m_LabelUpdatedSignal(rErsdAddr, Label, true);
-        }
+        m_LabelUpdatedSignal(rErsdAddr, Label, true);
       }
     }
-
-  Address::List AddressList;
-  AddressList.push_back(rAddr);
-  AddressList.merge(ErasedAddresses);
 
   Label OldLabel;
   if (m_spDatabase->GetLabel(rAddr, OldLabel) == true)
@@ -545,11 +508,11 @@ bool Document::SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label
 
     m_LabelUpdatedSignal(rAddr, OldLabel, true);
   }
-  m_spDatabase->AddLabel(rAddr, rLabel);
+  if (!m_spDatabase->AddLabel(rAddr, rLabel))
+    return false;
 
   m_LabelUpdatedSignal(rAddr, rLabel, false);
-  m_DocumentUpdatedSignal();
-  m_AddressUpdatedSignal(AddressList);
+  m_AddressUpdatedSignal(ErasedAddresses);
 
   return true;
 }
@@ -564,7 +527,7 @@ bool Document::DeleteCell(Address const& rAddr)
   if (!m_spDatabase->DeleteCellData(rAddr))
     return false;
 
-  Address::List DelAddr;
+  Address::Vector DelAddr;
   DelAddr.push_back(rAddr);
   m_AddressUpdatedSignal(DelAddr);
   m_DocumentUpdatedSignal();
@@ -590,9 +553,9 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell::SPType spMultiCell,
     return false;
 
   m_DocumentUpdatedSignal();
-  Address::List AddressList;
-  AddressList.push_back(rAddr);
-  m_AddressUpdatedSignal(AddressList);
+  Address::Vector Addresses;
+  Addresses.push_back(rAddr);
+  m_AddressUpdatedSignal(Addresses);
 
   if (spMultiCell->GetType() == MultiCell::StructType)
   {
@@ -1046,8 +1009,13 @@ void Document::RemoveLabelIfNeeded(Address const& rAddr)
     return;
   if (Lbl.GetType() & (Label::Exported | Label::Imported))
     return;
-  if (!HasCrossReferenceFrom(rAddr))
-    RemoveLabel(rAddr);
+
+  Address::Vector From;
+  if (!GetCrossReferenceFrom(rAddr, From))
+    return;
+  if (From.size() != 0)
+    return;
+  RemoveLabel(rAddr);
 }
 
 bool Document::_ApplyStructure(Address const& rAddr, StructureDetail const& rStructDtl)

@@ -12,7 +12,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   , medusa::FullDisassemblyView(
     *core,
     medusa::FormatDisassembly::ShowAddress |
-    medusa::FormatDisassembly::AddSpaceBeforeXref |
+    medusa::FormatDisassembly::AddNewLineBeforeCrossReference |
     medusa::FormatDisassembly::Indent,
     0, 0,
     core->GetDocument().GetStartAddress())
@@ -51,7 +51,7 @@ DisassemblyView::~DisassemblyView(void)
 {
 }
 
-void DisassemblyView::OnDocumentUpdated(void)
+void DisassemblyView::OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses)
 {
   emit viewUpdated();
 }

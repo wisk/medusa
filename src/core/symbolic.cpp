@@ -267,7 +267,7 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
 
     while (true)
     {
-      Address::List NextAddrs;
+      Address::Vector NextAddrs;
 
       Block Blk(m_PcRegId);
       if (!_ExecuteBlock(SymCtxt, CurAddr, Blk))
@@ -322,7 +322,7 @@ bool Symbolic::Execute(Address const& rAddr, Symbolic::Callback Cb)
       while (NextAddrs.size() != 1)
       {
         StkAddrs.push(NextAddrs.front());
-        NextAddrs.pop_front();
+        NextAddrs.erase(std::end(NextAddrs) - 1);
       }
 
       LastAddr = CurAddr;
@@ -384,7 +384,7 @@ bool Symbolic::_ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, 
   return true;
 }
 
-bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::List& rNextAddresses) const
+bool Symbolic::_DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::Vector& rNextAddresses) const
 {
   auto PcExprs = rSymCtxt.BacktrackRegister(rCurAddr, m_PcRegId);
   if (PcExprs.empty())

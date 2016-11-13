@@ -20,16 +20,16 @@ public:
   };
 
   BasicBlockVertexProperties(void);
-  BasicBlockVertexProperties(Document const& rDoc, Address::List const& rAddresses);
+  BasicBlockVertexProperties(Document const& rDoc, Address::Vector const& rAddresses);
 
   BasicBlockVertexProperties operator=(BasicBlockVertexProperties const& rBscBlk);
 
-  Address::List const& GetAddresses(void) const { return m_Addresses; }
+  Address::Vector const& GetAddresses(void) const { return m_Addresses; }
   Address              GetFirstAddress(void) const;
   Address              GetLastAddress(void) const;
   size_t               GetNumberOfInstruction(void) const { return m_Addresses.size(); }
   bool                 Contains(Address const& rAddr) const;
-  bool                 Split(Address const& rAddr, Address::List& rAddresses);
+  bool                 Split(Address const& rAddr, Address::Vector& rAddresses);
 
   bool                 GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const;
   bool                 GetNextAddress(Address const& rAddr, Address& rNextAddr) const;
@@ -40,7 +40,7 @@ public:
 
 private:
   Document const* m_pDoc;
-  Address::List m_Addresses;
+  Address::Vector m_Addresses;
   mutable u32 m_Flags;
   mutable u32 m_TestedFlags;
 };
