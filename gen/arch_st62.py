@@ -52,8 +52,7 @@ class St62ArchConvertion(ArchConvertion):
         arch_name = self.GetArchName()
 
         for name in sorted(self.arch['instruction']['table']):
-            if 'FP' in name:  opcd_no = 0xc0
-            else:             opcd_no = 0x00
+            opcd_no = 0x00
 
             res += 'const %sArchitecture::TDisassembler %sArchitecture::m_%s[%#x] =\n' % (arch_name, arch_name, name.capitalize(), 0x10 - opcd_no)
             res += '{\n'
@@ -65,8 +64,7 @@ class St62ArchConvertion(ArchConvertion):
             res += '\n};\n\n'
 
         for name in sorted(self.arch['instruction']['table']):
-            if 'FP' in name: opcd_no = 0xc0
-            else:            opcd_no = 0x00
+            opcd_no = 0x00
 
             for opcd in self.arch['instruction']['table'][name]:
                 res += self._ST62_GenerateInstructionComment(opcd)

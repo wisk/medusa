@@ -1806,26 +1806,6 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
     if (!_AddCellDataToCache(Id, Offset, rCellData))
       return false;
 
-    /*
-    {
-      std::lock_guard<std::mutex> Lock(m_Lock);
-
-      MemoryArea MemArea;
-      soci::statement Stmt = (m_Session.prepare <<
-        "SELECT * "
-        "FROM MemoryArea",
-        soci::into(MemArea)
-        );
-      if (!Stmt.execute(true))
-        return;
-      do
-      {
-        m_Lock.unlock();
-        Callback(MemArea);
-        m_Lock.lock();
-      } while (Stmt.fetch());
-    }*/
-
     u16 CellSize = rCellData.GetSize();
     u32 DelCellMemAreaId;
     OffsetType DelCellMemAreaOff;
@@ -1868,8 +1848,6 @@ bool SociDatabase::DeleteCellData(Address const &rAddress)
 
     if (!_FlushCellDataCache())
       return false;
-    //if (!_FlushCellDataCacheIfRequired(Id, Offset))
-    //  return false;
 
     m_Session <<
       "DELETE FROM CellData "

@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct  5 22:57:00 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Nov 14 21:29:28 2016) */
 enum ST62Opcode
 {
   ST62_Opcode_Unknown,

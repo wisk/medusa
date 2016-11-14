@@ -9,8 +9,10 @@ set(HDR
 set(SRC
   ${SRCROOT}/main.cpp
   ${SRCROOT}/st62_architecture.cpp
+  ${SRCROOT}/st62_decoder.cpp
   ${SRCROOT}/st62_opcode.cpp
   ${SRCROOT}/st62_operand.cpp
+  ${SRCROOT}/st62_mnemonic.cpp
 )
 
 medusa_add_module(arch st62 "${HDR}" "${SRC}")

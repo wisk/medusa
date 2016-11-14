@@ -61,7 +61,6 @@ set(SRC
   py_instruction.cpp
   py_document.cpp
   py_medusa.cpp
-  py_xrefs.cpp
   py_context.cpp
   py_execution.cpp
   py_symbolic.cpp

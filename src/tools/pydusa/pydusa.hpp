@@ -17,7 +17,6 @@ void PydusaBinaryStream(py::module& rPyMod);
 void PydusaCell(py::module& rPyMod);
 void PydusaInstruction(py::module& rPyMod);
 void PydusaMemoryArea(py::module& rPyMod);
-void PydusaXRefs(py::module& rPyMod);
 void PydusaDatabase(py::module& rPyMod);
 
 void PydusaConfiguration(py::module& rPyMod);

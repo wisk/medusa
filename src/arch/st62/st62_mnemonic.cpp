@@ -1,0 +1,35 @@
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Mon Nov 14 21:29:28 2016) */
+#include "st62_architecture.hpp"
+const char *St62Architecture::m_Mnemonic[0x1e] =
+{
+  "unknown",
+  "add",
+  "addi",
+  "and",
+  "andi",
+  "call",
+  "com",
+  "cp",
+  "cpi",
+  "dec",
+  "inc",
+  "jp",
+  "jrc",
+  "jrnc",
+  "jrnz",
+  "jrr",
+  "jrs",
+  "jrz",
+  "ld",
+  "ldi",
+  "nop",
+  "res",
+  "ret",
+  "reti",
+  "rlc",
+  "set",
+  "stop",
+  "sub",
+  "subi",
+  "wait"
+};

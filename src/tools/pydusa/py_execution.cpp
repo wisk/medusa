@@ -89,12 +89,12 @@ namespace pydusa
     return pExecution->Hook(rLabelName, Type, Callback);
   }
 
-  u64 Execution_GetFunctionParameter(Execution* pExecution, std::string const& rCallConv, u32 ParamNo)
+  py::object Execution_GetFunctionParameter(Execution* pExecution, std::string const& rCallConv, u32 ParamNo)
   {
     BitVector ParamVal;
     if (!pExecution->GetFunctionParameter(rCallConv, ParamNo, ParamVal))
       return py::none();
-    return ParamVal.ConvertTo<u64>();
+    return py::cast(ParamVal.ConvertTo<u64>());
   }
 
   py::object Execution_GetCallingConvention(Execution const* pExecution, Address const& rAddress)

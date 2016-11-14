@@ -19,7 +19,6 @@ PYBIND11_PLUGIN(pydusa)
   PydusaCell(m);
   PydusaInstruction(m);
   PydusaMemoryArea(m);
-  PydusaXRefs(m);
   PydusaDatabase(m);
 
   PydusaConfiguration(m);
