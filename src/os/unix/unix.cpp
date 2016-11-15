@@ -36,9 +36,9 @@ bool UnixOperatingSystem::InitializeContext(
   std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
 {
   auto const& rCpuInfo = rCpuCtxt.GetCpuInformation();
-  u64 const StkPtr = 0xbedb4000;
-  u64 const StkLen = 0x21000;
-  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+  u64  const StkPtr = 0xbedb4000;
+  u64  const StkLen = 0x21000;
+  auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   void* pStkMem;
   if (!rMemCtxt.AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem))

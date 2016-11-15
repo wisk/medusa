@@ -16,6 +16,7 @@ BREAK    = pydusa.Emulator.BREAK
 CONTINUE = pydusa.Emulator.CONTINUE
 STOP     = pydusa.Emulator.STOP
 
+print dir(pydusa.MemoryAccess.READ)
 R_W = pydusa.MemoryAccess.READ | pydusa.MemoryAccess.WRITE
 
 OUTPUT = ''
@@ -27,11 +28,8 @@ def on_insn(cpu, mem, ad):
 
     print '_' * 80
     print cpu
-    insn = core.disasm_cur_insn(cpu, mem)
-    print core.fmt_cell(ad, insn)
-
-    # d = mem.read(0x00000000bedd38c0, 8)
-    # print repr(d)
+    insn = core.disassemble_current_instruction(cpu, mem)
+    print core.format_cell(ad, insn)
 
     return CONTINUE
 
@@ -44,13 +42,13 @@ def on_unk_api(cpu, mem, ad):
 def on_libc_start_main(cpu, mem, ad):
     global exe
     # ref: https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA.junk/baselib---libc-start-main-.html
-    main      = exe.get_func_param('system_v', 0)
-    argc      = exe.get_func_param('system_v', 1)
-    ubp_av    = exe.get_func_param('system_v', 2)
-    init      = exe.get_func_param('system_v', 3)
-    fini      = exe.get_func_param('system_v', 4)
-    rtld_fini = exe.get_func_param('system_v', 5)
-    stack_end = exe.get_func_param('system_v', 6)
+    main      = exe.get_function_parameter('system_v', 0)
+    argc      = exe.get_function_parameter('system_v', 1)
+    ubp_av    = exe.get_function_parameter('system_v', 2)
+    init      = exe.get_function_parameter('system_v', 3)
+    fini      = exe.get_function_parameter('system_v', 4)
+    rtld_fini = exe.get_function_parameter('system_v', 5)
+    stack_end = exe.get_function_parameter('system_v', 6)
 
     print '__libc_start_main(%016x, %d, %016x, %016x, %016x, %016x, %016x)' % (main, argc, ubp_av, init, fini, rtld_fini, stack_end)
 
@@ -66,10 +64,10 @@ def on_libc_start_main(cpu, mem, ad):
 def on_strrchr(cpu, mem, ad):
     global exe
     # ref: http://www.cplusplus.com/reference/cstring/strrchr/
-    s = exe.get_func_param('system_v', 0)
-    c = exe.get_func_param('system_v', 1)
+    s = exe.get_function_parameter('system_v', 0)
+    c = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     s_str = mem.read_utf8(s)
 
@@ -88,10 +86,10 @@ def on_strrchr(cpu, mem, ad):
 def on_setlocale(cpu, mem, ad):
     global exe
     # ref: http://www.cplusplus.com/reference/clocale/setlocale/
-    category = exe.get_func_param('system_v', 0)
-    locale   = exe.get_func_param('system_v', 1)
+    category = exe.get_function_parameter('system_v', 0)
+    locale   = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     locale_str = mem.read_utf8(locale)
 
@@ -105,10 +103,10 @@ DIRNAME = None
 def on_bindtextdomain(cpu, mem, ad):
     global exe, DIRNAME
     # ref: http://linux.die.net/man/3/bindtextdomain
-    domainname = exe.get_func_param('system_v', 0)
-    DIRNAME    = exe.get_func_param('system_v', 1)
+    domainname = exe.get_function_parameter('system_v', 0)
+    DIRNAME    = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     domainname_str = mem.read_utf8(domainname)
     dirname_str    = mem.read_utf8(DIRNAME)
@@ -121,9 +119,9 @@ def on_bindtextdomain(cpu, mem, ad):
 def on_textdomain(cpu, mem, ad):
     global exe, DIRNAME
     # ref: http://linux.die.net/man/3/textdomain
-    domainname = exe.get_func_param('system_v', 0)
+    domainname = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     domainname_str = mem.read_utf8(domainname)
 
@@ -136,7 +134,7 @@ def on___cxa_atexit(cpu, mem, ad):
     global exe
     # ref: http://refspecs.linuxbase.org/LSB_3.1.0/LSB-Core-generic/LSB-Core-generic/baselib---cxa-atexit.html
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     cpu.rax = 0 # ???
     return BREAK
@@ -144,9 +142,9 @@ def on___cxa_atexit(cpu, mem, ad):
 def on_isatty(cpu, mem, ad):
     global exe
     # ref: http://linux.die.net/man/3/isatty
-    fd = exe.get_func_param('system_v', 0)
+    fd = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'isatty(%d)' % fd
 
@@ -157,9 +155,9 @@ def on_getenv(cpu, mem, ad):
     global exe
     # ref: http://man7.org/linux/man-pages/man3/getenv.3.html
 
-    name = exe.get_func_param('system_v', 0)
+    name = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     name_str = mem.read_utf8(name)
 
@@ -172,10 +170,10 @@ def on_ioctl(cpu, mem, ad):
     global exe
     # ref: http://man7.org/linux/man-pages/man2/ioctl.2.html
 
-    fd = exe.get_func_param('system_v', 0)
-    request = exe.get_func_param('system_v', 1)
+    fd = exe.get_function_parameter('system_v', 0)
+    request = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2) # ....
+    exe.return_from_function('system_v', 2) # ....
 
     print 'ioctl(%d, %08x, ...)' % (fd, request)
 
@@ -187,13 +185,13 @@ GETOPT_IDX = 1
 def on_getopt_long(cpu, mem, ad):
     global exe, doc, GETOPT_IDX
     # ref: http://linux.die.net/man/3/getopt_long
-    argc      = exe.get_func_param('system_v', 0)
-    argv      = exe.get_func_param('system_v', 1)
-    optstring = exe.get_func_param('system_v', 2)
-    longopts  = exe.get_func_param('system_v', 3)
-    longindex = exe.get_func_param('system_v', 4)
+    argc      = exe.get_function_parameter('system_v', 0)
+    argv      = exe.get_function_parameter('system_v', 1)
+    optstring = exe.get_function_parameter('system_v', 2)
+    longopts  = exe.get_function_parameter('system_v', 3)
+    longindex = exe.get_function_parameter('system_v', 4)
 
-    exe.ret_from_func('system_v', 5)
+    exe.return_from_function('system_v', 5)
 
     argv_list = []
     for i in range(argc):
@@ -232,7 +230,7 @@ def on_getopt_long(cpu, mem, ad):
     cpu.rax = res & 0xffffffff
 
 
-    optind_addr = doc.get_label_addr('optind')
+    optind_addr = doc.get_label_address('optind')
     mem.write_u32(optind_addr.offset, GETOPT_IDX)
 
     return BREAK
@@ -244,10 +242,10 @@ def on___errno_location(cpu, mem, ad):
 
     if not ERRNO_LOCATION:
         ERRNO_LOCATION = 0x1100000000
-        mem.alloc(ERRNO_LOCATION, 4, R_W)
+        mem.allocate(ERRNO_LOCATION, 4, R_W)
         mem.write_u32(ERRNO_LOCATION, 0)
 
-    exe.ret_from_func('system_v', 0)
+    exe.return_from_function('system_v', 0)
 
     print '__errno_location()'
 
@@ -260,24 +258,24 @@ alloc_pos  = 0
 def on_malloc(cpu, mem, ad):
     global exe, alloc_addr, alloc_pos, alloced
 
-    size = exe.get_func_param('system_v', 0)
+    size = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     ptr_alloc = alloc_addr + alloc_pos
     print("malloc(0x%08x) = 0x%016x" % (size, ptr_alloc))
 
     size = (size + 0x1000) & 0xFFFFF000 # Pages alignment
-    mem.alloc(ptr_alloc, size, R_W)
+    mem.allocate(ptr_alloc, size, R_W)
     alloc_pos += size
 
     cpu.rax = ptr_alloc
     return BREAK
 
 def on_free(cpu, mem, ad):
-    ptr = exe.get_func_param('system_v', 0)
+    ptr = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'free(%016x)' % ptr
     mem.free(ptr)
@@ -287,11 +285,11 @@ def on_free(cpu, mem, ad):
 def on_memcpy(cpu, mem, ad):
     global exe
 
-    dst = exe.get_func_param('system_v', 0)
-    src = exe.get_func_param('system_v', 1)
-    sz  = exe.get_func_param('system_v', 2)
+    dst = exe.get_function_parameter('system_v', 0)
+    src = exe.get_function_parameter('system_v', 1)
+    sz  = exe.get_function_parameter('system_v', 2)
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     print 'memcpy(%016x, %016x, %016x)' % (dst, src, sz)
 
@@ -304,11 +302,11 @@ def on_memcpy(cpu, mem, ad):
 def on___xstat(cpu, mem, ad):
     global exe
     # ref: https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-PDA/LSB-PDA/baselib-xstat-1.html
-    ver      = exe.get_func_param('system_v', 0)
-    path     = exe.get_func_param('system_v', 1)
-    stat_buf = exe.get_func_param('system_v', 2)
+    ver      = exe.get_function_parameter('system_v', 0)
+    path     = exe.get_function_parameter('system_v', 1)
+    stat_buf = exe.get_function_parameter('system_v', 2)
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     path_str = mem.read_utf8(path)
 
@@ -413,11 +411,11 @@ def on___xstat(cpu, mem, ad):
 def on_dcgettext(cpu, mem, ad):
     global exe
     # ref: https://refspecs.linuxbase.org/LSB_2.1.0/LSB-generic/LSB-generic/baselib-dcgettext.html
-    domainname = exe.get_func_param('system_v', 0)
-    msgid      = exe.get_func_param('system_v', 1)
-    category   = exe.get_func_param('system_v', 2)
+    domainname = exe.get_function_parameter('system_v', 0)
+    msgid      = exe.get_function_parameter('system_v', 1)
+    category   = exe.get_function_parameter('system_v', 2)
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     domainname_str = mem.read_utf8(domainname)
     msgid_str = mem.read_utf8(msgid)
@@ -430,9 +428,9 @@ def on_dcgettext(cpu, mem, ad):
 def on_strlen(cpu, mem, ad):
     global exe
 
-    s = exe.get_func_param('system_v', 0)
+    s = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     s_str = mem.read_utf8(s)
     res = len(s_str)
@@ -445,9 +443,9 @@ def on_strlen(cpu, mem, ad):
 def on__setjmp(cpu, mem, ad):
     global exe
     # ref: http://linux.die.net/man/3/_setjmp
-    env = exe.get_func_param('system_v', 0)
+    env = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print '_setjmp(%016x)' % env
 
@@ -458,7 +456,7 @@ def on___ctype_get_mb_cur_max(cpu, mem, ad):
     global exe
     # ref: https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA.junk/baselib---ctype-get-mb-cur-max-1.html
 
-    exe.ret_from_func('system_v', 0)
+    exe.return_from_function('system_v', 0)
 
     print '__ctype_get_mb_cur_max()'
 
@@ -468,12 +466,12 @@ def on___ctype_get_mb_cur_max(cpu, mem, ad):
 def on_fwrite_unlocked(cpu, mem, ad):
     global exe, OUTPUT
     # ref: http://linux.die.net/man/3/fwrite_unlocked
-    ptr    = exe.get_func_param('system_v', 0)
-    size   = exe.get_func_param('system_v', 1)
-    n      = exe.get_func_param('system_v', 2)
-    stream = exe.get_func_param('system_v', 3)
+    ptr    = exe.get_function_parameter('system_v', 0)
+    size   = exe.get_function_parameter('system_v', 1)
+    n      = exe.get_function_parameter('system_v', 2)
+    stream = exe.get_function_parameter('system_v', 3)
 
-    exe.ret_from_func('system_v', 4)
+    exe.return_from_function('system_v', 4)
 
     ptr_s = mem.read_utf8(ptr)
 
@@ -487,10 +485,10 @@ def on_fwrite_unlocked(cpu, mem, ad):
 def on___overflow(cpu, mem, ad):
     global exe, OUTPUT
 
-    f = exe.get_func_param('system_v', 0)
-    c = exe.get_func_param('system_v', 1)
+    f = exe.get_function_parameter('system_v', 0)
+    c = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     print '__overflow(%016x, %08x)' % (f, c)
 
@@ -502,10 +500,10 @@ def on___overflow(cpu, mem, ad):
 def on_strcoll(cpu, mem, ad):
     global exe
     # ref: http://www.cplusplus.com/reference/cstring/strcoll/
-    str1 = exe.get_func_param('system_v', 0)
-    str2 = exe.get_func_param('system_v', 1)
+    str1 = exe.get_function_parameter('system_v', 0)
+    str2 = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     str1_str = mem.read_utf8(str1)
     str2_str = mem.read_utf8(str2)
@@ -519,10 +517,10 @@ def on_strcoll(cpu, mem, ad):
 def on___fprintf_chk(cpu, mem, ad):
     global exe
 
-    stream = exe.get_func_param('system_v', 0)
-    fmt = exe.get_func_param('system_v', 1)
+    stream = exe.get_function_parameter('system_v', 0)
+    fmt = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 0) # ...
+    exe.return_from_function('system_v', 0) # ...
 
     fmt_str = mem.read_utf8(fmt)
 
@@ -533,11 +531,11 @@ def on___fprintf_chk(cpu, mem, ad):
 def on_strncmp(cpu, mem, ad):
     global exe
     # ref: http://www.cplusplus.com/reference/cstring/strcoll/
-    str1 = exe.get_func_param('system_v', 0)
-    str2 = exe.get_func_param('system_v', 1)
-    n    = exe.get_func_param('system_v', 2)
+    str1 = exe.get_function_parameter('system_v', 0)
+    str2 = exe.get_function_parameter('system_v', 1)
+    n    = exe.get_function_parameter('system_v', 2)
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     str1_str = mem.read_utf8(str1)[:n]
     str2_str = mem.read_utf8(str2)[:n]
@@ -550,10 +548,10 @@ def on_strncmp(cpu, mem, ad):
 
 def on_strstr(cpu, mem, ad):
     global exe
-    str1 = exe.get_func_param('system_v', 0)
-    str2 = exe.get_func_param('system_v', 1)
+    str1 = exe.get_function_parameter('system_v', 0)
+    str2 = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     str1_str = mem.read_utf8(str1)
     str2_str = mem.read_utf8(str2)
@@ -573,10 +571,10 @@ def on_strstr(cpu, mem, ad):
 def on_lgetfilecon(cpu, mem, ad):
     global exe
     # ref: http://manpages.ubuntu.com/manpages/dapper/man3/getfilecon.3.html
-    path = exe.get_func_param('system_v', 0)
-    con  = exe.get_func_param('system_v', 1)
+    path = exe.get_function_parameter('system_v', 0)
+    con  = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     path_str = mem.read_utf8(path)
 
@@ -588,10 +586,10 @@ def on_lgetfilecon(cpu, mem, ad):
 def on_error(cpu, mem, ad):
     global exe
     # ref: http://linux.die.net/man/3/error
-    status = exe.get_func_param('system_v', 0)
-    errnum = exe.get_func_param('system_v', 1)
-    format = exe.get_func_param('system_v', 2)
-    exe.ret_from_func('system_v', 1)
+    status = exe.get_function_parameter('system_v', 0)
+    errnum = exe.get_function_parameter('system_v', 1)
+    format = exe.get_function_parameter('system_v', 2)
+    exe.return_from_function('system_v', 1)
 
     format_str = mem.read_utf8(format)
     param_no = 3
@@ -602,17 +600,17 @@ def on_error(cpu, mem, ad):
         if c == '%':
             p = format_str[i + 1]
             if p == '*':
-                param.append(exe.get_func_param('system_v', param_no))
+                param.append(exe.get_function_parameter('system_v', param_no))
                 param_no += 1
                 p = format_str[i + 2]
 
             if p == 's':
-                p_ptr = exe.get_func_param('system_v', param_no)
+                p_ptr = exe.get_function_parameter('system_v', param_no)
                 param.append(mem.read_utf8(p_ptr))
                 param_no += 1
                 continue
 
-            param.append(exe.get_func_param('system_v', param_no))
+            param.append(exe.get_function_parameter('system_v', param_no))
             param_no += 1
 
     res = format_str % tuple(param)
@@ -653,10 +651,10 @@ def on_localeconv(cpu, mem, ad):
 
         # ref: http://www.cplusplus.com/reference/clocale/lconv/
         lc_info = ".\x00"
-        mem.alloc(LC_DATA, 2, R_W)
+        mem.allocate(LC_DATA, 2, R_W)
         mem.write(LC_DATA, lc_info)
 
-        mem.alloc(LC_ADDR, 8 * 10 + 1 * 8, R_W)
+        mem.allocate(LC_ADDR, 8 * 10 + 1 * 8, R_W)
         mem.write_u64(LC_ADDR + 0 * 8, LC_DATA + 0)
         mem.write_u64(LC_ADDR + 1 * 8, LC_DATA + 1)
         mem.write_u64(LC_ADDR + 2 * 8, LC_DATA + 1)
@@ -667,7 +665,7 @@ def on_localeconv(cpu, mem, ad):
         mem.write_u64(LC_ADDR + 7 * 8, LC_DATA + 1)
         mem.write(LC_ADDR + 8 * 8, '\xff' * 8)
 
-    exe.ret_from_func('system_v', 0)
+    exe.return_from_function('system_v', 0)
 
     print 'localeconv() = %016x' % LC_ADDR
 
@@ -679,9 +677,9 @@ PW_ADDR = None
 def on_getpwuid(cpu, mem, ad):
     global exe, PW_ADDR
 
-    uid = exe.get_func_param('system_v', 0)
+    uid = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'getpwuid(%d)' % uid
 
@@ -701,7 +699,7 @@ def on_getpwuid(cpu, mem, ad):
 
         PW_ADDR = 0x90000000
 
-        mem.alloc(PW_ADDR, 0x200, R_W)
+        mem.allocate(PW_ADDR, 0x200, R_W)
         mem.write(PW_ADDR, '\x00' * 0x200)
 
         PW_NAME = PW_ADDR + 8 + 8 + 4 + 4 + 4 + 8 + 8 + 8 + 8 + 4
@@ -716,9 +714,9 @@ GR_ADDR = None
 def on_getgrgid(cpu, mem, ad):
     global exe, GR_ADDR
 
-    gid = exe.get_func_param('system_v', 0)
+    gid = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'getgrgid(%d)' % gid
 
@@ -732,7 +730,7 @@ def on_getgrgid(cpu, mem, ad):
 
         GR_ADDR = PW_ADDR + 0x400
 
-        mem.alloc(GR_ADDR, 0x200, R_W)
+        mem.allocate(GR_ADDR, 0x200, R_W)
         mem.write(GR_ADDR, '\x00' * 0x200)
 
         GR_NAME = GR_ADDR + 0x100
@@ -747,10 +745,10 @@ def on_getgrgid(cpu, mem, ad):
 def on_strcpy(cpu, mem, ad):
     global exe
 
-    dst = exe.get_func_param('system_v', 0)
-    src = exe.get_func_param('system_v', 1)
+    dst = exe.get_function_parameter('system_v', 0)
+    src = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     data = mem.read_utf8(src)
     mem.write(dst, data + '\x00')
@@ -763,12 +761,12 @@ def on_strcpy(cpu, mem, ad):
 def on___sprintf_chk(cpu, mem, ad):
     global exe
     # ref: http://refspecs.linux-foundation.org/LSB_4.0.0/LSB-Core-generic/LSB-Core-generic/libc---sprintf-chk-1.html
-    buf    = exe.get_func_param('system_v', 0)
-    flag   = exe.get_func_param('system_v', 1)
-    buflen = exe.get_func_param('system_v', 2)
-    fmt    = exe.get_func_param('system_v', 3)
+    buf    = exe.get_function_parameter('system_v', 0)
+    flag   = exe.get_function_parameter('system_v', 1)
+    buflen = exe.get_function_parameter('system_v', 2)
+    fmt    = exe.get_function_parameter('system_v', 3)
 
-    exe.ret_from_func('system_v', 0)
+    exe.return_from_function('system_v', 0)
 
     fmt_str = mem.read_utf8(fmt)
 
@@ -780,17 +778,17 @@ def on___sprintf_chk(cpu, mem, ad):
         if c == '%':
             p = fmt_str[i + 1]
             if p == '*':
-                param.append(exe.get_func_param('system_v', param_no))
+                param.append(exe.get_function_parameter('system_v', param_no))
                 param_no += 1
                 p = fmt_str[i + 2]
 
             if p == 's':
-                p_ptr = exe.get_func_param('system_v', param_no)
+                p_ptr = exe.get_function_parameter('system_v', param_no)
                 param.append(mem.read_utf8(p_ptr))
                 param_no += 1
                 continue
 
-            param.append(exe.get_func_param('system_v', param_no))
+            param.append(exe.get_function_parameter('system_v', param_no))
             param_no += 1
 
     res = fmt_str % tuple(param)
@@ -805,10 +803,10 @@ def on___sprintf_chk(cpu, mem, ad):
 def on_fputs_unlocked(cpu, mem, ad):
     global exe, OUTPUT
     # ref: http://www.cplusplus.com/reference/cstdio/fputs/
-    s      = exe.get_func_param('system_v', 0)
-    stream = exe.get_func_param('system_v', 1)
+    s      = exe.get_function_parameter('system_v', 0)
+    stream = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     s_str = mem.read_utf8(s)
 
@@ -823,11 +821,11 @@ TIME_ADDR = None
 def on_localtime(cpu, mem, ad):
     global exe, TIME_ADDR
     # ref: http://linux.die.net/man/3/localtime
-    timep = exe.get_func_param('system_v', 0)
+    timep = exe.get_function_parameter('system_v', 0)
 
     if not TIME_ADDR:
         TIME_ADDR = GR_ADDR + 0x200
-        mem.alloc(TIME_ADDR, 0x200, R_W)
+        mem.allocate(TIME_ADDR, 0x200, R_W)
         mem.write(TIME_ADDR, '\x00' * 0x200)
         ## struct tm {
         ##    int tm_sec;         /* seconds */
@@ -850,7 +848,7 @@ def on_localtime(cpu, mem, ad):
         mem.write_u32(TIME_ADDR + 0x1c, 340) # doy
         mem.write_u32(TIME_ADDR + 0x20,   0) #dst
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'localtime(%016x)' % timep
 
@@ -860,10 +858,10 @@ def on_localtime(cpu, mem, ad):
 def on_clock_gettime(cpu, mem, ad):
     global exe
     # ref: http://linux.die.net/man/3/clock_gettime
-    clk_id = exe.get_func_param('system_v', 0)
-    tp     = exe.get_func_param('system_v', 1)
+    clk_id = exe.get_function_parameter('system_v', 0)
+    tp     = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     print 'clock_gettime(%d, %016x)' % (clk_id, tp)
 
@@ -876,7 +874,7 @@ def on_clock_gettime(cpu, mem, ad):
 def on_gettimeofday(cpu, mem, ad):
     global exe
     # ref: http://linux.die.net/man/2/gettimeofday
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     print 'gettimeofday(...)'
 
@@ -911,11 +909,11 @@ def on___ctype_toupper_loc(cpu, mem, ad):
     global exe, CHR_TBL_ADDR
     # ref: https://searchcode.com/codesearch/view/38709730/
 
-    exe.ret_from_func('system_v', 0)
+    exe.return_from_function('system_v', 0)
 
     if not CHR_TBL_ADDR:
         CHR_TBL_ADDR = TIME_ADDR + 0x200
-        mem.alloc(CHR_TBL_ADDR, 0x1000, R_W)
+        mem.allocate(CHR_TBL_ADDR, 0x1000, R_W)
         mem.write_u64(CHR_TBL_ADDR, CHR_TBL_ADDR + 8 + 128 * 4)
         for i in range(len(CHR_TBL)):
             c = CHR_TBL[i]
@@ -931,11 +929,11 @@ def on___ctype_toupper_loc(cpu, mem, ad):
 def on_memset(cpu, mem, ad):
     global exe
 
-    buf = exe.get_func_param('system_v', 0)
-    val = exe.get_func_param('system_v', 1)
-    sz  = exe.get_func_param('system_v', 2)
+    buf = exe.get_function_parameter('system_v', 0)
+    val = exe.get_function_parameter('system_v', 1)
+    sz  = exe.get_function_parameter('system_v', 2)
 
-    exe.ret_from_func('system_v', 3)
+    exe.return_from_function('system_v', 3)
 
     mem.write(buf, chr(val) * sz)
 
@@ -946,9 +944,9 @@ def on_memset(cpu, mem, ad):
 def on_opendir(cpu, mem, ad):
     global exe
 
-    name = exe.get_func_param('system_v', 0)
+    name = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     name_str = mem.read_utf8(name)
 
@@ -964,9 +962,9 @@ DIRENT_ADDR = None
 def on_readdir(cpu, mem, ad):
     global exe, LIST_DIR, DIRENT_ADDR
 
-    dirp = exe.get_func_param('system_v', 0)
+    dirp = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     dirp_str = mem.read_utf8(dirp)
 
@@ -974,7 +972,7 @@ def on_readdir(cpu, mem, ad):
 
     if not DIRENT_ADDR:
         DIRENT_ADDR = 0xdddd000000
-        CHR_TBL_ADDR = mem.alloc(DIRENT_ADDR, DIRENT_SIZE, R_W)
+        CHR_TBL_ADDR = mem.allocate(DIRENT_ADDR, DIRENT_SIZE, R_W)
 
     if not dirp_str in LIST_DIR:
         LIST_DIR[dirp_str] = [0, os.listdir(dirp_str)]
@@ -1011,10 +1009,10 @@ def on_readdir(cpu, mem, ad):
 def on_realloc(cpu, mem, ad):
     global exe, alloc_addr, alloc_pos, alloced
 
-    ptr = exe.get_func_param('system_v', 0)
-    size = exe.get_func_param('system_v', 1)
+    ptr = exe.get_function_parameter('system_v', 0)
+    size = exe.get_function_parameter('system_v', 1)
 
-    exe.ret_from_func('system_v', 2)
+    exe.return_from_function('system_v', 2)
 
     ptr_alloc = alloc_addr + alloc_pos
     old_size = mem.size(ptr)
@@ -1022,7 +1020,7 @@ def on_realloc(cpu, mem, ad):
     print 'realloc(%016x, %016x) = %016x' % (ptr, size, ptr_alloc)
 
     size = (size + 0x1000) & 0xFFFFF000 # Pages alignment
-    mem.alloc(ptr_alloc, size, R_W)
+    mem.allocate(ptr_alloc, size, R_W)
     alloc_pos += size
     data = mem.read(ptr, old_size)
     mem.write(ptr_alloc, data)
@@ -1034,9 +1032,9 @@ def on_realloc(cpu, mem, ad):
 def on_closedir(cpu, mem, ad):
     global exe, LIST_DIR
 
-    dirp = exe.get_func_param('system_v', 0)
+    dirp = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     dirp_str = mem.read_utf8(dirp)
 
@@ -1050,9 +1048,9 @@ def on_closedir(cpu, mem, ad):
 def on_exit(cpu, mem, ad):
     global exe
 
-    status = exe.get_func_param('system_v', 0)
+    status = exe.get_function_parameter('system_v', 0)
 
-    exe.ret_from_func('system_v', 1)
+    exe.return_from_function('system_v', 1)
 
     print 'exit(%d)' % status
 
@@ -1065,88 +1063,88 @@ exec_path = sys.argv[1]
 db_path   = exec_path + '.mdb'
 
 # Enable advanced Medusa logging
-# pydusa.log_to_stdout()
+pydusa.log_to_stdout()
 
 # Init Medusa
 core = pydusa.Medusa()
-core.open_exe(exec_path, db_path, False)
+assert(core.open_executable(exec_path, db_path, False))
 core.wait_for_tasks()
 doc = core.document
-start_addr = doc.get_label_addr('start')
+start_addr = doc.get_label_address('start')
 
 # Init Medusa emulator
 exe = pydusa.Execution(doc)
-exe.init([exec_path.replace('\\', '/'), '-l', 'C:\\'], [ ], '')
-exe.set_emulator('interpreter')
+assert(exe.init([exec_path.replace('\\', '/'), '-l', 'C:\\'], [ ], ''))
+assert(exe.set_emulator('interpreter'))
 
-exe.mem.alloc(0xd0000000, 0x100, R_W) # fake tcbhead_t
-exe.mem.write_u64(0xd0000000 + 0x28, 0xdeadbeefdeadbeef) # very random cookie
+assert(exe.mem.allocate(0xd0000000, 0x100, R_W)) # fake tcbhead_t
+assert(exe.mem.write_u64(0xd0000000 + 0x28, 0xdeadbeefdeadbeef)) # very random cookie
 
 exe.cpu.fs = 0x38
 tcb_addr = pydusa.Address(0x38, 0x0)
-exe.cpu.add_mapping(tcb_addr, 0xd0000000)
+assert(exe.cpu.add_mapping(tcb_addr, 0xd0000000))
 
-exe.mem.alloc(0xd0002000, 0x100, R_W)
-exe.mem.write(0xd0002000, '\x00' * 0x100)
-exe.mem.write_u64(doc.get_label_addr('stdout').offset, 0xd0002000)
+assert(exe.mem.allocate(0xd0002000, 0x100, R_W))
+assert(exe.mem.write(0xd0002000, '\x00' * 0x100))
+assert(exe.mem.write_u64(doc.get_label_address('stdout').offset, 0xd0002000))
 
 for lbl in doc.labels:
-    if not lbl.is_imp:
+    if not lbl.is_imported:
         continue
     print '[!] default handler for imported symbol: "%s"' % lbl.name
-    exe.hook_fn(lbl.name, on_unk_api)
+    assert(exe.hook_imported_function(lbl.name, on_unk_api))
 
-assert(exe.hook_fn('__libc_start_main', on_libc_start_main))
-assert(exe.hook_fn('strrchr', on_strrchr))
-assert(exe.hook_fn('setlocale', on_setlocale))
-assert(exe.hook_fn('bindtextdomain', on_bindtextdomain))
-assert(exe.hook_fn('textdomain', on_textdomain))
-assert(exe.hook_fn('__cxa_atexit', on___cxa_atexit))
-assert(exe.hook_fn('isatty', on_isatty))
-assert(exe.hook_fn('getenv', on_getenv))
-assert(exe.hook_fn('ioctl', on_ioctl))
-assert(exe.hook_fn('getopt_long', on_getopt_long))
-assert(exe.hook_fn('__errno_location', on___errno_location))
-assert(exe.hook_fn('malloc', on_malloc))
-assert(exe.hook_fn('memcpy', on_memcpy))
-assert(exe.hook_fn('__xstat', on___xstat))
-assert(exe.hook_fn('__lxstat', on___xstat))
-assert(exe.hook_fn('dcgettext', on_dcgettext))
-assert(exe.hook_fn('strlen', on_strlen))
-assert(exe.hook_fn('free', on_free))
-assert(exe.hook_fn('_setjmp', on__setjmp))
-assert(exe.hook_fn('__ctype_get_mb_cur_max', on___ctype_get_mb_cur_max))
-assert(exe.hook_fn('fwrite_unlocked', on_fwrite_unlocked))
-assert(exe.hook_fn('__overflow', on___overflow))
-assert(exe.hook_fn('strcoll', on_strcoll))
-assert(exe.hook_fn('__fprintf_chk', on___fprintf_chk))
-assert(exe.hook_fn('strncmp', on_strncmp))
-assert(exe.hook_fn('strstr', on_strstr))
-assert(exe.hook_fn('lgetfilecon', on_lgetfilecon))
-assert(exe.hook_fn('error', on_error))
-assert(exe.hook_fn('localeconv', on_localeconv))
-assert(exe.hook_fn('getpwuid', on_getpwuid))
-assert(exe.hook_fn('strcpy', on_strcpy))
-assert(exe.hook_fn('getgrgid', on_getgrgid))
-assert(exe.hook_fn('__sprintf_chk', on___sprintf_chk))
-assert(exe.hook_fn('fputs_unlocked', on_fputs_unlocked))
-assert(exe.hook_fn('localtime', on_localtime))
-assert(exe.hook_fn('clock_gettime', on_clock_gettime))
-assert(exe.hook_fn('gettimeofday', on_gettimeofday))
-assert(exe.hook_fn('__ctype_toupper_loc', on___ctype_toupper_loc))
-assert(exe.hook_fn('memset', on_memset))
-assert(exe.hook_fn('opendir', on_opendir))
-assert(exe.hook_fn('readdir', on_readdir))
-assert(exe.hook_fn('realloc', on_realloc))
-assert(exe.hook_fn('closedir', on_closedir))
-assert(exe.hook_fn('exit', on_exit))
+assert(exe.hook_imported_function('__libc_start_main', on_libc_start_main))
+assert(exe.hook_imported_function('strrchr', on_strrchr))
+assert(exe.hook_imported_function('setlocale', on_setlocale))
+assert(exe.hook_imported_function('bindtextdomain', on_bindtextdomain))
+assert(exe.hook_imported_function('textdomain', on_textdomain))
+assert(exe.hook_imported_function('__cxa_atexit', on___cxa_atexit))
+assert(exe.hook_imported_function('isatty', on_isatty))
+assert(exe.hook_imported_function('getenv', on_getenv))
+assert(exe.hook_imported_function('ioctl', on_ioctl))
+assert(exe.hook_imported_function('getopt_long', on_getopt_long))
+assert(exe.hook_imported_function('__errno_location', on___errno_location))
+assert(exe.hook_imported_function('malloc', on_malloc))
+assert(exe.hook_imported_function('memcpy', on_memcpy))
+assert(exe.hook_imported_function('__xstat', on___xstat))
+assert(exe.hook_imported_function('__lxstat', on___xstat))
+assert(exe.hook_imported_function('dcgettext', on_dcgettext))
+assert(exe.hook_imported_function('strlen', on_strlen))
+assert(exe.hook_imported_function('free', on_free))
+assert(exe.hook_imported_function('_setjmp', on__setjmp))
+assert(exe.hook_imported_function('__ctype_get_mb_cur_max', on___ctype_get_mb_cur_max))
+assert(exe.hook_imported_function('fwrite_unlocked', on_fwrite_unlocked))
+assert(exe.hook_imported_function('__overflow', on___overflow))
+assert(exe.hook_imported_function('strcoll', on_strcoll))
+assert(exe.hook_imported_function('__fprintf_chk', on___fprintf_chk))
+assert(exe.hook_imported_function('strncmp', on_strncmp))
+assert(exe.hook_imported_function('strstr', on_strstr))
+assert(exe.hook_imported_function('lgetfilecon', on_lgetfilecon))
+assert(exe.hook_imported_function('error', on_error))
+assert(exe.hook_imported_function('localeconv', on_localeconv))
+assert(exe.hook_imported_function('getpwuid', on_getpwuid))
+assert(exe.hook_imported_function('strcpy', on_strcpy))
+assert(exe.hook_imported_function('getgrgid', on_getgrgid))
+assert(exe.hook_imported_function('__sprintf_chk', on___sprintf_chk))
+assert(exe.hook_imported_function('fputs_unlocked', on_fputs_unlocked))
+assert(exe.hook_imported_function('localtime', on_localtime))
+assert(exe.hook_imported_function('clock_gettime', on_clock_gettime))
+assert(exe.hook_imported_function('gettimeofday', on_gettimeofday))
+assert(exe.hook_imported_function('__ctype_toupper_loc', on___ctype_toupper_loc))
+assert(exe.hook_imported_function('memset', on_memset))
+assert(exe.hook_imported_function('opendir', on_opendir))
+assert(exe.hook_imported_function('readdir', on_readdir))
+assert(exe.hook_imported_function('realloc', on_realloc))
+assert(exe.hook_imported_function('closedir', on_closedir))
+assert(exe.hook_imported_function('exit', on_exit))
 
 # exe.hook_insn(on_insn)
 
 # raw_input()
 
 # Start emulation
-exe.execute(start_addr)
+assert(exe.execute(start_addr))
 
 print 'RESULT:\n%s' % OUTPUT
 

@@ -74,14 +74,14 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   }
 
   rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "ROM", MemoryArea::Execute,
+    "ROM", MemoryArea::Access::Execute,
     0x0, rDoc.GetBinaryStream().GetSize(),
     Address(Address::LogicalType, 0x0, 0x0, 12, 12), rDoc.GetBinaryStream().GetSize(),
     ArchTag, ArchMode
     ));
 
   rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
-    "DATA", MemoryArea::Read | MemoryArea::Write,
+    "DATA", MemoryArea::Access::Read | MemoryArea::Access::Write,
     Address(Address::LogicalType, 0x1000, 0x00, 16, 8), 0x100,
     ArchTag, ArchMode
     ));

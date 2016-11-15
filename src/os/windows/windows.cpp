@@ -77,7 +77,7 @@ bool WindowsOperatingSystem::InitializeContext(
   if (!rCpuCtxt.WriteRegister(IdD, StartAddrVal))
     return false;
 
-  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+  auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   // TODO: create a fake _TEB/_PEB
   if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, ReadWrite, nullptr))

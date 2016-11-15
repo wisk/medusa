@@ -36,7 +36,7 @@ bool BootSectorLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   }
 
   if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "mem", MemoryArea::Read | MemoryArea::Write | MemoryArea::Execute,
+    "mem", MemoryArea::Access::Read | MemoryArea::Access::Write | MemoryArea::Access::Execute,
     0x0, 0x200,
     Address(Address::LinearType, 0x0, AddressOffset, 16, 16), 0x200,
     (*itArchX86)->GetTag(), (*itArchX86)->GetModeByName("16-bit")

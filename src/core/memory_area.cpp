@@ -34,9 +34,9 @@ void MemoryArea::SetDefaultArchitectureMode(u8 Mode)
 std::string MemoryArea::ToString(void) const
 {
   char Buf[4];
-  Buf[0] = (m_Access & MemoryArea::Read)    ? 'R' : '-';
-  Buf[1] = (m_Access & MemoryArea::Write)   ? 'W' : '-';
-  Buf[2] = (m_Access & MemoryArea::Execute) ? 'X' : '-';
+  Buf[0] = to_bool(m_Access & MemoryArea::Access::Read)    ? 'R' : '-';
+  Buf[1] = to_bool(m_Access & MemoryArea::Access::Write)   ? 'W' : '-';
+  Buf[2] = to_bool(m_Access & MemoryArea::Access::Execute) ? 'X' : '-';
   Buf[3] = '\0';
   return (boost::format("; mapped memory area %s %s %#08x %s") % m_Name % m_BaseAddress.ToString() % m_Size % Buf).str();
 }

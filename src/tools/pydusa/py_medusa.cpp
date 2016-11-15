@@ -101,7 +101,7 @@ namespace pydusa
     // ... to retrieve its data
     BinaryStream::SPType spBinStrm;
     u32 Off;
-    u32 Flags;
+    MemoryArea::Access Flags;
     if (!pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
       return nullptr;
 

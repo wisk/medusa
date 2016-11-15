@@ -26,7 +26,7 @@ TEST_CASE("load", "[db_soci]")
     medusa::Address BaseAddr(medusa::Address::LinearType, 0x7fffffffffULL);
 
     INFO("Memory area");
-    CHECK(spSociDb->AddMemoryArea(medusa::MemoryArea::CreateVirtual("virtual", medusa::MemoryArea::Read,
+    CHECK(spSociDb->AddMemoryArea(medusa::MemoryArea::CreateVirtual("virtual", medusa::MemoryArea::Access::Read,
       BaseAddr, 0x100
     )));
     medusa::MemoryArea DummyMemArea;
@@ -34,12 +34,12 @@ TEST_CASE("load", "[db_soci]")
     INFO(DummyMemArea.ToString());
     CHECK(DummyMemArea.GetBaseAddress() == BaseAddr);
     auto MappedMemArea = medusa::MemoryArea::CreateMapped(
-      "mapped", medusa::MemoryArea::Execute | medusa::MemoryArea::Read,
+      "mapped", medusa::MemoryArea::Access::Execute | medusa::MemoryArea::Access::Read,
       0x0, 0x10000, medusa::Address(medusa::Address::RelativeType, 0x1000), 0x10000
     );
     CHECK(spSociDb->AddMemoryArea(MappedMemArea));
     auto PhysicalMemArea = medusa::MemoryArea::CreatePhysical(
-      "physical", medusa::MemoryArea::Read, 0x1000, 0x2000
+      "physical", medusa::MemoryArea::Access::Read, 0x1000, 0x2000
     );
     CHECK(spSociDb->AddMemoryArea(PhysicalMemArea));
     spSociDb->ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)

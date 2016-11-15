@@ -101,7 +101,7 @@ namespace pydusa
     return py::cast(LinAddr);
   }
 
-  py::bytes MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size, u32 Flags)
+  py::bytes MemoryContext_Allocate(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size, MemoryArea::Access Flags)
   {
     void* pRawMem = nullptr;
     if (!pMemCtxt->AllocateMemory(LinAddr, Size, Flags, &pRawMem))

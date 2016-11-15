@@ -46,7 +46,7 @@ namespace medusa
         {
         case Instruction::CallType: LblTy = Label::Code | Label::Local; break;
         case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
-        case Instruction::NoneType: LblTy = (MemArea.GetAccess() & MemoryArea::Execute) ?
+        case Instruction::NoneType: LblTy = to_bool(MemArea.GetAccess() & MemoryArea::Access::Execute) ?
           Label::Code | Label::Local : Label::Data | Label::Global;
         default: break;
         } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))

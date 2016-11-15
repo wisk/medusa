@@ -44,16 +44,16 @@ void MemoryAreaView::Refresh(void)
 
 void MemoryAreaView::onAddMemoryArea(medusa::MemoryArea const& memArea)
 {
-  auto acc2Str = [](medusa::u32 access) -> std::string
+  auto acc2Str = [](medusa::MemoryArea::Access access) -> std::string
   {
     char buf[4];
     char *p = buf;
 
-    if (access & medusa::MemoryArea::Read)
+    if (to_bool(access & medusa::MemoryArea::Access::Read))
       *p++ = 'R';
-    if (access & medusa::MemoryArea::Write)
+    if (to_bool(access & medusa::MemoryArea::Access::Write))
       *p++ = 'W';
-    if (access & medusa::MemoryArea::Execute)
+    if (to_bool(access & medusa::MemoryArea::Access::Execute))
       *p++ = 'X';
     *p = '\0';
     return std::string(buf);

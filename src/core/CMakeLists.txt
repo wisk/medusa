@@ -12,6 +12,7 @@ set(SRC
   ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
   ${INCROOT}/binding.hpp
+  ${INCROOT}/bitmask.hpp
   ${INCROOT}/bits.hpp
   ${INCROOT}/cell.hpp
   ${INCROOT}/cell_action.hpp

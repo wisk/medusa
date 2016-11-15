@@ -177,7 +177,7 @@ bool Emulator::_Disassemble(Address const& rAddress, DisasmCbType Cb)
     // To disassemble instruction, we need both a binary stream and offset
     BinaryStream::SPType spBinStrm;
     u32 Off;
-    u32 Flags;
+    MemoryArea::Access Flags;
     if (!m_pMemCtxt->FindMemory(LinAddr, spBinStrm, Off, Flags))
     {
       Log::Write("core").Level(LogError) << "unable to find memory for: " << InsnAddr << ", linear address: " << LinAddr << LogEnd;

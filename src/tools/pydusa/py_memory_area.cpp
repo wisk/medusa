@@ -10,10 +10,18 @@ MEDUSA_NAMESPACE_USE
 
 void PydusaMemoryArea(py::module& rMod)
 {
+  // TODO(wisk): define a custom py::bitmask_
   py::enum_<MemoryArea::Access>(rMod, "MemoryAccess")
-    .value("READ",    MemoryArea::Read)
-    .value("WRITE",   MemoryArea::Write)
-    .value("EXECUTE", MemoryArea::Execute)
+    .value("READ",    MemoryArea::Access::Read)
+    .value("WRITE",   MemoryArea::Access::Write)
+    .value("EXECUTE", MemoryArea::Access::Execute)
+    .def("__ior__",  [](MemoryArea::Access& lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs = lhs | rhs; })
+    .def("__iand__", [](MemoryArea::Access& lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs = lhs & rhs; })
+    .def("__ixor__", [](MemoryArea::Access& lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs = lhs ^ rhs; })
+    .def("__or__",   [](MemoryArea::Access  lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs | rhs; })
+    .def("__and__",  [](MemoryArea::Access  lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs & rhs; })
+    .def("__xor__",  [](MemoryArea::Access  lhs, MemoryArea::Access rhs) -> MemoryArea::Access { return lhs ^ rhs; })
+    .def("__inv__",  [](MemoryArea::Access  e)                           -> MemoryArea::Access { return ~e; })
     ;
 
   py::class_<MemoryArea>(rMod, "MemoryArea")

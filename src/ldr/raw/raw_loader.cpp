@@ -13,7 +13,7 @@ bool RawLoader::IsCompatible(BinaryStream const& rBinStrm)
 bool RawLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   return rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "raw", MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+    "raw", MemoryArea::Access::Execute | MemoryArea::Access::Read | MemoryArea::Access::Write,
     0x0, rDoc.GetBinaryStream().GetSize(),
     Address(Address::LinearType, 0x0), rDoc.GetBinaryStream().GetSize()
     ));

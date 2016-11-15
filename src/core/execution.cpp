@@ -74,9 +74,9 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
 bool Execution::SetStackMemory()
 {
   auto const& rCpuInfo = m_pCpuCtxt->GetCpuInformation();
-  u64 const StkPtr = 0xdeadbeaf;
-  u64 const StkLen = 0x1000;
-  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+  u64  const StkPtr = 0xdeadbeaf;
+  u64  const StkLen = 0x1000;
+  auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   void* pStkMem;
   if (!m_pMemCtxt->AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem)) {

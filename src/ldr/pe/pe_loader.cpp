@@ -263,7 +263,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   auto HdrLen = std::min<u32>(0x1000, rBinStrm.GetSize());
 
   if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "hdr", MemoryArea::Read | MemoryArea::Write,
+    "hdr", MemoryArea::Access::Read | MemoryArea::Access::Write,
     0x0, HdrLen,
     Address(Address::LinearType, 0x0, ImageBase, 0x10, bit), HdrLen,
     ArchTag, ArchMode
@@ -275,7 +275,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
-    auto Flags = MemoryArea::Read;
+    auto Flags = MemoryArea::Access::Read;
     if (!rBinStrm.Read(SectionHeadersOffset + ScnIdx * sizeof(ScnHdr), &ScnHdr, sizeof(ScnHdr)))
     {
       Log::Write("ldr_pe") << "unable to read IMAGE_SECTION_HEADER" << LogEnd;
@@ -291,16 +291,16 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     std::string ScnName(reinterpret_cast<char const*>(ScnHdr.Name), 0, PE_SIZEOF_SHORT_NAME);
 
     if (ScnHdr.Characteristics & PE_SCN_MEM_EXECUTE)
-      Flags |= MemoryArea::Execute;
+      Flags |= MemoryArea::Access::Execute;
     // TODO: Is it documented?
     //else if (EpOff >= (ImgBase + ScnHdr.VirtualAddress)
     //  &&     EpOff <   ImgBase + ScnHdr.VirtualAddress + ScnVirtSz)
     //{
     //  Log::Write("ldr_pe") << "promote section " << ScnName << " to executable since it contains the entry point" << LogEnd;
-    //  Flags |= MemoryArea::Execute;
+    //  Flags |= MemoryArea::Access::Execute;
     //}
     if (ScnHdr.Characteristics & PE_SCN_MEM_WRITE)
-      Flags |= MemoryArea::Write;
+      Flags |= MemoryArea::Access::Write;
 
     if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
       ScnName, Flags,

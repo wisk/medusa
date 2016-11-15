@@ -202,7 +202,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
   typename MachOType::Section Section;
   std::string                 SegmentName;
   std::string                 FullSectionName;
-  auto                        MemAreaFlags = MemoryArea::NoAccess;
+  auto                        MemAreaFlags = MemoryArea::Access::NoAccess;
 
   if (!rBinStrm.Read(LoadCmdOff, &Segment, sizeof(Segment))) {
     LOG_WR << "Cannot read segment command" << LogEnd;
@@ -237,12 +237,12 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
       << ", name=\"" << FullSectionName
       << "\""        << LogEnd;
 
-    MemAreaFlags = MemoryArea::Read;
+    MemAreaFlags = MemoryArea::Access::Read;
     if (Segment.initprot & VM_PROT_WRITE) {
-      MemAreaFlags |= MemoryArea::Write;
+      MemAreaFlags |= MemoryArea::Access::Write;
     }
     if (Segment.initprot & VM_PROT_EXECUTE) {
-      MemAreaFlags |= MemoryArea::Execute;
+      MemAreaFlags |= MemoryArea::Access::Execute;
     }
 
     MemoryArea* pNewMemArea = nullptr;

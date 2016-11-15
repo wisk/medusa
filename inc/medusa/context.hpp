@@ -86,11 +86,11 @@ class MEDUSA_EXPORT MemoryContext
 public:
   struct MemoryChunk
   {
-    u64   m_LinearAddress;
-    u32   m_Flags;
+    u64                        m_LinearAddress;
+    MemoryArea::Access         m_Flags;
     MemoryBinaryStream::SPType m_spMemStrm;
 
-    MemoryChunk(u64 LinAddr = 0x0, void* Buffer = nullptr, u32 Size = 0x0, u32 Flags = 0x0)
+    MemoryChunk(u64 LinAddr = 0x0, void* Buffer = nullptr, u32 Size = 0x0, MemoryArea::Access Flags = MemoryArea::Access::NoAccess)
       : m_LinearAddress(LinAddr), m_spMemStrm(std::make_shared<MemoryBinaryStream>(Buffer, Size)), m_Flags(Flags) {}
 
     bool operator<(MemoryChunk const& rMemChunk) const
@@ -122,11 +122,11 @@ public:
     return WriteMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, u32& rFlags) const;
-  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, u32& rFlags) const;
+  virtual bool FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, MemoryArea::Access& rFlags) const;
+  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, MemoryArea::Access& rFlags) const;
 
-  virtual bool AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory);
-  virtual bool ProtectMemory(u64 LinAddr, u32 Flags); // TODO: add protection by pages
+  virtual bool AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Flags, void** ppRawMemory);
+  virtual bool ProtectMemory(u64 LinAddr, MemoryArea::Access Flags); // TODO: add protection by pages
   virtual bool FreeMemory(u64 LinAddr);
   virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 

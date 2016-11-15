@@ -4,6 +4,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/bits.hpp"
+#include "medusa/bitmask.hpp"
 #include "medusa/cell.hpp"
 #include "medusa/value.hpp"
 #include "medusa/binary_stream.hpp"
@@ -20,7 +21,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT MemoryArea
 {
 public:
-  enum Access : u8
+  enum class Access : u8
   {
     NoAccess = 0,
     Read     = 1 << 1,
@@ -48,7 +49,7 @@ public:
 
   MemoryArea(void)
     : m_Id(), m_Name("")
-    , m_Type(UnknownType), m_Access(NoAccess)
+    , m_Type(UnknownType), m_Access(Access::NoAccess)
     , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK), m_DefaultArchitectureMode()
     , m_FileOffset(), m_FileSize()
     , m_BaseAddress(), m_Size()
@@ -106,7 +107,7 @@ public:
   // Information methods
   std::string const& GetName(void)             const { return m_Name;                    }
   Type               GetType(void)             const { return m_Type;                    }
-  u32                GetAccess(void)           const { return m_Access;                  }
+  Access             GetAccess(void)           const { return m_Access;                  }
   Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag;  }
   u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
 
@@ -145,6 +146,8 @@ private:
     Tag DefaultArchitectureTag,
     u8 DefaultArchitectureMode);
 };
+
+MEDUSA_ENUM_CLASS_BITMASK(MemoryArea::Access)
 
 MEDUSA_NAMESPACE_END
 

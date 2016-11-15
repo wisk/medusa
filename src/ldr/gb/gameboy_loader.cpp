@@ -51,25 +51,25 @@ bool GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   }
 
   rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
-    "VRAM", MemoryArea::Read | MemoryArea::Write,
+    "VRAM", MemoryArea::Access::Read | MemoryArea::Access::Write,
     Address(Address::LogicalType, 0, 0x8000, 8, 16), 0x2000,
     ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
-    "RAM#nn", MemoryArea::Read | MemoryArea::Write,
+    "RAM#nn", MemoryArea::Access::Read | MemoryArea::Access::Write,
     Address(Address::LogicalType, 0, 0xA000, 8, 16), 0x2000,
     ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
-    "RAM/IOMap", MemoryArea::Read | MemoryArea::Write,
+    "RAM/IOMap", MemoryArea::Access::Read | MemoryArea::Access::Write,
     Address(Address::LogicalType, 0, 0xC000, 8, 16), 0x4000,
     ArchTag, ArchMode
   ));
 
   rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "ROM#00", MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+    "ROM#00", MemoryArea::Access::Execute | MemoryArea::Access::Read | MemoryArea::Access::Write,
     0x0, BankSize,
     Address(Address::LogicalType, 0, 0x0000, 8, 16), BankSize,
     ArchTag, ArchMode
@@ -77,7 +77,7 @@ bool GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 
   // NOTE(wisk): This memory area is not really located at 0:4000, but it's the default value
   rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-    "ROM#01", MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+    "ROM#01", MemoryArea::Access::Execute | MemoryArea::Access::Read | MemoryArea::Access::Write,
     0x4000, BankSize,
     Address(Address::LogicalType, 0, 0x4000, 8, 16), BankSize,
     ArchTag, ArchMode
@@ -92,7 +92,7 @@ bool GameBoyLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     oss << "ROM#" << std::hex << std::setw(2) << std::setfill('0') << Bank;
 
     rDoc.AddMemoryArea(MemoryArea::CreateMapped(
-      oss.str().c_str(), MemoryArea::Execute | MemoryArea::Read | MemoryArea::Write,
+      oss.str().c_str(), MemoryArea::Access::Execute | MemoryArea::Access::Read | MemoryArea::Access::Write,
       Bank * BankSize, BankSize,
       Address(Address::LogicalType, Bank, 0x4000, 8, 16), BankSize,
       ArchTag, ArchMode

@@ -199,12 +199,12 @@ private:
           ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
           "<invalid>" : upShStrTbl.get() + rShdr.sh_name;
 
-        auto MemAreaFlags = MemoryArea::Read;
+        auto MemAreaFlags = MemoryArea::Access::Read;
 
         if (rShdr.sh_flags & SHF_WRITE)
-          MemAreaFlags |= MemoryArea::Write;
+          MemAreaFlags |= MemoryArea::Access::Write;
         if (rShdr.sh_flags & SHF_EXECINSTR)
-          MemAreaFlags |= MemoryArea::Execute;
+          MemAreaFlags |= MemoryArea::Access::Execute;
 
         rDoc.AddMemoryArea(MemoryArea::CreateMapped(
           pShName, MemAreaFlags,
@@ -235,12 +235,12 @@ private:
             ShStrShdr.sh_size && rShdr.sh_name > ShStrShdr.sh_size ?
             "" : upShStrTbl.get() + rShdr.sh_name;
 
-          auto MemAreaFlags = MemoryArea::Read;
+          auto MemAreaFlags = MemoryArea::Access::Read;
 
           if (rShdr.sh_flags & SHF_WRITE)
-            MemAreaFlags |= MemoryArea::Write;
+            MemAreaFlags |= MemoryArea::Access::Write;
           if (rShdr.sh_flags & SHF_EXECINSTR)
-            MemAreaFlags |= MemoryArea::Execute;
+            MemAreaFlags |= MemoryArea::Access::Execute;
 
           if (rShdr.sh_type == SHT_NOBITS)
           {
@@ -267,14 +267,14 @@ private:
         u32 PhdrNo = 0;
         for (auto const& rPhdr : Segments)
         {
-          auto MemAreaFlags = MemoryArea::NoAccess;
+          auto MemAreaFlags = MemoryArea::Access::NoAccess;
 
           if (rPhdr.p_flags & PF_X)
-            MemAreaFlags |= MemoryArea::Execute;
+            MemAreaFlags |= MemoryArea::Access::Execute;
           if (rPhdr.p_flags & PF_W)
-            MemAreaFlags |= MemoryArea::Write;
+            MemAreaFlags |= MemoryArea::Access::Write;
           if (rPhdr.p_flags & PF_R)
-            MemAreaFlags |= MemoryArea::Read;
+            MemAreaFlags |= MemoryArea::Access::Read;
 
           std::ostringstream ShName;
           ShName << "phdr" << PhdrNo++;
