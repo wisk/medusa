@@ -16,16 +16,7 @@ Document::Document(void)
 
 Document::~Document(void)
 {
-  if (m_spDatabase)
-    m_spDatabase->Close();
-  m_QuitSignal();
-  std::lock_guard<MutexType> Lock(m_CellMutex);
-  m_QuitSignal.disconnect_all_slots();
-  m_DocumentUpdatedSignal.disconnect_all_slots();
-  m_MemoryAreaUpdatedSignal.disconnect_all_slots();
-  m_AddressUpdatedSignal.disconnect_all_slots();
-  m_LabelUpdatedSignal.disconnect_all_slots();
-  m_TaskUpdatedSignal.disconnect_all_slots();
+  Close();
 }
 
 bool Document::Open(Database::SPType spDb)
@@ -46,8 +37,11 @@ bool Document::Flush(void)
 bool Document::Close(void)
 {
   if (m_spDatabase)
+  {
     if (!m_spDatabase->Close())
       return false;
+    m_spDatabase = nullptr;
+  }
   m_QuitSignal();
   std::lock_guard<MutexType> Lock(m_CellMutex);
   m_QuitSignal.disconnect_all_slots();
@@ -151,18 +145,12 @@ bool Document::AddLabel(Address const& rAddr, Label const& rLabel, bool Force)
       return true;
 
     if (!m_spDatabase->RemoveLabel(rAddr))
-    {
-      Log::Write("core") << "remove label failed" << rAddr << LogEnd;
       return false;
-    }
 
     m_LabelUpdatedSignal(rAddr, OldLbl, true);
   }
   if (!m_spDatabase->AddLabel(rAddr, NewLbl))
-  {
-    Log::Write("core") << "add label failed" << rAddr << LogEnd;
     return false;
-  }
   m_LabelUpdatedSignal(rAddr, NewLbl, false);
   m_DocumentUpdatedSignal();
   return true;

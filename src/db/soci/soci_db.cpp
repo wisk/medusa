@@ -635,10 +635,11 @@ bool SociDatabase::Close(void)
 
   try
   {
-    std::lock_guard<std::mutex> Lock(m_Lock);
-
-    // TODO(wisk): save binary stream
     Flush();
+
+    std::lock_guard<std::mutex> Lock(m_Lock);
+    // TODO(wisk): save binary stream
+
     m_Session.close();
   }
   catch (std::exception const& rErr)
@@ -1394,6 +1395,9 @@ bool SociDatabase::GetLabelAddress(Label const &rLabel, Address &rAddress) const
   try
   {
     std::lock_guard<std::mutex> Lock(m_Lock);
+
+    if (!_FlushLabelCache())
+      return false;
 
     u32 Id, Offset;
     m_Session <<

@@ -202,23 +202,15 @@ bool Medusa::NewDocument(
       return false;
     }
 
-    bool Force = false;
-    Path DbPath = spBinStrm->GetPath();
-    DbPath += spCurDb->GetExtension().c_str();
-    while (!spCurDb->Create(DbPath, Force))
-    {
-      Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
-      Path NewDbPath = DbPath;
-      std::list<Filter> ExtList;
-      ExtList.push_back(std::make_tuple(spCurDb->GetName(), spCurDb->GetExtension()));
-      if (!AskDatabase(NewDbPath, ExtList))
-        return false;
-      if (NewDbPath.empty())
-        return false;
-      if (NewDbPath == DbPath)
-        Force = true;
-      DbPath = std::move(NewDbPath);
-    }
+    bool Force = true;
+    Path DbPath;
+    std::list<Filter> ExtList;
+    if (!AskDatabase(DbPath, ExtList))
+      return false;
+    if (DbPath.empty())
+      return false;
+    if (!spCurDb->Create(DbPath, Force))
+      return false;
 
     if (!BeforeStart())
       return false;

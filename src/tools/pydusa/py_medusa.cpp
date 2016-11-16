@@ -157,9 +157,9 @@ void PydusaMedusa(py::module& rMod)
 
     .def("make_address", pydusa::Medusa_MakeAddress)
 
-    .def("get_cell",        pydusa::Medusa_GetCell)
-    .def("format_cell",        pydusa::Medusa_FormatCell)
-    .def("get_instruction",        pydusa::Medusa_GetInstruction)
+    .def("get_cell",                        pydusa::Medusa_GetCell)
+    .def("format_cell",                     pydusa::Medusa_FormatCell)
+    .def("get_instruction",                 pydusa::Medusa_GetInstruction)
     .def("disassemble_current_instruction", pydusa::Medusa_DisassembleCurrentInstruction)
     ;
 }

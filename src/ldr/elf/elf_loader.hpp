@@ -99,8 +99,6 @@ private:
         return; // FIXME: We should continue anyway...
       }
 
-      rDoc.AddLabel(Address(Address::LinearType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported));
-
       ElfType::EndianSwap(ShStrShdr, Endianness);
 
       if (ShStrShdr.sh_size > rBinStrm.GetSize())
@@ -289,6 +287,13 @@ private:
       }
     }
 
+    // Now we got all memory area, we can add the start label
+    if (!rDoc.AddLabel(Address(Address::LinearType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported)))
+    {
+      Log::Write("ldr_elf").Level(LogError) << "failed to add start label: " << Ehdr.e_entry << LogEnd;
+      return;
+    }
+
     /* Try to retrieve imported function */
     for (auto const& rPhdr : Segments)
     {
@@ -341,10 +346,26 @@ private:
         OffsetType JmpRelTblOff  = 0x0;
         OffsetType DynStrOff     = 0x0;
         OffsetType RelaTblOff    = 0x0;
-        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, SymTbl),    SymTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, DynStr),    DynStrOff);
-        rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl),   RelaTblOff);
+        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, SymTbl), SymTblOff))
+        {
+          Log::Write("ldr_elf").Level(LogError) << "failed to convert SYM" << LogEnd;
+          return;
+        }
+        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff))
+        {
+          Log::Write("ldr_elf").Level(LogError) << "failed to convert JMP" << LogEnd;
+          return;
+        }
+        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, DynStr), DynStrOff))
+        {
+          Log::Write("ldr_elf").Level(LogError) << "failed to convert DYN" << LogEnd;
+          return;
+        }
+        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl), RelaTblOff))
+        {
+          Log::Write("ldr_elf").Level(LogError) << "failed to convert RELA" << LogEnd;
+          return;
+        }
 
         std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
         std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
@@ -422,7 +443,7 @@ private:
               std::string FuncName(upDynSymStr.get() + CurSym.st_name); // NOTE: st_name was checked before
 
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
-              //rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
+              rDoc.AddLabel(FuncPltAddr, Label(FuncName + "@plt", Label::Code | Label::Global));
             }
           }
           else if (PltRelType == DT_RELA)
@@ -452,7 +473,7 @@ private:
                 continue;
 
               OffsetType FuncOff;
-              if (!rDoc.ConvertAddressToFileOffset(pRela->r_offset, FuncOff))
+              if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, pRela->r_offset), FuncOff))
               {
                 Log::Write("ldr_elf") << "Can't convert address of RELA" << LogEnd;
                 continue;
@@ -479,8 +500,7 @@ private:
 
               rDoc.ChangeValueSize(FuncAddr, bit, true);
               rDoc.AddLabel(FuncAddr, Label(FuncName, Label::Data | Label::Imported));
-              //rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
-              //rDoc.InsertMultiCell(FuncPlt, new Function);
+              rDoc.AddLabel(FuncPlt, Label(FuncName + "@plt", Label::Code | Label::Global));
             }
           } // if (PltRelType == DT_REL)
         } // if (pReloc != 0x0 && JmpRelSz != 0x0)
@@ -515,11 +535,14 @@ private:
             Address SymAddr(Address::LinearType, 0x0, static_cast<OffsetType>(pRela->r_offset), 0x10, bit);
             std::string SymName(upDynSymStr.get() + CurSym.st_name);
 
+            bool Res;
             // TODO: Use ELFXX_ST_TYPE instead
             if ((CurSym.st_info & 0xf) == STT_FUNC)
-              rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Exported));
+              Res = rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Exported));
             else
-              rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported));
+              Res = rDoc.AddLabel(SymAddr, Label(SymName, Label::Data | Label::Exported));
+            if (!Res)
+              Log::Write("ldr_elf").Level(LogError) << "failed to add label: " << SymName << LogEnd;
           }
         }
       }
