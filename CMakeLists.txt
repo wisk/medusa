@@ -4,7 +4,7 @@ include("cmake/HunterGate.cmake")
 
 HunterGate(
   URL "https://github.com/wisk/hunter/archive/medusa-deps.tar.gz"
-  SHA1 "886e9aeda85f337931f0fc583ab348189151a78e"
+  SHA1 "8c538a0f6209b58681222e6bd766dc682e6a80fe"
 )
 
 # project name
