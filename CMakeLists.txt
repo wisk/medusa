@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.2)
 
 include("cmake/HunterGate.cmake")
+
 HunterGate(
-    URL "https://github.com/wisk/hunter/archive/medusa-deps.tar.gz"
-    SHA1 "7b6ced4c4cb8cada49f4572fff69a01629c5c61c"
+  URL "https://github.com/wisk/hunter/archive/medusa-deps.tar.gz"
+  SHA1 "886e9aeda85f337931f0fc583ab348189151a78e"
 )
 
 # project name
@@ -107,11 +108,7 @@ option(MEDUSA_BUILD_WITH_SQLITE3
   "SQLite3 library allows to build db_soci"
   TRUE)
 if (MEDUSA_BUILD_WITH_SQLITE3)
-  if (MSVC)
-    hunter_add_package(SQLite3-cmake)
-  else()
-    hunter_add_package(SQLite3)
-  endif()
+  hunter_add_package(SQLite3-cmake)
 endif()
 
 ## SOCI

@@ -91,7 +91,7 @@ bool Document::SetImageBase(ImageBaseType ImageBase)
 bool Document::GetMemoryArea(Address const& rAddr, MemoryArea& rMemArea) const
 {
   if (m_spDatabase == nullptr)
-    return nullptr;
+    return false;
   return m_spDatabase->GetMemoryArea(rAddr, rMemArea);
 }
 
@@ -309,7 +309,7 @@ Cell::SPType Document::GetCell(Address const& rAddr)
   if (m_spDatabase == nullptr)
   {
     Log::Write("core") << "database is null" << LogEnd;
-    return false;
+    return nullptr;
   }
   std::lock_guard<MutexType> Lock(m_CellMutex);
 
@@ -344,7 +344,7 @@ Cell::SPType Document::GetCell(Address const& rAddr)
     break;
   }
 
-  return Cell::SPType();
+  return nullptr;
 }
 
 Cell::SPType const Document::GetCell(Address const& rAddr) const
@@ -352,7 +352,7 @@ Cell::SPType const Document::GetCell(Address const& rAddr) const
   if (m_spDatabase == nullptr)
   {
     Log::Write("core") << "database is null" << LogEnd;
-    return false;
+    return nullptr;
   }
   std::lock_guard<MutexType> Lock(m_CellMutex);
 
@@ -386,7 +386,7 @@ Cell::SPType const Document::GetCell(Address const& rAddr) const
     break;
   }
 
-  return Cell::SPType();
+  return nullptr;
 }
 
 u8 Document::GetCellType(Address const& rAddr) const

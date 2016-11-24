@@ -3,6 +3,8 @@
 #include <medusa/medusa.hpp>
 #include "medusa/expression_visitor.hpp"
 
+#include <boost/format.hpp>
+
 char const* St62Architecture::ST62CpuInformation::ConvertIdentifierToName(u32 Id) const
 {
   switch (Id)

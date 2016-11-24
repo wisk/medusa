@@ -10,6 +10,7 @@
 #include <list>
 #include <algorithm>
 #include <boost/filesystem/operations.hpp>
+#include <boost/format.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

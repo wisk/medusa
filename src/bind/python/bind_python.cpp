@@ -5,6 +5,8 @@
 
 #include <mutex>
 
+#include <boost/format.hpp>
+
 MEDUSA_NAMESPACE_USE
 
 std::once_flag g_PythonInit;

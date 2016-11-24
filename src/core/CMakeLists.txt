@@ -143,24 +143,30 @@ target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
 )
 
+
+find_package(Threads REQUIRED)
+
 target_link_libraries(medusa
+  PUBLIC
   Boost::system
   Boost::filesystem
   Boost::program_options
+
+  INTERFACE
+  ${CMAKE_THREAD_LIBS_INIT}
 )
+
+# Thank ogre, I would never find this myself
+find_library(DL_LIBRARY NAMES dl dlsym)
+mark_as_advanced(DL_LIBRARY)
+if (DL_LIBRARY)
+  target_link_libraries(medusa PRIVATE dl)
+endif ()
 
 # generate export file
 generate_export_header(medusa
   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
 )
-
-# Thank ogre, I would never find this myself
-# NOTE(wisk): are these lines are still mandatory?
-find_library(DL_LIBRARY NAMES dl dlsym)
-mark_as_advanced(DL_LIBRARY)
-if (DL_LIBRARY)
-  target_link_libraries(medusa dl)
-endif ()
 
 if (MEDUSA_CMAKE_USE_COTIRE)
   cotire(medusa)

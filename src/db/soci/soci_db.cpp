@@ -1619,7 +1619,7 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
     u32 Id;
     OffsetType Offset;
     if (!_ConvertAddressToId(rAddress, Id, Offset))
-      return false;
+      return nullptr;
     u32 Type, Size;
     /*
     "CREATE TABLE IF NOT EXISTS MultiCell("
@@ -1633,7 +1633,7 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
       , soci::into(Type), soci::into(Size)
       , soci::use(Id), soci::use(Offset);
     if (!m_Session.got_data())
-      return false;
+      return nullptr;
 
     switch (Type)
     {

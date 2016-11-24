@@ -4,6 +4,7 @@
 #include <medusa/expression_visitor.hpp>
 
 #include <boost/algorithm/string/join.hpp>
+#include <boost/format.hpp>
 
 ArmArchitecture::ArmArchitecture(void)
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
