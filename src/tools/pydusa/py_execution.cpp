@@ -14,7 +14,7 @@ MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  std::shared_ptr<Document> Execution_MapModule(Execution* pExecution, std::string const& rModPath, Address const& rAddr)
+  std::shared_ptr<Document> Execution_MapModule(Execution* pExecution, std::string const& rModPath, std::string const& rModDbPath, Address const& rAddr)
   {
     Path ModPath = rModPath;
 
@@ -43,16 +43,22 @@ namespace pydusa
         if (!spLdr->IsCompatible(*spModBinStrm))
           continue;
 
-        auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
-        if (pGetDbText == nullptr)
+        auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(".", "soci");
+        if (pGetDb == nullptr)
         {
-          Log::Write("pydusa") << "failed to get db_text" << LogEnd;
+          Log::Write("pydusa") << "failed to get database module" << LogEnd;
           return nullptr;
         }
-        auto spDbText = medusa::Database::SPType(pGetDbText());
 
-        spDbText->SetBinaryStream(spModBinStrm);
-        spModDoc->Open(spDbText);
+        auto spDbMod = pGetDb();
+        if (!spDbMod->Create(rModDbPath, true))
+        {
+          Log::Write("pydusa") << "failed to create database at " << rModDbPath << LogEnd;
+        }
+        auto spDb = medusa::Database::SPType(spDbMod);
+
+        spDb->SetBinaryStream(spModBinStrm);
+        spModDoc->Open(spDb);
 
         if (!spLdr->Map(*spModDoc, { spArch }, rAddr))
         {
