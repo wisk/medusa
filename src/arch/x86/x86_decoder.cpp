@@ -357,10 +357,10 @@ static Expression::SPType __DecodeModRmAddress32(CpuInformation* pCpuInfo, Binar
 
 static Expression::SPType __DecodeSib64(CpuInformation* pCpuInfo, BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8& rOprdLen)
 {
-  static u32 Reg[]          = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Rsp,     X86_Reg_Unknown, X86_Reg_Rsi, X86_Reg_Rdi  };
-  static u32 RegRexB[]      = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_Unknown, X86_Reg_R14, X86_Reg_R15d };
-  static u32 RegIndex[]     = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Unknown, X86_Reg_Rbp,     X86_Reg_Rsi, X86_Reg_Rdi  };
-  static u32 RegIndexRexX[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_R13,     X86_Reg_R14, X86_Reg_R15d };
+  static u32 Reg[]          = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Rsp,     X86_Reg_Unknown, X86_Reg_Rsi, X86_Reg_Rdi };
+  static u32 RegRexB[]      = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_Unknown, X86_Reg_R14, X86_Reg_R15 };
+  static u32 RegIndex[]     = { X86_Reg_Rax, X86_Reg_Rcx, X86_Reg_Rdx,  X86_Reg_Rbx,  X86_Reg_Unknown, X86_Reg_Rbp,     X86_Reg_Rsi, X86_Reg_Rdi };
+  static u32 RegIndexRexX[] = { X86_Reg_R8,  X86_Reg_R9,  X86_Reg_R10,  X86_Reg_R11,  X86_Reg_R12,     X86_Reg_R13,     X86_Reg_R14, X86_Reg_R15 };
 
   static u32 aScale[]    = { 1, 2, 4, 8 };
 

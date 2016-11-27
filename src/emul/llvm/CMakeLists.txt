@@ -32,7 +32,7 @@ if (UNIX AND LLVM_ROOT)
 
   install(TARGETS emul_llvm LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
   set_target_properties(emul_llvm PROPERTIES
-    FOLDER "Emulations"
+    FOLDER "Emulators"
     PREFIX "")
 
 elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)

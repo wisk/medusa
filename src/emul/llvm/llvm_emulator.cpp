@@ -44,7 +44,7 @@ extern "C" EMUL_LLVM_EXPORT bool JitWriteRegister(CpuContext* pCpuCtxt, u32 Reg,
 static llvm::Function* s_pWriteRegisterFunc;
 
 // This function allows the JIT'ed code to convert logical address to linear address
-extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, TBase Base, TOffset Offset)
+extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, BaseType Base, OffsetType Offset)
 {
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
   u64 LinAddr;
@@ -57,7 +57,7 @@ extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, TBase Base,
 static llvm::Function* s_pTranslateAddressFunc;
 
 // This function allows the JIT'ed code to access to memory
-extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 BitSize)
+extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, BaseType Base, OffsetType Offset, u32 BitSize)
 {
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
   auto pMemCtxt = reinterpret_cast<MemoryContext*>(pMemCtxtObj);
@@ -73,7 +73,7 @@ extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj,
 
   u32 MemOff;
   u32 MemSize;
-  u32 Flags;
+  MemoryArea::Access Flags;
   if (!pMemCtxt->FindMemory(LinAddr, pMemory, MemOff, MemSize, Flags))
   {
     Log::Write("emul_llvm").Level(LogWarning) << "invalid memory access: linear address: " << LinAddr << LogEnd;
@@ -95,7 +95,7 @@ extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitCallInstructionHook(u8* pEmu
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset, Emulator::HookType HkTy)
+extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, BaseType Base, OffsetType Offset, Emulator::HookType HkTy)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
