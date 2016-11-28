@@ -1896,7 +1896,7 @@ Expression::SPType SymbolicVisitor::RemoveExpressionAnnotations(Expression::SPTy
     {
       auto spExpr = spSymExpr->GetExpression();
       if (spExpr == nullptr)
-        return nullptr;
+        return spSymExpr;
       return spSymExpr->GetExpression()->Visit(this);
     }
   } RemTrkOrSymVst;

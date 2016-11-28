@@ -894,7 +894,7 @@ u8 Document::GetMode(Address const& rAddress) const
         return Mode;
     }
     Mode = spCell->GetMode();
-    if (Mode != 0 && Mode != 1)
+    if (Mode != 0)
       return Mode;
   }
 

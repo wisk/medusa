@@ -70,7 +70,12 @@ set(SRC
 
 add_library(pydusa SHARED ${SRC})
 target_link_libraries(pydusa medusa ${PYTHON_LIBRARY} ${Boost_LIBRARIES})
-set_target_properties(pydusa PROPERTIES FOLDER "Tools")
+set_target_properties(
+  pydusa
+  PROPERTIES
+    FOLDER "Tools"
+    DEBUG_POSTFIX ""
+)
 add_dependencies(pydusa pybind11)
 
 set_target_properties(pydusa PROPERTIES PREFIX "")
