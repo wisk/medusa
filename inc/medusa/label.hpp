@@ -13,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Label is a string associated with an Address.
-class Medusa_EXPORT Label
+class MEDUSA_EXPORT Label
 {
 public:
   enum Type
@@ -33,15 +33,19 @@ public:
   };
 
   Label(Address const& rAddress, u16 Type = Unknown);
-  Label(std::string const& rName = "", u16 Type = Unknown, u32 Version = 0);
+  Label(std::string const& rName = "", u16 Type = Unknown, u16 Version = 0);
   ~Label(void);
 
   std::string Dump(void) const;
 
-  std::string GetName(void) const { return m_spName.get(); }
-  u16         GetType(void) const { return m_Type; }
-  void        SetType(u16 Type) { m_Type = Type; }
+  std::string GetName(void)    const { return m_Name;    }
+  u16         GetType(void)    const { return m_Type;    }
+  u16         GetVersion(void) const { return m_Version; }
   std::string GetLabel(void) const;
+
+  void        SetName(std::string const& Name) { m_Name    = Name;    }
+  void        SetVersion(u16 Version)          { m_Version = Version; }
+  void        SetType(u16 Type)                { m_Type    = Type;    }
 
   void IncrementVersion(void);
 
@@ -70,10 +74,9 @@ public:
 protected:
   static std::string _ConvertToLabel(char c);
 
-  std::shared_ptr<char> m_spName;
-  u16                   m_NameLength;
-  u16                   m_Type;
-  u32                   m_Version;
+  std::string m_Name;
+  u16         m_Type;
+  u16         m_Version;
 };
 
 MEDUSA_NAMESPACE_END

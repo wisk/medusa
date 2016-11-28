@@ -157,11 +157,11 @@ public:
     // TODO: iterate
     {
       auto const& rAddr = m_pView->GetCursorAddress();
-      auto pCell = m_rCore.GetCell(rAddr);
-      if (pCell == nullptr) return;
+      auto spCell = m_rCore.GetDocument().GetCell(rAddr);
+      if (spCell == nullptr) return;
 
       u8 NewSize = 0;
-      switch (pCell->GetLength())
+      switch (spCell->GetSize())
       {
       case 1: NewSize = 2; break;
       case 2: NewSize = 4; break;
@@ -568,6 +568,48 @@ public:
   }
 };
 
+class CellAction_SymbolicAnalyze : public Action
+{
+public:
+  CellAction_SymbolicAnalyze(Medusa& rCore, FullDisassemblyView* pView) : Action(rCore, pView) {}
+
+  static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
+  {
+    return std::make_shared<CellAction_SymbolicAnalyze>(rCore, pView);
+  }
+
+  static char const* GetBindingName(void)
+  {
+    return "action.symbolic_analyze";
+  }
+
+  virtual std::string GetName(void) const
+  {
+    return "Analyze (symbolically)";
+  }
+
+  virtual std::string GetDescription(void) const
+  {
+    return "Analyze symbolically using the most appropriate architecture";
+  }
+
+  virtual std::string GetIconName(void) const
+  {
+    return "analyze.png";
+  }
+
+  virtual bool IsCompatible(void) const
+  {
+    return true;
+  }
+
+  virtual void Do(void)
+  {
+    auto rAddr = m_pView->GetCursorAddress();
+    m_rCore.AddTask("symbolic disassemble", rAddr);
+  }
+};
+
 class CellAction_CreateFunction : public Action
 {
 public:
@@ -632,7 +674,7 @@ public:
     //    auto pStr = m_rCore.GetCell(rAddr);
     //    if (pStr == nullptr) return;
     //    OldAddr = rAddr;
-    //    StrLen = pStr->GetLength();
+    //    StrLen = pStr->GetSize();
     //  }
     //}
     // TODO: iterate
@@ -675,7 +717,7 @@ public:
     //    auto pStr = m_rCore.GetCell(rAddr);
     //    if (pStr == nullptr) return;
     //    OldAddr = rAddr;
-    //    StrLen = pStr->GetLength();
+    //    StrLen = pStr->GetSize();
     //  }
     //}
     // TODO: iterate
@@ -781,6 +823,7 @@ Action::MapType Action::GetMap(void)
     s_Actions[CellAction_Decimal::GetBindingName()]             = &CellAction_Decimal::Create;
     s_Actions[CellAction_Hexadecimal::GetBindingName()]         = &CellAction_Hexadecimal::Create;
     s_Actions[CellAction_Analyze::GetBindingName()]             = &CellAction_Analyze::Create;
+    s_Actions[CellAction_SymbolicAnalyze::GetBindingName()]     = &CellAction_SymbolicAnalyze::Create;
     s_Actions[CellAction_CreateFunction::GetBindingName()]      = &CellAction_CreateFunction::Create;
     s_Actions[CellAction_ToUtf8String::GetBindingName()]        = &CellAction_ToUtf8String::Create;
     s_Actions[CellAction_ToUtf16String::GetBindingName()]       = &CellAction_ToUtf16String::Create;

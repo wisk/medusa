@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Loader : public IsConfigurable
+class MEDUSA_EXPORT Loader : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<Loader> SPType;
@@ -29,7 +29,8 @@ public:
   virtual std::string GetName(void) const = 0;
   virtual u8          GetDepth(void) const = 0;
   virtual bool        IsCompatible(BinaryStream const& rBinStrm) = 0;
-  virtual void        Map(Document& rDoc, Architecture::VSPType const& rArchs) = 0;
+  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs) = 0;
+  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase) = 0;
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const = 0;
 };
 

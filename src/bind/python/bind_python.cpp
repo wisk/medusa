@@ -1,13 +1,14 @@
 #include "bind_python.hpp"
 #include <medusa/user_configuration.hpp>
 
-#include <boost/python.hpp>
+#include <Python.h>
 
 #include <mutex>
 
+#include <boost/format.hpp>
+
 MEDUSA_NAMESPACE_USE
 
-namespace bp = boost::python;
 std::once_flag g_PythonInit;
 
 BindingPython::BindingPython(void)
@@ -67,17 +68,9 @@ bool BindingPython::Bind(Medusa& rCore)
   if (!Execute(BindMedusa))
     return false;
 
-  try
-  {
-    auto PydusaCore = bp::object(boost::ref(rCore));
-    auto PydusaModule = bp::import("pydusa");
-    PydusaModule.attr("core") = PydusaCore;
-  }
-  catch (bp::error_already_set const&)
-  {
-    PyErr_Print();
-    return false;
-  }
+  return false;
+  //py::module m("pydusa", "pydusa module");
+  //m.attr("core") = py::cast(rCore);
 
   return true;
 }
@@ -96,19 +89,20 @@ bool BindingPython::Unbind(Medusa& rCore)
 //ref: http://www.boost.org/doc/libs/1_57_0/libs/python/doc/tutorial/doc/html/python/embedding.html
 bool BindingPython::Execute(std::string const& rCode)
 {
-  auto MainModule = bp::import("__main__");
-  auto MainNamespace = MainModule.attr("__dict__");
+  return false;
+  //auto MainModule = py::import("__main__");
+  //auto MainNamespace = MainModule.attr("__dict__");
 
-  try
-  {
-    auto Ignored = bp::exec(rCode.c_str(), MainNamespace);
-  }
-  catch (bp::error_already_set const&)
-  {
-    PyErr_Print();
-    return false;
-  }
-  return true;
+  //try
+  //{
+  //  auto Ignored = py::exec(rCode.c_str(), MainNamespace);
+  //}
+  //catch (py::error_already_set const&)
+  //{
+  //  PyErr_Print();
+  //  return false;
+  //}
+  //return true;
 }
 
 Binding* GetBinding(void) { return new BindingPython; }

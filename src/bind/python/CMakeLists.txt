@@ -1,89 +1,40 @@
-cmake_minimum_required(VERSION 2.8)
-
-find_package(Boost ${MEDUSA_BOOST_MIN_VERSION} COMPONENTS Python REQUIRED)
-set(Python_ADDITIONAL_VERSIONS ${MEDUSA_PYTHON_VERSION})
-find_package(PythonLibs REQUIRED)
-
-set(SRC
-  pydusa.cpp
-  pydusa.hpp
-
-  py_address.cpp
-  py_address.hpp
-
-  py_label.cpp
-  py_label.hpp
-
-  py_binary_stream.cpp
-  py_binary_stream.hpp
-
-  py_expression.cpp
-  py_expression.hpp
-
-  py_cell.cpp
-  py_cell.hpp
-
-  py_configuration.cpp
-  py_configuration.hpp
-
-  py_memory_area.cpp
-  py_memory_area.hpp
-
-  py_database.cpp
-  py_database.hpp
-
-  py_exception.cpp
-  py_exception.hpp
-
-  py_architecture.cpp
-  py_architecture.hpp
-
-  py_loader.cpp
-  py_loader.hpp
-
-  py_logger.cpp
-  py_logger.hpp
-
-  py_instruction.cpp
-  py_instruction.hpp
-
-  py_document.cpp
-  py_document.hpp
-
-  py_medusa.cpp
-  py_medusa.hpp
-
-  py_xrefs.cpp
-  py_xrefs.hpp
-
-  py_context.cpp
-  py_context.hpp
-
-  py_execution.cpp
-  py_execution.hpp
-
-  py_symbolic.cpp
-  py_symbolic.hpp
-
-  py_cpu_information.cpp
-  py_cpu_information.hpp
+set(MEDUSA_PYTHON_VERSION "" CACHE STRING
+  "Python version to use for compiling pydusa"
 )
 
-include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
+set(Python_ADDITIONAL_VERSIONS 2.7 3.4 3.5 3.6 3.7)
+if (NOT "${MEDUSA_PYTHON_VERSION}" STREQUAL "")
+  find_package(PythonLibs "${MEDUSA_PYTHON_VERSION}" EXACT)
+  if (NOT PYTHONLIBS_FOUND)
+    find_package(PythonLibs "${MEDUSA_PYTHON_VERSION}" REQUIRED)
+  endif()
+else()
+  find_package(PythonLibs REQUIRED)
+endif()
+
+string(REPLACE "+" "" PYTHONLIBS_VERSION_STRING "+${PYTHONLIBS_VERSION_STRING}")
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  if (NOT ${CMAKE_BUILD_TYPE} MATCHES DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+
+    CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
+    if (HAS_LTO_FLAG)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+    endif()
+  endif()
+endif()
+
+include_directories("${PYTHON_INCLUDE_DIR}")
 
 add_library(bind_python SHARED bind_python.cpp bind_python.hpp)
-target_link_libraries(bind_python ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
-set_target_properties(bind_python PROPERTIES FOLDER "Bindings")
-
-add_library(pydusa SHARED ${SRC})
-target_link_libraries(pydusa ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} Medusa)
-set_target_properties(pydusa PROPERTIES FOLDER "Bindings")
-
-set_target_properties(pydusa PROPERTIES PREFIX "")
+target_link_libraries(bind_python medusa ${PYTHON_LIBRARY})
+set_target_properties(bind_python PROPERTIES
+  FOLDER "Bindings"
+  PREFIX "")
 
 if(WIN32)
-  set_target_properties(pydusa PROPERTIES SUFFIX ".pyd")
-  install(TARGETS bind_python pydusa RUNTIME DESTINATION .)
+  install(TARGETS bind_python RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
 else()
-  install(TARGETS bind_python pydusa LIBRARY DESTINATION .)
+  install(TARGETS bind_python LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
 endif()

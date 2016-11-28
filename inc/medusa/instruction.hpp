@@ -17,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define P_NONE 0x0
 
 //! Instruction is a Cell which handles an instruction for any Architecture.
-class Medusa_EXPORT Instruction : public Cell
+class MEDUSA_EXPORT Instruction : public Cell
 {
 public:
   typedef std::shared_ptr<Instruction> SPType;
@@ -59,9 +59,11 @@ public:
 
   std::string ToString(void) const;
 
+  char const* GetFormat(void) const;
   char const* GetName(void) const;
   u32         GetOpcode(void) const;
   u32         GetPrefix(void) const;
+  u32         GetAttributes(void) const;
 
   u32 GetTestedFlags(void) const;
   u32 GetUpdatedFlags(void) const;
@@ -77,7 +79,12 @@ public:
   typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
   void               ForEachOperand(OperandCallback OprdCb) const;
 
+  void SetFormat(char const* pFormat);
   void SetName(char const* pName);
+  void SetMnemonic(char const* pMnem);
+  void AddMnemonicPrefix(char const* pPrefix);
+  void AddMnemonicSuffix(char const* pSuffix);
+  void AddAttribute(u32 Attr);
   void SetOpcode(u32 Opcd);
   void SetTestedFlags(u32 Flags);
   void SetUpdatedFlags(u32 Flags);
@@ -88,13 +95,17 @@ public:
   void AddPreSemantic(Expression::SPType spExpr);
   void AddPostSemantic(Expression::SPType spExpr);
 
-  u16& Length(void);
+  u16& Size(void);
   u32& Prefix(void);
 
 private:
+  char const*         m_pFormat;          /*! This string holds the format of the instruction                     */
   char const*         m_pName;            /*! This string holds the instruction name ("call", "lsl", ...)         */
-  u32                 m_Opcd;             /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
+  std::string         m_MnemonicPrefix;   /*! */
+  std::string         m_MnemonicSuffix;   /*! */
+  u32                 m_Opcode;           /*! This integer holds the current opcode (ARM_Ldr, GB_Swap, ...)       */
   u32                 m_Prefix;           /*! This integer holds prefix flag (REP, LOCK, ...)                     */
+  u32                 m_Attributes;       /*! This integer holdes instruction attributes (support-it-block, ... ) */
   u32                 m_TestedFlags;      /*! This integer holds flags that are tested by the instruction         */
   u32                 m_UpdatedFlags;     /*! This integer holds flags that could be modified by the instruction  */
   u32                 m_ClearedFlags;     /*! This integer holds flags that are unset by the instruction          */

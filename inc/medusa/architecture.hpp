@@ -34,7 +34,7 @@ MEDUSA_NAMESPACE_BEGIN
 /*! This class defines what an architecture plug-in must implement.
  * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function
  */
-class Medusa_EXPORT Architecture : public IsConfigurable
+class MEDUSA_EXPORT Architecture : public IsConfigurable
 {
 public:
   typedef std::shared_ptr<Architecture> SPType;
@@ -49,13 +49,13 @@ public:
   virtual std::string GetName(void) const;
 
   //! This method converts an virtual address to a physical one.
-  virtual bool Translate(Address const& rVirtAddr, TOffset& rPhysOff);
+  virtual bool Translate(Address const& rVirtAddr, OffsetType& rPhysOff);
 
   //! This method gets the current address from the instruction address
   virtual Address CurrentAddress(Address const& rAddr, Instruction const& rInsn) const;
 
   //! This method disassembles one instruction.
-  virtual bool Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual bool Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
 
   //! This method returns all available mode
   virtual NamedModeVector GetModes(void) const = 0;

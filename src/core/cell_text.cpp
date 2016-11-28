@@ -31,14 +31,49 @@ PrintData::PrintData(void)
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
   , m_Indent(2)
-  , m_CurrentCommentOffset()
+  , m_CurrentCommenOffsetType()
 {
+}
+
+PrintData::PrintData(PrintData const& rPD)
+  : m_PrependAddress(rPD.m_PrependAddress)
+  , m_CurrentAddress(rPD.m_CurrentAddress)
+  , m_CurrentText(rPD.m_CurrentText)
+  , m_CurrentMarks(rPD.m_CurrentMarks)
+  , m_CurrentOperandsOffset(rPD.m_CurrentOperandsOffset)
+  , m_CurrentCommenOffsetType(rPD.m_CurrentCommenOffsetType)
+  , m_Lines(rPD.m_Lines)
+  , m_Width(rPD.m_Width)
+  , m_LineWidth(rPD.m_LineWidth)
+  , m_Height(rPD.m_Height)
+  , m_Indent(rPD.m_Indent)
+{
+
 }
 
 PrintData& PrintData::operator()(Address const& rAddress)
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
   m_CurrentAddress = rAddress;
+  return *this;
+}
+
+PrintData& PrintData::operator=(PrintData const& rPD)
+{
+  m_PrependAddress = rPD.m_PrependAddress;
+
+  m_CurrentAddress        = rPD.m_CurrentAddress;
+  m_CurrentText           = rPD.m_CurrentText;
+  m_CurrentMarks          = rPD.m_CurrentMarks;
+  m_CurrentOperandsOffset = rPD.m_CurrentOperandsOffset;
+  m_CurrentCommenOffsetType  = rPD.m_CurrentCommenOffsetType;
+
+  m_Lines     = rPD.m_Lines;
+  m_Width     = rPD.m_Width;
+  m_LineWidth = rPD.m_LineWidth;
+  m_Height    = rPD.m_Height;
+  m_Indent    = rPD.m_Indent;
+
   return *this;
 }
 
@@ -111,9 +146,9 @@ PrintData& PrintData::MarkOffset(void)
   return *this;
 }
 
-Address::List PrintData::GetAddresses(void) const
+Address::Vector PrintData::GetAddresses(void) const
 {
-  Address::List Addrs;
+  Address::Vector Addrs;
 
   std::lock_guard<MutexType> Lock(m_Mutex);
   for (auto const& Line : m_Lines)
@@ -296,6 +331,7 @@ void PrintData::_AppendText(std::string const& rText, Mark::Type MarkType)
 void PrintData::Clear(void)
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
+
   m_CurrentAddress = Address();
   m_CurrentText.clear();
   m_CurrentMarks.clear();
@@ -304,4 +340,65 @@ void PrintData::Clear(void)
   m_Width     = 0;
   m_LineWidth = 0;
   m_Height    = 0;
+}
+
+bool GraphData::AddVertex(PrintData const& rPD, u16 X, u16 Y)
+{
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  Address VtxAddr;
+  if (!rPD.GetFirstAddress(VtxAddr))
+    return false;
+  if (m_Map.find(VtxAddr) != std::end(m_Map))
+    return false;
+  m_Map[VtxAddr] = std::make_tuple(rPD, X, Y);
+  return true;
+}
+
+bool GraphData::GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) const
+{
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  auto itVtxData = m_Map.find(rVtxAddr);
+  if (itVtxData == std::end(m_Map))
+    return false;
+  rX = std::get<1>(itVtxData->second);
+  rY = std::get<2>(itVtxData->second);
+  return true;
+}
+
+bool GraphData::SetVertexPosition(Address const& rVtxAddr, u16 X, u16 Y)
+{
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  auto itVtxData = m_Map.find(rVtxAddr);
+  if (itVtxData == std::end(m_Map))
+    return false;
+  std::get<1>(itVtxData->second) = X;
+  std::get<2>(itVtxData->second) = Y;
+  return true;
+}
+
+void GraphData::ForEachVertex(GraphData::VertexCallbackType CB) const
+{
+  std::lock_guard<MutexType> Lock(m_Mutex);
+
+  for (auto const& rVtxPair : m_Map)
+  {
+    CB(std::get<0>(rVtxPair.second), std::get<1>(rVtxPair.second), std::get<2>(rVtxPair.second));
+  }
+}
+
+bool GraphData::GetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType& rBends) const
+{
+  auto itBends = m_Bends.find(rEdgeDesc);
+  if (itBends == std::end(m_Bends))
+    return false;
+  rBends = itBends->second;
+  return true;
+}
+
+void GraphData::SetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType const& rBends)
+{
+  m_Bends[rEdgeDesc] = rBends;
 }

@@ -1,9 +1,10 @@
-#include "medusa/medusa.hpp"
+#include <medusa/bits.hpp>
+#include <medusa/medusa.hpp>
 #include "pe_loader.hpp"
 
 #include <boost/format.hpp>
 
-PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0)
+PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0), m_ImageBase(0x0)
 {
 }
 
@@ -46,17 +47,88 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature) + sizeof(PeFileHeader), m_Magic))
     return false;
 
+  switch (m_Magic)
+  {
+  case PE_NT_OPTIONAL_HDR32_MAGIC:
+  {
+    PeTraits<32>::DosHeader DosHdr;
+    PeTraits<32>::NtHeaders NtHdrs;
+
+    if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
+    {
+      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      return false;
+    }
+    DosHdr.Swap(LittleEndian);
+
+    if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
+    {
+      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      return false;
+    }
+    NtHdrs.Swap(LittleEndian);
+
+    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    break;
+  }
+
+  case PE_NT_OPTIONAL_HDR64_MAGIC:
+  {
+    PeTraits<64>::DosHeader DosHdr;
+    PeTraits<64>::NtHeaders NtHdrs;
+
+    if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
+    {
+      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      return false;
+    }
+    DosHdr.Swap(LittleEndian);
+
+    if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
+    {
+      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      return false;
+    }
+    NtHdrs.Swap(LittleEndian);
+
+    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    break;
+  }
+
+  default:
+    Log::Write("ldr_pe").Level(LogError) << "unsupported magic" << LogEnd;
+    return false;
+  }
+
   return true;
 }
 
-void PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
+  if (!rDoc.SetImageBase(m_ImageBase))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to set image base: " << m_ImageBase << LogEnd;
+    return false;
+  }
+  if (!rDoc.SetDefaultAddressingType(Address::LinearType))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to set the default address type" << LogEnd;
+    return false;
+  }
   switch (m_Magic)
   {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs); break;
-  case PE_NT_OPTIONAL_HDR64_MAGIC: _Map<64>(rDoc, rArchs); break;
+  case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs, m_ImageBase); break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: _Map<64>(rDoc, rArchs, m_ImageBase); break;
   default: assert(0 && "Unknown magic");
   }
+
+  return true;
+}
+
+bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  m_ImageBase = rImgBase.GetOffset();
+  return Map(rDoc, rArchs);
 }
 
 void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
@@ -67,7 +139,7 @@ void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) co
   {
   case PE_FILE_MACHINE_I386:
   case PE_FILE_MACHINE_AMD64:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     break;
 
   case PE_FILE_MACHINE_ARM:
@@ -93,12 +165,12 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   switch (m_Machine)
   {
   case PE_FILE_MACHINE_I386:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "32-bit";
     break;
 
   case PE_FILE_MACHINE_AMD64:
-    ArchName = "Intel x86";
+    ArchName = "x86";
     ArchMode = "64-bit";
     break;
 
@@ -123,7 +195,7 @@ bool PeLoader::_FindArchitectureTagAndModeByMachine(
   return false;
 }
 
-template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs)
+template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImgBase)
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
@@ -145,10 +217,10 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
   }
   NtHdrs.Swap(LittleEndian);
 
-  u64 ImgBase  = NtHdrs.OptionalHeader.ImageBase;
   u64 EpOff    = ImgBase + NtHdrs.OptionalHeader.AddressOfEntryPoint;
   u16 NumOfScn = NtHdrs.FileHeader.NumberOfSections;
   u64 ScnOff   = DosHdr.e_lfanew + offsetof(typename PeType::NtHeaders, OptionalHeader) + NtHdrs.FileHeader.SizeOfOptionalHeader;
+  u32 ScnAlign = NtHdrs.OptionalHeader.SectionAlignment;
 
   Log::Write("ldr_pe")
     <<   "ImageBase: "         << ImgBase
@@ -156,21 +228,28 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     << ", Number of section: " << NumOfScn
     << LogEnd;
 
-  Address EpAddr(Address::FlatType, 0x0, EpOff, 0x10, bit);
-  rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported));
-
-  _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn);
+  _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
   _ResolveImports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IMPORT].VirtualAddress,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
   _ResolveExports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+
+  Address EpAddr(Address::LinearType, 0x0, EpOff, 0x10, bit);
+  if (!rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported)))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to add label start" << LogEnd;
+  }
 }
 
-template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection)
+template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment)
 {
   Tag ArchTag  = MEDUSA_ARCH_UNK;
   u8  ArchMode = 0;
+
+  // TODO(wisk): verify how section alignment really works
+  if (SectionAlignment == 0)
+    SectionAlignment = 1;
 
   if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
     return;
@@ -183,17 +262,20 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   // ref: https://code.google.com/p/corkami/wiki/PE#SizeOfHeaders
   auto HdrLen = std::min<u32>(0x1000, rBinStrm.GetSize());
 
-  rDoc.AddMemoryArea(new MappedMemoryArea(
-    "hdr",
+  if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+    "hdr", MemoryArea::Access::Read | MemoryArea::Access::Write,
     0x0, HdrLen,
-    Address(Address::FlatType, 0x0, ImageBase, 0x10, bit), HdrLen,
-    MemoryArea::Read | MemoryArea::Write,
+    Address(Address::LinearType, 0x0, ImageBase, 0x10, bit), HdrLen,
     ArchTag, ArchMode
-    ));
+  )))
+  {
+    Log::Write("ldr_pe").Level(LogError) << "failed to add memory area" << LogEnd;
+    return;
+  }
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
   {
-    u32 Flags = MemoryArea::Read;
+    auto Flags = MemoryArea::Access::Read;
     if (!rBinStrm.Read(SectionHeadersOffset + ScnIdx * sizeof(ScnHdr), &ScnHdr, sizeof(ScnHdr)))
     {
       Log::Write("ldr_pe") << "unable to read IMAGE_SECTION_HEADER" << LogEnd;
@@ -202,27 +284,34 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
     ScnHdr.Swap(LittleEndian);
 
     u32 ScnVirtSz = ScnHdr.Misc.VirtualSize ? ScnHdr.Misc.VirtualSize : ScnHdr.SizeOfRawData;
+    if ((ScnVirtSz % SectionAlignment) != 0)
+    {
+      ScnVirtSz += SectionAlignment - (ScnVirtSz % SectionAlignment);
+    }
     std::string ScnName(reinterpret_cast<char const*>(ScnHdr.Name), 0, PE_SIZEOF_SHORT_NAME);
 
     if (ScnHdr.Characteristics & PE_SCN_MEM_EXECUTE)
-      Flags |= MemoryArea::Execute;
+      Flags |= MemoryArea::Access::Execute;
     // TODO: Is it documented?
     //else if (EpOff >= (ImgBase + ScnHdr.VirtualAddress)
     //  &&     EpOff <   ImgBase + ScnHdr.VirtualAddress + ScnVirtSz)
     //{
     //  Log::Write("ldr_pe") << "promote section " << ScnName << " to executable since it contains the entry point" << LogEnd;
-    //  Flags |= MemoryArea::Execute;
+    //  Flags |= MemoryArea::Access::Execute;
     //}
     if (ScnHdr.Characteristics & PE_SCN_MEM_WRITE)
-      Flags |= MemoryArea::Write;
+      Flags |= MemoryArea::Access::Write;
 
-    rDoc.AddMemoryArea(new MappedMemoryArea(
-      ScnName,
+    if (!rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+      ScnName, Flags,
       ScnHdr.PointerToRawData, ScnHdr.SizeOfRawData,
-      Address(Address::FlatType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
-      Flags,
+      Address(Address::LinearType, 0x0, ImageBase + ScnHdr.VirtualAddress, 0x10, bit), ScnVirtSz,
       ArchTag, ArchMode
-      ));
+    )))
+    {
+      Log::Write("ldr_pe").Level(LogError) << "failed to add memory area: " << ScnName << LogEnd;
+      continue;
+    }
 
     Log::Write("ldr_pe") << "found section " << ScnName << LogEnd;
   }
@@ -234,7 +323,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
   typename PeType::ImportDescriptor CurImp, EndImp;
   ::memset(&EndImp, 0x0, sizeof(EndImp));
 
-  TOffset ImpOff;
+  OffsetType ImpOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ImportDirectoryRva, ImpOff))
   {
     Log::Write("ldr_pe") << "unable to convert address import directory" << LogEnd;
@@ -253,7 +342,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     if (!memcmp(&CurImp, &EndImp, sizeof(CurImp)))
       break;
 
-    TOffset ImpNameOff;
+    OffsetType ImpNameOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurImp.Name, ImpNameOff))
     {
       Log::Write("ldr_pe") << "unable to convert import name address to offset" << LogEnd;
@@ -270,20 +359,20 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     Log::Write("ldr_pe") << "found import: " << ImpName << LogEnd;
 
     // For each thunks (imported symbol) ...
-    std::string       FuncName;
-    TOffset           OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
+    std::string  FuncName;
+    OffsetType   OrgThunkRva = CurImp.OriginalFirstThunk ? CurImp.OriginalFirstThunk : CurImp.FirstThunk,
       ThunkRva = CurImp.FirstThunk,
       FuncOff;
     typename PeType::ThunkData CurOrgThunk, CurThunk, EndThunk = { 0 };
 
-    TOffset OrgThunkOff;
+    OffsetType OrgThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + OrgThunkRva, OrgThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert thunk address to offset" << LogEnd;
       return;
     }
 
-    TOffset ThunkOff;
+    OffsetType ThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + ThunkRva, ThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert original thunk address to offset" << LogEnd;
@@ -337,14 +426,14 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
         SymName += ThunkName;
       }
 
-      Address SymAddr(Address::FlatType, 0x0, ImageBase + ThunkRva, 0, bit);
+      Address SymAddr(Address::LinearType, 0x0, ImageBase + ThunkRva, 0, bit);
       ThunkRva += sizeof(typename PeType::ThunkData);
       Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
       rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
-      auto pFunc = new Function(SymName, 0, 0);
-      rDoc.SetMultiCell(SymAddr, pFunc, true);
+      auto spFunc = std::make_shared<Function>(SymName, 0, 0);
+      rDoc.SetMultiCell(SymAddr, spFunc, true);
     }
   }
 }
@@ -355,7 +444,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
   typedef PeTraits<bit> PeType;
 
   typename PeType::ExportDirectory ExpDir;
-  TOffset ExpDirOff;
+  OffsetType ExpDirOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
   {
     Log::Write("ldr_pe") << "unable to convert export directory address to offset" << LogEnd;
@@ -367,7 +456,7 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     return;
   }
 
-  TOffset FuncOff, NameOff, OrdOff;
+  OffsetType FuncOff, NameOff, OrdOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfFunctions, FuncOff))
   {
     Log::Write("ldr_pe") << "unable to convert functions address to offset" << LogEnd;
@@ -390,14 +479,14 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     if (!rBinStrm.Read(OrdOff + i * sizeof(Ord), Ord))
     {
       Log::Write("ldr_pe") << "unable to read ordinal: " << i << LogEnd;
-      continue;
+      return;
     }
 
     u32 FuncRva;
     if (!rBinStrm.Read(FuncOff + Ord * sizeof(FuncRva), FuncRva))
     {
       Log::Write("ldr_pe") << "unable to read function rva: " << i << LogEnd;
-      continue;
+      return;
     }
 
     std::string SymName;
@@ -408,24 +497,24 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       if (!rBinStrm.Read(NameOff + i * sizeof(SymNameRva), SymNameRva))
       {
         Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
-        continue;
+        return;
       }
-      TOffset SymNameOff;
+      OffsetType SymNameOff;
       if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
       {
         Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
-        continue;
+        return;
       }
       if (!rBinStrm.Read(SymNameOff, SymName))
       {
         Log::Write("ldr_pe") << "unable to read export name" << LogEnd;
-        continue;
+        return;
       }
     }
     else
       SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
 
-    Address SymAddr(Address::FlatType, 0x0, ImageBase + FuncRva, 0x10, bit);
+    Address SymAddr(Address::LinearType, 0x0, ImageBase + FuncRva, 0x10, bit);
     rDoc.AddLabel(
       SymAddr,
        // We assume we only export function which is definitely false,

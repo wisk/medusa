@@ -6,7 +6,7 @@ namespace medusa
   {
     static Utf8StringTrait Utf8Str;
     s8 CurChar;
-    TOffset Offset;
+    OffsetType Offset;
     u16 RawLen = 0;
     std::string StrData;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
@@ -35,16 +35,14 @@ namespace medusa
     ++RawLen;
 
     auto spString = std::make_shared<String>(String::Utf8Type, RawLen);
-    m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
-
-    return true;
+    return m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
   }
 
   bool AnalyzerString::CreateUtf16String(void)
   {
     static Utf16StringTrait Utf16Str;
     Utf16StringTrait::CharType Utf16Char;
-    TOffset StrOff;
+    OffsetType StrOff;
     u16 RawLen = 0;
     auto const& rBinStrm = m_rDoc.GetBinaryStream();
 

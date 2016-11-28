@@ -8,14 +8,12 @@
 
 #if defined WIN32 || defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
 
-# include <windows.h>
-
 MEDUSA_NAMESPACE_BEGIN
 
-typedef HANDLE            TFileHandle;
-#define INVALID_FILE_VALUE (HANDLE)-1;
-typedef HANDLE            TMapHandle;
-#define INVALID_MAP_VALUE (HANDLE)nullptr;
+typedef void*              FileHandleType;
+#define INVALID_FILE_VALUE (FileHandleType)-1;
+typedef void*              MapHandleType;
+#define INVALID_MAP_VALUE  (MapHandleType)nullptr;
 
 MEDUSA_NAMESPACE_END
 
@@ -23,10 +21,10 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef int               TFileHandle;
-#define INVALID_FILE_VALUE (int)-1;
-typedef void*             TMapHandle;
-#define INVALID_MAP_VALUE (void*)-1; // MAP_ERROR
+typedef int               FileHandleType;
+#define INVALID_FILE_VALUE (FileHandleType)-1;
+typedef void*             MapHandleType;
+#define INVALID_MAP_VALUE (FileHandleType*)-1; // MAP_ERROR
 
 MEDUSA_NAMESPACE_END
 
@@ -70,7 +68,7 @@ typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
 // boost::multiprecision::cpp_int doesn't support arbitrary unsigned int
 typedef ap_int ap_uint;
 
-class Medusa_EXPORT BitVector
+class MEDUSA_EXPORT BitVector
 {
 public:
   BitVector(void) : m_BitSize(0), m_Value() {}
@@ -244,22 +242,22 @@ public:
 private:
   void _Adjust(void);
 
-  u16 m_BitSize;
+  u16    m_BitSize;
   ap_int m_Value;
 };
 
 template<> float  BitVector::ConvertTo<float> (void) const;
 template<> double BitVector::ConvertTo<double>(void) const;
 
-typedef u16                 TTranslationUnit;
-typedef u16                 TBase;
-typedef u64                 TOffset;
-typedef s64                 TRelative;
-typedef u64                 TData;
-typedef TTranslationUnit    TBank;
-typedef TTranslationUnit    TSegment;
-typedef u32                 Tag;
+// Address type
+typedef u16 BaseType;
+typedef u64 OffsetType;
+typedef u64 ImageBaseType;
 
+// Architecture
+typedef u32 Tag;
+
+// Misc
 typedef boost::uuids::uuid      Id;
 typedef boost::filesystem::path Path;
 

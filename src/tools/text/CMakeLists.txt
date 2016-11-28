@@ -15,8 +15,7 @@ add_executable(medusa_text
   ${SRC}
 )
 
-find_package(Threads REQUIRED)
-target_link_libraries(medusa_text Medusa ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(medusa_text medusa ${Boost_LIBRARIES})
 set_target_properties(medusa_text PROPERTIES FOLDER "Tools")
 
-install(TARGETS medusa_text RUNTIME DESTINATION .)
+install(TARGETS medusa_text RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})

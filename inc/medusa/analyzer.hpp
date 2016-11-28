@@ -73,11 +73,9 @@ class AnalyzerDisassemble : public AnalyzerPass
 public:
   AnalyzerDisassemble(Document& rDoc, Address const& rAddr) : AnalyzerPass("disassemble", rDoc, rAddr) {}
 
-  bool Disassemble(void);
-  bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock);
-
-  bool DisassembleWith(Architecture& rArch, u8 Mode);
-  bool DisassembleBasicBlockWith(Architecture& rArch, u8 Mode, std::list<Instruction::SPType>& rBasicBlock);
+  bool DisassembleOneInstruction(Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
+  bool Disassemble(Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
+  bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock, Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
 
   bool BuildControlFlowGraph(ControlFlowGraph& rCfg);
 
@@ -87,10 +85,16 @@ public:
 class AnalyzerInstruction : public AnalyzerPass
 {
 public:
-  AnalyzerInstruction(Document& rDoc, Address const& rAddr) : AnalyzerPass("instruction", rDoc, rAddr) {}
+  AnalyzerInstruction(Document& rDoc, Address const& rAddr, Instruction const& rInsn)
+    : AnalyzerPass("instruction", rDoc, rAddr)
+    , m_rInsn(rInsn)
+  {}
 
   bool FindCrossReference(void);
   bool FindString(void);
+
+protected:
+  Instruction const& m_rInsn;
 };
 
 class AnalyzerBasicBlock : public AnalyzerPass
@@ -121,7 +125,7 @@ public:
 };
 
 //! Analyzer handles all analysis operations.
-class Medusa_EXPORT Analyzer
+class MEDUSA_EXPORT Analyzer
 {
 public:
 
@@ -134,6 +138,7 @@ public:
 
   bool FormatCell(Document const& rDoc, Address const& rAddress, Cell const& rCell, PrintData &rPrintData) const;
   bool FormatMultiCell(Document const& rDoc, Address const& rAddress, MultiCell const& rMultiCell, PrintData& rPrintData) const;
+  bool FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData& rGraphData) const;
 };
 
 MEDUSA_NAMESPACE_END

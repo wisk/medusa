@@ -72,10 +72,10 @@ public:
   ~ArmArchitecture(void) {}
 
   virtual std::string           GetName(void) const                                    { return "ARM"; }
-  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhysOff) { return false; }
+  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) { return false; }
   virtual Address               CurrentAddress(Address const& rAddr, Instruction const& rInsn) const;
   virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const
   {
     NamedModeVector ArmModes;
@@ -99,7 +99,11 @@ public:
     Address       const& rAddr,
     Instruction   const& rInsn,
     PrintData          & rPrintData) const;
-  virtual CpuInformation const* GetCpuInformation(void) const                          { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+
+  virtual CpuInformation    const* GetCpuInformation(void) const                                         { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+  virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const;
+  virtual std::vector<std::string> GetCallingConventionNames(void) const                                 { return{ "aapcs" }; }
+
   virtual CpuContext*           MakeCpuContext(void) const                             { return new ARMCpuContext(*GetCpuInformation()); }
   virtual MemoryContext*        MakeMemoryContext(void) const                          { return new MemoryContext(*GetCpuInformation()); }
 

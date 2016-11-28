@@ -29,7 +29,7 @@ std::string WindowsOperatingSystem::GetName(void) const
 bool WindowsOperatingSystem::IsSupported(Loader const& rLdr, Architecture const& rArch) const
 {
   // At this time, only Windows on x86 is supported
-  if ((rLdr.GetName() == "PE" || rLdr.GetName() == "PE+") && rArch.GetName() == "Intel x86")
+  if ((rLdr.GetName() == "PE" || rLdr.GetName() == "PE+") && rArch.GetName() == "x86")
     return true;
 
   return false;
@@ -77,7 +77,7 @@ bool WindowsOperatingSystem::InitializeContext(
   if (!rCpuCtxt.WriteRegister(IdD, StartAddrVal))
     return false;
 
-  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+  auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   // TODO: create a fake _TEB/_PEB
   if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, ReadWrite, nullptr))
@@ -127,70 +127,9 @@ bool WindowsOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAdd
   return true;
 }
 
-Expression::LSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+Expression::VSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
 {
-  Expression::LSPType SymExprs;
-
-  auto pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rSymAddr));
-  if (pFunc == nullptr)
-    return SymExprs;
-
-  Id FuncId;
-  if (!rDoc.RetrieveDetailId(rSymAddr, 0, FuncId))
-    return SymExprs;
-
-  FunctionDetail FuncDtl;
-  if (!rDoc.GetFunctionDetail(FuncId, FuncDtl))
-    return SymExprs;
-
-  auto ArchTag = rDoc.GetArchitectureTag(rSymAddr);
-  auto ArchMode = rDoc.GetMode(rSymAddr);
-  auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
-  if (spArch == nullptr)
-    return SymExprs;
-
-  auto const pCpuInfo = spArch->GetCpuInformation();
-  if (pCpuInfo == nullptr)
-    return SymExprs;
-
-  // HACK: assume 32-bit stdcall calling convention which could be false
-
-  // Set the return register and undefined register due to volatile-register
-  u32 EaxId = pCpuInfo->ConvertNameToIdentifier("eax");
-  u32 EcxId = pCpuInfo->ConvertNameToIdentifier("ecx");
-  u32 EdxId = pCpuInfo->ConvertNameToIdentifier("edx");
-  if (EaxId == 0 || EcxId == 0 || EdxId == 0)
-    return SymExprs;
-  /* Returned value is contained in EAX */
-  SymExprs.push_back(
-    Expr::MakeAssign(
-    /**/Expr::MakeId(EaxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::ReturnedValue, "return value", rSymAddr)));
-
-  /* Volatile registers are ECX and EDX */
-  SymExprs.push_back(
-    Expr::MakeAssign(
-    /**/Expr::MakeId(EcxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register", rSymAddr)));
-  SymExprs.push_back(
-    Expr::MakeAssign(
-    /**/Expr::MakeId(EdxId, pCpuInfo),
-    /**/Expr::MakeSym(SymbolicExpression::Undefined, "volatile register", rSymAddr)));
-
-  /* In stdcall, the callee ajusts the stack pointer */
-  u32 EspId = pCpuInfo->ConvertNameToIdentifier("esp");
-  if (EspId == 0)
-    return SymExprs;
-  u32 EspBitSize = pCpuInfo->GetSizeOfRegisterInBit(EspId);
-
-  auto const& Parms = FuncDtl.GetParameters();
-  SymExprs.push_back(Expr::MakeAssign(
-    Expr::MakeId(EspId, pCpuInfo),
-    Expr::MakeBinOp(OperationExpression::OpAdd,
-    /**/Expr::MakeId(EspId, pCpuInfo),
-    /**/Expr::MakeBitVector(EspBitSize, EspBitSize / 8 * Parms.size()))));
-
-  return SymExprs;
+  return {};
 }
 
 bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
@@ -373,4 +312,34 @@ bool WindowsOperatingSystem::_GetTypeFromDatabase(std::string const& rTypeId, Ty
   sqlite3_finalize(pStmt);
 
   return true;
+}
+
+bool WindowsOperatingSystem::GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const
+{
+  auto spInsn = rDoc.GetCell(rAddress); // TODO(wisk): make sure this is an instruction
+  if (spInsn == nullptr)
+    return false;
+  auto ArchTag = spInsn->GetArchitectureTag();
+  auto Mode = spInsn->GetMode();
+
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spArch = rModMgr.GetArchitecture(ArchTag);
+
+  if (spArch->GetName() == "x86")
+  {
+    switch (Mode)
+    {
+    default:
+      return false;
+    case 16:
+    case 32:
+      rCallingConvention = "stdcall";
+      return true;
+    case 64:
+      rCallingConvention = "ms_x64";
+      return true;
+    }
+  }
+
+  return false;
 }

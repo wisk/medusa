@@ -11,23 +11,18 @@ Address::Address(std::string const& rAddrName)
   boost::algorithm::trim(AddrStr);
   m_Base       = 0;
   m_Offset     = 0;
-  m_BaseSize   = 0;
-  m_OffsetSize = static_cast<u8>(AddrStr.length() * 4);
-  m_Type       = UnknownType;
+  m_BaseSize   = 16;
+  m_OffsetSize = 64;
+  m_Type       = LinearType;
 
-  if (AddrStr.compare(0, 5, "addr(") == 0)
+  switch (AddrStr[0])
   {
-    switch (AddrStr[5])
-    {
-    case 'p': m_Type = PhysicalType; break;
-    case 'f': m_Type = FlatType;     break;
-    case 's': m_Type = SegmentType;  break;
-    case 'b': m_Type = BankType;     break;
-    case 'v': m_Type = VirtualType;  break;
-    }
-    AddrStr.erase(std::begin(AddrStr),   std::begin(AddrStr) + 7); // erase ^addr(?\s
-    AddrStr.erase(std::end(AddrStr) - 1, std::end(AddrStr)      ); // erase )$
+  case '*': m_Type = PhysicalType;     break;
+  case '+': m_Type = ArchitectureType; break;
+  default:                             break;
   }
+  if (m_Type != LinearType)
+    AddrStr.erase(std::begin(AddrStr), std::begin(AddrStr) + 1);
 
   if (AddrStr.compare(0, 2, "0x") == 0)
     AddrStr.erase(std::begin(AddrStr), std::begin(AddrStr) + 2); // erase 0x
@@ -49,45 +44,32 @@ Address::Address(std::string const& rAddrName)
   issOffset >> std::hex >> m_Offset;
 }
 
-std::string Address::Dump(void) const
-{
-  char TypeChr = '?';
-  switch (m_Type)
-  {
-  case PhysicalType: TypeChr = 'p'; break;
-  case FlatType:     TypeChr = 'f'; break;
-  case SegmentType:  TypeChr = 's'; break;
-  case BankType:     TypeChr = 'b'; break;
-  case VirtualType:  TypeChr = 'v'; break;
-  default:                          break;
-  }
-  std::ostringstream oss;
-
-  oss << std::hex << std::noshowbase << std::setfill('0');
-
-  oss << "addr(" << TypeChr << " ";
-
-  if (m_Type != FlatType && m_Type != UnknownType)
-    oss << std::setw(m_BaseSize / 4) << m_Base << ":";
-
-  oss << std::setw(m_OffsetSize / 4) << m_Offset << ")";
-  return oss.str();
-}
-
 std::string Address::ToString(void) const
 {
   std::ostringstream oss;
 
   oss << std::hex << std::setfill('0');
 
-  if (m_Type != FlatType)
-    oss << std::setw(m_BaseSize / 4) << m_Base << ":";
+  switch (m_Type)
+  {
+  case PhysicalType:
+    oss << "*";
+    break;
+  case RelativeType:
+    oss << "+";
+    break;
+  case LogicalType:
+      oss << std::setw(m_BaseSize / 4) << m_Base << ":";
+      break;
+  default:
+    break;
+  }
 
   oss << std::setw(m_OffsetSize / 4) << m_Offset;
   return oss.str();
 }
 
-TOffset Address::SanitizeOffset(TOffset Offset) const
+OffsetType Address::SanitizeOffset(OffsetType Offset) const
 {
   switch (m_OffsetSize)
   {
@@ -99,7 +81,7 @@ TOffset Address::SanitizeOffset(TOffset Offset) const
   }
 }
 
-void Address::SanitizeOffset(TOffset& rOffset)
+void Address::SanitizeOffset(OffsetType& rOffset)
 {
   switch (m_OffsetSize)
   {
@@ -111,15 +93,15 @@ void Address::SanitizeOffset(TOffset& rOffset)
   }
 }
 
-bool Address::IsBetween(u64 Size, TOffset Off) const
+bool Address::IsBetween(u64 Size, OffsetType Off) const
 {
   return Off >= m_Offset && Off < m_Offset + Size;
 }
 
 bool Address::IsBetween(u64 Size, Address const& Addr) const
 {
-  //if (m_Type != Addr.m_Type)
-  //  return false;
+  if (m_Type != Addr.m_Type)
+    return false;
   if (Addr.m_Type != Address::UnknownType && Addr.m_Base != m_Base)
     return false;
   return Addr.m_Offset >= m_Offset && Addr.m_Offset < m_Offset + Size;
@@ -135,7 +117,7 @@ bool Address::operator!=(Address const& rAddr) const
   return !(*this == rAddr);
 }
 
-Address Address::operator+(TOffset Off) const
+Address Address::operator+(OffsetType Off) const
 {
   Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
   Res.SanitizeOffset();
@@ -149,7 +131,7 @@ Address Address::operator+(Address const& Addr) const
   return Res;
 }
 
-Address Address::operator+=(TOffset Off)
+Address Address::operator+=(OffsetType Off)
 {
   m_Offset = SanitizeOffset(m_Offset + Off);
   return *this;

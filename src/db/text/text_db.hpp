@@ -60,6 +60,8 @@ public:
   virtual bool UnregisterArchitectureTag(Tag ArchitectureTag);
   virtual std::list<Tag> GetArchitectureTags(void) const;
 
+  virtual bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode);
+
   // MemoryArea
   virtual bool AddMemoryArea(MemoryArea* pMemArea);
   //virtual RemoveMemoryArea // not implemented

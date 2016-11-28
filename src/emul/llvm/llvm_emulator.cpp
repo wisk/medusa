@@ -44,7 +44,7 @@ extern "C" EMUL_LLVM_EXPORT bool JitWriteRegister(CpuContext* pCpuCtxt, u32 Reg,
 static llvm::Function* s_pWriteRegisterFunc;
 
 // This function allows the JIT'ed code to convert logical address to linear address
-extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, TBase Base, TOffset Offset)
+extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, BaseType Base, OffsetType Offset)
 {
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
   u64 LinAddr;
@@ -57,7 +57,7 @@ extern "C" EMUL_LLVM_EXPORT u64 JitTranslateAddress(u8* pCpuCtxtObj, TBase Base,
 static llvm::Function* s_pTranslateAddressFunc;
 
 // This function allows the JIT'ed code to access to memory
-extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, TBase Base, TOffset Offset, u32 BitSize)
+extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj, BaseType Base, OffsetType Offset, u32 BitSize)
 {
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
   auto pMemCtxt = reinterpret_cast<MemoryContext*>(pMemCtxtObj);
@@ -73,7 +73,7 @@ extern "C" EMUL_LLVM_EXPORT void* JitGetMemory(u8* pCpuCtxtObj, u8* pMemCtxtObj,
 
   u32 MemOff;
   u32 MemSize;
-  u32 Flags;
+  MemoryArea::Access Flags;
   if (!pMemCtxt->FindMemory(LinAddr, pMemory, MemOff, MemSize, Flags))
   {
     Log::Write("emul_llvm").Level(LogWarning) << "invalid memory access: linear address: " << LinAddr << LogEnd;
@@ -95,7 +95,7 @@ extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitCallInstructionHook(u8* pEmu
 static llvm::Function* s_pCallInstructionHookFunc = nullptr;
 
 // This function allows the JIT'ed code to handle hook
-extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, TBase Base, TOffset Offset)
+extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8* pCpuCtxtObj, BaseType Base, OffsetType Offset, Emulator::HookType HkTy)
 {
   auto pEmul = reinterpret_cast<Emulator*>(pEmulObj);
   auto pCpuCtxt = reinterpret_cast<CpuContext*>(pCpuCtxtObj);
@@ -398,7 +398,7 @@ LlvmEmulator::BasicBlockCode LlvmEmulator::LlvmJitHelper::GetFunctionCode(std::s
   if (m_pCurMod == nullptr)
     return nullptr;
 
-  auto FPM = new llvm::FunctionPassManager(m_pCurMod);
+  auto FPM = new llvm::legacy::FunctionPassManager(m_pCurMod);
 
 #ifndef DEBUG
   FPM->add(llvm::createVerifierPass());
@@ -435,11 +435,6 @@ LlvmEmulator::BasicBlockCode LlvmEmulator::LlvmJitHelper::GetFunctionCode(std::s
 void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
 {
   m_pCurMod = new llvm::Module("medusa-llvm-emulator-module-" + rModName, llvm::getGlobalContext());
-  // LLVM doesn't support COFF format https://the-ravi-programming-language.readthedocs.org/en/latest/llvm-notes.html
-#ifdef _WIN32
-  auto Triple = llvm::sys::getProcessTriple();
-  m_pCurMod->setTargetTriple(Triple + "-elf");
-#endif
 
   // Create the engine builder
   std::string ErrStr;
@@ -522,6 +517,7 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
       llvm::Type::getInt8PtrTy(rCtxt),  // pCpuCtxt
       llvm::Type::getInt16Ty(rCtxt),   // Base
       llvm::Type::getInt64Ty(rCtxt),  // Offset
+      llvm::Type::getInt32Ty(rCtxt), // Type
     };
     static auto pHandleHookType = llvm::FunctionType::get(llvm::Type::getInt8Ty(rCtxt), Params, false);
     s_pHandleHookFunc = llvm::Function::Create(pHandleHookType, llvm::GlobalValue::ExternalLinkage, "JitHandleHook", m_pCurMod);
@@ -591,11 +587,13 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitSystem(SystemExpres
   if (rSysName == "check_exec_hook")
   {
     Address CurAddr = spSysExpr->GetAddress();
-    auto pEmulRet = m_rBuilder.CreateCall5(
+    auto pEmulRet = m_rBuilder.CreateCall(
       s_pHandleHookFunc,
-      _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
-      _MakeInteger(BitVector(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(BitVector(64, spSysExpr->GetAddress().GetOffset())),
-      _MakeInteger(BitVector(32, Emulator::HookOnExecute)));
+      {
+        _MakePointer(8, m_pEmul), m_pCpuCtxtObjParam,
+        _MakeInteger(BitVector(16, spSysExpr->GetAddress().GetBase())), _MakeInteger(BitVector(64, spSysExpr->GetAddress().GetOffset())),
+        _MakeInteger(BitVector(32, Emulator::HookOnExecute))
+      });
 
     _EmitReturn(m_rBuilder.CreateICmpNE(pEmulRet, _MakeInteger(BitVector(8, Emulator::Continue))),
       pEmulRet);
@@ -932,8 +930,10 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitBinaryOperation(Bin
     break;
 
   case OperationExpression::OpUMod:
-    pBinOpVal = m_rBuilder.CreateURem(LeftVal, RightVal, "rmod");
+  {
+    pBinOpVal = m_rBuilder.CreateURem(LeftVal, RightVal, "umod");
     break;
+  }
 
   case OperationExpression::OpSext:
     pBinOpVal = m_rBuilder.CreateSExt(LeftVal, _BitSizeToLlvmType(spRight->GetBitSize()), "sext");
@@ -1184,7 +1184,14 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   llvm::Value* pPtrVal = nullptr;
   if (m_State != Read || spMemExpr->IsDereferencable())
   {
-    auto pRawMemVal = m_rBuilder.CreateCall5(s_pGetMemoryFunc, m_pCpuCtxtObjParam, m_pMemCtxtObjParam, pBaseVal, pOffVal, pAccBitSizeVal, "get_memory");
+    auto pRawMemVal = m_rBuilder.CreateCall(
+      s_pGetMemoryFunc,
+      {
+        m_pCpuCtxtObjParam,
+        m_pMemCtxtObjParam,
+        pBaseVal, pOffVal,
+        pAccBitSizeVal
+      }, "get_memory");
     pPtrVal = m_rBuilder.CreateBitCast(pRawMemVal, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
     _EmitReturnIfNull(pPtrVal, Emulator::Error);
   }
@@ -1199,7 +1206,13 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   {
     if (!spMemExpr->IsDereferencable())
     {
-      auto pTransAddrRes = m_rBuilder.CreateCall3(s_pTranslateAddressFunc, m_pCpuCtxtObjParam, pBaseVal, pOffVal, "translate_memory");
+      auto pTransAddrRes = m_rBuilder.CreateCall(
+        s_pTranslateAddressFunc, 
+        {
+          m_pCpuCtxtObjParam,
+          pBaseVal, pOffVal
+        },
+        "translate_memory");
       auto pTransAddrResCast = m_rBuilder.CreateTruncOrBitCast(pTransAddrRes, _BitSizeToLlvmType(AccBitSize));
       m_ValueStack.push(pTransAddrResCast);
       break;
@@ -1397,7 +1410,14 @@ llvm::Value* LlvmEmulator::LlvmExpressionVisitor::_EmitReadRegister(u32 Reg, Cpu
   auto pRegPtrVal = m_rBuilder.CreateBitCast(pRegAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), 8));
 
   // Call ReadRegister wrapper
-  auto pCallVal = m_rBuilder.CreateCall4(s_pReadRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize, RegName + "_read");
+  auto pCallVal = m_rBuilder.CreateCall(
+    s_pReadRegisterFunc,
+    {
+      m_pCpuCtxtObjParam,
+      pRegVal,
+      pRegPtrVal,
+      pBitSize
+    }, RegName + "_read");
 
   // Return the result
   auto pRegResVal = m_rBuilder.CreateLoad(pRegAlloca, RegName + "_val");
@@ -1421,7 +1441,15 @@ bool LlvmEmulator::LlvmExpressionVisitor::_EmitWriteRegister(u32 Reg, CpuInforma
   auto pRegPtrVal = m_rBuilder.CreateBitCast(pRegAlloca, llvm::Type::getIntNPtrTy(llvm::getGlobalContext(), 8), RegName + "_ptr");
 
   // Call WriteRegister wrapper
-  auto pCallVal = m_rBuilder.CreateCall4(s_pWriteRegisterFunc, m_pCpuCtxtObjParam, pRegVal, pRegPtrVal, pBitSize, RegName + "_write");
+  auto pCallVal = m_rBuilder.CreateCall(
+    s_pWriteRegisterFunc,
+    {
+      m_pCpuCtxtObjParam,
+      pRegVal,
+      pRegPtrVal,
+      pBitSize
+    },
+    RegName + "_write");
 
   return true;
 }

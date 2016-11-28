@@ -571,7 +571,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
     return nullptr;
   }
 
-  TBase Base = 0;
+  BaseType Base = 0;
   if (spBaseExpr != nullptr)
   {
     if (m_Values.size() < 2)
@@ -588,7 +588,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitMemor
     Log::Write("emul_interpreter").Level(LogError) << "no value for address offset" << LogEnd;
     return nullptr;
   }
-  TOffset Offset = m_Values.back().ConvertTo<TOffset>();
+  OffsetType Offset = m_Values.back().ConvertTo<OffsetType>();
   m_Values.pop_back();
 
   Address Addr(Base, Offset);

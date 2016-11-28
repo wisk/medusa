@@ -1,5 +1,3 @@
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_CMAKE_PATH})
-
 # We require qt5 widgets
 find_package(Qt5Widgets)
 
@@ -20,29 +18,6 @@ set(SRCROOT  ${CMAKE_SOURCE_DIR}/src/tools/qt)
 set(UIROOT   ${CMAKE_SOURCE_DIR}/src/tools/qt)
 set(RSRCROOT ${CMAKE_SOURCE_DIR}/src/tools/qt)
 
-set (SRC
-  ${SRCROOT}/About.cpp
-  ${SRCROOT}/Action.cpp
-  ${SRCROOT}/BasicBlockItem.cpp
-  ${SRCROOT}/BindingView.cpp
-  ${SRCROOT}/CommentDialog.cpp
-  ${SRCROOT}/ConfigureDialog.cpp
-  ${SRCROOT}/ControlFlowGraphScene.cpp
-  ${SRCROOT}/ControlFlowGraphView.cpp
-  ${SRCROOT}/DisassemblyView.cpp
-  ${SRCROOT}/EdgeItem.cpp
-  ${SRCROOT}/Goto.cpp
-  ${SRCROOT}/LabelDialog.cpp
-  ${SRCROOT}/LabelView.cpp
-  ${SRCROOT}/MainWindow.cpp
-  ${SRCROOT}/MemoryAreaView.cpp
-  ${SRCROOT}/Proxy.cpp
-  ${SRCROOT}/ScrollbarAddress.cpp
-  ${SRCROOT}/SemanticView.cpp
-  ${SRCROOT}/SettingsDialog.cpp
-  ${SRCROOT}/main.cpp
-)
-
 set (INC
   ${INCROOT}/About.hpp
   ${INCROOT}/Action.hpp
@@ -55,6 +30,8 @@ set (INC
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp
+  ${INCROOT}/GraphScene.hpp
+  ${SRCROOT}/GraphView.hpp
   ${INCROOT}/LabelDialog.hpp
   ${INCROOT}/LabelView.hpp
   ${INCROOT}/MainWindow.hpp
@@ -63,6 +40,33 @@ set (INC
   ${INCROOT}/ScrollbarAddress.hpp
   ${INCROOT}/SemanticView.hpp
   ${INCROOT}/SettingsDialog.hpp
+  ${INCROOT}/VertexItem.hpp
+)
+
+set (SRC
+  ${SRCROOT}/About.cpp
+  ${SRCROOT}/Action.cpp
+  ${SRCROOT}/BasicBlockItem.cpp
+  ${SRCROOT}/BindingView.cpp
+  ${SRCROOT}/CommentDialog.cpp
+  ${SRCROOT}/ConfigureDialog.cpp
+  ${SRCROOT}/ControlFlowGraphScene.cpp
+  ${SRCROOT}/ControlFlowGraphView.cpp
+  ${SRCROOT}/DisassemblyView.cpp
+  ${SRCROOT}/EdgeItem.cpp
+  ${SRCROOT}/Goto.cpp
+  ${SRCROOT}/GraphScene.cpp
+  ${SRCROOT}/GraphView.cpp
+  ${SRCROOT}/LabelDialog.cpp
+  ${SRCROOT}/LabelView.cpp
+  ${SRCROOT}/MainWindow.cpp
+  ${SRCROOT}/MemoryAreaView.cpp
+  ${SRCROOT}/Proxy.cpp
+  ${SRCROOT}/ScrollbarAddress.cpp
+  ${SRCROOT}/SemanticView.cpp
+  ${SRCROOT}/SettingsDialog.cpp
+  ${SRCROOT}/VertexItem.cpp
+  ${SRCROOT}/main.cpp
 )
 
 # Qt user interface files
@@ -84,7 +88,7 @@ qt5_wrap_ui(UI_INC ${UI})
 qt5_add_resources(RSRC_SRC ${RSRC})
 
 source_group("Forms"               FILES ${UI})
-source_group("Ressources"          FILES ${RSRC})
+source_group("Resources"           FILES ${RSRC})
 source_group("Generated Files\\ui" FILES ${UI_INC})
 
 add_executable(qMedusa ${GUI_TYPE}
@@ -96,14 +100,7 @@ add_executable(qMedusa ${GUI_TYPE}
   ${QM}
 )
 
-qt5_use_modules(qMedusa Widgets)
-
-# TODO(wisk): ogdf must be only used by medusa itself, not by tools
-if (MEDUSA_BUILD_WITH_OGDF)
-  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT} ogdf coin)
-else()
-  target_link_libraries(qMedusa Medusa ${CMAKE_THREAD_LIBS_INIT})
-endif()
+target_link_libraries(qMedusa medusa Qt5::Widgets)
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
 # I can't believe how hard it is to deploy qt5...
@@ -144,4 +141,4 @@ if (WIN32)
 
 endif ()
 
-install(TARGETS qMedusa RUNTIME DESTINATION .)
+install(TARGETS qMedusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})

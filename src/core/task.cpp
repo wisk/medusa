@@ -1,4 +1,9 @@
+#include <chrono>
+#include <sstream>
+#include <iomanip>
+
 #include "medusa/task.hpp"
+#include "medusa/log.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -25,15 +30,17 @@ void TaskManager::Start(void)
   {
     Task* pCurTask = nullptr;
 
-    while (m_Running)
+    while (true)
     {
       { std::unique_lock<std::mutex> Lock(m_Mutex);
 
-      while (m_Tasks.empty())
-        m_CondVar.wait(Lock);
+        if (!m_Running && m_Tasks.empty())
+          break;
 
-      pCurTask = m_Tasks.front();
-      m_Tasks.pop();
+        while (m_Tasks.empty())
+          m_CondVar.wait(Lock);
+
+        pCurTask = m_Tasks.front();
       }
 
       if (pCurTask == nullptr)
@@ -41,23 +48,33 @@ void TaskManager::Start(void)
         m_Running = false;
         break;
       }
+
+      auto Beg = std::chrono::system_clock::now();
       pCurTask->Run();
+      auto End = std::chrono::system_clock::now();
+
+      auto hr = std::chrono::duration_cast<std::chrono::hours>       (End - Beg).count();
+      auto mn = std::chrono::duration_cast<std::chrono::minutes>     (End - Beg).count() % 60;
+      auto sc = std::chrono::duration_cast<std::chrono::seconds>     (End - Beg).count() % 60;
+      auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(End - Beg).count() % 1000;
+
+      std::ostringstream Time;
+      Time << std::setfill('0')
+        << std::setw(2) << hr
+        << ":"
+        << std::setw(2) << mn 
+        << ":"
+        << std::setw(2) << sc
+        << ":"
+        << std::setw(3) << ms;
+
+      Log::Write("core") << "task \"" << pCurTask->GetName() << "\" finished in " << Time.str() << LogEnd;
+
+      { std::unique_lock<std::mutex> Lock(m_Mutex);
+        m_Tasks.pop();
+      }
       m_Notify(pCurTask);
       delete pCurTask;
-
-      while (!m_Tasks.empty())
-      {
-        { std::unique_lock<std::mutex> Lock(m_Mutex);
-        pCurTask = m_Tasks.front();
-        m_Tasks.pop();
-        }
-
-        if (pCurTask)
-        {
-          pCurTask->Run();
-          delete pCurTask;
-        }
-      }
     }
   });
 }
@@ -79,8 +96,10 @@ void TaskManager::Stop(void)
 
 void TaskManager::Wait(void)
 {
-  if (m_Tasks.empty())
-    return;
+  { std::unique_lock<std::mutex> Lock(m_Mutex);
+    if (m_Tasks.empty())
+      return;
+  }
   m_Running = false;
   if (m_Thread.joinable())
     m_Thread.join();
@@ -94,8 +113,9 @@ bool TaskManager::AddTask(Task* pTask)
   if (pTask == nullptr)
     return false;
 
-  std::unique_lock<std::mutex> Lock(m_Mutex);
-  m_Tasks.push(pTask);
+  { std::unique_lock<std::mutex> Lock(m_Mutex);
+    m_Tasks.push(pTask);
+  }
   m_CondVar.notify_one();
   return true;
 }

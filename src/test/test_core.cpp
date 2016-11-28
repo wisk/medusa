@@ -1,5 +1,5 @@
-#define BOOST_TEST_MODULE TestCore
-#include <boost/test/unit_test.hpp>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 
 #include <medusa/medusa.hpp>
 #include <medusa/detail.hpp>
@@ -20,29 +20,27 @@ public:
   }
 };
 
-BOOST_AUTO_TEST_SUITE(core_test_suite)
-
-BOOST_AUTO_TEST_CASE(core_ap_int_test_case)
+TEST_CASE("big number", "[core]")
 {
   using namespace medusa;
 
   BitVector Int0(16, -1);
-  BOOST_CHECK(Int0.GetUnsignedValue() == 0xffff);
+  CHECK(Int0.GetUnsignedValue() == 0xffff);
 
   BitVector Int1(16, 0xffff);
-  BOOST_CHECK(Int1.GetSignedValue() == -1);
+  CHECK(Int1.GetSignedValue() == -1);
 
   ++Int1;
-  BOOST_CHECK(Int1.GetSignedValue() == 0);
+  CHECK(Int1.GetSignedValue() == 0);
 
   --Int1;
-  BOOST_CHECK(Int1.GetUnsignedValue() == 0xffff);
-  BOOST_CHECK(Int1.GetSignedValue() == -1);
+  CHECK(Int1.GetUnsignedValue() == 0xffff);
+  CHECK(Int1.GetSignedValue() == -1);
 }
 
-BOOST_AUTO_TEST_CASE(core_structure_test_case)
+TEST_CASE("structure", "[core]")
 {
-  BOOST_TEST_MESSAGE("Testing structure");
+  INFO("Testing structure");
 
   using namespace medusa;
 
@@ -133,17 +131,17 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
     .AddField(LONG, "e_lfanew", ValueDetail::RelativeType, _IMAGE_NT_HEADERS.GetId())
     ;
 
-  BOOST_REQUIRE(_IMAGE_DOS_HEADER.IsValid());
-  BOOST_REQUIRE(_IMAGE_NT_HEADERS.IsValid());
+  REQUIRE(_IMAGE_DOS_HEADER.IsValid());
+  REQUIRE(_IMAGE_NT_HEADERS.IsValid());
 
-  BOOST_REQUIRE(_IMAGE_DOS_HEADER.GetSize() == 0x40);
+  REQUIRE(_IMAGE_DOS_HEADER.GetSize() == 0x40);
 
   std::cout << _IMAGE_DOS_HEADER.Dump() << std::endl;
   std::cout << _IMAGE_NT_HEADERS.Dump() << std::endl;
 
   TypedValueDetail e_lfanew;
-  BOOST_REQUIRE(_IMAGE_DOS_HEADER.GetFieldByOffset(0x3c, e_lfanew));
-  BOOST_REQUIRE(e_lfanew.GetValue().GetName() == "e_lfanew");
+  REQUIRE(_IMAGE_DOS_HEADER.GetFieldByOffset(0x3c, e_lfanew));
+  REQUIRE(e_lfanew.GetValue().GetName() == "e_lfanew");
 
   static u8 WinExeHdr[] = {
     0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00,
@@ -175,28 +173,28 @@ BOOST_AUTO_TEST_CASE(core_structure_test_case)
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
   medusa::Medusa Core;
-  BOOST_REQUIRE(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
-  auto pDosHdrStruct = new MultiCell(_IMAGE_DOS_HEADER.GetId(), MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
+  REQUIRE(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
+  auto spDosHdrStruct = std::make_shared<MultiCell>(_IMAGE_DOS_HEADER.GetId(), MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
   auto& rDoc = Core.GetDocument();
-  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
-  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_FILE_HEADER.GetId(), _IMAGE_FILE_HEADER));
-  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_DATA_DIRECTORY.GetId(), _IMAGE_DATA_DIRECTORY));
-  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_OPTIONAL_HEADER.GetId(), _IMAGE_OPTIONAL_HEADER));
-  BOOST_REQUIRE(rDoc.SetStructureDetail(_IMAGE_NT_HEADERS.GetId(), _IMAGE_NT_HEADERS));
-  BOOST_REQUIRE(rDoc.SetMultiCell(rDoc.GetFirstAddress(), pDosHdrStruct, true));
+  REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
+  REQUIRE(rDoc.SetStructureDetail(_IMAGE_FILE_HEADER.GetId(), _IMAGE_FILE_HEADER));
+  REQUIRE(rDoc.SetStructureDetail(_IMAGE_DATA_DIRECTORY.GetId(), _IMAGE_DATA_DIRECTORY));
+  REQUIRE(rDoc.SetStructureDetail(_IMAGE_OPTIONAL_HEADER.GetId(), _IMAGE_OPTIONAL_HEADER));
+  REQUIRE(rDoc.SetStructureDetail(_IMAGE_NT_HEADERS.GetId(), _IMAGE_NT_HEADERS));
+  REQUIRE(rDoc.SetMultiCell(rDoc.GetFirstAddress(), spDosHdrStruct, true));
 
   int const Step = 20;
-  TextFullDisassemblyView tfdv(Core, medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddSpaceBeforeXref, 80, Step, rDoc.GetFirstAddress());
+  TextFullDisassemblyView tfdv(Core, medusa::FormatDisassembly::ShowAddress | medusa::FormatDisassembly::AddNewLineBeforeCrossReference, 80, Step, rDoc.GetFirstAddress());
   tfdv.Refresh();
   do tfdv.Print();
   while (tfdv.MoveView(0, Step));
 }
 
-BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)
+TEST_CASE("call register", "[core]")
 {
   using namespace medusa;
 
-  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+  INFO("Using samples path \"" SAMPLES_DIR "\"");
 
   Medusa Core;
 
@@ -206,7 +204,7 @@ BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)
   try
   {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
-    BOOST_REQUIRE(Core.NewDocument(
+    REQUIRE(Core.NewDocument(
       spFileBinStrm, true,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
@@ -217,17 +215,17 @@ BOOST_AUTO_TEST_CASE(core_anlz_call_reg_test_case)
   catch (Exception const& e)
   {
     std::cerr << e.What() << std::endl;
-    BOOST_REQUIRE(0);
+    REQUIRE(0);
   }
 
   Core.WaitForTasks();
 }
 
-BOOST_AUTO_TEST_CASE(core_anlz_jmp_tbl_test_case)
+TEST_CASE("jump table", "[core]")
 {
   using namespace medusa;
 
-  BOOST_TEST_MESSAGE("Using samples path \"" SAMPLES_DIR "\"");
+  INFO("Using samples path \"" SAMPLES_DIR "\"");
 
   Medusa Core;
 
@@ -237,7 +235,7 @@ BOOST_AUTO_TEST_CASE(core_anlz_jmp_tbl_test_case)
   try
   {
     auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
-    BOOST_REQUIRE(Core.NewDocument(
+    REQUIRE(Core.NewDocument(
       spFileBinStrm, true,
       [&](Path& rDbPath, std::list<Medusa::Filter> const&)
     {
@@ -248,10 +246,8 @@ BOOST_AUTO_TEST_CASE(core_anlz_jmp_tbl_test_case)
   catch (Exception const& e)
   {
     std::cerr << e.What() << std::endl;
-    BOOST_REQUIRE(0);
+    REQUIRE(0);
   }
 
   Core.WaitForTasks();
 }
-
-BOOST_AUTO_TEST_SUITE_END()

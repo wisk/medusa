@@ -48,8 +48,8 @@ class Z80ArchConvertion(ArchConvertion):
                 if func_name == 'read':
                     assert(len(func_args) == 1 or len(func_args) == 2)
                     read_size = func_args[0]
-                    self.var_expr.append(self.parent._GenerateRead('Imm', 'Offset + rInsn.GetLength()', read_size))
-                    self.var_expr.append('rInsn.Length() += sizeof(Imm);\n')
+                    self.var_expr.append(self.parent._GenerateRead('Imm', 'Offset + rInsn.GetSize()', read_size))
+                    self.var_expr.append('rInsn.Size() += sizeof(Imm);\n')
 
                     if len(func_args) == 1:
                         self.var_expr.append('Expr::MakeBitVector(%d, Imm)' % read_size)
@@ -129,13 +129,13 @@ class Z80ArchConvertion(ArchConvertion):
 
 
     def _Z80_GenerateDispatcher(self, tbl, depth):
-        res = '++rInsn.Length();\n'
+        res = '++rInsn.Size();\n'
         res += self._GenerateRead('Opcode%d' % depth, 'Offset + %d' % depth, 8)
         insn_cases = []
         for insn in sorted(tbl, key = lambda i: i['opcode']):
             case_stmt = ''
             if 'reference' in insn:
-                case_stmt += 'rInsn.Length() += %d;\n' % (depth + 1)
+                case_stmt += 'rInsn.Size() += %d;\n' % (depth + 1)
                 case_stmt += self._GenerateBrace(self._Z80_GenerateDispatcher(self.arch['instruction'][insn['reference']], depth + 1))
             else:
                 case_stmt += 'rInsn.SetName("%s");\n' % insn['mnemonic']
@@ -172,7 +172,7 @@ class Z80ArchConvertion(ArchConvertion):
     def GenerateSource(self):
         dispatcher = self._Z80_GenerateDispatcher(self.arch['instruction']['table'], 0)
 
-        return 'bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)\n{\n%s}\n' % Indent(dispatcher)
+        return 'bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)\n{\n%s}\n' % Indent(dispatcher)
 
     def GenerateOpcodeEnum(self):
         return ''

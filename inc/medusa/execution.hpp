@@ -13,7 +13,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Execution
+class MEDUSA_EXPORT Execution
 {
 public:
   Execution(Document& rDoc);
@@ -21,6 +21,8 @@ public:
 
   bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
+  bool SetStackMemory();
+  bool SetCpuMemContext(Address const& rAddr);
 
   bool Execute(Address const& rAddr);
 
@@ -33,10 +35,13 @@ public:
   std::string GetHookName(void) const;
   Address GetHookAddress(std::string const& rHkFuncName) const;
 
-  MemoryContext* GetMemoryContext(void) { return m_pMemCtxt; }
+  MemoryContext*       GetMemoryContext(void) { return m_pMemCtxt; }
   // LATER: implement thread instead of cpu context
-  CpuContext* GetCpuContext(void) { return m_pCpuCtxt; }
+  CpuContext*          GetCpuContext(void)    { return m_pCpuCtxt; }
+  Document&            GetDocument(void)      { return m_rDoc;     }
+  Architecture::SPType GetArchitecture(void)  { return m_spArch;   }
 
+  bool GetCallingConvention(std::string& rCallingConvention, Address const& rAddress) const;
   bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamVal) const;
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
   bool ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const;

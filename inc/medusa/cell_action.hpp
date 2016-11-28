@@ -18,7 +18,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Action
+class MEDUSA_EXPORT Action
 {
 public:
   typedef std::shared_ptr<Action> SPType;

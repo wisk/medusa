@@ -428,6 +428,56 @@ std::list<Tag> TextDatabase::GetArchitectureTags(void) const
   return m_ArchitectureTags;
 }
 
+bool TextDatabase::SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, Database::SetArchitectureModeType SetArchMode)
+{
+  switch (SetArchMode)
+  {
+  case ByCell:
+  {
+    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+
+    for (MemoryArea* pMemArea : m_MemoryAreas)
+    {
+      if (!pMemArea->IsCellPresent(rAddress))
+        continue;
+      if (!pMemArea->IsCellPresent(rAddress.GetOffset()))
+        continue;
+
+      auto spCellData = pMemArea->GetCellData(rAddress.GetOffset());
+      if (spCellData == nullptr)
+        spCellData = std::make_shared<CellData>();
+
+      spCellData->SetDefaultArchitectureTag(ArchitectureTag);
+      spCellData->SetDefaultMode(Mode);
+      return pMemArea->SetCellData(rAddress.GetOffset(), spCellData);
+    }
+
+    break;
+  }
+
+  case ByMemoryArea:
+  {
+    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    for (MemoryArea* pMemArea : m_MemoryAreas)
+    {
+      if (pMemArea->IsCellPresent(rAddress))
+      {
+        pMemArea->SetDefaultArchitectureTag(ArchitectureTag);
+        pMemArea->SetDefaultArchitectureMode(Mode);
+        return true;
+      }
+    }
+
+    break;
+  }
+
+  default:
+    break;
+  }
+
+  return false;
+}
+
 bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
 {
   std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
@@ -780,14 +830,14 @@ bool TextDatabase::_MoveAddressBackward(Address const& rAddress, Address& rMoved
 
   u64 CurMemAreaOff = (rAddress.GetOffset() - (*itMemArea)->GetBaseAddress().GetOffset());
   if (static_cast<u64>(-Offset) <= CurMemAreaOff)
-    if (!(*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset))
     {
-      // TODO(wisk): this behavior is incorrect...
-      rMovedAddress = (*itMemArea)->GetBaseAddress();
+      if (!(*itMemArea)->MoveAddressBackward(rAddress, rMovedAddress, Offset))
+	{
+	  // TODO(wisk): this behavior is incorrect...
+	  rMovedAddress = (*itMemArea)->GetBaseAddress();
+	}
       return true;
     }
-    else
-      return true;
   Offset += CurMemAreaOff;
 
   if (itMemArea == std::begin(m_MemoryAreas))

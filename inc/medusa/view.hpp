@@ -11,7 +11,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT View : public Document::Subscriber
+class MEDUSA_EXPORT View : public Document::Subscriber
 {
 public:
   View(u32 Type, Document& rDoc);

@@ -116,7 +116,7 @@ MEDUSA_NAMESPACE_BEGIN
 #define O_ADDR64   (O_MEM   | AS_64BIT )
 
 //! Operand is a generic class which contains information about an instruction operand.
-class Medusa_EXPORT Operand
+class MEDUSA_EXPORT Operand
 {
 public:
   Operand(void)

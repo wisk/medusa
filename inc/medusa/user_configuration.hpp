@@ -14,7 +14,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT UserConfiguration
+class MEDUSA_EXPORT UserConfiguration
 {
 public:
   UserConfiguration(void);

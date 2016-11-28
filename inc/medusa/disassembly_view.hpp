@@ -16,7 +16,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Appearance
+class MEDUSA_EXPORT Appearance
 {
 public:
   struct Information
@@ -34,18 +34,19 @@ public:
   static MapType& GetFonts(void);
 };
 
-class Medusa_EXPORT FormatDisassembly
+class MEDUSA_EXPORT FormatDisassembly
 {
 public:
   enum Flags
   {
-    ShowAddress        = 1 << 0,
-    AddSpaceBeforeXref = 1 << 1,
-    Indent             = 1 << 2,
+    ShowAddress                    = 1 << 0,
+    AddNewLineBeforeCrossReference = 1 << 1,
+    AddNewLineBeforeLabel          = 1 << 2,
+    Indent                         = 1 << 3,
   };
 
   FormatDisassembly(Medusa const& rCore, PrintData& rPrintData) : m_rCore(rCore), m_rPrintData(rPrintData) {}
-  void operator()(Address::List const& rAddresses, u32 Flags);
+  void operator()(Address::Vector const& rAddresses, u32 Flags);
   void operator()(Address const& rAddress, u32 Flags, u16 LinesNo);
   void operator()(std::pair<Address const&, Address const&> const& rAddressesRange, u32 Flags);
 
@@ -56,15 +57,14 @@ private:
   void _FormatCell      (Address const& rAddress, u32 Flags);
   void _FormatMultiCell (Address const& rAddress, u32 Flags);
   void _FormatLabel     (Address const& rAddress, u32 Flags);
-  void _FormatXref      (Address const& rAddress, u32 Flags);
+  void _FormatCrossReference      (Address const& rAddress, u32 Flags);
   void _FormatMemoryArea(Address const& rAddress, u32 Flags);
-  void _FormatEmpty     (Address const& rAddress, u32 Flags);
 
   Medusa const& m_rCore;
   PrintData&    m_rPrintData;
 };
 
-class Medusa_EXPORT DisassemblyView : public View
+class MEDUSA_EXPORT DisassemblyView : public View
 {
 public:
   DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress);
@@ -83,7 +83,7 @@ protected:
   PrintData         m_PrintData;
 };
 
-class Medusa_EXPORT FullDisassemblyView : public View
+class MEDUSA_EXPORT FullDisassemblyView : public View
 {
 public:
   FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress);
@@ -91,7 +91,7 @@ public:
 
   Cell::SPType       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell::SPType const GetCellFromPosition(u32 xChar, u32 yChar) const;
-  void             GetDimension(u32& rWidth, u32& rHeight) const;
+  void               GetDimension(u32& rWidth, u32& rHeight) const;
 
   void             Resize(u32 Width, u32 Height);
   void             Refresh(void);

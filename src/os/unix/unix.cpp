@@ -36,9 +36,9 @@ bool UnixOperatingSystem::InitializeContext(
   std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const
 {
   auto const& rCpuInfo = rCpuCtxt.GetCpuInformation();
-  u64 const StkPtr = 0xbedb4000;
-  u64 const StkLen = 0x21000;
-  u32 const ReadWrite = MemoryArea::Read | MemoryArea::Write;
+  u64  const StkPtr = 0xbedb4000;
+  u64  const StkLen = 0x21000;
+  auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   void* pStkMem;
   if (!rMemCtxt.AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem))
@@ -113,60 +113,12 @@ bool UnixOperatingSystem::ProvideDetails(Document& rDoc) const
 
 bool UnixOperatingSystem::AnalyzeFunction(Document& rDoc, Address const& rAddress)
 {
-  auto const pFunc = dynamic_cast<Function const*>(rDoc.GetMultiCell(rAddress));
-  if (pFunc == nullptr)
-    return false;
-
-  if (pFunc->GetInstructionCounter() != 3)
-    return false;
-
-  auto Tag = rDoc.GetArchitectureTag(rAddress);
-  auto const spArch = ModuleManager::Instance().GetArchitecture(Tag);
-  if (spArch == nullptr)
-    return false;
-
-  if (spArch->GetName() != "ARM")
-    return false;
-
-  auto const spAdrIpImm   = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 0));
-  auto const spAddIpIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 4));
-  auto const spLdrPcIpImm = std::dynamic_pointer_cast<Instruction const>(rDoc.GetCell(rAddress + 8));
-  if (spAdrIpImm == nullptr || spAddIpIpImm == nullptr || spLdrPcIpImm == nullptr)
-    return true;
-
-  // TODO: execute this part
-  auto spBase = expr_cast<BitVectorExpression>(spAdrIpImm->GetOperand(1));
-  auto spDisp = expr_cast<BitVectorExpression>(spAddIpIpImm->GetOperand(2));
-  auto spMem  = expr_cast<MemoryExpression>(spLdrPcIpImm->GetOperand(1));
-
-  if (spBase == nullptr || spDisp == nullptr || spMem == nullptr)
-    return true;
-
-  auto spBinOp = expr_cast<BinaryOperationExpression>(spMem->GetOffsetExpression());
-  if (spBinOp == nullptr)
-    return true;
-  auto spOff = expr_cast<BitVectorExpression>(spBinOp->GetRightExpression());
-
-  Address DstAddr(
-    Address::FlatType,
-    0x0,
-    static_cast<u32>(spBase->GetInt().ConvertTo<u32>() + spDisp->GetInt().ConvertTo<u32>() + spOff->GetInt().ConvertTo<u32>()),
-    0, 32);
-
-  EvaluateVisitor EvalVst(rDoc, spArch->CurrentAddress(rAddress, *spAdrIpImm), spAdrIpImm->GetMode(), true);
-
-  auto DstLbl = rDoc.GetLabelFromAddress(DstAddr);
-  if (DstLbl.GetType() == Label::Unknown)
-    return true;
-
-  rDoc.SetLabelToAddress(rAddress, Label("b_" + DstLbl.GetLabel(), Label::Function | Label::Global));
-
-  return true;
+  return false;
 }
 
-Expression::LSPType UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
+Expression::VSPType UnixOperatingSystem::ExecuteSymbol(Document& rDoc, Address const& rSymAddr)
 {
-  return Expression::LSPType();
+  return {};
 }
 
 bool UnixOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
@@ -184,3 +136,32 @@ bool UnixOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail& rS
   return false;
 }
 
+bool UnixOperatingSystem::GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const
+{
+  auto spInsn = rDoc.GetCell(rAddress); // TODO(wisk): make sure this is an instruction
+  if (spInsn == nullptr)
+    return false;
+  auto ArchTag = spInsn->GetArchitectureTag();
+  auto Mode = spInsn->GetMode();
+
+  auto const& rModMgr = ModuleManager::Instance();
+  auto spArch = rModMgr.GetArchitecture(ArchTag);
+
+  if (spArch->GetName() == "x86")
+  {
+    switch (Mode)
+    {
+    default:
+      return false;
+    case 16:
+    case 32:
+      rCallingConvention = "cdecl";
+      return true;
+    case 64:
+      rCallingConvention = "system_v";
+      return true;
+    }
+  }
+
+  return false;
+}

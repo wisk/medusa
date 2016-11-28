@@ -27,7 +27,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Medusa is a main class, it's able to handle almost all sub-classes.
-class Medusa_EXPORT Medusa
+class MEDUSA_EXPORT Medusa
 {
 public:
                                   Medusa(void);
@@ -101,30 +101,30 @@ public:
                                    */
   bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
 
-  Cell::SPType                      GetCell(Address const& rAddr);
-  Cell::SPType const                GetCell(Address const& rAddr) const;
   bool FormatCell(
     Address       const& rAddress,
     Cell          const& rCell,
     PrintData          & rPrintData) const;
 
-  MultiCell*                      GetMultiCell(Address const& rAddr);
-  MultiCell const*                GetMultiCell(Address const& rAddr) const;
-  bool FormatMultiCell(
+  bool              FormatMultiCell(
     Address       const& rAddress,
     MultiCell     const& rMultiCell,
     PrintData          & rPrintData) const;
 
+  bool FormatGraph(
+    Graph const& rGraph,
+    GraphData& rGraphData) const;
+
                                   //! This method makes a fully filled Address if possible. @see Address
-  Address                         MakeAddress(TOffset Offset);
-  Address                         MakeAddress(TBase Base, TOffset Offset);
-  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TOffset Offset);
-  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset);
+  Address                         MakeAddress(OffsetType Offset);
+  Address                         MakeAddress(BaseType Base, OffsetType Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, OffsetType Offset);
+  Address                         MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, BaseType Base, OffsetType Offset);
 
   bool                            CreateFunction(Address const& rAddr);
   bool                            CreateUtf8String(Address const& rAddr);
   bool                            CreateUtf16String(Address const& rAddr);
-  void                            FindFunctionAddressFromAddress(Address::List& rFunctionAddress, Address const& rAddress) const;
+  void                            FindFunctionAddressFromAddress(Address::Vector& rFunctionAddress, Address const& rAddress) const;
 
   bool                            AddTask(std::string const& rTaskName);
   bool                            AddTask(std::string const& rTaskName, Address const& rAddr);

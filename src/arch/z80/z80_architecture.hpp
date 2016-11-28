@@ -54,8 +54,8 @@ public:
   Z80Architecture(void) : Architecture(MEDUSA_ARCH_TAG('z','8','0')) {}
 
   virtual std::string           GetName(void) const { return "Zilog 80"; }
-  virtual bool                  Translate(Address const& rVirtAddr, TOffset& rPhyslOff);
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode);
+  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff);
+  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const;
   virtual EEndianness           GetEndianness(void) { return LittleEndian; }
   virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }

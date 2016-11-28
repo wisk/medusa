@@ -12,6 +12,7 @@ set(SRC
   ${INCROOT}/basic_block.hpp
   ${INCROOT}/binary_stream.hpp
   ${INCROOT}/binding.hpp
+  ${INCROOT}/bitmask.hpp
   ${INCROOT}/bits.hpp
   ${INCROOT}/cell.hpp
   ${INCROOT}/cell_action.hpp
@@ -32,13 +33,14 @@ set(SRC
   ${INCROOT}/event_queue.hpp
   ${INCROOT}/exception.hpp
   ${INCROOT}/execution.hpp
-  ${INCROOT}/export.hpp
   ${INCROOT}/expression.hpp
   ${INCROOT}/expression_filter.hpp
+  ${INCROOT}/expression_operation.hpp
   ${INCROOT}/expression_simplifier.hpp
   ${INCROOT}/expression_visitor.hpp
   ${INCROOT}/extend.hpp
   ${INCROOT}/function.hpp
+  ${INCROOT}/graph.hpp
   ${INCROOT}/information.hpp
   ${INCROOT}/instruction.hpp
   ${INCROOT}/label.hpp
@@ -93,9 +95,11 @@ set(SRC
   ${SRCROOT}/execution.cpp
   ${SRCROOT}/expression.cpp
   ${SRCROOT}/expression_filter.cpp
+  ${SRCROOT}/expression_operation.cpp
   ${SRCROOT}/expression_simplifier.cpp
   ${SRCROOT}/expression_visitor.cpp
   ${SRCROOT}/function.cpp
+  ${SRCROOT}/graph.cpp
   ${SRCROOT}/instruction.cpp
   ${SRCROOT}/information.cpp
   ${SRCROOT}/label.cpp
@@ -123,30 +127,58 @@ if (WIN32)
     ${SRCROOT}/windows_binary_stream.cpp
     ${SRCROOT}/windows_module.cpp
     )
-else ()
+else()
   set(SRC
     ${SRC}
     ${SRCROOT}/unix_binary_stream.cpp
     ${SRCROOT}/unix_module.cpp
     )
-endif ()
+endif()
 
-# define libMedusa architecture target
-add_library(Medusa SHARED ${SRC})
-target_link_libraries(Medusa ${Boost_LIBRARIES})
+include(GenerateExportHeader)
+
+# define medusa architecture target
+add_library(medusa SHARED ${SRC})
+target_include_directories(medusa
+  PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
+)
+
+
+find_package(Threads REQUIRED)
+
+target_link_libraries(medusa
+  PUBLIC
+  Boost::system
+  Boost::filesystem
+  Boost::program_options
+
+  INTERFACE
+  ${CMAKE_THREAD_LIBS_INIT}
+)
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
 if (DL_LIBRARY)
-  target_link_libraries(Medusa dl)
+  target_link_libraries(medusa PRIVATE dl)
 endif ()
 
+# generate export file
+generate_export_header(medusa
+  EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
+)
+
+if (MEDUSA_CMAKE_USE_COTIRE)
+  cotire(medusa)
+endif()
+
+# Build OGDF if needed
+if (MEDUSA_BUILD_WITH_OGDF)
+  message("Build medusa with OGDF")
+endif()
+
 if (WIN32)
-  install(TARGETS Medusa RUNTIME DESTINATION .)
-  file(GLOB boost_system_dll     "${Boost_LIBRARY_DIRS}/boost_system-*-mt-1*.dll")
-  file(GLOB boost_filesystem_dll "${Boost_LIBRARY_DIRS}/boost_filesystem-*-mt-1*.dll")
-  install(FILES "${boost_system_dll}" "${boost_filesystem_dll}" DESTINATION .)
+  install(TARGETS medusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})
 else ()
-  install(TARGETS Medusa LIBRARY DESTINATION .)
+  install(TARGETS medusa LIBRARY DESTINATION ${MEDUSA_LIBRARY_PATH})
 endif ()

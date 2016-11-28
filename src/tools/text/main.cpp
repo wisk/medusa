@@ -382,7 +382,7 @@ int main(int argc, char **argv)
     m.WaitForTasks();
 
     int step = 100;
-    TextFullDisassemblyView tfdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddSpaceBeforeXref, 80, step, m.GetDocument().GetStartAddress());
+    TextFullDisassemblyView tfdv(m, FormatDisassembly::ShowAddress | FormatDisassembly::AddNewLineBeforeCrossReference, 80, step, m.GetDocument().GetStartAddress());
     do tfdv.Print();
     while (tfdv.MoveView(0, step));
   }

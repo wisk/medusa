@@ -20,6 +20,8 @@ Appearance::MapType& Appearance::GetColors(void)
     s_Colors["color.background_node_begin"] = Information("Background Node Begin", "");
     s_Colors["color.background_node_end"] = Information("Background Node End", "");
     s_Colors["color.instruction_mnemonic"] = Information("Instruction mnemonic", "");
+    s_Colors["color.instruction_mnemonic_prefix"] = Information("Instruction mnemonic prefix", "");
+    s_Colors["color.instruction_mnemonic_suffix"] = Information("Instruction mnemonic suffix", "");
     s_Colors["color.instruction_register"] = Information("Instruction register", "");
     s_Colors["color.instruction_immediate"] = Information("Instruction immediate", "");
     s_Colors["color.comment"] = Information("Comment", "");
@@ -61,7 +63,7 @@ void FormatDisassembly::operator()(Address const& rAddress, u32 Flags, u16 Lines
   }
 }
 
-void FormatDisassembly::operator()(Address::List const& rAddresses, u32 Flags)
+void FormatDisassembly::operator()(Address::Vector const& rAddresses, u32 Flags)
 {
   m_rPrintData.Clear();
 
@@ -98,59 +100,33 @@ void FormatDisassembly::operator()(std::pair<Address const&, Address const&> con
 
 void FormatDisassembly::_Format(Address const& rAddress, u32 Flags)
 {
-  auto& rDoc = m_rCore.GetDocument();
-
   m_rPrintData(rAddress);
 
   // Header
-  if (rDoc.GetStartAddress() == rAddress)
-  {
-    m_rPrintData(rAddress);
-    _FormatHeader(rAddress, Flags);
-  }
+  _FormatHeader(rAddress, Flags);
 
   // MemoryArea
-  auto pMemArea = rDoc.GetMemoryArea(rAddress);
-  if (pMemArea != nullptr && pMemArea->GetBaseAddress() == rAddress)
-  {
-    _FormatMemoryArea(rAddress, Flags);
-    m_rPrintData.AppendNewLine();
-  }
+  _FormatMemoryArea(rAddress, Flags);
 
-  // XRefs
-  if (rDoc.HasCrossReferenceFrom(rAddress))
-  {
-    if (Flags & AddSpaceBeforeXref)
-      m_rPrintData.AppendNewLine();
-
-    _FormatXref(rAddress, Flags);
-    m_rPrintData.AppendNewLine();
-  }
+  // Refs
+  _FormatCrossReference(rAddress, Flags);
 
   // Label
-  auto rLbl = rDoc.GetLabelFromAddress(rAddress);
-  if (rLbl.GetType() != Label::Unknown)
-  {
-    _FormatLabel(rAddress, Flags);
-    m_rPrintData.AppendNewLine();
-  }
+  _FormatLabel(rAddress, Flags);
 
   // Multicell
-  if (rDoc.GetMultiCell(rAddress) != nullptr)
-  {
-    _FormatMultiCell(rAddress, Flags);
-    m_rPrintData.AppendNewLine();
-  }
+  _FormatMultiCell(rAddress, Flags);
 
-  if (rDoc.GetCell(rAddress) != nullptr)
-  {
-    _FormatCell(rAddress, Flags);
-    m_rPrintData.AppendNewLine();
-  }
+  // Cell
+  _FormatCell(rAddress, Flags);
 }
 
 void FormatDisassembly::_FormatHeader(Address const& rAddress, u32 Flags)
 {
+  auto const& rFirstAddr = m_rCore.GetDocument().GetFirstAddress();
+  if (rFirstAddr != rAddress)
+    return;
+
   m_rPrintData.AppendComment(";; File disassembled with ").AppendComment(Medusa::GetVersion()).AppendNewLine();
   m_rPrintData.AppendComment(";; website: https://github.com/wisk/medusa ").AppendNewLine();
   // TODO: filename
@@ -167,13 +143,14 @@ void FormatDisassembly::_FormatAddress(Address const& rAddress, u32 Flags)
 
 void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
 {
+  auto spCell = m_rCore.GetDocument().GetCell(rAddress);
+  if (spCell == nullptr)
+    return;
+
   if (Flags & Indent)
     m_rPrintData.AppendSpace(4);
-  auto pCell = m_rCore.GetCell(rAddress);
-  if (pCell == nullptr)
-    m_rPrintData.AppendComment(";; invalid cell!");
-  else
-    m_rCore.FormatCell(rAddress, *pCell, m_rPrintData);
+  if (!m_rCore.FormatCell(rAddress, *spCell, m_rPrintData))
+    return;
 
   std::string Cmt;
   u16 CurTextWidth = static_cast<u16>(m_rPrintData.GetCurrentText().length()) + 1;
@@ -191,51 +168,74 @@ void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
     for (; itCmtLine != itCmtLineEnd; ++itCmtLine)
       m_rPrintData.AppendNewLine().AppendSpace(CurTextWidth + 1).AppendComment(";").AppendSpace().AppendComment(*itCmtLine);
   }
+  m_rPrintData.AppendNewLine();
 }
 
 void FormatDisassembly::_FormatMultiCell(Address const& rAddress, u32 Flags)
 {
+  auto spMultiCell = m_rCore.GetDocument().GetMultiCell(rAddress);
+  if (spMultiCell == nullptr)
+    return;
+
   if (Flags & Indent)
     m_rPrintData.AppendSpace(2);
-  auto pMultiCell = m_rCore.GetMultiCell(rAddress);
-  if (pMultiCell == nullptr)
-    m_rPrintData.AppendComment(";; invalid multicell!");
-  else
-    m_rCore.FormatMultiCell(rAddress, *pMultiCell, m_rPrintData);
+  if (!m_rCore.FormatMultiCell(rAddress, *spMultiCell, m_rPrintData))
+    return;
+  m_rPrintData.AppendNewLine();
 }
 
 void FormatDisassembly::_FormatLabel(Address const& rAddress, u32 Flags)
 {
   auto Lbl = m_rCore.GetDocument().GetLabelFromAddress(rAddress);
   if (Lbl.GetType() == Label::Unknown)
-    m_rPrintData.AppendComment(";; invalid label!");
-  else
-    m_rPrintData.AppendLabel(Lbl.GetLabel()).AppendOperator(":");
+    return;
+
+  m_rPrintData.AppendLabel(Lbl.GetLabel()).AppendOperator(":").AppendNewLine();
 }
 
-void FormatDisassembly::_FormatXref(Address const& rAddress, u32 Flags)
+void FormatDisassembly::_FormatCrossReference(Address const& rAddress, u32 Flags)
 {
-  Address::List AddrFrom;
+  Address::Vector AddrFrom;
   std::list<std::string> AddrFromStr;
-  m_rCore.GetDocument().GetCrossReferenceFrom(rAddress, AddrFrom);
+  if (!m_rCore.GetDocument().GetCrossReferenceFrom(rAddress, AddrFrom))
+    return;
+  if (AddrFrom.empty())
+    return;
+
+  auto CrossReferenceLimit = 8ul;
   for (auto const& rAddr : AddrFrom)
+  {
     AddrFromStr.push_back(rAddr.ToString());
+    if (CrossReferenceLimit == 0)
+      break;
+    --CrossReferenceLimit;
+  }
+
   std::string Buffer = "; xref: " + boost::algorithm::join(AddrFromStr, ", ");
+  if (CrossReferenceLimit == 0)
+    Buffer += ", ...";
+  if (Flags & AddNewLineBeforeCrossReference)
+    m_rPrintData.AppendNewLine();
   m_rPrintData.AppendComment(Buffer);
+  m_rPrintData.AppendNewLine();
 }
 
 void FormatDisassembly::_FormatMemoryArea(Address const& rAddress, u32 Flags)
 {
+  MemoryArea MemArea;
+  if (!m_rCore.GetDocument().GetMemoryArea(rAddress, MemArea))
+    return;
+
+  if (MemArea.GetBaseAddress() != rAddress)
+    return;
+
   m_rPrintData.AppendNewLine();
-  auto pMemArea = m_rCore.GetDocument().GetMemoryArea(rAddress);
-  if (pMemArea == nullptr)
-    m_rPrintData.AppendComment(";; invalid memory area!");
-  else
-    m_rPrintData.AppendComment(pMemArea->ToString());
+  m_rPrintData.AppendComment(MemArea.ToString());
+  m_rPrintData.AppendNewLine();
 }
 
 DisassemblyView::DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress)
-  : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
+  : View(Document::Subscriber::DocumentUpdated | Document::Subscriber::AddressUpdated, rCore.GetDocument())
   , m_rCore(rCore)
   , m_FormatFlags(FormatFlags)
   , m_Format(rCore, m_PrintData)
@@ -265,7 +265,7 @@ void DisassemblyView::GetDimension(u32& rWidth, u32& rHeight) const
 }
 
 FullDisassemblyView::FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress)
-  : View(Document::Subscriber::DocumentUpdated, rCore.GetDocument())
+  : View(Document::Subscriber::DocumentUpdated | Document::Subscriber::AddressUpdated, rCore.GetDocument())
   , m_rCore(rCore)
   , m_FormatFlags(FormatFlags)
   , m_Format(rCore, m_PrintData)

@@ -21,13 +21,21 @@ void AddSemanticViewAction::Do(void)
   mainWin->addSemanticView(m_pView->GetCursorAddress());
 }
 
-void AddControlFlowGraphViewAction::Do(void)
+void AddGraphViewAction::Do(void)
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
     return;
-  mainWin->addControlFlowGraphView(m_pView->GetCursorAddress());
+  mainWin->addGraphView(m_pView->GetCursorAddress());
 }
+
+//void AddControlFlowGraphViewAction::Do(void)
+//{
+//  auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
+//  if (mainWin == nullptr)
+//    return;
+//  mainWin->addControlFlowGraphView(m_pView->GetCursorAddress());
+//}
 
 void ShowCommentDialog::Do(void)
 {
@@ -45,7 +53,8 @@ void AddUiActions(medusa::Action::MapType& rActions)
 {
   rActions[AddDisassemblyViewAction::GetBindingName()]      = &AddDisassemblyViewAction::Create;
   rActions[AddSemanticViewAction::GetBindingName()]         = &AddSemanticViewAction::Create;
-  rActions[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
+  rActions[AddGraphViewAction::GetBindingName()]            = &AddGraphViewAction::Create;
+  //rActions[AddControlFlowGraphViewAction::GetBindingName()] = &AddControlFlowGraphViewAction::Create;
   rActions[ShowCommentDialog::GetBindingName()]             = &ShowCommentDialog::Create;
   rActions[ShowLabelDialog::GetBindingName()]               = &ShowLabelDialog::Create;
 }

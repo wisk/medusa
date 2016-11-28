@@ -17,7 +17,7 @@ class BasicBlockItem : public QObject, public QGraphicsItem, public medusa::Disa
   Q_INTERFACES(QGraphicsItem)
 
 public:
-  BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::List const& addresses);
+  BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::Vector const& addresses);
 
   virtual void OnDocumentUpdated(void);
 
@@ -40,7 +40,7 @@ signals:
 
 private:
   QObject *                  m_pParent;
-  medusa::Address::List      m_Addresses;
+  medusa::Address::Vector      m_Addresses;
   qreal                      m_Width, m_Height, m_AddrLen;
   bool                       m_IsSelected;
   qreal                      m_Z;

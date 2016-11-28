@@ -94,13 +94,20 @@ u8 MachOLoader::GetDepth(void) const
   return 1;
 }
 
-void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 {
   if (m_Arch64) {
     Map<64>(rDoc, rArchs);
   } else {
     Map<32>(rDoc, rArchs);
   }
+
+  return true;
+}
+
+bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+{
+  return false;
 }
 
 template<int bit>
@@ -182,7 +189,7 @@ void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
       m_EntryPoint = m_TextSectionVMAddr + m_EntryPoint;
     }
   }
-  rDoc.AddLabel(Address(Address::FlatType, 0x0, m_EntryPoint, 0x10, bit),
+  rDoc.AddLabel(Address(Address::LinearType, 0x0, m_EntryPoint, 0x10, bit),
     Label("start", Label::Code | Label::Exported));
 }
 
@@ -195,7 +202,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
   typename MachOType::Section Section;
   std::string                 SegmentName;
   std::string                 FullSectionName;
-  u32                         MemAreaFlags;
+  auto                        MemAreaFlags = MemoryArea::Access::NoAccess;
 
   if (!rBinStrm.Read(LoadCmdOff, &Segment, sizeof(Segment))) {
     LOG_WR << "Cannot read segment command" << LogEnd;
@@ -230,37 +237,37 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
       << ", name=\"" << FullSectionName
       << "\""        << LogEnd;
 
-    MemAreaFlags = MemoryArea::Read;
+    MemAreaFlags = MemoryArea::Access::Read;
     if (Segment.initprot & VM_PROT_WRITE) {
-      MemAreaFlags |= MemoryArea::Write;
+      MemAreaFlags |= MemoryArea::Access::Write;
     }
     if (Segment.initprot & VM_PROT_EXECUTE) {
-      MemAreaFlags |= MemoryArea::Execute;
+      MemAreaFlags |= MemoryArea::Access::Execute;
     }
 
     MemoryArea* pNewMemArea = nullptr;
+    bool Res;
 
     if ((Section.flags & SECTION_TYPE) == S_ZEROFILL) {
-      pNewMemArea = new VirtualMemoryArea(
-        FullSectionName,
-        Address(Address::FlatType, 0x0, Section.addr, 16, bit),
+      Res = rDoc.AddMemoryArea(MemoryArea::CreateVirtual(
+        FullSectionName, MemAreaFlags,
+        Address(Address::LinearType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
-        MemAreaFlags,
         ArchTag, ArchMode
-        );
+        ));
     } else {
-      pNewMemArea = new MappedMemoryArea(
-        FullSectionName,
+      Res = rDoc.AddMemoryArea(MemoryArea::CreateMapped(
+        FullSectionName, MemAreaFlags,
         Section.offset,
         static_cast<u32>(Section.size),
-        Address(Address::FlatType, 0x0, Section.addr, 16, bit),
+        Address(Address::LinearType, 0x0, Section.addr, 16, bit),
         static_cast<u32>(Section.size),
-        MemAreaFlags,
         ArchTag, ArchMode
-        );
+        ));
     }
 
-    rDoc.AddMemoryArea(pNewMemArea);
+    if (!Res)
+      LOG_WR << "failed to add memory area" << LogEnd;
 
     if ((Section.flags & SECTION_TYPE) == S_CSTRING_LITERALS)
       for (Address CurAddr = pNewMemArea->GetBaseAddress(), EndAddr = pNewMemArea->GetBaseAddress() + pNewMemArea->GetSize();
@@ -285,7 +292,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
       m_SymbolsIndex   = Section.reserved1;
     }
 
-      LoadCmdOff += sizeof(Section);
+    LoadCmdOff += sizeof(Section);
   }
 }
 
@@ -447,7 +454,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     }
 
     rDoc.AddLabel(
-      Address(Address::FlatType, 0x0, ImpAddr, 0x10, bit),
+      Address(Address::LinearType, 0x0, ImpAddr, 0x10, bit),
       Label(SymName, Label::Imported | Label::Data));
   }
 }
@@ -459,7 +466,7 @@ void MachOLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs)
   switch (m_Machine)
   {
   case CPU_TYPE_X86:
-  case CPU_TYPE_X86_64: ArchName = "Intel x86"; break;
+  case CPU_TYPE_X86_64: ArchName = "x86"; break;
   case CPU_TYPE_ARM:    ArchName = "ARM";       break;
   default:                                      return;
   }
@@ -477,12 +484,12 @@ bool MachOLoader::_FindArchitectureTagAndModeByMachine(
   switch (m_Machine)
   {
   case CPU_TYPE_X86:
-    ArchTagName  = "Intel x86";
+    ArchTagName  = "x86";
     ArchModeName = "32-bit";
     break;
 
   case CPU_TYPE_X86_64:
-    ArchTagName  = "Intel x86";
+    ArchTagName  = "x86";
     ArchModeName = "64-bit";
     break;
 

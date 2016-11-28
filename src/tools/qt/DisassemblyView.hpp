@@ -29,13 +29,14 @@ public:
   DisassemblyView(QWidget * parent, medusa::Medusa * core);
   ~DisassemblyView(void);
 
-  virtual void OnDocumentUpdated(void);
+  virtual void OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses);
 
   bool goTo(medusa::Address const& address);
 
 signals:
   void DisassemblyViewAdded(medusa::Address const& startAddr);
   void SemanticViewAdded(medusa::Address const& funcAddr);
+  void GraphViewAdded(medusa::Address const& funcAddr);
   void ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
   void viewportUpdated(void);
   void cursorAddressUpdated(medusa::Address const& addr);

@@ -5,12 +5,14 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
+#include "medusa/graph.hpp"
 
 #include <mutex>
 #include <sstream>
 #include <string>
 #include <list>
 #include <set>
+#include <unordered_map>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -24,6 +26,8 @@ public:
     UnknownType,
     UnprintableType,
     MnemonicType,
+    MnemonicPrefixType,
+    MnemonicSuffixType,
     RegisterType,
     ImmediateType,
     LabelType,
@@ -39,14 +43,14 @@ public:
   {}
 
   u16 GetType(void)   const { return m_Type;   }
-  u16 GetLength(void) const { return m_Length; }
+  u16 GetSize(void) const { return m_Length; }
 
 private:
   u16 m_Type;
   u16 m_Length;
 };
 
-class Medusa_EXPORT LineData
+class MEDUSA_EXPORT LineData
 {
 public:
   LineData(Address const& rAddress = Address(), std::string const& rText = "", Mark::List const& rMarks = Mark::List(), std::set<u16> const& rOperandsOffset = std::set<u16>())
@@ -65,18 +69,25 @@ private:
   std::set<u16> m_OperandsOffset;
 };
 
-class Medusa_EXPORT PrintData
+class MEDUSA_EXPORT PrintData
 {
 public:
   PrintData(void);
+
+  PrintData(PrintData const& rPD);
 
   void PrependAddress(bool Flag) { m_PrependAddress = Flag; }
   void SetIndent(u8 Indent) { m_Indent = Indent; }
 
   PrintData& operator()(Address const& rAddress);
+  PrintData& operator=(PrintData const& rPD);
 
   PrintData& AppendMnemonic (std::string const& rMnemonic)
   { _AppendText(rMnemonic, Mark::MnemonicType);   return *this; }
+  PrintData& AppendMnemonicPrefix (std::string const& rMnemonic)
+  { _AppendText(rMnemonic, Mark::MnemonicPrefixType);   return *this; }
+    PrintData& AppendMnemonicSuffix (std::string const& rMnemonic)
+  { _AppendText(rMnemonic, Mark::MnemonicSuffixType);   return *this; }
   PrintData& AppendRegister (std::string const& rRegister)
   { _AppendText(rRegister, Mark::RegisterType);   return *this; }
   PrintData& AppendImmediate(std::string const& rImmediate)
@@ -102,7 +113,7 @@ public:
 
   PrintData& MarkOffset(void);
 
-  Address::List GetAddresses(void) const;
+  Address::Vector GetAddresses(void) const;
   bool          GetFirstAddress(Address& rAddress) const;
   bool          GetLastAddress(Address& rAddress) const;
   std::string   GetTexts(void) const;
@@ -142,13 +153,40 @@ private:
   std::string         m_CurrentText;
   Mark::List          m_CurrentMarks;
   std::set<u16>       m_CurrentOperandsOffset;
-  u16                 m_CurrentCommentOffset;
+  u16                 m_CurrentCommenOffsetType;
 
   std::list<LineData> m_Lines;
   u16                 m_Width;
   u16                 m_LineWidth;
   u16                 m_Height;
   u8                  m_Indent;
+
+  typedef std::mutex MutexType;
+  mutable MutexType m_Mutex;
+};
+
+class MEDUSA_EXPORT GraphData
+{
+public:
+  typedef std::tuple<PrintData, u16 /* X */, u16 /* Y */> VertexDataType;
+
+  bool AddVertex(PrintData const& rPD, u16 X = 0, u16 Y = 0);
+  bool GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) const;
+  bool SetVertexPosition(Address const& rVtxAddr, u16 X, u16 Y);
+
+  typedef std::function<void(PrintData const& rPD, u16 X, u16 Y)> VertexCallbackType;
+  void ForEachVertex(VertexCallbackType CB) const;
+
+  typedef std::vector<std::tuple<u16 /* X */, u16 /* Y */>> BendsType;
+  bool GetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType& rBends) const;
+  void SetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType const& rBends);
+
+private:
+  typedef std::unordered_map<Address, VertexDataType> AddressVertexMapType;
+  AddressVertexMapType m_Map;
+
+  typedef std::map<Graph::EdgeDescriptor, BendsType> BendsMapType;
+  BendsMapType m_Bends;
 
   typedef std::mutex MutexType;
   mutable MutexType m_Mutex;

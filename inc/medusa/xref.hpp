@@ -13,7 +13,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! XRefs handles a cross-reference.
-class Medusa_EXPORT XRefs
+class MEDUSA_EXPORT XRefs
 {
 public:
    XRefs(void) {}
@@ -33,10 +33,10 @@ public:
   bool RemoveRef(Address const& rFrom);
 
   //! Get all addresses which access to a specific address
-  bool From(Address const& rTo, Address::List& rFromList) const;
+  bool From(Address const& rTo, Address::Vector& rFrom) const;
 
   //! Get accessed address from a specific address
-  bool To(Address const& rFrom, Address::List& rToList) const;
+  bool To(Address const& rFrom, Address::Vector& rTo) const;
 
   //! Test if a specific address has a cross-reference
   bool HasXRefTo(Address const& rFrom) const;

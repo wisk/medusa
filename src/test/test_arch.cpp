@@ -1,88 +1,78 @@
-#define BOOST_TEST_MODULE TestArchitecture
-#include <boost/test/unit_test.hpp> 
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 
 #include <medusa/binary_stream.hpp>
 #include <medusa/module.hpp>
 #include <medusa/architecture.hpp>
 #include <medusa/instruction.hpp>
 
-BOOST_AUTO_TEST_SUITE(architecture_test_suite)
-
-BOOST_AUTO_TEST_CASE(arch_arm_test_case)
+TEST_CASE("disassemble", "[arch_arm]")
 {
-  BOOST_TEST_MESSAGE("Testing ARM architecture");
+  INFO("Testing ARM architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
   medusa::Address Addr;
   auto pArmGetter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "arm");
-  BOOST_REQUIRE(pArmGetter != nullptr);
+  REQUIRE(pArmGetter != nullptr);
   auto pArmDisasm = pArmGetter();
 
   auto const ArmMode = pArmDisasm->GetModeByName("arm");
   auto const ThumbMode = pArmDisasm->GetModeByName("thumb");
-  BOOST_REQUIRE(ArmMode != 0);
-  BOOST_REQUIRE(ThumbMode != 0);
+  REQUIRE(ArmMode != 0);
+  REQUIRE(ThumbMode != 0);
 
   {
     // e52de004        push    {lr}            ; (str lr, [sp, #-4]!)
     medusa::MemoryBinaryStream MemBinStrm("\x04\xe0\x2d\xe5", 4);
     medusa::Instruction Insn;
-    BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
+    CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
     medusa::PrintData Data;
-    BOOST_CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
-    BOOST_TEST_MESSAGE("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
+    CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
+    INFO("0xe52de004 is push {lr} (str lr, [sp, #-4], decoded as: " << Data.GetTexts());
   }
 
   {
     // e710019f ldr r1, [pc,r1]
     medusa::MemoryBinaryStream MemBinStrm("\x01\x10\x9f\xe7", 4);
     medusa::Instruction Insn;
-    BOOST_CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
+    CHECK(pArmDisasm->Disassemble(MemBinStrm, 0x0, Insn, ArmMode));
     medusa::PrintData Data;
-    BOOST_CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
+    CHECK(pArmDisasm->FormatInstruction(Doc, Addr, Insn, Data));
     std::cout << Data.GetTexts() << std::endl;
-    BOOST_TEST_MESSAGE("e710019f is ldr r1, [pc,r1], decoded as: " << Data.GetTexts());
+    INFO("e710019f is ldr r1, [pc,r1], decoded as: " << Data.GetTexts());
   }
 
   delete pArmDisasm;
 }
 
-BOOST_AUTO_TEST_CASE(arch_avr8_test_case)
+TEST_CASE("disassemble", "[arch_x86]")
 {
-}
-
-BOOST_AUTO_TEST_CASE(arch_gameboy_test_case)
-{
-}
-
-BOOST_AUTO_TEST_CASE(arch_x86_test_case)
-{
-  BOOST_TEST_MESSAGE("Testing x86 architecture");
+  INFO("Testing x86 architecture");
 
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::Document Doc;
   medusa::Address Addr;
 
   auto pGetDbText = rModMgr.LoadModule<medusa::TGetDatabase>(".", "text");
-  BOOST_REQUIRE(pGetDbText != nullptr);
+  REQUIRE(pGetDbText != nullptr);
   auto spDbText = medusa::Database::SPType(pGetDbText());
 
-  Doc.Use(spDbText);
+  Doc.Open(spDbText);
 
   auto pX86Getter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "x86");
-  BOOST_REQUIRE(pX86Getter != nullptr);
+  REQUIRE(pX86Getter != nullptr);
   auto pX86Disasm = pX86Getter();
 
   auto const X86_16_Mode = pX86Disasm->GetModeByName("16-bit");
   auto const X86_32_Mode = pX86Disasm->GetModeByName("32-bit");
   auto const X86_64_Mode = pX86Disasm->GetModeByName("64-bit");
-  BOOST_REQUIRE(X86_16_Mode != 0);
-  BOOST_REQUIRE(X86_32_Mode != 0);
-  BOOST_REQUIRE(X86_64_Mode != 0);
+  REQUIRE(X86_16_Mode != 0);
+  REQUIRE(X86_32_Mode != 0);
+  REQUIRE(X86_64_Mode != 0);
 
   {
-    BOOST_TEST_MESSAGE("Testing Ev decoding");
+    INFO("Testing Ev decoding");
 
     auto const pAddressingTest =
       "\xFE\x0D\xFA\x0F\x00\x00"     // dec byte  [rel 0x1000]
@@ -92,19 +82,19 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       ;
     medusa::MemoryBinaryStream MBS(pAddressingTest, 0x6 + 0x7 + 0x6 + 0x7);
     medusa::Instruction InsnDecByteAddr, InsnDecWordAddr, InsnDecDwordAddr, InsnDecQwordAddr;
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x0, InsnDecByteAddr, X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6, InsnDecWordAddr, X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7, InsnDecDwordAddr, X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0x0, InsnDecByteAddr, X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0x6, InsnDecWordAddr, X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7, InsnDecDwordAddr, X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0x6 + 0x7 + 0x6, InsnDecQwordAddr, X86_64_Mode));
 
     medusa::PrintData PD;
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x0, InsnDecByteAddr, PD));
+    CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x0, InsnDecByteAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6, InsnDecWordAddr, PD));
+    CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6, InsnDecWordAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7, InsnDecDwordAddr, PD));
+    CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7, InsnDecDwordAddr, PD));
     PD.AppendNewLine();
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7 + 0x6, InsnDecQwordAddr, PD));
+    CHECK(pX86Disasm->FormatInstruction(Doc, Addr + 0x6 + 0x7 + 0x6, InsnDecQwordAddr, PD));
     PD.AppendNewLine();
 
     std::cout << InsnDecByteAddr.ToString() << std::endl;
@@ -115,7 +105,7 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   }
 
   {
-    BOOST_TEST_MESSAGE("Testing Ev, Gv decoding");
+    INFO("Testing Ev, Gv decoding");
 
     auto const pAddressingOperandTest =
       "\x67\x88\x00"     // mov byte  [eax], al
@@ -130,26 +120,26 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pAddressingOperandTest, 3 + 4 + 3 + 4 + 2 + 3 + 2 + 3);
     medusa::Instruction InsnArr[8];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7,  InsnArr[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 10, InsnArr[3], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[4], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[5], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 19, InsnArr[6], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[7], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7,  InsnArr[2], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 10, InsnArr[3], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[4], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[5], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 19, InsnArr[6], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[7], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
 
   {
-    BOOST_TEST_MESSAGE("Testing Ev, Iz decoding");
+    INFO("Testing Ev, Iz decoding");
 
     auto const pAddressingImmediate =
       "\xC6\x00\xCC"                 // mov byte [rax], 0xcc
@@ -161,23 +151,23 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pAddressingImmediate, 3 + 5 + 6 + 7 + 3);
     medusa::Instruction InsnArr[5];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 8,  InsnArr[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[3], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[4], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0,  InsnArr[0], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 3,  InsnArr[1], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 8,  InsnArr[2], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 14, InsnArr[3], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[4], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
 
   {
-    BOOST_TEST_MESSAGE("Testing SIB");
+    INFO("Testing SIB");
 
     auto const pSib =
       "\x88\x8C\xD8\x90\x90\x90\x90" // mov [rax + rbx * 8 + 0x90909090], cl
@@ -185,16 +175,16 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pSib, 7);
     medusa::Instruction Insn;
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, Insn, X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0, Insn, X86_64_Mode));
 
     std::cout << Insn.ToString() << std::endl;
     medusa::PrintData PD;
-    BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, Insn, PD));
+    CHECK(pX86Disasm->FormatInstruction(Doc, Addr, Insn, PD));
     std::cout << PD.GetTexts() << std::endl;
   }
 
   {
-    BOOST_TEST_MESSAGE("Testing Jb/Jv decoding");
+    INFO("Testing Jb/Jv decoding");
 
     auto const pRelative =
       "\xEB\x90"             // jmp short $+0x90
@@ -204,15 +194,15 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pRelative, 2 + 4 + 5);
     medusa::Instruction InsnArr[3];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 2, InsnArr[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 6, InsnArr[2], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 2, InsnArr[1], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 6, InsnArr[2], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
@@ -228,17 +218,17 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pSimd, 3 + 4 + 5 + 8 + 9);
     medusa::Instruction InsnArr[5];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 3, InsnArr[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 12, InsnArr[3], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 20, InsnArr[4], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 3, InsnArr[1], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[2], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 12, InsnArr[3], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 20, InsnArr[4], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
@@ -258,29 +248,31 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
       "\x41\x52"                     // push r10
       "\x98"                         // cwde
       "\x66\x98"                     // cbw
+      "\x41\x83\x65\x00\x00"         // 
       ;
 
-    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2);
-    medusa::Instruction InsnArr[13];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[1], X86_32_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6, InsnArr[2], X86_32_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4, InsnArr[3], X86_32_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3, InsnArr[4], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7, InsnArr[5], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7, InsnArr[6], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5, InsnArr[7], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9, InsnArr[8], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7, InsnArr[9], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6, InsnArr[10], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2, InsnArr[11], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1, InsnArr[12], X86_64_Mode));
+    medusa::MemoryBinaryStream MBS(pBuggyInsn, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2 + 5);
+    medusa::Instruction InsnArr[14];
+    CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7, InsnArr[1], X86_32_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6, InsnArr[2], X86_32_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4, InsnArr[3], X86_32_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3, InsnArr[4], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7, InsnArr[5], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7, InsnArr[6], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5, InsnArr[7], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9, InsnArr[8], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7, InsnArr[9], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6, InsnArr[10], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2, InsnArr[11], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1, InsnArr[12], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 7 + 6 + 4 + 3 + 7 + 7 + 5 + 9 + 7 + 6 + 2 + 1 + 2, InsnArr[13], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
@@ -292,13 +284,13 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pComplexInsn, 4);
     medusa::Instruction InsnArr[1];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 0, InsnArr[0], X86_32_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
@@ -314,17 +306,17 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
 
     medusa::MemoryBinaryStream MBS(pSimdInsn, 8 + 8 + 5 + 4 + 5);
     medusa::Instruction InsnArr[5];
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS,  0, InsnArr[0], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS,  8, InsnArr[1], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[2], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[3], X86_64_Mode));
-    BOOST_CHECK(pX86Disasm->Disassemble(MBS, 25, InsnArr[4], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS,  0, InsnArr[0], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS,  8, InsnArr[1], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 16, InsnArr[2], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 21, InsnArr[3], X86_64_Mode));
+    CHECK(pX86Disasm->Disassemble(MBS, 25, InsnArr[4], X86_64_Mode));
 
     for (auto const& rInsn : InsnArr)
     {
       std::cout << rInsn.ToString() << std::endl;
       medusa::PrintData PD;
-      BOOST_CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
+      CHECK(pX86Disasm->FormatInstruction(Doc, Addr, rInsn, PD));
       std::cout << PD.GetTexts() << std::endl;
     }
   }
@@ -332,4 +324,30 @@ BOOST_AUTO_TEST_CASE(arch_x86_test_case)
   delete pX86Disasm;
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+TEST_CASE("disassemble", "[arch_st62]")
+{
+  INFO("Testing ST62 architecture");
+
+  auto& rModMgr = medusa::ModuleManager::Instance();
+  medusa::Document Doc;
+  medusa::Address Addr;
+  auto pSt62Getter = rModMgr.LoadModule<medusa::TGetArchitecture>(".", "st62");
+  REQUIRE(pSt62Getter != nullptr);
+  auto pSt62Disasm = pSt62Getter();
+
+  auto const St62x25Mode = pSt62Disasm->GetModeByName("ST62x25");
+  REQUIRE(St62x25Mode != 0);
+
+  {
+    // 0000:0000000000000000  jp               0xC1
+    medusa::MemoryBinaryStream MemBinStrm("\x19\x0c", 2);
+    medusa::Instruction Insn;
+    CHECK(pSt62Disasm->Disassemble(MemBinStrm, 0x0, Insn, St62x25Mode));
+    medusa::PrintData Data;
+    CHECK(pSt62Disasm->FormatInstruction(Doc, Addr, Insn, Data));
+    INFO("jp 0xC1, decoded as: " << Data.GetTexts());
+    CHECK(Data.GetTexts() == "0000:0000000000000000  jp              0xC1");
+  }
+
+  delete pSt62Disasm;
+}

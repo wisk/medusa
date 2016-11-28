@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CloneVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT CloneVisitor : public ExpressionVisitor
 {
 public:
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
@@ -28,7 +28,7 @@ public:
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 };
 
-class Medusa_EXPORT FilterVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT FilterVisitor : public ExpressionVisitor
 {
 public:
   typedef std::function <Expression::SPType(Expression::SPType spExpr)> Matcher;
@@ -51,7 +51,7 @@ public:
   virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
   virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
 
-  Expression::LSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
+  Expression::VSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
 
 protected:
   void _Evaluate(Expression::SPType spExpr);
@@ -60,10 +60,10 @@ protected:
 
   Matcher m_ExprMatcher;
   size_t m_NbrOfResult;
-  Expression::LSPType m_MatchedExprs;
+  Expression::VSPType m_MatchedExprs;
 };
 
-class Medusa_EXPORT EvaluateVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT EvaluateVisitor : public ExpressionVisitor
 {
 public:
   // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
@@ -109,7 +109,7 @@ protected:
   Expression::SPType m_spResExpr;
 };
 
-class Medusa_EXPORT SymbolicVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT SymbolicVisitor : public ExpressionVisitor
 {
 public:
   SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef = true);
@@ -137,9 +137,11 @@ public:
   bool IsRelative(void) const { return m_IsRelative; }
   bool IsMemoryReference(void) const { return m_IsMemoryReference; }
 
-  Expression::SPType  GetExpression(Expression::SPType spExpr);
-  Expression::VSPType GetExpressions(void) const;
-  Expression::SPType  FindExpression(Expression::SPType spExpr);
+  static Expression::SPType  RemoveExpressionAnnotations(Expression::SPType spExpr);
+  Expression::SPType         GetValue(Expression::SPType spExpr) const;
+  Expression::VSPType        FindExpressionsByKey(Expression::SPType spPatExpr) const;
+  Expression::VSPType        FindExpressionsByValue(Expression::SPType spPatExpr) const;
+  Expression::VSPType        FindExpressionsByUse(Expression::SPType spPatExpr) const;
 
   std::string ToString(void) const;
   bool BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate = false);
@@ -152,6 +154,7 @@ public:
   bool FindAllPaths(int& rNumOfPathFound, Architecture& rArch, DestinationPathCallbackType DstPathCb);
 
 protected:
+  void _InsertExpression(Expression::SPType spKeyExpr, Expression::SPType spValExpr);
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
   typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
@@ -171,7 +174,7 @@ protected:
 };
 
 //! Visit an expression and convert IdentifierExpression to TrackExpression.
-class Medusa_EXPORT TrackVisitor : public CloneVisitor
+class MEDUSA_EXPORT TrackVisitor : public CloneVisitor
 {
 public:
   TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt);
@@ -192,7 +195,7 @@ private:
 //! If the expression contains a track id, GetResult will return true
 //! Visit always return nullptr
 //! BackTrackContext is updated with the source
-class Medusa_EXPORT BackTrackVisitor : public ExpressionVisitor
+class MEDUSA_EXPORT BackTrackVisitor : public ExpressionVisitor
 {
 public:
   BackTrackVisitor(Track::BackTrackContext& rBtCtxt)
@@ -211,7 +214,7 @@ private:
   bool m_Result;
 };
 
-class Medusa_EXPORT NormalizeIdentifier : public CloneVisitor
+class MEDUSA_EXPORT NormalizeIdentifier : public CloneVisitor
 {
 public:
   NormalizeIdentifier(CpuInformation const& rCpuinfo, u8 Mode);
@@ -224,7 +227,7 @@ protected:
   u8 m_Mode;
 };
 
-class Medusa_EXPORT IdentifierToVariable : public CloneVisitor
+class MEDUSA_EXPORT IdentifierToVariable : public CloneVisitor
 {
 public:
   virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
@@ -234,11 +237,39 @@ private:
   std::set<u32> m_UsedId;
 };
 
-class Medusa_EXPORT SimplifyVisitor : public CloneVisitor
+class MEDUSA_EXPORT SimplifyVisitor : public CloneVisitor
 {
 public:
+  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
   virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
   virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+};
+
+class MEDUSA_EXPORT ConstantFoldingVisitor : public CloneVisitor
+{
+public:
+  ConstantFoldingVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef = true)
+          : m_rDoc(rDoc), m_CurAddr(rCurAddr), m_Mode(Mode)
+  {}
+
+  enum  Position
+  {
+      Left = 0,
+      Right,
+  };
+
+  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+  bool                       IsCommutative(BinaryOperationExpression::SPType spBinOpExpr);
+  bool                       IsAssociative(Expression::SPType spBinOpExpr);
+  Expression::SPType         GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand);
+  Expression::SPType         SimplifyAssociativeOrCommutative(BinaryOperationExpression::SPType spBinOpExpr);
+  Expression::SPType         SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
+
+protected:
+  Document const&                   m_rDoc;
+  u8                                m_Mode;
+  Address                           m_CurAddr;
 };
 
 MEDUSA_NAMESPACE_END

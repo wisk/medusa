@@ -12,7 +12,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   , medusa::FullDisassemblyView(
     *core,
     medusa::FormatDisassembly::ShowAddress |
-    medusa::FormatDisassembly::AddSpaceBeforeXref |
+    medusa::FormatDisassembly::AddNewLineBeforeCrossReference |
     medusa::FormatDisassembly::Indent,
     0, 0,
     core->GetDocument().GetStartAddress())
@@ -34,6 +34,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
 
   connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)),      this->parent(),   SLOT(addDisassemblyView(medusa::Address const&)));
   connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)),         this->parent(),   SLOT(addSemanticView(medusa::Address const&)));
+  connect(this, SIGNAL(GraphViewAdded(medusa::Address const&)),            this->parent(),   SLOT(addGraphView(medusa::Address const&)));
   connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(),   SLOT(addControlFlowGraphView(medusa::Address const&)));
   connect(this, SIGNAL(viewportUpdated()),                                 this->viewport(), SLOT(update()));
 
@@ -50,7 +51,7 @@ DisassemblyView::~DisassemblyView(void)
 {
 }
 
-void DisassemblyView::OnDocumentUpdated(void)
+void DisassemblyView::OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses)
 {
   emit viewUpdated();
 }
@@ -293,6 +294,8 @@ void DisassemblyView::paintText(QPainter& p)
 
   medusa::UserConfiguration UserCfg;
   QColor MnClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic")));
+  QColor PfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_prefix")));
+  QColor SfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_suffix")));
   QColor KwClr(QString::fromStdString(UserCfg.GetOption("color.keyword")));
   QColor ImClr(QString::fromStdString(UserCfg.GetOption("color.instruction_immediate")));
   QColor OpClr(QString::fromStdString(UserCfg.GetOption("color.operator")));
@@ -312,26 +315,28 @@ void DisassemblyView::paintText(QPainter& p)
     std::string::size_type TextOff = 0;
     for (auto const& rMark : rMarks)
     {
-      auto MarkLen = rMark.GetLength();
+      auto MarkSz = rMark.GetSize();
       if (rMark.GetType() != medusa::Mark::UnprintableType)
       {
         switch (rMark.GetType())
         {
-        case medusa::Mark::MnemonicType:  MarkClr = MnClr; break;
-        case medusa::Mark::KeywordType:   MarkClr = KwClr; break;
-        case medusa::Mark::ImmediateType: MarkClr = ImClr; break;
-        case medusa::Mark::OperatorType:  MarkClr = OpClr; break;
-        case medusa::Mark::RegisterType:  MarkClr = RgClr; break;
-        case medusa::Mark::LabelType:     MarkClr = LbClr; break;
-        case medusa::Mark::StringType:    MarkClr = SzClr; break;
-        case medusa::Mark::CommentType:   MarkClr = CmClr; break;
-        default:                          MarkClr = DfClr; break;
+        case medusa::Mark::MnemonicType:       MarkClr = MnClr; break;
+        case medusa::Mark::MnemonicPrefixType: MarkClr = PfClr; break;
+        case medusa::Mark::MnemonicSuffixType: MarkClr = SfClr; break;
+        case medusa::Mark::KeywordType:        MarkClr = KwClr; break;
+        case medusa::Mark::ImmediateType:      MarkClr = ImClr; break;
+        case medusa::Mark::OperatorType:       MarkClr = OpClr; break;
+        case medusa::Mark::RegisterType:       MarkClr = RgClr; break;
+        case medusa::Mark::LabelType:          MarkClr = LbClr; break;
+        case medusa::Mark::StringType:         MarkClr = SzClr; break;
+        case medusa::Mark::CommentType:        MarkClr = CmClr; break;
+        default:                               MarkClr = DfClr; break;
         };
         p.setPen(MarkClr);
-        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());
+        QString Text = QString::fromUtf8(rText.substr(TextOff, MarkSz).c_str());
         p.drawText(static_cast<int>(TextOff * _wChar), Line, Text);
       }
-      TextOff += MarkLen;
+      TextOff += MarkSz;
     }
     Line += _hChar;
   });

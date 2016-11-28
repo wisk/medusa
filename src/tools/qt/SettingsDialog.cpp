@@ -10,70 +10,78 @@
 #include "medusa/cell_action.hpp"
 #include "medusa/user_configuration.hpp"
 
-class QColorPicker : public QPushButton
+namespace qMedusa
 {
-public:
-  QColorPicker(QWidget* pParent, QString const& rColorName)
-    : QPushButton(pParent), m_Color(rColorName)
+
+  class QColorPicker : public QPushButton
   {
-    _UpdateColor();
-    connect(this, &QColorPicker::clicked, [this]()
+  public:
+    QColorPicker(QWidget* pParent, QString const& rColorName)
+      : QPushButton(pParent), m_Color(rColorName)
     {
-      auto Color = QColorDialog::getColor(m_Color, this, "Select color", QColorDialog::DontUseNativeDialog);
-      if (!Color.isValid())
-        return;
-      m_Color = Color;
       _UpdateColor();
-    });
-  }
+      connect(this, &QColorPicker::clicked, [this]()
+      {
+        auto Color = QColorDialog::getColor(m_Color, this, "Select color", QColorDialog::DontUseNativeDialog);
+        if (!Color.isValid())
+          return;
+        m_Color = Color;
+        _UpdateColor();
+      });
+    }
 
-  QString GetColorName(void) const
-  { return m_Color.name(); }
-
-private:
-  void _UpdateColor(void)
-  {
-    QPalette Pal = palette();
-    Pal.setColor(QPalette::Button, m_Color);
-    setAutoFillBackground(true);
-    setFlat(true);
-    setPalette(Pal);
-    update();
-  }
-
-  QColor m_Color;
-};
-
-class QFontPicker : public QPushButton
-{
-public:
-  QFontPicker(QWidget* pParent, QString const& rFontName)
-    : QPushButton(pParent)
-  {
-    m_Font.fromString(rFontName);
-    _UpdateFont();
-    connect(this, &QFontPicker::clicked, [this]()
+    QString GetColorName(void) const
     {
-      bool Ok;
-      auto Font = QFontDialog::getFont(&Ok, m_Font, this, "Select font", QFontDialog::DontUseNativeDialog);
-      if (!Ok)
-        return;
-      m_Font = Font;
-      _UpdateFont();
-    });
-  }
+      return m_Color.name();
+    }
 
-  QString GetFontName(void) const
-  { return m_Font.toString(); }
+  private:
+    void _UpdateColor(void)
+    {
+      QPalette Pal = palette();
+      Pal.setColor(QPalette::Button, m_Color);
+      setAutoFillBackground(true);
+      setFlat(true);
+      setPalette(Pal);
+      update();
+    }
 
-private:
-  void _UpdateFont(void)
+    QColor m_Color;
+  };
+
+  class QFontPicker : public QPushButton
   {
-    setText(m_Font.toString());
-  }
+  public:
+    QFontPicker(QWidget* pParent, QString const& rFontName)
+      : QPushButton(pParent)
+    {
+      m_Font.fromString(rFontName);
+      _UpdateFont();
+      connect(this, &QFontPicker::clicked, [this]()
+      {
+        bool Ok;
+        auto Font = QFontDialog::getFont(&Ok, m_Font, this, "Select font", QFontDialog::DontUseNativeDialog);
+        if (!Ok)
+          return;
+        m_Font = Font;
+        _UpdateFont();
+      });
+    }
 
-  QFont m_Font;
-};
+    QString GetFontName(void) const
+    {
+      return m_Font.toString();
+    }
+
+  private:
+    void _UpdateFont(void)
+    {
+      setText(m_Font.toString());
+    }
+
+    QFont m_Font;
+  };
+}
 
 SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
   : QDialog(pParent), m_rCore(rCore)
@@ -100,7 +108,7 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
 
     Value = QString::fromStdString(Opt);
 
-    AppearanceWidget->setItemWidget(pFontItem, 1, new QFontPicker(this, Value));
+    AppearanceWidget->setItemWidget(pFontItem, 1, new qMedusa::QFontPicker(this, Value));
   }
 
   auto Colors = medusa::Appearance::GetColors();
@@ -121,7 +129,7 @@ SettingsDialog::SettingsDialog(QWidget* pParent, medusa::Medusa& rCore)
     else
       Value = QString::fromStdString(Opt);
 
-    AppearanceWidget->setItemWidget(pColorItem, 1, new QColorPicker(this, Value));
+    AppearanceWidget->setItemWidget(pColorItem, 1, new qMedusa::QColorPicker(this, Value));
   }
 
   auto Actions = medusa::Action::GetMap();
@@ -156,8 +164,8 @@ void SettingsDialog::SaveSettings()
     std::string OptName = (*itAppearance)->data(0, Qt::UserRole).toString().toStdString();
     std::string Value;
     auto pWidget = AppearanceWidget->itemWidget(*itAppearance, 1);
-    auto pColorPicker = dynamic_cast<QColorPicker*>(pWidget);
-    auto pFontPicker = dynamic_cast<QFontPicker*>(pWidget);
+    auto pColorPicker = dynamic_cast<qMedusa::QColorPicker*>(pWidget);
+    auto pFontPicker = dynamic_cast<qMedusa::QFontPicker*>(pWidget);
     if (pColorPicker != nullptr)
       Value = pColorPicker->GetColorName().toStdString();
     else if (pFontPicker != nullptr)

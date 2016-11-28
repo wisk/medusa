@@ -44,6 +44,9 @@ void BitVector::BitCast(u16 NewBitSize)
 
 ap_int BitVector::GetSignedValue(void) const
 {
+  if (m_BitSize == 0)
+    return 0;
+
   // If the value is positive, we don't need to do anything
   if (!((GetUnsignedValue() >> (m_BitSize - 1)) & 1))
     return m_Value;
@@ -55,6 +58,9 @@ ap_int BitVector::GetSignedValue(void) const
 
 ap_uint BitVector::GetUnsignedValue(void) const
 {
+  if (m_BitSize == 0)
+    return 0;
+
   // If the value is positive, we don't need to do anything
   if (!m_Value.backend().sign())
     return m_Value;

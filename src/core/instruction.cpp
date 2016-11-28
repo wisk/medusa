@@ -1,12 +1,14 @@
 #include "medusa/instruction.hpp"
 #include "medusa/expression_visitor.hpp"
+#include <boost/format.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
-  : Cell(Cell::InstructionType, NoneType)
+Instruction::Instruction(char const* pName, u32 Opcode, u16 Size)
+  : Cell(Cell::InstructionType, NoneType, Size)
+  , m_pFormat(nullptr)
   , m_pName(pName)
-  , m_Opcd(Opcode)
+  , m_Opcode(Opcode)
   , m_Prefix()
   , m_TestedFlags()
   , m_UpdatedFlags()
@@ -14,13 +16,13 @@ Instruction::Instruction(char const* pName, u32 Opcode, u16 Length)
   , m_FixedFlags()
   , m_Expressions()
 {
-  m_spDna->Length() = Length;
 }
 
 Instruction::Instruction(CellData::SPType spDna)
   : Cell(spDna)
+  , m_pFormat(nullptr)
   , m_pName(nullptr)
-  , m_Opcd(0x0)
+  , m_Opcode(0x0)
   , m_Prefix()
   , m_TestedFlags()
   , m_UpdatedFlags()
@@ -36,7 +38,7 @@ Instruction::~Instruction(void)
 std::string Instruction::ToString(void) const
 {
   std::string Res = (boost::format("mnem: %s(%08x), length: %d, prefix: %08x, oprd: %d")
-    % m_pName % m_Opcd % m_spDna->GetLength() % m_Prefix % m_Operands.size()).str();
+    % m_pName % m_Opcode % m_spDna->GetSize() % m_Prefix % m_Operands.size()).str();
   if (m_Operands.empty())
     return Res;
   Res += "\n";
@@ -48,6 +50,11 @@ std::string Instruction::ToString(void) const
   return Res;
 }
 
+char const* Instruction::GetFormat(void) const
+{
+  return m_pFormat;
+}
+
 char const* Instruction::GetName(void) const
 {
   return m_pName;
@@ -55,12 +62,17 @@ char const* Instruction::GetName(void) const
 
 u32 Instruction::GetOpcode(void) const
 {
-  return m_Opcd;
+  return m_Opcode;
 }
 
 u32 Instruction::GetPrefix(void) const
 {
   return m_Prefix;
+}
+
+u32 Instruction::GetAttributes(void) const
+{
+  return m_Attributes;
 }
 
 u32 Instruction::GetTestedFlags(void) const
@@ -115,12 +127,12 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   {
     auto spBaseExpr = expr_cast<BitVectorExpression>(spMemExpr->GetBaseExpression());
     if (spBaseExpr != nullptr)
-      rDstAddr.SetBase(spBaseExpr->GetInt().ConvertTo<TBase>());
+      rDstAddr.SetBase(spBaseExpr->GetInt().ConvertTo<BaseType>());
 
     auto spOffExpr = expr_cast<BitVectorExpression>(spMemExpr->GetOffsetExpression());
     if (spOffExpr == nullptr)
       return false;
-    rDstAddr.SetOffset(spOffExpr->GetInt().ConvertTo<TOffset>());
+    rDstAddr.SetOffset(spOffExpr->GetInt().ConvertTo<OffsetType>());
     return true;
   }
 
@@ -128,7 +140,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   auto spConstExpr = expr_cast<BitVectorExpression>(spResExpr);
   if (spConstExpr != nullptr && spConstExpr->GetBitSize() > 8)
   {
-    rDstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<TOffset>());
+    rDstAddr.SetOffset(spConstExpr->GetInt().ConvertTo<OffsetType>());
     return true;
   }
 
@@ -146,14 +158,39 @@ void Instruction::ForEachOperand(Instruction::OperandCallback OprdCb) const
     OprdCb(rspOprdExpr);
 }
 
+void Instruction::SetFormat(char const* pFormat)
+{
+  m_pFormat = pFormat;
+}
+
 void Instruction::SetName(char const* pName)
 {
   m_pName = pName;
 }
 
+void Instruction::SetMnemonic(char const* pMnem)
+{
+  m_pName = pMnem;
+}
+
+void Instruction::AddMnemonicPrefix(char const* pPrefix)
+{
+  m_MnemonicPrefix += pPrefix;
+}
+
+void Instruction::AddMnemonicSuffix(char const* pSuffix)
+{
+  m_MnemonicSuffix += pSuffix;
+}
+
+void Instruction::AddAttribute(u32 Attr)
+{
+  m_Attributes |= Attr;
+}
+
 void Instruction::SetOpcode(u32 Opcd)
 {
-  m_Opcd = Opcd;
+  m_Opcode = Opcd;
 }
 
 void Instruction::SetTestedFlags(u32 Flags)
@@ -197,9 +234,9 @@ void Instruction::AddPostSemantic(Expression::SPType spExpr)
   m_Expressions.push_back(spExpr);
 }
 
-u16& Instruction::Length(void)
+u16& Instruction::Size(void)
 {
-  return m_spDna->Length();
+  return m_spDna->Size();
 }
 
 u32& Instruction::Prefix(void)

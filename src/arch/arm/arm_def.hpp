@@ -15,57 +15,62 @@ enum ARM_FeatureThumb
   ARM_ThumbEE,
 };
 
+// src: https://community.arm.com/groups/processors/blog/2010/07/16/condition-codes-1-condition-flags-and-codes
 enum ARM_Condition
 {
-  ARM_Cond_Eq,
-  ARM_Cond_Ne,
-  ARM_Cond_Cs,
-  ARM_Cond_Cc,
-  ARM_Cond_Mi,
-  ARM_Cond_Pl,
-  ARM_Cond_Vs,
-  ARM_Cond_Vc,
-  ARM_Cond_Hi,
-  ARM_Cond_Ls,
-  ARM_Cond_Ge,
-  ARM_Cond_Lt,
-  ARM_Cond_Gt,
-  ARM_Cond_Le
+  ARM_Cond_Eq, // EQual
+  ARM_Cond_Ne, // Not Equal
+  ARM_Cond_Cs, // Carry Set (unsigned >=)
+  ARM_Cond_Hs = ARM_Cond_Cs, // Higher or Same (unsigned >=)
+  ARM_Cond_Cc, // Carry Clear (unsigned <)
+  ARM_Cond_Lo = ARM_Cond_Cc, // LOwer (unsigned <)
+  ARM_Cond_Mi, // MInus (negative)
+  ARM_Cond_Pl, // PLus (positive)
+  ARM_Cond_Vs, // oVerflow Set
+  ARM_Cond_Vc, // oVerflow Clear
+  ARM_Cond_Hi, // HIgher (unsigned >)
+  ARM_Cond_Ls, // Lower or Same (unsigned <=)
+  ARM_Cond_Ge, // Greater or Equal (signed >=)
+  ARM_Cond_Lt, // Lesser Than (signed <)
+  ARM_Cond_Gt, // Greater Than (signed >)
+  ARM_Cond_Le, // Lesser or Equal (signed <=)
+  ARM_Cond_Al, // ALways
+  ARM_Cond_Unknown,
 };
 
-enum ARM_Register
+enum ARM_Identifier
 {
-  ARM_RegUnknown,
+  ARM_Id_Unknown,
 
-  ARM_FlNf,
-  ARM_FlCf,
-  ARM_FlVf,
-  ARM_FlZf,
+  ARM_Fl_Nf,
+  ARM_Fl_Cf,
+  ARM_Fl_Vf,
+  ARM_Fl_Zf,
 
-  ARM_RegR0,
-  ARM_RegR1,
-  ARM_RegR2,
-  ARM_RegR3,
-  ARM_RegR4,
-  ARM_RegR5,
-  ARM_RegR6,
-  ARM_RegR7,
-  ARM_RegR8,
-  ARM_RegR9,
-  ARM_RegR10,
-  ARM_RegR11,
-  ARM_RegFP = ARM_RegR11,
-  ARM_RegR12,
-  ARM_RegIP = ARM_RegR12,
-  ARM_RegR13,
-  ARM_RegSP = ARM_RegR13,
-  ARM_RegR14,
-  ARM_RegLR = ARM_RegR14,
-  ARM_RegR15,
-  ARM_RegPC = ARM_RegR15,
+  ARM_Reg_R0,
+  ARM_Reg_R1,
+  ARM_Reg_R2,
+  ARM_Reg_R3,
+  ARM_Reg_R4,
+  ARM_Reg_R5,
+  ARM_Reg_R6,
+  ARM_Reg_R7,
+  ARM_Reg_R8,
+  ARM_Reg_R9,
+  ARM_Reg_R10,
+  ARM_Reg_R11,
+  ARM_Reg_Fp = ARM_Reg_R11,
+  ARM_Reg_R12,
+  ARM_Reg_Ip = ARM_Reg_R12,
+  ARM_Reg_R13,
+  ARM_Reg_Sp = ARM_Reg_R13,
+  ARM_Reg_R14,
+  ARM_Reg_Lr = ARM_Reg_R14,
+  ARM_Reg_R15,
+  ARM_Reg_Pc = ARM_Reg_R15,
 };
 
-enum CSPR_Flags
+enum ARM_CSPR
 {
   ARM_CSPR_T = 1 << 5,  //! State bit (Thumb)
   ARM_CSPR_V = 1 << 28, //! Overflow
@@ -82,6 +87,14 @@ enum ARM_Prefix
   ARM_Prefix_S = 1 << 2, /* Set condition */
   ARM_Prefix_U = 1 << 3, /* Up/Down */
   ARM_Prefix_P = 1 << 4  /* Pre/Post indexing */
+};
+
+enum ARM_Attributes
+{
+  ARM_Attribute_None,
+  ARM_Attribute_SupportItBlock = 1 << 0,
+  ARM_Attribute_WriteBack = 1 << 1,
+
 };
 
 #endif // !ARM_DEF_HPP

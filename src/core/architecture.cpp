@@ -15,7 +15,7 @@ std::string Architecture::GetName(void) const
   return "";
 };
 
-bool Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
+bool Architecture::Translate(Address const& rVirtAddr, OffsetType& rPhysOff)
 {
   return false;
 }
@@ -23,10 +23,10 @@ bool Architecture::Translate(Address const& rVirtAddr, TOffset& rPhysOff)
 // NOTE: In most of architecture, current address is instruction address + instruction length
 Address Architecture::CurrentAddress(Address const& rAddr, Instruction const& rInsn) const
 {
-  return rAddr + rInsn.GetLength();
+  return rAddr + rInsn.GetSize();
 }
 
-bool Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
   return false;
 };
@@ -57,6 +57,7 @@ bool Architecture::FormatTypeDetail(TypeDetail const& rTypeDtl, PrintData& rPrin
   case TypeDetail::ClassType:     rPrintData.AppendKeyword("class").AppendSpace(); break;
   case TypeDetail::EnumType:      rPrintData.AppendKeyword("enum").AppendSpace(); break;
   case TypeDetail::StructureType: rPrintData.AppendKeyword("struct").AppendSpace(); break;
+  default:	break;
   }
 
   rPrintData.AppendKeyword(rTypeDtl.GetName());
@@ -65,6 +66,7 @@ bool Architecture::FormatTypeDetail(TypeDetail const& rTypeDtl, PrintData& rPrin
   {
   case TypeDetail::PointerType:   rPrintData.AppendOperator("*").AppendSpace(); break;
   case TypeDetail::ReferenceType: rPrintData.AppendOperator("&").AppendSpace(); break;
+  default:	break;
   }
 
   return true;
@@ -85,7 +87,7 @@ namespace
     {
       _Type Value;
 
-      TOffset Off;
+      OffsetType Off;
       if (!m_rDoc.ConvertAddressToFileOffset(m_rAddr, Off))
         return false;
 
@@ -250,7 +252,7 @@ public:
 
   virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr)
   {
-    Address const OprdAddr(spConstExpr->GetInt().ConvertTo<TOffset>());
+    Address const OprdAddr = Address(Address::LinearType, spConstExpr->GetInt().ConvertTo<OffsetType>());
     auto OprdLbl = m_rDoc.GetLabelFromAddress(OprdAddr);
     if (OprdLbl.GetType() != Label::Unknown)
     {
@@ -320,7 +322,7 @@ bool Architecture::FormatOperand(
     return false;
 
   // TODO: rAddr+InsnLen is not always equivalent to PC!
-  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetLength(), rInsn.GetMode(), false);
+  EvaluateVisitor EvalVst(rDoc, rAddr + rInsn.GetSize(), rInsn.GetMode(), false);
   auto spEvalRes = spCurOprd->Visit(&EvalVst);
   if (spEvalRes != nullptr)
     spCurOprd = spEvalRes;
@@ -339,7 +341,7 @@ bool Architecture::FormatCharacter(
 {
   auto const& rBinStrm = rDoc.GetBinaryStream();
   std::ostringstream oss;
-  TOffset Off;
+  OffsetType Off;
 
   if (!rDoc.ConvertAddressToFileOffset(rAddr, Off))
     return false;
@@ -377,8 +379,8 @@ bool Architecture::FormatString(
   PrintData          & rPrintData) const
 {
   auto const&        rBinStrm  = rDoc.GetBinaryStream();
-  TOffset            FileOff;
-  size_t             StrLen    = rStr.GetLength();
+  OffsetType            FileOff;
+  size_t             StrLen    = rStr.GetSize();
   StringTrait const* pStrTrait = rStr.GetStringTrait();
 
   if (pStrTrait == nullptr)
@@ -436,13 +438,13 @@ bool Architecture::FormatValue(
   PrintData          & rPrintData) const
 {
   auto const&         rBinStrm = rDoc.GetBinaryStream();
-  TOffset             Off;
+  OffsetType          Off;
   u8                  ValueModifier = rVal.GetSubType() & ValueDetail::ModifierMask;
   u8                  ValueType     = rVal.GetSubType() & ValueDetail::BaseMask;
   std::string         BasePrefix    = "";
   bool                IsUnk = false;
 
-  switch (rVal.GetLength())
+  switch (rVal.GetSize())
   {
   case 1:  rPrintData.AppendKeyword("db").AppendSpace(); break;
   case 2:  rPrintData.AppendKeyword("dw").AppendSpace(); break;
@@ -463,7 +465,7 @@ bool Architecture::FormatValue(
   if (rDoc.RetrieveDetailId(rAddr, 0, BindId))
     rDoc.GetValueDetail(BindId, ValDtl);
 
-  return FormatValueDetail(rDoc, rAddr, static_cast<u8>(rVal.GetLength() * 8), ValDtl, rPrintData);
+  return FormatValueDetail(rDoc, rAddr, static_cast<u8>(rVal.GetSize() * 8), ValDtl, rPrintData);
 }
 
 bool Architecture::FormatMultiCell(
@@ -487,18 +489,13 @@ bool Architecture::FormatFunction(
 {
   auto FuncLabel = rDoc.GetLabelFromAddress(rAddr);
 
-  if (rFunc.GetSize() != 0 && rFunc.GetInstructionCounter() != 0)
-  {
-    std::ostringstream oss;
-    oss
-      << std::hex << std::showbase << std::left
-      << "; size=" << rFunc.GetSize()
-      << ", insn_cnt=" << rFunc.GetInstructionCounter();
+  std::ostringstream oss;
+  oss
+    << std::hex << std::showbase << std::left
+    << "; size=" << rFunc.GetSize()
+    << ", insn_cnt=" << rFunc.GetInstructionCounter();
 
-    rPrintData.AppendComment(oss.str());
-  }
-  else
-    rPrintData.AppendComment("; imported");
+  rPrintData.AppendComment(oss.str());
 
   FunctionDetail FuncDtl;
   Id CurId;

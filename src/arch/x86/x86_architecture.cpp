@@ -434,10 +434,10 @@ bool X86Architecture::EmitSetExecutionAddress(Expression::VSPType& rExprs, Addre
   return true;
 }
 
-bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, TOffset Offset, Instruction& rInsn, u8 Mode)
+bool X86Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
-  rInsn.GetData()->ArchitectureTag() = GetTag();
-  rInsn.Mode() = Mode;
+  rInsn.SetArchitectureTag(GetTag());
+  rInsn.SetMode(Mode);
 
   u8 Opcode;
   if (!rBinStrm.Read(Offset, Opcode))

@@ -23,12 +23,13 @@ public:
   virtual std::string GetName(void) const;
   virtual u8          GetDepth(void) const { return 1; }
   virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual void        Map(Document& rDoc, Architecture::VSPType const& rArchs);
+  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
+  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
 
 private:
-  typedef u16 BankType;
-  BankType GetNumberOfBank(void) const;
+  typedef u16 LogicalType;
+  BaseType GetNumberOfBank(void) const;
   enum     { BankSize = 0x4000 };
 
   GameBoyRom m_GameBoyRom;

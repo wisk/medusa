@@ -1,60 +1,61 @@
 #include "medusa/analyzer.hpp"
 #include "medusa/module.hpp"
+#include "medusa/expression_visitor.hpp"
 
 namespace medusa
 {
   bool AnalyzerInstruction::FindCrossReference(void)
   {
-    auto spInsn = std::dynamic_pointer_cast<Instruction const>(m_rDoc.GetCell(m_Addr));
-    if (spInsn == nullptr)
-      return false;
-
-    auto spArch = ModuleManager::Instance().GetArchitecture(spInsn->GetArchitectureTag());
+    auto spArch = ModuleManager::Instance().GetArchitecture(m_rInsn.GetArchitectureTag());
     if (spArch == nullptr)
       return false;
 
-    for (u8 CurOp = 0; CurOp < spInsn->GetNumberOfOperand(); ++CurOp)
+    for (u8 CurOp = 0; CurOp < m_rInsn.GetNumberOfOperand(); ++CurOp)
     {
-      auto spCurOprd = spInsn->GetOperand(CurOp);
+      auto spCurOprd = m_rInsn.GetOperand(CurOp);
 
       // HACK: We don't want to resolve MNEM ``ID''{, ...} which could be PC for instance
       if (CurOp == 0 && expr_cast<IdentifierExpression>(spCurOprd) != nullptr)
         continue;
-      if (expr_cast<BindExpression>(spCurOprd) != nullptr)
-        continue;
+
+      // Handle reference address (e.g. call [API])
+      Address RefAddr;
+      if (expr_cast<MemoryExpression>(spCurOprd) != nullptr)
+        if (m_rInsn.GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, m_rInsn), RefAddr, false))
+        {
+          m_rDoc.ChangeValueSize(RefAddr, m_rInsn.GetOperand(CurOp)->GetBitSize(), false);
+          m_rDoc.AddCrossReference(RefAddr, m_Addr);
+          m_rDoc.AddLabel(RefAddr, Label(RefAddr, Label::Data | Label::Global));
+        }
 
       Address DstAddr;
-      if (!spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, *spInsn), DstAddr))
-        continue;
-
-      auto spMemExpr = expr_cast<MemoryExpression>(spCurOprd);
-      if (spMemExpr != nullptr && spMemExpr->IsDereferencable())
+      if (m_rInsn.GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, m_rInsn), DstAddr))
       {
-        Address RefAddr;
-        if (spInsn->GetOperandReference(m_rDoc, CurOp, spArch->CurrentAddress(m_Addr, *spInsn), RefAddr, false))
-          m_rDoc.ChangeValueSize(RefAddr, spInsn->GetOperand(CurOp)->GetBitSize(), false);
+        // TODO(wisk): test if address is present in the document
+        // and check result of AddCrossReference
+
+        // Add cross reference if possible
+        m_rDoc.AddCrossReference(DstAddr, m_Addr);
+        MemoryArea MemArea;
+        if (!m_rDoc.GetMemoryArea(DstAddr, MemArea))
+          continue;
+
+        u16 LblTy = Label::Unknown;
+
+        switch (m_rInsn.GetSubType() & (Instruction::CallType | Instruction::JumpType))
+        {
+        case Instruction::CallType: LblTy = Label::Code | Label::Local; break;
+        case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
+        case Instruction::NoneType: LblTy = to_bool(MemArea.GetAccess() & MemoryArea::Access::Execute) ?
+          Label::Code | Label::Local : Label::Data | Label::Global;
+        default: break;
+        } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
+
+        m_rDoc.AddLabel(DstAddr, Label(DstAddr, LblTy), false);
       }
 
-      // Check if the destination is valid and is an instruction
-      auto spDstCell = m_rDoc.GetCell(DstAddr);
-      if (spDstCell == nullptr)
-        continue;
 
-      // Add XRef
-      m_rDoc.AddCrossReference(DstAddr, m_Addr);
 
-      u16 LblTy = Label::Unknown;
-
-      switch (spInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
-      {
-      case Instruction::CallType: LblTy = Label::Code | Label::Local; break;
-      case Instruction::JumpType: LblTy = Label::Code | Label::Local; break;
-      case Instruction::NoneType: LblTy = (m_rDoc.GetMemoryArea(DstAddr)->GetAccess() & MemoryArea::Execute) ?
-        Label::Code | Label::Local : Label::Data | Label::Global;
-      default: break;
-      } // switch (pInsn->GetSubType() & (Instruction::CallType | Instruction::JumpType))
-
-      m_rDoc.AddLabel(DstAddr, Label(DstAddr, LblTy), false);
     } // for (u8 CurOp = 0; CurOp < spInsn->GetNumberOfOperand(); ++CurOp)
 
     return true;

@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT CpuInformation
+class MEDUSA_EXPORT CpuInformation
 {
 public:
   enum Type

@@ -16,7 +16,7 @@ public:
   ScrollbarAddress(QWidget * parent, medusa::Medusa & core);
   virtual ~ScrollbarAddress(void);
 
-  virtual void OnAddressUpdated(medusa::Address::List const& rAddressList);
+  virtual void OnAddressUpdated(medusa::Address::Vector const& rAddresses);
 
   void Refresh(void);
 

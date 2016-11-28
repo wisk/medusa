@@ -13,7 +13,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Symbolic
+class MEDUSA_EXPORT Symbolic
 {
 private:
 
@@ -59,7 +59,7 @@ private:
 
 
 public:
-  class Medusa_EXPORT Context
+  class MEDUSA_EXPORT Context
   {
   public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
@@ -79,7 +79,7 @@ public:
   Symbolic(Document &rDoc);
   ~Symbolic(void);
 
-  typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::List& rNextAddresses)> Callback;
+  typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::Vector& rNextAddresses)> Callback;
 
   void FollowFunction(bool FollowFunction);
 
@@ -88,7 +88,7 @@ public:
 private:
   bool _ExecuteBlock(Symbolic::Context& rCtxt, Address const& rBlkAddr, Symbolic::Block& rBlk);
 
-  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::List& rNextAddresses) const;
+  bool _DetermineNextAddresses(Symbolic::Context& rSymCtxt, Instruction const& rInsn, Address const& rCurAddr, Address::Vector& rNextAddresses) const;
   bool _ApplyCallingEffect(Address const& rImpFunc, Track::Context& rTrkCtxt, Symbolic::Block& rBlk);
 
   Document& m_rDoc;
@@ -98,7 +98,7 @@ private:
   bool m_FollowFunction;
 };
 
-class Medusa_EXPORT Symbolic2
+class MEDUSA_EXPORT Symbolic2
 {
 public:
   Symbolic2(Document& rDoc);

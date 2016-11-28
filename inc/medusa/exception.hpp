@@ -9,7 +9,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Exception is a base exception type.
-class Medusa_EXPORT Exception
+class MEDUSA_EXPORT Exception
 {
 public:
   Exception(void)                                  : m_ExceptionMessage("Unknown exception")  {}
@@ -23,7 +23,7 @@ protected:
 };
 
 //! Exception_System is an exception related to a system error.
-class Medusa_EXPORT Exception_System : public Exception
+class MEDUSA_EXPORT Exception_System : public Exception
 {
 public:
   Exception_System(void) : Exception(ErrorCodeToMessage()) {}
@@ -36,7 +36,7 @@ private:
 };
 
 //! Exception_NotImplemented is n exception threw when a feature is not implemented.
-class Medusa_EXPORT Exception_NotImplemented : public Exception
+class MEDUSA_EXPORT Exception_NotImplemented : public Exception
 {
 public:
   Exception_NotImplemented(void) : Exception("Not implemented") {}

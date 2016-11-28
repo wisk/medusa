@@ -3,6 +3,7 @@
 #include <sstream>
 #include <boost/format.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 
 MEDUSA_NAMESPACE_USE
@@ -24,7 +25,7 @@ bool Track::Context::GetTrackAddress(u32 RegId, Address& rTrackedAddress)
 // system expression //////////////////////////////////////////////////////////
 
 SystemExpression::SystemExpression(std::string const& rName, Address const& rAddr)
-: m_Name(rName), m_Address(rAddr)
+  : m_Name(rName), m_Address(rAddr)
 {
 }
 
@@ -142,7 +143,7 @@ Expression::CompareType BindExpression::Compare(Expression::SPType spExpr) const
 // condition expression ///////////////////////////////////////////////////////
 
 ConditionExpression::ConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr)
-: m_Type(CondType), m_spRefExpr(spRefExpr), m_spTestExpr(spTestExpr)
+  : m_Type(CondType), m_spRefExpr(spRefExpr), m_spTestExpr(spTestExpr)
 {
 }
 
@@ -227,7 +228,7 @@ ConditionExpression::Type ConditionExpression::GetOppositeCondition(void) const
 }
 
 TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr)
-: ConditionExpression(CondType, spRefExpr, spTestExpr), m_spTrueExpr(spTrueExpr), m_spFalseExpr(spFalseExpr)
+  : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spTrueExpr(spTrueExpr), m_spFalseExpr(spFalseExpr)
 {
 }
 
@@ -320,7 +321,7 @@ Expression::CompareType TernaryConditionExpression::Compare(Expression::SPType s
 }
 
 IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr)
-: ConditionExpression(CondType, spRefExpr, spTestExpr), m_spThenExpr(spThenExpr), m_spElseExpr(spElseExpr)
+  : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spThenExpr(spThenExpr), m_spElseExpr(spElseExpr)
 {
 }
 
@@ -406,7 +407,7 @@ Expression::CompareType IfElseConditionExpression::Compare(Expression::SPType sp
 }
 
 WhileConditionExpression::WhileConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr)
-: ConditionExpression(CondType, spRefExpr, spTestExpr), m_spBodyExpr(spBodyExpr)
+  : ConditionExpression(CondType, spRefExpr, spTestExpr), m_spBodyExpr(spBodyExpr)
 {
 }
 
@@ -476,7 +477,7 @@ Expression::CompareType WhileConditionExpression::Compare(Expression::SPType spE
 // operation expression ///////////////////////////////////////////////////////
 
 AssignmentExpression::AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr)
-: m_spDstExpr(spDstExpr), m_spSrcExpr(spSrcExpr)
+  : m_spDstExpr(spDstExpr), m_spSrcExpr(spSrcExpr)
 {
   assert(spDstExpr != nullptr && "Destination expression is null");
   assert(spSrcExpr != nullptr && "Source expression is null");
@@ -537,7 +538,7 @@ Expression::CompareType AssignmentExpression::Compare(Expression::SPType spExpr)
 }
 
 OperationExpression::OperationExpression(Type OpType)
-: m_OpType(OpType)
+  : m_OpType(OpType)
 {
 }
 
@@ -555,9 +556,9 @@ std::string OperationExpression::ToString(void) const
     // unary
   case OpNot:          return "~";
   case OpNeg:          return "-";
-  case OpSwap:         return "⇄";
-  case OpBsf:          return "bsf";
-  case OpBsr:          return "bsr";
+  case OpSwap:         return "byte_swap()";
+  case OpBsf:          return "bsf()";
+  case OpBsr:          return "bsr()";
 
   case OpFNeg:         return "-{f}";
 
@@ -568,8 +569,8 @@ std::string OperationExpression::ToString(void) const
   case OpLls:          return "<<";
   case OpLrs:          return ">>{u}";
   case OpArs:          return ">>{s}";
-  case OpRol:          return "rol";
-  case OpRor:          return "ror";
+  case OpRol:          return "rol()";
+  case OpRor:          return "ror()";
   case OpAdd:          return "+";
   case OpSub:          return "-";
   case OpMul:          return "*";
@@ -577,11 +578,11 @@ std::string OperationExpression::ToString(void) const
   case OpUDiv:         return "/{u}";
   case OpSMod:         return "%{s}";
   case OpUMod:         return "%{u}";
-  case OpSext:         return "↗{s}";
-  case OpZext:         return "↗{z}";
-  case OpInsertBits:   return "<insert_bits>";
-  case OpExtractBits:  return "<extract_bits>";
-  case OpBcast:        return "<bcast>";
+  case OpSext:         return "sign_extend()";
+  case OpZext:         return "zero_extend()";
+  case OpInsertBits:   return "insert_bits()";
+  case OpExtractBits:  return "extract_bits()";
+  case OpBcast:        return "bcast()";
 
   case OpFAdd:         return "+{f}";
   case OpFSub:         return "-{f}";
@@ -609,42 +610,42 @@ u8 OperationExpression::GetOppositeOperation(void) const
   default:
     return OpUnk;
 
-  //case OpUnk:
-  //case OpNot:
-  //case OpNeg:
-  //case OpSwap:
-  //case OpBsf:
-  //case OpBsr:
+    //case OpUnk:
+    //case OpNot:
+    //case OpNeg:
+    //case OpSwap:
+    //case OpBsf:
+    //case OpBsr:
 
-  //case OpFNeg:
+    //case OpFNeg:
 
-  //case OpAnd:
-  //case OpOr:
-  //case OpXor:
-  //case OpLls:
-  //case OpLrs:
-  //case OpArs:
-  //case OpRol:
-  //case OpRor:
+    //case OpAnd:
+    //case OpOr:
+    //case OpXor:
+    //case OpLls:
+    //case OpLrs:
+    //case OpArs:
+    //case OpRol:
+    //case OpRor:
   case OpAdd: return OpSub;
   case OpSub: return OpAdd;
-  //case OpMul:
-  //case OpSDiv:
-  //case OpUDiv:
-  //case OpSMod:
-  //case OpUMod:
-  //case OpSext:
-  //case OpZext:
-  //case OpInsertBits:
-  //case OpExtractBits:
-  //case OpClearBits:
-  //case OpBcast:
+    //case OpMul:
+    //case OpSDiv:
+    //case OpUDiv:
+    //case OpSMod:
+    //case OpUMod:
+    //case OpSext:
+    //case OpZext:
+    //case OpInsertBits:
+    //case OpExtractBits:
+    //case OpClearBits:
+    //case OpBcast:
 
   case OpFAdd: return OpFSub;
   case OpFSub: return OpFAdd;
-  //case OpFMul:
-  //case OpFDiv:
-  //case OpFMod:
+    //case OpFMul:
+    //case OpFDiv:
+    //case OpFMod:
   }
 }
 
@@ -660,7 +661,10 @@ UnaryOperationExpression::~UnaryOperationExpression(void)
 
 std::string UnaryOperationExpression::ToString(void) const
 {
-  return (boost::format("%1%(%2%)") % OperationExpression::ToString() % m_spExpr->ToString()).str();
+  auto OpStr = OperationExpression::ToString();
+  if (boost::algorithm::ends_with(OpStr, "()"))
+    OpStr.erase(OpStr.length() - 2, 2);
+  return OpStr + "(" + m_spExpr->ToString() + ")";
 }
 
 Expression::SPType UnaryOperationExpression::Clone(void) const
@@ -715,15 +719,29 @@ BinaryOperationExpression::~BinaryOperationExpression(void)
 
 std::string BinaryOperationExpression::ToString(void) const
 {
-  std::string Res("(");
-  Res += m_spLeftExpr->ToString();
-  Res += " ";
-  Res += OperationExpression::ToString();
-  Res += " ";
-  Res += m_spRightExpr->ToString();
-  Res += ")";
+  std::string Res;
+  auto OpStr = OperationExpression::ToString();
+  if (boost::algorithm::ends_with(OpStr, "()"))
+  {
+    OpStr.erase(OpStr.length() - 2, 2);
+    Res = OpStr;
+    Res += "(";
+    Res += m_spLeftExpr->ToString();
+    Res += ", ";
+    Res += m_spRightExpr->ToString();
+    Res += ")";
+  }
+  else
+  {
+    Res = "(";
+    Res += m_spLeftExpr->ToString();
+    Res += " ";
+    Res += OperationExpression::ToString();
+    Res += " ";
+    Res += m_spRightExpr->ToString();
+    Res += ")";
+  }
   return Res;
-  //return (boost::format("(%1% %2% %3%)") % m_spLeftExpr->ToString() % OperationExpression::ToString() % m_spRightExpr->ToString()).str();
 }
 
 Expression::SPType BinaryOperationExpression::Clone(void) const
@@ -791,12 +809,12 @@ void BinaryOperationExpression::SwapLeftExpressions(BinaryOperationExpression::S
 // constant expression ////////////////////////////////////////////////////////
 
 BitVectorExpression::BitVectorExpression(u16 BitSize, ap_int Value)
-: m_Value(BitSize, Value)
+  : m_Value(BitSize, Value)
 {
 }
 
 BitVectorExpression::BitVectorExpression(BitVector const& rValue)
-: m_Value(rValue)
+  : m_Value(rValue)
 {
 }
 
@@ -1018,7 +1036,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 // identifier expression //////////////////////////////////////////////////////
 
 IdentifierExpression::IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo)
-: m_Id(Id), m_pCpuInfo(pCpuInfo) {}
+  : m_Id(Id), m_pCpuInfo(pCpuInfo) {}
 
 
 std::string IdentifierExpression::ToString(void) const
@@ -1189,7 +1207,7 @@ bool VectorIdentifierExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext*
 }
 
 TrackExpression::TrackExpression(Expression::SPType spTrkExpr, Address const& rCurAddr, u8 Pos)
-: m_spTrkExpr(spTrkExpr), m_CurAddr(rCurAddr), m_Pos(Pos) {}
+  : m_spTrkExpr(spTrkExpr), m_CurAddr(rCurAddr), m_Pos(Pos) {}
 
 
 TrackExpression::~TrackExpression(void)
@@ -1220,7 +1238,22 @@ Expression::CompareType TrackExpression::Compare(Expression::SPType spExpr) cons
 {
   auto spCmpExpr = expr_cast<TrackExpression>(spExpr);
   if (spCmpExpr == nullptr)
+  {
+    // Track and symbolic are actually same expression
+    if (auto spSymExpr = expr_cast<SymbolicExpression>(spExpr))
+    {
+      if (spSymExpr->GetExpression() == nullptr)
+        return CmpDifferent;
+      if (m_spTrkExpr == nullptr)
+        return CmpDifferent;
+      if (m_CurAddr != spSymExpr->GetAddress())
+        return CmpDifferent;
+      if (m_spTrkExpr->Compare(spSymExpr->GetExpression()) != CmpIdentical)
+        return CmpDifferent;
+      return CmpIdentical;
+    }
     return CmpDifferent;
+  }
   if (m_CurAddr != spCmpExpr->GetTrackAddress())
     return CmpSameExpression;
   if (m_Pos != spCmpExpr->GetTrackPosition())
@@ -1288,7 +1321,7 @@ Expression::CompareType VariableExpression::Compare(Expression::SPType spExpr) c
 // memory expression //////////////////////////////////////////////////////////
 
 MemoryExpression::MemoryExpression(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference)
-: m_AccessSizeInBit(AccessSize), m_spBaseExpr(spExprBase), m_spOffExpr(spExprOffset), m_Dereference(Dereference)
+  : m_AccessSizeInBit(AccessSize), m_spBaseExpr(spExprBase), m_spOffExpr(spExprOffset), m_Dereference(Dereference)
 {
   assert(spExprOffset != nullptr);
 }
@@ -1406,10 +1439,10 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   if (m_spOffExpr->Read(pCpuCtxt, pMemCtxt, OffsetData) == false)
     return false;
 
-  TBase Base = BaseData.size() != 1 ? 0x0 : BaseData.front().ConvertTo<TBase>();
+  BaseType Base = BaseData.size() != 1 ? 0x0 : BaseData.front().ConvertTo<BaseType>();
   if (OffsetData.size() != 1)
     return false;
-  TOffset OffsetValue = OffsetData.front().ConvertTo<TOffset>();
+  OffsetType OffsetValue = OffsetData.front().ConvertTo<OffsetType>();
   rAddress = Address(Base, OffsetValue);
   return true;
 }
@@ -1467,7 +1500,7 @@ Expression::CompareType MemoryExpression::Compare(Expression::SPType spExpr) con
 // symbolic expression ////////////////////////////////////////////////////////
 
 SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr)
-: m_Type(SymType), m_Value(rValue), m_Address(rAddr), m_spExpr(spExpr) {}
+  : m_Type(SymType), m_Value(rValue), m_Address(rAddr), m_spExpr(spExpr) {}
 
 std::string SymbolicExpression::ToString(void) const
 {
@@ -1483,7 +1516,7 @@ std::string SymbolicExpression::ToString(void) const
   default:                pType = "???";      break;
   }
   if (m_spExpr == nullptr)
-    return (boost::format("Sym(%s, \"%s\", %s)")   % pType % m_Value % m_Address.ToString()).str();
+    return (boost::format("Sym(%s, \"%s\", %s)") % pType % m_Value % m_Address.ToString()).str();
   return (boost::format("Sym(%s, \"%s\", %s, %s)") % pType % m_Value % m_Address.ToString() % m_spExpr->ToString()).str();
 }
 
@@ -1494,7 +1527,9 @@ Expression::SPType SymbolicExpression::Clone(void) const
 
 u32 SymbolicExpression::GetBitSize(void) const
 {
-  return 0;
+  if (m_spExpr == nullptr)
+    return 0;
+  return m_spExpr->GetBitSize();
 }
 
 Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
@@ -1504,6 +1539,9 @@ Expression::SPType SymbolicExpression::Visit(ExpressionVisitor* pVisitor)
 
 bool SymbolicExpression::UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr)
 {
+  if (m_spExpr == nullptr)
+    return false;
+
   if (m_spExpr->Compare(spOldExpr) == Expression::CmpIdentical)
   {
     m_spExpr = spNewExpr;
@@ -1517,14 +1555,30 @@ Expression::CompareType SymbolicExpression::Compare(Expression::SPType spExpr) c
 {
   auto spCmpExpr = expr_cast<SymbolicExpression>(spExpr);
   if (spCmpExpr == nullptr)
+  {
+    if (auto spTrkExpr = expr_cast<TrackExpression>(spExpr))
+    {
+      if (m_spExpr == nullptr)
+        return CmpDifferent;
+      if (spTrkExpr->GetTrackedExpression() == nullptr)
+        return CmpDifferent;
+      if (m_Address != spTrkExpr->GetTrackAddress())
+        return CmpDifferent;
+      if (m_spExpr->Compare(spTrkExpr->GetTrackedExpression()) != CmpIdentical)
+        return CmpDifferent;
+      return CmpIdentical;
+    }
     return CmpDifferent;
+  }
   if (m_Address != spCmpExpr->GetAddress())
     return CmpSameExpression;
   if (m_Value != spCmpExpr->GetValue())
     return CmpSameExpression;
   if (m_Type != spCmpExpr->GetType())
     return CmpSameExpression;
-  if (m_spExpr->Compare(spCmpExpr->GetExpression()) != CmpIdentical)
+  if (m_spExpr == nullptr)
+    return spCmpExpr->GetExpression() == nullptr ? CmpIdentical : CmpSameExpression;
+  else if (m_spExpr->Compare(spCmpExpr->GetExpression()) != CmpIdentical)
     return CmpSameExpression;
   return CmpIdentical;
 }

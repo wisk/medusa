@@ -20,7 +20,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! BinaryStream is a generic class to handle memory access.
-class Medusa_EXPORT BinaryStream
+class MEDUSA_EXPORT BinaryStream
 {
 public:
   typedef std::shared_ptr<BinaryStream> SPType;
@@ -68,39 +68,39 @@ public:
   void SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, s8  &rData) const
+  bool Read(OffsetType Position, s8  &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, u8  &rData) const
+  bool Read(OffsetType Position, u8  &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, s16 &rData) const
+  bool Read(OffsetType Position, s16 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, u16 &rData) const
+  bool Read(OffsetType Position, u16 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, s32 &rData) const
+  bool Read(OffsetType Position, s32 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, u32 &rData) const
+  bool Read(OffsetType Position, u32 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, s64 &rData) const
+  bool Read(OffsetType Position, s64 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(TOffset Position, u64 &rData) const
+  bool Read(OffsetType Position, u64 &rData) const
   { return ReadGeneric(Position, rData); }
 
   template<typename _Tp>
-  bool Read(TOffset Position, u64& rData, bool SignExtend) const
+  bool Read(OffsetType Position, u64& rData, bool SignExtend) const
   {
     _Tp Val;
 
@@ -113,7 +113,7 @@ public:
     return true;
   }
 
-  bool Read(TOffset Position, u64& rData, u32 Size, bool SignExtend) const
+  bool Read(OffsetType Position, u64& rData, u32 Size, bool SignExtend) const
   {
     switch (Size)
     {
@@ -126,7 +126,7 @@ public:
   }
 
   template<typename T, size_t N>
-  bool Read(TOffset Position, T (&rData)[N]) const
+  bool Read(OffsetType Position, T (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
@@ -137,21 +137,21 @@ public:
     return true;
   }
 
-  u16 StringLength(TOffset Position) const
+  u16 StringLength(OffsetType Position) const
   {
     if (Position > m_Size)
       return 0;
-    u16 Limit = static_cast<u16>(static_cast<u64>(m_Size) - Position); // TODO m_Size should be u64?
+    auto Limit = static_cast<OffsetType>(m_Size) - Position; // TODO m_Size should be u64?
     if (Limit == 0)
       return 0;
     char const* pDst = static_cast<char const*>(m_pBuffer) + Position;
-    u16 StrLen = static_cast<u16>(::strnlen(pDst, Limit));
+    auto StrLen = static_cast<u16>(::strnlen(pDst, Limit));
     if (pDst[StrLen] != '\0')
       return 0;
     return StrLen;
   }
 
-  bool Read(TOffset Position, std::string& rString) const
+  bool Read(OffsetType Position, std::string& rString) const
   {
     u16 StrLen = StringLength(Position);
     if (StrLen == 0)
@@ -163,13 +163,13 @@ public:
   }
 
   //! This method reads a buffer, no swap will be performed.
-  bool Read(TOffset Position, void* pData, size_t Length) const
+  bool Read(OffsetType Position, void* pData, size_t Length) const
   {
     return Read(Position, static_cast<u8*>(pData), Length);
   }
 
   //! This method reads a buffer, no swap will be performed.
-  bool Read(TOffset Position, u8* pData, size_t Length) const
+  bool Read(OffsetType Position, u8* pData, size_t Length) const
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -182,28 +182,28 @@ public:
     return true;
   }
 
-  bool Write(TOffset Position, s8  const& rData)
+  bool Write(OffsetType Position, s8  const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(TOffset Position, u8  const& rData)
-  { return WriteGeneric(Position, rData); }
-
-  bool Write(TOffset Position, s16 const& rData)
-  { return WriteGeneric(Position, rData); }
-  bool Write(TOffset Position, u16 const& rData)
+  bool Write(OffsetType Position, u8  const& rData)
   { return WriteGeneric(Position, rData); }
 
-  bool Write(TOffset Position, s32 const& rData)
+  bool Write(OffsetType Position, s16 const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(TOffset Position, u32 const& rData)
+  bool Write(OffsetType Position, u16 const& rData)
   { return WriteGeneric(Position, rData); }
 
-  bool Write(TOffset Position, s64 const& rData)
+  bool Write(OffsetType Position, s32 const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(TOffset Position, u64 const& rData)
+  bool Write(OffsetType Position, u32 const& rData)
+  { return WriteGeneric(Position, rData); }
+
+  bool Write(OffsetType Position, s64 const& rData)
+  { return WriteGeneric(Position, rData); }
+  bool Write(OffsetType Position, u64 const& rData)
   { return WriteGeneric(Position, rData); }
 
   template<typename T, size_t N>
-  bool Write(TOffset Position, T const (&rData)[N]) const
+  bool Write(OffsetType Position, T const (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
@@ -215,12 +215,12 @@ public:
     return true;
   }
 
-  bool Write(TOffset Position, void const* pData, size_t Length)
+  bool Write(OffsetType Position, void const* pData, size_t Length)
   {
     return Write(Position, static_cast<u8 const*>(pData), Length);
   }
 
-  bool Write(TOffset Position, u8 const* pData, size_t Length)
+  bool Write(OffsetType Position, u8 const* pData, size_t Length)
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -233,7 +233,7 @@ public:
     return true;
   }
 
-  bool Write(TOffset Position, int Val, size_t Length)
+  bool Write(OffsetType Position, int Val, size_t Length)
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -259,7 +259,7 @@ public:
 
 protected:
   template <typename DataType>
-  bool ReadGeneric(TOffset Position, DataType& rData) const
+  bool ReadGeneric(OffsetType Position, DataType& rData) const
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -276,7 +276,7 @@ protected:
   }
 
   template <typename DataType>
-  bool WriteGeneric(TOffset Position, DataType& rData)
+  bool WriteGeneric(OffsetType Position, DataType& rData)
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -301,7 +301,7 @@ protected:
 };
 
 //! FileBinaryStream is a generic class for file access.
-class Medusa_EXPORT FileBinaryStream : public BinaryStream
+class MEDUSA_EXPORT FileBinaryStream : public BinaryStream
 {
 public:
   FileBinaryStream(Path const& rFilePath = Path());
@@ -342,12 +342,12 @@ public:
   void Close(void);
 
 protected:
-  TFileHandle             m_FileHandle;
-  TMapHandle              m_MapHandle;
+  FileHandleType m_FileHandle;
+  MapHandleType  m_MapHandle;
 };
 
 //! MemoryBinaryStream handle memory from a raw pointer but its duplicated first.
-class Medusa_EXPORT MemoryBinaryStream : public BinaryStream
+class MEDUSA_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
   MemoryBinaryStream(void const* pMem = nullptr, u32 MemSize = 0);

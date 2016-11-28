@@ -8,7 +8,7 @@ namespace medusa
 {
   typedef std::unordered_map<std::string, Expression::SPType> NamedExpressionType;
 
-  class Medusa_EXPORT ExpressionPattern
+  class MEDUSA_EXPORT ExpressionPattern
   {
   public:
     typedef std::shared_ptr<ExpressionPattern> SPType;
@@ -31,7 +31,7 @@ namespace medusa
     std::string m_PatternName;
   };
 
-  class Medusa_EXPORT ExpressionFilter
+  class MEDUSA_EXPORT ExpressionFilter
   {
   public:
     ExpressionFilter(ExpressionPattern::SPType spPattern);
@@ -49,7 +49,7 @@ namespace medusa
 
   namespace Pattern
   {
-    class Medusa_EXPORT Any : public ExpressionPattern
+    class MEDUSA_EXPORT Any : public ExpressionPattern
     {
     public:
       Any(std::string const& rPatternName) : ExpressionPattern(rPatternName) {}
@@ -66,7 +66,7 @@ namespace medusa
       }
     };
 
-    class Medusa_EXPORT Callback : public ExpressionPattern
+    class MEDUSA_EXPORT Callback : public ExpressionPattern
     {
     public:
       typedef std::function<bool(Expression::SPType spExpr)> Type;
@@ -91,7 +91,7 @@ namespace medusa
       Type m_Callback;
     };
 
-    class Medusa_EXPORT Memory : public ExpressionPattern
+    class MEDUSA_EXPORT Memory : public ExpressionPattern
     {
     public:
       Memory(ExpressionPattern::SPType spOffsetPattern)

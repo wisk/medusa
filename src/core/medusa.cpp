@@ -10,11 +10,12 @@
 #include <list>
 #include <algorithm>
 #include <boost/filesystem/operations.hpp>
+#include <boost/format.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
 Medusa::Medusa(void)
-  : m_TaskManager([] (Task const* pTask) { Log::Write("core") << "Task \"" << pTask->GetName() << "\" is done" << LogEnd; })
+  : m_TaskManager([] (Task const* pTask) { })
   , m_Document()
   , m_Analyzer()
 {
@@ -80,7 +81,7 @@ bool Medusa::Start(
   spBinaryStream->SetEndianness(spArchitectures.front()->GetEndianness()); // LATER: does it always true?
 
   /* Set the database to the document */
-  m_Document.Use(spDatabase);
+  m_Document.Open(spDatabase);
 
   /* Map the file to the document */
   spLoader->Map(m_Document, spArchitectures); // Should it be async?
@@ -107,20 +108,21 @@ bool Medusa::Start(
   /* Analyze all functions */
   if (spOperatingSystem)
   {
-    auto MCells = m_Document.GetMultiCells();
-    for (auto const &MCell : MCells)
+    spDatabase->ForEachLabel([&](Address const& rAddr, Label const& rLbl)
     {
-      if (MCell.second->GetType() != MultiCell::FunctionType)
-        continue;
-      spOperatingSystem->AnalyzeFunction(m_Document, MCell.first);
-    }
+      if (!rLbl.IsCode())
+        return;
+      if (rLbl.IsImported())
+        return;
+      spOperatingSystem->AnalyzeFunction(m_Document, rAddr);
+    });
   }
 
   return true;
 }
 
 bool Medusa::IgnoreDatabasePath(
-  Path& rDatabasePath,
+        Path& rDatabasePath,
   std::list<Filter> const& rExtensionFilter)
 {
   rDatabasePath = boost::filesystem::unique_path();
@@ -140,7 +142,9 @@ bool Medusa::DefaultModuleSelector(BinaryStream::SPType spBinStrm, Database::SPT
     return false;
   rspLoader = AllLdrs.front();
   rspArchitectures = rModMgr.GetArchitectures();
-  rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+
+  rspLoader->FilterAndConfigureArchitectures(rspArchitectures); // It filters architecture for GetArchitectureTag
+
   if (rspArchitectures.empty())
     return false;
   rspOperatingSystem = rModMgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
@@ -199,23 +203,15 @@ bool Medusa::NewDocument(
       return false;
     }
 
-    bool Force = false;
-    Path DbPath = spBinStrm->GetPath();
-    DbPath += spCurDb->GetExtension().c_str();
-    while (!spCurDb->Create(DbPath, Force))
-    {
-      Log::Write("core") << "unable to create database file \"" << DbPath.string() << "\"" << LogEnd;
-      Path NewDbPath = DbPath;
-      std::list<Filter> ExtList;
-      ExtList.push_back(std::make_tuple(spCurDb->GetName(), spCurDb->GetExtension()));
-      if (!AskDatabase(NewDbPath, ExtList))
-        return false;
-      if (NewDbPath.empty())
-        return false;
-      if (NewDbPath == DbPath)
-        Force = true;
-      DbPath = std::move(NewDbPath);
-    }
+    bool Force = true;
+    Path DbPath;
+    std::list<Filter> ExtList;
+    if (!AskDatabase(DbPath, ExtList))
+      return false;
+    if (DbPath.empty())
+      return false;
+    if (!spCurDb->Create(DbPath, Force))
+      return false;
 
     if (!BeforeStart())
       return false;
@@ -279,12 +275,11 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
     if (ModPath.empty())
       ModPath = ".";
     rModMgr.LoadDatabases(ModPath);
-    rModMgr.LoadModules(ModPath, *spDb->GetBinaryStream());
+    rModMgr.LoadModules(ModPath, spDb->GetBinaryStream());
 
     Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
 
-    m_Document.Use(spDb);
-
+    m_Document.Open(spDb);
     auto const& ArchTags = spDb->GetArchitectureTags();
     auto const& AllArchs = rModMgr.GetArchitectures();
     for (auto itArchTag = std::begin(ArchTags), itEnd = std::end(ArchTags); itArchTag != itEnd; ++itArchTag)
@@ -310,17 +305,16 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
 
 bool Medusa::CloseDocument(void)
 {
-  m_Document.RemoveAll();
+  m_Document.Close();
   return true;
 }
 
 void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
 {
   Cell::SPType spCell = nullptr;
-
   if (Mode == 0)
   {
-    spCell = GetCell(rAddr);
+    spCell = m_Document.GetCell(rAddr);
     if (spCell == nullptr)
       return;
     Mode = spCell->GetData()->GetMode();
@@ -330,11 +324,10 @@ void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
   {
     if (spCell == nullptr)
     {
-      spCell = GetCell(rAddr);
+      spCell = m_Document.GetCell(rAddr);
       if (spCell == nullptr)
         return;
     }
-
     spArch = ModuleManager::Instance().GetArchitecture(spCell->GetArchitectureTag());
     if (spArch == nullptr)
       return;
@@ -351,32 +344,12 @@ bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }
 
-Cell::SPType Medusa::GetCell(Address const& rAddr)
-{
-  return m_Document.GetCell(rAddr);
-}
-
-Cell::SPType const Medusa::GetCell(Address const& rAddr) const
-{
-  return m_Document.GetCell(rAddr);
-}
-
 bool Medusa::FormatCell(
   Address       const& rAddress,
   Cell          const& rCell,
   PrintData          & rPrintData) const
 {
   return m_Analyzer.FormatCell(m_Document, rAddress, rCell, rPrintData);
-}
-
-MultiCell* Medusa::GetMultiCell(Address const& rAddr)
-{
-  return m_Document.GetMultiCell(rAddr);
-}
-
-MultiCell const* Medusa::GetMultiCell(Address const& rAddr) const
-{
-  return m_Document.GetMultiCell(rAddr);
 }
 
 bool Medusa::FormatMultiCell(
@@ -387,22 +360,29 @@ bool Medusa::FormatMultiCell(
   return m_Analyzer.FormatMultiCell(m_Document, rAddress, rMultiCell, rPrintData);
 }
 
-Address Medusa::MakeAddress(TOffset Offset)
+bool Medusa::FormatGraph(
+  Graph const& rGraph,
+  GraphData& rGraphData) const
+{
+  return m_Analyzer.FormatGraph(m_Document, rGraph, rGraphData);
+}
+
+Address Medusa::MakeAddress(OffsetType Offset)
 {
   return MakeAddress(Loader::SPType(), Architecture::SPType(), 0x0, Offset);
 }
 
-Address Medusa::MakeAddress(TBase Base, TOffset Offset)
+Address Medusa::MakeAddress(BaseType Base, OffsetType Offset)
 {
   return MakeAddress(Loader::SPType(), Architecture::SPType(), Base, Offset);
 }
 
-Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, OffsetType Offset)
 {
   return MakeAddress(pLoader, pArch, 0x0, Offset);
 }
 
-Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, TBase Base, TOffset Offset)
+Address Medusa::MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, BaseType Base, OffsetType Offset)
 {
   Address NewAddr = m_Document.MakeAddress(Base, Offset);
   if (NewAddr.GetAddressingType() != Address::UnknownType)

@@ -15,13 +15,13 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Module is only used to load medusa modules.
-class Medusa_EXPORT Module
+class MEDUSA_EXPORT Module
 {
 public:
   Module(void) {}
   ~Module(void) {}
 
-  void* Load(boost::filesystem::path const& ModulePath)
+  void* Load(Path const& ModulePath)
   {
     return ImplLoadLibrary(ModulePath);
   }
@@ -29,7 +29,7 @@ public:
   static char const* GetExtension(void);
 
   template<typename FuncType>
-  FuncType Load(boost::filesystem::path const& ModulePath, std::string const& FunctionName)
+  FuncType Load(Path const& ModulePath, std::string const& FunctionName)
   {
     void* pModule = ImplLoadLibrary(ModulePath);
     if (pModule == nullptr)
@@ -78,7 +78,7 @@ DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",   "G
 
 #undef DECL_MODULE_TRAITS
 
-class Medusa_EXPORT ModuleManager
+class MEDUSA_EXPORT ModuleManager
 {
 private:
   ModuleManager(void) : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}
@@ -93,6 +93,8 @@ public:
 
   static ModuleManager& Instance(void)
   {
+    static std::mutex		mutex;
+    std::lock_guard<std::mutex> lock(mutex);
     static ModuleManager ModMgr;
 
     return ModMgr;
@@ -123,8 +125,27 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
+  template<typename ModuleType>
+  bool ActionLoad(
+      Path const& rModulePath,
+      ModuleType pModule,
+      std::string const MsgModule,
+      std::string const MsgError,
+      std::function<void (ModuleType)> pFct)
+  {
+    Log::Write("core") << rModulePath.string() << " " << MsgModule << LogEnd;
+    if (pModule == nullptr)
+    {
+      Log::Write("core") << MsgError << LogEnd;
+      return false;
+    }
+    pFct(pModule);
+    return true;
+}
+
   void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
+  bool LoadCommonFromModule(Path const& rModulePath, void* const pModule, Module & rModule);
   void UnloadModules(void);
 
   // Architecture

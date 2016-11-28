@@ -1,5 +1,6 @@
 #include "medusa/analyzer.hpp"
 
+#include "medusa/version.hpp"
 #include "medusa/function.hpp"
 #include "medusa/character.hpp"
 #include "medusa/string.hpp"
@@ -12,6 +13,16 @@
 
 #include <list>
 #include <stack>
+#include <vector>
+
+#ifdef MEDUSA_HAS_OGDF
+# include <ogdf/basic/Graph.h>
+# include <ogdf/basic/GraphAttributes.h>
+# include <ogdf/layered/SugiyamaLayout.h>
+# include <ogdf/layered/MedianHeuristic.h>
+# include <ogdf/layered/OptimalRanking.h>
+# include <ogdf/layered/OptimalHierarchyLayout.h>
+#endif
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -54,7 +65,7 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
           return;
 
         BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
-        TOffset StrOff;
+        OffsetType StrOff;
 
         if (!rDoc.ConvertAddressToFileOffset(rAddress, StrOff))
           return;
@@ -82,15 +93,13 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
         if (Utf16Str.IsFinalCharacter(Utf16Char) && RawLen != 0x0)
         {
           RawLen += sizeof(Utf16Char);
-          auto pStrBuf = new u8[RawLen];
-          if (!rBinStrm.Read(StrOff, pStrBuf, RawLen))
+          auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
+          if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
           {
             Log::Write("core") << "Unable to read utf-16 string at " << rAddress << LogEnd;
-            delete[] pStrBuf;
             return;
           }
-          std::string CvtStr = Utf16Str.ConvertToUtf8(pStrBuf, RawLen);
-          delete[] pStrBuf;
+          std::string CvtStr = Utf16Str.ConvertToUtf8(upStrBuf.get(), RawLen);
           if (CvtStr.empty())
           {
             Log::Write("core") << "Unable to convert utf-16 string at " << rAddress << LogEnd;
@@ -138,6 +147,15 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
 
 Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address const& rAddr)
 {
+  if (rTaskName == "disassemble one instruction")
+  {
+    return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)
+    {
+      AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
+      AnlzDisasm.DisassembleOneInstruction();
+    });
+  }
+
   if (rTaskName == "disassemble")
   {
     return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [](Document& rDoc, Address const& rAddr)
@@ -192,9 +210,8 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address
   {
     return new AnalyzerTaskAddress(rTaskName, rDoc, rAddr, [&rArch, Mode](Document& rDoc, Address const& rAddr)
     {
-      // LATER(wisk): rArch could be invalided, it'd be wiser to use architecture tag instead
       AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
-      AnlzDisasm.DisassembleWith(rArch, Mode);
+      AnlzDisasm.Disassemble(rArch.GetTag(), Mode);
     });
   }
 
@@ -230,6 +247,146 @@ bool Analyzer::FormatMultiCell(Document const& rDoc, Address const& rAddress, Mu
   if (spArch == nullptr)
     return false;
   return spArch->FormatMultiCell(rDoc, rAddress, rMultiCell, rPrintData);
+}
+
+bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData& rGraphData) const
+{
+  bool Res = true;
+
+#ifdef MEDUSA_HAS_OGDF
+  auto const& BoostGraph = rGraph();
+  ogdf::Graph OgdfGraph;
+  ogdf::GraphAttributes OgdfGraphAttr(OgdfGraph, ogdf::GraphAttributes::nodeGraphics | ogdf::GraphAttributes::edgeGraphics);
+
+  u16 MaxVtxWidth = 0, MaxVtxHeight = 0;
+  std::unordered_map<Address, ogdf::node> OgdfNodes;
+#endif
+
+
+  // Fill PrintData for all vertices
+  rGraph.ForEachVertex([&](Graph::VertexProperties const& rVtxProp)
+  {
+    if (!Res)
+      return;
+
+    PrintData VtxPrintData;
+
+    for (auto const& rAddr : rVtxProp.GetAddresses())
+    {
+      VtxPrintData(rAddr);
+
+      auto spCurCell = rDoc.GetCell(rAddr);
+      if (spCurCell == nullptr)
+      {
+        Res = false;
+        return;
+      }
+
+      if (!FormatCell(rDoc, rAddr, *spCurCell, VtxPrintData))
+      {
+        Res = false;
+        return;
+      }
+
+      VtxPrintData.AppendNewLine();
+    }
+
+    rGraphData.AddVertex(VtxPrintData);
+
+#ifdef MEDUSA_HAS_OGDF
+    // Add the current vertex to OGDF graph
+    Address VtxAddr;
+    if (!VtxPrintData.GetFirstAddress(VtxAddr))
+    {
+      Res = false;
+      return;
+    }
+    auto NewNode  = OgdfGraph.newNode();
+    OgdfNodes[VtxAddr] = NewNode;
+
+    u16 VtxWidth  = VtxPrintData.GetWidth();
+    u16 VtxHeight = VtxPrintData.GetHeight();
+
+    OgdfGraphAttr.width()[NewNode]  = VtxWidth;
+    OgdfGraphAttr.height()[NewNode] = VtxHeight;
+
+    MaxVtxWidth  = std::max(MaxVtxWidth, VtxWidth);
+    MaxVtxHeight = std::max(MaxVtxHeight, VtxHeight);
+#endif
+  });
+
+#ifdef MEDUSA_HAS_OGDF
+
+  // Add all edges
+  auto const& rBoostGraph = rGraph();
+  auto EdgesRange = boost::edges(rBoostGraph);
+  std::vector<std::tuple<Graph::EdgeDescriptor, ogdf::edge>> Edges;
+  //double Factor = 1.8;
+  for (auto itEdge = EdgesRange.first; itEdge != EdgesRange.second; ++itEdge)
+  {
+    auto const& rSrcVtx = rBoostGraph[itEdge->m_source];
+    auto const& rTgtVtx = rBoostGraph[itEdge->m_target];
+
+    Address SrcVtxAddr, TgtVtxAddr;
+
+    if (!rSrcVtx.GetFirstAddress(SrcVtxAddr) || !rTgtVtx.GetFirstAddress(TgtVtxAddr))
+      return false;
+
+    auto itOgdfSrcNode = OgdfNodes.find(SrcVtxAddr);
+    auto itOgdfTgtNode = OgdfNodes.find(TgtVtxAddr);
+
+    if (itOgdfSrcNode == std::end(OgdfNodes) || itOgdfTgtNode == std::end(OgdfNodes))
+      return false;
+
+    auto* pOgdfEdge  = OgdfGraph.newEdge(itOgdfSrcNode->second, itOgdfTgtNode->second);
+
+    Edges.push_back(std::make_tuple(*itEdge, pOgdfEdge));
+  }
+
+  // Let OGDF finds a layout for the graph
+  auto OHL = new ogdf::OptimalHierarchyLayout;
+  OHL->nodeDistance(30.0);
+  OHL->layerDistance(10.0);
+  OHL->weightBalancing(0.0);
+  OHL->weightSegments(0.0);
+
+  ogdf::SugiyamaLayout SL;
+  SL.setRanking(new ogdf::OptimalRanking);
+  SL.setCrossMin(new ogdf::MedianHeuristic);
+  SL.alignSiblings(true);
+  SL.setLayout(OHL);
+  SL.call(OgdfGraphAttr);
+
+  // Update all vertices with its position
+  for (auto const& OgdfNode : OgdfNodes)
+  {
+    auto VtxX = OgdfGraphAttr.x(std::get<1>(OgdfNode));
+    auto VtxY = OgdfGraphAttr.y(std::get<1>(OgdfNode));
+    if (!rGraphData.SetVertexPosition(
+      std::get<0>(OgdfNode), static_cast<u16>(VtxX), static_cast<u16>(VtxY))
+    )
+      return false;
+  }
+
+  // Initialize all edges
+  for (auto const& rEdge : Edges)
+  {
+    auto const& rEdgeDesc = std::get<0>(rEdge);
+    auto*       pOgdfEdge = std::get<1>(rEdge);
+
+    auto const& rOgdfBends = OgdfGraphAttr.bends(pOgdfEdge);
+
+    GraphData::BendsType Bends;
+    for (auto const& rOgdfBend : rOgdfBends)
+    {
+      Bends.push_back(std::make_tuple(static_cast<u16>(rOgdfBend.m_x), static_cast<u16>(rOgdfBend.m_y)));
+    }
+
+    rGraphData.SetBends(rEdgeDesc, Bends);
+  }
+#endif
+
+  return Res;
 }
 
 MEDUSA_NAMESPACE_END

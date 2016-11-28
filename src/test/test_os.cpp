@@ -1,16 +1,12 @@
-#define BOOST_TEST_MODULE TestOperatingSystem
-#include <boost/test/unit_test.hpp> 
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 
 #include <medusa/os.hpp>
 
-BOOST_AUTO_TEST_SUITE(operating_system_test_suite)
-
-BOOST_AUTO_TEST_CASE(os_unix_test_case)
+TEST_CASE("", "[os_unix]")
 {
 }
 
-BOOST_AUTO_TEST_CASE(os_windows_test_case)
+TEST_CASE("", "[os_windows]")
 {
 }
-
-BOOST_AUTO_TEST_SUITE_END()

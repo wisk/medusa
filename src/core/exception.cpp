@@ -2,6 +2,8 @@
 
 #ifdef WIN32
 
+#include <Windows.h>
+
 MEDUSA_NAMESPACE_BEGIN
 
 std::string Exception_System::ErrorCodeToMessage(void)

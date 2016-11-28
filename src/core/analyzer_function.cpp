@@ -19,15 +19,12 @@ namespace medusa
         << LogEnd;
 
       Label FuncLbl(m_Addr, Label::Function | Label::Global);
-      Function* pFunction = new Function(FuncLbl.GetLabel(), FuncLen, InsnCnt);
-      m_rDoc.SetMultiCell(m_Addr, pFunction, false);
+      auto spFunction = std::make_shared<Function>(FuncLbl.GetLabel(), FuncLen, InsnCnt);
+      m_rDoc.SetMultiCell(m_Addr, spFunction, false);
       m_rDoc.AddLabel(m_Addr, FuncLbl, false);
     }
     else
     {
-      auto pMemArea = m_rDoc.GetMemoryArea(m_Addr);
-      if (pMemArea == nullptr)
-        return false;
       auto spInsn = std::static_pointer_cast<Instruction const>(m_rDoc.GetCell(m_Addr));
       if (spInsn == nullptr)
         return false;
@@ -46,8 +43,8 @@ namespace medusa
       // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
       std::string FuncName = std::string(spInsn->GetName()) + std::string("_") + OpLbl.GetName();
       m_rDoc.AddLabel(m_Addr, Label(FuncName, Label::Function | Label::Global), false);
-      auto pFunc = new Function(FuncName, spInsn->GetLength(), 1);
-      m_rDoc.SetMultiCell(m_Addr, pFunc, true);
+      auto spFunc = std::make_shared<Function>(FuncName, spInsn->GetSize(), 1);
+      m_rDoc.SetMultiCell(m_Addr, spFunc, true);
 
       // Propagate the detail ID
       Id RefId;
@@ -77,17 +74,13 @@ namespace medusa
     std::map<Address, bool> VisitedInstruction;
     bool RetReached = false;
 
-    u32 FuncLen = 0x0;
+    u32 FuncSz = 0x0;
     Address CurAddr = m_Addr;
     rFunctionLength = 0x0;
     rInstructionCounter = 0x0;
-    MemoryArea const* pMemArea = m_rDoc.GetMemoryArea(CurAddr);
 
     auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
     if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
-      return false;
-
-    if (pMemArea == nullptr)
       return false;
 
     CallStack.push(CurAddr);
@@ -113,21 +106,21 @@ namespace medusa
 
         if (VisitedInstruction[CurAddr])
         {
-          auto InsnLen = spInsn->GetLength();
-          if (InsnLen == 0)
+          auto InsnSz = spInsn->GetSize();
+          if (InsnSz == 0)
           {
-            Log::Write("core").Level(LogDebug) << "0 length instruction at " << CurAddr << LogEnd;
+            Log::Write("core").Level(LogDebug) << "0 size instruction at " << CurAddr << LogEnd;
             break;
           }
-          CurAddr += spInsn->GetLength();
+          CurAddr += InsnSz;
           continue;
         }
 
-        FuncLen += static_cast<u32>(spInsn->GetLength());
+        FuncSz += static_cast<u32>(spInsn->GetSize());
 
         VisitedInstruction[CurAddr] = true;
 
-        rFunctionLength += static_cast<u32>(spInsn->GetLength());
+        rFunctionLength += static_cast<u32>(spInsn->GetSize());
         rInstructionCounter++;
 
         if (spInsn->GetSubType() & Instruction::JumpType)
@@ -135,7 +128,7 @@ namespace medusa
           Address DstAddr;
 
           if (spInsn->GetSubType() & Instruction::ConditionalType)
-            CallStack.push(CurAddr + spInsn->GetLength());
+            CallStack.push(CurAddr + spInsn->GetSize());
 
           if (expr_cast<MemoryExpression>(spInsn->GetOperand(0)) != nullptr)
             break;
@@ -153,9 +146,9 @@ namespace medusa
           break;
         }
 
-        CurAddr += spInsn->GetLength();
+        CurAddr += spInsn->GetSize();
 
-        if (LengthThreshold && FuncLen > LengthThreshold)
+        if (LengthThreshold && FuncSz > LengthThreshold)
           return false;
       } // end while (m_Document.IsPresent(CurAddr))
     } // while (!CallStack.empty())

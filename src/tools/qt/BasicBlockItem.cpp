@@ -3,7 +3,7 @@
 #include <sstream>
 #include <medusa/user_configuration.hpp>
 
-BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address::List const& rAddresses)
+BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address::Vector const& rAddresses)
   : m_pParent(pParent)
   , medusa::DisassemblyView(rCore, medusa::FormatDisassembly::ShowAddress, rAddresses.front())
   , m_Addresses(rAddresses)
@@ -59,6 +59,8 @@ QVariant BasicBlockItem::itemChange(GraphicsItemChange change, const QVariant &v
     m_NeedRepaint = true;
     update();
     break;
+  default:
+    break;
   }
   return value;
 }
@@ -97,6 +99,8 @@ void BasicBlockItem::paintText(QPainter& p)
 
   medusa::UserConfiguration UserCfg;
   QColor MnClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic")));
+  QColor PfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_prefix")));
+  QColor SfClr(QString::fromStdString(UserCfg.GetOption("color.instruction_mnemonic_suffix")));
   QColor KwClr(QString::fromStdString(UserCfg.GetOption("color.keyword")));
   QColor ImClr(QString::fromStdString(UserCfg.GetOption("color.instruction_immediate")));
   QColor OpClr(QString::fromStdString(UserCfg.GetOption("color.operator")));
@@ -113,20 +117,22 @@ void BasicBlockItem::paintText(QPainter& p)
     std::string::size_type TextOff = 0;
     for (auto const& rMark : rMarks)
     {
-      auto MarkLen = rMark.GetLength();
+      auto MarkLen = rMark.GetSize();
       if (rMark.GetType() != medusa::Mark::UnprintableType)
       {
         switch (rMark.GetType())
         {
-        case medusa::Mark::MnemonicType:  MarkClr = MnClr; break;
-        case medusa::Mark::KeywordType:   MarkClr = KwClr; break;
-        case medusa::Mark::ImmediateType: MarkClr = ImClr; break;
-        case medusa::Mark::OperatorType:  MarkClr = OpClr; break;
-        case medusa::Mark::RegisterType:  MarkClr = RgClr; break;
-        case medusa::Mark::LabelType:     MarkClr = LbClr; break;
-        case medusa::Mark::StringType:    MarkClr = SzClr; break;
-        case medusa::Mark::CommentType:   MarkClr = CmClr; break;
-        default:                          MarkClr = DfClr; break;
+        case medusa::Mark::MnemonicType:       MarkClr = MnClr; break;
+        case medusa::Mark::MnemonicPrefixType: MarkClr = PfClr; break;
+        case medusa::Mark::MnemonicSuffixType: MarkClr = SfClr; break;
+        case medusa::Mark::KeywordType:        MarkClr = KwClr; break;
+        case medusa::Mark::ImmediateType:      MarkClr = ImClr; break;
+        case medusa::Mark::OperatorType:       MarkClr = OpClr; break;
+        case medusa::Mark::RegisterType:       MarkClr = RgClr; break;
+        case medusa::Mark::LabelType:          MarkClr = LbClr; break;
+        case medusa::Mark::StringType:         MarkClr = SzClr; break;
+        case medusa::Mark::CommentType:        MarkClr = CmClr; break;
+        default:                               MarkClr = DfClr; break;
         };
         p.setPen(MarkClr);
         QString Text = QString::fromUtf8(rText.substr(TextOff, MarkLen).c_str());

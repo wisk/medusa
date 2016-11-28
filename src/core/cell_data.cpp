@@ -11,7 +11,7 @@ std::string CellData::Dump(void) const
     << std::hex
     << "dna("   << static_cast<int>(m_Type)
     << " "     << static_cast<int>(m_SubType)
-    << " "     << m_Length
+    << " "     << m_Size
     << " "     << m_FormatStyle
     << " "     << static_cast<int>(m_Flags)
     << " "     << static_cast<int>(m_Mode)

@@ -52,9 +52,10 @@ Database& Database::SetBinaryStream(BinaryStream::SPType spBinStrm)
   return *this;
 }
 
-BinaryStream::SPType const Database::GetBinaryStream(void) const
+BinaryStream& Database::GetBinaryStream(void)
 {
-  return m_spBinStrm;
+  // TODO(wisk): don't need a shared ptr here
+  return *m_spBinStrm;
 }
 
 Database& Database::SetOperatingSystemName(std::string const& rOperatingSystemName)

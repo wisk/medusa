@@ -5,7 +5,6 @@ Medusa is a disassembler designed to be both modular and interactive.
 It runs on Windows and Linux, it should be the same on OSX.
 This project is organized as a library. To disassemble a file you have to use
 medusa_text or qMedusa.
-An experimental emulator is also available.
 
 Build-bot
 =========
@@ -21,7 +20,7 @@ Prerequisites
 =============
 
 Medusa requires the following libraries: `boost >= 1.55 <http://www.boost.org>`_ (system, filesystem, thread, date_time), `OGDF <http://www.ogdf.net>`_ (required git), and `Qt5 >= 5.2 <http://qt-project.org>`_ for the GUI.
-You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2013 update 4 on Windows).
+You also need `CMake <http://www.cmake.org>`_ for compilation and a C++11 compiler (VS2015 update 2 on Windows).
 Git is optional but allows to clone remote repository for specific features, see *Compilation/Options*.
 
 Feature
@@ -41,6 +40,8 @@ Feature
 +---------+---------+--------+--------+---------+-------------------------------------------+
 | GameBoy | yes     | yes    | yes    | yes     | - GameBoy Color registers are not handled |
 |         |         |        |        |         | - All mappers are not handled             |
++---------+---------+--------+--------+---------+-------------------------------------------+
+| ST62ROM | yes     | yes    | yes    | yes     |                                           |
 +---------+---------+--------+--------+---------+-------------------------------------------+
 
 +----------------------------------------------------------------+
@@ -64,9 +65,11 @@ Feature
 +------+---------+-------------+----------+                      |
 | arm  | thumb2  | partial     | no       |                      |
 +------+---------+-------------+----------+----------------------+
+| st62 |         | yes         | partial  |                      |
++------+---------+-------------+----------+----------------------+
 
 +--------------------------------------------------------------------------+
-| User interface                                                           |
+| Tool                                                                     |
 +--------+---------------+---------+-------+---------+----------+----------+
 | Name   | interactivity | Comment | Label | Graph   | Database | Notes    |
 +========+===============+=========+=======+=========+==========+==========+
@@ -129,7 +132,7 @@ Finally, we're ready to retrieve and compile medusa:
   git clone https://github.com/wisk/medusa.git
   mkdir build
   cd build
-  # UNIX users should define CMAKE_BUILD_TYPE e.g. -DCMAKE_BUILD_TYPE=Release to compile Medusa with optimizatin
+  # UNIX users should define CMAKE_BUILD_TYPE e.g. -DCMAKE_BUILD_TYPE=Release to compile Medusa with optimization
   cmake -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
 
   # for UNIX users
@@ -139,17 +142,28 @@ Finally, we're ready to retrieve and compile medusa:
   explorer Medusa.sln
 
 
-Note: If CMake is unable to find Boost on Windows, try to define **BOOST_LIBRARYDIR**. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-11.0*).
-In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *%USERPROFILE%\\Sources\\qt-5.3.0-x64-msvc2012-compact\\lib\\cmake* on Windows.
-For Windows users, you should probably add **-G"Visual Studio XX Win64"** where *XX* is your Visual Studio version and *Win64* if you build medusa in 64-bit.
+Note: If CMake is unable to find Boost on Windows, try to define **BOOST_LIBRARYDIR**. This variable must be set to the library directory (e.g.: *C:\\boost_1_55_0\\lib64-msvc-14.0*).
+In my configuration, **QT5_CMAKE_PATH** is set to */usr/lib/cmake* on ArchLinux and *C:\\Qt\\5.6\\msvc2015_64\\lib\\cmake* on Windows.
+For Windows users, you should probably add **-G"Visual Studio 14 Win64"** where *14* is your Visual Studio version and *Win64* if you build medusa in 64-bit.
 To run the Qt interface on Windows, you may have to add the folder *%QTDIR%\\bin* to your *%PATH%* and copy the folder *%QTDIR%\\plugins\\platforms*.
 By default, Medusa searches modules in the current folder, so you should run medusa executables from the folder where modules are located (e.g. *build/bin* on UNIX or *build\\bin\\{Debug,Release,...}* on Windows).
 
 Options
 -------
 
-* MEDUSA_BUILD_WITH_OGDF: clone OGDF project and build it, this library allows qMedusa to display graph
-
++-------------------------+---------------+-----------------------------------------------------------------------------+
+| Name                    | Default value | Meaning                                                                     |
++=========================+===============+=============================================================================+
+| MEDUSA_BUILD_TOOLS      | TRUE          | Compile tools                                                               |
++-------------------------+---------------+-----------------------------------------------------------------------------+
+| MEDUSA_BUILD_TESTS      | TRUE          | Compile tests                                                               |
++-------------------------+---------------+-----------------------------------------------------------------------------+
+| MEDUSA_CMAKE_USE_COTIRE | FALSE         | Use cotire for building                                                     |
++-------------------------+---------------+-----------------------------------------------------------------------------+
+| MEDUSA_BUILD_WITH_OGDF  | FALSE         | Add OGDF project and build it, this library allows qMedusa to display graph |
++-------------------------+---------------+-----------------------------------------------------------------------------+
+| MEDUSA_MODULES_TO_BUILD | "all"         | Semicolon-separated list of modules to build, or "all"                      |
++-------------------------+---------------+-----------------------------------------------------------------------------+
 
 Screenshots
 ===========
@@ -207,7 +221,7 @@ Acknowledgements
 ================
 
 * My schoolmates: epieddy, flalande and FX.
-* My workmate: gg, w1gz.
+* My workmate: gg, w1gz, lemme.
 * Yusuke Kamiyamane for his `icons <http://p.yusukekamiyamane.com>`_
 * gunmetal313, saeschdivara, kangjoni76, KarlVogel, ekse for their contributions.
 

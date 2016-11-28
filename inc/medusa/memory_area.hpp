@@ -3,6 +3,8 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
+#include "medusa/bits.hpp"
+#include "medusa/bitmask.hpp"
 #include "medusa/cell.hpp"
 #include "medusa/value.hpp"
 #include "medusa/binary_stream.hpp"
@@ -16,15 +18,23 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT MemoryArea
+class MEDUSA_EXPORT MemoryArea
 {
 public:
-  enum Access
+  enum class Access : u8
   {
-    Unknown = 0,
-    Read    = 1 << 1,
-    Write   = 1 << 2,
-    Execute = 1 << 3,
+    NoAccess = 0,
+    Read     = 1 << 1,
+    Write    = 1 << 2,
+    Execute  = 1 << 3,
+  };
+
+  enum Type : u8
+  {
+    UnknownType,
+    VirtualType,
+    MappedType,
+    PhysicalType,
   };
 
   struct Compare
@@ -35,161 +45,109 @@ public:
     }
   };
 
-  typedef std::function<void (TOffset, CellData::SPType)> CellDataPredicat;
+  typedef std::function<void (OffsetType, CellData::SPType)> CellDataPredicat;
 
-  MemoryArea(
-    std::string const& rName,
-    u32 Access,
-    Tag DefaultArchitectureTag,
-    u8 DefaultArchitectureMode);
-  virtual ~MemoryArea(void);
+  MemoryArea(void)
+    : m_Id(), m_Name("")
+    , m_Type(UnknownType), m_Access(Access::NoAccess)
+    , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK), m_DefaultArchitectureMode()
+    , m_FileOffset(), m_FileSize()
+    , m_BaseAddress(), m_Size()
+  {}
 
-  virtual std::string Dump(void) const = 0;
+  static MemoryArea CreateVirtual(
+    std::string const& rName, Access Access,
+    Address const& rBaseAddress, u32 Size,
+    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
+    u8 DefaultArchitectureMode = 0
+  )
+  {
+    MemoryArea MemArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode);
+    MemArea.m_Type = VirtualType;
+    MemArea.m_BaseAddress = rBaseAddress;
+    MemArea.m_Size = Size;
+    return MemArea;
+  }
+
+  static MemoryArea CreateMapped(
+    std::string const& rName, Access Access,
+    u32 FileOffset, u32 FileSize,
+    Address const& rBaseAddress, u32 Size,
+    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
+    u8 DefaultArchitectureMode = 0
+  )
+  {
+    MemoryArea MemArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode);
+    MemArea.m_Type = MappedType;
+    MemArea.m_FileOffset = FileOffset;
+    MemArea.m_FileSize = FileSize;
+    MemArea.m_BaseAddress = rBaseAddress;
+    MemArea.m_Size = Size;
+    return MemArea;
+  }
+
+  static MemoryArea CreatePhysical(
+    std::string const& rName, Access Access,
+    u32 FileOffset, u32 FileSize,
+    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
+    u8 DefaultArchitectureMode = 0
+  )
+  {
+    MemoryArea MemArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode);
+    MemArea.m_Type = PhysicalType;
+    MemArea.m_FileOffset = FileOffset;
+    MemArea.m_FileSize = FileSize;
+    MemArea.m_BaseAddress = Address(Address::PhysicalType, 0xffff, FileOffset);
+    MemArea.m_Size = FileSize;
+    return MemArea;
+  }
+
+  std::string ToString(void) const;
 
   // Information methods
-  virtual std::string const& GetName(void)             const { return m_Name;   }
-  virtual u32                GetAccess(void)           const { return m_Access; }
-  virtual u32                GetSize(void)             const = 0;
-  virtual std::string        ToString(void)            const = 0;
-  /*    */Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag; }
-  /*    */u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
+  std::string const& GetName(void)             const { return m_Name;                    }
+  Type               GetType(void)             const { return m_Type;                    }
+  Access             GetAccess(void)           const { return m_Access;                  }
+  Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag;  }
+  u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
 
-  virtual TOffset            GetFileOffset(void) const = 0;
-  virtual u32                GetFileSize(void)   const = 0;
+  // Set Architecture Tag and Mode
+  void SetDefaultArchitectureTag(Tag arch);
+  void SetDefaultArchitectureMode(u8 mode);
 
-  // Cell methods
-  virtual CellData::SPType GetCellData(TOffset Offset) const = 0;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCell, Address::List& rDeletedCellAddresses, bool Force) = 0;
-  virtual void           ForEachCellData(CellDataPredicat Predicat) const = 0;
+  void SetName(std::string const& Name) { m_Name = Name;     }
+  void SetAccess(Access Access)         { m_Access = Access; }
+  void SetId(u32 Id)                    { m_Id = Id;         }
 
-  bool IsCellPresent(Address const& rAddress) const
-  {
-    if (GetBaseAddress().GetBase() != rAddress.GetBase())
-      return false;
-    return IsCellPresent(rAddress.GetOffset());
-  }
-  bool IsCellPresent(TOffset Offset) const
-  { return GetBaseAddress().IsBetween(GetSize(), Offset); }
-
-  // Address methods
-  virtual Address GetBaseAddress(void) const = 0;
-  virtual Address MakeAddress(TOffset Offset) const = 0;
-  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const = 0;
-  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const = 0;
-
-  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
-  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
-  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const = 0;
-  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const = 0;
-  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const = 0;
+  OffsetType     GetFileOffset(void)  const { return m_FileOffset;  }
+  u32            GetFileSize(void)    const { return m_FileSize;    }
+  Address const& GetBaseAddress(void) const { return m_BaseAddress; }
+  u32            GetSize(void)        const { return m_Size;        }
+  u32            GetId(void)          const { return m_Id;          }
 
 protected:
+  u32         m_Id;
   std::string m_Name;
-  u32         m_Access;
+  Type        m_Type;
+  Access      m_Access;
+
   Tag         m_DefaultArchitectureTag;
   u8          m_DefaultArchitectureMode;
-};
 
-class Medusa_EXPORT MappedMemoryArea : public MemoryArea
-{
-public:
-  MappedMemoryArea(
+  OffsetType  m_FileOffset;
+  u32         m_FileSize;
+  Address     m_BaseAddress;
+  u32         m_Size;
+
+private:
+  MemoryArea(
     std::string const& rName,
-    TOffset FileOffset, u32 FileSize,
-    Address const& rVirtualBase,  u32 VirtualSize,
-    u32 Access,
-    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
-    u8 DefaultArchitectureMode = 0
-    )
-    : MemoryArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode)
-    , m_FileOffset(FileOffset), m_FileSize(FileSize)
-    , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
-  {}
-
-  virtual ~MappedMemoryArea(void);
-
-  virtual std::string Dump(void) const;
-
-  virtual u32         GetSize(void)  const;
-  virtual std::string ToString(void) const;
-
-  virtual TOffset     GetFileOffset(void) const;
-  virtual u32         GetFileSize(void)   const;
-
-  virtual CellData::SPType GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual void           ForEachCellData(CellDataPredicat Predicat) const;
-
-  virtual Address GetBaseAddress(void) const;
-  virtual Address MakeAddress(TOffset Offset) const;
-  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
-
-  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const;
-  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
-
-protected:
-  bool _InsertCell(TOffset Offset, CellData::SPType spCellData);
-  bool _RemoveCell(TOffset Offset, CellData::SPType spCellData);
-
-  typedef std::vector<CellData::SPType> CellDataVectorType;
-
-  TOffset            m_FileOffset;
-  u32                m_FileSize;
-  Address            m_VirtualBase;
-  u32                m_VirtualSize;
-  CellDataVectorType m_Cells;
-
-  typedef std::mutex MutexType;
-  mutable MutexType m_Mutex;
+    Access Access,
+    Tag DefaultArchitectureTag,
+    u8 DefaultArchitectureMode);
 };
 
-class Medusa_EXPORT VirtualMemoryArea : public MemoryArea
-{
-public:
-  VirtualMemoryArea(
-    std::string const& rName,
-    Address const& rVirtualBase,  u32 VirtualSize,
-    u32 Access,
-    Tag DefaultArchitectureTag = MEDUSA_ARCH_UNK,
-    u8 DefaultArchitectureMode = 0
-    )
-    : MemoryArea(rName, Access, DefaultArchitectureTag, DefaultArchitectureMode)
-    , m_VirtualBase(rVirtualBase), m_VirtualSize(VirtualSize)
-  {}
-
-  virtual ~VirtualMemoryArea(void);
-
-  virtual std::string Dump(void) const;
-
-  virtual u32         GetSize(void)  const;
-  virtual std::string ToString(void) const;
-
-  virtual TOffset     GetFileOffset(void) const;
-  virtual u32         GetFileSize(void)   const;
-
-  virtual CellData::SPType GetCellData(TOffset Offset) const;
-  virtual bool           SetCellData(TOffset Offset, CellData::SPType spCellData, Address::List& rDeletedCellAddresses, bool Force);
-  virtual void           ForEachCellData(CellDataPredicat Predicat) const;
-
-  virtual Address GetBaseAddress(void) const;
-  virtual Address MakeAddress(TOffset Offset) const;
-  virtual bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  virtual bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
-
-  virtual bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    MoveAddressBackward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    MoveAddressForward(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool    ConvertOffsetToPosition(TOffset Offset, u64& rPosition) const;
-  virtual bool    ConvertOffsetToFileOffset(TOffset Offset, TOffset& rFileOffset) const;
-
-protected:
-  Address m_VirtualBase;
-  u32     m_VirtualSize;
-};
+MEDUSA_ENUM_CLASS_BITMASK(MemoryArea::Access)
 
 MEDUSA_NAMESPACE_END
 

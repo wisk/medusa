@@ -32,7 +32,7 @@ enum LogLevelType
   LogDebug,
 };
 
-class Medusa_EXPORT LogWrapper
+class MEDUSA_EXPORT LogWrapper
 {
 public:
   typedef boost::function<void(std::string const&)> LoggerCallback;
@@ -73,25 +73,25 @@ private:
 
   LoggerCallback   m_pLog;
   std::string      m_Name;
-  std::string&     m_rBuffer;
+  std::string      m_rBuffer;
   static MutexType m_Mutex;
   LogLevelType     m_Level;
 };
 
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(s8 Value);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(u8 Value);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(s16 Value);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(u16 Value);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(Address Addr);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(std::string Msg);
-template<> Medusa_EXPORT LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(s8 Value);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(u8 Value);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(s16 Value);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(u16 Value);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(Address Addr);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(std::string Msg);
+template<> MEDUSA_EXPORT LogWrapper& LogWrapper::operator<<(LogWrapper::LoggerFunction pFunc);
 
-Medusa_EXPORT LogWrapper& LogFlush(LogWrapper& rLogWrapper);
-Medusa_EXPORT LogWrapper& LogEnd(LogWrapper& rLogWrapper);
-Medusa_EXPORT LogWrapper& LogLevel(LogWrapper& rLogWrapper, LogLevelType NewLvl);
+MEDUSA_EXPORT LogWrapper& LogFlush(LogWrapper& rLogWrapper);
+MEDUSA_EXPORT LogWrapper& LogEnd(LogWrapper& rLogWrapper);
+MEDUSA_EXPORT LogWrapper& LogLevel(LogWrapper& rLogWrapper, LogLevelType NewLvl);
 
 //! this class allows core or modules to log information
-class Medusa_EXPORT Log : boost::noncopyable
+class MEDUSA_EXPORT Log : boost::noncopyable
 {
 public:
   static void SetLog(LogWrapper::LoggerCallback pLog)

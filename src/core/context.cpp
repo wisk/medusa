@@ -216,13 +216,13 @@ void MemoryContext::ForEachMemoryChunk(CallbackType Callback)
   }
 }
 
-bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, u32& rFlags) const
+bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, MemoryArea::Access& rFlags) const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   MemoryChunk MemChk;
 
   rOffset = 0;
-  rFlags = 0;
+  rFlags = MemoryArea::Access::NoAccess;
 
   if (!_FindMemoryChunk(LinAddr, MemChk))
     return false;
@@ -233,7 +233,7 @@ bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u3
   return true;
 }
 
-bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32& rSize, u32& rFlags) const
+bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32& rSize, MemoryArea::Access& rFlags) const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
 
@@ -251,7 +251,7 @@ bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32&
   return false;
 }
 
-bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRawMemory)
+bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Flags, void** ppRawMemory)
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   if (ppRawMemory)
@@ -265,7 +265,7 @@ bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, u32 Flags, void** ppRa
   return true;
 }
 
-bool MemoryContext::ProtectMemory(u64 LinAddr, u32 Flags)
+bool MemoryContext::ProtectMemory(u64 LinAddr, MemoryArea::Access Flags)
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   auto itMemChnk = std::find(std::begin(m_Memories), std::end(m_Memories), LinAddr);
@@ -293,10 +293,10 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
   rDoc.ForEachMemoryArea([&](MemoryArea const& rMemArea)
   {
     Address const& rMemAreaAddr = rMemArea.GetBaseAddress();
-    u32 MemAreaSize             = rMemArea.GetSize();
-    u32 MemAreaFileSize         = rMemArea.GetFileSize();
-    u32 Size                    = std::max(MemAreaSize, MemAreaFileSize); // TODO: be more careful with that
-    u32 Flags                   = rMemArea.GetAccess();
+    auto MemAreaSize             = rMemArea.GetSize();
+    auto MemAreaFileSize         = rMemArea.GetFileSize();
+    auto Size                    = std::max(MemAreaSize, MemAreaFileSize); // TODO: be more careful with that
+    auto Flags                   = rMemArea.GetAccess();
 
     void* pRawMemory;
     u64 LinearAddress;
@@ -315,8 +315,8 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
     if (MemAreaFileSize == 0x0)
       return;
 
-    TOffset MemAreaFileOff;
-    if (rMemArea.ConvertOffsetToFileOffset(rMemAreaAddr.GetOffset(), MemAreaFileOff) == false)
+    OffsetType MemAreaFileOff;
+    if (rDoc.ConvertAddressToFileOffset(rMemAreaAddr, MemAreaFileOff) == false)
       return;
 
     if (!rDoc.GetBinaryStream().Read(MemAreaFileOff, pRawMemory, MemAreaFileSize))
@@ -341,7 +341,7 @@ std::string MemoryContext::ToString(void) const
     oss
       << "laddr: "  << std::hex << std::setw(16) << std::setfill('0') << rMemChnk.m_LinearAddress
       << ", size: " << std::hex << std::setw(8)  << std::setfill('0') << rMemChnk.m_spMemStrm->GetSize()
-      << ", flags:" << std::hex << std::setw(8)  << std::setfill('0') << rMemChnk.m_Flags
+      << ", flags:" << std::hex << std::setw(8)  << std::setfill('0') << static_cast<int>(rMemChnk.m_Flags)
       << ", rawb: " << rMemChnk.m_spMemStrm->GetBuffer() << std::endl;
     HexDump(oss, rMemChnk.m_spMemStrm->GetBuffer(), static_cast<u16>(rMemChnk.m_spMemStrm->GetSize()), rMemChnk.m_LinearAddress);
   }

@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class Medusa_EXPORT Structure : public MultiCell
+class MEDUSA_EXPORT Structure : public MultiCell
 {
 public:
 

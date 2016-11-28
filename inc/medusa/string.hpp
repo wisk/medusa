@@ -39,7 +39,7 @@ public:
 };
 
 //! String is a Cell which handles a string.
-class Medusa_EXPORT String : public Cell
+class MEDUSA_EXPORT String : public Cell
 {
 public:
   enum

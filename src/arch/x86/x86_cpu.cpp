@@ -655,9 +655,9 @@ bool X86Architecture::X86CpuContext::GetAddress(CpuContext::AddressKind AddrKind
   case AddressExecution:
     switch (m_Bits)
     {
-    case 16: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.w, 16, 16); return true;
-    case 32: rAddr = Address(Address::VirtualType, m_Context.cs, m_Context.ip.e, 16, 32); return true;
-    case 64: rAddr = Address(Address::VirtualType,            0, m_Context.ip.r,  0, 64); return true;
+    case 16: rAddr = Address(Address::LinearType, m_Context.cs, m_Context.ip.w, 16, 16); return true;
+    case 32: rAddr = Address(Address::LinearType, m_Context.cs, m_Context.ip.e, 16, 32); return true;
+    case 64: rAddr = Address(Address::LinearType,            0, m_Context.ip.r,  0, 64); return true;
     default: return false;
     }
     break;

@@ -16,7 +16,7 @@ enum EEndianness
 };
 
 //! This function returns true if a swap if needed, otherwise it returns false.
-Medusa_EXPORT bool TestEndian(EEndianness Endianness);
+MEDUSA_EXPORT bool TestEndian(EEndianness Endianness);
 
 //! This function do a swap.
 template<typename T> inline void EndianSwap(T&)

@@ -5,6 +5,7 @@
 #include "medusa/types.hpp"
 #include "medusa/export.hpp"
 #include "medusa/address.hpp"
+#include "medusa/graph.hpp"
 
 #include <boost/shared_ptr.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -15,10 +16,10 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! MultiCell is a group of cell.
-class Medusa_EXPORT MultiCell
+class MEDUSA_EXPORT MultiCell
 {
 public:
-  typedef std::map<Address, MultiCell*> Map;
+  typedef std::shared_ptr<MultiCell> SPType;
   typedef boost::uuids::uuid Id;
 
   enum Type
@@ -49,10 +50,14 @@ public:
   //! This method tells if the ui have to display cell contained in multicell.
   virtual bool DisplayCell(void) const { return false; }
 
+  Graph::SPType GetGraph(void)                  { return m_spGraph;    }
+  void          SetGraph(Graph::SPType spGraph) { m_spGraph = spGraph; }
+
 protected:
-  Id          m_Id;
-  u8          m_Type;
-  u16         m_Size;
+  Id            m_Id;
+  u8            m_Type;
+  u16           m_Size;
+  Graph::SPType m_spGraph;
 };
 
 MEDUSA_NAMESPACE_END

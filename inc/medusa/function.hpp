@@ -10,7 +10,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! Function is a MultiCell which handles a function.
-class Medusa_EXPORT Function : public MultiCell
+class MEDUSA_EXPORT Function : public MultiCell
 {
 public:
   typedef std::list<Function> List;

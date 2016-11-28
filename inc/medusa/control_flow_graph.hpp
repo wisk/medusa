@@ -16,7 +16,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 //! ControlFlowGraph is a graph which contains BasicBlock.
-class Medusa_EXPORT ControlFlowGraph
+class MEDUSA_EXPORT ControlFlowGraph
 {
   struct ControlFlowGraphProperties{};
 
@@ -70,8 +70,8 @@ public:
   void ForEachInstruction(std::function<void (Address const&)> Predicat) const;
   void ForEachInstruction(std::function<bool (Address const&)> Predicat, bool& rResult) const;
 
-  bool GetPreviousAddress(Address const& rAddr, Address::List& rPrevAddr) const;
-  bool GetNextAddress(Address const& rAddr, Address::List& rNextAddr) const;
+  bool GetPreviousAddress(Address const& rAddr, Address::Vector& rPrevAddr) const;
+  bool GetNextAddress(Address const& rAddr, Address::Vector& rNextAddr) const;
 
   bool Contains(Address const& rAddress) const;
 

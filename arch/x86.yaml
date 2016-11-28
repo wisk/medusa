@@ -82,7 +82,7 @@ function:
       op1.offset += int(op1.offset.bit, op1.byte);
 
   load_string: &load_string |
-    op1.val = op0.val;
+    op0.val = op1.val;
     if __expr and df.id == int1(1):
       op1.offset -= int(op1.offset.bit, op1.byte)
     else:
@@ -416,6 +416,7 @@ semantic:
     call('parity_flag');
     call('adjust_flag');
     op0.val = res;
+    free_var('op1');
     free_var('res');
 
   neg: &neg |
@@ -941,9 +942,12 @@ semantic:
     program.id = op0.val;
 
   call: &call |
+    alloc_var('call_dst', stack.bit);
+    call_dst = op0.val;
     stack.id -= stack.size;
     stack.mem = program.id;
-    program.id = op0.val;
+    program.id = call_dst;
+    free_var('call_dst');
 
   ret: &ret |
     program.id = stack.mem;
@@ -1122,16 +1126,16 @@ semantic:
     cf.id = bit_cast((op0.val >> (bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)))), int_type1);
 
   btc: &btc |
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     op0.val = (op0.val ^ ((int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     free_var('bit_set');
 
   bts: &bts |
     alloc_var('res', op0.bit);
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     res = (op0.val | ((int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     op0.val = res
@@ -1139,8 +1143,8 @@ semantic:
     free_var('res');
 
   btr: &btr |
-    alloc_var('bit_set', 16);
-    bit_set = bit_cast(bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1)), int_type16);
+    alloc_var('bit_set', op0.bit);
+    bit_set = bit_cast(op1.val, int_type(op0.bit)) & (int(op0.bit, op0.bit) - int(op0.bit, 1));
     cf.id = bit_cast((op0.val >> bit_set), int_type1);
     op0.val = (op0.val & (~(int(op0.bit, 1) << bit_cast(bit_set, int_type(op0.bit)))));
     free_var('bit_set');
@@ -4297,6 +4301,7 @@ instruction:
             operand: [ Vx, Wx ]
             prefix: 0xf3
             cpu_model: ">= X86_Arch_Sse"
+            semantic: *mov
 
       - opcode: 0x70
         sub_opcodes:
@@ -4457,6 +4462,7 @@ instruction:
             operand: [ Wx, Vx ]
             attr: [ rep ]
             cpu_model: ">= X86_Arch_Sse2"
+            semantic: *mov
 
       - opcode: 0x80
         mnemonic: jo
