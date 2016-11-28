@@ -4,7 +4,7 @@ ExternalProject_add(pybind11
   PREFIX            "pybind11"
 
   GIT_REPOSITORY    "https://github.com/pybind/pybind11"
-  GIT_TAG           "master"
+  GIT_TAG           "2160860c0aa5d5ca14b8a5b670f2fbfcbc6d6b17"
 
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""

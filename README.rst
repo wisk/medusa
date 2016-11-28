@@ -125,6 +125,8 @@ First off, you need boost libraries; you can either download a built version or 
 
 Now, make sure you have installed Qt5 if you need a graphical user interface (and I'm pretty sure you do ;)). Medusa requires at least the version 5.2, be sure to pick the good version on the `official website <http://qt-project.org/downloads>`_ or use your package manager.
 
+LLVM 3.7 is also required, you can download it on the `official website <http://llvm.org/>`_ or directly from your package manager.
+
 Finally, we're ready to retrieve and compile medusa:
 
 .. code-block:: bash
@@ -133,7 +135,7 @@ Finally, we're ready to retrieve and compile medusa:
   mkdir build
   cd build
   # UNIX users should define CMAKE_BUILD_TYPE e.g. -DCMAKE_BUILD_TYPE=Release to compile Medusa with optimization
-  cmake -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> ..
+  cmake -DBOOST_ROOT:PATH=<path to the boost directory> -DQT5_CMAKE_PATH:PATH=<Path to Qt5 cmake scripts directory> -DLLVM_ROOT=<Path to llvm> ..
 
   # for UNIX users
   make && cd bin && ./qMedusa
@@ -195,8 +197,7 @@ Docker image
 
 If you do not wish to install the various dependencies on your system, you can
 use this docker image instead. Even though it is working out of the box, you may
-want to customize it to suit your needs or for added security (e.g. restrict ssh
-access to public key authentication only).
+want to customize it to suit your needs (e.g. public key authentication).
 
 Build the Medusa container
 --------------------------
@@ -204,9 +205,13 @@ Build the Medusa container
 
 Going inside the container
 --------------------------
-``docker run -it medusa /bin/bash``
+``docker run -it --rm medusa``
 
-OR launch qMedusa (ssh with X forwarding)
+Mount a directory inside the container
+--------------------------
+``docker run -it --rm medusa -v <host_abs_dir>:<container_abs_dir>``
+
+Launch qMedusa (ssh with X forwarding)
 -----------------------------------------
 * ``docker run -it -d medusa``
 * ``ssh -X developer@<containers_ip> "medusa/build/bin/qMedusa"``
