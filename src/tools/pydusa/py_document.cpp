@@ -36,7 +36,7 @@ namespace pydusa
     Label Lbl;
     Lbl = pDoc->GetLabelFromAddress(rAddress);
     if (Lbl.GetType() == Label::Unknown)
-      return py::object();
+      return py::none();
     return py::cast(Lbl);
   }
 
@@ -45,7 +45,7 @@ namespace pydusa
     Address Addr;
     Addr = pDoc->GetAddressFromLabelName(rLabelName);
     if (Addr.GetAddressingType() == Address::UnknownType)
-      return py::object();
+      return py::none();
     return py::cast(Addr);
   }
 
