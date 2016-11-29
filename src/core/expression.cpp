@@ -603,7 +603,7 @@ Expression::CompareType OperationExpression::Compare(Expression::SPType spExpr) 
 }
 
 // TODO(wisk): handle more operations
-u8 OperationExpression::GetOppositeOperation(void) const
+OperationExpression::Type OperationExpression::GetOppositeOperation(void) const
 {
   switch (m_OpType)
   {

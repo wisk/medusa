@@ -413,11 +413,11 @@ public:
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
   virtual CompareType Compare(Expression::SPType spExpr) const;
 
-  u8 GetOperation(void) const { return m_OpType; }
-  u8 GetOppositeOperation(void) const;
+  Type GetOperation(void) const { return m_OpType; }
+  Type GetOppositeOperation(void) const;
 
 protected:
-  u8 m_OpType;
+  Type m_OpType;
 };
 
 class MEDUSA_EXPORT UnaryOperationExpression : public OperationExpression

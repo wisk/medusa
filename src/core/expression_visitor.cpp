@@ -866,7 +866,9 @@ Expression::SPType EvaluateVisitor::VisitMemory(MemoryExpression::SPType spMemEx
 
 Expression::SPType EvaluateVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
-  auto spRes = expr_cast<BitVectorExpression>(spSymExpr->GetExpression()->Visit(this));
+  auto spRes = spSymExpr->GetExpression();
+  if (spRes != nullptr)
+    spRes = expr_cast<BitVectorExpression>(spRes->Visit(this));
   if (spRes == nullptr)
   {
     m_IsSymbolic = true;
@@ -1968,11 +1970,12 @@ Expression::VSPType SymbolicVisitor::FindExpressionsByUse(Expression::SPType spP
     FilterVisitor FltVst([&](Expression::SPType spExpr)
     {
       return spPatExpr->Compare(spExpr) == Expression::CmpIdentical ? spTmpExpr : nullptr;
-    });
+    }, 1);
 
     spTmpExpr->Visit(&FltVst);
     auto Res = FltVst.GetMatchedExpressions();
-    FoundExprs.insert(std::end(FoundExprs), std::begin(Res), std::end(Res));
+    if (!Res.empty())
+      FoundExprs.push_back(spTmpExpr);
   }
 
   FoundExprs.erase(std::unique(std::begin(FoundExprs), std::end(FoundExprs)), std::end(FoundExprs));
