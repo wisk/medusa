@@ -106,13 +106,21 @@ void PydusaExpression(py::module& rMod)
     ;
 
   // symbolic expression class inherited from base expression class
-  
+
   auto const& rSymbolicExpressionClass = py::class_<SymbolicExpression, SymbolicExpression::SPType>(rMod, "SymbolicExpression", py::base<Expression>())
     .def("__str__", &SymbolicExpression::ToString)
     .def_property_readonly("type", &SymbolicExpression::GetType)
     .def_property_readonly("value", &SymbolicExpression::GetValue)
     .def_property_readonly("address", &SymbolicExpression::GetAddress)
     .def_property_readonly("expression", &SymbolicExpression::GetExpression)
+    ;
+
+  // variable expression class inherited from base expression class
+
+  auto const& rVariableExpressionClass = py::class_<VariableExpression, VariableExpression::SPType>(rMod, "VariableExpression", py::base<Expression>())
+    .def("__str__", &VariableExpression::ToString)
+    .def_property_readonly("type", &VariableExpression::GetAction)
+    .def_property_readonly("name", &VariableExpression::GetName)
     ;
 
   // operation expression class inherited from base expression class
@@ -150,6 +158,7 @@ void PydusaExpression(py::module& rMod)
     .def("expr_make_bin_op", &Expr::MakeBinOp)
     .def("expr_make_assign", &Expr::MakeAssign)
     .def("expr_make_sym", &Expr::MakeSym)
+    .def("expr_make_var", &Expr::MakeVar)
     ;
 
   // exposing enumerations
@@ -205,6 +214,13 @@ void PydusaExpression(py::module& rMod)
     .value("SYM_EXTERNAL_VALUE",    SymbolicExpression::ExternalValue)
     .value("SYM_EXTERNAL_FUNCTION", SymbolicExpression::ExternalFunction)
     .value("SYM_UNDEFINED",         SymbolicExpression::Undefined)
+    ;
+
+  py::enum_<VariableExpression::ActionType>(rVariableExpressionClass, "Type")
+    .value("VAR_UNKNOWN",    VariableExpression::Unknown)
+    .value("VAR_ALLOC",      VariableExpression::Alloc)
+    .value("VAR_FREE",       VariableExpression::Free)
+    .value("VAR_USE",        VariableExpression::Use)
     ;
 
   py::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
