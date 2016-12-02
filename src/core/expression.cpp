@@ -752,6 +752,15 @@ Expression::SPType BinaryOperationExpression::Clone(void) const
 
 u32 BinaryOperationExpression::GetBitSize(void) const
 {
+  switch (m_OpType)
+  {
+    case OperationExpression::OpBcast:
+    case OperationExpression::OpZext:
+    case OperationExpression::OpSext:
+      return m_spRightExpr->GetBitSize();
+    default:
+      break;
+  }
   return std::max(m_spLeftExpr->GetBitSize(), m_spRightExpr->GetBitSize());
 }
 
