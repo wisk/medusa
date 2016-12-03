@@ -20,9 +20,10 @@ set(SRC
   ${INCROOT}/cell_text.hpp
   ${INCROOT}/calling_convention.hpp
   ${INCROOT}/character.hpp
+  ${INCROOT}/compilation.hpp
   ${INCROOT}/configuration.hpp
-  ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/context.hpp
+  ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/detail.hpp
   ${INCROOT}/disassembly_view.hpp
@@ -81,9 +82,10 @@ set(SRC
   ${SRCROOT}/cell_data.cpp
   ${SRCROOT}/cell_text.cpp
   ${SRCROOT}/character.cpp
+  ${SRCROOT}/compilation.cpp
   ${SRCROOT}/configuration.cpp
-  ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/context.cpp
+  ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/detail.cpp
   ${SRCROOT}/disassembly_view.cpp

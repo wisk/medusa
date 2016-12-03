@@ -26,9 +26,12 @@ medusa_include_module_if_needed(arch z80)          # Zilog80 (GameBoy)
 
 medusa_include_module_if_needed(bind python)       # Python
 
+# compilation
+
+medusa_include_module_if_needed(compil llvm)       # LLVM
+
 # database
 
-#medusa_include_module_if_needed(db text)           # Text
 medusa_include_module_if_needed(db soci)           # SOCI
 
 # emulation

@@ -1,43 +1,43 @@
-set(INCROOT ${CMAKE_SOURCE_DIR}/src/emul/llvm)
-set(SRCROOT ${CMAKE_SOURCE_DIR}/src/emul/llvm)
+set(INCROOT ${CMAKE_SOURCE_DIR}/src/compil/llvm)
+set(SRCROOT ${CMAKE_SOURCE_DIR}/src/compil/llvm)
 
 set(SRC
   ${SRCROOT}/main.cpp
-  ${SRCROOT}/llvm_emulator.cpp
-  ${INCROOT}/llvm_emulator.hpp
+  ${SRCROOT}/llvm_compiler.cpp
+  ${INCROOT}/llvm_compiler.hpp
   )
 
 # TODO(KS): Probably not the optimal solution, but it works, so who cares?
 set(MEDUSA_LLVM_LIBS all)
 
 if (UNIX AND NOT LLVM_ROOT)
-  message(WARNING "Please, define LLVM_ROOT to compile emul_llvm")
+  message(WARNING "Please, define LLVM_ROOT to compile compil_llvm")
 endif()
 
 if (MSVC AND (NOT LLVM_ROOT_DEBUG OR NOT LLVM_ROOT_RELEASE))
-  message(WARNING "Please, define both LLVM_ROOT_DBUG AND LLVM_ROOT_RELEASE to compile emul_llvm")
+  message(WARNING "Please, define both LLVM_ROOT_DBUG AND LLVM_ROOT_RELEASE to compile compil_llvm")
 endif()
 
 
 if (UNIX AND LLVM_ROOT)
 
-  add_library(emul_llvm SHARED ${SRC})
+  add_library(compil_llvm SHARED ${SRC})
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT}/share/llvm/cmake")
   include(LLVMConfig)
   include_directories(${LLVM_INCLUDE_DIRS})
   link_directories(${LLVM_LIBRARY_DIRS})
   add_definitions(${LLVM_DEFINITIONS})
   llvm_map_components_to_libnames(LLVM_LIBRARIES ${MEDUSA_LLVM_LIBS})
-  target_link_libraries(emul_llvm medusa "-L ${LLVM_LIBRARY_DIRS}" ${LLVM_LIBRARIES}) # -L should not be here, but link_directories doesn't seem to work...
+  target_link_libraries(compil_llvm medusa "-L ${LLVM_LIBRARY_DIRS}" ${LLVM_LIBRARIES}) # -L should not be here, but link_directories doesn't seem to work...
 
-  install(TARGETS emul_llvm LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
-  set_target_properties(emul_llvm PROPERTIES
-    FOLDER "Emulators"
+  install(TARGETS compil_llvm LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
+  set_target_properties(compil_llvm PROPERTIES
+    FOLDER "Compilations"
     PREFIX "")
 
 elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
 
-  add_library(emul_llvm SHARED ${SRC})
+  add_library(compil_llvm SHARED ${SRC})
 
   set(LLVM_ALL_LIBRARIES)
   set(LLVM_ALL_LIBRARY_DIRS)
@@ -66,11 +66,11 @@ elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
     list(APPEND LLVM_ALL_LIBRARIES optimized "${LLVM_LIBRARY_DIRS}/${LIB}.lib")
   endforeach()
 
-  target_link_libraries(emul_llvm medusa ${LLVM_ALL_LIBRARIES})
+  target_link_libraries(compil_llvm medusa ${LLVM_ALL_LIBRARIES})
 
-  install(TARGETS emul_llvm RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
-  set_target_properties(emul_llvm PROPERTIES
-    FOLDER "Emulators"
+  install(TARGETS compil_llvm RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
+  set_target_properties(compil_llvm PROPERTIES
+    FOLDER "Compilations"
     PREFIX "")
 
 endif()
