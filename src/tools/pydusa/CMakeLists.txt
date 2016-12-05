@@ -51,6 +51,7 @@ set(SRC
   py_binary_stream.cpp
   py_expression.cpp
   py_cell.cpp
+  py_compiler.cpp
   py_configuration.cpp
   py_memory_area.cpp
   py_database.cpp

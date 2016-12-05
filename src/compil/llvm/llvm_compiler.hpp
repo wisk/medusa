@@ -49,14 +49,75 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
+  bool CreateBasicBlock(Expression::VSPType const& rExprs) { m_Exprs = rExprs; }
+
   virtual bool Compile(std::string const& rFormatName, Path const& rOutputFile);
-  virtual bool Compile(std::string const& rFormatName, void*& rpOutputBuffer, u32& rOutputSize);
+  virtual bool Compile(std::string const& rFormatName, std::vector<u8>& rBuffer);
 
 private:
   llvm::IRBuilder<> m_Builder;
 
   typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
   VarMapType m_Vars;
+  Expression::VSPType m_Exprs;
+
+
+  class LlvmExpressionVisitor : public ExpressionVisitor
+  {
+  public:
+    LlvmExpressionVisitor(
+      Compiler* pCompil,
+      VarMapType& rVars,
+      llvm::IRBuilder<>& rBuilder);
+
+    virtual ~LlvmExpressionVisitor(void);
+
+    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
+    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
+    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
+    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
+    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
+    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
+    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
+    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
+    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
+    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
+    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
+    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+
+  protected:
+    llvm::Value* _MakeInteger(BitVector const& rInt) const;
+    llvm::Value* _MakePointer(u32 Bits, void* pPointer, s32 Offset = 0) const;
+    llvm::Value* _MakePointer(u32 Bits, llvm::Value* pPointerValue, s32 Offset = 0) const;
+
+    llvm::Type*  _BitVectorToLlvmType(BitVector const& rInt) const;
+    llvm::Type*  _BitSizeToLlvmType(u16 BitSize) const;
+
+    llvm::Value* _CallIntrinsic(llvm::Intrinsic::ID IntrId, std::vector<llvm::Type*> const& rTypes, std::vector<llvm::Value*> const& rArgs) const;
+
+    llvm::Value* _EmitComparison(u8 CondOp, char const* pCmpName);
+    llvm::Value* _EmitFloatingPointBinaryOperation(OperationExpression::Type FOpType, llvm::Value* pLeftVal, llvm::Value* pRightVal) const;
+
+    Compiler*                 m_pCompil;
+    LlvmCompiler::VarMapType& m_rVars;
+    llvm::IRBuilder<>&        m_rBuilder;
+
+    std::stack<llvm::Value*> m_ValueStack;
+
+    size_t m_NrOfValueToRead;
+
+    enum State
+    {
+      Unknown,
+      Read,
+      Write,
+    };
+
+    State m_State;
+  };
 
 };
 

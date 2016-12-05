@@ -3,6 +3,7 @@
 
 #include "medusa/architecture.hpp"
 #include "medusa/binding.hpp"
+#include "medusa/compilation.hpp"
 #include "medusa/database.hpp"
 #include "medusa/emulation.hpp"
 #include "medusa/loader.hpp"
@@ -69,12 +70,13 @@ struct ModuleTraits
   template<> inline char const* mod_name::GetPrefix(void) { return prefix; }\
   template<> inline char const* mod_name::GetExportedFunctionName(void) { return func_name; }
 
-DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_", "GetArchitecture")
-DECL_MODULE_TRAITS(BindingModuleTraits,         TGetBinding,         "bind_", "GetBinding")
-DECL_MODULE_TRAITS(DatabaseModuleTraits,        TGetDatabase,        "db_",   "GetDatabase")
-DECL_MODULE_TRAITS(EmulatorModuleTraits,        TGetEmulator,        "emul_", "GetEmulator")
-DECL_MODULE_TRAITS(LoaderModuleTraits,          TGetLoader,          "ldr_",  "GetLoader")
-DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",   "GetOperatingSystem")
+DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_",   "GetArchitecture")
+DECL_MODULE_TRAITS(BindingModuleTraits,         TGetBinding,         "bind_",   "GetBinding")
+DECL_MODULE_TRAITS(CompilerModuleTraits,        TGetCompiler,        "compil_", "Getcompiler")
+DECL_MODULE_TRAITS(DatabaseModuleTraits,        TGetDatabase,        "db_",     "GetDatabase")
+DECL_MODULE_TRAITS(EmulatorModuleTraits,        TGetEmulator,        "emul_",   "GetEmulator")
+DECL_MODULE_TRAITS(LoaderModuleTraits,          TGetLoader,          "ldr_",    "GetLoader")
+DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",     "GetOperatingSystem")
 
 #undef DECL_MODULE_TRAITS
 
@@ -85,6 +87,16 @@ private:
   ~ModuleManager(void) {}
   ModuleManager(ModuleManager const&);
   ModuleManager& operator=(ModuleManager const&);
+
+  template<typename ModuleType>
+  bool _DoLoad(
+    Path const& rModulePath,
+    ModuleType pModule,
+    std::string const MsgModule,
+    std::string const MsgError,
+    std::function<void(ModuleType)> pFct);
+
+  bool _DoLoadModule(Path const& rModulePath, void* const pModule, Module& rModule);
 
 public:
   typedef std::map<std::string, TGetBinding>  BindingMap;
@@ -101,7 +113,7 @@ public:
   }
 
   template<typename ExportedFunctionType>
-  ExportedFunctionType LoadModule(Path const& rModPath, std::string rModName)
+  ExportedFunctionType ModuleManager::LoadModule(Path const& rModPath, std::string rModName)
   {
     typedef ModuleTraits<ExportedFunctionType> ModuleType;
     Module Mod;
@@ -113,7 +125,7 @@ public:
     if (pModHandle == nullptr)
     {
       FullModName = "lib";
-      FullModName +=  ModuleType::GetPrefix();
+      FullModName += ModuleType::GetPrefix();
       FullModName += rModName;
       FullModName += ".";
       FullModName += Module::GetExtension();
@@ -125,27 +137,8 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
-  template<typename ModuleType>
-  bool ActionLoad(
-      Path const& rModulePath,
-      ModuleType pModule,
-      std::string const MsgModule,
-      std::string const MsgError,
-      std::function<void (ModuleType)> pFct)
-  {
-    Log::Write("core") << rModulePath.string() << " " << MsgModule << LogEnd;
-    if (pModule == nullptr)
-    {
-      Log::Write("core") << MsgError << LogEnd;
-      return false;
-    }
-    pFct(pModule);
-    return true;
-}
-
   void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
-  bool LoadCommonFromModule(Path const& rModulePath, void* const pModule, Module & rModule);
   void UnloadModules(void);
 
   // Architecture
@@ -160,6 +153,7 @@ public:
   OperatingSystem::SPType GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
   OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
   Database::SPType        GetDatabase(std::string const& rDatabaseName);
+  Compiler::SPType        GetCompiler(std::string const& rCompilerName);
   Database::VSPType       GetDatabases(void) const;
 
   Loader::VSPType         GetLoaders(void) const;
@@ -176,6 +170,7 @@ private:
   Loader::VSPType          m_Loaders;
   Architecture::VSPType    m_Architectures;
   Database::VSPType        m_Databases;
+  Compiler::VSPType        m_Compilers;
   OperatingSystem::VSPType m_OperatingSystems;
   BindingMap               m_Bindings;
   EmulatorMap              m_Emulators;
