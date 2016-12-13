@@ -14,11 +14,20 @@ namespace pydusa
   {
     return pCpuInfo->ConvertNameToIdentifier(rIdName);
   }
+
+  py::object CpuInformation_ConvertIdentifierToName(CpuInformation const* pCpuInfo, u32 IdVal)
+  {
+    auto pIdName = pCpuInfo->ConvertIdentifierToName(IdVal);
+    if (pIdName == nullptr)
+      return py::none();
+    return py::str(pIdName);
+  }
 }
 
 void PydusaCpuInformation(py::module& rMod)
 {
   py::class_<CpuInformation>(rMod, "CpuInformation")
     .def("__getattr__", pydusa::CpuInformation_ConvertNameToIdentifier)
+    .def("__getitem__", pydusa::CpuInformation_ConvertIdentifierToName)
   ;
 }

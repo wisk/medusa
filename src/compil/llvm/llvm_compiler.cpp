@@ -28,19 +28,98 @@ LlvmCompiler::~LlvmCompiler(void)
 {
 }
 
-bool LlvmCompiler::Compile(std::string const& rFormatName, Path const& rOutputFile)
+bool LlvmCompiler::Compile(std::vector<u8>& rBuffer)
 {
-  return false;
+  // Initialization
+  std::string ErrMsg;
+  auto& rGblCtx              = llvm::getGlobalContext();
+  auto pModule               = new llvm::Module("compil_llvm", rGblCtx); // TODO(wisk): can we use a std::unique_ptr here?
+  auto pCompiledFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(rGblCtx), false);
+  auto pCompiledFunction     = llvm::Function::Create(pCompiledFunctionType, llvm::Function::ExternalLinkage, "compiled_function", pModule);
+  auto pCompiledBasicBlock   = llvm::BasicBlock::Create(rGblCtx, "entry", pCompiledFunction);
+
+  m_Builder.SetInsertPoint(pCompiledBasicBlock);
+
+  // Convert medusa expressions to LLVM-IR
+  LlvmExpressionVisitor LlvmExpressionVisitor(this, m_Vars, m_Builder);
+  IdentifierToVariable Id2Var;
+  for (auto const& rCodePair : m_CodeMap)
+  {
+    std::list<Expression::SPType> CompilExprs;
+
+    // First, we need to transform expressions to be compiled
+    for (auto const& rspExpr : rCodePair.second)
+    {
+      CompilExprs.push_back(rspExpr);
+    }
+
+    // now we can convert them to LLVM-IR
+    for (auto const& rspExpr : CompilExprs)
+    {
+      if (rspExpr->Visit(&LlvmExpressionVisitor) == nullptr)
+      {
+        Log::Write("compil_llvm").Level(LogError) << "failed to compile expression: " << rspExpr->ToString() << LogEnd;
+        return false;
+      }
+    }
+    
+  }
+  m_Builder.CreateRetVoid();
+
+  // Compilation
+  auto pExecutionEngine = llvm::EngineBuilder(std::unique_ptr<llvm::Module>(pModule))
+    .setErrorStr(&ErrMsg)
+    .setOptLevel(llvm::CodeGenOpt::Default)
+    .setRelocationModel(llvm::Reloc::PIC_)
+    .setCodeModel(llvm::CodeModel::Small)
+    .create();
+  auto pTargetMachine = pExecutionEngine->getTargetMachine();
+  llvm::SmallString<0> StringBuffer;
+  llvm::raw_svector_ostream OstreamBuffer(StringBuffer);
+  llvm::legacy::PassManager PassManager;
+
+  pTargetMachine->addPassesToEmitFile(PassManager, OstreamBuffer, llvm::TargetMachine::CGFT_ObjectFile); // NOTE(wisk): don't check against false returned value here
+  if (!PassManager.run(*pModule))
+  {
+    Log::Write("compil_llvm").Level(LogError) << "emit code to buffer failed" << LogEnd;
+    return false;
+  }
+
+  // Get object file
+  llvm::MemoryBufferRef MemoryBuffer(OstreamBuffer.str(), "compiled-buffer");
+  auto pObjectFile = llvm::object::ObjectFile::createObjectFile(MemoryBuffer);
+  if (auto ErrorCode = pObjectFile.getError())
+  {
+    Log::Write("compil_llvm").Level(LogError) << "unable to get object file: " << ErrorCode.message() << LogEnd;
+    return false;
+  }
+
+  // Find .text section (section which contains compiled data)
+  // FIXME(wisk): some parts of the code might not be included in this section...
+  llvm::StringRef TextSectionContents;
+  for (auto const& rSection : (*pObjectFile)->sections())
+  {
+    if (!rSection.isText())
+      continue;
+    if (auto ErrorCode = rSection.getContents(TextSectionContents))
+    {
+      Log::Write("compil_llvm").Level(LogError) << "unable to get .text section data: " << ErrorCode.message() << LogEnd;
+      return false;
+    }
+    break;
+  }
+
+  // Get compiled data
+  if (TextSectionContents.empty())
+  {
+    Log::Write("compil_llvm").Level(LogError) << "unable to find .text section" << LogEnd;
+    return false;
+  }
+  rBuffer.resize(TextSectionContents.size());
+  rBuffer = std::vector<u8>(TextSectionContents.data(), TextSectionContents.data() + TextSectionContents.size()); // LATER(wisk): can we improve this code by moving the pointer from llvm::StringRef?
+
+  return true;
 }
-
-bool LlvmCompiler::Compile(std::string const& rFormatName, std::vector<u8>& rBuffer)
-{
-  return false;
-}
-
-
-
-
 
 LlvmCompiler::LlvmExpressionVisitor::LlvmExpressionVisitor(
   Compiler* pCompil,
@@ -499,7 +578,7 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitVariable(VariableEx
   {
   case Unknown:
   {
-    switch (spVarExpr->GetAction())
+    switch (spVarExpr->GetType())
     {
     case VariableExpression::Alloc:
       m_rVars[spVarExpr->GetName()] = std::make_tuple(spVarExpr->GetBitSize(), m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spVarExpr->GetBitSize()), nullptr, spVarExpr->GetName()));
@@ -517,7 +596,7 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitVariable(VariableEx
   }
 
   case Read:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
@@ -533,7 +612,7 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitVariable(VariableEx
     }
 
   case Write:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
@@ -561,8 +640,6 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitVariable(VariableEx
 
 Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
 {
-  return nullptr;
-
   State OldState = m_State;
   m_State = Read;
 
@@ -589,13 +666,11 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitMemory(MemoryExpres
   auto pBaseVal = m_ValueStack.top();
   m_ValueStack.pop();
   auto AccBitSize = spMemExpr->GetAccessSizeInBit();
-  auto pAccBitSizeVal = _MakeInteger(BitVector(32, AccBitSize));
 
-  llvm::Value* pPtrVal = nullptr;
-  if (m_State != Read || spMemExpr->IsDereferencable())
-  {
-    return nullptr; // TODO(wisk):
-  }
+  // TODO(wisk): handle x86 fs/gs segment register
+  // using gs = 256, and fs = 257
+  // http://llvm.org/docs/doxygen/html/classllvm_1_1PointerType.html
+  auto pPtrVal = m_rBuilder.CreateIntToPtr(pOffVal, llvm::PointerType::getIntNPtrTy(llvm::getGlobalContext(), AccBitSize));
 
   switch (m_State)
   {
@@ -636,8 +711,12 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitMemory(MemoryExpres
       return nullptr;
     }
 
-    return nullptr; // TODO(wisk):
-
+    do
+    {
+      auto pCurVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      m_rBuilder.CreateStore(pCurVal, pPtrVal);
+    } while (!m_ValueStack.empty());
     break;
   }
   }
@@ -647,7 +726,9 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitMemory(MemoryExpres
 
 Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
-  return nullptr;
+  if (spSymExpr->GetExpression() == nullptr)
+    return nullptr;
+  return spSymExpr->GetExpression()->Visit(this);
 }
 
 llvm::Value* LlvmCompiler::LlvmExpressionVisitor::_MakeInteger(BitVector const& rInt) const

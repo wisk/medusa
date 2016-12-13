@@ -32,6 +32,7 @@ macro(medusa_add_module type name include_files source_files)
     LINKER_LANGUAGE CXX
     FOLDER ${MEDUSA_FOLDER}
     PREFIX ""
+    DEBUG_POSTFIX ""
   )
 
   install(TARGETS ${MEDUSA_MODULE}

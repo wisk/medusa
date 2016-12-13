@@ -43,7 +43,7 @@ void PydusaExpression(py::module& rMod)
 
   // condition expression class inherited from base expression class
 
-  auto const& rConditionExpressionClass = py::class_<ConditionExpression, ConditionExpression::SPType>(rMod, "ConditionExpression", py::base<Expression>())
+  auto const& rConditionExpressionClass = py::class_<ConditionExpression, ConditionExpression::SPType, Expression>(rMod, "ConditionExpression")
     .def("__str__", &ConditionExpression::ToString)
     .def_property_readonly("type", &ConditionExpression::GetType)
     .def_property_readonly("condition", &ConditionExpression::GetCondition)
@@ -52,35 +52,35 @@ void PydusaExpression(py::module& rMod)
     .def_property_readonly("tested_expression", &ConditionExpression::GetTestExpression)
     ;
 
-  auto const& rTernaryConditionExpressionClass = py::class_<TernaryConditionExpression, TernaryConditionExpression::SPType>(rMod, "TernaryConditionExpression", py::base<ConditionExpression>())
+  auto const& rTernaryConditionExpressionClass = py::class_<TernaryConditionExpression, TernaryConditionExpression::SPType, ConditionExpression>(rMod, "TernaryConditionExpression")
     .def_property_readonly("true_expression", &TernaryConditionExpression::GetTrueExpression)
     .def_property_readonly("false_expression", &TernaryConditionExpression::GetFalseExpression)
     ;
 
-  auto const& rIfElseConditionExpressionClass = py::class_<IfElseConditionExpression, IfElseConditionExpression::SPType>(rMod, "IfElseConditionExpression", py::base<ConditionExpression>())
+  auto const& rIfElseConditionExpressionClass = py::class_<IfElseConditionExpression, IfElseConditionExpression::SPType, ConditionExpression>(rMod, "IfElseConditionExpression")
     .def_property_readonly("then_expression", &IfElseConditionExpression::GetThenExpression)
     .def_property_readonly("else_expression", &IfElseConditionExpression::GetElseExpression)
     ;
 
-  auto const& rWhileConditionExpressionClass = py::class_<WhileConditionExpression, WhileConditionExpression::SPType>(rMod, "WhileConditionExpression", py::base<ConditionExpression>())
+  auto const& rWhileConditionExpressionClass = py::class_<WhileConditionExpression, WhileConditionExpression::SPType, ConditionExpression>(rMod, "WhileConditionExpression")
     .def_property_readonly("body_expression", &WhileConditionExpression::GetBodyExpression)
     ;
 
   // constant expression class inherited from base expression class
 
-  auto const& rBitVectorExpressionClass = py::class_<BitVectorExpression, BitVectorExpression::SPType>(rMod, "BitVectorExpression", py::base<Expression>())
+  auto const& rBitVectorExpressionClass = py::class_<BitVectorExpression, BitVectorExpression::SPType, Expression>(rMod, "BitVectorExpression")
     .def("__str__", &BitVectorExpression::ToString)
     .def_property_readonly("value", &BitVectorExpression::GetInt)
     ;
 
   // identifier expression class inherited from base expression class
 
-  auto const& rIdentifierExpressionClass = py::class_<IdentifierExpression, IdentifierExpression::SPType>(rMod, "IdentifierExpression", py::base<Expression>())
+  auto const& rIdentifierExpressionClass = py::class_<IdentifierExpression, IdentifierExpression::SPType, Expression>(rMod, "IdentifierExpression")
     .def("__str__", &IdentifierExpression::ToString)
     .def_property_readonly("identifier", &GetExprIdIdentifier)
     ;
 
-  auto const& rTrackExpressionClass = py::class_<TrackExpression, TrackExpression::SPType>(rMod, "TrackExpression", py::base<Expression>())
+  auto const& rTrackExpressionClass = py::class_<TrackExpression, TrackExpression::SPType, Expression>(rMod, "TrackExpression")
     .def("__str__", &TrackExpression::ToString)
     .def_property_readonly("tracked_expression", &TrackExpression::GetTrackedExpression)
     .def_property_readonly("tracked_address", &TrackExpression::GetTrackAddress)
@@ -89,7 +89,7 @@ void PydusaExpression(py::module& rMod)
 
   // assignment expression class inherited from base expression class
 
-  auto const& rAssignmentExpressionClass = py::class_<AssignmentExpression, AssignmentExpression::SPType>(rMod, "AssignmentExpression", py::base<Expression>())
+  auto const& rAssignmentExpressionClass = py::class_<AssignmentExpression, AssignmentExpression::SPType, Expression>(rMod, "AssignmentExpression")
     .def("__str__", &AssignmentExpression::ToString)
     .def_property_readonly("destination_expression", &AssignmentExpression::GetDestinationExpression)
     .def_property_readonly("source_expression", &AssignmentExpression::GetSourceExpression)
@@ -97,7 +97,7 @@ void PydusaExpression(py::module& rMod)
 
   // memory expression class inherited from base expression class
 
-  auto const& rMemoryExpressionClass = py::class_<MemoryExpression, MemoryExpression::SPType>(rMod, "MemoryExpression", py::base<Expression>())
+  auto const& rMemoryExpressionClass = py::class_<MemoryExpression, MemoryExpression::SPType, Expression>(rMod, "MemoryExpression")
     .def("__str__", &MemoryExpression::ToString)
     .def_property_readonly("access_bit_size", &MemoryExpression::GetAccessSizeInBit)
     .def_property_readonly("base_expression", &MemoryExpression::GetBaseExpression)
@@ -107,7 +107,7 @@ void PydusaExpression(py::module& rMod)
 
   // symbolic expression class inherited from base expression class
 
-  auto const& rSymbolicExpressionClass = py::class_<SymbolicExpression, SymbolicExpression::SPType>(rMod, "SymbolicExpression", py::base<Expression>())
+  auto const& rSymbolicExpressionClass = py::class_<SymbolicExpression, SymbolicExpression::SPType, Expression>(rMod, "SymbolicExpression")
     .def("__str__", &SymbolicExpression::ToString)
     .def_property_readonly("type", &SymbolicExpression::GetType)
     .def_property_readonly("value", &SymbolicExpression::GetValue)
@@ -117,29 +117,29 @@ void PydusaExpression(py::module& rMod)
 
   // variable expression class inherited from base expression class
 
-  auto const& rVariableExpressionClass = py::class_<VariableExpression, VariableExpression::SPType>(rMod, "VariableExpression", py::base<Expression>())
+  auto const& rVariableExpressionClass = py::class_<VariableExpression, VariableExpression::SPType, Expression>(rMod, "VariableExpression")
     .def("__str__", &VariableExpression::ToString)
-    .def_property_readonly("type", &VariableExpression::GetAction)
     .def_property_readonly("name", &VariableExpression::GetName)
+    .def_property_readonly("type", &VariableExpression::GetType)
     ;
 
   // operation expression class inherited from base expression class
 
-  auto const& rOperationExpressionClass = py::class_<OperationExpression, OperationExpression::SPType>(rMod, "OperationExpression", py::base<Expression>())
+  auto const& rOperationExpressionClass = py::class_<OperationExpression, OperationExpression::SPType, Expression>(rMod, "OperationExpression")
     .def("__str__", &OperationExpression::ToString)
     .def_property_readonly("operation", &OperationExpression::GetOperation)
     ;
 
   // UnaryOperationExpression expression class inherited from operation expression class
 
-  auto const& rUnaryOperationExpressionClass = py::class_<UnaryOperationExpression, UnaryOperationExpression::SPType>(rMod, "UnaryOperationExpression", py::base<OperationExpression>())
+  auto const& rUnaryOperationExpressionClass = py::class_<UnaryOperationExpression, UnaryOperationExpression::SPType, OperationExpression>(rMod, "UnaryOperationExpression")
     .def("__str__", &UnaryOperationExpression::ToString)
     .def_property_readonly("expression", &UnaryOperationExpression::GetExpression)
     ;
 
   // BinaryOperationExpression expression class inherited from operation expression class
 
-  auto const& rBinaryOperationClass = py::class_<BinaryOperationExpression, BinaryOperationExpression::SPType>(rMod, "BinaryOperationExpression", py::base<OperationExpression>())
+  auto const& rBinaryOperationClass = py::class_<BinaryOperationExpression, BinaryOperationExpression::SPType, OperationExpression>(rMod, "BinaryOperationExpression")
     .def("__str__", &BinaryOperationExpression::ToString)
     .def_property_readonly("left_expression", &BinaryOperationExpression::GetLeftExpression)
     .def_property_readonly("right_expression", &BinaryOperationExpression::GetRightExpression)
@@ -216,7 +216,7 @@ void PydusaExpression(py::module& rMod)
     .value("SYM_UNDEFINED",         SymbolicExpression::Undefined)
     ;
 
-  py::enum_<VariableExpression::ActionType>(rVariableExpressionClass, "Type")
+  py::enum_<VariableExpression::Type>(rVariableExpressionClass, "Type")
     .value("VAR_UNKNOWN",    VariableExpression::Unknown)
     .value("VAR_ALLOC",      VariableExpression::Alloc)
     .value("VAR_FREE",       VariableExpression::Free)
@@ -225,24 +225,25 @@ void PydusaExpression(py::module& rMod)
 
   py::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
 
-  py::class_<NormalizeIdentifier>(rMod, "NormalizeIdentifier", py::base<ExpressionVisitor>())
+  py::class_<NormalizeIdentifier, ExpressionVisitor>(rMod, "NormalizeIdentifier")
     .def(py::init<CpuInformation const&, u8>())
     ;
 
-  py::class_<IdentifierToVariable>(rMod, "IdentifierToVariable", py::base<ExpressionVisitor>())
+  py::class_<IdentifierToVariable, ExpressionVisitor>(rMod, "IdentifierToVariable")
+    .def(py::init<>())
+    .def_property_readonly("used_identifier", &IdentifierToVariable::GetUsedId)
+    ;
+
+  py::class_<SimplifyVisitor, ExpressionVisitor>(rMod, "SimplifyVisitor")
     .def(py::init<>())
     ;
 
-  py::class_<SimplifyVisitor>(rMod, "SimplifyVisitor", py::base<ExpressionVisitor>())
-    .def(py::init<>())
-    ;
-
-  py::class_<FilterVisitor>(rMod, "FilterVisitor", py::base<ExpressionVisitor>())
+  py::class_<FilterVisitor, ExpressionVisitor>(rMod, "FilterVisitor")
     .def(py::init<FilterVisitor::Matcher, size_t>())
     .def("get_matched_expressions", &FilterVisitor::GetMatchedExpressions)
     ;
 
-  py::class_<SymbolicVisitor>(rMod, "SymbolicVisitor", py::base<ExpressionVisitor>())
+  py::class_<SymbolicVisitor, ExpressionVisitor>(rMod, "SymbolicVisitor")
     .def(py::init<Document const&, u8, bool>())
     .def("fork", &SymbolicVisitor::Fork)
     .def("remove_expression_annotations", &SymbolicVisitor::RemoveExpressionAnnotations)

@@ -1091,7 +1091,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
   {
   case Unknown:
   {
-    switch (spVarExpr->GetAction())
+    switch (spVarExpr->GetType())
     {
     case VariableExpression::Alloc:
       m_rVars[spVarExpr->GetName()] = std::make_tuple(spVarExpr->GetBitSize(), m_rBuilder.CreateAlloca(_BitSizeToLlvmType(spVarExpr->GetBitSize()), nullptr, spVarExpr->GetName()));
@@ -1109,7 +1109,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
   }
 
   case Read:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
@@ -1125,7 +1125,7 @@ Expression::SPType LlvmEmulator::LlvmExpressionVisitor::VisitVariable(VariableEx
     }
 
   case Write:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))

@@ -39,7 +39,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" COMPIL_LLVM_EXPORT Compiler* GetCompiler(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+extern "C" COMPIL_LLVM_EXPORT Compiler* GetCompiler(void);
 
 class LlvmCompiler : public Compiler
 {
@@ -49,18 +49,13 @@ public:
 
   virtual std::string GetName(void) const { return "llvm"; }
 
-  bool CreateBasicBlock(Expression::VSPType const& rExprs) { m_Exprs = rExprs; }
-
-  virtual bool Compile(std::string const& rFormatName, Path const& rOutputFile);
-  virtual bool Compile(std::string const& rFormatName, std::vector<u8>& rBuffer);
+  virtual bool Compile(std::vector<u8>& rBuffer);
 
 private:
   llvm::IRBuilder<> m_Builder;
 
   typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
   VarMapType m_Vars;
-  Expression::VSPType m_Exprs;
-
 
   class LlvmExpressionVisitor : public ExpressionVisitor
   {

@@ -155,9 +155,10 @@ public:
 
 protected:
   void _InsertExpression(Expression::SPType spKeyExpr, Expression::SPType spValExpr);
+  bool _RemoveExpression(Expression::SPType spKeyExpr);
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
-  typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
+  typedef std::vector<std::pair<Expression::SPType, Expression::SPType>> SymbolicContextType;
   Document const&                   m_rDoc;
   u8                                m_Mode;
   SymbolicContextType               m_SymCtxt;
@@ -267,9 +268,9 @@ public:
   Expression::SPType         SimplifyBinOp(OperationExpression::Type Operation, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
 
 protected:
-  Document const&                   m_rDoc;
-  u8                                m_Mode;
-  Address                           m_CurAddr;
+  Document const& m_rDoc;
+  u8              m_Mode;
+  Address         m_CurAddr;
 };
 
 MEDUSA_NAMESPACE_END

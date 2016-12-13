@@ -72,7 +72,7 @@ struct ModuleTraits
 
 DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_",   "GetArchitecture")
 DECL_MODULE_TRAITS(BindingModuleTraits,         TGetBinding,         "bind_",   "GetBinding")
-DECL_MODULE_TRAITS(CompilerModuleTraits,        TGetCompiler,        "compil_", "Getcompiler")
+DECL_MODULE_TRAITS(CompilerModuleTraits,        TGetCompiler,        "compil_", "GetCompiler")
 DECL_MODULE_TRAITS(DatabaseModuleTraits,        TGetDatabase,        "db_",     "GetDatabase")
 DECL_MODULE_TRAITS(EmulatorModuleTraits,        TGetEmulator,        "emul_",   "GetEmulator")
 DECL_MODULE_TRAITS(LoaderModuleTraits,          TGetLoader,          "ldr_",    "GetLoader")

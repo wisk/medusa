@@ -33,7 +33,9 @@ if (UNIX AND LLVM_ROOT)
   install(TARGETS compil_llvm LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
   set_target_properties(compil_llvm PROPERTIES
     FOLDER "Compilations"
-    PREFIX "")
+    PREFIX ""
+    DEBUG_POSTFIX ""
+    )
 
 elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
 
@@ -71,7 +73,9 @@ elseif (MSVC AND LLVM_ROOT_DEBUG AND LLVM_ROOT_RELEASE)
   install(TARGETS compil_llvm RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
   set_target_properties(compil_llvm PROPERTIES
     FOLDER "Compilations"
-    PREFIX "")
+    PREFIX ""
+    DEBUG_POSTFIX ""
+    )
 
 endif()
 

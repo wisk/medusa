@@ -2,8 +2,14 @@
 #include "medusa/expression_visitor.hpp"
 #include "medusa/expression_filter.hpp"
 #include <boost/format.hpp>
+#include <algorithm>
 
 MEDUSA_NAMESPACE_BEGIN
+
+bool operator==(std::pair<Expression::SPType, Expression::SPType> const& lhs, Expression::SPType const& rhs)
+{
+  return lhs.first->Compare(rhs) == Expression::CmpIdentical;
+}
 
 Expression::SPType ExpressionVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
 {
@@ -217,8 +223,8 @@ Expression::SPType CloneVisitor::VisitVariable(VariableExpression::SPType spVarE
 {
   return Expr::MakeVar(
     spVarExpr->GetName(),
-    spVarExpr->GetAction(),
-    spVarExpr->GetBitSize());
+    spVarExpr->GetType(),
+    static_cast<u16>(spVarExpr->GetBitSize()));
 }
 
 Expression::SPType CloneVisitor::VisitMemory(MemoryExpression::SPType spMemExpr)
@@ -238,7 +244,7 @@ Expression::SPType CloneVisitor::VisitSymbolic(SymbolicExpression::SPType spSymE
     spSymExpr->GetType(),
     spSymExpr->GetValue(),
     spSymExpr->GetAddress(),
-    spSymExpr->GetExpression());
+    spSymExpr->GetExpression() == nullptr ? nullptr : spSymExpr->GetExpression()->Visit(this));
 }
 
 Expression::SPType FilterVisitor::VisitSystem(SystemExpression::SPType spSysExpr)
@@ -1131,13 +1137,13 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
     auto spNoAnnDstExprVst = RemoveExpressionAnnotations(spDstExprVst);
     for (auto const& rSymPair : m_SymCtxt)
     {
-      auto spCurExpr = rSymPair.first;
+      auto spCurExpr = std::get<0>(rSymPair);
 
       if (auto spIdExpr = expr_cast<IdentifierExpression>(RemoveExpressionAnnotations(spCurExpr)))
       {
         if ((spIdExpr->Compare(spNoAnnDstExpr) == Expression::CmpIdentical) || (spIdExpr->Compare(spNoAnnDstExprVst) == Expression::CmpIdentical))
         {
-          m_SymCtxt.erase(rSymPair.first);
+          _RemoveExpression(rSymPair.first);
           break;
         }
       }
@@ -1146,7 +1152,7 @@ Expression::SPType SymbolicVisitor::VisitAssignment(AssignmentExpression::SPType
       {
         if ((spCurExpr->Compare(spDstExpr) == Expression::CmpIdentical) || (spCurExpr->Compare(spDstExprVst) == Expression::CmpIdentical))
         {
-          m_SymCtxt.erase(rSymPair.first);
+          _RemoveExpression(rSymPair.first);
           break;
         }
       }
@@ -1384,7 +1390,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
   auto itVar = m_VarPool.find(spVarExpr->GetName());
   if (itVar == std::end(m_VarPool))
   {
-    if (spVarExpr->GetAction() != VariableExpression::Alloc)
+    if (spVarExpr->GetType() != VariableExpression::Alloc)
     {
       Log::Write("core").Level(LogError) << "invalid var expr action while evaluation" << LogEnd;
       return nullptr;
@@ -1393,7 +1399,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
   }
   else
   {
-    switch (spVarExpr->GetAction())
+    switch (spVarExpr->GetType())
     {
     default:
       break;
@@ -1428,7 +1434,7 @@ Expression::SPType SymbolicVisitor::VisitVariable(VariableExpression::SPType spV
         {
           if (spSymVarExpr->GetName() == spVarExpr->GetName())
           {
-            m_SymCtxt.erase(rSymPair.first);
+            _RemoveExpression(rSymPair.first);
             break;
           }
         }
@@ -1578,7 +1584,7 @@ SymbolicVisitor SymbolicVisitor::Fork(void) const
 
   for (auto const& rSymCtxtPair : m_SymCtxt)
   {
-    Forked.m_SymCtxt[rSymCtxtPair.first] = rSymCtxtPair.second->Clone();
+    Forked.m_SymCtxt.push_back(std::make_pair(rSymCtxtPair.first, rSymCtxtPair.second->Clone()));
   }
 
   for (auto const& rSymCond : m_SymCond)
@@ -2008,7 +2014,16 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
     return;
   }
 
-  m_SymCtxt[spSimKeyExpr] = spSimValExpr;
+  m_SymCtxt.push_back(std::make_pair(spSimKeyExpr, spSimValExpr));
+}
+
+bool SymbolicVisitor::_RemoveExpression(Expression::SPType spKeyExpr)
+{
+  auto itSymPair = std::find(std::begin(m_SymCtxt), std::end(m_SymCtxt), spKeyExpr);
+  if (itSymPair == std::end(m_SymCtxt))
+    return false;
+  m_SymCtxt.erase(itSymPair);
+  return true;
 }
 
 bool SymbolicVisitor::_EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const

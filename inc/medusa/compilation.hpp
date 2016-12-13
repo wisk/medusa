@@ -20,16 +20,26 @@ public:
 
   virtual std::string GetName(void) const = 0;
 
-  //virtual bool AddLabel(Label const& rLabel, Address const& rAddress) = 0;
-  //virtual bool AddFunction(FunctionDetail const& rFunction, Address const& rAddress) = 0;
+  std::string GetFormat(void) const;
+  std::string GetEntryPoint(void) const;
 
+  void SetFormat(std::string const& rFormat = "native");
   void SetEntryPoint(std::string const& rLabelName = "start");
 
-  virtual bool Compile(std::string const& rFormatName, Path const& rOutputFile) = 0;
-  virtual bool Compile(std::string const& rFormatName, std::vector<u8>& rBuffer) = 0;
+  virtual bool AddCode(std::string const& rCodeName, Expression::VSPType const& rCode);
+  virtual bool AddData(std::string const& rDataName, std::vector<u8> const& rData);
+
+  //virtual bool AddFunction(FunctionDetail const& rFunction, Address const& rAddress) = 0;
+
+  virtual bool Compile(Path const& rOutputFile);
+  virtual bool Compile(std::vector<u8>& rBuffer) = 0;
 
 protected:
-  std::string m_EntryPoint;
+  std::string m_Format = "native";
+  std::string m_EntryPoint = "start";
+
+  std::unordered_map<std::string, Expression::VSPType> m_CodeMap;
+  std::unordered_map<std::string, std::vector<u8>> m_DataMap;
 };
 
 typedef Compiler* (*TGetCompiler)(void);

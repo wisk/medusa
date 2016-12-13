@@ -62,7 +62,7 @@ bool ModuleManager::_DoLoadModule(Path const& rModulePath, void* const pMod, Mod
       rModulePath,
       pGetCompiler(),
       "is a compiler", "unable to get compiler",
-      [this, pGetCompiler](medusa::Compiler* pCompiler)
+      [this](medusa::Compiler* pCompiler)
     {
       Compiler::SPType spCompiler(pCompiler);
       m_Compilers.push_back(spCompiler);
