@@ -11,6 +11,7 @@ MEDUSA_NAMESPACE_USE
 void PydusaAddress(py::module& rMod)
 {
   auto const& rAddressClass = py::class_<Address>(rMod, "Address")
+    .def(py::init<>())
     .def(py::init<OffsetType>())
     .def(py::init<BaseType, OffsetType>())
     .def(py::init<Address::Type, OffsetType>())

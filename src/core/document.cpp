@@ -886,16 +886,20 @@ u8 Document::GetMode(Address const& rAddress) const
   if (spCell != nullptr)
   {
     auto const& rModMgr = ModuleManager::Instance();
-    auto spCellArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
-    if (spCellArch != nullptr)
+    auto ArchTag = spCell->GetArchitectureTag();
+    if (ArchTag != MEDUSA_ARCH_UNK)
     {
-      Mode = spCellArch->GetDefaultMode(rAddress);
-      if (Mode != 0 && Mode != 1)
+      auto spCellArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
+      if (spCellArch != nullptr)
+      {
+        Mode = spCellArch->GetDefaultMode(rAddress);
+        if (Mode != 0)
+          return Mode;
+      }
+      Mode = spCell->GetMode();
+      if (Mode != 0)
         return Mode;
     }
-    Mode = spCell->GetMode();
-    if (Mode != 0)
-      return Mode;
   }
 
   MemoryArea MemArea;

@@ -1492,13 +1492,17 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
     return spFoundExpr;
   }
 
+  Address CurAddr;
   auto Offset = spOffConstExpr->GetInt().ConvertTo<OffsetType>();
 
   BaseType Base = 0;
   if (auto spBaseConstExpr = expr_cast<BitVectorExpression>(spBaseExpr))
+  {
     Base = spBaseConstExpr->GetInt().ConvertTo<BaseType>();
-
-  Address CurAddr(Base, Offset);
+    CurAddr = Address(Base, Offset);
+  }
+  else
+    CurAddr = Address(Offset);
 
   auto Lbl = m_rDoc.GetLabelFromAddress(CurAddr);
   if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
@@ -1916,13 +1920,23 @@ Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
 {
   auto spExprToFind = RemoveExpressionAnnotations(spExpr);
   if (spExprToFind == nullptr)
-        return nullptr;
-  // TODO(wisk): handle memory aliasing
+    return nullptr;
+
+  ConstantFoldingVisitor ConstantFoldingVst(m_rDoc, m_CurAddr, m_Mode);
+  SimplifyVisitor        SimVst;
+  auto spOptExprToFind = spExprToFind->Visit(&ConstantFoldingVst);
+  if (spOptExprToFind != nullptr)
+  {
+    spOptExprToFind = spOptExprToFind->Visit(&SimVst);
+  }
+  if (spOptExprToFind != nullptr)
+    spExprToFind = spOptExprToFind;
   for (auto const& rSymPair : m_SymCtxt)
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
     if (spCurExpr == nullptr)
         continue;
+    if (spOptExprToFind != nullptr)
     if (spExprToFind->Compare(spCurExpr) == Expression::CmpIdentical)
       return rSymPair.second;
   }
@@ -2478,12 +2492,20 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return spBv->GetInt().GetUnsignedValue() == Mask.GetUnsignedValue();
   };
 
+  auto TestMsbOne = [](BitVectorExpression::SPType spBv)
+  {
+    if (spBv == nullptr)
+      return false;
+    return spBv->GetInt().Msb().GetUnsignedValue() != 0x0;
+  };
+
   switch (spBinOpExpr->GetOperation())
   {
   default: break;
 
   // a | 0 = a // 0 | b = b
   // a + 0 = a // 0 + b = b
+  // a + (-b) = a -b
   case OperationExpression::OpOr:
   case OperationExpression::OpAdd:
   {
@@ -2491,6 +2513,24 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
       return spRight;
     if (TestZero(spBvRight))
       return spLeft;
+
+    if (spBinOpExpr->GetOperation() == OperationExpression::OpAdd)
+    {
+      if (auto spUnOpExpr = expr_cast<UnaryOperationExpression>(spRight))
+      {
+        if (spUnOpExpr->GetOperation() == OperationExpression::OpNeg)
+        {
+          return Expr::MakeBinOp(OperationExpression::OpSub, spLeft, spUnOpExpr->GetExpression());
+        }
+      }
+
+      //if (TestMsbOne(spBvRight))
+      //{
+      //  auto OppoVal = spBvRight->GetInt().Neg();
+      //  return Expr::MakeBinOp(OperationExpression::OpSub, spLeft, Expr::MakeBitVector(OppoVal));
+      //}
+    }
+
     break;
   }
 
@@ -2502,11 +2542,17 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   case OperationExpression::OpArs:
   case OperationExpression::OpRol:
   case OperationExpression::OpRor:
+  {
+    if (TestZero(spBvRight))
+      return spLeft;
+
+    if (spBinOpExpr->GetOperation() == OperationExpression::OpSub && spBvRight != nullptr)
     {
-      if (TestZero(spBvRight))
-        return spLeft;
-      break;
+      auto OppoVal = spBvRight->GetInt().Neg();
+      return Expr::MakeBinOp(OperationExpression::OpAdd, spLeft, Expr::MakeBitVector(OppoVal));
     }
+    break;
+  }
 
   // a * 0 = 0 // 0 * b = 0
   // a * 1 = a // 1 * b = b

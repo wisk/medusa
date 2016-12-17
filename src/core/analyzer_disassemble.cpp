@@ -62,6 +62,8 @@ namespace medusa
         return false;
     }
 
+    // ArchMode value is handled in DisasembleBasicBlock
+
     auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
     if ((Lbl.GetType() & Label::AccessMask) == Label::Imported)
       return true;
@@ -238,6 +240,9 @@ namespace medusa
 
         if (ArchTag == MEDUSA_ARCH_UNK)
         {
+          ArchTag = m_rDoc.GetArchitectureTag(CurAddr);
+          if (ArchTag == MEDUSA_ARCH_UNK)
+            throw std::string("unable to get the current architecture tag");
           spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
           if (spArch == nullptr)
             throw std::string("unable to find architecture module for: ") + CurAddr.ToString();

@@ -32,28 +32,75 @@ bool LlvmCompiler::Compile(std::vector<u8>& rBuffer)
 {
   // Initialization
   std::string ErrMsg;
-  auto& rGblCtx              = llvm::getGlobalContext();
-  auto pModule               = new llvm::Module("compil_llvm", rGblCtx); // TODO(wisk): can we use a std::unique_ptr here?
-  auto pCompiledFunctionType = llvm::FunctionType::get(llvm::Type::getVoidTy(rGblCtx), false);
-  auto pCompiledFunction     = llvm::Function::Create(pCompiledFunctionType, llvm::Function::ExternalLinkage, "compiled_function", pModule);
-  auto pCompiledBasicBlock   = llvm::BasicBlock::Create(rGblCtx, "entry", pCompiledFunction);
-
-  m_Builder.SetInsertPoint(pCompiledBasicBlock);
+  auto& rGblCtx = llvm::getGlobalContext();
+  auto pModule  = new llvm::Module("compil_llvm", rGblCtx); // TODO(wisk): can we use a std::unique_ptr here?
 
   // Convert medusa expressions to LLVM-IR
-  LlvmExpressionVisitor LlvmExpressionVisitor(this, m_Vars, m_Builder);
+  u32 RetValBitSize = 0;
+  std::vector<std::tuple<u32, std::string>> ParamsInfo;
+  std::vector<llvm::Value*> Params;
   IdentifierToVariable Id2Var;
   for (auto const& rCodePair : m_CodeMap)
   {
+    Log::Write("compil_llvm").Level(LogDebug) << "compile code: " << rCodePair.first << LogEnd;
     std::list<Expression::SPType> CompilExprs;
 
     // First, we need to transform expressions to be compiled
     for (auto const& rspExpr : rCodePair.second)
     {
+      // Find the returned value
+      if (auto spAssign = expr_cast<AssignmentExpression>(rspExpr))
+        if (auto spSym = expr_cast<SymbolicExpression>(spAssign->GetDestinationExpression()))
+          if (spSym->GetType() == SymbolicExpression::ReturnedValue)
+            RetValBitSize = spAssign->GetSourceExpression()->GetBitSize();
+
+      // Find parameters
+      FilterVisitor FltVst([](Expression::SPType spExpr) -> Expression::SPType
+      {
+        if (auto spSymExpr = expr_cast<SymbolicExpression>(spExpr))
+          if (spSymExpr->GetType() == SymbolicExpression::FromParameter)
+            return spSymExpr;
+        return nullptr;
+      });
+      rspExpr->Visit(&FltVst);
+      for (auto const& rspParamExpr : FltVst.GetMatchedExpressions())
+      {
+        if (auto spSymParamExpr = expr_cast<SymbolicExpression>(rspParamExpr))
+        {
+          size_t ParamNo = static_cast<size_t>(spSymParamExpr->GetAddress().GetOffset());
+          if (ParamsInfo.size() < ParamNo + 1)
+            ParamsInfo.resize(ParamNo + 1);
+          if (std::get<0>(ParamsInfo[ParamNo]) != 0)
+            continue;
+          ParamsInfo[ParamNo] = std::make_tuple(spSymParamExpr->GetBitSize(), spSymParamExpr->GetValue());
+        }
+      }
+
       CompilExprs.push_back(rspExpr);
     }
 
+    // Create a function type according to SymbolicExpression values
+    auto pRetType = RetValBitSize == 0 ? llvm::Type::getVoidTy(rGblCtx) : llvm::Type::getIntNTy(rGblCtx, RetValBitSize);
+    std::vector<llvm::Type*> ParamsType;
+    for (auto Param : ParamsInfo)
+    {
+      ParamsType.push_back(llvm::Type::getIntNTy(rGblCtx, std::get<0>(Param)));
+    }
+
+    // Define the current function and the first basic block
+    auto pCompiledFunctionType = llvm::FunctionType::get(pRetType, ParamsType, false);
+    auto pCompiledFunction     = llvm::Function::Create(pCompiledFunctionType, llvm::Function::ExternalLinkage, rCodePair.first, pModule);
+    auto pCompiledBasicBlock   = llvm::BasicBlock::Create(rGblCtx, rCodePair.first + "_entry", pCompiledFunction);
+    m_Builder.SetInsertPoint(pCompiledBasicBlock);
+
     // now we can convert them to LLVM-IR
+    auto itArg = pCompiledFunction->arg_begin();
+    for (auto Param : ParamsInfo)
+    {
+      auto pParamVal = itArg++;
+      m_Vars[std::get<1>(Param)] = std::make_tuple(std::get<0>(Param), pParamVal);
+    }
+    LlvmExpressionVisitor LlvmExpressionVisitor(this, m_Vars, m_Builder);
     for (auto const& rspExpr : CompilExprs)
     {
       if (rspExpr->Visit(&LlvmExpressionVisitor) == nullptr)
@@ -62,9 +109,12 @@ bool LlvmCompiler::Compile(std::vector<u8>& rBuffer)
         return false;
       }
     }
-    
+
+    if (RetValBitSize == 0)
+      m_Builder.CreateRetVoid();
+
+    pCompiledFunction->dump();
   }
-  m_Builder.CreateRetVoid();
 
   // Compilation
   auto pExecutionEngine = llvm::EngineBuilder(std::unique_ptr<llvm::Module>(pModule))
@@ -77,6 +127,17 @@ bool LlvmCompiler::Compile(std::vector<u8>& rBuffer)
   llvm::SmallString<0> StringBuffer;
   llvm::raw_svector_ostream OstreamBuffer(StringBuffer);
   llvm::legacy::PassManager PassManager;
+
+  llvm::legacy::FunctionPassManager FunctionPassManager(pModule);
+  FunctionPassManager.add(llvm::createBasicAliasAnalysisPass());
+  FunctionPassManager.add(llvm::createReassociatePass());
+  FunctionPassManager.add(llvm::createPromoteMemoryToRegisterPass());
+  FunctionPassManager.add(llvm::createInstructionCombiningPass());
+  FunctionPassManager.add(llvm::createGVNPass());
+  FunctionPassManager.add(llvm::createCFGSimplificationPass());
+  FunctionPassManager.doInitialization();
+  for (auto& rFunc : *pModule)
+    FunctionPassManager.run(rFunc);
 
   pTargetMachine->addPassesToEmitFile(PassManager, OstreamBuffer, llvm::TargetMachine::CGFT_ObjectFile); // NOTE(wisk): don't check against false returned value here
   if (!PassManager.run(*pModule))
@@ -726,8 +787,61 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitMemory(MemoryExpres
 
 Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitSymbolic(SymbolicExpression::SPType spSymExpr)
 {
+  switch (m_State)
+  {
+  case Read:
+    switch (spSymExpr->GetType())
+    {
+    case SymbolicExpression::FromParameter:
+    {
+      auto itVar = m_rVars.find(spSymExpr->GetValue());
+      if (itVar == std::end(m_rVars))
+        return nullptr;
+      m_ValueStack.push(std::get<1>(itVar->second));
+      return spSymExpr;
+    }
+
+    default:
+      break;
+    }
+
+  case Write:
+  {
+    if (m_ValueStack.empty())
+      return nullptr;
+
+    switch (spSymExpr->GetType())
+    {
+    case SymbolicExpression::ReturnedValue:
+    {
+      auto pRetVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      m_rBuilder.CreateRet(pRetVal);
+      return spSymExpr;
+    }
+
+    default:
+      break;
+    }
+
+    if (spSymExpr->GetValue() == "instruction_pointer")
+    {
+      auto pDstVal = m_ValueStack.top();
+      m_ValueStack.pop();
+      auto DstBitSize = pDstVal->getType()->getScalarSizeInBits();
+      m_rBuilder.CreateIndirectBr(_MakePointer(DstBitSize, m_ValueStack.top()));
+      m_ValueStack.pop();
+      return spSymExpr;
+    }
+    break;
+  }
+
+  default:
+    break;
+  }
+
   if (spSymExpr->GetExpression() == nullptr)
-    return nullptr;
+    return spSymExpr;
   return spSymExpr->GetExpression()->Visit(this);
 }
 

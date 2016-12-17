@@ -1277,7 +1277,7 @@ Expression::CompareType TrackExpression::Compare(Expression::SPType spExpr) cons
     return CmpSameExpression;
   if (m_Pos != spCmpExpr->GetTrackPosition())
     return CmpSameExpression;
-  return CmpIdentical;
+  return m_spTrkExpr->Compare(spCmpExpr->GetTrackedExpression());
 }
 
 // variable ///////////////////////////////////////////////////////////////////

@@ -209,7 +209,7 @@ void PydusaExpression(py::module& rMod)
 
   py::enum_<SymbolicExpression::Type>(rSymbolicExpressionClass, "Type")
     .value("SYM_UNKNOWN",           SymbolicExpression::Unknown)
-    .value("SYM_RETURN_VAL",        SymbolicExpression::ReturnedValue)
+    .value("SYM_RETURNED_VALUE",    SymbolicExpression::ReturnedValue)
     .value("SYM_FROM_PARAMETER",    SymbolicExpression::FromParameter)
     .value("SYM_EXTERNAL_VALUE",    SymbolicExpression::ExternalValue)
     .value("SYM_EXTERNAL_FUNCTION", SymbolicExpression::ExternalFunction)
