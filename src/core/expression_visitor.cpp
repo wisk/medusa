@@ -1460,6 +1460,9 @@ Expression::SPType SymbolicVisitor::VisitMemory(MemoryExpression::SPType spMemEx
   }
 
   spOffExpr = spMemExpr->GetOffsetExpression()->Visit(this);
+  auto spOffValExpr = GetValue(spOffExpr);
+  if (spOffValExpr != nullptr)
+    spOffExpr = spOffValExpr;
   m_Update = OldUpdateState;
 
   auto spVstMemExpr = Expr::MakeMem(spMemExpr->GetAccessSizeInBit(), spBaseExpr, spOffExpr, spMemExpr->IsDereferencable());
@@ -1935,11 +1938,59 @@ Expression::SPType SymbolicVisitor::GetValue(Expression::SPType spExpr) const
   {
     auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
     if (spCurExpr == nullptr)
-        continue;
-    if (spOptExprToFind != nullptr)
+      continue;
     if (spExprToFind->Compare(spCurExpr) == Expression::CmpIdentical)
       return rSymPair.second;
   }
+
+  // We could find the good expression, but the memory access bitsize is different
+  if (auto spMemExpr = expr_cast<MemoryExpression>(spExprToFind))
+  {
+    for (auto const& rSymPair : m_SymCtxt)
+    {
+      auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
+      if (spCurExpr == nullptr)
+        continue;
+      auto spCurMemExpr = expr_cast<MemoryExpression>(spCurExpr);
+      if (spCurMemExpr == nullptr)
+        continue;
+
+      // Here, we want a strictly superior access bitsize
+      // Inferior access bitsize means a part of memory is not yet initialized and should be ignored
+      if (!(spCurMemExpr->GetAccessSizeInBit() > spMemExpr->GetAccessSizeInBit()))
+        continue;
+
+      if (spCurMemExpr->IsDereferencable() != spMemExpr->IsDereferencable())
+        continue;
+
+      auto spCurBaseExpr = spCurMemExpr->GetBaseExpression();
+      auto spBaseExpr = spMemExpr->GetBaseExpression();
+      if (spCurBaseExpr == nullptr && spBaseExpr != nullptr)
+        continue;
+      if (spCurBaseExpr != nullptr && spBaseExpr == nullptr)
+        continue;
+      if (spCurBaseExpr != nullptr && spBaseExpr != nullptr)
+        if (spCurBaseExpr->Compare(spBaseExpr) != Expression::CmpIdentical)
+          continue;
+
+      auto spCurOffExpr = spCurMemExpr->GetOffsetExpression();
+      auto spOffExpr = spMemExpr->GetOffsetExpression();
+      if (spCurOffExpr->Compare(spOffExpr) != Expression::CmpIdentical)
+        continue;
+
+      auto AccBitSize = static_cast<u16>(spMemExpr->GetAccessSizeInBit());
+
+      if (auto spBvExpr = expr_cast<BitVectorExpression>(rSymPair.second))
+      {
+        auto Val = spBvExpr->GetInt();
+        Val.BitCast(AccBitSize);
+        return Expr::MakeBitVector(AccBitSize, Val.GetUnsignedValue());
+      }
+
+      return Expr::MakeBinOp(OperationExpression::OpBcast, rSymPair.second, Expr::MakeBitVector(AccBitSize, AccBitSize));
+    }
+  }
+
   return nullptr;
 }
 
@@ -2016,16 +2067,75 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
   auto spSimValExpr = spConstantFoldingValExpr->Visit(&SimVst);
   auto spSimKeyExpr = spConstantFoldingKeyExpr->Visit(&SimVst);
 
+  if (spSimKeyExpr == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "try to insert null expression with key: " << spKeyExpr->ToString() << LogEnd;
+    return;
+  }
+
   if (expr_cast<BitVectorExpression>(spSimKeyExpr))
   {
     Log::Write("core").Level(LogError) << "try to insert a bitvector expression as key: " << spKeyExpr->ToString() << "=" << spValExpr->ToString() << LogEnd;
     return;
   }
 
-  if (spSimKeyExpr == nullptr)
+  if (auto spMemExpr = expr_cast<MemoryExpression>(spSimKeyExpr))
   {
-    Log::Write("core").Level(LogError) << "try to insert null expression with key: " << spKeyExpr->ToString() << LogEnd;
-    return;
+    auto spOffExpr = RemoveExpressionAnnotations(spMemExpr->GetOffsetExpression());
+    Expression::SPType spNewKeyExpr, spNewValExpr;
+    for (auto const& rSymPair : m_SymCtxt)
+    {
+      auto spCurExpr = RemoveExpressionAnnotations(rSymPair.first);
+      if (spCurExpr == nullptr)
+        continue;
+      auto spCurMemExpr = expr_cast<MemoryExpression>(spCurExpr);
+      if (spCurMemExpr == nullptr)
+        continue;
+
+      if (!(spCurMemExpr->GetAccessSizeInBit() > spMemExpr->GetAccessSizeInBit()))
+        continue;
+
+      if (spCurMemExpr->IsDereferencable() != spMemExpr->IsDereferencable())
+        continue;
+
+      auto spCurBaseExpr = spCurMemExpr->GetBaseExpression();
+      auto spBaseExpr = spMemExpr->GetBaseExpression();
+      if (spCurBaseExpr == nullptr && spBaseExpr != nullptr)
+        continue;
+      if (spCurBaseExpr != nullptr && spBaseExpr == nullptr)
+        continue;
+      if (spCurBaseExpr != nullptr && spBaseExpr != nullptr)
+        if (spCurBaseExpr->Compare(spBaseExpr) != Expression::CmpIdentical)
+          continue;
+
+      auto spCurOffExpr = spCurMemExpr->GetOffsetExpression();
+      if (spCurOffExpr->Compare(spOffExpr) != Expression::CmpIdentical)
+        continue;
+
+      auto CurAccBitSize = static_cast<u16>(spCurMemExpr->GetAccessSizeInBit());
+      auto AccBitSize    = static_cast<u64>(spMemExpr->GetAccessSizeInBit());
+      BitVector Mask(CurAccBitSize, (1ULL << AccBitSize) - 1); // FIXME(wisk): could overflow for huge mask...
+
+      // FIXME(wisk): this code is not endian safe
+      auto spLowPartExpr = spValExpr;
+      auto spHighPartExpr = rSymPair.second;
+      // Rebuild the correct expression
+      /// bit_cast(LowPart, HighPartBitSize)
+      spLowPartExpr = Expr::MakeBinOp(OperationExpression::OpBcast, spLowPartExpr, Expr::MakeBitVector(CurAccBitSize, CurAccBitSize));
+      /// HighPart & ~Mask
+      spHighPartExpr = Expr::MakeBinOp(OperationExpression::OpAnd, spHighPartExpr, Expr::MakeBitVector(Mask.Not()));
+      /// Expr = HighPart | LowPart
+      spNewKeyExpr = rSymPair.first;
+      spNewValExpr = Expr::MakeBinOp(OperationExpression::OpOr, spHighPartExpr, spLowPartExpr)->Visit(this);
+      break;
+    }
+
+    if (spNewKeyExpr != nullptr && spNewValExpr != nullptr)
+    {
+      _RemoveExpression(spNewKeyExpr);
+      _InsertExpression(spNewKeyExpr, spNewValExpr);
+      return;
+    }
   }
 
   m_SymCtxt.push_back(std::make_pair(spSimKeyExpr, spSimValExpr));
