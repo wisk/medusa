@@ -1285,10 +1285,10 @@ Expression::CompareType TrackExpression::Compare(Expression::SPType spExpr) cons
 VariableExpression::VariableExpression(std::string const& rVarName, VariableExpression::Type VarType, u32 BitSize)
   : m_Name(rVarName), m_VarType(VarType), m_BitSize(BitSize)
 {
-  if (BitSize != 0 && VarType != Alloc)
-    Log::Write("core").Level(LogWarning) << "variable expression doesn't require bit size if action is different from ``alloc''" << LogEnd;
+  //if (BitSize != 0 && VarType != Alloc)
+  //  Log::Write("core").Level(LogWarning) << "variable expression doesn't require bit size if action is different from ``alloc''" << LogEnd;
   if (BitSize == 0 && VarType == Alloc)
-    Log::Write("core").Level(LogWarning) << "try to allocate a 0-bit variable" << LogEnd;
+    Log::Write("core").Level(LogError) << "try to allocate a 0-bit variable" << LogEnd;
 }
 
 VariableExpression::~VariableExpression(void)

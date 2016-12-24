@@ -2132,12 +2132,12 @@ void SymbolicVisitor::_InsertExpression(Expression::SPType spKeyExpr, Expression
 
     if (spNewKeyExpr != nullptr && spNewValExpr != nullptr)
     {
-      _RemoveExpression(spNewKeyExpr);
       _InsertExpression(spNewKeyExpr, spNewValExpr);
       return;
     }
   }
 
+  _RemoveExpression(spSimKeyExpr);
   m_SymCtxt.push_back(std::make_pair(spSimKeyExpr, spSimValExpr));
 }
 
