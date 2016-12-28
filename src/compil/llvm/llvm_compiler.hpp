@@ -24,6 +24,8 @@
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/Target/TargetMachine.h>
 
+#include <llvm/CodeGen/VirtRegMap.h>
+
 #include <llvm/IR/Intrinsics.h>
 
 

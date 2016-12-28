@@ -98,6 +98,7 @@ set(SRC
   ${SRCROOT}/expression.cpp
   ${SRCROOT}/expression_filter.cpp
   ${SRCROOT}/expression_operation.cpp
+  ${SRCROOT}/expression_parser.cpp
   ${SRCROOT}/expression_simplifier.cpp
   ${SRCROOT}/expression_visitor.cpp
   ${SRCROOT}/function.cpp
@@ -143,6 +144,7 @@ include(GenerateExportHeader)
 add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
+  PRIVATE "${PEGTL_ROOT}"
 )
 
 

@@ -2609,11 +2609,14 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
     return spBv->GetInt().Msb().GetUnsignedValue() != 0x0;
   };
 
-  switch (spBinOpExpr->GetOperation())
+  auto const BinOp = spBinOpExpr->GetOperation();
+
+  switch (BinOp)
   {
   default: break;
 
   // a | 0 = a // 0 | b = b
+  // a | a = a
   // a + 0 = a // 0 + b = b
   // a + (-b) = a -b
   case OperationExpression::OpOr:
@@ -2624,7 +2627,7 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
     if (TestZero(spBvRight))
       return spLeft;
 
-    if (spBinOpExpr->GetOperation() == OperationExpression::OpAdd)
+    if (BinOp == OperationExpression::OpAdd)
     {
       if (auto spUnOpExpr = expr_cast<UnaryOperationExpression>(spRight))
       {
@@ -2639,6 +2642,12 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
       //  auto OppoVal = spBvRight->GetInt().Neg();
       //  return Expr::MakeBinOp(OperationExpression::OpSub, spLeft, Expr::MakeBitVector(OppoVal));
       //}
+    }
+
+    else if (BinOp == OperationExpression::OpOr)
+    {
+      if (spLeft->Compare(spRight) == Expression::CmpIdentical)
+        return spLeft;
     }
 
     break;
@@ -2693,6 +2702,7 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
 
   // a & -1 = a // -1 & b = b
   // a &  0 = 0 //  0 & b = 0
+  // a &  a = a
   case OperationExpression::OpAnd:
   {
     if (TestAllOnes(spBvLeft))
@@ -2703,6 +2713,8 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
       return spBvLeft;
     if (TestZero(spBvRight))
       return spBvRight;
+    if (spLeft->Compare(spRight) == Expression::CmpIdentical)
+      return spLeft;
     break;
   }
 
@@ -2715,10 +2727,13 @@ Expression::SPType SimplifyVisitor::VisitBinaryOperation(BinaryOperationExpressi
   }
 
   // a ^ b = 0 if a == b
+  // a ^ -1 = ~a
   case OperationExpression::OpXor:
   {
     if (spLeft->Compare(spRight) == Expression::CmpIdentical)
       return Expr::MakeBitVector(spLeft->GetBitSize(), 0x0);
+    if (TestAllOnes(spBvRight))
+      return Expr::MakeUnOp(OperationExpression::OpNot, spLeft);
     break;
   }
 

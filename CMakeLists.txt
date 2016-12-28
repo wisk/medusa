@@ -126,6 +126,25 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(ExternalProject)
 
+## PEGTL
+
+ExternalProject_add(PEGTL
+  PREFIX PEGTL
+
+  GIT_REPOSITORY "https://github.com/ColinH/PEGTL"
+  GIT_TAG        "master"
+
+  UPDATE_COMMAND ""
+  PATCH_COMMAND  ""
+
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/deps/pegtl"
+
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+)
+set(PEGTL_ROOT "${CMAKE_SOURCE_DIR}/deps/pegtl")
+
 ## C++
 set(CMAKE_CXX_STANDARD 11)
 include(CheckCXXCompilerFlag)

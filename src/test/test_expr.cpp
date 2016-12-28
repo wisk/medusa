@@ -10,6 +10,31 @@
 
 using namespace medusa;
 
+TEST_CASE("parsing", "[expr]")
+{
+  INFO("Testing expression parser");
+
+  auto& rModMgr = ModuleManager::Instance();
+  auto pX86Getter = rModMgr.LoadModule<TGetArchitecture>(".", "x86");
+  REQUIRE(pX86Getter != nullptr);
+  auto pX86Disasm = pX86Getter();
+
+  auto const X86_32_Mode = pX86Disasm->GetModeByName("32-bit");
+  REQUIRE(X86_32_Mode != 0);
+
+  auto const pCpuInfo = pX86Disasm->GetCpuInformation();
+
+  auto const Input = "(Id64(rax) = bv64(0x0000000011223344))";
+
+  auto Res = Expression::Parse(Input, *pCpuInfo, X86_32_Mode);
+
+
+  REQUIRE(Res.size() == 1);
+
+  std::cout << "parsed expression: " << Res[0]->ToString() << std::endl;
+  CHECK(Res[0]->ToString() == Input);
+}
+
 TEST_CASE("const", "[expr]")
 {
   INFO("Testing creation of BitVectorExpression");

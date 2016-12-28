@@ -86,6 +86,8 @@ public:
 
   virtual ~Expression(void) {}
 
+  static Expression::VSPType Parse(std::string const& rExpressions, CpuInformation const& rCpuInfo, u8 Mode);
+
   virtual std::string ToString(void) const = 0;
   virtual Expression::SPType Clone(void) const = 0;
   virtual u32 GetBitSize(void) const = 0;
@@ -340,7 +342,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetBitSize(void) const { return 0; }
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
   virtual CompareType Compare(Expression::SPType spExpr) const;

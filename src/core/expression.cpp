@@ -497,6 +497,11 @@ Expression::SPType AssignmentExpression::Clone(void) const
   return std::make_shared<AssignmentExpression>(m_spDstExpr->Clone(), m_spSrcExpr->Clone());
 }
 
+u32 AssignmentExpression::GetBitSize(void) const
+{
+  return std::max(m_spDstExpr->GetBitSize(), m_spSrcExpr->GetBitSize());
+}
+
 Expression::SPType AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitAssignment(std::static_pointer_cast<AssignmentExpression>(shared_from_this()));

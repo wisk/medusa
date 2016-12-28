@@ -135,6 +135,7 @@ bool LlvmCompiler::Compile(std::vector<u8>& rBuffer)
   FunctionPassManager.add(llvm::createInstructionCombiningPass());
   FunctionPassManager.add(llvm::createGVNPass());
   FunctionPassManager.add(llvm::createCFGSimplificationPass());
+
   FunctionPassManager.doInitialization();
   for (auto& rFunc : *pModule)
     FunctionPassManager.run(rFunc);

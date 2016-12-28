@@ -8,7 +8,7 @@ std::string BitVector::ToString(u16 Base) const
   std::ostringstream Out;
   switch (Base)
   {
-  case 16: Out << "0x" << std::setw(m_BitSize / 8) << std::hex; break;
+  case 16: Out << "0x" << std::setw(m_BitSize / 8 * 2) << std::hex; break;
   default: break;
   }
   Out << std::setfill('0') << GetUnsignedValue();
