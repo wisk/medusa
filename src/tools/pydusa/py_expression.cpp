@@ -28,6 +28,7 @@ void PydusaExpression(py::module& rMod)
   py::class_<Expression, Expression::SPType> pyExpr(rMod, "Expression");
   pyExpr
     .def("__str__", &Expression::ToString)
+    .def_static("parse", &Expression::Parse)
     .def("update_child", &Expression::UpdateChild)
     .def("compare", &Expression::Compare)
     .def("visit", &Expression::Visit)

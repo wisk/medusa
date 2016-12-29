@@ -19,20 +19,28 @@ TEST_CASE("parsing", "[expr]")
   REQUIRE(pX86Getter != nullptr);
   auto pX86Disasm = pX86Getter();
 
-  auto const X86_32_Mode = pX86Disasm->GetModeByName("32-bit");
-  REQUIRE(X86_32_Mode != 0);
-
+  auto const X86_64_Mode = pX86Disasm->GetModeByName("64-bit");
+  REQUIRE(X86_64_Mode != 0);
   auto const pCpuInfo = pX86Disasm->GetCpuInformation();
 
-  auto const Input = "(Id64(rax) = bv64(0x0000000011223344))";
+  auto TestParseExpr = [&](std::string const& rExprStr)
+  {
+    auto Res = Expression::Parse(rExprStr, *pCpuInfo, X86_64_Mode);
+    REQUIRE(Res.size() == 1);
+    std::cout << "input expression:  " << rExprStr << std::endl;
+    std::cout << "parsed expression: " << Res[0]->ToString() << std::endl;
+    CHECK(Res[0]->ToString() == rExprStr);
+  };
 
-  auto Res = Expression::Parse(Input, *pCpuInfo, X86_32_Mode);
-
-
-  REQUIRE(Res.size() == 1);
-
-  std::cout << "parsed expression: " << Res[0]->ToString() << std::endl;
-  CHECK(Res[0]->ToString() == Input);
+  TestParseExpr("(Id64(rax) = bv64(0x0000000011223344))");
+  TestParseExpr("Var32[alloc] test");
+  TestParseExpr("(Var32[use] test = bv32(0xDEADBEEF))");
+  TestParseExpr("(Id32(eax) = Var32[use] test)");
+  TestParseExpr("Var32[free] test");
+  TestParseExpr("(Id64(rcx) = Sym(parm, \"blabla\", 1122334455667788, Var64[use] test))");
+  TestParseExpr("(Id32(ecx) = Sym(parm, \"blabla\", aabbccdd))");
+  TestParseExpr("(Id8(al) = (bv8(0xFF) * bv8(0x00)))");
+  TestParseExpr("(Id16(ax) = (bv16(0x1234) & ~(bv16(0xFF00))))");
 }
 
 TEST_CASE("const", "[expr]")
