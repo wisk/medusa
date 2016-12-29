@@ -113,7 +113,7 @@ public:
   }
 
   template<typename ExportedFunctionType>
-  ExportedFunctionType ModuleManager::LoadModule(Path const& rModPath, std::string rModName)
+  ExportedFunctionType LoadModule(Path const& rModPath, std::string rModName)
   {
     typedef ModuleTraits<ExportedFunctionType> ModuleType;
     Module Mod;

@@ -255,7 +255,7 @@ namespace action
   };
 
   template<> struct make_expression<grammar::lit_str> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       auto Str = in.string();
       Str.erase(0, 1); // remove first "
       Str.erase(Str.size() - 1); // remove last "
@@ -264,7 +264,7 @@ namespace action
   };
 
   template<> struct make_expression<grammar::lit_addr> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       Address Addr(in.string());
       rExprState.PushAddress(Addr);
     }
@@ -304,7 +304,7 @@ namespace action
 
   /// Operation
   template< OperationExpression::Type OpType > struct operation_type_action {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       rExprState.PushOperationType(OpType);
     }
   };
@@ -340,7 +340,7 @@ namespace action
   template<> struct make_expression<grammar::op_bin_fdiv>    : operation_type_action<OperationExpression::OpFDiv>        {};
   template<> struct make_expression<grammar::op_bin_fmod>    : operation_type_action<OperationExpression::OpFMod>        {};
   template<> struct make_expression<grammar::expr_un> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       OperationExpression::Type UnOpType;
       if (!rExprState.PopOperationType(UnOpType))
         return;
@@ -350,7 +350,7 @@ namespace action
     }
   };
   template<> struct make_expression<grammar::expr_bin> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       OperationExpression::Type BinOpType;
       if (!rExprState.PopOperationType(BinOpType))
         return;
@@ -399,7 +399,7 @@ namespace action
   template<> struct make_expression<grammar::sym_extfunc> : symbolic_type_action<SymbolicExpression::ExternalFunction> {};
   template<> struct make_expression<grammar::sym_undef>   : symbolic_type_action<SymbolicExpression::Undefined> {};
   template<> struct make_expression<grammar::expr_sym_with_expr> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState)
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState)
     {
       SymbolicExpression::Type SymType;
       if (!rExprState.PopSymbolicType(SymType))
@@ -418,7 +418,7 @@ namespace action
     }
   };
   template<> struct make_expression<grammar::expr_sym_without_expr> {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       SymbolicExpression::Type SymType;
       if (!rExprState.PopSymbolicType(SymType))
         return;
