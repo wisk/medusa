@@ -619,8 +619,52 @@ Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitBitVector(BitVector
 
 Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitIdentifier(IdentifierExpression::SPType spIdExpr)
 {
-  Log::Write("compil_llvm").Level(LogError) << "identifier expression are not supported" << LogEnd;
-  return nullptr;
+  auto Id        = spIdExpr->GetId();
+  auto IdName    = spIdExpr->GetCpuInformation()->ConvertIdentifierToName(Id);
+  auto IdBitSize = spIdExpr->GetBitSize();
+  auto& rGblCtxt = llvm::getGlobalContext();
+  auto pIdType   = llvm::Type::getIntNTy(rGblCtxt, IdBitSize);
+
+  switch (m_State)
+  {
+  case Read:
+  {
+    auto pFuncType = llvm::FunctionType::get(pIdType, false);
+    auto Constraints = std::string("={") + IdName + "}";
+    auto pAsm = llvm::InlineAsm::get(pFuncType, "", Constraints, true);
+    auto pCallAsm = m_rBuilder.CreateCall(pAsm);
+    m_ValueStack.push(pCallAsm);
+    break;
+  }
+
+  case Write:
+  {
+    if (m_ValueStack.empty())
+      return nullptr;
+    auto pSrc = m_ValueStack.top();
+    m_ValueStack.pop();
+
+    //auto const& rCpuInfo = *spIdExpr->GetCpuInformation();
+    //auto PcId = rCpuInfo.GetRegisterByType(CpuInformation::ProgramPointerRegister, static_cast<u8>(IdBitSize)); // HACK(wisk): the mode should come from this instance...
+    //if (PcId == Id)
+    //{
+    //  auto DstBitSize = pSrc->getType()->getScalarSizeInBits();
+    //  m_rBuilder.CreateIndirectBr(_MakePointer(DstBitSize, pSrc));
+    //}
+    //else
+    {
+      auto pFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(rGblCtxt), { pIdType }, false);
+      auto Constraints = std::string("{") + IdName + "}";
+      auto pAsm = llvm::InlineAsm::get(pFuncType, "", Constraints, true);
+      auto pCallAsm = m_rBuilder.CreateCall(pAsm, { pSrc });
+    }
+    break;
+  }
+
+  default:
+    return nullptr;
+  }
+  return spIdExpr;
 }
 
 Expression::SPType LlvmCompiler::LlvmExpressionVisitor::VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr)

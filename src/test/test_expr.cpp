@@ -25,9 +25,11 @@ TEST_CASE("parsing", "[expr]")
 
   auto TestParseExpr = [&](std::string const& rExprStr)
   {
-    auto Res = Expression::Parse(rExprStr, *pCpuInfo, X86_64_Mode);
-    REQUIRE(Res.size() == 1);
     std::cout << "input expression:  " << rExprStr << std::endl;
+    auto Res = Expression::Parse(rExprStr, *pCpuInfo, X86_64_Mode);
+    CHECK(Res.size() == 1);
+    if (Res.size() < 1)
+      return;
     std::cout << "parsed expression: " << Res[0]->ToString() << std::endl;
     CHECK(Res[0]->ToString() == rExprStr);
   };
@@ -39,6 +41,12 @@ TEST_CASE("parsing", "[expr]")
   TestParseExpr("Var32[free] test");
   TestParseExpr("(Id64(rcx) = Sym(parm, \"blabla\", 1122334455667788, Var64[use] test))");
   TestParseExpr("(Id32(ecx) = Sym(parm, \"blabla\", aabbccdd))");
+  TestParseExpr("(Mem32((Id64(rsp) + bv64(0x0000000000000008))) = Id32(ecx))");
+  TestParseExpr("(Var64[use] cheeki = Mem64(bv64(0x0000000140000000)))");
+  TestParseExpr("(Var64[use] cheeki = Mem64(Id16(fs):bv64(0x0000000140000000)))"); // FIXME(wisk): see below
+  TestParseExpr("(Var64[use] cheeki = Addr64(bv64(0x0000000000000120)))");
+  TestParseExpr("(Var64[use] cheeki = Addr64(Id16(fs):bv64(0x0000000000000120)))"); // FIXME(wisk): parsing base doesn't work
+  TestParseExpr("(Var64[use] cheeki = Var64[use] breeki)");
   TestParseExpr("(Id8(al) = (bv8(0xFF) * bv8(0x00)))");
   TestParseExpr("(Id16(ax) = (bv16(0x1234) & ~(bv16(0xFF00))))");
 }

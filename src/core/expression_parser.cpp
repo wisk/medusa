@@ -52,15 +52,15 @@ namespace grammar
   struct op_un_bsf  : pegtl_string_t( "bsf " ) {};
   struct op_un_bsr  : pegtl_string_t( "bsr" ) {};
   struct op_un_fn   : pegtl::sor<
-    op_un_swap, op_un_bsf, op_un_bsr, op_un_fn
+    op_un_swap, op_un_bsf, op_un_bsr
   > {};
 
   //// binary
+  struct op_bin_bcast   : pegtl_string_t( "bcast"        ) {};
   struct op_bin_sext    : pegtl_string_t( "sign_extend"  ) {};
   struct op_bin_zext    : pegtl_string_t( "zero_extend"  ) {};
   struct op_bin_insbits : pegtl_string_t( "insert_bits"  ) {};
   struct op_bin_extbits : pegtl_string_t( "extract_bits" ) {};
-  struct op_bin_bcast   : pegtl_string_t( "bcast"        ) {};
 
   struct op_bin_lls : pegtl_string_t( "<<"    ) {};
   struct op_bin_lrs : pegtl_string_t( ">>{u}" ) {};
@@ -93,7 +93,11 @@ namespace grammar
   > {};
 
 
-  struct op_bin_fn : pegtl::sor< op_bin_rol, op_bin_ror, op_bin_sext, op_bin_zext, op_bin_insbits, op_bin_extbits, op_bin_bcast > {};
+  struct op_bin_fn : pegtl::sor<
+    op_bin_rol, op_bin_ror,
+    op_bin_bcast, op_bin_sext, op_bin_zext,
+    op_bin_insbits, op_bin_extbits
+  > {};
 
   /// Symbolic
 
@@ -103,7 +107,9 @@ namespace grammar
   struct sym_extval  : pegtl_string_t( "extval"  ) {};
   struct sym_extfunc : pegtl_string_t( "extfunc" ) {};
   struct sym_undef   : pegtl_string_t( "undef"   ) {};
-  struct sym_type    : pegtl::sor< sym_unk, sym_retval, sym_parm, sym_extval, sym_extfunc, sym_undef > {};
+  struct sym_type    : pegtl::sor<
+    sym_unk, sym_retval, sym_parm, sym_extval, sym_extfunc, sym_undef
+  > {};
 
   //// contional operator
   // TODO(wisk):
@@ -111,16 +117,17 @@ namespace grammar
   /// Expressions
   struct expr;
 
-  struct expr_bv     : pegtl::seq< pref_bv,  lit_dec, pegtl::one< '(' >, lit_hex,           pegtl::one< ')' > > {};
-  struct expr_id     : pegtl::seq< pref_id,  lit_dec, pegtl::one< '(' >, pegtl::identifier, pegtl::one< ')' > > {};
-  struct expr_var    : pegtl::seq< pref_var, lit_dec, pegtl::one< '[' >, var_type,          pegtl::one< ']' >, pegtl::space, pegtl::identifier > {};
+  struct expr_bv                : pegtl::seq< pref_bv,  lit_dec, pegtl::one< '(' >, lit_hex,                           pegtl::one< ')' > > {};
+  struct expr_id                : pegtl::seq< pref_id,  lit_dec, pegtl::one< '(' >, pegtl::identifier,                 pegtl::one< ')' > > {};
+  struct expr_var_use           : pegtl::seq< pref_var, lit_dec, pegtl::one< '[' >, var_use,                           pegtl::one< ']' >, pegtl::space, pegtl::identifier > {};
+  struct expr_var_alloc_or_free : pegtl::seq< pref_var, lit_dec, pegtl::one< '[' >, pegtl::sor< var_alloc, var_free >, pegtl::one< ']' >, pegtl::space, pegtl::identifier > {};
 
   struct expr_sym_with_expr : pegtl::seq<
     pref_sym, pegtl::one< '(' >,
     sym_type, sep,
     lit_str, sep,
     lit_addr, sep,
-    pegtl::sor< expr_bv, expr_id, expr_var >, pegtl::one< ')' >
+    pegtl::sor< expr_bv, expr_id, expr_var_use >, pegtl::one< ')' >
   > {};
   struct expr_sym_without_expr : pegtl::seq<
     pref_sym, pegtl::one< '(' >,
@@ -128,21 +135,50 @@ namespace grammar
     lit_str, sep,
     lit_addr, pegtl::one< ')' >
   > {};
-  struct expr_sym    : pegtl::sor< expr_sym_with_expr, expr_sym_without_expr > {};
-
-  struct expr_mem    : pegtl::seq< pref_mem, lit_dec, pegtl::one< '(' >, pegtl::opt< expr, sep >, expr, pegtl::one< ')' > > {};
+  struct expr_sym : pegtl::sor< expr_sym_with_expr, expr_sym_without_expr > {};
 
   struct expr_un_op  : pegtl::seq< op_un_sym, pegtl::one< '(' >, expr, pegtl::one< ')' > > {};
-  struct expr_un_fn  : pegtl::seq< op_bin_fn, pegtl::one< '(' >, expr, pegtl::one< ')' > > {};
+  struct expr_un_fn  : pegtl::seq< op_un_fn, pegtl::one< '(' >, expr, pegtl::one< ')' > > {};
   struct expr_un     : pegtl::sor< expr_un_op, expr_un_fn > {};
   struct expr_bin_op : pegtl::seq< pegtl::one< '(' >, expr, pegtl::space, op_bin_sym, pegtl::space, expr, pegtl::one< ')' > > {};
   struct expr_bin_fn : pegtl::seq< op_bin_fn, pegtl::one< '(' >, expr, sep, expr, pegtl::one< ')' > > {};
   struct expr_bin    : pegtl::sor< expr_bin_op, expr_bin_fn > {};
 
-  struct expr_assign : pegtl::seq< pegtl::one< '(' >, expr, pegtl::space, pegtl::one< '=' >, pegtl::space, expr, pegtl::one< ')' > > {};
+  struct expr_mem;
+  struct expr_mem_base : pegtl::sor< expr_bv, expr_id > {};
+  struct expr_mem_off : pegtl::sor< expr_bv, expr_id, expr_var_use, expr_sym, expr_mem, expr_un, expr_bin > {};
+    struct expr_mem_with_base : pegtl::seq<
+    pref_mem, lit_dec, pegtl::one< '(' >,
+    expr_mem_base, pegtl::one< ':' >,
+    expr_mem_off,
+    pegtl::one< ')' >
+    > {};
+  struct expr_mem_without_base : pegtl::seq<
+    pref_mem, lit_dec, pegtl::one< '(' >,
+    expr_mem_off,
+    pegtl::one< ')' >
+  > {};
+  struct expr_mem : pegtl::sor< expr_mem_with_base, expr_mem_without_base > {}; // FIXME(wisk): the base expression already pushes an expression...
 
-  struct expr        : pegtl::sor< expr_bv, expr_id, expr_var, expr_sym, expr_mem, expr_un, expr_bin > {};
-  struct start       : pegtl::sor< expr_var, expr_assign > {};
+  struct expr_addr_with_base : pegtl::seq<
+    pref_addr, lit_dec, pegtl::one< '(' >,
+    expr_mem_base, pegtl::one< ':' >,
+    expr_mem_off,
+    pegtl::one< ')' >
+  > {};
+  struct expr_addr_without_base : pegtl::seq<
+    pref_addr, lit_dec, pegtl::one< '(' >,
+    expr_mem_off,
+    pegtl::one< ')' >
+  > {};
+  struct expr_addr : pegtl::sor< expr_addr_with_base, expr_addr_without_base > {}; // FIXME(wisk): same issue here (see above)
+
+  struct expr_lval   : pegtl::sor< expr_id, expr_var_use, expr_sym, expr_mem > {};
+  struct expr_rval   : pegtl::sor< expr_bv, expr_id, expr_var_use, expr_sym, expr_mem, expr_addr, expr_un, expr_bin > {};
+  struct expr_assign : pegtl::seq< pegtl::one< '(' >, expr_lval, pegtl::space, pegtl::one< '=' >, pegtl::space, expr_rval, pegtl::one< ')' > > {};
+
+  struct expr        : pegtl::sor< expr_bv, expr_id, expr_var_use, expr_sym, expr_mem, expr_addr, expr_un, expr_bin > {};
+  struct start       : pegtl::sor< expr_var_alloc_or_free, expr_assign > {};
 }
 
 // Actions
@@ -293,14 +329,38 @@ namespace action
 
   template<> struct make_expression<grammar::expr_id> {
     static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+      u16 IdBitSize;
+      if (!rExprState.PopBitSize(IdBitSize))
+        return;
       std::string IdStr;
       if (!rExprState.PopIdentifier(IdStr))
         return;
       auto Id = rExprState.GetCpuInformation().ConvertNameToIdentifier(IdStr);
+      if (IdBitSize != rExprState.GetCpuInformation().GetSizeOfRegisterInBit(Id))
+        return;
       auto spId = Expr::MakeId(Id, &rExprState.GetCpuInformation());
       rExprState.Push(spId);
     }
   };
+
+  template<bool Dereference, bool WithBase> struct make_memory_expression {
+    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+      u16 AccBitSize;
+      if (!rExprState.PopBitSize(AccBitSize))
+        return;
+      Expression::SPType spBaseExpr;
+      auto spOffExpr  = rExprState.Pop();
+      if (WithBase)
+        spBaseExpr = rExprState.Pop();
+      auto spMemExpr = Expr::MakeMem(AccBitSize, spBaseExpr, spOffExpr, Dereference);
+      rExprState.Push(spMemExpr);
+    }
+  };
+  template<> struct make_expression<grammar::expr_mem_with_base>     : make_memory_expression<true,  true>  {};
+  template<> struct make_expression<grammar::expr_mem_without_base>  : make_memory_expression<true,  false> {};
+  template<> struct make_expression<grammar::expr_addr_with_base>    : make_memory_expression<false, true>  {};
+  template<> struct make_expression<grammar::expr_addr_without_base> : make_memory_expression<false, false> {};
+
 
   /// Operation
   template< OperationExpression::Type OpType > struct operation_type_action {
@@ -370,7 +430,22 @@ namespace action
   template<> struct make_expression<grammar::var_alloc> : variable_type_action<VariableExpression::Alloc> {};
   template<> struct make_expression<grammar::var_use>   : variable_type_action<VariableExpression::Use>   {};
   template<> struct make_expression<grammar::var_free>  : variable_type_action<VariableExpression::Free>  {};
-  template<> struct make_expression<grammar::expr_var> {
+  template<> struct make_expression<grammar::expr_var_use> {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+      std::string VarName;
+      if (!rExprState.PopIdentifier(VarName))
+        return;
+      VariableExpression::Type VarType;
+      if (!rExprState.PopVariableType(VarType))
+        return;
+      u16 VarBitSize;
+      if (!rExprState.PopBitSize(VarBitSize))
+        return;
+      auto spVar = Expr::MakeVar(VarName, VarType, VarBitSize);
+      rExprState.Push(spVar);
+    }
+  };
+  template<> struct make_expression<grammar::expr_var_alloc_or_free> { // TODO(wisk): code dup
     static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       std::string VarName;
       if (!rExprState.PopIdentifier(VarName))
@@ -453,7 +528,7 @@ Expression::VSPType Expression::Parse(std::string const& rExpressions, CpuInform
   ExpressionState ExprState(ParsedExprs, rCpuInfo, Mode);
   //pegtl::trace_string<grammar::start>(rExpressions, __FILE__, ExprState);
   if (!pegtl::parse_string<grammar::start, action::make_expression>(rExpressions, __FILE__, ExprState))
-    Log::Write("core").Level(LogError) << "failed to parse expressions";
+    Log::Write("core").Level(LogError) << "failed to parse expressions" << LogEnd;
   ExprState.Finalize();
   return ParsedExprs;
 }
