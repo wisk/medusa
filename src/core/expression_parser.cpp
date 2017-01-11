@@ -344,7 +344,7 @@ namespace action
   };
 
   template<bool Dereference, bool WithBase> struct make_memory_expression {
-    static void apply(pegtl::action_input& in, ExpressionState& rExprState) {
+    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
       u16 AccBitSize;
       if (!rExprState.PopBitSize(AccBitSize))
         return;
