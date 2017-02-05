@@ -30,8 +30,8 @@ public:
 
   bool HookInstruction(Emulator::HookCallback HkCb);
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
-  bool Hook(Address const& rAddress, u32 Type, Emulator::HookCallback Callback);
-  bool Hook(std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback);
+  bool Hook(Address const& rAddress, Emulator::HookType Type, Emulator::HookCallback Callback);
+  bool Hook(std::string const& rLabelName, Emulator::HookType Type, Emulator::HookCallback Callback);
   std::string GetHookName(void) const;
   Address GetHookAddress(std::string const& rHkFuncName) const;
 

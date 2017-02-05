@@ -94,7 +94,7 @@ Emulator::ReturnType Emulator::Execute(Address const& rAddress)
   return Execute(Exprs);
 }
 
-bool Emulator::AddHook(Address const& rAddress, u32 Type, HookCallback Callback)
+bool Emulator::AddHook(Address const& rAddress, Emulator::HookType Type, HookCallback Callback)
 {
   auto itHook = m_Hooks.find(rAddress);
   if (itHook != std::end(m_Hooks))
@@ -114,7 +114,7 @@ bool Emulator::AddHookOnInstruction(HookCallback InsnCb)
   return true;
 }
 
-bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, u32 Type, HookCallback Callback)
+bool Emulator::AddHook(Document const& rDoc, std::string const& rLabelName, Emulator::HookType Type, HookCallback Callback)
 {
   auto Addr = rDoc.GetAddressFromLabelName(rLabelName);
   return AddHook(Addr, Type, Callback);

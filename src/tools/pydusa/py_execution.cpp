@@ -85,12 +85,12 @@ namespace pydusa
     return nullptr;
   }
 
-  bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, u32 Type, Emulator::HookCallback Callback)
+  bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, Emulator::HookType Type, Emulator::HookCallback Callback)
   {
     return pExecution->Hook(rAddress, Type, Callback);
   }
 
-  bool Execution_HookLabel(Execution* pExecution, std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback)
+  bool Execution_HookLabel(Execution* pExecution, std::string const& rLabelName, Emulator::HookType Type, Emulator::HookCallback Callback)
   {
     return pExecution->Hook(rLabelName, Type, Callback);
   }

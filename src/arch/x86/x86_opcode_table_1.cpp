@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct  5 22:56:59 2016) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Feb 05 12:38:19 2017) */
 #include "x86_architecture.hpp"
 const X86Architecture::TDisassembler X86Architecture::m_Table_1[0x100] =
 {
@@ -25946,11 +25946,11 @@ bool X86Architecture::Table_1_9e(BinaryStream const& rBinStrm, OffsetType Offset
  * test_flags: ['sf', 'zf', 'af', 'pf', 'cf']
  * semantic: ah.id =\
     (  bit_cast(cf.id, int8(ah.bit))
-    | (int64(1)                      << int(ah.bit, 1))
+    | (int(ah.bit, 1)                << int(ah.bit, 1))
     | (bit_cast(pf.id, int8(ah.bit)) << int(ah.bit, 2))
-    | (int64(0)                      << int(ah.bit, 3))
+    | (int(ah.bit, 0)                << int(ah.bit, 3))
     | (bit_cast(af.id, int8(ah.bit)) << int(ah.bit, 4))
-    | (int64(0)                      << int(ah.bit, 5))
+    | (int(ah.bit, 0)                << int(ah.bit, 5))
     | (bit_cast(zf.id, int8(ah.bit)) << int(ah.bit, 6))
     | (bit_cast(sf.id, int8(ah.bit)) << int(ah.bit, 7)));
 
@@ -25964,11 +25964,11 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, OffsetType Offset
       rInsn.SetTestedFlags(X86_FlSf | X86_FlZf | X86_FlAf | X86_FlPf | X86_FlCf);
       /* semantic: ah.id =\
           (  bit_cast(cf.id, int8(ah.bit))
-          | (int64(1)                      << int(ah.bit, 1))
+          | (int(ah.bit, 1)                << int(ah.bit, 1))
           | (bit_cast(pf.id, int8(ah.bit)) << int(ah.bit, 2))
-          | (int64(0)                      << int(ah.bit, 3))
+          | (int(ah.bit, 0)                << int(ah.bit, 3))
           | (bit_cast(af.id, int8(ah.bit)) << int(ah.bit, 4))
-          | (int64(0)                      << int(ah.bit, 5))
+          | (int(ah.bit, 0)                << int(ah.bit, 5))
           | (bit_cast(zf.id, int8(ah.bit)) << int(ah.bit, 6))
           | (bit_cast(sf.id, int8(ah.bit)) << int(ah.bit, 7))) */
       AllExpr.push_back(Expr::MakeAssign(
@@ -25990,7 +25990,7 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, OffsetType Offset
                       Expr::MakeBinOp(OperationExpression::OpBcast, Expr::MakeId(X86_FlCf, &m_CpuInfo), Expr::MakeBitVector(8, m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah))),
                       Expr::MakeBinOp(
                         OperationExpression::OpLls,
-                        Expr::MakeBitVector(64, 0x1),
+                        Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x1),
                         Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x1))),
                     Expr::MakeBinOp(
                       OperationExpression::OpLls,
@@ -25998,7 +25998,7 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, OffsetType Offset
                       Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x2))),
                   Expr::MakeBinOp(
                     OperationExpression::OpLls,
-                    Expr::MakeBitVector(64, 0x0),
+                    Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x0),
                     Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x3))),
                 Expr::MakeBinOp(
                   OperationExpression::OpLls,
@@ -26006,7 +26006,7 @@ bool X86Architecture::Table_1_9f(BinaryStream const& rBinStrm, OffsetType Offset
                   Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x4))),
               Expr::MakeBinOp(
                 OperationExpression::OpLls,
-                Expr::MakeBitVector(64, 0x0),
+                Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x0),
                 Expr::MakeBitVector(m_CpuInfo.GetSizeOfRegisterInBit(X86_Reg_Ah), 0x5))),
             Expr::MakeBinOp(
               OperationExpression::OpLls,
