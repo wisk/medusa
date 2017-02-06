@@ -92,7 +92,7 @@ namespace pydusa
 
 void PydusaDocument(py::module& rMod)
 {
-  py::class_<Document>(rMod, "Document")
+  py::class_<Document, std::shared_ptr<Document>>(rMod, "Document")
     .def_property_readonly("memory_areas", pydusa::Document_MemoryAreas)
     .def_property_readonly("labels", pydusa::Document_Labels)
     .def("get_label", pydusa::Document_GetLabel)

@@ -7,6 +7,7 @@
 #include <medusa/document.hpp>
 #include <medusa/execution.hpp>
 #include <medusa/module.hpp>
+#include <medusa/user_configuration.hpp>
 
 namespace py = pybind11;
 
@@ -43,7 +44,11 @@ namespace pydusa
         if (!spLdr->IsCompatible(*spModBinStrm))
           continue;
 
-        auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(".", "soci");
+        UserConfiguration UserCfg;
+        auto DbModPath = UserCfg.GetOption("core.modules_path");
+        if (DbModPath.empty())
+          DbModPath = ".";
+        auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(DbModPath, "soci");
         if (pGetDb == nullptr)
         {
           Log::Write("pydusa") << "failed to get database module" << LogEnd;
