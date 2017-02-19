@@ -132,9 +132,8 @@ ExternalProject_add(PEGTL
   PREFIX PEGTL
 
   GIT_REPOSITORY "https://github.com/ColinH/PEGTL"
-  GIT_TAG        "master"
+  GIT_TAG        "ba225fd3dd9a323356883069e0676b1d3aa4a353"
 
-  UPDATE_COMMAND ""
   PATCH_COMMAND  ""
 
   SOURCE_DIR "${CMAKE_SOURCE_DIR}/deps/pegtl"
