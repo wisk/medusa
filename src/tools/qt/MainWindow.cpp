@@ -178,7 +178,7 @@ bool MainWindow::openDocument()
   return _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()), true,
     [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
   {
-    auto DbPrDbPathath = QFileDialog::getSaveFileName(this,
+    rDbPath = QFileDialog::getSaveFileName(this,
       "Select a database path",
       QString::fromStdString(rDbPath.string())
       ).toStdString();

@@ -172,14 +172,14 @@ bool Medusa::NewDocument(
     auto const& AllLdrs = rModMgr.GetLoaders();
     if (AllLdrs.empty())
     {
-      Log::Write("core") << "there is not supported loader" << LogEnd;
+      Log::Write("core").Level(LogError) << "there is not supported loader" << LogEnd;
       return false;
     }
 
     auto const& AllArchs = rModMgr.GetArchitectures();
     if (AllArchs.empty())
     {
-      Log::Write("core") << "there is not supported architecture" << LogEnd;
+      Log::Write("core").Level(LogError) << "there is not supported architecture" << LogEnd;
       return false;
     }
 
@@ -189,17 +189,20 @@ bool Medusa::NewDocument(
     OperatingSystem::SPType spCurOs;
 
     if (!ModuleSelector(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
+    {
+      Log::Write("core").Level(LogError) << "failed to select modules" << LogEnd;
       return false;
+    }
 
     if (spCurDb == nullptr)
     {
-      Log::Write("core") << "there's no available database" << LogEnd;
+      Log::Write("core").Level(LogError) << "there's no available database" << LogEnd;
       return false;
     }
 
     if (spCurLdr == nullptr)
     {
-      Log::Write("core") << "there's no available loader" << LogEnd;
+      Log::Write("core").Level(LogError) << "there's no available loader" << LogEnd;
       return false;
     }
 
@@ -207,11 +210,20 @@ bool Medusa::NewDocument(
     Path DbPath;
     std::list<Filter> ExtList;
     if (!AskDatabase(DbPath, ExtList))
+    {
+      Log::Write("core").Level(LogError) << "failed to ask for database path" << LogEnd;
       return false;
+    }
     if (DbPath.empty())
+    {
+      Log::Write("core").Level(LogError) << "path to database is empty" << LogEnd;
       return false;
+    }
     if (!spCurDb->Create(DbPath, Force))
+    {
+      Log::Write("core").Level(LogError) << "failed to create database to: " << DbPath.string().c_str() << LogEnd;
       return false;
+    }
 
     if (!BeforeStart())
       return false;
