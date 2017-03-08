@@ -89,7 +89,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     }
     return true;
   case 0x07:
-    rInsn.SetName("rlc");
+    rInsn.SetName("rlca");
     {
       auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
