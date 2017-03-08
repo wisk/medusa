@@ -160,6 +160,15 @@ target_link_libraries(medusa
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
+if (MEDUSA_HAS_OGDF)
+  target_include_directories(medusa
+    PUBLIC "${OGDF_INCLUDE_DIRS}")
+  target_link_libraries(medusa
+    PUBLIC
+    COIN OGDF
+  )
+endif ()
+
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
@@ -174,11 +183,6 @@ generate_export_header(medusa
 
 if (MEDUSA_CMAKE_USE_COTIRE)
   cotire(medusa)
-endif()
-
-# Build OGDF if needed
-if (MEDUSA_BUILD_WITH_OGDF)
-  message("Build medusa with OGDF")
 endif()
 
 if (WIN32)

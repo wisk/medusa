@@ -19,6 +19,8 @@ set(VERSION_PATCH 4)
 
 # variables
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 set(MEDUSA_MODULES_TO_BUILD "all"
   CACHE STRING "Semicolon-separated list of modules to build, or \"all\"")
 list(REMOVE_DUPLICATES MEDUSA_MODULES_TO_BUILD)
@@ -86,6 +88,13 @@ option(MEDUSA_BUILD_WITH_OGDF
   TRUE)
 if (MEDUSA_BUILD_WITH_OGDF)
   hunter_add_package(OGDF)
+endif()
+find_package(OGDF)
+if (OGDF_FOUND)
+  message("OGDF found")
+  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
+else()
+  message("OGDF not found")
 endif()
 
 ## LLVM

@@ -104,6 +104,49 @@ extern "C" EMUL_LLVM_EXPORT Emulator::ReturnType JitHandleHook(u8* pEmulObj, u8*
 
 static llvm::Function* s_pHandleHookFunc = nullptr;
 
+#ifdef _MSC_VER
+extern "C" EMUL_LLVM_EXPORT __m128 __umodti3(__m128 a, __m128 b)
+{
+  u128 A, B;
+
+  A = a.m128_u64[1];
+  A <<= 64;
+  A |= a.m128_u64[0];
+
+  B = b.m128_u64[1];
+  B <<= 64;
+  B |= b.m128_u64[0];
+
+  auto C = A % B;
+  __m128 Result;
+  Result.m128_u64[1] = static_cast<u64>(C >> 64);
+  Result.m128_u64[0] = static_cast<u64>(C & 0xffffffffffffffffULL);
+
+  return Result;
+}
+
+extern "C" EMUL_LLVM_EXPORT __m128 __udivti3(__m128 a, __m128 b)
+{
+  u128 A, B;
+
+  A = a.m128_u64[1];
+  A <<= 64;
+  A |= a.m128_u64[0];
+
+  B = b.m128_u64[1];
+  B <<= 64;
+  B |= b.m128_u64[0];
+
+  auto C = A / B;
+  __m128 Result;
+  Result.m128_u64[1] = static_cast<u64>(C >> 64);
+  Result.m128_u64[0] = static_cast<u64>(C & 0xffffffffffffffffULL);
+
+  return Result;
+}
+
+#endif
+
 LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
   : Emulator(pCpuInfo, pCpuCtxt, pMemCtxt)
   , m_Builder(llvm::getGlobalContext())
