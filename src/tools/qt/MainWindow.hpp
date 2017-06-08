@@ -51,7 +51,6 @@ public slots:
   void        addDisassemblyView(medusa::Address const& startAddr);
   void        addSemanticView(medusa::Address const& funcAddr);
   void        addGraphView(medusa::Address const& rMcAddr);
-  void        addControlFlowGraphView(medusa::Address const& funcAddr);
 
   void        on_actionAbout_triggered();
   void        on_actionOpen_triggered();
@@ -71,7 +70,6 @@ signals:
   void        DisassemblyViewAdded(medusa::Address const& startAddr);
   void        SemanticViewAdded(medusa::Address const& funcAddr);
   void        GraphViewAdded(medusa::Address const& rMcAddr);
-  void        ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
 
   void        logAppended(QString const & msg);
   void        addNewView(medusa::Address const& addr);

@@ -1,6 +1,10 @@
 #include "medusa/graph.hpp"
 #include "medusa/log.hpp"
 
+#include <boost/graph/graphviz.hpp>
+#include <boost/graph/properties.hpp>
+
+
 namespace medusa
 {
   Graph::VertexProperties::VertexProperties(void)
@@ -89,6 +93,57 @@ namespace medusa
     if (itAddr == std::end(m_Addresses))
       return false;
     rNextAddr = *itAddr;
+    return true;
+  }
+
+  bool Graph::ToGraphViz(std::string& rGraphVizCode) const
+  {
+    std::ostringstream Output;
+    boost::dynamic_properties DynProp;
+
+    // TODO(wisk): figure out why const_cast is required here
+    DynProp
+      .property("node_id",   boost::get(boost::vertex_index,            m_Graph))
+      .property("addresses", boost::get(&VertexProperties::m_Addresses, const_cast<Graph::Type&>(m_Graph)))
+      .property("type",      boost::get(&VertexProperties::m_Flags,     const_cast<Graph::Type&>(m_Graph)))
+      .property("type",      boost::get(&EdgeProperties::m_Type,        const_cast<Graph::Type&>(m_Graph)))
+      ;
+
+    try
+    {
+      boost::write_graphviz_dp(Output, m_Graph, DynProp);
+    }
+    catch (...)
+    {
+      return false;
+    }
+
+    rGraphVizCode = std::move(Output.str());
+    return true;
+  }
+
+  bool Graph::FromGraphViz(Graph& rGraph, std::string const & rGraphVizCode)
+  {
+    Graph::Type LoadedGraph(0);
+    std::istringstream Input(rGraphVizCode);
+    boost::dynamic_properties DynProp(boost::ignore_other_properties);
+
+    DynProp
+      .property("addresses", boost::get(&VertexProperties::m_Addresses, LoadedGraph))
+      .property("type",      boost::get(&VertexProperties::m_Flags,     LoadedGraph))
+      .property("type",      boost::get(&EdgeProperties::m_Type,        LoadedGraph))
+      ;
+
+    try
+    {
+      if (!boost::read_graphviz(Input, LoadedGraph, DynProp))
+        return false;
+      rGraph() = LoadedGraph;
+    }
+    catch (...)
+    {
+      return false;
+    }
     return true;
   }
 
@@ -186,11 +241,6 @@ namespace medusa
       }
     }
     return false;
-  }
-
-  void Graph::Finalize(void)
-  {
-    // TODO(wisk):
   }
 
   void Graph::ForEachVertex(std::function<void(Graph::VertexProperties const&)> Predicat) const

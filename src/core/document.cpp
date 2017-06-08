@@ -545,17 +545,17 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell::SPType spMultiCell,
   Addresses.push_back(rAddr);
   m_AddressUpdatedSignal(Addresses);
 
-  if (spMultiCell->GetType() == MultiCell::StructType)
-  {
-    auto StructId = spMultiCell->GetId();
-    StructureDetail StructDtl;
-    if (!GetStructureDetail(StructId, StructDtl))
-      return true;
-    if (!_ApplyStructure(rAddr, StructDtl))
-    {
-      Log::Write("core") << "failed to apply structure at " << rAddr << LogEnd;
-    }
-  }
+  //if (spMultiCell->GetType() == MultiCell::StructType)
+  //{
+  //  auto StructId = spMultiCell->GetId();
+  //  StructureDetail StructDtl;
+  //  if (!GetStructureDetail(StructId, StructDtl))
+  //    return true;
+  //  if (!_ApplyStructure(rAddr, StructDtl))
+  //  {
+  //    Log::Write("core") << "failed to apply structure at " << rAddr << LogEnd;
+  //  }
+  //}
 
   return true;
 }

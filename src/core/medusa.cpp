@@ -351,7 +351,7 @@ void Medusa::Analyze(Address const& rAddr, Architecture::SPType spArch, u8 Mode)
   AddTask(m_Analyzer.CreateTask("disassemble with", m_Document, rAddr, *spArch, Mode));
 }
 
-bool Medusa::BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg)
+bool Medusa::BuildControlFlowGraph(Address const& rAddr, Graph& rCfg)
 {
   return m_Analyzer.BuildControlFlowGraph(m_Document, rAddr, rCfg);
 }

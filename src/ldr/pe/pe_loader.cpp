@@ -432,8 +432,6 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
       rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
-      auto spFunc = std::make_shared<Function>(SymName, 0, 0);
-      rDoc.SetMultiCell(SymAddr, spFunc, true);
     }
   }
 }

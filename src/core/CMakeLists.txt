@@ -23,7 +23,6 @@ set(SRC
   ${INCROOT}/compilation.hpp
   ${INCROOT}/configuration.hpp
   ${INCROOT}/context.hpp
-  ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/detail.hpp
   ${INCROOT}/disassembly_view.hpp
@@ -85,7 +84,6 @@ set(SRC
   ${SRCROOT}/compilation.cpp
   ${SRCROOT}/configuration.cpp
   ${SRCROOT}/context.cpp
-  ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/detail.cpp
   ${SRCROOT}/disassembly_view.cpp
@@ -155,6 +153,8 @@ target_link_libraries(medusa
   Boost::system
   Boost::filesystem
   Boost::program_options
+  Boost::graph
+  Boost::regex
 
   INTERFACE
   ${CMAKE_THREAD_LIBS_INIT}

@@ -383,19 +383,6 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
   this->tabWidget->addTab(semView, QIcon(":/icons/view-semantic.png"), QString("Semantic of function %1").arg(funcLbl));
 }
 
-void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
-{
-  auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
-  QString funcLbl = QString::fromStdString(funcAddr.ToString());
-  if (lbl.GetType() != medusa::Label::Unknown)
-    funcLbl = QString::fromStdString(lbl.GetLabel());
-
-  auto cfgView = new ControlFlowGraphView(this);
-  auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, funcAddr);
-  cfgView->setScene(cfgScene);
-  this->tabWidget->addTab(cfgView, QIcon(":/icons/view-graph.png"), QString("Graph of function %1").arg(funcLbl));
-}
-
 void MainWindow::addGraphView(medusa::Address const& rMcAddr)
 {
   auto lbl = _medusa.GetDocument().GetLabelFromAddress(rMcAddr);

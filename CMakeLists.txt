@@ -74,10 +74,10 @@ option(MEDUSA_BUILD_WITH_BOOST
   "Boost library is required to build medusa"
   TRUE)
 if (MEDUSA_BUILD_WITH_BOOST)
-  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options)
+  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options graph regex)
 endif()
 
-find_package(Boost COMPONENTS system atomic filesystem program_options REQUIRED)
+find_package(Boost COMPONENTS system atomic filesystem program_options graph regex REQUIRED)
 if (NOT Boost_FOUND)
   message(FATAL_ERROR "Unable to find Boost")
 endif()

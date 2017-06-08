@@ -7,15 +7,15 @@ SemanticView::SemanticView(QWidget *parent, medusa::Medusa& core, medusa::Addres
 
   auto const& doc = core.GetDocument();
 
-  auto func = std::dynamic_pointer_cast<medusa::Function const>(doc.GetMultiCell(funcAddr));
+  auto func = std::static_pointer_cast<medusa::Function const>(doc.GetMultiCell(funcAddr));
   if (func == nullptr)
     return;
 
-  medusa::ControlFlowGraph cfg(doc);
-  if (!core.BuildControlFlowGraph(funcAddr, cfg))
+  medusa::Graph Cfg;
+  if (!core.BuildControlFlowGraph(funcAddr, Cfg))
     return;
 
-  cfg.ForEachInstruction([&](medusa::Address const& addr)
+  Cfg.ForEachAddress([&](medusa::Address const& addr)
   {
     QString addrStr = QString::fromStdString(addr.ToString()) + ": ";
     auto insn = std::dynamic_pointer_cast<medusa::Instruction const>(doc.GetCell(addr));

@@ -15,7 +15,7 @@ std::string MultiCell::Dump(void) const
   }
   std::ostringstream oss;
   oss << std::hex << std::showbase;
-  oss << "mc(" << m_Id << ", " << TypeChr << ", " << m_Size << ")";
+  oss << "mc(" << TypeChr << ", " << m_Size << ")";
   return oss.str();
 }
 

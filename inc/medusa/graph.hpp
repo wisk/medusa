@@ -16,7 +16,7 @@ namespace medusa
 
     typedef std::shared_ptr<Graph> SPType;
 
-    class MEDUSA_EXPORT VertexProperties
+    struct MEDUSA_EXPORT VertexProperties
     {
       enum Type
       {
@@ -51,12 +51,11 @@ namespace medusa
       void                   MarkAsEnd(void)    { m_Flags |= End;    }
       void                   MarkAsInLoop(void) { m_Flags |= InLoop; }
 
-    private:
       Address::Vector m_Addresses;
       u32 m_Flags;
     };
 
-    class MEDUSA_EXPORT EdgeProperties
+    struct MEDUSA_EXPORT EdgeProperties
     {
     public:
       enum Type
@@ -71,10 +70,9 @@ namespace medusa
 
       EdgeProperties(Type Type = Unknown) : m_Type(Type) {}
 
-      Type GetType(void) const { return m_Type; }
+      Type GetType(void) const { return static_cast<Type>(m_Type); }
 
-    private:
-      Type m_Type;
+      u32 m_Type;
     };
 
     class MEDUSA_EXPORT GraphProperties
@@ -99,12 +97,14 @@ namespace medusa
     typedef boost::graph_traits<Type>::vertex_iterator   VertexIterator;
     typedef boost::graph_traits<Type>::edge_descriptor   EdgeIterator;
 
+    bool ToGraphViz(std::string& rGraphVizCode) const;
+    static bool FromGraphViz(Graph& rGraph, std::string const& rGraphVizCode);
+
     void AddVertex(VertexProperties const& rVertex);
     bool AddEdge(EdgeProperties const& rEdge, Address const& rSrcAddr, Address const& rDstAddr);
     bool FindVertex(Address const& rAddr, VertexDescriptor& rVtxDesc) const;
     bool FindVertexConnections(Address const& rSrcVtxAddr, Address::Vector& rDstVstAddrs) const;
     bool SplitVertex(Address const& rDstAddr, Address const& rSrcAddr, EdgeProperties::Type EdgeType, Address* pPrevAddr = nullptr);
-    void Finalize(void);
 
     void ForEachVertex(std::function<void(VertexProperties const&)> Predicat) const;
     void ForEachVertex(std::function<bool(VertexProperties const&)> Predicat, bool& rResult) const;
