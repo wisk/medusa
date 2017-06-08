@@ -400,6 +400,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
   if (itSplitAddr != std::end(SplitAddrs) && *itSplitAddr == std::begin(VstAddrs)->first)
     ++itSplitAddr;
   std::vector<Address> CurBscBlk;
+  Address PrevAddr;
   for (auto const& rVstAddr : VstAddrs)
   {
     if (!rVstAddr.second)
@@ -410,9 +411,11 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
       rCfg.AddVertex(Graph::VertexProperties(CurBscBlk));
       CurBscBlk.clear();
       ++itSplitAddr;
+      Edges.emplace_back(PrevAddr, rVstAddr.first, Graph::EdgeProperties::Next);
     }
 
     CurBscBlk.push_back(rVstAddr.first);
+    PrevAddr = rVstAddr.first;
   }
 
   if (!CurBscBlk.empty())

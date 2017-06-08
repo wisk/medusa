@@ -5,7 +5,6 @@
 #include "medusa/export.hpp"
 #include "medusa/document.hpp"
 #include "medusa/architecture.hpp"
-#include "medusa/control_flow_graph.hpp"
 #include "medusa/task.hpp"
 
 #include <fstream>

@@ -5,7 +5,6 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/multicell.hpp"
-#include "medusa/control_flow_graph.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
