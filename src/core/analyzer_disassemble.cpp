@@ -329,7 +329,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
       }
 
       // This lambda handle references during a call or jump
-      auto HandleInstructionReference = [&](bool FollowPath) -> bool
+      auto HandleInstructionReference = [&](void) -> bool
       {
         // Try to get the destination
         Address DstAddr;
@@ -337,19 +337,16 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
           return false;
 
         // We have to save the destination for later if required
-        if (FollowPath)
+        CallStack.push(DstAddr);
+        if (spInsn->GetSubType() & Instruction::ConditionalType)
         {
-          CallStack.push(DstAddr);
-          if (spInsn->GetSubType() & Instruction::ConditionalType)
-          {
-            auto NxtAddr = CurAddr + spInsn->GetSize();
-            Edges.emplace_back(CurAddr, DstAddr, Graph::EdgeProperties::True);
-            Edges.emplace_back(CurAddr, NxtAddr, Graph::EdgeProperties::False);
-            SplitAddrs.insert(NxtAddr);
-          }
-          else
-            Edges.emplace_back(CurAddr, DstAddr, Graph::EdgeProperties::Unconditional);
+          auto NxtAddr = CurAddr + spInsn->GetSize();
+          Edges.emplace_back(CurAddr, DstAddr, Graph::EdgeProperties::True);
+          Edges.emplace_back(CurAddr, NxtAddr, Graph::EdgeProperties::False);
+          SplitAddrs.insert(NxtAddr);
         }
+        else
+          Edges.emplace_back(CurAddr, DstAddr, Graph::EdgeProperties::Unconditional);
 
         // Store split address
         SplitAddrs.insert(DstAddr);
@@ -367,12 +364,11 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
 
         // We don't follow the path for call
       case Instruction::CallType:
-        HandleInstructionReference(false);
         break;
 
         // Jump / Conditional instruction types
       case Instruction::JumpType:
-        if (!HandleInstructionReference(true))
+        if (!HandleInstructionReference())
           // Exit the basic block if we can't reach the destination statically
           EndOfBasicBlock = true;
         break;

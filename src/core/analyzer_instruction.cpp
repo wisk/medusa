@@ -25,7 +25,7 @@ namespace medusa
         {
           m_rDoc.ChangeValueSize(RefAddr, m_rInsn.GetOperand(CurOp)->GetBitSize(), false);
           m_rDoc.AddCrossReference(RefAddr, m_Addr);
-          m_rDoc.AddLabel(RefAddr, Label(RefAddr, Label::Data | Label::Global));
+          m_rDoc.AddLabel(RefAddr, Label(RefAddr, Label::Data | Label::Global), false);
         }
 
       Address DstAddr;
