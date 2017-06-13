@@ -1886,14 +1886,14 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
     u16 CellSize = rCellData.GetSize();
     u32 DelCellMemAreaId;
     OffsetType DelCellMemAreaOff;
-    soci::statement Stmt = (m_Session.prepare <<
+    soci::statement SelectStmt = (m_Session.prepare <<
       "SELECT memory_area_id, memory_area_offset "
       "FROM CellLayout "
       "WHERE :memory_area_id == memory_area_id AND :memory_area_offset >= memory_area_offset AND :memory_area_offset < (memory_area_offset + :cell_size)"
       , soci::into(DelCellMemAreaId), soci::into(DelCellMemAreaOff)
       , soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset"), soci::use(CellSize, "cell_size")
       );
-    if (!Stmt.execute(true))
+    if (!SelectStmt.execute(true))
       return true;
     do
     {
@@ -1901,7 +1901,14 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
       if (!_ConvertIdToAddress(DelCellMemAreaId, DelCellMemAreaOff, DelCellAddr))
         return false;
       rDeletedCellAddresses.push_back(DelCellAddr);
-    } while (Stmt.fetch());
+    } while (SelectStmt.fetch());
+
+    m_Session <<
+      "DELETE FROM CellData "
+      "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
+      , soci::use(Id), soci::use(Offset);
+
+    // TODO(wisk): what should we do with CellLayout?
   }
   catch (std::exception const& rErr)
   {

@@ -240,7 +240,7 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   if (spOldCell == nullptr)
     return false;
 
-  if (spOldCell->GetType() == Cell::InstructionType && Force == false)
+  if (spOldCell->GetType() != Cell::ValueType && Force == false)
     return false;
 
   NewValueSize /= 8;

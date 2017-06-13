@@ -59,9 +59,9 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
     {
       rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
       {
-        if ((rLabel.GetType() & Label::AccessMask) == Label::Imported)
+        if (rLabel.IsImported())
           return;
-        if ((rLabel.GetType() & Label::CellMask) != Label::Data)
+        if (!rLabel.IsData())
           return;
 
         BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
