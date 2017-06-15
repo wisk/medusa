@@ -169,6 +169,10 @@ if (MEDUSA_HAS_OGDF)
   )
 endif ()
 
+if (APPLE)
+  target_link_libraries(medusa ${MEDUSA_NEEDED_LIBRARIES})
+endif()
+
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
 mark_as_advanced(DL_LIBRARY)
