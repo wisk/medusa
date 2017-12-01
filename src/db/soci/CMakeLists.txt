@@ -19,7 +19,9 @@ add_library(db_soci SHARED ${SRC})
 target_link_libraries(db_soci medusa ${SQLITE3_LIBRARY} SOCI::soci_core_static SOCI::soci_sqlite3_static)
 set_target_properties(db_soci PROPERTIES
   FOLDER "Databases"
-  PREFIX "")
+  PREFIX ""
+  DEBUG_POSTFIX ""
+)
 
 install(TARGETS db_soci
   RUNTIME DESTINATION ${MEDUSA_MODULE_PATH}

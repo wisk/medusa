@@ -25,8 +25,6 @@ set (INC
   ${INCROOT}/BindingView.hpp
   ${INCROOT}/CommentDialog.hpp
   ${INCROOT}/ConfigureDialog.hpp
-  ${INCROOT}/ControlFlowGraphScene.hpp
-  ${INCROOT}/ControlFlowGraphView.hpp
   ${INCROOT}/DisassemblyView.hpp
   ${INCROOT}/EdgeItem.hpp
   ${INCROOT}/Goto.hpp
@@ -50,8 +48,6 @@ set (SRC
   ${SRCROOT}/BindingView.cpp
   ${SRCROOT}/CommentDialog.cpp
   ${SRCROOT}/ConfigureDialog.cpp
-  ${SRCROOT}/ControlFlowGraphScene.cpp
-  ${SRCROOT}/ControlFlowGraphView.cpp
   ${SRCROOT}/DisassemblyView.cpp
   ${SRCROOT}/EdgeItem.cpp
   ${SRCROOT}/Goto.cpp

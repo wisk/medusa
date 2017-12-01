@@ -36,6 +36,14 @@ add_test(NAME "testing_binding"
   COMMAND $<TARGET_FILE:test_bind>
   WORKING_DIRECTORY ${WORKING_DIR})
 
+## Compilation
+add_executable(test_compil ${TEST_ROOT}/test_compil.cpp)
+target_link_libraries(test_compil medusa catch)
+set_target_properties(test_compil PROPERTIES FOLDER "Tests")
+add_test(NAME "testing_compilation"
+  COMMAND $<TARGET_FILE:test_compil>
+  WORKING_DIRECTORY ${WORKING_DIR})
+
 ## Database
 add_executable(test_db ${TEST_ROOT}/test_db.cpp)
 target_link_libraries(test_db medusa catch)

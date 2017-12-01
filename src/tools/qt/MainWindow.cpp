@@ -178,7 +178,7 @@ bool MainWindow::openDocument()
   return _medusa.NewDocument(std::make_shared<medusa::FileBinaryStream>(_fileName.toStdWString()), true,
     [&](medusa::Path& rDbPath, std::list<medusa::Medusa::Filter> const& filters)
   {
-    auto DbPrDbPathath = QFileDialog::getSaveFileName(this,
+    rDbPath = QFileDialog::getSaveFileName(this,
       "Select a database path",
       QString::fromStdString(rDbPath.string())
       ).toStdString();
@@ -381,19 +381,6 @@ void MainWindow::addSemanticView(medusa::Address const& funcAddr)
 
   auto semView = new SemanticView(this, _medusa, funcAddr);
   this->tabWidget->addTab(semView, QIcon(":/icons/view-semantic.png"), QString("Semantic of function %1").arg(funcLbl));
-}
-
-void MainWindow::addControlFlowGraphView(medusa::Address const& funcAddr)
-{
-  auto lbl = _medusa.GetDocument().GetLabelFromAddress(funcAddr);
-  QString funcLbl = QString::fromStdString(funcAddr.ToString());
-  if (lbl.GetType() != medusa::Label::Unknown)
-    funcLbl = QString::fromStdString(lbl.GetLabel());
-
-  auto cfgView = new ControlFlowGraphView(this);
-  auto cfgScene = new ControlFlowGraphScene(this->tabWidget, _medusa, funcAddr);
-  cfgView->setScene(cfgScene);
-  this->tabWidget->addTab(cfgView, QIcon(":/icons/view-graph.png"), QString("Graph of function %1").arg(funcLbl));
 }
 
 void MainWindow::addGraphView(medusa::Address const& rMcAddr)

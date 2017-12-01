@@ -20,8 +20,8 @@ set(SRC
   ${INCROOT}/cell_text.hpp
   ${INCROOT}/calling_convention.hpp
   ${INCROOT}/character.hpp
+  ${INCROOT}/compilation.hpp
   ${INCROOT}/configuration.hpp
-  ${INCROOT}/control_flow_graph.hpp
   ${INCROOT}/context.hpp
   ${INCROOT}/database.hpp
   ${INCROOT}/detail.hpp
@@ -81,8 +81,8 @@ set(SRC
   ${SRCROOT}/cell_data.cpp
   ${SRCROOT}/cell_text.cpp
   ${SRCROOT}/character.cpp
+  ${SRCROOT}/compilation.cpp
   ${SRCROOT}/configuration.cpp
-  ${SRCROOT}/control_flow_graph.cpp
   ${SRCROOT}/context.cpp
   ${SRCROOT}/database.cpp
   ${SRCROOT}/detail.cpp
@@ -96,6 +96,7 @@ set(SRC
   ${SRCROOT}/expression.cpp
   ${SRCROOT}/expression_filter.cpp
   ${SRCROOT}/expression_operation.cpp
+  ${SRCROOT}/expression_parser.cpp
   ${SRCROOT}/expression_simplifier.cpp
   ${SRCROOT}/expression_visitor.cpp
   ${SRCROOT}/function.cpp
@@ -141,6 +142,7 @@ include(GenerateExportHeader)
 add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
+  PRIVATE "${PEGTL_ROOT}"
 )
 
 
@@ -151,10 +153,21 @@ target_link_libraries(medusa
   Boost::system
   Boost::filesystem
   Boost::program_options
+  Boost::graph
+  Boost::regex
 
   INTERFACE
   ${CMAKE_THREAD_LIBS_INIT}
 )
+
+if (MEDUSA_HAS_OGDF)
+  target_include_directories(medusa
+    PUBLIC "${OGDF_INCLUDE_DIRS}")
+  target_link_libraries(medusa
+    PUBLIC
+    COIN OGDF
+  )
+endif ()
 
 # Thank ogre, I would never find this myself
 find_library(DL_LIBRARY NAMES dl dlsym)
@@ -170,11 +183,6 @@ generate_export_header(medusa
 
 if (MEDUSA_CMAKE_USE_COTIRE)
   cotire(medusa)
-endif()
-
-# Build OGDF if needed
-if (MEDUSA_BUILD_WITH_OGDF)
-  message("Build medusa with OGDF")
 endif()
 
 if (WIN32)

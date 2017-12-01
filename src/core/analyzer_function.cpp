@@ -19,7 +19,15 @@ namespace medusa
         << LogEnd;
 
       Label FuncLbl(m_Addr, Label::Function | Label::Global);
-      auto spFunction = std::make_shared<Function>(FuncLbl.GetLabel(), FuncLen, InsnCnt);
+      auto spFunction = std::make_shared<Function>(FuncLen, InsnCnt);
+
+      AnalyzerDisassemble AnlzDisasm(m_rDoc, m_Addr);
+      auto spGraph = std::make_shared<Graph>();
+      if (AnlzDisasm.BuildControlFlowGraph(*spGraph))
+      {
+        spFunction->SetGraph(spGraph);
+      }
+
       m_rDoc.SetMultiCell(m_Addr, spFunction, false);
       m_rDoc.AddLabel(m_Addr, FuncLbl, false);
     }
@@ -43,7 +51,7 @@ namespace medusa
       // Set the name <mnemonic> + "_" + sym_name (The name is not refreshed if sym_name is updated)
       std::string FuncName = std::string(spInsn->GetName()) + std::string("_") + OpLbl.GetName();
       m_rDoc.AddLabel(m_Addr, Label(FuncName, Label::Function | Label::Global), false);
-      auto spFunc = std::make_shared<Function>(FuncName, spInsn->GetSize(), 1);
+      auto spFunc = std::make_shared<Function>(spInsn->GetSize(), 1);
       m_rDoc.SetMultiCell(m_Addr, spFunc, true);
 
       // Propagate the detail ID

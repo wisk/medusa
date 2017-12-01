@@ -34,7 +34,7 @@ bool GraphScene::_Update(void)
   medusa::Log::Write("ui_qt").Level(medusa::LogError) << "you must compiled medusa with OGDF library to display graph" << medusa::LogEnd;
   return false;
 #else
-  auto pMC = m_rCore.GetMultiCell(m_GraphAddr);
+  auto pMC = m_rCore.GetDocument().GetMultiCell(m_GraphAddr);
   if (pMC == nullptr)
   {
     medusa::Log::Write("ui_qt").Level(medusa::LogError) << "null multicell" << medusa::LogEnd;

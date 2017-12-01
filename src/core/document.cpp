@@ -240,7 +240,7 @@ bool Document::ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool 
   if (spOldCell == nullptr)
     return false;
 
-  if (spOldCell->GetType() == Cell::InstructionType && Force == false)
+  if (spOldCell->GetType() != Cell::ValueType && Force == false)
     return false;
 
   NewValueSize /= 8;
@@ -545,17 +545,17 @@ bool Document::SetMultiCell(Address const& rAddr, MultiCell::SPType spMultiCell,
   Addresses.push_back(rAddr);
   m_AddressUpdatedSignal(Addresses);
 
-  if (spMultiCell->GetType() == MultiCell::StructType)
-  {
-    auto StructId = spMultiCell->GetId();
-    StructureDetail StructDtl;
-    if (!GetStructureDetail(StructId, StructDtl))
-      return true;
-    if (!_ApplyStructure(rAddr, StructDtl))
-    {
-      Log::Write("core") << "failed to apply structure at " << rAddr << LogEnd;
-    }
-  }
+  //if (spMultiCell->GetType() == MultiCell::StructType)
+  //{
+  //  auto StructId = spMultiCell->GetId();
+  //  StructureDetail StructDtl;
+  //  if (!GetStructureDetail(StructId, StructDtl))
+  //    return true;
+  //  if (!_ApplyStructure(rAddr, StructDtl))
+  //  {
+  //    Log::Write("core") << "failed to apply structure at " << rAddr << LogEnd;
+  //  }
+  //}
 
   return true;
 }
@@ -886,16 +886,20 @@ u8 Document::GetMode(Address const& rAddress) const
   if (spCell != nullptr)
   {
     auto const& rModMgr = ModuleManager::Instance();
-    auto spCellArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
-    if (spCellArch != nullptr)
+    auto ArchTag = spCell->GetArchitectureTag();
+    if (ArchTag != MEDUSA_ARCH_UNK)
     {
-      Mode = spCellArch->GetDefaultMode(rAddress);
-      if (Mode != 0 && Mode != 1)
+      auto spCellArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
+      if (spCellArch != nullptr)
+      {
+        Mode = spCellArch->GetDefaultMode(rAddress);
+        if (Mode != 0)
+          return Mode;
+      }
+      Mode = spCell->GetMode();
+      if (Mode != 0)
         return Mode;
     }
-    Mode = spCell->GetMode();
-    if (Mode != 0 && Mode != 1)
-      return Mode;
   }
 
   MemoryArea MemArea;

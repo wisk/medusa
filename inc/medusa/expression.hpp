@@ -86,6 +86,8 @@ public:
 
   virtual ~Expression(void) {}
 
+  static Expression::VSPType Parse(std::string const& rExpressions, CpuInformation const& rCpuInfo, u8 Mode);
+
   virtual std::string ToString(void) const = 0;
   virtual Expression::SPType Clone(void) const = 0;
   virtual u32 GetBitSize(void) const = 0;
@@ -340,7 +342,7 @@ public:
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
-  virtual u32 GetBitSize(void) const { return 0; }
+  virtual u32 GetBitSize(void) const;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor);
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr);
   virtual CompareType Compare(Expression::SPType spExpr) const;
@@ -413,11 +415,11 @@ public:
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) { return false; }
   virtual CompareType Compare(Expression::SPType spExpr) const;
 
-  u8 GetOperation(void) const { return m_OpType; }
-  u8 GetOppositeOperation(void) const;
+  Type GetOperation(void) const;
+  Type GetOppositeOperation(void) const;
 
 protected:
-  u8 m_OpType;
+  Type m_OpType;
 };
 
 class MEDUSA_EXPORT UnaryOperationExpression : public OperationExpression
@@ -658,7 +660,7 @@ class MEDUSA_EXPORT VariableExpression : public Expression
   DECL_EXPR(VariableExpression, Expression::Var, Expression)
 
 public:
-  enum ActionType
+  enum Type
   {
     Unknown,
     Alloc,
@@ -666,7 +668,7 @@ public:
     Use,
   };
 
-  VariableExpression(std::string const& rVarName, ActionType VarType, u32 BitSize = 0);
+  VariableExpression(std::string const& rVarName, Type VarType, u32 BitSize = 0);
 
   virtual ~VariableExpression(void);
 
@@ -678,14 +680,14 @@ public:
   virtual CompareType Compare(Expression::SPType spExpr) const;
 
   std::string const& GetName(void) const { return m_Name; }
-  ActionType         GetAction(void) const { return m_Action; }
+  Type               GetType(void) const { return m_VarType; }
 
   void SetBitSize(u32 BitSize) { m_BitSize = BitSize; }
 
 protected:
   std::string m_Name;
-  ActionType m_Action;
-  u32 m_BitSize;
+  Type        m_VarType;
+  u32         m_BitSize;
 };
 
 // memory expression //////////////////////////////////////////////////////////
@@ -798,7 +800,7 @@ namespace Expr
   MEDUSA_EXPORT Expression::SPType MakeVecId(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
   MEDUSA_EXPORT Expression::SPType MakeTrack(Expression::SPType spTrkExpr, Address const& rCurAddr, u8 Pos);
   MEDUSA_EXPORT Expression::SPType MakeMem(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
-  MEDUSA_EXPORT Expression::SPType MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize = 0);
+  MEDUSA_EXPORT Expression::SPType MakeVar(std::string const& rName, VariableExpression::Type VarType, u16 BitSize = 0);
 
   MEDUSA_EXPORT Expression::SPType MakeCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr);
   MEDUSA_EXPORT Expression::SPType MakeTernaryCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);

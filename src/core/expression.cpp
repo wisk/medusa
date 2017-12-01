@@ -497,6 +497,11 @@ Expression::SPType AssignmentExpression::Clone(void) const
   return std::make_shared<AssignmentExpression>(m_spDstExpr->Clone(), m_spSrcExpr->Clone());
 }
 
+u32 AssignmentExpression::GetBitSize(void) const
+{
+  return std::max(m_spDstExpr->GetBitSize(), m_spSrcExpr->GetBitSize());
+}
+
 Expression::SPType AssignmentExpression::Visit(ExpressionVisitor* pVisitor)
 {
   return pVisitor->VisitAssignment(std::static_pointer_cast<AssignmentExpression>(shared_from_this()));
@@ -599,11 +604,21 @@ u32 OperationExpression::GetBitSize(void) const
 
 Expression::CompareType OperationExpression::Compare(Expression::SPType spExpr) const
 {
-  return CmpUnknown;
+  auto spCmpExpr = expr_cast<OperationExpression>(spExpr);
+  if (spCmpExpr == nullptr)
+    return CmpDifferent;
+  if (GetOperation() != spCmpExpr->GetOperation())
+    return CmpSameExpression;
+  return CmpIdentical;
+}
+
+OperationExpression::Type OperationExpression::GetOperation(void) const
+{
+  return m_OpType;
 }
 
 // TODO(wisk): handle more operations
-u8 OperationExpression::GetOppositeOperation(void) const
+OperationExpression::Type OperationExpression::GetOppositeOperation(void) const
 {
   switch (m_OpType)
   {
@@ -752,6 +767,15 @@ Expression::SPType BinaryOperationExpression::Clone(void) const
 
 u32 BinaryOperationExpression::GetBitSize(void) const
 {
+  switch (m_OpType)
+  {
+    case OperationExpression::OpBcast:
+    case OperationExpression::OpZext:
+    case OperationExpression::OpSext:
+      return m_spRightExpr->GetBitSize();
+    default:
+      break;
+  }
   return std::max(m_spLeftExpr->GetBitSize(), m_spRightExpr->GetBitSize());
 }
 
@@ -1258,18 +1282,18 @@ Expression::CompareType TrackExpression::Compare(Expression::SPType spExpr) cons
     return CmpSameExpression;
   if (m_Pos != spCmpExpr->GetTrackPosition())
     return CmpSameExpression;
-  return CmpIdentical;
+  return m_spTrkExpr->Compare(spCmpExpr->GetTrackedExpression());
 }
 
 // variable ///////////////////////////////////////////////////////////////////
 
-VariableExpression::VariableExpression(std::string const& rVarName, ActionType VarAct, u32 BitSize)
-  : m_Name(rVarName), m_Action(VarAct), m_BitSize(BitSize)
+VariableExpression::VariableExpression(std::string const& rVarName, VariableExpression::Type VarType, u32 BitSize)
+  : m_Name(rVarName), m_VarType(VarType), m_BitSize(BitSize)
 {
-  if (BitSize != 0 && VarAct != Alloc)
-    Log::Write("core").Level(LogWarning) << "variable expression doesn't require bit size if action is different from ``alloc''" << LogEnd;
-  if (BitSize == 0 && VarAct == Alloc)
-    Log::Write("core").Level(LogWarning) << "try to allocate a 0-bit variable" << LogEnd;
+  //if (BitSize != 0 && VarType != Alloc)
+  //  Log::Write("core").Level(LogWarning) << "variable expression doesn't require bit size if action is different from ``alloc''" << LogEnd;
+  if (BitSize == 0 && VarType == Alloc)
+    Log::Write("core").Level(LogError) << "try to allocate a 0-bit variable" << LogEnd;
 }
 
 VariableExpression::~VariableExpression(void)
@@ -1278,22 +1302,22 @@ VariableExpression::~VariableExpression(void)
 
 std::string VariableExpression::ToString(void) const
 {
-  std::string ActStr = "";
+  std::string Str = "";
 
-  switch (m_Action)
+  switch (m_VarType)
   {
-  case Alloc: ActStr = "alloc"; break;
-  case Free: ActStr = "free"; break;
-  case Use: ActStr = "use"; break;
+  case Alloc: Str = "alloc"; break;
+  case Free:  Str = "free"; break;
+  case Use:   Str = "use"; break;
   default: return "<invalid variable>";
   }
 
-  return (boost::format("Var%d[%s] %s") % m_BitSize % ActStr % m_Name).str();
+  return (boost::format("Var%d[%s] %s") % m_BitSize % Str % m_Name).str();
 }
 
 Expression::SPType VariableExpression::Clone(void) const
 {
-  return Expr::MakeVar(m_Name, m_Action, m_BitSize);
+  return Expr::MakeVar(m_Name, m_VarType, m_BitSize);
 }
 
 u32 VariableExpression::GetBitSize(void) const
@@ -1311,7 +1335,7 @@ Expression::CompareType VariableExpression::Compare(Expression::SPType spExpr) c
   auto spCmpExpr = expr_cast<VariableExpression>(spExpr);
   if (spCmpExpr == nullptr)
     return CmpDifferent;
-  if (m_Action != spCmpExpr->GetAction())
+  if (m_VarType != spCmpExpr->GetType())
     return CmpSameExpression;
   if (m_Name != spCmpExpr->GetName())
     return CmpSameExpression;
@@ -1620,9 +1644,9 @@ Expression::SPType Expr::MakeMem(u32 AccessSize, Expression::SPType spExprBase, 
   return std::make_shared<MemoryExpression>(AccessSize, spExprBase, spExprOffset, Dereference);
 }
 
-Expression::SPType Expr::MakeVar(std::string const& rName, VariableExpression::ActionType Act, u16 BitSize)
+Expression::SPType Expr::MakeVar(std::string const& rName, VariableExpression::Type VarType, u16 BitSize)
 {
-  return std::make_shared<VariableExpression>(rName, Act, BitSize);
+  return std::make_shared<VariableExpression>(rName, VarType, BitSize);
 }
 
 Expression::SPType Expr::MakeCond(ConditionExpression::Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr)

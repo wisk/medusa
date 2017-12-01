@@ -7,6 +7,7 @@
 #include <medusa/document.hpp>
 #include <medusa/execution.hpp>
 #include <medusa/module.hpp>
+#include <medusa/user_configuration.hpp>
 
 namespace py = pybind11;
 
@@ -43,7 +44,11 @@ namespace pydusa
         if (!spLdr->IsCompatible(*spModBinStrm))
           continue;
 
-        auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(".", "soci");
+        UserConfiguration UserCfg;
+        auto DbModPath = UserCfg.GetOption("core.modules_path");
+        if (DbModPath.empty())
+          DbModPath = ".";
+        auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(DbModPath, "soci");
         if (pGetDb == nullptr)
         {
           Log::Write("pydusa") << "failed to get database module" << LogEnd;
@@ -85,12 +90,12 @@ namespace pydusa
     return nullptr;
   }
 
-  bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, u32 Type, Emulator::HookCallback Callback)
+  bool Execution_HookAddress(Execution* pExecution, Address const& rAddress, Emulator::HookType Type, Emulator::HookCallback Callback)
   {
     return pExecution->Hook(rAddress, Type, Callback);
   }
 
-  bool Execution_HookLabel(Execution* pExecution, std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback)
+  bool Execution_HookLabel(Execution* pExecution, std::string const& rLabelName, Emulator::HookType Type, Emulator::HookCallback Callback)
   {
     return pExecution->Hook(rLabelName, Type, Callback);
   }

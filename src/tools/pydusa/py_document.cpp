@@ -31,6 +31,24 @@ namespace pydusa
     return Labels;
   }
 
+  static py::object Document_GetLabel(Document* pDoc, Address const& rAddress)
+  {
+    Label Lbl;
+    Lbl = pDoc->GetLabelFromAddress(rAddress);
+    if (Lbl.GetType() == Label::Unknown)
+      return py::none();
+    return py::cast(Lbl);
+  }
+
+  static py::object Document_GetLabelAddress(Document* pDoc, std::string const& rLabelName)
+  {
+    Address Addr;
+    Addr = pDoc->GetAddressFromLabelName(rLabelName);
+    if (Addr.GetAddressingType() == Address::UnknownType)
+      return py::none();
+    return py::cast(Addr);
+  }
+
   static bool Document_SetAddressArchitectureMode(Document* pDoc, Address const& rAddr, const char* pTagArch, u8 Mode,
                                    Database::SetArchitectureModeType SetArchMode)
   {
@@ -77,8 +95,8 @@ void PydusaDocument(py::module& rMod)
   py::class_<Document, std::shared_ptr<Document>>(rMod, "Document")
     .def_property_readonly("memory_areas", pydusa::Document_MemoryAreas)
     .def_property_readonly("labels", pydusa::Document_Labels)
-    .def("get_label", &Document::GetLabelFromAddress)
-    .def("get_label_address", &Document::GetAddressFromLabelName)
+    .def("get_label", pydusa::Document_GetLabel)
+    .def("get_label_address", pydusa::Document_GetLabelAddress)
     .def("set_address_architecture_mode", pydusa::Document_SetAddressArchitectureMode)
 
     .def("get_architecture_tag", &Document::GetArchitectureTag)

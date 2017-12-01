@@ -20,6 +20,79 @@ public:
   }
 };
 
+
+TEST_CASE("graph", "[core]")
+{
+  using namespace medusa;
+
+  Graph g;
+
+  g.AddVertex(Graph::VertexProperties({ Address(0x00), Address(0x02), Address(0x03), Address(0x06), }));
+  g.AddVertex(Graph::VertexProperties({ Address(0x10), Address(0x15), Address(0x20), Address(0x25), }));
+  g.AddVertex(Graph::VertexProperties({ Address(0x31), Address(0x33), Address(0x35), Address(0x37), }));
+
+  REQUIRE(g.AddEdge(Graph::EdgeProperties(Graph::EdgeProperties::True),  Address(0x00), Address(0x10)));
+  REQUIRE(g.AddEdge(Graph::EdgeProperties(Graph::EdgeProperties::False), Address(0x00), Address(0x31)));
+
+  std::string GraphVizCode;
+  CHECK(g.ToGraphViz(GraphVizCode));
+  std::cout << GraphVizCode << std::endl;
+
+  Graph NewGraph;
+  CHECK(Graph::FromGraphViz(NewGraph, GraphVizCode));
+
+  std::string NewGraphVizCode;
+  CHECK(NewGraph.ToGraphViz(NewGraphVizCode));
+
+  std::cout << NewGraphVizCode << std::endl;
+  CHECK(NewGraphVizCode == GraphVizCode);
+}
+
+TEST_CASE("cfg", "[core]")
+{
+  using namespace medusa;
+
+  INFO("Using samples path \"" SAMPLES_DIR "\"");
+
+  Medusa Core;
+
+  auto const pSample = SAMPLES_DIR "/exe/cfg_test.pe.x86-64";
+  std::cout << "analyzing program: " << pSample << std::endl;
+
+  try
+  {
+    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
+    REQUIRE(Core.NewDocument(
+      spFileBinStrm, true,
+      [&](Path& rDbPath, std::list<Medusa::Filter> const&)
+    {
+      rDbPath = "cfg_test.pe.x86-64_";
+      return true;
+    }));
+  }
+  catch (Exception const& e)
+  {
+    std::cerr << e.What() << std::endl;
+    REQUIRE(0);
+  }
+
+  Core.WaitForTasks();
+
+  Core.GetDocument().ForEachLabel([&](Address const& rAddr, Label const& rLbl)
+  {
+    if (rLbl.IsImported())
+      return;
+    if (!rLbl.IsFunction())
+      return;
+    auto spMCell = Core.GetDocument().GetMultiCell(rAddr);
+    auto spCfg = spMCell->GetGraph();
+    REQUIRE(spCfg != nullptr);
+    std::string GV;
+    REQUIRE(spCfg->ToGraphViz(GV));
+    std::cout << GV << std::endl;
+  });
+}
+
 TEST_CASE("big number", "[core]")
 {
   using namespace medusa;
@@ -174,7 +247,7 @@ TEST_CASE("structure", "[core]")
 
   medusa::Medusa Core;
   REQUIRE(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
-  auto spDosHdrStruct = std::make_shared<MultiCell>(_IMAGE_DOS_HEADER.GetId(), MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
+  auto spDosHdrStruct = std::make_shared<MultiCell>(MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
   auto& rDoc = Core.GetDocument();
   REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
   REQUIRE(rDoc.SetStructureDetail(_IMAGE_FILE_HEADER.GetId(), _IMAGE_FILE_HEADER));

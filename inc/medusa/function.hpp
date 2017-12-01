@@ -5,7 +5,6 @@
 
 #include "medusa/namespace.hpp"
 #include "medusa/multicell.hpp"
-#include "medusa/control_flow_graph.hpp"
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -15,20 +14,13 @@ class MEDUSA_EXPORT Function : public MultiCell
 public:
   typedef std::list<Function> List;
 
-  Function(Id FunctionId, u16 Size, u16 InsnCnt);
-  Function(std::string Name, u16 Size, u16 InsnCnt);
+  Function(u16 Size, u16 InsnCnt);
 
   //! This method returns the number of instruction.
-  u16 GetInstructionCounter(void) const { return m_InsnCnt; }
-  u8 GetParameterCounter(void) const { return m_ParamCnt; }
-
-  void SetParameterCounter(u8 ParamCnt) { m_ParamCnt = ParamCnt; }
-
-  virtual bool DisplayCell(void) const { return true; }
+  u16 GetInstructionCount(void) const { return m_InsnCnt; }
 
 private:
   u16 m_InsnCnt;
-  u8  m_ParamCnt;
 };
 
 MEDUSA_NAMESPACE_END

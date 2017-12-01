@@ -19,6 +19,8 @@ set(VERSION_PATCH 4)
 
 # variables
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 set(MEDUSA_MODULES_TO_BUILD "all"
   CACHE STRING "Semicolon-separated list of modules to build, or \"all\"")
 list(REMOVE_DUPLICATES MEDUSA_MODULES_TO_BUILD)
@@ -72,10 +74,10 @@ option(MEDUSA_BUILD_WITH_BOOST
   "Boost library is required to build medusa"
   TRUE)
 if (MEDUSA_BUILD_WITH_BOOST)
-  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options)
+  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options graph regex)
 endif()
 
-find_package(Boost COMPONENTS system atomic filesystem program_options REQUIRED)
+find_package(Boost COMPONENTS system atomic filesystem program_options graph regex REQUIRED)
 if (NOT Boost_FOUND)
   message(FATAL_ERROR "Unable to find Boost")
 endif()
@@ -86,6 +88,13 @@ option(MEDUSA_BUILD_WITH_OGDF
   TRUE)
 if (MEDUSA_BUILD_WITH_OGDF)
   hunter_add_package(OGDF)
+endif()
+find_package(OGDF)
+if (OGDF_FOUND)
+  message("OGDF found")
+  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
+else()
+  message("OGDF not found")
 endif()
 
 ## LLVM
@@ -125,6 +134,24 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # features
 
 include(ExternalProject)
+
+## PEGTL
+
+ExternalProject_add(PEGTL
+  PREFIX PEGTL
+
+  GIT_REPOSITORY "https://github.com/ColinH/PEGTL"
+  GIT_TAG        "ba225fd3dd9a323356883069e0676b1d3aa4a353"
+
+  PATCH_COMMAND  ""
+
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/deps/pegtl"
+
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+)
+set(PEGTL_ROOT "${CMAKE_SOURCE_DIR}/deps/pegtl")
 
 ## C++
 set(CMAKE_CXX_STANDARD 11)

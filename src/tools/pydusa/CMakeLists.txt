@@ -4,7 +4,7 @@ ExternalProject_add(pybind11
   PREFIX            "pybind11"
 
   GIT_REPOSITORY    "https://github.com/pybind/pybind11"
-  GIT_TAG           "master"
+  GIT_TAG           "v2.0.0-rc1"
 
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""
@@ -51,6 +51,7 @@ set(SRC
   py_binary_stream.cpp
   py_expression.cpp
   py_cell.cpp
+  py_compiler.cpp
   py_configuration.cpp
   py_memory_area.cpp
   py_database.cpp
@@ -70,7 +71,12 @@ set(SRC
 
 add_library(pydusa SHARED ${SRC})
 target_link_libraries(pydusa medusa ${PYTHON_LIBRARY} ${Boost_LIBRARIES})
-set_target_properties(pydusa PROPERTIES FOLDER "Tools")
+set_target_properties(
+  pydusa
+  PROPERTIES
+    FOLDER "Tools"
+    DEBUG_POSTFIX ""
+)
 add_dependencies(pydusa pybind11)
 
 set_target_properties(pydusa PROPERTIES PREFIX "")

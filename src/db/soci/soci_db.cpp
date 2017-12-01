@@ -12,6 +12,7 @@ SociDatabase::SociDatabase(void)
 
 SociDatabase::~SociDatabase(void)
 {
+  // FIXME(wisk): wait for locks
 }
 
 bool SociDatabase::_ConfigureDatabase(void)
@@ -70,14 +71,19 @@ bool SociDatabase::_CreateTable(void)
     m_Session << "CREATE INDEX cell_data_index ON CellData (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CellLayout("
-      "offset INTEGER, size INTEGER, "
+      "offset INTEGER, size INTEGER,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
     m_Session << "CREATE INDEX cell_layout_index ON CellLayout (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS MultiCell("
-      "type INTEGER, size INTEGER,"
+      "type INTEGER, size INTEGER, graphviz STRING,"
       "memory_area_id INTEGER, memory_area_offset BIGINT)";
     m_Session << "CREATE INDEX multicell_index ON MultiCell (memory_area_id, memory_area_offset)";
+
+    m_Session << "CREATE TABLE IF NOT EXISTS Function("
+      "instruction_count INTEGER,"
+      "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    m_Session << "CREATE INDEX function_index ON Function (memory_area_id, memory_area_offset)";
 
     m_Session << "CREATE TABLE IF NOT EXISTS CrossReference("
       "memory_area_id_to   INTEGER, memory_area_offset_to   BIGINT,"
@@ -346,15 +352,6 @@ bool SociDatabase::_AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOf
   auto MemAreaPair = std::make_pair(MemoryAreaId, MemoryAreaOffset);
   m_CellDataCache.push_back(std::make_tuple(MemoryAreaId, MemoryAreaOffset, rCellData));
 
-  for (u16 i = 0; i < rCellData.GetSize(); ++i)
-  {
-    auto MemAreaPair = std::make_pair(MemoryAreaId, MemoryAreaOffset + i);
-    if (m_CellLayoutCache.find(MemAreaPair) != std::end(m_CellLayoutCache))
-    {
-      if (!_FlushCellDataCache())
-        return false;
-    }
-  }
   return true;
 }
 
@@ -818,6 +815,17 @@ bool SociDatabase::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) 
   {
     std::lock_guard<std::mutex> Lock(m_Lock);
 
+    for (auto const& rCurMemArea : m_MemoryAreaCache)
+    {
+      auto const& rCurMemAreaAddr = rCurMemArea.GetBaseAddress();
+      auto const Size = rAddress.GetAddressingType() == Address::PhysicalType ? rCurMemArea.GetFileSize() : rCurMemArea.GetSize();
+      if (rAddress.IsBetween(Size, rCurMemAreaAddr))
+      {
+        rMemArea = rCurMemArea;
+        return true;
+      }
+    }
+
     if (rAddress.GetAddressingType() == Address::PhysicalType)
     {
       m_Session <<
@@ -906,6 +914,8 @@ bool SociDatabase::AddMemoryArea(MemoryArea const& rMemArea)
       /**/":addressing_type, :base, :offset, :base_size, :offset_size,"
       /**/":size)",
       soci::use(rMemArea);
+
+    m_MemoryAreaCache.push_back(rMemArea);
   }
   catch (std::exception const& rErr)
   {
@@ -1427,10 +1437,9 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
   u32 Id;
   OffsetType Offset;
 
+  std::lock_guard<std::mutex> Lock(m_Lock);
   try
   {
-    std::lock_guard<std::mutex> Lock(m_Lock);
-
     _FlushLabelCache();
 
     soci::statement Stmt = (m_Session.prepare <<
@@ -1457,7 +1466,15 @@ void SociDatabase::ForEachLabel(LabelCallback Callback)
       }
 
       m_Lock.unlock();
-      Callback(Addr, Label);
+      try
+      {
+        Callback(Addr, Label);
+      }
+      catch (...)
+      {
+        m_Lock.lock();
+        throw;
+      }
       m_Lock.lock();
     } while (Stmt.fetch());
   }
@@ -1612,6 +1629,7 @@ bool SociDatabase::GetCrossReferenceTo(Address const &rFrom, Address::Vector &rT
 MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
 {
   MultiCell::SPType spRes;
+
   try
   {
     std::lock_guard<std::mutex> Lock(m_Lock);
@@ -1621,16 +1639,17 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return nullptr;
     u32 Type, Size;
+    std::string GraphViz;
     /*
     "CREATE TABLE IF NOT EXISTS MultiCell("
-    "type INTEGER, size INTEGER,"
+    "type INTEGER, size INTEGER, graphviz STRING"
     "memory_area_id INTEGER, memory_area_offset INTEGER)";
     */
     m_Session <<
-      "SELECT type, size "
+      "SELECT type, size, graphviz "
       "FROM MultiCell "
       "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
-      , soci::into(Type), soci::into(Size)
+      , soci::into(Type), soci::into(Size), soci::into(GraphViz)
       , soci::use(Id), soci::use(Offset);
     if (!m_Session.got_data())
       return nullptr;
@@ -1640,14 +1659,39 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
     case MultiCell::ArrayType:
       break;
 
+    /*
+    "CREATE TABLE IF NOT EXISTS Function("
+    "size INTEGER, instruction_count INTEGER,"
+    "memory_area_id INTEGER, memory_area_offset BIGINT)";
+    */
     case MultiCell::FunctionType:
+    {
+      u32 InstructionCount;
+      m_Session <<
+        "SELECT instruction_count "
+        "FROM Function "
+        "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
+        , soci::into(InstructionCount), soci::into(InstructionCount);
+      spRes = std::make_shared<Function>(Size, InstructionCount);
       break;
+    }
 
     case MultiCell::StructType:
       break;
 
     default:
+      Log::Write("db_soci").Level(LogError) << "unknown multicell type" << LogEnd;
       break;
+    }
+
+    if (!GraphViz.empty())
+    {
+      Graph MultiCellGraph;
+      if (!Graph::FromGraphViz(MultiCellGraph, GraphViz))
+      {
+        Log::Write("db_soci").Level(LogError) << "failed to parse GraphViz code" << LogEnd;
+      }
+      spRes->SetGraph(std::make_shared<Graph>(MultiCellGraph)); // TODO(wisk): make FromGraphViz returns a shared_ptr
     }
   }
   catch (std::exception const& rErr)
@@ -1670,13 +1714,42 @@ bool SociDatabase::SetMultiCell(Address const &rAddress, MultiCell::SPType spMul
     if (!_ConvertAddressToId(rAddress, Id, Offset))
       return false;
 
+    std::string GraphViz;
+    auto spGraph = spMultiCell->GetGraph();
+    if (spGraph != nullptr)
+    {
+      if (!spGraph->ToGraphViz(GraphViz))
+        Log::Write("db_soci").Level(LogDebug) << "no graph attached to multicell" << LogEnd;
+    }
+
+    /*
+    "CREATE TABLE IF NOT EXISTS MultiCell("
+    "type INTEGER, size INTEGER, graphviz STRING"
+    "memory_area_id INTEGER, memory_area_offset INTEGER)";
+    */
+    m_Session << "INSERT INTO MultiCell(type, size, graphviz, memory_area_id, memory_area_offset) "
+      "VALUES(:type, :size, :graphviz, :memory_area_id, :memory_area_offset)"
+      , soci::use(static_cast<int>(spMultiCell->GetType())), soci::use(spMultiCell->GetSize()), soci::use(GraphViz)
+      , soci::use(Id), soci::use(Offset);
+
     switch (spMultiCell->GetType())
     {
     case MultiCell::ArrayType:
       break;
 
     case MultiCell::FunctionType:
+    {
+      auto spFunc = std::static_pointer_cast<Function>(spMultiCell);
+      if (spFunc == nullptr)
+      {
+        Log::Write("db_soci").Level(LogError) << "invalid function" << LogEnd;
+        return false;
+      }
+      m_Session << "INSERT INTO Function(instruction_count, memory_area_id, memory_area_offset) "
+        "VALUES(:instruction_count, :memory_area_id, :memory_area_offset)"
+        , soci::use(spFunc->GetInstructionCount()), soci::use(Id), soci::use(Offset);
       break;
+    }
 
     case MultiCell::StructType:
       break;
@@ -1687,7 +1760,7 @@ bool SociDatabase::SetMultiCell(Address const &rAddress, MultiCell::SPType spMul
   }
   catch (std::exception const& rErr)
   {
-    Log::Write("db_soci").Level(LogError) << "add multicell failed: " << rErr.what() << LogEnd;
+    Log::Write("db_soci").Level(LogError) << "set multicell failed: " << rErr.what() << LogEnd;
     return false;
   }
 
@@ -1813,14 +1886,14 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
     u16 CellSize = rCellData.GetSize();
     u32 DelCellMemAreaId;
     OffsetType DelCellMemAreaOff;
-    soci::statement Stmt = (m_Session.prepare <<
+    soci::statement SelectStmt = (m_Session.prepare <<
       "SELECT memory_area_id, memory_area_offset "
       "FROM CellLayout "
       "WHERE :memory_area_id == memory_area_id AND :memory_area_offset >= memory_area_offset AND :memory_area_offset < (memory_area_offset + :cell_size)"
       , soci::into(DelCellMemAreaId), soci::into(DelCellMemAreaOff)
       , soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset"), soci::use(CellSize, "cell_size")
       );
-    if (!Stmt.execute(true))
+    if (!SelectStmt.execute(true))
       return true;
     do
     {
@@ -1828,7 +1901,14 @@ bool SociDatabase::SetCellData(Address const &rAddress, CellData const &rCellDat
       if (!_ConvertIdToAddress(DelCellMemAreaId, DelCellMemAreaOff, DelCellAddr))
         return false;
       rDeletedCellAddresses.push_back(DelCellAddr);
-    } while (Stmt.fetch());
+    } while (SelectStmt.fetch());
+
+    m_Session <<
+      "DELETE FROM CellData "
+      "WHERE :memory_area_id == memory_area_id AND :memory_area_offset == memory_area_offset"
+      , soci::use(Id), soci::use(Offset);
+
+    // TODO(wisk): what should we do with CellLayout?
   }
   catch (std::exception const& rErr)
   {

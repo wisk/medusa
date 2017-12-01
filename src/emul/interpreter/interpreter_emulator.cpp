@@ -503,7 +503,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
   {
   case Unknown:
   {
-    switch (spVarExpr->GetAction())
+    switch (spVarExpr->GetType())
     {
     case VariableExpression::Alloc:
       m_rVars[spVarExpr->GetName()] = BitVector();
@@ -521,7 +521,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
   }
 
   case Read:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))
@@ -536,7 +536,7 @@ Expression::SPType InterpreterEmulator::InterpreterExpressionVisitor::VisitVaria
     }
 
   case Write:
-    if (spVarExpr->GetAction() == VariableExpression::Use)
+    if (spVarExpr->GetType() == VariableExpression::Use)
     {
       auto itVar = m_rVars.find(spVarExpr->GetName());
       if (itVar == std::end(m_rVars))

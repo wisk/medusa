@@ -346,6 +346,9 @@ private:
   mutable soci::session m_Session;
   mutable std::mutex m_Lock;
 
+  typedef std::vector<MemoryArea> MemoryAreaCacheType;
+  mutable MemoryAreaCacheType m_MemoryAreaCache;
+
   typedef std::vector<std::tuple<u32, OffsetType, CellData>> CellDataCacheType;
   mutable CellDataCacheType m_CellDataCache;
 

@@ -5,7 +5,6 @@
 #include "medusa/export.hpp"
 #include "medusa/document.hpp"
 #include "medusa/architecture.hpp"
-#include "medusa/control_flow_graph.hpp"
 #include "medusa/task.hpp"
 
 #include <fstream>
@@ -77,7 +76,7 @@ public:
   bool Disassemble(Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
   bool DisassembleBasicBlock(std::list<Instruction::SPType>& rBasicBlock, Tag ArchTag = MEDUSA_ARCH_UNK, u8 ArchMode = 0);
 
-  bool BuildControlFlowGraph(ControlFlowGraph& rCfg);
+  bool BuildControlFlowGraph(Graph& rCfg);
 
   bool DisassembleUsingSymbolicExecution(void);
 };
@@ -133,8 +132,8 @@ public:
   Task* CreateTask(std::string const& rTaskName, Document& rDoc, Address const& rAddr);
   Task* CreateTask(std::string const& rTaskName, Document& rDoc, Address const& rAddr, Architecture& rArch, u8 Mode);
 
-  bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const;
-  bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        ControlFlowGraph& rCfg) const;
+  bool BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, Graph& rCfg) const;
+  bool BuildControlFlowGraph(Document& rDoc, Address const& rAddr,        Graph& rCfg) const;
 
   bool FormatCell(Document const& rDoc, Address const& rAddress, Cell const& rCell, PrintData &rPrintData) const;
   bool FormatMultiCell(Document const& rDoc, Address const& rAddress, MultiCell const& rMultiCell, PrintData& rPrintData) const;

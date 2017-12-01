@@ -20,6 +20,7 @@ PYBIND11_PLUGIN(pydusa)
   PydusaInstruction(m);
   PydusaMemoryArea(m);
   PydusaDatabase(m);
+  PydusaCompiler(m);
 
   PydusaConfiguration(m);
   PydusaArchitecture(m);

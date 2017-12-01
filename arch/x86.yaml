@@ -1112,11 +1112,11 @@ semantic:
   lahf: &lahf |
     ah.id =\
         (  bit_cast(cf.id, int8(ah.bit))
-        | (int64(1)                      << int(ah.bit, 1))
+        | (int(ah.bit, 1)                << int(ah.bit, 1))
         | (bit_cast(pf.id, int8(ah.bit)) << int(ah.bit, 2))
-        | (int64(0)                      << int(ah.bit, 3))
+        | (int(ah.bit, 0)                << int(ah.bit, 3))
         | (bit_cast(af.id, int8(ah.bit)) << int(ah.bit, 4))
-        | (int64(0)                      << int(ah.bit, 5))
+        | (int(ah.bit, 0)                << int(ah.bit, 5))
         | (bit_cast(zf.id, int8(ah.bit)) << int(ah.bit, 6))
         | (bit_cast(sf.id, int8(ah.bit)) << int(ah.bit, 7)));
 

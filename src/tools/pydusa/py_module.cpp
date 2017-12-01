@@ -14,4 +14,8 @@ void PydusaModule(py::module& rMod)
   {
     return ModuleManager::Instance().GetArchitecture(ArchTag);
   });
+  rMod.def("get_compiler", [](std::string const& rCompilerName) -> Compiler::SPType
+  {
+    return ModuleManager::Instance().GetCompiler(rCompilerName);
+  });
 }

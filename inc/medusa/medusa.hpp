@@ -99,7 +99,7 @@ public:
                                    * \param rAddr is the start address.
                                    * \param rCfg is the filled control flow graph.
                                    */
-  bool                            BuildControlFlowGraph(Address const& rAddr, ControlFlowGraph& rCfg);
+  bool                            BuildControlFlowGraph(Address const& rAddr, Graph& rCfg);
 
   bool FormatCell(
     Address       const& rAddress,

@@ -242,7 +242,7 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
   return true;
 }
 
-bool Execution::Hook(Address const& rAddress, u32 Type, Emulator::HookCallback Callback)
+bool Execution::Hook(Address const& rAddress, Emulator::HookType Type, Emulator::HookCallback Callback)
 {
   if (m_spEmul == nullptr)
     return false;
@@ -250,7 +250,7 @@ bool Execution::Hook(Address const& rAddress, u32 Type, Emulator::HookCallback C
   return true;
 }
 
-bool Execution::Hook(std::string const& rLabelName, u32 Type, Emulator::HookCallback Callback)
+bool Execution::Hook(std::string const& rLabelName, Emulator::HookType Type, Emulator::HookCallback Callback)
 {
   if (m_spEmul == nullptr)
     return false;

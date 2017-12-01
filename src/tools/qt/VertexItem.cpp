@@ -86,6 +86,8 @@ void VertexItem::paintBackground(QPainter& p)
   p.fillRect(BgRct, bgBrsh);
   p.fillRect(AdRct, adBrsh);
   m_Fx->setColor(FxClr);
+  BgRct.adjust(0.0, 0.0, -1.0, -1.0); // // HACK(wisk):
+  AdRct.adjust(0.0, 0.0, -1.0, -1.0); // \\ we have to adjust the margin, again
   p.drawRect(BgRct);
   p.drawRect(AdRct);
 }
@@ -95,8 +97,8 @@ void VertexItem::paintText(QPainter& p)
   p.setFont(m_Font);
   QFontMetrics fm(m_Font);
   auto hChar = fm.height();
-  auto wChar = fm.width('M');
-  int xOff = 3, yOff = 3;
+  auto wChar = fm.width('M'); // 'M' is a large character, we use that as a base
+  int xOff = 3, yOff = 1;
   int Line = hChar - yOff; // http://doc.qt.digia.com/qt-maemo/qpainter.html#drawText-12 (Note: The y-position is used as the baseline of the font.)
 
   medusa::UserConfiguration UserCfg;
@@ -162,8 +164,9 @@ void VertexItem::_Update(void)
 
   medusa::u32 viewWidth, viewHeight;
   GetDimension(viewWidth, viewHeight);
+  viewWidth  += 1; // FIXME(wisk): it seems the width is a little bit too short
   m_Width  = viewWidth  * fm.width('M');
-  m_Height = viewHeight * fm.height();
+  m_Height = viewHeight * fm.height() + 5.0; // FIXME(wisk): same issue here
   m_AddrLen  = (m_Addresses.front().ToString().length() + 1) * fm.width('M');
   m_NeedRepaint = true;
 }

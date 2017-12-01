@@ -179,9 +179,58 @@ namespace std
       return Hash_u16(rAddr.GetBase()) ^ Hash_u64(rAddr.GetOffset());
     }
   };
+
+  static inline std::ostream& operator<<(std::ostream& rOstream, medusa::Address const& rAddress)
+  {
+    rOstream << rAddress.ToString();
+    return rOstream;
+  }
+
+  static inline std::ostream& operator<<(std::ostream& rOstream, medusa::Address::Vector const& rAddresses)
+  {
+    auto Size = rAddresses.size();
+
+    if (Size == 0)
+      return rOstream;
+
+    rOstream << rAddresses[0].ToString();
+    for (decltype(Size) i = 1; i < Size; ++i)
+      rOstream << " " << rAddresses[i].ToString();
+
+    return rOstream;
+  }
+
+  static inline std::istream& operator>>(std::istream& rIstream, medusa::Address& rAddress)
+  {
+    std::string AddrStr;
+    rIstream >> AddrStr;
+    rAddress = medusa::Address(AddrStr);
+    return rIstream;
+  }
+
+  static inline std::istream& operator>>(std::istream& rIstream, medusa::Address::Vector& rAddresses)
+  {
+    std::string AddrStr;
+    if (!(rIstream >> AddrStr))
+      return rIstream;
+    rAddresses.push_back(medusa::Address(AddrStr));
+
+    while (!rIstream.eof())
+    {
+      rIstream.ignore(1, ' ');
+      if (!rIstream)
+        break;
+      if (!(rIstream >> AddrStr))
+        break;
+      rAddresses.push_back(medusa::Address(AddrStr));
+    }
+    return rIstream;
+  }
 }
 
-MEDUSA_EXPORT std::ostream& operator<<(std::ostream& rOstrm, medusa::Address const& rAddr);
-MEDUSA_EXPORT std::istream& operator>>(std::istream& rIstrm, medusa::Address& rAddr);
+MEDUSA_EXPORT std::ostream& operator<<(std::ostream& rOstream, medusa::Address const& rAddress);
+MEDUSA_EXPORT std::ostream& operator<<(std::ostream& rOstream, medusa::Address::Vector const& rAddresses);
+MEDUSA_EXPORT std::istream& operator>>(std::istream& rIstream, medusa::Address& rAddress);
+MEDUSA_EXPORT std::istream& operator>>(std::istream& rIstream, medusa::Address::Vector& rAddresses);
 
 #endif // MEDUSA_ADDRESS_HPP

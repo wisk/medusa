@@ -8,6 +8,8 @@ macro(medusa_add_module type name include_files source_files)
     set(MEDUSA_FOLDER "Architectures")
   elseif ("${type}" STREQUAL "bind")
     set(MEDUSA_FOLDER "Bindings")
+  elseif ("${type}" STREQUAL "compil")
+    set(MEDUSA_FOLDER "Compilations")
   elseif ("${type}" STREQUAL "db")
     set(MEDUSA_FOLDER "Databases")
   elseif ("${type}" STREQUAL "emul")
@@ -30,6 +32,7 @@ macro(medusa_add_module type name include_files source_files)
     LINKER_LANGUAGE CXX
     FOLDER ${MEDUSA_FOLDER}
     PREFIX ""
+    DEBUG_POSTFIX ""
   )
 
   install(TARGETS ${MEDUSA_MODULE}

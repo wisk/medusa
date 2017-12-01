@@ -59,9 +59,9 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
     {
       rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
       {
-        if ((rLabel.GetType() & Label::AccessMask) == Label::Imported)
+        if (rLabel.IsImported())
           return;
-        if ((rLabel.GetType() & Label::CellMask) != Label::Data)
+        if (!rLabel.IsData())
           return;
 
         BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
@@ -218,13 +218,13 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc, Address
   return nullptr;
 }
 
-bool Analyzer::BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document& rDoc, std::string const& rLblName, Graph& rCfg) const
 {
   auto rAddr = rDoc.GetAddressFromLabelName(rLblName);
   return BuildControlFlowGraph(rDoc, rAddr, rCfg);
 }
 
-bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, ControlFlowGraph& rCfg) const
+bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, Graph& rCfg) const
 {
   AnalyzerDisassemble AnlzDisasm(rDoc, rAddr);
   return AnlzDisasm.BuildControlFlowGraph(rCfg);
@@ -321,7 +321,7 @@ bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData&
   auto const& rBoostGraph = rGraph();
   auto EdgesRange = boost::edges(rBoostGraph);
   std::vector<std::tuple<Graph::EdgeDescriptor, ogdf::edge>> Edges;
-  //double Factor = 1.8;
+
   for (auto itEdge = EdgesRange.first; itEdge != EdgesRange.second; ++itEdge)
   {
     auto const& rSrcVtx = rBoostGraph[itEdge->m_source];
@@ -345,7 +345,7 @@ bool Analyzer::FormatGraph(Document const& rDoc, Graph const& rGraph, GraphData&
 
   // Let OGDF finds a layout for the graph
   auto OHL = new ogdf::OptimalHierarchyLayout;
-  OHL->nodeDistance(30.0);
+  OHL->nodeDistance(5.0);
   OHL->layerDistance(10.0);
   OHL->weightBalancing(0.0);
   OHL->weightSegments(0.0);

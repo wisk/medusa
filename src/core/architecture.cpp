@@ -493,7 +493,7 @@ bool Architecture::FormatFunction(
   oss
     << std::hex << std::showbase << std::left
     << "; size=" << rFunc.GetSize()
-    << ", insn_cnt=" << rFunc.GetInstructionCounter();
+    ;
 
   rPrintData.AppendComment(oss.str());
 
