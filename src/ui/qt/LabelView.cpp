@@ -10,6 +10,7 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
   : QTreeView(parent), View(medusa::Document::Subscriber::LabelUpdated, core.GetDocument())
   , _core(core)
 {
+  setSortingEnabled(true);
   setUniformRowHeights(false);
   qRegisterMetaType<medusa::Address>("Address");
   qRegisterMetaType<medusa::Label>("Label");
