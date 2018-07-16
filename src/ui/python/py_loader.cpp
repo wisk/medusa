@@ -8,6 +8,12 @@ namespace bp = boost::python;
 
 MEDUSA_NAMESPACE_USE
 
+template<>
+Loader const volatile *boost::get_pointer(Loader const volatile *p)
+{
+  return p;
+}
+
 void PydusaLoader(void)
 {
   bp::class_<Loader, boost::noncopyable>("Loader", bp::no_init)

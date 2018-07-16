@@ -9,6 +9,12 @@ namespace bp = boost::python;
 
 MEDUSA_NAMESPACE_USE
 
+template<>
+MemoryArea const volatile *boost::get_pointer(MemoryArea const volatile *p)
+{
+  return p;
+}
+
 namespace pydusa
 {
 }
