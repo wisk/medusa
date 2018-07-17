@@ -2,24 +2,42 @@
 
 #include <QStandardItemModel>
 #include <QTreeWidgetItem>
+#include <QFileInfo>
+#include <QDir>
 
 Q_DECLARE_METATYPE(medusa::Address);
 Q_DECLARE_METATYPE(medusa::Label);
 
-LabelView::LabelView(QWidget * parent, medusa::Medusa &core)
+LabelView::LabelView(QWidget * parent, medusa::Medusa &core, QString const &fileName)
   : QTreeView(parent), View(medusa::Document::Subscriber::LabelUpdated, core.GetDocument())
   , _core(core)
 {
+  QFileInfo const fi(fileName);
+  QFile file(QFileInfo(fi.dir(), fi.completeBaseName() + ".map").filePath());
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    while (!file.atEnd())
+    {
+      auto line = file.readLine();
+      int64_t addr;
+      char name[256];
+      if (sscanf(line, "%llx:%llx %255s %llx", &addr, &addr, name, &addr) == 4)
+      {
+        _symbolMap[addr] = name;
+      }
+    }
+  }
   setSortingEnabled(true);
   setUniformRowHeights(false);
   qRegisterMetaType<medusa::Address>("Address");
   qRegisterMetaType<medusa::Label>("Label");
   setEditTriggers(QAbstractItemView::NoEditTriggers);
   auto model = new QStandardItemModel(this);
-  model->setColumnCount(3);
+  model->setColumnCount(4);
   model->setHeaderData(0, Qt::Horizontal, "Name");
   model->setHeaderData(1, Qt::Horizontal, "Type");
   model->setHeaderData(2, Qt::Horizontal, "Address");
+  model->setHeaderData(3, Qt::Horizontal, "Symbol");
   setModel(model);
   connect(this, SIGNAL(doubleClicked(QModelIndex const&)),  this, SLOT(onDoubleClickLabel(QModelIndex const&)));
   connect(this, SIGNAL(labelAdded(medusa::Address const&, medusa::Label const&)),   this, SLOT(onAddLabel(medusa::Address const&, medusa::Label const&)));
@@ -76,6 +94,9 @@ void LabelView::onAddLabel(medusa::Address const& address, medusa::Label const& 
   model->setData(model->index(row, 0), QString::fromStdString(label.GetLabel()));
   model->setData(model->index(row, 1), labelType);
   model->setData(model->index(row, 2), QString::fromStdString(address.ToString()));
+  auto it = _symbolMap.find(address.GetOffset());
+  if (it != _symbolMap.end())
+    model->setData(model->index(row, 3), QString::fromStdString(it->second));
 
   // This method can assert
   //resizeColumnToContents(0);
