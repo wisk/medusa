@@ -12,6 +12,9 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core, QString const &file
   : QTreeView(parent), View(medusa::Document::Subscriber::LabelUpdated, core.GetDocument())
   , _core(core)
 {
+  // Look for a map file with the same base name as the binary file, and if such
+  // is present, record the listed symbols, indexed by address for later lookup.
+  // For now, ignorantly assume Microsoft Visual Studio linker map file format.
   QFileInfo const fi(fileName);
   QFile file(QFileInfo(fi.dir(), fi.completeBaseName() + ".map").filePath());
   if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -21,8 +24,13 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core, QString const &file
       auto line = file.readLine();
       int64_t addr;
       char name[256];
-      if (sscanf(line, "%llx:%llx %255s %llx", &addr, &addr, name, &addr) == 4)
+      if (sscanf(line, "%llx:%llx %llx", &addr, &addr, &addr) == 3)
       {
+        // The line seems to belong to the section directory. Just ignore it.
+      }
+      else if (sscanf(line, "%llx:%llx %255s %llx", &addr, &addr, name, &addr) == 4)
+      {
+        // Now this seems worth recording.
         _symbolMap[addr] = name;
       }
     }
