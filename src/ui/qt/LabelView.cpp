@@ -24,7 +24,7 @@ LabelView::LabelView(QWidget * parent, medusa::Medusa &core, QString const &file
       auto line = file.readLine();
       int64_t addr;
       char name[256];
-      if (sscanf(line, "%llx:%llx %llx", &addr, &addr, &addr) == 3)
+      if (sscanf(line, "%llx:%llx 0%llx", &addr, &addr, &addr) == 3)
       {
         // The line seems to belong to the section directory. Just ignore it.
       }
