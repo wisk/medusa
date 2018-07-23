@@ -1,9 +1,10 @@
 #include "medusa/expression.hpp"
 
-#include <pegtl.hh>
-#include <pegtl/trace.hh>
+#include <tao/pegtl.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
+
+namespace pegtl = tao::TAO_PEGTL_NAMESPACE;
 
 namespace grammar
 {
@@ -11,16 +12,16 @@ namespace grammar
   struct sep : pegtl::seq< pegtl::one< ',' >, pegtl::opt< pegtl::space > > {};
 
   /// Prefixes
-  struct pref_bv   : pegtl_string_t( "bv" )   {};
-  struct pref_id   : pegtl_string_t( "Id" )   {};
-  struct pref_sym  : pegtl_string_t( "Sym" )  {};
-  struct pref_var  : pegtl_string_t( "Var" )  {};
-  struct pref_mem  : pegtl_string_t( "Mem" )  {};
-  struct pref_addr : pegtl_string_t( "Addr" ) {};
+  struct pref_bv   : TAO_PEGTL_STRING( "bv" )   {};
+  struct pref_id   : TAO_PEGTL_STRING( "Id" )   {};
+  struct pref_sym  : TAO_PEGTL_STRING( "Sym" )  {};
+  struct pref_var  : TAO_PEGTL_STRING( "Var" )  {};
+  struct pref_mem  : TAO_PEGTL_STRING( "Mem" )  {};
+  struct pref_addr : TAO_PEGTL_STRING( "Addr" ) {};
 
   /// Literals
   struct lit_dec  : pegtl::plus<pegtl::digit> {};
-  struct lit_hex  : pegtl::seq< pegtl_string_t( "0x" ), pegtl::plus< pegtl::xdigit > > {};
+  struct lit_hex  : pegtl::seq< TAO_PEGTL_STRING( "0x" ), pegtl::plus< pegtl::xdigit > > {};
   struct lit_str  : pegtl::seq< pegtl::one< '"' >, pegtl::plus< pegtl::sor< pegtl::alnum, pegtl::space > >, pegtl::one< '"' > > {};
 
   /// Address
@@ -30,9 +31,9 @@ namespace grammar
   struct lit_addr  : pegtl::seq< addr_pref, addr_base, addr_off > {};
 
   /// Variable type
-  struct var_alloc : pegtl_string_t( "alloc" ) {};
-  struct var_use   : pegtl_string_t( "use" )   {};
-  struct var_free  : pegtl_string_t( "free" )  {};
+  struct var_alloc : TAO_PEGTL_STRING( "alloc" ) {};
+  struct var_use   : TAO_PEGTL_STRING( "use" )   {};
+  struct var_free  : TAO_PEGTL_STRING( "free" )  {};
   struct var_type  : pegtl::sor< var_alloc, var_use, var_free > {};
 
   /// Operator
@@ -41,32 +42,32 @@ namespace grammar
   struct op_un_not  : pegtl::one< '~' > {};
   struct op_un_neg  : pegtl::one< '-' > {};
 
-  struct op_un_fneg : pegtl_string_t( "-{f}" ) {};
+  struct op_un_fneg : TAO_PEGTL_STRING( "-{f}" ) {};
 
   struct op_un_sym  : pegtl::sor<
     op_un_not, op_un_neg,
     op_un_fneg
   > {};
 
-  struct op_un_swap : pegtl_string_t( "byte_swap" ) {};
-  struct op_un_bsf  : pegtl_string_t( "bsf " ) {};
-  struct op_un_bsr  : pegtl_string_t( "bsr" ) {};
+  struct op_un_swap : TAO_PEGTL_STRING( "byte_swap" ) {};
+  struct op_un_bsf  : TAO_PEGTL_STRING( "bsf " ) {};
+  struct op_un_bsr  : TAO_PEGTL_STRING( "bsr" ) {};
   struct op_un_fn   : pegtl::sor<
     op_un_swap, op_un_bsf, op_un_bsr
   > {};
 
   //// binary
-  struct op_bin_bcast   : pegtl_string_t( "bcast"        ) {};
-  struct op_bin_sext    : pegtl_string_t( "sign_extend"  ) {};
-  struct op_bin_zext    : pegtl_string_t( "zero_extend"  ) {};
-  struct op_bin_insbits : pegtl_string_t( "insert_bits"  ) {};
-  struct op_bin_extbits : pegtl_string_t( "extract_bits" ) {};
+  struct op_bin_bcast   : TAO_PEGTL_STRING( "bcast"        ) {};
+  struct op_bin_sext    : TAO_PEGTL_STRING( "sign_extend"  ) {};
+  struct op_bin_zext    : TAO_PEGTL_STRING( "zero_extend"  ) {};
+  struct op_bin_insbits : TAO_PEGTL_STRING( "insert_bits"  ) {};
+  struct op_bin_extbits : TAO_PEGTL_STRING( "extract_bits" ) {};
 
-  struct op_bin_lls : pegtl_string_t( "<<"    ) {};
-  struct op_bin_lrs : pegtl_string_t( ">>{u}" ) {};
-  struct op_bin_ars : pegtl_string_t( ">>{s}" ) {};
-  struct op_bin_rol : pegtl_string_t( "rol"   ) {};
-  struct op_bin_ror : pegtl_string_t( "ror"   ) {};
+  struct op_bin_lls : TAO_PEGTL_STRING( "<<"    ) {};
+  struct op_bin_lrs : TAO_PEGTL_STRING( ">>{u}" ) {};
+  struct op_bin_ars : TAO_PEGTL_STRING( ">>{s}" ) {};
+  struct op_bin_rol : TAO_PEGTL_STRING( "rol"   ) {};
+  struct op_bin_ror : TAO_PEGTL_STRING( "ror"   ) {};
 
   struct op_bin_and : pegtl::one< '&' > {};
   struct op_bin_or  : pegtl::one< '|' > {};
@@ -75,16 +76,16 @@ namespace grammar
   struct op_bin_add  : pegtl::one< '+' > {};
   struct op_bin_sub  : pegtl::one< '-' > {};
   struct op_bin_mul  : pegtl::one< '*' > {};
-  struct op_bin_udiv : pegtl_string_t( "/{u}" ) {};
-  struct op_bin_sdiv : pegtl_string_t( "/{s}" ) {};
-  struct op_bin_umod : pegtl_string_t( "%{u}" ) {};
-  struct op_bin_smod : pegtl_string_t( "%{s}" ) {};
+  struct op_bin_udiv : TAO_PEGTL_STRING( "/{u}" ) {};
+  struct op_bin_sdiv : TAO_PEGTL_STRING( "/{s}" ) {};
+  struct op_bin_umod : TAO_PEGTL_STRING( "%{u}" ) {};
+  struct op_bin_smod : TAO_PEGTL_STRING( "%{s}" ) {};
 
-  struct op_bin_fadd : pegtl_string_t("+{f}") {};
-  struct op_bin_fsub : pegtl_string_t("-{f}") {};
-  struct op_bin_fmul : pegtl_string_t("*{f}") {};
-  struct op_bin_fdiv : pegtl_string_t("/{f}") {};
-  struct op_bin_fmod : pegtl_string_t("%{f}") {};
+  struct op_bin_fadd : TAO_PEGTL_STRING("+{f}") {};
+  struct op_bin_fsub : TAO_PEGTL_STRING("-{f}") {};
+  struct op_bin_fmul : TAO_PEGTL_STRING("*{f}") {};
+  struct op_bin_fdiv : TAO_PEGTL_STRING("/{f}") {};
+  struct op_bin_fmod : TAO_PEGTL_STRING("%{f}") {};
 
   struct op_bin_sym : pegtl::sor<
     op_bin_lls, op_bin_lrs, op_bin_ars,
@@ -101,12 +102,12 @@ namespace grammar
 
   /// Symbolic
 
-  struct sym_unk     : pegtl_string_t( "unknown" ) {};
-  struct sym_retval  : pegtl_string_t( "retval"  ) {};
-  struct sym_parm    : pegtl_string_t( "parm"    ) {};
-  struct sym_extval  : pegtl_string_t( "extval"  ) {};
-  struct sym_extfunc : pegtl_string_t( "extfunc" ) {};
-  struct sym_undef   : pegtl_string_t( "undef"   ) {};
+  struct sym_unk     : TAO_PEGTL_STRING( "unknown" ) {};
+  struct sym_retval  : TAO_PEGTL_STRING( "retval"  ) {};
+  struct sym_parm    : TAO_PEGTL_STRING( "parm"    ) {};
+  struct sym_extval  : TAO_PEGTL_STRING( "extval"  ) {};
+  struct sym_extfunc : TAO_PEGTL_STRING( "extfunc" ) {};
+  struct sym_undef   : TAO_PEGTL_STRING( "undef"   ) {};
   struct sym_type    : pegtl::sor<
     sym_unk, sym_retval, sym_parm, sym_extval, sym_extfunc, sym_undef
   > {};
@@ -285,14 +286,16 @@ namespace action
   template< typename Rule > struct make_expression : pegtl::nothing< Rule > {};
 
   template<> struct make_expression<grammar::lit_dec> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
-      rExprState.PushBitSize(static_cast<u16>(std::stol(in.string())));
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
+      rExprState.PushBitSize(static_cast<u16>(std::stol(rIn.string())));
     }
   };
 
   template<> struct make_expression<grammar::lit_str> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
-      auto Str = in.string();
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
+      auto Str = rIn.string();
       Str.erase(0, 1); // remove first "
       Str.erase(Str.size() - 1); // remove last "
       rExprState.PushIdentifier(Str);
@@ -300,26 +303,28 @@ namespace action
   };
 
   template<> struct make_expression<grammar::lit_addr> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
-      Address Addr(in.string());
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
+      Address Addr(rIn.string());
       rExprState.PushAddress(Addr);
     }
   };
 
   template<> struct make_expression<pegtl::identifier> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
-      rExprState.PushIdentifier(in.string());
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
+      rExprState.PushIdentifier(rIn.string());
     }
   };
 
-  template<> struct make_expression<grammar::expr_bv>
-  {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState)
+  template<> struct make_expression<grammar::expr_bv> {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState)
     {
       u16 BitSize;
       if (!rExprState.PopBitSize(BitSize))
         return;
-      auto ValueString = in.string();
+      auto ValueString = rIn.string();
       auto Beg = ValueString.find('(') + 1, End = ValueString.rfind(')');
       auto Value = ValueString.substr(Beg, End - Beg);
       auto spBv = Expr::MakeBitVector(BitSize, ap_uint(Value));
@@ -328,7 +333,8 @@ namespace action
   };
 
   template<> struct make_expression<grammar::expr_id> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       u16 IdBitSize;
       if (!rExprState.PopBitSize(IdBitSize))
         return;
@@ -344,7 +350,8 @@ namespace action
   };
 
   template<bool Dereference, bool WithBase> struct make_memory_expression {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       u16 AccBitSize;
       if (!rExprState.PopBitSize(AccBitSize))
         return;
@@ -364,7 +371,8 @@ namespace action
 
   /// Operation
   template< OperationExpression::Type OpType > struct operation_type_action {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       rExprState.PushOperationType(OpType);
     }
   };
@@ -400,7 +408,8 @@ namespace action
   template<> struct make_expression<grammar::op_bin_fdiv>    : operation_type_action<OperationExpression::OpFDiv>        {};
   template<> struct make_expression<grammar::op_bin_fmod>    : operation_type_action<OperationExpression::OpFMod>        {};
   template<> struct make_expression<grammar::expr_un> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       OperationExpression::Type UnOpType;
       if (!rExprState.PopOperationType(UnOpType))
         return;
@@ -410,7 +419,8 @@ namespace action
     }
   };
   template<> struct make_expression<grammar::expr_bin> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       OperationExpression::Type BinOpType;
       if (!rExprState.PopOperationType(BinOpType))
         return;
@@ -423,7 +433,8 @@ namespace action
 
   /// Variable
   template< VariableExpression::Type VarType > struct variable_type_action {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       rExprState.PushVariableType(VarType);
     }
   };
@@ -431,7 +442,8 @@ namespace action
   template<> struct make_expression<grammar::var_use>   : variable_type_action<VariableExpression::Use>   {};
   template<> struct make_expression<grammar::var_free>  : variable_type_action<VariableExpression::Free>  {};
   template<> struct make_expression<grammar::expr_var_use> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       std::string VarName;
       if (!rExprState.PopIdentifier(VarName))
         return;
@@ -446,7 +458,8 @@ namespace action
     }
   };
   template<> struct make_expression<grammar::expr_var_alloc_or_free> { // TODO(wisk): code dup
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       std::string VarName;
       if (!rExprState.PopIdentifier(VarName))
         return;
@@ -463,7 +476,8 @@ namespace action
 
   /// Symbolic
   template< SymbolicExpression::Type SymType > struct symbolic_type_action {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       rExprState.PushSymbolicType(SymType);
     }
   };
@@ -474,7 +488,8 @@ namespace action
   template<> struct make_expression<grammar::sym_extfunc> : symbolic_type_action<SymbolicExpression::ExternalFunction> {};
   template<> struct make_expression<grammar::sym_undef>   : symbolic_type_action<SymbolicExpression::Undefined> {};
   template<> struct make_expression<grammar::expr_sym_with_expr> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState)
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState)
     {
       SymbolicExpression::Type SymType;
       if (!rExprState.PopSymbolicType(SymType))
@@ -493,7 +508,8 @@ namespace action
     }
   };
   template<> struct make_expression<grammar::expr_sym_without_expr> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       SymbolicExpression::Type SymType;
       if (!rExprState.PopSymbolicType(SymType))
         return;
@@ -510,7 +526,8 @@ namespace action
 
   template<>
   struct make_expression<grammar::expr_assign> {
-    static void apply(pegtl::action_input const& in, ExpressionState& rExprState) {
+    template<typename Input>
+    static void apply(Input const& rIn, ExpressionState& rExprState) {
       auto spSrc = rExprState.Pop();
       auto spDst = rExprState.Pop();
       if (spSrc == nullptr || spDst == nullptr)
@@ -527,7 +544,8 @@ Expression::VSPType Expression::Parse(std::string const& rExpressions, CpuInform
   Expression::VSPType ParsedExprs;
   ExpressionState ExprState(ParsedExprs, rCpuInfo, Mode);
   //pegtl::trace_string<grammar::start>(rExpressions, __FILE__, ExprState);
-  if (!pegtl::parse_string<grammar::start, action::make_expression>(rExpressions, __FILE__, ExprState))
+  pegtl::memory_input<> Input(rExpressions, "expressions");
+  if (!pegtl::parse<grammar::start, action::make_expression>(Input, ExprState))
     Log::Write("core").Level(LogError) << "failed to parse expressions" << LogEnd;
   ExprState.Finalize();
   return ParsedExprs;

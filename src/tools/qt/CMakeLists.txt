@@ -99,42 +99,43 @@ add_executable(qMedusa ${GUI_TYPE}
 target_link_libraries(qMedusa medusa Qt5::Widgets)
 set_target_properties(qMedusa PROPERTIES FOLDER "Tools")
 
-# I can't believe how hard it is to deploy qt5...
-# Inspired from http://pastebin.com/an3dyt51
-# ref: http://qt-project.org/doc/qt-5/windows-deployment.html#creating-the-application-package
-# ref: http://qt-project.org/wiki/Deploy_an_Application_on_Windows
-if (WIN32)
+# src: https://stackoverflow.com/questions/41193584/deploy-all-qt-dependencies-when-building
+if (Qt5_FOUND AND WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
+    get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
 
-  set(QT5_BIN_PATH ${QT5_CMAKE_PATH}/../../bin)
-  file(TO_CMAKE_PATH ${QT5_BIN_PATH} QT5_BIN_PATH)
-  set(QT5_PPF_PATH ${QT5_CMAKE_PATH}/../../plugins/platforms)
-  file(TO_CMAKE_PATH ${QT5_PPF_PATH} QT5_PPF_PATH)
+    execute_process(
+        COMMAND "${_qt5_qmake_location}" -query QT_INSTALL_PREFIX
+        RESULT_VARIABLE return_code
+        OUTPUT_VARIABLE qt5_install_prefix
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 
-  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Gui.dll)
-  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Core.dll)
-  list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/Qt5Widgets.dll)
-  if (EXISTS "${QT5_BIN_PATH}/libGLESv2.dll")
-    list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libGLESv2.dll)
-  endif()
-  if (EXISTS "${QT5_BIN_PATH}/libEGL.dll")
-    list(APPEND QT5_NEEDED_DLL ${QT5_BIN_PATH}/libEGL.dll)
-  endif()
+    set(imported_location "${qt5_install_prefix}/bin/windeployqt.exe")
 
-  file(GLOB icuin_dll ${QT5_BIN_PATH}/icuin*.dll)
-  list(APPEND QT5_NEEDED_DLL ${icuin_dll})
-  file(GLOB icuuc_dll ${QT5_BIN_PATH}/icuuc*.dll)
-  list(APPEND QT5_NEEDED_DLL ${icuuc_dll})
-  file(GLOB icudt_dll ${QT5_BIN_PATH}/icudt*.dll)
-  list(APPEND QT5_NEEDED_DLL ${icudt_dll})
-  file(GLOB d3dcompiler_dll ${QT5_BIN_PATH}/d3dcompiler_*.dll)
-  list(APPEND QT5_NEEDED_DLL ${d3dcompiler_dll})
+    if (EXISTS ${imported_location})
+        add_executable(Qt5::windeployqt IMPORTED)
 
-  foreach (lib ${QT5_NEEDED_DLL})
-    install(FILES ${lib} DESTINATION .)
-  endforeach ()
+        set_target_properties(Qt5::windeployqt PROPERTIES
+            IMPORTED_LOCATION ${imported_location}
+        )
+    endif()
+endif()
 
-  install(FILES ${QT5_PPF_PATH}/qwindows.dll DESTINATION platforms)
+if (TARGET Qt5::windeployqt)
+    # execute windeployqt in a tmp directory after build
+    add_custom_command(TARGET qMedusa
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/windeployqt"
+        COMMAND set PATH=%PATH%$<SEMICOLON>${qt5_install_prefix}/bin
+        COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:qMedusa>/$<TARGET_FILE_NAME:qMedusa>"
+    )
 
-endif ()
+    # copy deployment directory during installation
+    install(
+        DIRECTORY
+        "${CMAKE_CURRENT_BINARY_DIR}/windeployqt/"
+        DESTINATION ${MEDUSA_EXECUTABLE_PATH}
+    )
+endif()
 
 install(TARGETS qMedusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})

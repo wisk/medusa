@@ -5,7 +5,7 @@
 #include <QPen>
 #include <QPainter>
 
-#include <medusa/version.hpp>
+#include <medusa/config.hpp>
 #include <medusa/basic_block.hpp>
 #include <medusa/cell_text.hpp>
 

@@ -9,14 +9,16 @@ set(SRC
   ${SRCROOT}/soci_db.cpp
   )
 
-find_package(SQLite3 REQUIRED)
-include("${SOCI_ROOT}/cmake/SOCI.cmake")
+add_library(db_soci SHARED ${SRC})
+add_definitions(db_soci SQLite3)
+
+find_package(SQLite3 CONFIG)
+# include("${SOCI_ROOT}/cmake/SOCI.cmake")
+
+include_directories("${SOCI_ROOT}/include") # HACK(wisk): INTERFACE_INCLUDE_DIRECTORIES shoud be used instead
 
 # define db soci target
-include_directories(${SQLITE3_INCLUDE_DIRS})
-include_directories(${SOCI_INCLUDE_DIRS})
-add_library(db_soci SHARED ${SRC})
-target_link_libraries(db_soci medusa ${SQLITE3_LIBRARY} SOCI::soci_core_static SOCI::soci_sqlite3_static)
+target_link_libraries(db_soci medusa sqlite3 SOCI::soci_core_static SOCI::soci_sqlite3_static)
 set_target_properties(db_soci PROPERTIES
   FOLDER "Databases"
   PREFIX ""

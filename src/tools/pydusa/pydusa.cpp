@@ -4,7 +4,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_PLUGIN(pydusa)
+PYBIND11_MODULE(pydusa)
 {
   py::module m("pydusa", "pydusa is python binding for medusa");
 
@@ -36,6 +36,4 @@ PYBIND11_PLUGIN(pydusa)
   PydusaCpuInformation(m);
 
   PydusaModule(m);
-
-  return m.ptr();
 }

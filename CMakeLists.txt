@@ -1,23 +1,16 @@
 cmake_minimum_required(VERSION 3.2)
 
-include("cmake/HunterGate.cmake")
-
-HunterGate(
-  URL "https://github.com/wisk/hunter/archive/medusa-deps.tar.gz"
-  SHA1 "8c538a0f6209b58681222e6bd766dc682e6a80fe"
-)
-
-# project name
+# Name
 
 project(Medusa)
 
-# medusa version
+# Version
 
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 4)
+set(VERSION_MINOR 5)
 set(VERSION_PATCH 4)
 
-# variables
+# Variables
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -35,7 +28,7 @@ else()
   endforeach()
 endif()
 
-set(MEDUSA_EXECUTABLE_PATH bin)
+set(MEDUSA_EXECUTABLE_PATH ".")
 set(MEDUSA_LIBRARY_PATH lib)
 set(MEDUSA_MODULE_PATH lib/medusa)
 set(MEDUSA_RESOURCE_PATH share/medusa)
@@ -44,7 +37,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# options
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# Options
 
 ## Tools
 option(MEDUSA_BUILD_TOOLS
@@ -59,99 +54,7 @@ if (MEDUSA_BUILD_TESTS)
   enable_testing()
 endif()
 
-## Cotire
-option(MEDUSA_CMAKE_USE_COTIRE
-  "use cotire"
-  FALSE)
-if (MEDUSA_CMAKE_USE_COTIRE)
-  include(${CMAKE_SOURCE_DIR}/cmake/cotire.cmake) # https://github.com/sakra/cotire
-  message("Cotire was enabled")
-endif()
-
-## Boost
-add_definitions("-DBOOST_ALL_NO_LIB=1") # HACK(wisk): disable auto-link
-option(MEDUSA_BUILD_WITH_BOOST
-  "Boost library is required to build medusa"
-  TRUE)
-if (MEDUSA_BUILD_WITH_BOOST)
-  hunter_add_package(Boost COMPONENTS system atomic filesystem program_options graph regex)
-endif()
-
-find_package(Boost COMPONENTS system atomic filesystem program_options graph regex REQUIRED)
-if (NOT Boost_FOUND)
-  message(FATAL_ERROR "Unable to find Boost")
-endif()
-
-## OGDF
-option(MEDUSA_BUILD_WITH_OGDF
-  "OGDF library allows medusa to display graph"
-  TRUE)
-if (MEDUSA_BUILD_WITH_OGDF)
-  hunter_add_package(OGDF)
-endif()
-find_package(OGDF)
-if (OGDF_FOUND)
-  message("OGDF found")
-  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
-else()
-  message("OGDF not found")
-endif()
-
-## LLVM
-option(MEDUSA_BUILD_WITH_LLVM
-  "LLVM library allows medusa to compile to code in the module emul_llvm"
-  TRUE)
-if (MEDUSA_BUILD_WITH_LLVM)
-endif()
-
-## QT5
-option(MEDUSA_BUILD_WITH_QT
-  "Qt library allows to build qMedusa tool"
-  TRUE)
-if (MEDUSA_BUILD_WITH_QT)
-  hunter_add_package(Qt)
-endif()
-
-## SQLite3
-option(MEDUSA_BUILD_WITH_SQLITE3
-  "SQLite3 library allows to build db_soci"
-  TRUE)
-if (MEDUSA_BUILD_WITH_SQLITE3)
-  hunter_add_package(SQLite3-cmake)
-endif()
-
-## SOCI
-option(MEDUSA_BUILD_WITH_SOCI
-  "SOCI library allows to build db_soci"
-  TRUE)
-if (MEDUSA_BUILD_WITH_SOCI)
-  hunter_add_package(SOCI)
-endif()
-
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# features
-
-include(ExternalProject)
-
-## PEGTL
-
-ExternalProject_add(PEGTL
-  PREFIX PEGTL
-
-  GIT_REPOSITORY "https://github.com/ColinH/PEGTL"
-  GIT_TAG        "ba225fd3dd9a323356883069e0676b1d3aa4a353"
-
-  PATCH_COMMAND  ""
-
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/deps/pegtl"
-
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND     ""
-  INSTALL_COMMAND   ""
-)
-set(PEGTL_ROOT "${CMAKE_SOURCE_DIR}/deps/pegtl")
+# Features
 
 ## C++
 set(CMAKE_CXX_STANDARD 11)
@@ -180,10 +83,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     "/Zm256")
 endif()
 
-# add source directory
+# Sources
 add_subdirectory(src)
 
-# add packaging directory
+# Packaging
 add_subdirectory(package)
 
 find_package(Doxygen)
@@ -204,8 +107,3 @@ if (DOXYGEN_FOUND)
     COMMENT "Generating API documentation with doxygen" VERBATIM
     )
 endif()
-
-configure_file(
-  ${CMAKE_SOURCE_DIR}/inc/medusa/version.hpp.in
-  ${CMAKE_BINARY_DIR}/inc/medusa/version.hpp
-)

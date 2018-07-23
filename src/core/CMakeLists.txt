@@ -3,7 +3,7 @@ set(SRCROOT ${CMAKE_SOURCE_DIR}/src/core)
 
 # all source files
 set(SRC
-  ${CMAKE_BINARY_DIR}/inc/medusa/version.hpp
+  ${CMAKE_BINARY_DIR}/inc/medusa/config.hpp
 
   ${INCROOT}/address.hpp
   ${INCROOT}/analyzer.hpp
@@ -136,17 +136,53 @@ else()
     )
 endif()
 
+# Dependencies
+
+include(ExternalProject)
+
+## Boost
+
+add_definitions("-DBOOST_ALL_NO_LIB=1")
+set(Boost_USE_STATIC_LIBS TRUE)
+find_package(Boost REQUIRED COMPONENTS system atomic filesystem program_options graph regex)
+
+## PEGTL
+
+find_package(PEGTL CONFIG REQUIRED)
+
+## OGDF
+
+find_package(OGDF CONFIG)
+if (OGDF_FOUND)
+  message("OGDF found")
+  set(MEDUSA_HAS_OGDF "#define MEDUSA_HAS_OGDF")
+else()
+  message("OGDF not found")
+endif()
+
+
+configure_file(
+  ${CMAKE_SOURCE_DIR}/inc/medusa/config.hpp.in
+  ${CMAKE_BINARY_DIR}/inc/medusa/config.hpp
+)
+
 include(GenerateExportHeader)
 
 # define medusa architecture target
 add_library(medusa SHARED ${SRC})
 target_include_directories(medusa
   PUBLIC "${CMAKE_SOURCE_DIR}/inc" "${CMAKE_BINARY_DIR}/inc"
-  PRIVATE "${PEGTL_ROOT}"
+  PRIVATE taocpp::pegtl
 )
 
-
 find_package(Threads REQUIRED)
+
+# src: https://github.com/libssh2/libssh2/blob/master/src/CMakeLists.txt#L127
+include(CheckIncludeFiles)
+check_include_files("windows.h;bcrypt.h" HAVE_BCRYPT_H)
+if(HAVE_BCRYPT_H)
+  list(APPEND CRYPT_LIBRARIES bcrypt)
+endif()
 
 target_link_libraries(medusa
   PUBLIC
@@ -156,15 +192,15 @@ target_link_libraries(medusa
   Boost::graph
   Boost::regex
 
+  ${CRYPT_LIBRARIES}
+
   INTERFACE
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
-if (MEDUSA_HAS_OGDF)
-  target_include_directories(medusa
-    PUBLIC "${OGDF_INCLUDE_DIRS}")
+if (OGDF_FOUND)
   target_link_libraries(medusa
-    PUBLIC
+    PRIVATE
     COIN OGDF
   )
 endif ()

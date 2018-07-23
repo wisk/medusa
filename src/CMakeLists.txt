@@ -32,7 +32,8 @@ medusa_include_module_if_needed(compil llvm)       # LLVM
 
 # database
 
-medusa_include_module_if_needed(db soci)           # SOCI
+# medusa_include_module_if_needed(db soci)           # SOCI
+# medusa_include_module_if_needed(db sqlite3)        # SQLite3
 
 # emulation
 

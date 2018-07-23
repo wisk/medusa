@@ -8,13 +8,11 @@ endif()
 set(SAMPLES_DIR ${CMAKE_SOURCE_DIR}/samples)
 add_definitions(-DSAMPLES_DIR="${SAMPLES_DIR}")
 
-set(CATCH_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/deps/catch CACHE INTERNAL "Path to include folder for Catch")
-add_library(catch INTERFACE)
-target_include_directories(catch INTERFACE ${CATCH_INCLUDE_DIR})
+find_package(Catch2 CONFIG REQUIRED)
 
 ## Core (medusa Boost::unit_test_framework)
 add_executable(test_core ${TEST_ROOT}/test_core.cpp)
-target_link_libraries(test_core medusa catch)
+target_link_libraries(test_core PRIVATE medusa Catch2::Catch)
 set_target_properties(test_core PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_core"
   COMMAND $<TARGET_FILE:test_core>
@@ -22,7 +20,7 @@ add_test(NAME "testing_core"
 
 ## Architecture
 add_executable(test_arch ${TEST_ROOT}/test_arch.cpp)
-target_link_libraries(test_arch medusa catch)
+target_link_libraries(test_arch PRIVATE medusa Catch2::Catch)
 set_target_properties(test_arch PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_architecture"
   COMMAND $<TARGET_FILE:test_arch>
@@ -30,7 +28,7 @@ add_test(NAME "testing_architecture"
 
 ## Binding
 add_executable(test_bind ${TEST_ROOT}/test_bind.cpp)
-target_link_libraries(test_bind medusa catch)
+target_link_libraries(test_bind PRIVATE medusa Catch2::Catch)
 set_target_properties(test_bind PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_binding"
   COMMAND $<TARGET_FILE:test_bind>
@@ -38,7 +36,7 @@ add_test(NAME "testing_binding"
 
 ## Compilation
 add_executable(test_compil ${TEST_ROOT}/test_compil.cpp)
-target_link_libraries(test_compil medusa catch)
+target_link_libraries(test_compil PRIVATE medusa Catch2::Catch)
 set_target_properties(test_compil PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_compilation"
   COMMAND $<TARGET_FILE:test_compil>
@@ -46,7 +44,7 @@ add_test(NAME "testing_compilation"
 
 ## Database
 add_executable(test_db ${TEST_ROOT}/test_db.cpp)
-target_link_libraries(test_db medusa catch)
+target_link_libraries(test_db PRIVATE medusa Catch2::Catch)
 set_target_properties(test_db PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_database"
   COMMAND $<TARGET_FILE:test_db>
@@ -54,7 +52,7 @@ add_test(NAME "testing_database"
 
 ## Emulation
 add_executable(test_emul ${TEST_ROOT}/test_emul.cpp)
-target_link_libraries(test_emul medusa catch)
+target_link_libraries(test_emul PRIVATE medusa Catch2::Catch)
 set_target_properties(test_emul PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_emulation"
   COMMAND $<TARGET_FILE:test_emul>
@@ -62,7 +60,7 @@ add_test(NAME "testing_emulation"
 
 ## Expression
 add_executable(test_expr ${TEST_ROOT}/test_expr.cpp)
-target_link_libraries(test_expr medusa catch)
+target_link_libraries(test_expr PRIVATE medusa Catch2::Catch)
 set_target_properties(test_expr PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_expression"
   COMMAND $<TARGET_FILE:test_expr>
@@ -70,7 +68,7 @@ add_test(NAME "testing_expression"
 
 ## Loader
 add_executable(test_ldr ${TEST_ROOT}/test_ldr.cpp)
-target_link_libraries(test_ldr medusa catch)
+target_link_libraries(test_ldr PRIVATE medusa Catch2::Catch)
 set_target_properties(test_ldr PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_loader"
   COMMAND $<TARGET_FILE:test_ldr>
@@ -78,7 +76,7 @@ add_test(NAME "testing_loader"
 
 ## Operating System
 add_executable(test_os ${TEST_ROOT}/test_os.cpp)
-target_link_libraries(test_os medusa catch)
+target_link_libraries(test_os PRIVATE medusa Catch2::Catch)
 set_target_properties(test_os PROPERTIES FOLDER "Tests")
 add_test(NAME "testing_operating_system"
   COMMAND $<TARGET_FILE:test_os>

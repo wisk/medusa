@@ -1,5 +1,5 @@
 ﻿#include "medusa/medusa.hpp"
-#include "medusa/version.hpp"
+#include "medusa/config.hpp"
 #include "medusa/module.hpp"
 #include "medusa/xref.hpp"
 #include "medusa/log.hpp"

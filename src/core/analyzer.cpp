@@ -1,6 +1,6 @@
 #include "medusa/analyzer.hpp"
 
-#include "medusa/version.hpp"
+#include "medusa/config.hpp"
 #include "medusa/function.hpp"
 #include "medusa/character.hpp"
 #include "medusa/string.hpp"

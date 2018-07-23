@@ -1,4 +1,5 @@
 #include "medusa/user_configuration.hpp"
+#include "medusa/config.hpp"
 #include <boost/filesystem.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -97,7 +98,7 @@ std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefau
 {
   static std::unordered_map<std::string, std::string> s_DefOpts
   {
-    { "core.modules_path", "." },
+    { "core.modules_path", MEDUSA_DEFAULT_MODULE_PATH },
     { "core.log_level", "default" },
 
     { "color.background_listing", "#1e1e1e" },
