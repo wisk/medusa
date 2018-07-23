@@ -16,7 +16,7 @@ class LabelView : public QTreeView, public medusa::View
   Q_OBJECT
 
 public:
-  LabelView(QWidget * parent, medusa::Medusa& core);
+  LabelView(QWidget * parent, medusa::Medusa& core, QString const &fileName);
   virtual ~LabelView(void) {}
 
   virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
@@ -36,6 +36,7 @@ private slots:
 private:
   medusa::Medusa& _core;
   QMutex _mutex;
+  std::map<int64_t, std::string> _symbolMap;
 };
 
 #endif // !__LABEL_VIEW_HPP__

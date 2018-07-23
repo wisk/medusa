@@ -9,6 +9,12 @@ namespace bp = boost::python;
 
 MEDUSA_NAMESPACE_USE
 
+template<>
+Architecture const volatile *boost::get_pointer(Architecture const volatile *p)
+{
+  return p;
+}
+
 void PydusaArchitecture(void)
 {
   bp::class_<Architecture, boost::noncopyable>("Architecture", bp::no_init)

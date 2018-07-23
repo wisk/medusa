@@ -9,6 +9,12 @@ namespace bp = boost::python;
 
 MEDUSA_NAMESPACE_USE
 
+template<>
+Cell const volatile *boost::get_pointer(Cell const volatile *p)
+{
+  return p;
+}
+
 void PydusaCell(void)
 {
   bp::enum_<Cell::Type>("CellType")

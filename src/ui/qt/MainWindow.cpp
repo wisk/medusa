@@ -93,7 +93,7 @@ bool MainWindow::openDocument()
     this->memAreaDock->setWidget(memAreaView);
     connect(memAreaView, SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
-    auto labelView = new LabelView(this, _medusa);
+    auto labelView = new LabelView(this, _medusa, _fileName);
     this->labelDock->setWidget(labelView);
     connect(labelView,   SIGNAL(goTo(medusa::Address const&)), this, SLOT(goTo(medusa::Address const&)));
 
@@ -147,7 +147,7 @@ bool MainWindow::loadDocument()
   memAreaView->Refresh();
   this->memAreaDock->setWidget(memAreaView);
 
-  auto labelView = new LabelView(this, _medusa);
+  auto labelView = new LabelView(this, _medusa, _fileName);
   labelView->Refresh();
   this->labelDock->setWidget(labelView);
 
