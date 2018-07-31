@@ -138,8 +138,6 @@ endif()
 
 # Dependencies
 
-include(ExternalProject)
-
 ## Boost
 
 add_definitions("-DBOOST_ALL_NO_LIB=1")
@@ -186,6 +184,7 @@ endif()
 
 target_link_libraries(medusa
   PUBLIC
+  Boost::boost
   Boost::system
   Boost::filesystem
   Boost::program_options
@@ -200,7 +199,7 @@ target_link_libraries(medusa
 
 if (OGDF_FOUND)
   target_link_libraries(medusa
-    PRIVATE
+    PUBLIC
     COIN OGDF
   )
 endif ()

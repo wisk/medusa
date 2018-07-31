@@ -33,7 +33,7 @@ medusa_include_module_if_needed(compil llvm)       # LLVM
 # database
 
 # medusa_include_module_if_needed(db soci)           # SOCI
-# medusa_include_module_if_needed(db sqlite3)        # SQLite3
+medusa_include_module_if_needed(db sqlite3)        # SQLite3
 
 # emulation
 
@@ -53,7 +53,7 @@ medusa_include_module_if_needed(ldr st62)          # ST62
 # operating system
 
 medusa_include_module_if_needed(os unix)           # UNIX
-medusa_include_module_if_needed(os windows)        # Windows
+# medusa_include_module_if_needed(os windows)        # Windows
 
 # tool
 

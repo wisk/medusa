@@ -4,9 +4,9 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pydusa)
+PYBIND11_MODULE(pydusa, m)
 {
-  py::module m("pydusa", "pydusa is python binding for medusa");
+  m.doc() = "pydusa is python binding for medusa";
 
   PydusaLogger(m);
 

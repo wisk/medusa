@@ -10,7 +10,7 @@ add_definitions(-DSAMPLES_DIR="${SAMPLES_DIR}")
 
 find_package(Catch2 CONFIG REQUIRED)
 
-## Core (medusa Boost::unit_test_framework)
+## Core
 add_executable(test_core ${TEST_ROOT}/test_core.cpp)
 target_link_libraries(test_core PRIVATE medusa Catch2::Catch)
 set_target_properties(test_core PROPERTIES FOLDER "Tests")
