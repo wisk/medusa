@@ -102,8 +102,8 @@ namespace
     LabelTable(MemoryAreaRelated const& rMemAreaRel, Label const& rLbl)
       : MemoryAreaRelated(rMemAreaRel), Name(rLbl.GetName()), Type(rLbl.GetType()), Version(rLbl.GetVersion()) {}
 
-    u32 const& GetMemoryAreaId(void) const { return MemoryAreaRelated::GetMemeoryAreaId(); }
-    u64 const& GetMemoryAreaOffset(void) const { return MemoryAreaRelated::GetMemeoryAreaOffset(); }
+    u32 const& GetMemoryAreaId(void) const { return MemoryAreaRelated::GetMemoryAreaId(); }
+    u64 const& GetMemoryAreaOffset(void) const { return MemoryAreaRelated::GetMemoryAreaOffset(); }
 
     void SetMemoryAreaId(u32 Id) { MemoryAreaRelated::SetMemoryAreaId(Id); }
     void SetMemoryAreaOffset(u64 Offset) { MemoryAreaRelated::SetMemoryAreaOffset(Offset); }
