@@ -3,7 +3,7 @@
 #include <medusa/medusa.hpp>
 #include "medusa/expression_visitor.hpp"
 
-#include <boost/format.hpp>
+#include <fmt/format.h>
 
 char const* St62Architecture::ST62CpuInformation::ConvertIdentifierToName(u32 Id) const
 {
@@ -188,18 +188,17 @@ bool St62Architecture::St62CpuContext::SetAddress(CpuContext::AddressKind AddrKi
 
 std::string St62Architecture::St62CpuContext::ToString(void) const
 {
-  return (boost::format(
-      "A:0x%02x X:0x%02x Y: 0x%02x V:0x%02x W:0x%02x\n"
-      "pc:%03x flags: %s%s  stack:%03x %03x %03x %03x %03x %03x")
-    % (u16)m_Context.A % (u16)m_Context.X % (u16)m_Context.Y
-    % (u16)m_Context.V % (u16)m_Context.W
-    % m_Context.Pc
-    % (m_Context.CF ? "C" : "c")
-    % (m_Context.ZF ? "Z" : "z")
-    % m_Context.Stk[0] % m_Context.Stk[1]
-    % m_Context.Stk[2] % m_Context.Stk[2]
-    % m_Context.Stk[4] % m_Context.Stk[3]
-    ).str();
+  return fmt::format(
+    "A:0x%02x X:0x%02x Y: 0x%02x V:0x%02x W:0x%02x\n"
+    "pc:%03x flags: %s%s  stack:%03x %03x %03x %03x %03x %03x"
+    , m_Context.A, m_Context.X, m_Context.Y
+    , m_Context.V, m_Context.W
+    , m_Context.Pc
+    , (m_Context.CF ? "C" : "c")
+    , (m_Context.ZF ? "Z" : "z")
+    , m_Context.Stk[0], m_Context.Stk[1]
+    , m_Context.Stk[2], m_Context.Stk[2]
+    , m_Context.Stk[4], m_Context.Stk[3]);
 }
 
 void* St62Architecture::St62CpuContext::GetRegisterAddress(u32 Register)

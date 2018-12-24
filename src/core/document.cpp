@@ -764,10 +764,43 @@ bool Document::TranslateAddress(Address const& rAddress, Address::Type ToConvert
     if (!m_spDatabase->GetDefaultAddressingType(AddrType))
       return false;
     return TranslateAddress(Address(
-      static_cast<Address::Type>(AddrType),
+      AddrType,
       rAddress.GetBase(), rAddress.GetOffset(),
       rAddress.GetBaseSize(), rAddress.GetOffsetSize()),
       ToConvert, rTranslatedAddress);
+  }
+
+  case Address::LinearType:
+  {
+    switch (ToConvert)
+    {
+    case Address::RelativeType:
+    {
+      u64 ImageBase;
+      if (!GetImageBase(ImageBase))
+        return false;
+      if (ImageBase > rAddress.GetOffset())
+        return false;
+      rTranslatedAddress = Address(
+        Address::RelativeType,
+        rAddress.GetBase(), rAddress.GetOffset() - ImageBase,
+        rAddress.GetBaseSize(), rAddress.GetOffsetSize());
+      return true;
+    }
+    case Address::PhysicalType:
+    {
+      MemoryArea MemArea;
+      if (!GetMemoryArea(rAddress, MemArea))
+        return false;
+      rTranslatedAddress = Address(
+        Address::PhysicalType,
+        0x0, MemArea.GetFileOffset() + (rAddress.GetOffset() - MemArea.GetBaseAddress().GetOffset()),
+        0x0, 64);
+      return true;
+    }
+    default:
+      return false;
+    }
   }
 
   case Address::ArchitectureType:
@@ -781,6 +814,9 @@ bool Document::TranslateAddress(Address const& rAddress, Address::Type ToConvert
   default:
     break;
   }
+
+  if (m_spDatabase == nullptr)
+    return false;
 
   return m_spDatabase->TranslateAddress(rAddress, ToConvert, rTranslatedAddress);
 }
@@ -871,10 +907,10 @@ Tag Document::GetArchitectureTag(Address const& rAddress) const
   return ArchTag;
 }
 
-std::list<Tag> Document::GetArchitectureTags(void) const
+std::vector<Tag> Document::GetArchitectureTags(void) const
 {
   if (m_spDatabase == nullptr)
-    return std::list<Tag>();
+    return {};
   return m_spDatabase->GetArchitectureTags();
 }
 

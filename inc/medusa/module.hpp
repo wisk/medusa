@@ -11,7 +11,7 @@
 
 #include "medusa/exception.hpp"
 #include "medusa/export.hpp"
-#include <map>
+#include <unordered_map>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -83,26 +83,14 @@ DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",     
 class MEDUSA_EXPORT ModuleManager
 {
 private:
-  ModuleManager(void) : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}
+  ModuleManager(void) {}
   ~ModuleManager(void) {}
   ModuleManager(ModuleManager const&);
   ModuleManager& operator=(ModuleManager const&);
 
-  template<typename ModuleType>
-  bool _DoLoad(
-    Path const& rModulePath,
-    ModuleType pModule,
-    std::string const MsgModule,
-    std::string const MsgError,
-    std::function<void(ModuleType)> pFct);
-
-  bool _DoLoadModule(Path const& rModulePath, void* const pModule, Module& rModule);
+  bool _LoadModule(Path const& rModulePath, void* const pModule, Module& rModule);
 
 public:
-  typedef std::map<std::string, TGetBinding>  BindingMap;
-  typedef std::map<std::string, TGetEmulator> EmulatorMap;
-
-
   static ModuleManager& Instance(void)
   {
     static std::mutex		mutex;
@@ -137,43 +125,46 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
-  void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
-  void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
-  void UnloadModules(void);
+  void InitializeModules(Path const& rModPath);
 
-  // Architecture
-  Architecture::SPType    GetArchitecture(Tag ArchTag) const;
-  Architecture::SPType    FindArchitecture(Tag ArchTag) const;
-  bool                    RegisterArchitecture(Architecture::SPType spArch);
-  bool                    UnregisterArchitecture(Architecture::SPType spArch);
-  void                    ResetArchitecture(void);
+  bool ConvertArchitectureNameToTag(std::string const& rArchitectureName, TagType& rArchitectureTag) const;
+  bool ConvertArchitectureNameToTagAndMode(std::string const& rArchitectureName, TagType& rArchitectureTag, u8& rArchitectureMode) const;
 
-  TGetBinding             GetBinding(std::string const& rBindingName);
-  TGetEmulator            GetEmulator(std::string const& rEmulatorName);
-  OperatingSystem::SPType GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const;
+  Architecture::SPType    GetArchitecture(TagType ArchTag) const;
+  Architecture::VSPType   GetArchitectures(Loader::SPType const spLoader, BinaryStream const& rBinaryStream) const;
   OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
-  Database::SPType        GetDatabase(std::string const& rDatabaseName);
-  Compiler::SPType        GetCompiler(std::string const& rCompilerName);
-  Database::VSPType       GetDatabases(void) const;
 
-  Loader::VSPType         GetLoaders(void) const;
-  Architecture::VSPType   GetArchitectures(void) const;
+  Loader::SPType          MakeLoader(std::string const& rLoaderName) const;
+  Loader::VSPType         MakeAllLoaders(void) const;
+  Loader::VSPType         MakeAllLoaders(BinaryStream::SPType spBinStrm) const;
+  Database::SPType        MakeDatabase(std::string const& rDatabaseName) const;
+  Database::VSPType       MakeAllDatabases(void) const;
+  Binding::SPType         MakeBinding(std::string const& rBindingName) const;
+  Emulator::SPType        MakeEmulator(std::string const& rEmulatorName) const;
+  Compiler::SPType        MakeCompiler(std::string const& rCompilerName) const;
 
 private:
   typedef std::mutex MutexType;
-  MutexType                m_Mutex;
+  MutexType m_Mutex;
 
-  u32                      m_ArchIdPool;
-  Tag                      m_DefaultArchitectureTag;
-  Architecture::TagMap     m_TaggedArchitectures;
 
-  Loader::VSPType          m_Loaders;
-  Architecture::VSPType    m_Architectures;
-  Database::VSPType        m_Databases;
-  Compiler::VSPType        m_Compilers;
-  OperatingSystem::VSPType m_OperatingSystems;
-  BindingMap               m_Bindings;
-  EmulatorMap              m_Emulators;
+  // Context free modules
+  using ArchitectureMapType = std::unordered_map<TagType, Architecture::SPType>;
+  ArchitectureMapType m_Architectures;
+  using OperatingSystemMapType = std::unordered_map<std::string, OperatingSystem::SPType>;
+  OperatingSystemMapType m_OperatingSystems;
+
+  // Context non-free modules
+  using LoaderMakerVectorType = std::vector<TGetLoader>;
+  LoaderMakerVectorType m_Loaders;
+  using DatabaseMakerMapType = std::unordered_map<std::string, TGetDatabase>;
+  DatabaseMakerMapType m_Databases;
+  using BindingMakerMapType = std::unordered_map<std::string, TGetBinding>;
+  BindingMakerMapType m_Bindings;
+  using EmulatorMapType = std::unordered_map<std::string, TGetEmulator>;
+  EmulatorMapType m_Emulators;
+  using CompilerMapType = std::unordered_map<std::string, TGetCompiler>;
+  CompilerMapType m_Compilers;
 };
 
 MEDUSA_NAMESPACE_END

@@ -3,13 +3,19 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Emulator::Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
-  : m_pCpuInfo(pCpuInfo), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt)
+Emulator::Emulator(void) : m_pCpuInfo(nullptr), m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
 {
 }
 
 Emulator::~Emulator(void)
 {
+}
+
+void Emulator::Initialize(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt)
+{
+  m_pCpuInfo = pCpuInfo;
+  m_pCpuCtxt = pCpuCtxt;
+  m_pMemCtxt = pMemCtxt;
 }
 
 bool Emulator::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const

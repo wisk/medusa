@@ -16,6 +16,6 @@ void PydusaModule(py::module& rMod)
   });
   rMod.def("get_compiler", [](std::string const& rCompilerName) -> Compiler::SPType
   {
-    return ModuleManager::Instance().GetCompiler(rCompilerName);
+    return ModuleManager::Instance().MakeCompiler(rCompilerName);
   });
 }

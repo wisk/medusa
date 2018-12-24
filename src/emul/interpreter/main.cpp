@@ -1,5 +1,5 @@
 #include "interpreter_emulator.hpp"
 
-Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt) { return new InterpreterEmulator(pCpuInfo, pCpuCtxt, pMemCtxt); }
+Emulator* GetEmulator(void) { return new InterpreterEmulator(); }
 
 int main(void) { return 0; }

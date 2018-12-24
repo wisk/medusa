@@ -10,7 +10,7 @@
 #include <list>
 #include <algorithm>
 #include <boost/filesystem/operations.hpp>
-#include <boost/format.hpp>
+#include <fmt/format.h>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -37,13 +37,13 @@ std::string Medusa::GetVersion(void)
 #endif
   char const* pBuildDate = __DATE__;
   char const* pBuildTime = __TIME__;
-  return std::move((boost::format("Medusa %1%.%2%.%3% (%4%) %5% - %6%")
-    % Version::Major
-    % Version::Minor
-    % Version::Patch
-    % pBuildType
-    % pBuildDate
-    % pBuildTime).str());
+  return fmt::format("Medusa %1%.%2%.%3% (%4%) %5% - %6%"
+    , Version::Major
+    , Version::Minor
+    , Version::Patch
+    , pBuildType
+    , pBuildDate
+    , pBuildTime);
 }
 
 bool Medusa::AddTask(Task* pTask)
@@ -56,71 +56,6 @@ void Medusa::WaitForTasks(void)
   m_TaskManager.Wait();
 }
 
-bool Medusa::Start(
-  BinaryStream::SPType spBinaryStream,
-  Database::SPType spDatabase,
-  Loader::SPType spLoader,
-  Architecture::VSPType spArchitectures,
-  OperatingSystem::SPType spOperatingSystem,
-  bool StartAnalyzer)
-{
-  if (spArchitectures.empty())
-    return false;
-
-  for (auto const& rArch : spArchitectures)
-  {
-    if (!ModuleManager::Instance().RegisterArchitecture(rArch))
-      Log::Write("core") << "unable to register architecture " << rArch->GetName() << " to module manager" << LogEnd;
-    if (!spDatabase->RegisterArchitectureTag(rArch->GetTag()))
-      Log::Write("core") << "unable to register architecture " << rArch->GetName() << " to database" << LogEnd;
-  }
-
-  spDatabase->SetBinaryStream(spBinaryStream);
-
-  /* Set the endianness for the binary stream */
-  spBinaryStream->SetEndianness(spArchitectures.front()->GetEndianness()); // LATER: does it always true?
-
-  /* Set the database to the document */
-  m_Document.Open(spDatabase);
-
-  /* Map the file to the document */
-  spLoader->Map(m_Document, spArchitectures); // Should it be async?
-
-  /* Try to define functions and structures if possible */
-  if (spOperatingSystem)
-  {
-    spDatabase->SetOperatingSystemName(spOperatingSystem->GetName());
-    spOperatingSystem->ProvideDetails(m_Document);
-  }
-
-  if (!StartAnalyzer)
-    return true;
-
-  /* Disassemble the file with the default analyzer */
-  AddTask(m_Analyzer.CreateTask("disassemble all functions", m_Document));
-
-  /* Analyze the stack for each functions */
-  //AddTask(m_Analyzer.CreateAnalyzeStackAllFunctionsTask(m_Document));
-
-  /* Find all strings using the previous analyze */
-  AddTask(m_Analyzer.CreateTask("find all strings", m_Document));
-
-  /* Analyze all functions */
-  if (spOperatingSystem)
-  {
-    spDatabase->ForEachLabel([&](Address const& rAddr, Label const& rLbl)
-    {
-      if (!rLbl.IsCode())
-        return;
-      if (rLbl.IsImported())
-        return;
-      spOperatingSystem->AnalyzeFunction(m_Document, rAddr);
-    });
-  }
-
-  return true;
-}
-
 bool Medusa::IgnoreDatabasePath(
         Path& rDatabasePath,
   std::list<Filter> const& rExtensionFilter)
@@ -129,25 +64,28 @@ bool Medusa::IgnoreDatabasePath(
   return true;
 }
 
-bool Medusa::DefaultModuleSelector(BinaryStream::SPType spBinStrm, Database::SPType& rspDatabase, Loader::SPType& rspLoader,
-                                   Architecture::VSPType& rspArchitectures, OperatingSystem::SPType& rspOperatingSystem)
+bool Medusa::DefaultModuleSelector(
+  BinaryStream::SPType& rspBinStrm,
+  Database::SPType& rspDatabase,
+  Loader::SPType& rspLoader,
+  Architecture::VSPType& rspArchitectures,
+  OperatingSystem::SPType& rspOperatingSystem)
 {
-  auto& rModMgr = ModuleManager::Instance();
-  auto AllDbs = rModMgr.GetDatabases();
-  if (AllDbs.empty())
-    return false;
-  rspDatabase =  AllDbs.front();
-  auto AllLdrs = rModMgr.GetLoaders();
-  if (AllLdrs.empty())
-    return false;
-  rspLoader = AllLdrs.front();
-  rspArchitectures = rModMgr.GetArchitectures();
+  auto const& rModMngr = ModuleManager::Instance();
+  auto ArchNames = rspLoader->GetUsedArchitectures(*rspBinStrm);
+  for (auto ArchName : ArchNames)
+  {
+    TagType ArchTag;
+    u8 ArchMode;
+    if (!rModMngr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
+      return false;
+    rspArchitectures.push_back(rModMngr.GetArchitecture(ArchTag));
+  }
 
-  rspLoader->FilterAndConfigureArchitectures(rspArchitectures); // It filters architecture for GetArchitectureTag
+  auto const& rSysName = rspLoader->GetSystemName(*rspBinStrm);
+  if (!rSysName.empty())
+    rspOperatingSystem = rModMngr.GetOperatingSystem(rSysName);
 
-  if (rspArchitectures.empty())
-    return false;
-  rspOperatingSystem = rModMgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
   return true;
 }
 
@@ -155,56 +93,35 @@ bool Medusa::NewDocument(
   BinaryStream::SPType spBinStrm,
   bool StartAnalyzer,
   Medusa::AskDatabaseFunctionType AskDatabase,
-  Medusa::ModuleSelectorFunctionType ModuleSelector,
-  Medusa::FunctionType BeforeStart,
-  Medusa::FunctionType AfterStart)
+  Medusa::ModuleSelectorFunctionType ModuleSelector)
 {
   try
   {
     auto& rModMgr = ModuleManager::Instance();
-    rModMgr.UnloadModules(); // Make sure we don't have loaded modules in memory
     UserConfiguration UserCfg;
     auto ModPath = UserCfg.GetOption("core.modules_path");
     if (ModPath.empty())
       ModPath = ".";
-    rModMgr.LoadModules(ModPath, *spBinStrm);
+    rModMgr.InitializeModules(ModPath);
 
-    auto const& AllLdrs = rModMgr.GetLoaders();
+    // Get all loaders and remove which are not needed
+    auto AllLdrs = rModMgr.MakeAllLoaders();
     if (AllLdrs.empty())
     {
       Log::Write("core").Level(LogError) << "there is not supported loader" << LogEnd;
       return false;
     }
-
-    auto const& AllArchs = rModMgr.GetArchitectures();
-    if (AllArchs.empty())
+    AllLdrs.erase(std::remove_if(std::begin(AllLdrs), std::end(AllLdrs), [&spBinStrm](Loader::SPType spLdr)
     {
-      Log::Write("core").Level(LogError) << "there is not supported architecture" << LogEnd;
-      return false;
-    }
+      return spLdr->IsCompatible(*spBinStrm) ? false : true;
+    }), std::end(AllLdrs));
 
-    Database::SPType spCurDb;
-    Loader::SPType spCurLdr;
-    Architecture::VSPType spCurArchs;
-    OperatingSystem::SPType spCurOs;
-
-    if (!ModuleSelector(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs))
-    {
-      Log::Write("core").Level(LogError) << "failed to select modules" << LogEnd;
+    Database::SPType spDb;
+    Loader::SPType spLdr;
+    Architecture::VSPType vspArchs;
+    OperatingSystem::SPType spOs;
+    if (!ModuleSelector(spBinStrm, spDb, spLdr, vspArchs, spOs))
       return false;
-    }
-
-    if (spCurDb == nullptr)
-    {
-      Log::Write("core").Level(LogError) << "there's no available database" << LogEnd;
-      return false;
-    }
-
-    if (spCurLdr == nullptr)
-    {
-      Log::Write("core").Level(LogError) << "there's no available loader" << LogEnd;
-      return false;
-    }
 
     bool Force = true;
     Path DbPath;
@@ -219,18 +136,44 @@ bool Medusa::NewDocument(
       Log::Write("core").Level(LogError) << "path to database is empty" << LogEnd;
       return false;
     }
-    if (!spCurDb->Create(DbPath, Force))
+    if (!spDb->Create(DbPath, Force))
     {
-      Log::Write("core").Level(LogError) << "failed to create database to: " << DbPath.string().c_str() << LogEnd;
+      Log::Write("core").Level(LogError) << "failed to create database to: " << DbPath.string() << LogEnd;
       return false;
     }
 
-    if (!BeforeStart())
+    /* Bind a binary stream to the database */
+    spDb->SetBinaryStream(spBinStrm);
+
+    /* Bind the database to the document */
+    if (!m_Document.Open(spDb))
       return false;
-    if (!Start(spBinStrm, spCurDb, spCurLdr, spCurArchs, spCurOs, StartAnalyzer))
+
+    /* Save used architectures */
+    for (auto const spArch : vspArchs)
+    {
+      if (!spDb->RegisterArchitectureTag(spArch->GetTag()))
+        return false;
+    }
+
+    /* Map memory areas */
+    if (!spLdr->Map(m_Document))
       return false;
-    if (!AfterStart())
-      return false;
+
+    /* Create symbols, functions, ... */
+    spLdr->Analyze(m_Document);
+
+    if (StartAnalyzer)
+    {
+      /* Disassemble the file with the default analyzer */
+      AddTask(m_Analyzer.CreateTask("disassemble all functions", m_Document));
+
+      /* Analyze the stack for each functions */
+      //AddTask(m_Analyzer.CreateAnalyzeStackAllFunctionsTask(m_Document));
+
+      /* Find all strings using the previous analyze */
+      AddTask(m_Analyzer.CreateTask("find all strings", m_Document));
+    }
 
     return true;
   }
@@ -243,75 +186,6 @@ bool Medusa::NewDocument(
 
 bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
 {
-  auto& rModMgr = ModuleManager::Instance();
-  try
-  {
-    rModMgr.UnloadModules();
-    UserConfiguration UserCfg;
-    auto ModPath = UserCfg.GetOption("core.modules_path");
-    if (ModPath.empty())
-      ModPath = ".";
-    rModMgr.LoadDatabases(ModPath);
-
-    auto const& AllDbs = rModMgr.GetDatabases();
-    std::list<Filter> ExtList;
-    for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
-      ExtList.push_back(std::make_tuple((*itDb)->GetName(), (*itDb)->GetExtension()));
-
-    Path DbPath;
-    if (!AskDatabase(DbPath, ExtList))
-      return false;
-
-    Database::SPType spDb;
-    for (auto itDb = std::begin(AllDbs), itEnd = std::end(AllDbs); itDb != itEnd; ++itDb)
-      if ((*itDb)->IsCompatible(DbPath))
-      {
-        spDb = *itDb;
-        break;
-      }
-
-    if (spDb == nullptr)
-    {
-      Log::Write("core") << "unable to find a suitable database" << LogEnd;
-      return false;
-    }
-
-    if (!spDb->Open(DbPath))
-    {
-      Log::Write("core") << "unable to open database" << LogEnd;
-      return false;
-    }
-
-    rModMgr.UnloadModules();
-    ModPath = UserCfg.GetOption("core.modules_path");
-    if (ModPath.empty())
-      ModPath = ".";
-    rModMgr.LoadDatabases(ModPath);
-    rModMgr.LoadModules(ModPath, spDb->GetBinaryStream());
-
-    Log::Write("core") << "opening database \"" << DbPath.string() << "\"" << LogEnd;
-
-    m_Document.Open(spDb);
-    auto const& ArchTags = spDb->GetArchitectureTags();
-    auto const& AllArchs = rModMgr.GetArchitectures();
-    for (auto itArchTag = std::begin(ArchTags), itEnd = std::end(ArchTags); itArchTag != itEnd; ++itArchTag)
-    {
-      for (auto itArch = std::begin(AllArchs), itArchEnd = std::end(AllArchs); itArch != itArchEnd; ++itArch)
-      {
-        if (MEDUSA_CMP_TAG((*itArch)->GetTag(), (*itArchTag)))
-        {
-          rModMgr.RegisterArchitecture(*itArch);
-          break;
-        }
-      }
-    }
-
-    return true;
-  }
-  catch (Exception &e)
-  {
-    Log::Write("core") << "exception: \"" << e.What() << "\"" << LogEnd;
-  }
   return false;
 }
 

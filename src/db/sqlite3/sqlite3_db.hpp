@@ -57,16 +57,16 @@ namespace
   class MemoryAreaRelated
   {
   public:
-    MemoryAreaRelated(u32 Id = 0x0, u64 Offset = 0x0) : m_Id(Id), m_Offset(Offset) {}
+    MemoryAreaRelated(int Id = -1, u64 Offset = 0x0) : m_Id(Id), m_Offset(Offset) {}
 
-    u32 const& GetMemoryAreaId(void) const { return m_Id; }
+    int const& GetMemoryAreaId(void) const { return m_Id; }
     u64 const& GetMemoryAreaOffset(void) const { return m_Offset; }
 
-    void SetMemoryAreaId(u32 Id) { m_Id = Id; }
+    void SetMemoryAreaId(int Id) { m_Id = Id; }
     void SetMemoryAreaOffset(u64 Offset) { m_Offset = Offset; }
 
   private:
-    u32 m_Id;
+    int m_Id;
     u64 m_Offset;
   };
 
@@ -81,13 +81,13 @@ namespace
 
   struct MemoryAreaTable
   {
-    u32 Id;
+    int Id;
     std::string Name;
     std::underlying_type<MemoryArea::Type>::type Type;
     std::underlying_type<MemoryArea::Access>::type Access;
     Tag ArchitectureTag;
     u8 ArchitectureMode;
-    OffsetType FileOffset;
+    u32 FileOffset;
     u32 FileSize;
     std::underlying_type<Address::Type>::type BaseAddressType;
     u16 BaseAddressBase;
@@ -95,6 +95,49 @@ namespace
     u8 BaseAddressBaseSize;
     u8 BaseAddressOffsetSize;
     u32 Size;
+
+    bool ToMemoryArea(MemoryArea& rMemArea) const
+    {
+      switch (Type)
+      {
+        case MemoryArea::VirtualType:
+          rMemArea = MemoryArea::CreateVirtual(
+            Name, static_cast<MemoryArea::Access>(Access),
+            Address(static_cast<Address::Type>(BaseAddressType), BaseAddressBase, BaseAddressOffset, BaseAddressBaseSize, BaseAddressOffsetSize),
+            Size,
+            ArchitectureTag, ArchitectureMode);
+          break;
+
+        case MemoryArea::MappedType:
+          rMemArea = MemoryArea::CreateMapped(
+            Name, static_cast<MemoryArea::Access>(Access),
+            FileOffset, FileSize,
+            Address(static_cast<Address::Type>(BaseAddressType), BaseAddressBase, BaseAddressOffset, BaseAddressBaseSize, BaseAddressOffsetSize),
+            Size,
+            ArchitectureTag, ArchitectureMode);
+          break;
+
+        case MemoryArea::PhysicalType:
+          rMemArea = MemoryArea::CreatePhysical(
+            Name, static_cast<MemoryArea::Access>(Access),
+            FileOffset, FileSize,
+            ArchitectureTag, ArchitectureMode);
+          break;
+
+        default:
+          return false;
+      }
+      rMemArea.SetId(Id);
+      return true;
+    }
+
+    Address GetAddress(void) const
+    {
+      return Address(
+        static_cast<Address::Type>(BaseAddressType),
+        BaseAddressBase, BaseAddressOffset,
+        BaseAddressBaseSize, BaseAddressOffsetSize);
+    }
   };
 
   struct LabelTable : public MemoryAreaRelated
@@ -102,12 +145,11 @@ namespace
     LabelTable(MemoryAreaRelated const& rMemAreaRel, Label const& rLbl)
       : MemoryAreaRelated(rMemAreaRel), Name(rLbl.GetName()), Type(rLbl.GetType()), Version(rLbl.GetVersion()) {}
 
-    u32 const& GetMemoryAreaId(void) const { return MemoryAreaRelated::GetMemoryAreaId(); }
+    int const& GetMemoryAreaId(void) const { return MemoryAreaRelated::GetMemoryAreaId(); }
     u64 const& GetMemoryAreaOffset(void) const { return MemoryAreaRelated::GetMemoryAreaOffset(); }
 
-    void SetMemoryAreaId(u32 Id) { MemoryAreaRelated::SetMemoryAreaId(Id); }
+    void SetMemoryAreaId(int Id) { MemoryAreaRelated::SetMemoryAreaId(Id); }
     void SetMemoryAreaOffset(u64 Offset) { MemoryAreaRelated::SetMemoryAreaOffset(Offset); }
-
 
     std::string Name;
     u16 Type;
@@ -153,9 +195,9 @@ namespace
     MemoryAreaRelated GetTo(void) const { return { MemoryAreaIdTo, MemoryAreaOffsetTo }; }
     MemoryAreaRelated GetFrom(void) const { return { MemoryAreaIdFrom, MemoryAreaOffsetFrom }; }
 
-    u32 MemoryAreaIdTo;
+    int MemoryAreaIdTo;
     u64 MemoryAreaOffsetTo;
-    u32 MemoryAreaIdFrom;
+    int MemoryAreaIdFrom;
     u64 MemoryAreaOffsetFrom;
   };
 
@@ -191,7 +233,6 @@ namespace
         , make_column("base_address_offset_size", &MemoryAreaTable::BaseAddressOffsetSize)
         , make_column("size", &MemoryAreaTable::Size)
       )
-
       , make_table("Label"
         , make_column("memory_area_id", &LabelTable::GetMemoryAreaId, &LabelTable::SetMemoryAreaId)
         , make_column("memory_area_offset", &LabelTable::GetMemoryAreaOffset, &LabelTable::SetMemoryAreaOffset)
@@ -234,7 +275,7 @@ namespace
         , make_column("memory_area_id_from", &CrossReferenceTable::MemoryAreaIdFrom)
         , make_column("memory_area_offset_from", &CrossReferenceTable::MemoryAreaOffsetFrom)
       )
-      , make_table("CommentTable"
+      , make_table("Comment"
         , make_column("memory_area_id", &CommentTable::GetMemoryAreaId, &CommentTable::SetMemoryAreaId)
         , make_column("memory_area_offset", &CommentTable::GetMemoryAreaOffset, &CommentTable::SetMemoryAreaOffset)
         , make_column("text", &CommentTable::Text)
@@ -255,18 +296,18 @@ public:
 private:
   bool _ConfigureDatabase(void);
   bool _CreateTable(void);
-  bool _ConvertIdToAddress(u32 Id, OffsetType Offset, Address& rAddress) const;
-  bool _ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset) const;
-  bool _ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const;
-  bool _GetNextMemoryAreaId(u32 Id, u32& rNextId) const;
-  bool _GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const;
+  bool _ConvertIdToAddress(int Id, OffsetType Offset, Address& rAddress) const;
+  bool _ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset) const;
+  bool _ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const;
+  bool _GetNextMemoryAreaId(int Id, int& rNextId) const;
+  bool _GetPreviousMemoryAreaId(int Id, int& rPreviousId) const;
 
-  bool _AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData);
-  bool _FlushCellDataCacheIfRequired(u32 MemoryAreaId, OffsetType MemoryAreaOffset, u16 CellSize) const;
+  bool _AddCellDataToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData);
+  bool _FlushCellDataCacheIfRequired(int MemoryAreaId, OffsetType MemoryAreaOffset, u16 CellSize) const;
   bool _FlushCellDataCache(void) const;
-  bool _GetCellDataFromCache(u32 MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const;
+  bool _GetCellDataFromCache(int MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const;
 
-  bool _AddLabelToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, Label const& rLabel);
+  bool _AddLabelToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, Label const& rLabel);
   bool _FlushLabelCache(void) const;
 
 public:
@@ -285,7 +326,7 @@ public:
   // Architecture
   virtual bool RegisterArchitectureTag(Tag ArchitectureTag);
   virtual bool UnregisterArchitectureTag(Tag ArchitectureTag);
-  virtual std::list<Tag> GetArchitectureTags(void) const;
+  virtual std::vector<Tag> GetArchitectureTags(void) const;
 
   virtual bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode);
 

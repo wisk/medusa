@@ -232,7 +232,8 @@ bool Analyzer::BuildControlFlowGraph(Document& rDoc, Address const& rAddr, Graph
 
 bool Analyzer::FormatCell(Document const& rDoc, Address const& rAddress, Cell const& rCell, PrintData &rPrintData) const
 {
-  auto spArch = ModuleManager::Instance().GetArchitecture(rCell.GetArchitectureTag());
+  auto ArchTag = rDoc.GetArchitectureTag(rAddress);
+  auto spArch = ModuleManager::Instance().GetArchitecture(ArchTag);
   if (spArch == nullptr)
     return false;
   return spArch->FormatCell(rDoc, rAddress, rCell, rPrintData);

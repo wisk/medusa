@@ -144,6 +144,9 @@ add_definitions("-DBOOST_ALL_NO_LIB=1")
 set(Boost_USE_STATIC_LIBS TRUE)
 find_package(Boost REQUIRED COMPONENTS system atomic filesystem program_options graph regex)
 
+## Fmt
+find_package(fmt CONFIG REQUIRED)
+
 ## PEGTL
 
 find_package(PEGTL CONFIG REQUIRED)
@@ -190,6 +193,9 @@ target_link_libraries(medusa
   Boost::program_options
   Boost::graph
   Boost::regex
+
+  fmt::fmt
+  fmt::fmt-header-only
 
   ${CRYPT_LIBRARIES}
 

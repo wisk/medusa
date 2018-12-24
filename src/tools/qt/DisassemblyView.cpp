@@ -246,15 +246,15 @@ void DisassemblyView::paintSelection(QPainter& p)
   // To draw the selection we use the lazy method by three passes.
   /*
      +-----------------+
-     |     ############+ Part¹
-     |#################+ Part²
-     |#################+ Part²
-     |####             | Part³
+     |     ############+ Partï¿½
+     |#################+ Partï¿½
+     |#################+ Partï¿½
+     |####             | Partï¿½
      +-----------------+
   */
   else if (deltaSelect > 0)
   {
-    // Part¹
+    // Partï¿½
     int x = (begSelectOff - horizontalScrollBar()->value()) * _wChar;
     int y = (begSelect - verticalScrollBar()->value()) * _hChar;
     int w = (viewport()->width() - _addrLen) * _wChar;
@@ -262,7 +262,7 @@ void DisassemblyView::paintSelection(QPainter& p)
     QRect slctRect(x, y, w, h);
     p.fillRect(slctRect, slctColor);
 
-    // Part²
+    // Partï¿½
     if (deltaSelect > 2)
     {
       x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
@@ -273,7 +273,7 @@ void DisassemblyView::paintSelection(QPainter& p)
       p.fillRect(slctRect, slctColor);
     }
 
-    // Part³
+    // Partï¿½
     x = (_addrLen - horizontalScrollBar()->value()) * _wChar;
     y = slctRect.bottom();
     w = (endSelectOff - _addrLen) * _wChar;

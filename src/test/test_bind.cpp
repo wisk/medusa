@@ -42,10 +42,7 @@ TEST_CASE("", "[bind_python]")
   Core.WaitForTasks();
 
   auto& rModMgr = ModuleManager::Instance();
-  auto pGetPythonBinding = rModMgr.GetBinding("python");
-  REQUIRE(pGetPythonBinding != nullptr);
-
-  auto spPython = std::shared_ptr<Binding>(pGetPythonBinding());
+  auto spPython = rModMgr.MakeBinding("python");
   std::cout << "binding name " << spPython->GetName() << std::endl;
 
   REQUIRE(spPython->Bind(Core));

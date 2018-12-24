@@ -122,19 +122,13 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
       Log::Write("core").Level(LogError) << "cpu context or memory context is null" << LogEnd;
       return false;
     }
-  auto pGetEmulator = ModuleManager::Instance().GetEmulator(rEmulatorName);
-  if (pGetEmulator == nullptr)
-    {
-      Log::Write("core").Level(LogError) << "cannot get emulator" << LogEnd;
-      return false;
-    }
-  auto pEmul = pGetEmulator(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
-  if (pEmul == nullptr)
-    {
-      Log::Write("core").Level(LogError) << "cannot get emulator" << LogEnd;
-      return false;
-    }
-  m_spEmul = Emulator::SPType(pEmul);
+  auto m_spEmul = ModuleManager::Instance().MakeEmulator(rEmulatorName);
+  if (m_spEmul == nullptr)
+  {
+    Log::Write("core").Level(LogError) << "cannot make emulator" << LogEnd;
+    return false;
+  }
+  m_spEmul->Initialize(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
   return true;
 }
 

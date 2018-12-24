@@ -38,10 +38,10 @@ public:
 
   virtual std::string GetName(void) const;
   virtual std::string GetExtension(void) const;
-  virtual bool IsCompatible(boost::filesystem::path const& rDatabasePath) const;
+  virtual bool IsCompatible(Path const& rDatabasePath) const;
 
-  virtual bool Open(boost::filesystem::path const& rDatabasePath);
-  virtual bool Create(boost::filesystem::path const& rDatabasePath, bool Force);
+  virtual bool Open(Path const& rDatabasePath);
+  virtual bool Create(Path const& rDatabasePath, bool Force);
   virtual bool Flush(void);
   virtual bool Close(void);
 
@@ -52,7 +52,7 @@ public:
   // Architecture
   virtual bool RegisterArchitectureTag(Tag ArchitectureTag) = 0;
   virtual bool UnregisterArchitectureTag(Tag ArchitectureTag) = 0;
-  virtual std::list<Tag> GetArchitectureTags(void) const = 0;
+  virtual std::vector<Tag> GetArchitectureTags(void) const = 0;
 
   // Operating system
   Database& SetOperatingSystemName(std::string const& rOperatingSystemName);

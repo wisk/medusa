@@ -7,12 +7,15 @@
 #include "medusa/medusa.hpp"
 
 #include <string>
+#include <memory>
 
 MEDUSA_NAMESPACE_BEGIN
 
 class MEDUSA_EXPORT Binding
 {
 public:
+  using SPType = std::shared_ptr<Binding>;
+
   Binding(void);
   virtual ~Binding(void);
 

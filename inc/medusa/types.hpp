@@ -30,7 +30,8 @@ MEDUSA_NAMESPACE_END
 
 #endif
 
-#include <stdint.h>
+#include <cstdint>
+#include <cctype>
 #include <boost/multiprecision/cpp_int.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -254,12 +255,49 @@ typedef u16 BaseType;
 typedef u64 OffsetType;
 typedef u64 ImageBaseType;
 
-// Architecture
-typedef u32 Tag;
+//// Architecture
+//class Tag
+//{
+//public:
+//  template<u8 _A, u8 _B, u8 _C, u8 _D>
+//  Tag(void) : m_Value(_A << 24 | _B << 16 | _C << 8 | _D << 0) {}
+//
+//  operator u32(void) const
+//  {
+//    return m_Value;
+//  }
+//
+//  // TODO(wisk): Handle non-printable characters
+//  std::string ToString(void) const
+//  {
+//    std::string Result;
+//    Result += m_Value >> 24;
+//    Result += m_Value >> 16 & 0xff;
+//    Result += m_Value >> 8 & 0xff;
+//    Result += m_Value & 0xff;
+//    return Result;
+//  }
+//
+//  bool operator==(Tag const& Other)
+//  {
+//    return m_Value == Other.m_Value;
+//  }
+//
+//private:
+//  u32 m_Value;
+//};
+
+typedef u32 TagType;
+typedef u32 Tag/*Type*/;
+inline constexpr Tag/*Type*/ MakeTag(u8 A, u8 B, u8 C, u8 D)
+{
+  return A << 24 | B << 16 | C << 8 | D << 0;
+}
 
 // Misc
 typedef boost::uuids::uuid      Id;
 typedef boost::filesystem::path Path;
+
 
 MEDUSA_NAMESPACE_END
 

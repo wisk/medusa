@@ -109,15 +109,14 @@ void ConfigureDialog::_GetModulesByLoader(void)
   }
 
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
-  m_spArchitectures = rModMgr.GetArchitectures();
-  m_spLoader->FilterAndConfigureArchitectures(m_spArchitectures);
+  m_spArchitectures = rModMgr.GetArchitectures(m_spLoader, *m_spBinaryStream);
   if (m_spArchitectures.empty())
   {
     medusa::Log::Write("core") << "none available architecture" << medusa::LogEnd;
     return;
   }
 
-  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader, m_spArchitectures.front());
+  m_spOpratingSystem = rModMgr.GetOperatingSystem(m_spLoader->GetSystemName(*m_spBinaryStream));
 }
 
 
@@ -126,27 +125,20 @@ void ConfigureDialog::_GetDefaultModules(void)
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
   medusa::UserConfiguration UserCfg;
 
-  rModMgr.UnloadModules();
-  rModMgr.LoadModules(UserCfg.GetOption("core.modules_path"), *m_spBinaryStream);
+  rModMgr.InitializeModules(UserCfg.GetOption("core.modules_path"));
 
   // Database
-  auto const& rDbs = rModMgr.GetDatabases();
-  if (rDbs.empty())
+  m_spDatabase = rModMgr.MakeDatabase(UserCfg.GetOption("core.default_database"));
+  if (m_spDatabase == nullptr)
+    m_spDatabase = rModMgr.MakeDatabase("Memory");
+  if (m_spDatabase == nullptr)
     return;
-  m_spDatabase = rDbs.front();
 
   // Loader
-  auto const& rLdrs = rModMgr.GetLoaders();
+  auto const& rLdrs = rModMgr.MakeAllLoaders(m_spBinaryStream);
   if (rLdrs.empty())
     return;
-  for (auto itLdr = std::begin(rLdrs), itEnd = std::end(rLdrs); itLdr != itEnd; ++itLdr)
-  {
-    if ((*itLdr)->IsCompatible(*m_spBinaryStream))
-    {
-      m_spLoader = *itLdr;
-      break;
-    }
-  }
+  m_spLoader = rLdrs.front();
 
   _GetModulesByLoader();
 }
@@ -233,7 +225,7 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
   pModPathLayout->addWidget(pToolBtn);
   ConfigurationLayout->addLayout(pModPathLayout);
 
-  auto const& rDbs = rModMgr.GetDatabases();
+  auto const& rDbs = rModMgr.MakeAllDatabases();
   if (!rDbs.empty())
   {
     auto pDbCmbBox = new QComboBox;
@@ -246,7 +238,7 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
     connect(pDbCmbBox, static_cast<void (QComboBox::*)(QString const&)>(&QComboBox::currentIndexChanged), [&](QString const& rDbName)
     {
       auto& rModMgr = medusa::ModuleManager::Instance();
-      auto AllDbs = rModMgr.GetDatabases();
+      auto AllDbs = rModMgr.MakeAllDatabases();
       auto itDb = std::find_if(std::begin(AllDbs), std::end(AllDbs), [&rDbName](medusa::Database::SPType spDb)
       { return spDb->GetName() == rDbName.toStdString(); });
       if (itDb == std::end(AllDbs))
@@ -257,25 +249,20 @@ void ConfigureDialog::_DisplayDocumentOptions(void)
     ConfigurationLayout->addWidget(pDbCmbBox);
   }
 
-  auto const& rLdrs = rModMgr.GetLoaders();
+  auto const& rLdrs = rModMgr.MakeAllLoaders();
   if (!rLdrs.empty())
   {
     auto pLdrCmbBox = new QComboBox;
     for (auto itLdr = std::begin(rLdrs), itEnd = std::end(rLdrs); itLdr != itEnd; ++itLdr)
     {
-      pLdrCmbBox->addItem(QString::fromStdString((*itLdr)->GetName()));
+      pLdrCmbBox->addItem(QString::fromStdString((*itLdr)->GetDetailedName(*m_spBinaryStream)));
       if (m_spLoader != nullptr && (*itLdr)->GetName() == m_spLoader->GetName())
         pLdrCmbBox->setCurrentIndex(pLdrCmbBox->count() - 1);
     }
     connect(pLdrCmbBox, static_cast<void (QComboBox::*)(QString const&)>(&QComboBox::currentIndexChanged), [&](QString const& rLdrName)
     {
       auto& rModMgr = medusa::ModuleManager::Instance();
-      auto AllLdrs = rModMgr.GetLoaders();
-      auto itLdr = std::find_if(std::begin(AllLdrs), std::end(AllLdrs), [&rLdrName](medusa::Loader::SPType spLdr)
-      { return spLdr->GetName() == rLdrName.toStdString(); });
-      if (itLdr == std::end(AllLdrs))
-        return;
-      m_spLoader = *itLdr;
+      m_spLoader = rModMgr.MakeLoader(rLdrName.toStdString());
       _GetModulesByLoader();
       _UpdateTree();
     });

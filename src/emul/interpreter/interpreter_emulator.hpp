@@ -15,16 +15,15 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator(void);
 
 class InterpreterEmulator : public Emulator
 {
 public:
-  InterpreterEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
+  InterpreterEmulator(void);
   virtual ~InterpreterEmulator(void);
 
   virtual std::string GetName(void) const { return "interpreter"; }
-
   virtual ReturnType Execute(Expression::VSPType const& rExprs);
 
 protected:

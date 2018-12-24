@@ -120,14 +120,12 @@ bool Address::operator!=(Address const& rAddr) const
 Address Address::operator+(OffsetType Off) const
 {
   Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Off), m_BaseSize, m_OffsetSize);
-  Res.SanitizeOffset();
   return Res;
 }
 
 Address Address::operator+(Address const& Addr) const
 {
   Address Res = Address(m_Type, m_Base, SanitizeOffset(m_Offset + Addr.m_Offset), m_BaseSize, m_OffsetSize);
-  Res.SanitizeOffset();
   return Res;
 }
 

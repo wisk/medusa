@@ -14,7 +14,7 @@ public:
 
 private:
   medusa::Medusa& m_rCore;
-  medusa::Binding* m_pCurBinding;
+  medusa::Binding::SPType m_spCurBinding;
 };
 
 #endif // !QMEDUSA_BINDING_VIEW_HPP

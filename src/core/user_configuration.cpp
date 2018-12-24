@@ -10,7 +10,7 @@ UserConfiguration::UserConfiguration(void)
   fs::path HomePath;
 
 #ifdef WIN32
-  HomePath = getenv("APPDATA");
+  HomePath = _wgetenv(L"APPDATA");
   if (HomePath.empty())
   {
     std::cerr << "unable to get the %APPDATA% directory" << std::endl;
@@ -121,7 +121,6 @@ std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefau
     { "action.add_disassembly_view", "Ctrl+D" },
     { "action.add_semantic_view", "Ctrl+S" },
     { "action.add_graph_view", "Ctrl+F" },
-    //{ "action.add_control_flow_graph_view", "Ctrl+F" },
     { "action.show_label_dialog", "N" },
     { "action.show_comment_dialog", "," },
     { "action.change_value_size", "S, V" },

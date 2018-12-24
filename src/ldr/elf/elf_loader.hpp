@@ -6,6 +6,7 @@
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
 #include <medusa/log.hpp>
+#include <medusa/module.hpp>
 
 #include "elf.h"
 #include "elf_traits.hpp"
@@ -25,47 +26,78 @@ MEDUSA_NAMESPACE_USE
 class ElfLoader : public Loader
 {
 public:
-  ElfLoader(void);
-
-  virtual std::string GetName(void) const;
+  virtual std::string GetName(void) const { return "ELF"; }
   virtual u8          GetDepth(void) const { return 1; }
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
+
+  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const;
+  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const;
+  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const;
+  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+
+  virtual bool Map(Document& rDoc) const;
+  virtual bool Map(Document& rDoc, Address const& rImgBase) const;
+  virtual void Analyze(Document& rDoc) const {}
 
 private:
-  u8  m_Ident[EI_NIDENT];
-  u16 m_Machine;
+  static EEndianness _GetEndianness(BinaryStream const& rBinStrm)
+  {
+    u8 EiData;
+    if (!rBinStrm.Read(EI_DATA, EiData))
+      return EndianUnknown;
+    switch (EiData)
+    {
+    case ELFDATA2LSB:
+      return LittleEndian;
+    case ELFDATA2MSB:
+      return BigEndian;
+    default:
+      return EndianUnknown;
+    }
+  }
 
-  bool FindArchitectureTagAndModeByMachine(
-      Architecture::VSPType const& rArchs,
-      Tag& rArchTag,
-      u8&  rArchMode
-      ) const;
+  static u8 _GetBitness(BinaryStream const& rBinStrm)
+  {
+    u8 EiClass;
+    if (!rBinStrm.Read(EI_CLASS, EiClass))
+      return 0;
+    switch (EiClass)
+    {
+    case ELFCLASS32:
+      return 32;
+    case ELFCLASS64:
+      return 64;
+    default:
+      return 0;
+    }
+  }
+
+  static std::string _GetMachineName(BinaryStream const& rBinStrm)
+  {
+    u16 Machine;
+    if (!rBinStrm.Read(EI_NIDENT + sizeof(u16), Machine))
+      return "unknown";
+    switch (Machine)
+    {
+    case EM_386:
+      return "x86/32-bit";
+    case EM_X86_64:
+      return "x86/64-bit";
+    case EM_ARM:
+      return "arm";
+    case EM_AVR:
+      return "avr";
+    }
+  }
 
   // TODO: Move and clean this function
-  template<int bit> void Map(Document& rDoc, Architecture::VSPType const& rArchs)
+  template<int bit> bool Map(Document& rDoc) const
   {
-    if (rArchs.empty())
-      return;
-
-    Tag ArchTag;
-    u8  ArchMode;
-
-    if (!FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
-      return;
-
+    auto const& rModMngr = ModuleManager::Instance();
     BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
-    EEndianness Endianness;
-    switch (m_Ident[EI_DATA])
-    {
-    case ELFDATA2LSB: Endianness = LittleEndian; break;
-    case ELFDATA2MSB: Endianness = BigEndian;    break;
-    default:
-      return;
-    }
+    auto Endianness = _GetEndianness(rBinStrm);
+    if (Endianness == EndianUnknown)
+      return false;
 
     typedef ElfTraits<bit> ElfType;
     typename ElfType::Ehdr Ehdr;
@@ -76,9 +108,17 @@ private:
     if (!rBinStrm.Read(0x0, &Ehdr, sizeof(Ehdr)))
     {
       Log::Write("ldr_elf") << "Can't read EHDR" << LogEnd;
-      return;
+      return false;
     }
     ElfType::EndianSwap(Ehdr, Endianness);
+
+    auto const& rMachineName = _GetMachineName(rBinStrm);
+    if (rMachineName.empty())
+      return false;
+    TagType ArchTag;
+    u8 ArchMode;
+    if (!rModMngr.ConvertArchitectureNameToTagAndMode(rMachineName, ArchTag, ArchMode))
+      return false;
 
     std::vector<typename ElfType::Shdr> Sections;
     std::vector<typename ElfType::Phdr> Segments;
@@ -96,7 +136,7 @@ private:
       if (!rBinStrm.Read(Ehdr.e_shoff + sizeof(ShStrShdr) * Ehdr.e_shstrndx, &ShStrShdr, sizeof(ShStrShdr)))
       {
         Log::Write("ldr_elf") << "Can't read SHSTR" << LogEnd;
-        return; // FIXME: We should continue anyway...
+        return false; // FIXME: We should continue anyway...
       }
 
       ElfType::EndianSwap(ShStrShdr, Endianness);
@@ -109,7 +149,7 @@ private:
         if (!rBinStrm.Read(ShStrShdr.sh_offset, upShStrTbl.get(), static_cast<u32>(ShStrShdr.sh_size)))
         {
           Log::Write("ldr_elf") << "Can't read string SHDR" << LogEnd;
-          return;
+          return false;
         }
       }
 
@@ -291,7 +331,7 @@ private:
     if (!rDoc.AddLabel(Address(Address::LinearType, 0x0, Ehdr.e_entry, 0x10, bit), Label("start", Label::Code | Label::Exported)))
     {
       Log::Write("ldr_elf").Level(LogError) << "failed to add start label: " << Ehdr.e_entry << LogEnd;
-      return;
+      return false;
     }
 
     /* Try to retrieve imported function */
@@ -349,22 +389,22 @@ private:
         if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, SymTbl), SymTblOff))
         {
           Log::Write("ldr_elf").Level(LogError) << "failed to convert SYM" << LogEnd;
-          return;
+          return false;
         }
         if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff))
         {
           Log::Write("ldr_elf").Level(LogError) << "failed to convert JMP" << LogEnd;
-          return;
+          return false;
         }
         if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, DynStr), DynStrOff))
         {
           Log::Write("ldr_elf").Level(LogError) << "failed to convert DYN" << LogEnd;
-          return;
+          return false;
         }
         if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl), RelaTblOff))
         {
           Log::Write("ldr_elf").Level(LogError) << "failed to convert RELA" << LogEnd;
-          return;
+          return false;
         }
 
         std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
@@ -374,17 +414,17 @@ private:
         if (!rBinStrm.Read(JmpRelTblOff, upReloc.get(), JmpRelSz))
         {
           Log::Write("ldr_elf") << "Can't read REL" << LogEnd;
-          return;
+          return false;
         }
         if (!rBinStrm.Read(DynStrOff, upDynSymStr.get(), DynStrSz))
         {
           Log::Write("ldr_elf") << "Can't read DYNSTR" << LogEnd;
-          return;
+          return false;
         }
         if (!rBinStrm.Read(RelaTblOff, upRelocA.get(), RelaSz))
         {
           Log::Write("ldr_elf") << "Can't read RELA" << LogEnd;
-          return;
+          return false;
         }
 
         // XXX: At this time, it's unclear if we R_XXX_JMP_SLOT is always a Rel, Rela or both

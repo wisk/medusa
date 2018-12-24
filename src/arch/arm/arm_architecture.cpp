@@ -4,7 +4,7 @@
 #include <medusa/expression_visitor.hpp>
 
 #include <boost/algorithm/string/join.hpp>
-#include <boost/format.hpp>
+#include <fmt/format.h>
 
 ArmArchitecture::ArmArchitecture(void)
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
@@ -248,17 +248,17 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   CPSR += (m_Context.CPSR & ARM_CSPR_V) ? "V" : "v";
   CPSR += (m_Context.CPSR & ARM_CSPR_T) ? "T" : "t";
 
-  return (boost::format(
+  return fmt::format(
       "r0:0x%08x r1:0x%08x r2: 0x%08x r3:%08x\n"
       "r4:0x%08x r5:0x%08x r6: 0x%08x r7:%08x\n"
       "r8:0x%08x r9:0x%08x r10:0x%08x fp:%08x\n"
       "ip:0x%08x sp:0x%08x lr: 0x%08x pc:%08x\n"
-      "CPSR: %s\n")
-    % m_Context.Registers[0] % m_Context.Registers[1] % m_Context.Registers[2] % m_Context.Registers[3]
-    % m_Context.Registers[4] % m_Context.Registers[5] % m_Context.Registers[6] % m_Context.Registers[7]
-    % m_Context.Registers[8] % m_Context.Registers[9] % m_Context.Registers[10] % m_Context.Registers[11]
-    % m_Context.Registers[12] % m_Context.Registers[13] % m_Context.Registers[14] % m_Context.Registers[15]
-    % CPSR).str();
+      "CPSR: %s\n"
+    , m_Context.Registers[0],  m_Context.Registers[1],  m_Context.Registers[2],  m_Context.Registers[3]
+    , m_Context.Registers[4],  m_Context.Registers[5],  m_Context.Registers[6],  m_Context.Registers[7]
+    , m_Context.Registers[8],  m_Context.Registers[9],  m_Context.Registers[10], m_Context.Registers[11]
+    , m_Context.Registers[12], m_Context.Registers[13], m_Context.Registers[14], m_Context.Registers[15]
+    , CPSR);
 }
 
 void* ArmArchitecture::ARMCpuContext::GetRegisterAddress(u32 Register)

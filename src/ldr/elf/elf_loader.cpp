@@ -3,103 +3,68 @@
 
 #include <algorithm>
 
-ElfLoader::ElfLoader(void)
+bool ElfLoader::IsCompatible(BinaryStream const& rBinStrm) const
 {
-  memset(m_Ident, 0x0, sizeof(m_Ident));
-}
-
-std::string ElfLoader::GetName(void) const
-{
-  switch (m_Ident[EI_CLASS])
-  {
-  case ELFCLASSNONE: return "ELF (invalid)";
-  case ELFCLASS32:   return "ELF 32-bit";
-  case ELFCLASS64:   return "ELF 64-bit";
-  default:           return "ELF (unknown)";
-  }
-}
-
-bool ElfLoader::IsCompatible(BinaryStream const& rBinStrm)
-{
+  u8 Ident[EI_NIDENT];
   if (rBinStrm.GetSize() < sizeof(Elf32_Ehdr))
     return false;
 
-  if (!rBinStrm.Read(0x0, m_Ident, EI_NIDENT))
+  if (!rBinStrm.Read(0x0, Ident, EI_NIDENT))
     return false;
 
-  if (!rBinStrm.Read(EI_NIDENT + sizeof(u16), m_Machine))
-    return false;
-
-  if (memcmp(m_Ident, ELFMAG, SELFMAG))
+  if (memcmp(Ident, ELFMAG, SELFMAG))
     return false;
 
   return true;
 }
 
-bool ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+std::string ElfLoader::GetDetailedName(BinaryStream const& rBinStrm) const
 {
-  switch (m_Ident[EI_CLASS])
+  u16 Machine;
+  std::string MachineName = "<unknown>";
+  if (rBinStrm.Read(EI_NIDENT + sizeof(u16), Machine))
   {
-  case ELFCLASS32: Map<32>(rDoc, rArchs); break;
-  case ELFCLASS64: Map<64>(rDoc, rArchs); break;
+    switch (Machine)
+    {
+    case EM_386:
+      MachineName = "x86 (32-bit)"; break;
+    case EM_X86_64:
+      MachineName = "x86 (64-bit)"; break;
+    case EM_ARM:
+      MachineName = "Arm"; break;
+    case EM_AVR:
+      MachineName = "Atmel AVR 8-bit"; break;
+    default:
+      break;
+    }
+  }
+  return "ELF " + MachineName;
+}
+
+std::string ElfLoader::GetSystemName(BinaryStream const& rBinStrm) const
+{
+  return "unix"; // TODO: be more precise than that
+}
+
+std::vector<std::string> ElfLoader::GetUsedArchitectures(BinaryStream const& rBinStrm) const
+{
+  return { _GetMachineName(rBinStrm) };
+}
+
+bool ElfLoader::Map(Document& rDoc) const
+{
+  switch (_GetBitness(rDoc.GetBinaryStream()))
+  {
+  case ELFCLASS32: Map<32>(rDoc); break;
+  case ELFCLASS64: Map<64>(rDoc); break;
   default: assert(0 && "Unknown ELF class");
   }
 
   return true;
 }
 
-bool ElfLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+bool ElfLoader::Map(Document& rDoc, Address const& rImgBase) const
 {
-  return false;
-}
-
-void ElfLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
-{
-  Tag ArchTag;
-  u8  ArchMode;
-
-  if (!FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
-    return;
-
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchTag](Architecture::SPType spArch)
-  { return ArchTag != spArch->GetTag();}), std::end(rArchs));
-}
-
-bool ElfLoader::FindArchitectureTagAndModeByMachine(
-    Architecture::VSPType const& rArchs,
-    Tag& rArchTag,
-    u8&  rArchMode
-    ) const
-{
-  std::string ArchName = "";
-  std::string ArchMode = "";
-
-  switch (m_Machine)
-  {
-  case EM_386:
-    ArchName = "x86";
-    ArchMode = "32-bit";
-    break;
-
-  case EM_X86_64:
-    ArchName = "x86";
-    ArchMode = "64-bit";
-    break;
-
-  case EM_ARM:                 ArchName = "ARM";             break;
-  case EM_AVR:                 ArchName = "Atmel AVR 8-bit"; break;
-  default:                                                   break;
-  }
-
-  for (auto& rArch : rArchs)
-  {
-    if (ArchName == rArch->GetName())
-    {
-      rArchTag  = rArch->GetTag();
-      rArchMode = rArch->GetModeByName(ArchMode);
-      return true;
-    }
-  }
-
+  // TODO: support loading at a different image base
   return false;
 }

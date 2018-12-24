@@ -1,24 +1,84 @@
 #include <medusa/bits.hpp>
 #include <medusa/medusa.hpp>
+#include <medusa/module.hpp>
 #include "pe_loader.hpp"
 
-#include <boost/format.hpp>
-
-PeLoader::PeLoader(void) : m_Machine(PE_FILE_MACHINE_UNKNOWN), m_Magic(0x0), m_ImageBase(0x0)
+bool PeLoader::IsCompatible(BinaryStream const& rBinStrm) const
 {
+  u16 Machine, Magic;
+  u64 ImageBase;
+  return _GetInformation(rBinStrm, Machine, Magic, ImageBase);
 }
 
-std::string PeLoader::GetName(void) const
+std::string PeLoader::GetDetailedName(BinaryStream const& rBinStrm) const
 {
-  switch (m_Magic)
+  u16 Machine, Magic;
+  u64 ImageBase;
+  if (!_GetInformation(rBinStrm, Machine, Magic, ImageBase))
+    return GetName();
+
+  std::string FormatName = "(invalid magic)";
+  switch (Magic)
   {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: return "PE";
-  case PE_NT_OPTIONAL_HDR64_MAGIC: return "PE+";
-  default:                         return "PE (unknown)";
+  case PE_NT_OPTIONAL_HDR32_MAGIC: FormatName = ""; break;
+  case PE_NT_OPTIONAL_HDR64_MAGIC: FormatName = "+"; break;
+  default: break;
+  }
+
+  std::string MachineName = "unknown machine";
+  switch (Machine)
+  {
+  case PE_FILE_MACHINE_I386:
+    MachineName = "x86"; break;
+  case PE_FILE_MACHINE_AMD64:
+    MachineName = "X64"; break;
+
+    // TODO: handle Arm64
+  case PE_FILE_MACHINE_ARM:
+  case PE_FILE_MACHINE_ARMT:
+    return "Arm"; break;
+
+  case PE_FILE_MACHINE_ARM64: return "Arm64"; break;
+
+    default: break;
+  }
+
+  return "PE" + FormatName + " (" + MachineName + ")";
+}
+
+std::string PeLoader::GetSystemName(BinaryStream const& rBinStrm) const
+{
+  // TODO: be more precise
+  return "Windows";
+}
+
+std::vector<std::string> PeLoader::GetUsedArchitectures(BinaryStream const& rBinStrm) const
+{
+  u16 Machine, Magic;
+  u64 ImageBase;
+  if (!_GetInformation(rBinStrm, Machine, Magic, ImageBase))
+    return {};
+  switch (Machine)
+  {
+  case PE_FILE_MACHINE_I386:
+    return { "x86/32-bit" };
+  case PE_FILE_MACHINE_AMD64:
+    return { "x86/64-bit" };
+
+  // TODO: handle Arm64
+  case PE_FILE_MACHINE_ARM:
+  case PE_FILE_MACHINE_ARMT:
+    return { "arm/32-bit" };
+
+  case PE_FILE_MACHINE_ARM64:
+    return { "arm/64-bit" };
+
+  default:
+    return {};
   }
 }
 
-bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
+bool PeLoader::_GetInformation(BinaryStream const& rBinStrm, u16& rMachine, u16& rMagic, u64& rImageBase)
 {
   if (rBinStrm.GetSize() < sizeof(PeDosHeader))
     return false;
@@ -43,11 +103,11 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature), &FileHeader, sizeof(FileHeader)))
     return false;
   FileHeader.Swap(LittleEndian);
-  m_Machine = FileHeader.Machine;
-  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature) + sizeof(PeFileHeader), m_Magic))
+  rMachine = FileHeader.Machine;
+  if (!rBinStrm.Read(DosHdr.e_lfanew + sizeof(Signature) + sizeof(PeFileHeader), rMagic))
     return false;
 
-  switch (m_Magic)
+  switch (rMagic)
   {
   case PE_NT_OPTIONAL_HDR32_MAGIC:
   {
@@ -68,7 +128,7 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
     }
     NtHdrs.Swap(LittleEndian);
 
-    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    rImageBase = NtHdrs.OptionalHeader.ImageBase;
     break;
   }
 
@@ -91,7 +151,7 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
     }
     NtHdrs.Swap(LittleEndian);
 
-    m_ImageBase = NtHdrs.OptionalHeader.ImageBase;
+    rImageBase = NtHdrs.OptionalHeader.ImageBase;
     break;
   }
 
@@ -103,11 +163,26 @@ bool PeLoader::IsCompatible(BinaryStream const& rBinStrm)
   return true;
 }
 
-bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool PeLoader::Map(Document& rDoc) const
 {
-  if (!rDoc.SetImageBase(m_ImageBase))
+  u16 Machine, Magic;
+  u64 ImageBase;
+  if (!_GetInformation(rDoc.GetBinaryStream(), Machine, Magic, ImageBase))
+    return false;
+  return Map(rDoc, Address(Address::LinearType, ImageBase));
+}
+
+bool PeLoader::Map(Document& rDoc, Address const& rImgBase) const
+{
+  u16 Machine, Magic;
+  u64 ImageBase;
+  if (!_GetInformation(rDoc.GetBinaryStream(), Machine, Magic, ImageBase))
+    return false;
+  ImageBase = rImgBase.GetOffset();
+
+  if (!rDoc.SetImageBase(ImageBase))
   {
-    Log::Write("ldr_pe").Level(LogError) << "failed to set image base: " << m_ImageBase << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "failed to set image base: " << ImageBase << LogEnd;
     return false;
   }
   if (!rDoc.SetDefaultAddressingType(Address::LinearType))
@@ -115,87 +190,17 @@ bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     Log::Write("ldr_pe").Level(LogError) << "failed to set the default address type" << LogEnd;
     return false;
   }
-  switch (m_Magic)
+  switch (Magic)
   {
-  case PE_NT_OPTIONAL_HDR32_MAGIC: _Map<32>(rDoc, rArchs, m_ImageBase); break;
-  case PE_NT_OPTIONAL_HDR64_MAGIC: _Map<64>(rDoc, rArchs, m_ImageBase); break;
+  case PE_NT_OPTIONAL_HDR32_MAGIC: return _Map<32>(rDoc, ImageBase);
+  case PE_NT_OPTIONAL_HDR64_MAGIC: return _Map<64>(rDoc, ImageBase);
   default: assert(0 && "Unknown magic");
   }
 
   return true;
 }
 
-bool PeLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
-{
-  m_ImageBase = rImgBase.GetOffset();
-  return Map(rDoc, rArchs);
-}
-
-void PeLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
-{
-  std::string ArchName = "";
-
-  switch (m_Machine)
-  {
-  case PE_FILE_MACHINE_I386:
-  case PE_FILE_MACHINE_AMD64:
-    ArchName = "x86";
-    break;
-
-  case PE_FILE_MACHINE_ARM:
-  case PE_FILE_MACHINE_ARMT:
-    ArchName = "ARM";
-    break;
-
-  default: break;
-  }
-
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SPType spArch)
-  { return spArch->GetName() != ArchName; }), std::end(rArchs));
-}
-
-bool PeLoader::_FindArchitectureTagAndModeByMachine(
-    Architecture::VSPType const& rArchs,
-    Tag& rArchTag, u8& rArchMode
-    ) const
-{
-  std::string ArchName = "";
-  std::string ArchMode = "";
-
-  switch (m_Machine)
-  {
-  case PE_FILE_MACHINE_I386:
-    ArchName = "x86";
-    ArchMode = "32-bit";
-    break;
-
-  case PE_FILE_MACHINE_AMD64:
-    ArchName = "x86";
-    ArchMode = "64-bit";
-    break;
-
-  case PE_FILE_MACHINE_ARM:
-  case PE_FILE_MACHINE_ARMT:
-    ArchName = "ARM";
-    break;
-
-  default: break;
-  }
-
-  for (auto& rArch : rArchs)
-  {
-    if (ArchName == rArch->GetName())
-    {
-      rArchTag  = rArch->GetTag();
-      rArchMode = rArch->GetModeByName(ArchMode);
-      return true;
-    }
-  }
-
-  return false;
-}
-
-template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImgBase)
+template<int bit> bool PeLoader::_Map(Document& rDoc, u64 ImgBase) const
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
@@ -206,14 +211,14 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
   if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
   {
     Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
-    return;
+    return false;
   }
   DosHdr.Swap(LittleEndian);
 
   if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
   {
     Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
-    return;
+    return false;
   }
   NtHdrs.Swap(LittleEndian);
 
@@ -228,31 +233,41 @@ template<int bit> void PeLoader::_Map(Document& rDoc, Architecture::VSPType cons
     << ", Number of section: " << NumOfScn
     << LogEnd;
 
-  _MapSections<bit>(rDoc, rArchs, ImgBase, ScnOff, NumOfScn, ScnAlign);
-  _ResolveImports<bit>(rDoc, ImgBase,
+  if (!_MapSections<bit>(rDoc, ImgBase, ScnOff, NumOfScn, ScnAlign))
+    return false;
+  if (!_ResolveImports<bit>(rDoc, ImgBase,
     NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IMPORT].VirtualAddress,
-    NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress);
-  _ResolveExports<bit>(rDoc, ImgBase,
-    NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+    NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_IAT].VirtualAddress))
+    return false;
+  if (!_ResolveExports<bit>(rDoc, ImgBase,
+    NtHdrs.OptionalHeader.DataDirectory[PE_DIRECTORY_ENTRY_EXPORT].VirtualAddress))
+    return false;
 
   Address EpAddr(Address::LinearType, 0x0, EpOff, 0x10, bit);
   if (!rDoc.AddLabel(EpAddr, Label("start", Label::Code | Label::Exported)))
   {
     Log::Write("ldr_pe").Level(LogError) << "failed to add label start" << LogEnd;
+    return false;
   }
+
+  return true;
 }
 
-template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment)
+template<int bit> bool PeLoader::_MapSections(Document& rDoc, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment) const
 {
-  Tag ArchTag  = MEDUSA_ARCH_UNK;
-  u8  ArchMode = 0;
+  auto const& rModMngr = ModuleManager::Instance();
+  TagType ArchTag;
+  u8 ArchMode;
+  auto const& ArchNames = GetUsedArchitectures(rDoc.GetBinaryStream());
+  if (ArchNames.size() != 1)
+    return false;
+  auto const& rArchName = ArchNames[0];
+  if (!rModMngr.ConvertArchitectureNameToTagAndMode(rArchName, ArchTag, ArchMode))
+    return false;
 
   // TODO(wisk): verify how section alignment really works
   if (SectionAlignment == 0)
     SectionAlignment = 1;
-
-  if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode))
-    return;
 
   BinaryStream const&            rBinStrm = rDoc.GetBinaryStream();
   typedef PeTraits<bit>          PeType;
@@ -270,7 +285,7 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
   )))
   {
     Log::Write("ldr_pe").Level(LogError) << "failed to add memory area" << LogEnd;
-    return;
+    return false;
   }
 
   for (u16 ScnIdx = 0; ScnIdx < NumberOfSection; ++ScnIdx)
@@ -315,8 +330,10 @@ template<int bit> void PeLoader::_MapSections(Document& rDoc, Architecture::VSPT
 
     Log::Write("ldr_pe") << "found section " << ScnName << LogEnd;
   }
+
+  return true;
 }
-template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva)
+template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva) const
 {
   auto const&                       rBinStrm = rDoc.GetBinaryStream();
   typedef PeTraits<bit>             PeType;
@@ -327,7 +344,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ImportDirectoryRva, ImpOff))
   {
     Log::Write("ldr_pe") << "unable to convert address import directory" << LogEnd;
-    return;
+    return false;
   }
 
   while (true)
@@ -335,7 +352,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     if (!rBinStrm.Read(ImpOff, &CurImp, sizeof(CurImp)))
     {
       Log::Write("ldr_pe") << "unable to read IMAGE_IMPORT_DESCRIPTOR" << LogEnd;
-      return;
+      return false;
     }
     ImpOff += sizeof(CurImp);
     CurImp.Swap(LittleEndian);
@@ -346,14 +363,14 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurImp.Name, ImpNameOff))
     {
       Log::Write("ldr_pe") << "unable to convert import name address to offset" << LogEnd;
-      return;
+      return false;
     }
 
     std::string ImpName;
     if (!rBinStrm.Read(ImpNameOff, ImpName))
     {
       Log::Write("ldr_pe") << "unable to read import name" << LogEnd;
-      return;
+      return false;
     }
     std::transform(std::begin(ImpName), std::end(ImpName), std::begin(ImpName), ::tolower);
     Log::Write("ldr_pe") << "found import: " << ImpName << LogEnd;
@@ -369,14 +386,14 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + OrgThunkRva, OrgThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert thunk address to offset" << LogEnd;
-      return;
+      return false;
     }
 
     OffsetType ThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + ThunkRva, ThunkOff))
     {
       Log::Write("ldr_pe") << "unable to convert original thunk address to offset" << LogEnd;
-      return;
+      return false;
     }
 
     while (true)
@@ -384,7 +401,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       if (!rBinStrm.Read(OrgThunkOff, &CurOrgThunk, sizeof(CurOrgThunk)))
       {
         Log::Write("ldr_pe") << "unable to read original thunk" << LogEnd;
-        return;
+        return false;
       }
       OrgThunkOff += sizeof(CurOrgThunk);
       CurOrgThunk.Swap(LittleEndian);
@@ -394,7 +411,7 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       if (!rBinStrm.Read(ThunkOff, &CurThunk, sizeof(CurThunk)))
       {
         Log::Write("ldr_pe") << "unable to read thunk" << LogEnd;
-        return;
+        return false;
       }
       ThunkOff += sizeof(CurThunk);
       CurThunk.Swap(LittleEndian);
@@ -415,13 +432,13 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
         if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurOrgThunk.Function, FuncOff))
         {
           Log::Write("ldr_pe") << "unable to convert function address to offset" << LogEnd;
-          return;
+          return false;
         }
         std::string ThunkName;
         if (!rBinStrm.Read(FuncOff + offsetof(typename PeType::ImportByName, Name), ThunkName))
         {
           Log::Write("ldr_pe") << "unable to read function name" << LogEnd;
-          return;
+          return false;
         }
         SymName += ThunkName;
       }
@@ -434,9 +451,11 @@ template<int bit> void PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
     }
   }
+
+  return true;
 }
 
-template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva)
+template<int bit> bool PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva) const
 {
   auto const& rBinStrm = rDoc.GetBinaryStream();
   typedef PeTraits<bit> PeType;
@@ -446,29 +465,29 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
   {
     Log::Write("ldr_pe") << "unable to convert export directory address to offset" << LogEnd;
-    return;
+    return false;
   }
   if (!rBinStrm.Read(ExpDirOff, &ExpDir, sizeof(ExpDir)))
   {
     Log::Write("ldr_pe") << "unable to read export directory" << LogEnd;
-    return;
+    return false;
   }
 
   OffsetType FuncOff, NameOff, OrdOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfFunctions, FuncOff))
   {
     Log::Write("ldr_pe") << "unable to convert functions address to offset" << LogEnd;
-    return;
+    return false;
   }
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNames, NameOff))
   {
     Log::Write("ldr_pe") << "unable to convert names address to offset" << LogEnd;
-    return;
+    return false;
   }
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNameOrdinals, OrdOff))
   {
     Log::Write("ldr_pe") << "unable to convert ordinals address to offset" << LogEnd;
-    return;
+    return false;
   }
 
   for (u32 i = 0; i < ExpDir.NumberOfFunctions; ++i)
@@ -477,14 +496,14 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     if (!rBinStrm.Read(OrdOff + i * sizeof(Ord), Ord))
     {
       Log::Write("ldr_pe") << "unable to read ordinal: " << i << LogEnd;
-      return;
+      return false;
     }
 
     u32 FuncRva;
     if (!rBinStrm.Read(FuncOff + Ord * sizeof(FuncRva), FuncRva))
     {
       Log::Write("ldr_pe") << "unable to read function rva: " << i << LogEnd;
-      return;
+      return false;
     }
 
     std::string SymName;
@@ -495,22 +514,22 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       if (!rBinStrm.Read(NameOff + i * sizeof(SymNameRva), SymNameRva))
       {
         Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
-        return;
+        return false;
       }
       OffsetType SymNameOff;
       if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
       {
         Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
-        return;
+        return false;
       }
       if (!rBinStrm.Read(SymNameOff, SymName))
       {
         Log::Write("ldr_pe") << "unable to read export name" << LogEnd;
-        return;
+        return false;
       }
     }
     else
-      SymName = (boost::format("ord_%d") % (Ord + ExpDir.Base)).str();
+      SymName = "ord_" + std::to_string(Ord + ExpDir.Base);
 
     Address SymAddr(Address::LinearType, 0x0, ImageBase + FuncRva, 0x10, bit);
     rDoc.AddLabel(
@@ -522,4 +541,6 @@ template<int bit> void PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
 
     Log::Write("ldr_pe") << "found export name: \"" << SymName << "\", ordinal: " << Ord << LogEnd;
   }
+
+  return true;
 }

@@ -7,155 +7,161 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-template<typename ModuleType>
-bool ModuleManager::_DoLoad(
-  Path const& rModulePath,
-  ModuleType pModule,
-  std::string const MsgModule,
-  std::string const MsgError,
-  std::function<void(ModuleType)> pFct)
-{
-  Log::Write("core") << rModulePath.string() << " " << MsgModule << LogEnd;
-  if (pModule == nullptr)
-  {
-    Log::Write("core") << MsgError << LogEnd;
-    return false;
-  }
-  pFct(pModule);
-  return true;
-}
-
-bool ModuleManager::_DoLoadModule(Path const& rModulePath, void* const pMod, Module & rModule)
+bool ModuleManager::_LoadModule(Path const& rModulePath, void* const pMod, Module& rModule)
 {
   auto pGetArchitecture = rModule.Load<TGetArchitecture>(pMod, "GetArchitecture");
   if (pGetArchitecture != nullptr)
   {
-    return _DoLoad<medusa::Architecture*>(
-      rModulePath,
-      pGetArchitecture(),
-      "is an architecture", "unable to get architecture",
-      [this](medusa::Architecture* const pArchitecture)
+    auto pArch = pGetArchitecture();
+    if (pArch == nullptr)
     {
-      Architecture::SPType ArchitecturePtr(pArchitecture);
-      m_Architectures.push_back(ArchitecturePtr);
-    });
-  }
-
-  auto pGetBinding = rModule.Load<TGetBinding>(pMod, "GetBinding");
-  if (pGetBinding != nullptr)
-  {
-    return _DoLoad<medusa::Binding*>(
-      rModulePath,
-      pGetBinding(),
-      "is a binding", "unable to get binding",
-      [this, pGetBinding](medusa::Binding* const pBinding)
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_Architectures.find(pArch->GetTag()) != std::end(m_Architectures))
     {
-      m_Bindings[pBinding->GetName()] = pGetBinding;
-      delete pBinding;
-    });
-  }
-
-  auto pGetCompiler = rModule.Load<TGetCompiler>(pMod, "GetCompiler");
-  if (pGetCompiler != nullptr)
-  {
-    return _DoLoad<medusa::Compiler*>(
-      rModulePath,
-      pGetCompiler(),
-      "is a compiler", "unable to get compiler",
-      [this](medusa::Compiler* pCompiler)
-    {
-      Compiler::SPType spCompiler(pCompiler);
-      m_Compilers.push_back(spCompiler);
+      Log::Write("core").Level(LogWarning) << "module " << pArch->GetName() << " is already loaded" << LogEnd;
+      delete pArch;
       return true;
-    });
-  }
-
-  auto pGetDatabase = rModule.Load<TGetDatabase>(pMod, "GetDatabase");
-  if (pGetDatabase != nullptr)
-  {
-    return _DoLoad<medusa::Database*>(
-      rModulePath,
-      pGetDatabase(),
-      "is a database", "unable to get database",
-      [this](medusa::Database* const pDatabase)
-    {
-      Database::SPType spDatabase(pDatabase);
-      m_Databases.push_back(spDatabase);
-      return true;
-    });
-  }
-
-  auto pGetEmulator = rModule.Load<TGetEmulator>(pMod, "GetEmulator");
-  if (pGetEmulator != nullptr)
-  {
-    return _DoLoad<medusa::Emulator*>(
-      rModulePath,
-      pGetEmulator(nullptr, nullptr, nullptr),
-      "is an emulator", "unable to get emulator",
-      [this, pGetEmulator](medusa::Emulator* const pEmulator)
-    {
-      m_Emulators[pEmulator->GetName()] = pGetEmulator;
-      delete pEmulator;
-    });
+    }
+    m_Architectures[pArch->GetTag()] = Architecture::SPType(pArch);
+    Log::Write("core").Level(LogInfo) << "architecture module " << pArch->GetName() << " loaded" << LogEnd;
+    return true;
   }
 
   auto pGetOperatingSystem = rModule.Load<TGetOperatingSystem>(pMod, "GetOperatingSystem");
   if (pGetOperatingSystem != nullptr)
   {
-    return _DoLoad<medusa::OperatingSystem*>(
-      rModulePath,
-      pGetOperatingSystem(),
-      "is an operating system", "unable to get operating system",
-      [this](medusa::OperatingSystem* const pOperatingSystem)
+    auto pOs = pGetOperatingSystem();
+    if (pOs == nullptr)
     {
-      OperatingSystem::SPType spOperatingSystem(pOperatingSystem);
-      m_OperatingSystems.push_back(spOperatingSystem);
-    });
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_OperatingSystems.find(pOs->GetName()) != std::end(m_OperatingSystems))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pOs->GetName() << " is already loaded" << LogEnd;
+      delete pOs;
+      return true;
+    }
+    m_OperatingSystems[pOs->GetName()] = OperatingSystem::SPType(pOs);
+    return true;
   }
+
+  auto pGetLoader = rModule.Load<TGetLoader>(pMod, "GetLoader");
+  if (pGetLoader != nullptr)
+  {
+    auto pLdr = pGetLoader();
+    if (pLdr == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (std::find(std::begin(m_Loaders), std::end(m_Loaders), pGetLoader) != std::end(m_Loaders))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pLdr->GetName() << " is already loaded" << LogEnd;
+      delete pLdr;
+      return true;
+    }
+    m_Loaders.push_back(pGetLoader);
+    delete pLdr;
+    return true;
+  }
+
+  auto pGetBinding = rModule.Load<TGetBinding>(pMod, "GetBinding");
+  if (pGetBinding != nullptr)
+  {
+    // HACK(wisk): instantiate a dummy module to get its name
+    auto pBind = pGetBinding();
+    if (pBind == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_Bindings.find(pBind->GetName()) != std::end(m_Bindings))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pBind->GetName() << " is already loaded" << LogEnd;
+      delete pBind;
+      return true;
+    }
+    m_Bindings[pBind->GetName()] = pGetBinding;
+    Log::Write("core").Level(LogInfo) << "binding module " << pBind->GetName() << " loaded" << LogEnd;
+    delete pBind;
+    return true;
+  }
+
+  auto pGetCompiler = rModule.Load<TGetCompiler>(pMod, "GetCompiler");
+  if (pGetCompiler != nullptr)
+  {
+    // HACK(wisk): instantiate a dummy module to get its name
+    auto pComp = pGetCompiler();
+    if (pComp == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_Compilers.find(pComp->GetName()) != std::end(m_Compilers))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pComp->GetName() << " is already loaded" << LogEnd;
+      delete pComp;
+      return true;
+    }
+    m_Compilers[pComp->GetName()] = pGetCompiler;
+    Log::Write("core").Level(LogInfo) << "compiler module " << pComp->GetName() << " loaded" << LogEnd;
+    delete pComp;
+    return true;
+  }
+
+  auto pGetDatabase = rModule.Load<TGetDatabase>(pMod, "GetDatabase");
+  if (pGetDatabase != nullptr)
+  {
+    auto pDb = pGetDatabase();
+    if (pDb == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_Databases.find(pDb->GetName()) != std::end(m_Databases))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pDb->GetName() << " is already loaded" << LogEnd;
+      delete pDb;
+      return true;
+    }
+    m_Databases[pDb->GetName()] = pGetDatabase;
+    Log::Write("core").Level(LogInfo) << "database module " << pDb->GetName() << " loaded" << LogEnd;
+    delete pDb;
+    return true;
+  }
+
+  auto pGetEmulator = rModule.Load<TGetEmulator>(pMod, "GetEmulator");
+  if (pGetEmulator != nullptr)
+  {
+    auto pEmul = pGetEmulator();
+    if (pEmul == nullptr)
+    {
+      Log::Write("core").Level(LogError) << "unable to load " << rModulePath << LogEnd;
+      return false;
+    }
+    if (m_Emulators.find(pEmul->GetName()) != std::end(m_Emulators))
+    {
+      Log::Write("core").Level(LogWarning) << "module " << pEmul->GetName() << " is already loaded" << LogEnd;
+      return true;
+    }
+    m_Emulators[pEmul->GetName()] = pGetEmulator;
+    Log::Write("core").Level(LogInfo) << "emulator module " << pEmul->GetName() << " loaded" << LogEnd;
+    delete pEmul;
+    return true;
+  }
+
+  Log::Write("core").Level(LogWarning) << "module " << rModulePath << " is unknown" << LogEnd;
   return false;
 }
 
-void ModuleManager::LoadDatabases(Path const& rModPath)
+void ModuleManager::InitializeModules(Path const& rModPath)
 {
   try
   {
-    const boost::filesystem::path CurDir = rModPath;
-    Module Module;
-
-    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
-
-    boost::filesystem::directory_iterator End;
-    for (boost::filesystem::directory_iterator It(CurDir);
-      It != End; ++It) {
-      auto const &rFilename = It->path().string();
-
-      if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
-        continue;
-
-      auto FullPath = boost::filesystem::system_complete(*It);
-      Log::Write("core") << "Module: \"" << rFilename << "\" ";
-
-      void *pMod = Module.Load(FullPath);
-      if (pMod == nullptr) {
-        Log::Write("core") << "can't be loaded" << LogEnd;
-        continue;
-      }
-
-      if (!_DoLoadModule(rFilename, pMod, Module))
-        Log::Write("core") << "is unknown (ignored)" << LogEnd;
-    }
-  }
-  catch (std::exception &e)
-  {
-    Log::Write("core") << e.what() << LogEnd;
-  }
-}
-
-void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm)
-{
-  try
-  {
-    const boost::filesystem::path CurDir = rModPath;
+    auto CurDir = rModPath;
     Module Module;
 
     Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
@@ -170,201 +176,176 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
         continue;
 
       auto FullPath = boost::filesystem::system_complete(*It).string();
-      Log::Write("core") << "Module: \"" << rFilename << "\" ";
-
       void* pMod = Module.Load(FullPath);
+
+      Log::Write("core") << "Module: \"" << rFilename << "\" ";
       if (pMod == nullptr)
       {
         Log::Write("core") << "can't be loaded" << LogEnd;
         continue;
       }
 
-      TGetLoader pGetLoader = Module.Load<TGetLoader>(pMod, "GetLoader");
-      if (pGetLoader != nullptr)
-      {
-        Log::Write("core") << "is a loader ";
-
-        Loader* pLoader = pGetLoader();
-        if (pLoader->IsCompatible(rBinStrm))
-        {
-          Loader::SPType LoaderPtr(pLoader);
-          m_Loaders.push_back(LoaderPtr);
-          Log::Write("core") << "(loaded)" << LogEnd;
-        }
-        else
-        {
-          Log::Write("core") << "(unloaded)" << LogEnd;
-          delete pLoader;
-        }
-        continue;
-      }
-
-      if (!_DoLoadModule(rFilename, pMod, Module))
-        Log::Write("core") << "is unknown (ignored)" << LogEnd;
+      _LoadModule(rFilename, pMod, Module);
     }
   }
   catch (std::exception &e)
   {
     Log::Write("core") << e.what() << LogEnd;
   }
-
-  if (!m_Loaders.empty())
-    std::sort(std::begin(m_Loaders), std::end(m_Loaders), [](Loader::SPType spLdr0, Loader::SPType spLdr1)
-        {
-          return spLdr0->GetDepth() > spLdr1->GetDepth();
-        });
 }
 
-void ModuleManager::UnloadModules(void)
+bool ModuleManager::ConvertArchitectureNameToTag(std::string const& rArchitectureName, TagType& rArchitectureTag) const
 {
-  m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
-  m_Loaders.clear();
-  m_Architectures.clear();
-  m_Databases.clear();
-  m_OperatingSystems.clear();
-  m_Emulators.clear();
-}
-
-Architecture::SPType ModuleManager::GetArchitecture(Tag ArchTag) const
-{
-  if (ArchTag == MEDUSA_ARCH_UNK) {
-    ArchTag = m_DefaultArchitectureTag;
+  for (auto const itArch : m_Architectures)
+  {
+    if (itArch.second->GetName() == rArchitectureName)
+    {
+      rArchitectureTag = itArch.first;
+      return true;
+    }
   }
+  return false;
+}
 
-  // UPDATE replace :
-  //auto itArch = m_TaggedArchitectures.find(ArchTag);
-  auto itArch = std::find_if(std::begin(m_TaggedArchitectures),
-                             std::end(m_TaggedArchitectures),
-                             [ArchTag](const std::pair<const unsigned int, std::shared_ptr<medusa::Architecture> > arch)
-                             { return (arch.first & ArchTag) == ArchTag;});
+bool ModuleManager::ConvertArchitectureNameToTagAndMode(std::string const& rArchitectureName, TagType& rArchitectureTag, u8& rArchitectureMode) const
+{
+  auto LimitOff = rArchitectureName.find('/');
+  if (LimitOff == std::string::npos)
+  {
+    rArchitectureMode = 0x0;
+    return ConvertArchitectureNameToTag(rArchitectureName, rArchitectureTag);
+  }
+  auto const& rArchName = rArchitectureName.substr(0x0, LimitOff);
+  auto const& rArchMode = rArchitectureName.substr(LimitOff + 1);
+  for (auto const itArch : m_Architectures)
+  {
+    if (itArch.second->GetName() == rArchName)
+    {
+      rArchitectureTag = itArch.first;
+      rArchitectureMode = itArch.second->GetModeByName(rArchMode);
+      return true;
+    }
+  }
+  return false;
+}
 
-  if (itArch == std::end(m_TaggedArchitectures))
-    return Architecture::SPType();
+Architecture::SPType ModuleManager::GetArchitecture(TagType ArchTag) const
+{
+  auto itArch = m_Architectures.find(ArchTag);
+  if (itArch == std::end(m_Architectures))
+    return nullptr;
   return itArch->second;
 }
 
-Architecture::SPType ModuleManager::FindArchitecture(Tag ArchTag) const
+Architecture::VSPType ModuleManager::GetArchitectures(Loader::SPType const spLoader, BinaryStream const& rBinaryStream) const
 {
-  if (ArchTag == MEDUSA_ARCH_UNK)
-    return nullptr;
-
-  auto const& rAllArchs = GetArchitectures();
-  for (auto itArch = std::begin(rAllArchs), itEnd = std::end(rAllArchs); itArch != itEnd; ++itArch)
-    if (MEDUSA_CMP_TAG((*itArch)->GetTag(), ArchTag))
-      return *itArch;
-  return nullptr;
-}
-
-bool ModuleManager::RegisterArchitecture(Architecture::SPType spArch)
-{
-  u8 Id = 0;
-  bool FoundId = false;
-  for (u8 i = 0; i < 32; ++i)
-    if (!(m_ArchIdPool & (1 << i)))
-    {
-      m_ArchIdPool |= (1 << i);
-      Id = i;
-      FoundId = true;
-      break;
-    }
-
-  if (FoundId == false)
-    return false;
-
-  spArch->UpdateId(Id);
-
-  m_TaggedArchitectures[spArch->GetTag()] = spArch;
-
-  if (m_DefaultArchitectureTag == MEDUSA_ARCH_UNK)
-    m_DefaultArchitectureTag = spArch->GetTag();
-  return true;
-}
-
-// TODO: test this function
-bool ModuleManager::UnregisterArchitecture(Architecture::SPType spArch)
-{
-  Tag ArchTag = spArch->GetTag();
-  auto itArch = std::find_if(std::begin(m_TaggedArchitectures),
-                             std::end(m_TaggedArchitectures),
-                             [ArchTag](const std::pair<const unsigned int,
-                                       std::shared_ptr<medusa::Architecture> > arch)
-                             {
-                                 return (arch.first & ArchTag) == ArchTag;
-                             });
-
-  if (itArch == std::end(m_TaggedArchitectures))
-    return false;
-  m_TaggedArchitectures.erase(itArch);
-  return true; /* Not implemented */
-}
-
-void ModuleManager::ResetArchitecture(void)
-{
-  m_Architectures.clear();
-}
-
-TGetBinding ModuleManager::GetBinding(std::string const& rBindingName)
-{
-  auto itBinding = m_Bindings.find(rBindingName);
-  if (itBinding == std::end(m_Bindings))
-    return nullptr;
-  return itBinding->second;
-}
-
-TGetEmulator ModuleManager::GetEmulator(std::string const& rEmulatorName)
-{
-  auto itEmulator = m_Emulators.find(rEmulatorName);
-  if (itEmulator == std::end(m_Emulators))
-    return nullptr;
-  return itEmulator->second;
+  auto ArchNames = spLoader->GetUsedArchitectures(rBinaryStream);
+  Architecture::VSPType Archs;
+  for (auto ArchName : ArchNames)
+  {
+    TagType ArchTag;
+    u8 ArchMode;
+    if (!ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
+      return {};
+    auto spArch = GetArchitecture(ArchTag);
+    if (spArch == nullptr)
+      return {};
+    Archs.push_back(spArch);
+  }
+  return Archs;
 }
 
 OperatingSystem::SPType ModuleManager::GetOperatingSystem(std::string const& rOperatingSystemName) const
 {
-  for (auto spOs : m_OperatingSystems)
-    if (spOs->GetName() == rOperatingSystemName)
-      return spOs;
+  auto itOs = m_OperatingSystems.find(rOperatingSystemName);
+  if (itOs == std::end(m_OperatingSystems))
+    return nullptr;
+  return itOs->second;
+}
+
+Loader::SPType ModuleManager::MakeLoader(std::string const& rLoaderName) const
+{
+  for (auto const& rLdrMaker : m_Loaders)
+  {
+    auto spTmpLdr = Loader::SPType(rLdrMaker());
+    if (spTmpLdr == nullptr)
+      continue;
+    if (spTmpLdr->GetName() == rLoaderName)
+      return spTmpLdr;
+  }
+
   return nullptr;
 }
 
-OperatingSystem::SPType ModuleManager::GetOperatingSystem(Loader::SPType spLdr, Architecture::SPType spArch) const
+Loader::VSPType ModuleManager::MakeAllLoaders(void) const
 {
-  OperatingSystem::VSPType CompatOs;
-  for (auto itOs = std::begin(m_OperatingSystems); itOs != std::end(m_OperatingSystems); ++itOs)
-    if ((*itOs)->IsSupported(*spLdr, *spArch) == true)
-      return *itOs;
-  return nullptr;
+  Loader::VSPType Ldrs;
+  for (auto const& rLdrMaker : m_Loaders)
+    Ldrs.push_back(Loader::SPType(rLdrMaker()));
+  std::sort(std::begin(Ldrs), std::end(Ldrs), [](Loader::SPType spLdr0, Loader::SPType spLdr1)
+  {
+    return spLdr0->GetDepth() > spLdr1->GetDepth();
+  });
+  return std::move(Ldrs);
 }
 
-Database::SPType ModuleManager::GetDatabase(std::string const& rDatabaseName)
+Loader::VSPType ModuleManager::MakeAllLoaders(BinaryStream::SPType spBinStrm) const
 {
-  for (auto itDb : m_Databases)
-    if (itDb->GetName() == rDatabaseName)
-      return itDb;
-  return nullptr;
+  Loader::VSPType Ldrs;
+  for (auto const& rLdrMaker : m_Loaders)
+    Ldrs.push_back(Loader::SPType(rLdrMaker()));
+  Ldrs.erase(std::remove_if(std::begin(Ldrs), std::end(Ldrs), [&spBinStrm](Loader::SPType spLoader) {
+    return spLoader->IsCompatible(*spBinStrm) ? false : true;
+  }), std::end(Ldrs));
+  std::sort(std::begin(Ldrs), std::end(Ldrs), [](Loader::SPType spLdr0, Loader::SPType spLdr1)
+  {
+    return spLdr0->GetDepth() > spLdr1->GetDepth();
+  });
+  return std::move(Ldrs);
 }
 
-Compiler::SPType ModuleManager::GetCompiler(std::string const & rCompilerName)
+Database::SPType ModuleManager::MakeDatabase(std::string const& rDatabaseName) const
 {
-  for (auto itCompil : m_Compilers)
-    if (itCompil->GetName() == rCompilerName)
-      return itCompil;
-  return nullptr;
+  auto itDb = m_Databases.find(rDatabaseName);
+  if (itDb == std::end(m_Databases))
+    return nullptr;
+  auto pMakeDb = itDb->second;
+  return Database::SPType(pMakeDb());
 }
 
-Database::VSPType ModuleManager::GetDatabases(void) const
+Database::VSPType ModuleManager::MakeAllDatabases(void) const
 {
-  return m_Databases;
+  Database::VSPType Dbs;
+  for (auto const& itDb : m_Databases)
+    Dbs.push_back(Database::SPType(itDb.second()));
+  return Dbs;
 }
 
-Loader::VSPType ModuleManager::GetLoaders(void) const
+Binding::SPType ModuleManager::MakeBinding(std::string const& rBindingName) const
 {
-  return m_Loaders;
+  auto itBind = m_Bindings.find(rBindingName);
+  if (itBind == std::end(m_Bindings))
+    return nullptr;
+  auto pMakeBind = itBind->second;
+  return Binding::SPType(pMakeBind());
 }
 
-Architecture::VSPType ModuleManager::GetArchitectures(void) const
+Emulator::SPType ModuleManager::MakeEmulator(std::string const& rEmulatorName) const
 {
-  return m_Architectures;
+  auto itEmul = m_Emulators.find(rEmulatorName);
+  if (itEmul == std::end(m_Emulators))
+    return nullptr;
+  auto pMakeEmul = itEmul->second;
+  return Emulator::SPType(pMakeEmul());
+}
+
+Compiler::SPType ModuleManager::MakeCompiler(std::string const& rCompilerName) const
+{
+  auto itComp = m_Compilers.find(rCompilerName);
+  if (itComp == std::end(m_Compilers))
+    return nullptr;
+  auto pMakeComp = itComp->second;
+  return Compiler::SPType(pMakeComp());
 }
 
 MEDUSA_NAMESPACE_END

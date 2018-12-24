@@ -22,29 +22,28 @@ MEDUSA_NAMESPACE_USE
 class PeLoader : public Loader
 {
 public:
-  PeLoader(void);
+  // Generic methods
+  virtual std::string GetName(void) const { return "PE"; }
+  virtual u8          GetDepth(void) const { return 2; }
 
-  virtual std::string GetName(void) const;
-  virtual u8          GetDepth(void) const { return 2; /* IMAGE_DOS_HEADER is depth 1 */ }
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
+  // Only binary stream is needed
+  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const;
+  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const;
+  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const;
+  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+
+  // Document is required
+  virtual bool Map(Document& rDoc) const;
+  virtual bool Map(Document& rDoc, Address const& rImgBase) const;
+  virtual void Analyze(Document& rDoc) const {}
 
 private:
-  u16 m_Machine;
-  u16 m_Magic;
-  u64 m_ImageBase;
+  static bool _GetInformation(BinaryStream const& rBinStrm, u16& rMachine, u16& rMagic, u64& rImageBase);
 
-  bool _FindArchitectureTagAndModeByMachine(
-      Architecture::VSPType const& rArchs,
-      Tag& rArchTag, u8& rArchMode
-      ) const;
-
-  template<int bit> void _Map(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase);
-  template<int bit> void _MapSections(Document& rDoc, Architecture::VSPType const& rArchs, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment);
-  template<int bit> void _ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva);
-  template<int bit> void _ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva);
+  template<int bit> bool _Map(Document& rDoc, u64 ImageBase) const;
+  template<int bit> bool _MapSections(Document& rDoc, u64 ImageBase, u64 SectionHeadersOffset, u16 NumberOfSection, u32 SectionAlignment) const;
+  template<int bit> bool _ResolveImports(Document& rDoc, u64 ImageBase, u64 ImportDirectoryRva, u64 ImportAddressTableRva) const;
+  template<int bit> bool _ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva) const;
 };
 
 extern "C" LDR_PE_EXPORT Loader* GetLoader(void);

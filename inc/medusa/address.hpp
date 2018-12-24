@@ -24,7 +24,7 @@ class MEDUSA_EXPORT Address
 {
 public:
 
-  typedef enum
+  enum Type : u8
   {
     UnknownType,      //! Used only in case of error or default
     DefaultType,      //! Defined by the loader
@@ -33,7 +33,7 @@ public:
     LinearType,       //! Used for protected mode
     RelativeType,     //! Relative to a image base (RVA)
     LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
-  } Type;
+  };
 
   typedef std::vector<Address> Vector;
 

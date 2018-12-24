@@ -25,32 +25,109 @@ bool Sqlite3Database::_CreateTable(void)
   return true;
 }
 
-bool Sqlite3Database::_ConvertIdToAddress(u32 Id, OffsetType Offset, Address& rAddress) const
+bool Sqlite3Database::_ConvertIdToAddress(int Id, OffsetType Offset, Address& rAddress) const
 {
+  using namespace sqlite_orm;
+  try
+  {
+    auto AddrTbl = m_spStorage->select(columns(
+      &MemoryAreaTable::BaseAddressType,
+      &MemoryAreaTable::BaseAddressBase,
+      &MemoryAreaTable::BaseAddressOffset,
+      &MemoryAreaTable::BaseAddressBaseSize,
+      &MemoryAreaTable::BaseAddressOffsetSize),
+      where(c(&MemoryAreaTable::Id) == Id));
+    if (AddrTbl.size() != 1)
+      return false;
+    auto const& AddrTuple = AddrTbl[0];
+    rAddress = Address(
+      static_cast<Address::Type>(std::get<0>(AddrTuple)),
+      std::get<1>(AddrTuple), std::get<2>(AddrTuple),
+      std::get<3>(AddrTuple), std::get<4>(AddrTuple));
+    return true;
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
-bool Sqlite3Database::_ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset) const
+bool Sqlite3Database::_ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset) const
 {
+  using namespace sqlite_orm;
+
+  try
+  {
+    //auto AddrType = rAddress.GetAddressingType();
+    //switch (AddrType)
+    //{
+    //case Address::PhysicalType:
+    //  break;
+    //case Address::LinearType:
+    //  break;
+    //case Address::RelativeType:
+    //{
+    //  ImageBaseType ImgBase;
+    //  if (!GetImageBase(ImgBase))
+    //    return false;
+
+    //  break;
+    //}
+    //case Address::LogicalType:
+    //  break;
+
+    //default:
+    //  return false;
+    //}
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
-bool Sqlite3Database::_ConvertAddressToId(Address const& rAddress, u32& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const
+bool Sqlite3Database::_ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const
 {
+  try
+  {
+
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
-bool Sqlite3Database::_GetNextMemoryAreaId(u32 Id, u32& rNextId) const
+bool Sqlite3Database::_GetNextMemoryAreaId(int Id, int& rNextId) const
 {
+  try
+  {
+
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
-bool Sqlite3Database::_GetPreviousMemoryAreaId(u32 Id, u32& rPreviousId) const
+bool Sqlite3Database::_GetPreviousMemoryAreaId(int Id, int& rPreviousId) const
 {
+  try
+  {
+
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
-bool Sqlite3Database::_AddCellDataToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData)
+bool Sqlite3Database::_AddCellDataToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData)
 {
   return false;
 }
@@ -60,12 +137,12 @@ bool Sqlite3Database::_FlushCellDataCache(void) const
   return false;
 }
 
-bool Sqlite3Database::_GetCellDataFromCache(u32 MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const
+bool Sqlite3Database::_GetCellDataFromCache(int MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const
 {
   return false;
 }
 
-bool Sqlite3Database::_AddLabelToCache(u32 MemoryAreaId, OffsetType MemoryAreaOffset, Label const & rLabel)
+bool Sqlite3Database::_AddLabelToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, Label const & rLabel)
 {
   return false;
 }
@@ -148,7 +225,7 @@ bool Sqlite3Database::UnregisterArchitectureTag(Tag ArchitectureTag)
   return false;
 }
 
-std::list <Tag> Sqlite3Database::GetArchitectureTags(void) const
+std::vector<Tag> Sqlite3Database::GetArchitectureTags(void) const
 {
   return {};
 }
@@ -180,14 +257,36 @@ bool Sqlite3Database::SetImageBase(ImageBaseType ImageBase)
 
 bool Sqlite3Database::GetMemoryArea(Address const &rAddress, MemoryArea& rMemArea) const
 {
-  return false;
+  try
+  {
+    using namespace sqlite_orm;
+    auto MemAreaId = m_spStorage->select(&MemoryAreaTable::Id, where(
+      c(&MemoryAreaTable::BaseAddressBase) == rAddress.GetBase() &&
+      c(&MemoryAreaTable::BaseAddressOffset) == rAddress.GetOffset()
+      ));
+    if (MemAreaId.size() != 1)
+      return false;
+    auto MemAreaTbl = m_spStorage->get<MemoryAreaTable>(MemAreaId.front());
+    return MemAreaTbl.ToMemoryArea(rMemArea);
+  }
+  catch (std::exception const& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << "exception: " << e.what() << LogEnd;
+    return false;
+  }
+
+  return true;
 }
 
 
 void Sqlite3Database::ForEachMemoryArea(MemoryAreaCallback Callback) const
 {
-  for (auto const& rMemArea : m_spStorage->get_all<MemoryAreaTable>())
+  for (auto const& rMemAreaTbl : m_spStorage->iterate<MemoryAreaTable>())
   {
+    MemoryArea TmpMemArea;
+    if (!rMemAreaTbl.ToMemoryArea(TmpMemArea))
+      continue;
+    Callback(TmpMemArea);
   }
 }
 
@@ -245,13 +344,26 @@ bool Sqlite3Database::SetDefaultAddressingType(Address::Type AddressType)
 }
 
 // Implemented possibilities:
-// - Logical Address → Virtual Address → (Relative Address → Physical address) WIP
-// - (Physical Address → Relative Address) → Virtual Address → Logical Address (might not normalized)
-// - Architecture Address → ? (depends on architecture)
-// - ? → Architecture Address (might not be normalized)
+// - Logical Address → Linear Address → (Relative Address → Physical address) WIP
+// - (Physical Address → Relative Address) → Linear Address → Logical Address (might not normalized)
+// 
 // See document.hpp Document::Translate
 bool Sqlite3Database::TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const
 {
+  using namespace sqlite_orm;
+  try
+  {
+    switch (rAddress.GetAddressingType())
+    {
+    case Address::LinearType:
+      break;
+    }
+    return true;
+  }
+  catch (std::exception& e)
+  {
+    Log::Write("db_sqlite3").Level(LogError) << e.what() << LogEnd;
+  }
   return false;
 }
 
@@ -282,10 +394,10 @@ bool Sqlite3Database::ConvertPositionToAddress(u32 Position, Address &rAddress) 
 
 bool Sqlite3Database::AddLabel(Address const &rAddress, Label const &rLabel)
 {
-  u32 Id = 0;
+  int Id = 0;
   u64 Off = 0;
-  //if (!_ConvertAddressToId(rAddress, Id, Off))
-  //  return false;
+  if (!_ConvertAddressToId(rAddress, Id, Off))
+    return false;
   MemoryAreaRelated MemAreaRel{ Id, Off };
   LabelTable LblTbl{ MemAreaRel, rLabel };
   m_spStorage->insert(LblTbl);

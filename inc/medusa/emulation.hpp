@@ -21,11 +21,14 @@ class MEDUSA_EXPORT Emulator
 public:
   typedef std::shared_ptr<Emulator> SPType;
 
+  Emulator(void);
   virtual ~Emulator(void);
+
+  virtual void Initialize(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
   virtual std::string GetName(void) const = 0;
 
-  virtual bool ReadRegister (u32 Reg, void* pVal, u32 BitSize) const;
+  virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const;
   template<typename _RegTy>
   bool ReadRegister(u32 Reg, _RegTy& rRegVal) const
   {
@@ -85,8 +88,6 @@ public:
   virtual bool InvalidateCache(void);
 
 protected:
-  Emulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
-
   typedef std::function<bool (Address const&, Instruction&, Architecture&, u8)> DisasmCbType;
   bool _Disassemble(Address const& rAddress, DisasmCbType Cb);
 
@@ -113,7 +114,7 @@ protected:
   SemanticCacheType m_SemCache;
 };
 
-typedef Emulator* (*TGetEmulator)(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt);
+typedef Emulator* (*TGetEmulator)(void);
 
 MEDUSA_NAMESPACE_END
 

@@ -1,7 +1,7 @@
 #include "medusa/label.hpp"
 #include <algorithm>
 #include <sstream>
-#include <boost/format.hpp>
+#include <fmt/format.h>
 #include <boost/algorithm/string.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -106,12 +106,12 @@ std::string Label::GetLabel(void) const
     }
 
   if (Result.empty())
-    Result = "uname";
+    Result = "";
 
   if (m_Version == 0)
     return Result;
 
-  return (boost::format("%s.%d") % Result % m_Version).str();
+  return fmt::format("%s.%d", Result, m_Version);
 }
 
 void Label::IncrementVersion(void)

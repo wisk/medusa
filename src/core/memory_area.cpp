@@ -4,7 +4,7 @@
 #include "medusa/instruction.hpp"
 #include "medusa/character.hpp"
 
-#include <boost/format.hpp>
+#include <fmt/format.h>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -38,7 +38,7 @@ std::string MemoryArea::ToString(void) const
   Buf[1] = to_bool(m_Access & MemoryArea::Access::Write)   ? 'W' : '-';
   Buf[2] = to_bool(m_Access & MemoryArea::Access::Execute) ? 'X' : '-';
   Buf[3] = '\0';
-  return (boost::format("; mapped memory area %s %s %#08x %s") % m_Name % m_BaseAddress.ToString() % m_Size % Buf).str();
+  return fmt::format("; mapped memory area %s %s 0x%08x %s", m_Name, m_BaseAddress.ToString(), m_Size, Buf);
 }
 
 MEDUSA_NAMESPACE_END

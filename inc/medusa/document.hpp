@@ -249,9 +249,9 @@ public:
   bool ContainsCode(Address const& rAddress) const;
   bool ContainsUnknown(Address const& rAddress) const;
 
-  Tag            GetArchitectureTag(Address const& rAddress) const;
-  std::list<Tag> GetArchitectureTags(void) const;
-  u8             GetMode(Address const& rAddress) const;
+  Tag              GetArchitectureTag(Address const& rAddress) const;
+  std::vector<Tag> GetArchitectureTags(void) const;
+  u8               GetMode(Address const& rAddress) const;
 
   // Operating system
 

@@ -20,12 +20,15 @@ MEDUSA_NAMESPACE_USE
 class BootSectorLoader : public Loader
 {
 public:
-  virtual std::string GetName(void) const;
+  virtual std::string GetName(void) const { return "boot sector"; }
   virtual u8          GetDepth(void) const { return 1; }
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
+
+  virtual bool IsCompatible(BinaryStream const& rBinStrm) const;
+  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const { return { "x86/16-bit" }; }
+
+  virtual bool Map(Document& rDoc) const;
+  virtual bool Map(Document& rDoc, Address const& rImgBase) const { return false; }
+  virtual void Analyze(Document& rDoc) const {}
 
 private:
   enum { AddressOffset = 0x7c00 };
