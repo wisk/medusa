@@ -33,7 +33,7 @@ bool BindingPython::Bind(Medusa& rCore)
 
   auto const AddCurDirToPythonPath = fmt::format(
     "import sys\n"
-    "medusa_path = '%s'\n"
+    "medusa_path = '{}'\n"
     "if not medusa_path in sys.path:\n"
     "  sys.path.append(medusa_path)\n", ModPath);
 

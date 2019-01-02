@@ -86,6 +86,8 @@ private:
       return "arm";
     case EM_AVR:
       return "avr";
+    default:
+      return "unknown";
     }
   }
 
@@ -379,7 +381,7 @@ private:
           }
         }
 
-        if (SymTbl == 0x0 || JmpRelTbl == 0x0)
+        if (SymTbl == 0x0)
           break;
 
         OffsetType SymTblOff     = 0x0;
@@ -391,11 +393,12 @@ private:
           Log::Write("ldr_elf").Level(LogError) << "failed to convert SYM" << LogEnd;
           return false;
         }
-        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff))
-        {
-          Log::Write("ldr_elf").Level(LogError) << "failed to convert JMP" << LogEnd;
-          return false;
-        }
+        if (JmpRelTbl != 0x0)
+          if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, JmpRelTbl), JmpRelTblOff))
+          {
+            Log::Write("ldr_elf").Level(LogError) << "failed to convert JMP" << LogEnd;
+            return false;
+          }
         if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, DynStr), DynStrOff))
         {
           Log::Write("ldr_elf").Level(LogError) << "failed to convert DYN" << LogEnd;
@@ -411,11 +414,12 @@ private:
         std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
         std::unique_ptr<u8[]>   upRelocA(new u8[RelaSz]);
 
-        if (!rBinStrm.Read(JmpRelTblOff, upReloc.get(), JmpRelSz))
-        {
-          Log::Write("ldr_elf") << "Can't read REL" << LogEnd;
-          return false;
-        }
+        if (JmpRelTblOff != 0x0)
+          if (!rBinStrm.Read(JmpRelTblOff, upReloc.get(), JmpRelSz))
+          {
+            Log::Write("ldr_elf") << "Can't read REL" << LogEnd;
+            return false;
+          }
         if (!rBinStrm.Read(DynStrOff, upDynSymStr.get(), DynStrSz))
         {
           Log::Write("ldr_elf") << "Can't read DYNSTR" << LogEnd;
@@ -587,6 +591,7 @@ private:
         }
       }
     }
+    return true;
   }
 };
 

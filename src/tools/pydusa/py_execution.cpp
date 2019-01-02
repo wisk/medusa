@@ -17,76 +17,69 @@ namespace pydusa
 {
   std::shared_ptr<Document> Execution_MapModule(Execution* pExecution, std::string const& rModPath, std::string const& rModDbPath, Address const& rAddr)
   {
-    //Path ModPath = rModPath;
+    Path ModPath = rModPath;
 
-    //auto* pMemCtxt = pExecution->GetMemoryContext();
-    //auto* pCpuCtxt = pExecution->GetCpuContext();
+    auto* pMemCtxt = pExecution->GetMemoryContext();
+    auto* pCpuCtxt = pExecution->GetCpuContext();
 
-    //if (pMemCtxt == nullptr)
-    //  return nullptr;
-    //if (pCpuCtxt == nullptr)
-    //  return nullptr;
+    if (pMemCtxt == nullptr)
+      return nullptr;
+    if (pCpuCtxt == nullptr)
+      return nullptr;
 
-    //try
-    //{
-    //  auto spModBinStrm = std::make_shared<FileBinaryStream>(ModPath);
+    try
+    {
+      auto spModBinStrm = std::make_shared<FileBinaryStream>(ModPath);
 
-    //  auto& rModMgr     = ModuleManager::Instance();
-    //  auto const& rLdrs = rModMgr.GetLoaders();
-    //  auto spArch       = pExecution->GetArchitecture();
-    //  auto spModDoc     = std::make_shared<Document>();
+      auto& rModMgr     = ModuleManager::Instance();
+      auto const& rLdrs = rModMgr.MakeAllLoaders();
+      auto spArch       = pExecution->GetArchitecture();
+      auto spModDoc     = std::make_shared<Document>();
 
-    //  if (spArch == nullptr)
-    //    return nullptr;
+      if (spArch == nullptr)
+        return nullptr;
 
-    //  for (auto spLdr : rLdrs)
-    //  {
-    //    if (!spLdr->IsCompatible(*spModBinStrm))
-    //      continue;
+      for (auto spLdr : rLdrs)
+      {
+        if (!spLdr->IsCompatible(*spModBinStrm))
+          continue;
 
-    //    UserConfiguration UserCfg;
-    //    auto DbModPath = UserCfg.GetOption("core.modules_path");
-    //    if (DbModPath.empty())
-    //      DbModPath = ".";
-    //    auto pGetDb = rModMgr.LoadModule<medusa::TGetDatabase>(DbModPath, "soci");
-    //    if (pGetDb == nullptr)
-    //    {
-    //      Log::Write("pydusa") << "failed to get database module" << LogEnd;
-    //      return nullptr;
-    //    }
+        UserConfiguration UserCfg;
+        auto DbModPath = UserCfg.GetOption("core.modules_path");
+        if (DbModPath.empty())
+          DbModPath = ".";
+        auto spDb = rModMgr.MakeDatabase("Memory");
+        if (spDb == nullptr)
+        {
+          Log::Write("pydusa") << "failed to get database module" << LogEnd;
+          return nullptr;
+        }
 
-    //    auto spDbMod = pGetDb();
-    //    if (!spDbMod->Create(rModDbPath, true))
-    //    {
-    //      Log::Write("pydusa") << "failed to create database at " << rModDbPath << LogEnd;
-    //    }
-    //    auto spDb = medusa::Database::SPType(spDbMod);
+        spDb->SetBinaryStream(spModBinStrm);
+        spModDoc->Open(spDb);
 
-    //    spDb->SetBinaryStream(spModBinStrm);
-    //    spModDoc->Open(spDb);
+        if (!spLdr->Map(*spModDoc, rAddr))
+        {
+          Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << LogEnd;
+          return nullptr;
+        }
 
-    //    if (!spLdr->Map(*spModDoc, { spArch }, rAddr))
-    //    {
-    //      Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << LogEnd;
-    //      return nullptr;
-    //    }
+        if (!pMemCtxt->MapDocument(*spModDoc, pCpuCtxt))
+        {
+          Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << " to memory context" << LogEnd;
+          return nullptr;
+        }
 
-    //    if (!pMemCtxt->MapDocument(*spModDoc, pCpuCtxt))
-    //    {
-    //      Log::Write("pydusa") << "failed to map " << ModPath.string() << " at " << rAddr << " to memory context" << LogEnd;
-    //      return nullptr;
-    //    }
+        return spModDoc;
+      }
+    }
+    catch (Exception const& e)
+    {
+      Log::Write("pydusa") << e.What() << LogEnd;
+      return nullptr;
+    }
 
-    //    return spModDoc;
-    //  }
-    //}
-    //catch (Exception const& e)
-    //{
-    //  Log::Write("pydusa") << e.What() << LogEnd;
-    //  return nullptr;
-    //}
-
-    //Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
+    Log::Write("pydusa").Level(LogError) << "unable to find suitable loader for file: " << ModPath.string() << LogEnd;
     return nullptr;
   }
 
@@ -150,6 +143,7 @@ void PydusaExecution(py::module& rMod)
     .def("get_calling_convention", pydusa::Execution_GetCallingConvention)
     .def("get_function_parameter", pydusa::Execution_GetFunctionParameter)
     .def("return_from_function", &Execution::ReturnFromFunction)
+    .def("return_value_from_function", &Execution::ReturnValueFromFunction)
     .def_property_readonly("cpu", &Execution::GetCpuContext, py::return_value_policy::reference_internal)
     .def_property_readonly("mem", &Execution::GetMemoryContext, py::return_value_policy::reference_internal)
     ;

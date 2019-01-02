@@ -122,7 +122,7 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
       Log::Write("core").Level(LogError) << "cpu context or memory context is null" << LogEnd;
       return false;
     }
-  auto m_spEmul = ModuleManager::Instance().MakeEmulator(rEmulatorName);
+  m_spEmul = ModuleManager::Instance().MakeEmulator(rEmulatorName);
   if (m_spEmul == nullptr)
   {
     Log::Write("core").Level(LogError) << "cannot make emulator" << LogEnd;

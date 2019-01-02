@@ -37,7 +37,7 @@ Instruction::~Instruction(void)
 
 std::string Instruction::ToString(void) const
 {
-  std::string Res = fmt::format("mnem: %s(%08x), length: %d, prefix: %08x, oprd: %d",
+  std::string Res = fmt::format("mnem: {}({:#08x}), length: {}, prefix: {:#08x}, oprd: {}",
     m_pName, m_Opcode, m_spDna->GetSize(), m_Prefix, m_Operands.size());
   if (m_Operands.empty())
     return Res;

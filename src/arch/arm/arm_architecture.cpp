@@ -249,11 +249,11 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   CPSR += (m_Context.CPSR & ARM_CSPR_T) ? "T" : "t";
 
   return fmt::format(
-      "r0:0x%08x r1:0x%08x r2: 0x%08x r3:%08x\n"
-      "r4:0x%08x r5:0x%08x r6: 0x%08x r7:%08x\n"
-      "r8:0x%08x r9:0x%08x r10:0x%08x fp:%08x\n"
-      "ip:0x%08x sp:0x%08x lr: 0x%08x pc:%08x\n"
-      "CPSR: %s\n"
+      "r0:{:#08x} r1:{:#08x} r2: {:#08x} r3:%08x\n"
+      "r4:{:#08x} r5:{:#08x} r6: {:#08x} r7:%08x\n"
+      "r8:{:#08x} r9:{:#08x} r10:{:#08x} fp:%08x\n"
+      "ip:{:#08x} sp:{:#08x} lr: {:#08x} pc:%08x\n"
+      "CPSR: {}\n"
     , m_Context.Registers[0],  m_Context.Registers[1],  m_Context.Registers[2],  m_Context.Registers[3]
     , m_Context.Registers[4],  m_Context.Registers[5],  m_Context.Registers[6],  m_Context.Registers[7]
     , m_Context.Registers[8],  m_Context.Registers[9],  m_Context.Registers[10], m_Context.Registers[11]

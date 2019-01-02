@@ -55,8 +55,8 @@ bool ElfLoader::Map(Document& rDoc) const
 {
   switch (_GetBitness(rDoc.GetBinaryStream()))
   {
-  case ELFCLASS32: Map<32>(rDoc); break;
-  case ELFCLASS64: Map<64>(rDoc); break;
+  case 32: Map<32>(rDoc); break;
+  case 64: Map<64>(rDoc); break;
   default: assert(0 && "Unknown ELF class");
   }
 

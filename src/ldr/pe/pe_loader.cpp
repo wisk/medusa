@@ -116,14 +116,14 @@ bool PeLoader::_GetInformation(BinaryStream const& rBinStrm, u16& rMachine, u16&
 
     if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
     {
-      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read DOS header" << LogEnd;
       return false;
     }
     DosHdr.Swap(LittleEndian);
 
     if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
     {
-      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read NT headers" << LogEnd;
       return false;
     }
     NtHdrs.Swap(LittleEndian);
@@ -139,14 +139,14 @@ bool PeLoader::_GetInformation(BinaryStream const& rBinStrm, u16& rMachine, u16&
 
     if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
     {
-      Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read DOS header" << LogEnd;
       return false;
     }
     DosHdr.Swap(LittleEndian);
 
     if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
     {
-      Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read NT headers" << LogEnd;
       return false;
     }
     NtHdrs.Swap(LittleEndian);
@@ -210,14 +210,14 @@ template<int bit> bool PeLoader::_Map(Document& rDoc, u64 ImgBase) const
 
   if (!rBinStrm.Read(0x0, &DosHdr, sizeof(DosHdr)))
   {
-    Log::Write("ldr_pe") << "unable to read DOS header" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to read DOS header" << LogEnd;
     return false;
   }
   DosHdr.Swap(LittleEndian);
 
   if (!rBinStrm.Read(DosHdr.e_lfanew, &NtHdrs, sizeof(NtHdrs)))
   {
-    Log::Write("ldr_pe") << "unable to read NT headers" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to read NT headers" << LogEnd;
     return false;
   }
   NtHdrs.Swap(LittleEndian);
@@ -293,7 +293,7 @@ template<int bit> bool PeLoader::_MapSections(Document& rDoc, u64 ImageBase, u64
     auto Flags = MemoryArea::Access::Read;
     if (!rBinStrm.Read(SectionHeadersOffset + ScnIdx * sizeof(ScnHdr), &ScnHdr, sizeof(ScnHdr)))
     {
-      Log::Write("ldr_pe") << "unable to read IMAGE_SECTION_HEADER" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read IMAGE_SECTION_HEADER" << LogEnd;
       continue;
     }
     ScnHdr.Swap(LittleEndian);
@@ -311,7 +311,7 @@ template<int bit> bool PeLoader::_MapSections(Document& rDoc, u64 ImageBase, u64
     //else if (EpOff >= (ImgBase + ScnHdr.VirtualAddress)
     //  &&     EpOff <   ImgBase + ScnHdr.VirtualAddress + ScnVirtSz)
     //{
-    //  Log::Write("ldr_pe") << "promote section " << ScnName << " to executable since it contains the entry point" << LogEnd;
+    //  Log::Write("ldr_pe").Level(LogWarning) << "promote section " << ScnName << " to executable since it contains the entry point" << LogEnd;
     //  Flags |= MemoryArea::Access::Execute;
     //}
     if (ScnHdr.Characteristics & PE_SCN_MEM_WRITE)
@@ -328,7 +328,7 @@ template<int bit> bool PeLoader::_MapSections(Document& rDoc, u64 ImageBase, u64
       continue;
     }
 
-    Log::Write("ldr_pe") << "found section " << ScnName << LogEnd;
+    Log::Write("ldr_pe").Level(LogInfo) << "found section " << ScnName << LogEnd;
   }
 
   return true;
@@ -343,7 +343,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
   OffsetType ImpOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ImportDirectoryRva, ImpOff))
   {
-    Log::Write("ldr_pe") << "unable to convert address import directory" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to convert address import directory" << LogEnd;
     return false;
   }
 
@@ -351,7 +351,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
   {
     if (!rBinStrm.Read(ImpOff, &CurImp, sizeof(CurImp)))
     {
-      Log::Write("ldr_pe") << "unable to read IMAGE_IMPORT_DESCRIPTOR" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read IMAGE_IMPORT_DESCRIPTOR" << LogEnd;
       return false;
     }
     ImpOff += sizeof(CurImp);
@@ -362,18 +362,18 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     OffsetType ImpNameOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurImp.Name, ImpNameOff))
     {
-      Log::Write("ldr_pe") << "unable to convert import name address to offset" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to convert import name address to offset" << LogEnd;
       return false;
     }
 
     std::string ImpName;
     if (!rBinStrm.Read(ImpNameOff, ImpName))
     {
-      Log::Write("ldr_pe") << "unable to read import name" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read import name" << LogEnd;
       return false;
     }
     std::transform(std::begin(ImpName), std::end(ImpName), std::begin(ImpName), ::tolower);
-    Log::Write("ldr_pe") << "found import: " << ImpName << LogEnd;
+    Log::Write("ldr_pe").Level(LogInfo) << "found import: " << ImpName << LogEnd;
 
     // For each thunks (imported symbol) ...
     std::string  FuncName;
@@ -385,14 +385,14 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     OffsetType OrgThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + OrgThunkRva, OrgThunkOff))
     {
-      Log::Write("ldr_pe") << "unable to convert thunk address to offset" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to convert thunk address to offset" << LogEnd;
       return false;
     }
 
     OffsetType ThunkOff;
     if (!rDoc.ConvertAddressToFileOffset(ImageBase + ThunkRva, ThunkOff))
     {
-      Log::Write("ldr_pe") << "unable to convert original thunk address to offset" << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to convert original thunk address to offset" << LogEnd;
       return false;
     }
 
@@ -400,7 +400,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
     {
       if (!rBinStrm.Read(OrgThunkOff, &CurOrgThunk, sizeof(CurOrgThunk)))
       {
-        Log::Write("ldr_pe") << "unable to read original thunk" << LogEnd;
+        Log::Write("ldr_pe").Level(LogError) << "unable to read original thunk" << LogEnd;
         return false;
       }
       OrgThunkOff += sizeof(CurOrgThunk);
@@ -410,7 +410,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
 
       if (!rBinStrm.Read(ThunkOff, &CurThunk, sizeof(CurThunk)))
       {
-        Log::Write("ldr_pe") << "unable to read thunk" << LogEnd;
+        Log::Write("ldr_pe").Level(LogError) << "unable to read thunk" << LogEnd;
         return false;
       }
       ThunkOff += sizeof(CurThunk);
@@ -431,13 +431,13 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
         // Get ImageImportByName
         if (!rDoc.ConvertAddressToFileOffset(ImageBase + CurOrgThunk.Function, FuncOff))
         {
-          Log::Write("ldr_pe") << "unable to convert function address to offset" << LogEnd;
+          Log::Write("ldr_pe").Level(LogError) << "unable to convert function address to offset" << LogEnd;
           return false;
         }
         std::string ThunkName;
         if (!rBinStrm.Read(FuncOff + offsetof(typename PeType::ImportByName, Name), ThunkName))
         {
-          Log::Write("ldr_pe") << "unable to read function name" << LogEnd;
+          Log::Write("ldr_pe").Level(LogError) << "unable to read function name" << LogEnd;
           return false;
         }
         SymName += ThunkName;
@@ -445,7 +445,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
 
       Address SymAddr(Address::LinearType, 0x0, ImageBase + ThunkRva, 0, bit);
       ThunkRva += sizeof(typename PeType::ThunkData);
-      Log::Write("ldr_pe") << SymAddr << ":   " << SymName << LogEnd;
+      Log::Write("ldr_pe").Level(LogInfo) << SymAddr << ":   " << SymName << LogEnd;
       rDoc.AddLabel(SymAddr, Label(SymName, Label::Code | Label::Imported));
       rDoc.ChangeValueSize(SymAddr, SymAddr.GetOffsetSize(), true);
       rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
@@ -464,29 +464,29 @@ template<int bit> bool PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
   OffsetType ExpDirOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExportDirectoryRva, ExpDirOff))
   {
-    Log::Write("ldr_pe") << "unable to convert export directory address to offset" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to convert export directory address to offset" << LogEnd;
     return false;
   }
   if (!rBinStrm.Read(ExpDirOff, &ExpDir, sizeof(ExpDir)))
   {
-    Log::Write("ldr_pe") << "unable to read export directory" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to read export directory" << LogEnd;
     return false;
   }
 
   OffsetType FuncOff, NameOff, OrdOff;
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfFunctions, FuncOff))
   {
-    Log::Write("ldr_pe") << "unable to convert functions address to offset" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to convert functions address to offset" << LogEnd;
     return false;
   }
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNames, NameOff))
   {
-    Log::Write("ldr_pe") << "unable to convert names address to offset" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to convert names address to offset" << LogEnd;
     return false;
   }
   if (!rDoc.ConvertAddressToFileOffset(ImageBase + ExpDir.AddressOfNameOrdinals, OrdOff))
   {
-    Log::Write("ldr_pe") << "unable to convert ordinals address to offset" << LogEnd;
+    Log::Write("ldr_pe").Level(LogError) << "unable to convert ordinals address to offset" << LogEnd;
     return false;
   }
 
@@ -495,14 +495,14 @@ template<int bit> bool PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
     u16 Ord;
     if (!rBinStrm.Read(OrdOff + i * sizeof(Ord), Ord))
     {
-      Log::Write("ldr_pe") << "unable to read ordinal: " << i << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read ordinal: " << i << LogEnd;
       return false;
     }
 
     u32 FuncRva;
     if (!rBinStrm.Read(FuncOff + Ord * sizeof(FuncRva), FuncRva))
     {
-      Log::Write("ldr_pe") << "unable to read function rva: " << i << LogEnd;
+      Log::Write("ldr_pe").Level(LogError) << "unable to read function rva: " << i << LogEnd;
       return false;
     }
 
@@ -513,18 +513,18 @@ template<int bit> bool PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       u32 SymNameRva;
       if (!rBinStrm.Read(NameOff + i * sizeof(SymNameRva), SymNameRva))
       {
-        Log::Write("ldr_pe") << "unable to read export name rva: " << i << LogEnd;
+        Log::Write("ldr_pe").Level(LogError) << "unable to read export name rva: " << i << LogEnd;
         return false;
       }
       OffsetType SymNameOff;
       if (!rDoc.ConvertAddressToFileOffset(ImageBase + SymNameRva, SymNameOff))
       {
-        Log::Write("ldr_pe") << "unable to convert export name address to offset" << LogEnd;
+        Log::Write("ldr_pe").Level(LogError) << "unable to convert export name address to offset" << LogEnd;
         return false;
       }
       if (!rBinStrm.Read(SymNameOff, SymName))
       {
-        Log::Write("ldr_pe") << "unable to read export name" << LogEnd;
+        Log::Write("ldr_pe").Level(LogError) << "unable to read export name" << LogEnd;
         return false;
       }
     }
@@ -539,7 +539,7 @@ template<int bit> bool PeLoader::_ResolveExports(Document& rDoc, u64 ImageBase, 
       Label(SymName, Label::Exported | Label::Function));
     rDoc.BindDetailId(SymAddr, 0, Sha1(SymName));
 
-    Log::Write("ldr_pe") << "found export name: \"" << SymName << "\", ordinal: " << Ord << LogEnd;
+    Log::Write("ldr_pe").Level(LogInfo) << "found export name: \"" << SymName << "\", ordinal: " << Ord << LogEnd;
   }
 
   return true;

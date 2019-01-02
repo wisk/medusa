@@ -111,7 +111,7 @@ std::string Label::GetLabel(void) const
   if (m_Version == 0)
     return Result;
 
-  return fmt::format("%s.%d", Result, m_Version);
+  return fmt::format("{}.{}", Result, m_Version);
 }
 
 void Label::IncrementVersion(void)

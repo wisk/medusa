@@ -38,7 +38,7 @@ std::string MemoryArea::ToString(void) const
   Buf[1] = to_bool(m_Access & MemoryArea::Access::Write)   ? 'W' : '-';
   Buf[2] = to_bool(m_Access & MemoryArea::Access::Execute) ? 'X' : '-';
   Buf[3] = '\0';
-  return fmt::format("; mapped memory area %s %s 0x%08x %s", m_Name, m_BaseAddress.ToString(), m_Size, Buf);
+  return fmt::format("; mapped memory area {} {} {:#08x} {}", m_Name, m_BaseAddress.ToString(), m_Size, Buf);
 }
 
 MEDUSA_NAMESPACE_END

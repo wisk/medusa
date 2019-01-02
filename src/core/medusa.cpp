@@ -37,7 +37,7 @@ std::string Medusa::GetVersion(void)
 #endif
   char const* pBuildDate = __DATE__;
   char const* pBuildTime = __TIME__;
-  return fmt::format("Medusa %1%.%2%.%3% (%4%) %5% - %6%"
+  return fmt::format("Medusa {}.{}.{} ({}) {} - {}"
     , Version::Major
     , Version::Minor
     , Version::Patch
@@ -71,20 +71,42 @@ bool Medusa::DefaultModuleSelector(
   Architecture::VSPType& rspArchitectures,
   OperatingSystem::SPType& rspOperatingSystem)
 {
-  auto const& rModMngr = ModuleManager::Instance();
+  auto const& rModMgr = ModuleManager::Instance();
+  medusa::UserConfiguration UserCfg;
+
+  // Database
+  rspDatabase = rModMgr.MakeDatabase(UserCfg.GetOption("core.default_database"));
+  if (rspDatabase == nullptr)
+    rspDatabase = rModMgr.MakeDatabase("Memory");
+  if (rspDatabase == nullptr)
+    return false;
+
+  // Get all loaders and remove which are not needed
+  auto AllLdrs = rModMgr.MakeAllLoaders();
+  AllLdrs.erase(std::remove_if(std::begin(AllLdrs), std::end(AllLdrs), [&rspBinStrm](Loader::SPType spLdr)
+  {
+    return spLdr->IsCompatible(*rspBinStrm) ? false : true;
+  }), std::end(AllLdrs));
+  if (AllLdrs.empty())
+  {
+    Log::Write("core").Level(LogError) << "there is not supported loader" << LogEnd;
+    return false;
+  }
+  rspLoader = AllLdrs.front();
+
   auto ArchNames = rspLoader->GetUsedArchitectures(*rspBinStrm);
   for (auto ArchName : ArchNames)
   {
     TagType ArchTag;
     u8 ArchMode;
-    if (!rModMngr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
+    if (!rModMgr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
       return false;
-    rspArchitectures.push_back(rModMngr.GetArchitecture(ArchTag));
+    rspArchitectures.push_back(rModMgr.GetArchitecture(ArchTag));
   }
 
   auto const& rSysName = rspLoader->GetSystemName(*rspBinStrm);
   if (!rSysName.empty())
-    rspOperatingSystem = rModMngr.GetOperatingSystem(rSysName);
+    rspOperatingSystem = rModMgr.GetOperatingSystem(rSysName);
 
   return true;
 }
