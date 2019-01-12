@@ -448,11 +448,16 @@ void MainWindow::on_tabWidget_tabCloseRequested(int index)
 
 void MainWindow::onLogMessageAppended(QString const & msg)
 {
+  auto const& rPrevCursorPos = logEdit->textCursor();
+  logEdit->moveCursor(QTextCursor::End);
+  logEdit->insertPlainText(msg);
+
   //https://qt-project.org/forums/viewthread/19083
   bool DoScroll = (logEdit->verticalScrollBar()->sliderPosition() == logEdit->verticalScrollBar()->maximum());
-  logEdit->insertPlainText(msg);
   if (DoScroll)
-    logEdit->verticalScrollBar()->setSliderPosition(logEdit->verticalScrollBar()->maximum());
+    logEdit->moveCursor(QTextCursor::End);
+  else
+    logEdit->setTextCursor(rPrevCursorPos);
 }
 
 void MainWindow::goTo(medusa::Address const& addr)

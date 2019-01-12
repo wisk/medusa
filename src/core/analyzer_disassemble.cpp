@@ -325,7 +325,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
       if (spInsn == nullptr)
       {
         Log::Write("core").Level(LogWarning) << "no instruction at: " << CurAddr << LogEnd;
-        continue;
+        break;
       }
 
       // This lambda handle references during a call or jump
