@@ -35,7 +35,6 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   connect(this, SIGNAL(DisassemblyViewAdded(medusa::Address const&)),      this->parent(),   SLOT(addDisassemblyView(medusa::Address const&)));
   connect(this, SIGNAL(SemanticViewAdded(medusa::Address const&)),         this->parent(),   SLOT(addSemanticView(medusa::Address const&)));
   connect(this, SIGNAL(GraphViewAdded(medusa::Address const&)),            this->parent(),   SLOT(addGraphView(medusa::Address const&)));
-  connect(this, SIGNAL(ControlFlowGraphViewAdded(medusa::Address const&)), this->parent(),   SLOT(addControlFlowGraphView(medusa::Address const&)));
   connect(this, SIGNAL(viewportUpdated()),                                 this->viewport(), SLOT(update()));
 
   int w, h;

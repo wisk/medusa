@@ -69,7 +69,7 @@ namespace medusa
       return true;
 
     std::stack<Address> CallStack;
-    Address::Vector FuncAddr;
+    std::set<Address> FuncAddr;
     Address CurAddr = m_Addr;
 
     // Push entry point
@@ -155,7 +155,7 @@ namespace medusa
             break;
           }
 
-          FuncAddr.push_back(DstAddr);
+          FuncAddr.insert(DstAddr);
           BbAddr = DstAddr;
           break;
         } // end CallType

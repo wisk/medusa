@@ -279,8 +279,6 @@ bool MemoryDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress
         Id = MemArea.GetId();
         Offset = MemArea.GetSize() - 1;
       }
-      else
-        --Offset;
 
       auto itCellLayoutPair = m_CellLayoutMap.find(Id);
       if (itCellLayoutPair == std::cend(m_CellLayoutMap))
@@ -288,7 +286,21 @@ bool MemoryDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress
       auto const& rCellLayout = itCellLayoutPair->second;
       if (Offset > rCellLayout.size())
         return false;
-      Offset -= rCellLayout[Offset].GetOffset();
+      if (rCellLayout[Offset].IsEmpty())
+        --Offset;
+      else
+      {
+        auto const& rCurLayout = rCellLayout[Offset];
+        if (rCurLayout.GetOffset() == 0x0)
+        {
+          if (rCurLayout.GetSize() > Offset)
+            Offset = 0x0;
+          else
+            Offset -= rCurLayout.GetSize();
+        }
+        else
+          Offset -= rCurLayout.GetOffset();
+      }
 
     } while (++Displacement);
     return _ConvertIdToAddress(Id, Offset, 0, rMovedAddress);
@@ -306,8 +318,6 @@ bool MemoryDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress
         Id = MemArea.GetId();
         Offset = 0x0;
       }
-      else
-        ++Offset;
 
       auto itCellLayout = m_CellLayoutMap.find(Id);
       if (itCellLayout == std::cend(m_CellLayoutMap))
@@ -315,7 +325,10 @@ bool MemoryDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress
       auto const& rCellLayout = itCellLayout->second;
       if (Offset > rCellLayout.size())
         return false;
-      Offset += rCellLayout[Offset].GetNextCellOffset();
+      if (rCellLayout[Offset].IsEmpty())
+        ++Offset;
+      else
+        Offset += rCellLayout[Offset].GetNextCellOffset();
 
     } while (--Displacement);
     return _ConvertIdToAddress(Id, Offset, 0, rMovedAddress);

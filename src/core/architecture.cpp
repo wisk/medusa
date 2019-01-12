@@ -89,22 +89,28 @@ namespace
 
       OffsetType Off;
       if (!m_rDoc.ConvertAddressToFileOffset(m_rAddr, Off))
-        return false;
+      {
+        rPrintData.AppendOperator("(?)");
+        return true;
+      }
 
       if (!m_rDoc.GetBinaryStream().Read(Off, Value))
-        return false;
+      {
+        rPrintData.AppendOperator("(?)");
+        return true;
+      }
 
       switch (m_rValDtl.GetType() & ValueDetail::ModifierMask)
       {
-      case ValueDetail::NotType:    rPrintData.AppendOperator("~"); Value = ~Value; break;
+      case ValueDetail::NotType:    rPrintData.AppendOperator("~"); Value = ~Value;     break;
       case ValueDetail::NegateType: rPrintData.AppendOperator("-"); Value = ~Value + 1; break;
-      default:                                                                      break;
+      default:                                                                          break;
       }
 
       switch (m_rValDtl.GetType() & ValueDetail::BaseMask)
       {
-      case ValueDetail::BinaryType:      rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 2); break; // 0b10
-      case ValueDetail::DecimalType:     rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 10); break; // 10
+      case ValueDetail::BinaryType:      rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 2);    break; // 0b10
+      case ValueDetail::DecimalType:     rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 10);   break; // 10
       case ValueDetail::HexadecimalType: rPrintData.AppendImmediate(Value, sizeof(Value) * 8, 0x10); break; // 0x10
 
       case ValueDetail::ReferenceType:
