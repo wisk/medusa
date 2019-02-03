@@ -1,17 +1,45 @@
 version: 0.5.{build}
-os: Windows Server 2012 R2
-configuration: Release
+branches:
+  only:
+  - dev
+image: Visual Studio 2017
+configuration:
+- Release
+- Debug
 platform: x64
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_60_0
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
-  QTDIR: C:\Qt\5.4\msvc2015_64_opengl
+  PYTHON: C:\Python37-x64
+  QT: C:\Qt\5.11.2\msvc2017_64
+install:
+- cmd: >-
+    set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+
+    python --version
+
+    set CMAKE_PREFIX_PATH=%QT%
+
+    cd C:\Tools\vcpkg
+
+    git pull
+
+    .\bootstrap-vcpkg.bat
+
+    vcpkg install boost-system:x64-windows boost-filesystem:x64-windows boost-program-options:x64-windows boost-graph:x64-windows boost-regex:x64-windows boost-uuid:x64-windows boost-multiprecision:x64-windows boost-signals2:x64-windows pegtl:x64-windows pybind11:x64-windows catch2:x64-windows fmt:x64-windows ogdf:x64-windows sqlite-orm:x64-windows
+
+    cd "%APPVEYOR_BUILD_FOLDER%"
+cache: c:\tools\vcpkg\installed\
 before_build:
-- git submodule update --init --recursive
-- md build
-- cd build
-- cmake -G"Visual Studio 14 Win64" -DQT5_CMAKE_PATH=%QTDIR% -DMEDUSA_CMAKE_USE_COTIRE=TRUE ..
+- cmd: >-
+    git submodule update --init --recursive
+
+    md build
+
+    cd build
+
+    cmake -G"Visual Studio 15 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 build:
   project: C:\projects\medusa\build\Medusa.sln
   parallel: true
   verbosity: minimal
+test_script:
+- cmd: ctest -VV -C Release
