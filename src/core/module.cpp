@@ -45,6 +45,7 @@ bool ModuleManager::_LoadModule(Path const& rModulePath, void* const pMod, Modul
       return true;
     }
     m_OperatingSystems[pOs->GetName()] = OperatingSystem::SPType(pOs);
+    Log::Write("core").Level(LogInfo) << "operating system module " << pOs->GetName() << " loaded" << LogEnd;
     return true;
   }
 

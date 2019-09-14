@@ -123,7 +123,7 @@ public:
 private:
   struct MemoryAreaSorter
   {
-    bool operator()(MemoryArea const& rLhs, MemoryArea const& rRhs)
+    bool operator()(MemoryArea const& rLhs, MemoryArea const& rRhs) const
     {
       return rLhs.GetBaseAddress() < rRhs.GetBaseAddress();
     }

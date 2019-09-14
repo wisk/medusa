@@ -1138,7 +1138,7 @@ bool Document::_ApplyValue(Address const& rAddr, ValueDetail const& rValDtl)
 std::string Document::GetOperatingSystemName(void) const
 {
   if (m_spDatabase == nullptr)
-    return "";
+    return "MS Windows";
   return m_spDatabase->GetOperatingSystemName();
 }
 

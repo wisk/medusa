@@ -61,7 +61,14 @@ bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<st
       Log::Write("core").Level(LogError) << "set cpu memory context failed" << LogEnd;
       return false;
     }
-  m_spOs = rModMgr.GetOperatingSystem(m_rDoc.GetOperatingSystemName());
+  auto OsName = m_rDoc.GetOperatingSystemName();
+  if (OsName.empty())
+  {
+      Log::Write("core").Level(LogError) << "there's no operating system selected" << LogEnd;
+      OsName = "MS Windows";
+  }
+  Log::Write("core").Level(LogInfo) << "try to load operating system module " << OsName << LogEnd;
+  m_spOs = rModMgr.GetOperatingSystem(OsName);
   if (m_spOs == nullptr)
     {
       Log::Write("core").Level(LogError) << "operating system was not found" << LogEnd;

@@ -4,7 +4,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-namespace pegtl = tao::TAO_PEGTL_NAMESPACE;
+namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 namespace grammar
 {

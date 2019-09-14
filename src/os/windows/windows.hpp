@@ -4,7 +4,7 @@
 #include <medusa/namespace.hpp>
 #include <medusa/os.hpp>
 
-#include "sqlite3.h"
+// #include "sqlite3.h"
 
 #if defined(_WIN32) || defined(WIN32)
 #ifdef os_windows_EXPORTS
@@ -46,7 +46,7 @@ private:
   bool _OpenDatabaseIfNeeded(void) const;
   bool _GetTypeFromDatabase(std::string const& rTypeId, TypeDetail& rTpDtl) const;
 
-  mutable sqlite3* m_Database;
+  // mutable sqlite3* m_Database;
 };
 
 extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(void);

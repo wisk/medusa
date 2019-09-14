@@ -11,14 +11,14 @@
 // FIXME: the code is x86 specific
 
 WindowsOperatingSystem::WindowsOperatingSystem(void)
-  : m_Database(nullptr)
+  // : m_Database(nullptr)
 {
 }
 
 WindowsOperatingSystem::~WindowsOperatingSystem(void)
 {
-  if (m_Database != nullptr)
-    sqlite3_close(m_Database);
+  // if (m_Database != nullptr)
+  //   sqlite3_close(m_Database);
 }
 
 std::string WindowsOperatingSystem::GetName(void) const
@@ -79,22 +79,6 @@ bool WindowsOperatingSystem::InitializeContext(
 
   auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
-  // TODO: create a fake _TEB/_PEB
-  if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, ReadWrite, nullptr))
-    return false;
-  // Init TIB::Self
-  if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x18, static_cast<u32>(Teb32LinAddr)))
-    return false;
-  // Allocate fake _PEB
-  if (!rMemCtxt.AllocateMemory(Peb32LinAddr, 0x1000, ReadWrite, nullptr))
-    return false;
-  // Write _TEB::Peb
-  if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x30, static_cast<u32>(Peb32LinAddr)))
-    return false;
-  // Set _PEB::BeingDebugged to false
-  if (!rMemCtxt.WriteMemory(Peb32LinAddr + 0x2, static_cast<u8>(0x00)))
-    return false;
-
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, rCpuCtxt.GetMode());
   if (StkReg == 0)
     return false;
@@ -107,6 +91,41 @@ bool WindowsOperatingSystem::InitializeContext(
   StkAddr -= 0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
   if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegBitSize)) // FIXME: should not be endian safe...
     return false;
+
+  // TODO: create a fake _TEB/_PEB
+  if (!rMemCtxt.AllocateMemory(Teb32LinAddr, 0x1000, ReadWrite, nullptr))
+      return false;
+  // Init TIB::Self
+  if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x18, static_cast<u32>(Teb32LinAddr)))
+      return false;
+  // Allocate fake _PEB
+  if (!rMemCtxt.AllocateMemory(Peb32LinAddr, 0x1000, ReadWrite, nullptr))
+      return false;
+  // Write _TEB::Peb
+  if (!rMemCtxt.WriteMemory(Teb32LinAddr + 0x30, static_cast<u32>(Peb32LinAddr)))
+      return false;
+  // Set _PEB::BeingDebugged to false
+  if (!rMemCtxt.WriteMemory(Peb32LinAddr + 0x2, static_cast<u8>(0x00)))
+      return false;
+
+  // TODO: create a fake _TEB/_PEB
+  if (!rMemCtxt.AllocateMemory(Teb64LinAddr, 0x1000, ReadWrite, nullptr))
+      return false;
+  // Init TIB::StackLimit
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x10, static_cast<u64>(StkAddr)))
+      return false;
+  // Init TIB::Self
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x30, static_cast<u64>(Teb32LinAddr)))
+      return false;
+  // Allocate fake _PEB
+  if (!rMemCtxt.AllocateMemory(Peb64LinAddr, 0x1000, ReadWrite, nullptr))
+      return false;
+  // Write _TEB::Peb
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x60, static_cast<u64>(Peb32LinAddr)))
+      return false;
+  // Set _PEB::BeingDebugged to false
+  if (!rMemCtxt.WriteMemory(Peb64LinAddr + 0x2, static_cast<u8>(0x00)))
+      return false;
 
   // Set default flags
   u32 ZF = rCpuInfo.ConvertNameToIdentifier("zf");
@@ -134,36 +153,37 @@ Expression::VSPType WindowsOperatingSystem::ExecuteSymbol(Document& rDoc, Addres
 
 bool WindowsOperatingSystem::ProvideDetails(Document& rDoc) const
 {
-  if (!_OpenDatabaseIfNeeded())
-    return false;
+  return false;
+  // if (!_OpenDatabaseIfNeeded())
+  //   return false;
 
-  rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
-  {
-    bool IsCode = (rLabel.GetType() & Label::CellMask) == Label::Code;
-    bool IsFunc = (rLabel.GetType() & Label::CellMask) == Label::Function;
+  // rDoc.ForEachLabel([&](Address const& rAddress, Label const& rLabel)
+  // {
+  //   bool IsCode = (rLabel.GetType() & Label::CellMask) == Label::Code;
+  //   bool IsFunc = (rLabel.GetType() & Label::CellMask) == Label::Function;
 
-    if (!IsCode && !IsFunc)
-      return;
+  //   if (!IsCode && !IsFunc)
+  //     return;
 
-    Id FuncId = Sha1(rLabel.GetName());
-    FunctionDetail FuncDtl;
-    if (!GetFunctionDetail(FuncId, FuncDtl))
-      return;
+  //   Id FuncId = Sha1(rLabel.GetName());
+  //   FunctionDetail FuncDtl;
+  //   if (!GetFunctionDetail(FuncId, FuncDtl))
+  //     return;
 
-    if (!rDoc.SetFunctionDetail(FuncId, FuncDtl))
-    {
-      Log::Write("os_windows") << "unable to set function detail for " << rLabel.GetName() << " @" << rAddress << LogEnd;
-      return;
-    }
+  //   if (!rDoc.SetFunctionDetail(FuncId, FuncDtl))
+  //   {
+  //     Log::Write("os_windows") << "unable to set function detail for " << rLabel.GetName() << " @" << rAddress << LogEnd;
+  //     return;
+  //   }
 
-    if (!rDoc.BindDetailId(rAddress, 0, FuncId))
-    {
-      Log::Write("os_windows") << "unable to bind id for " << rLabel.GetName() << " @" << rAddress << LogEnd;
-      return;
-    }
-  });
+  //   if (!rDoc.BindDetailId(rAddress, 0, FuncId))
+  //   {
+  //     Log::Write("os_windows") << "unable to bind id for " << rLabel.GetName() << " @" << rAddress << LogEnd;
+  //     return;
+  //   }
+  // });
 
-  return true;
+  // return true;
 }
 
 bool WindowsOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) const
@@ -173,90 +193,91 @@ bool WindowsOperatingSystem::GetValueDetail(Id ValueId, ValueDetail& rValDtl) co
 
 bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const
 {
-  if (!_OpenDatabaseIfNeeded())
-    return false;
+  return false;
+  // if (!_OpenDatabaseIfNeeded())
+  //   return false;
 
-  std::ostringstream Query;
+  // std::ostringstream Query;
 
-  Query << "SELECT * FROM Functions WHERE id LIKE '";
-  // HACK: This is a workaround since GUID is 128-bit long and SHA-1 digest is 160-bit (stupid mistake)
-  // We could: use MD5 instead, pray god not to have hash collision, or redesign ID...
-  auto pIdValues = reinterpret_cast<u8 const*>(FunctionId.data);
-  for (size_t i = 0; i < FunctionId.size(); ++i)
-    Query << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(pIdValues[i]);
-  Query << "%'";
+  // Query << "SELECT * FROM Functions WHERE id LIKE '";
+  // // HACK: This is a workaround since GUID is 128-bit long and SHA-1 digest is 160-bit (stupid mistake)
+  // // We could: use MD5 instead, pray god not to have hash collision, or redesign ID...
+  // auto pIdValues = reinterpret_cast<u8 const*>(FunctionId.data);
+  // for (size_t i = 0; i < FunctionId.size(); ++i)
+  //   Query << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(pIdValues[i]);
+  // Query << "%'";
 
-  sqlite3_stmt *pStmt = nullptr;
-  if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
-    return false;
-  }
+  // sqlite3_stmt *pStmt = nullptr;
+  // if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
+  // {
+  //   Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
+  //   return false;
+  // }
 
-  if (sqlite3_step(pStmt) != SQLITE_ROW)
-  {
-    sqlite3_finalize(pStmt);
-    return false;
-  }
+  // if (sqlite3_step(pStmt) != SQLITE_ROW)
+  // {
+  //   sqlite3_finalize(pStmt);
+  //   return false;
+  // }
 
-  std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) : "";
-  std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) : "";
-  std::string Parms    = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) : "";
-  std::string Result   = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) : "";
+  // std::string FuncName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1)) : "";
+  // std::string LibName  = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 2)) : "";
+  // std::string Parms    = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 3)) : "";
+  // std::string Result   = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) ? reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 4)) : "";
 
-  if (sqlite3_finalize(pStmt) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_finalize: " << sqlite3_errmsg(m_Database) << LogEnd;
-    return false;
-  }
+  // if (sqlite3_finalize(pStmt) != SQLITE_OK)
+  // {
+  //   Log::Write("os_windows") << "sqlite3_finalize: " << sqlite3_errmsg(m_Database) << LogEnd;
+  //   return false;
+  // }
 
-  if (FuncName.empty())
-    return false;
+  // if (FuncName.empty())
+  //   return false;
 
-  std::string Name = LibName.empty() ? FuncName : (LibName + "!" + FuncName);
+  // std::string Name = LibName.empty() ? FuncName : (LibName + "!" + FuncName);
 
-  TypeDetail ResType;
-  TypedValueDetail::List ParmsTpValList;
+  // TypeDetail ResType;
+  // TypedValueDetail::List ParmsTpValList;
 
-  if (Result.empty())
-    return false;
+  // if (Result.empty())
+  //   return false;
 
-  if (!_GetTypeFromDatabase(Result, ResType))
-    return false;
+  // if (!_GetTypeFromDatabase(Result, ResType))
+  //   return false;
 
-  if (Parms.empty())
-  {
-    rFcnDtl = FunctionDetail(Name, ResType, TypedValueDetail::List());
-    return true;
-  }
+  // if (Parms.empty())
+  // {
+  //   rFcnDtl = FunctionDetail(Name, ResType, TypedValueDetail::List());
+  //   return true;
+  // }
 
-  std::vector<std::string> TypedParms;
-  boost::algorithm::split(TypedParms, Parms, boost::algorithm::is_any_of(";"));
+  // std::vector<std::string> TypedParms;
+  // boost::algorithm::split(TypedParms, Parms, boost::algorithm::is_any_of(";"));
 
-  for (auto const& rTypedParm : TypedParms)
-  {
-    std::vector<std::string> CurParm;
-    boost::algorithm::split(CurParm, rTypedParm, boost::algorithm::is_any_of(","));
-    if (CurParm.size() != 2)
-    {
-      Log::Write("os_windows") << "malformed parameter typed value" << LogEnd;
-      return false;
-    }
+  // for (auto const& rTypedParm : TypedParms)
+  // {
+  //   std::vector<std::string> CurParm;
+  //   boost::algorithm::split(CurParm, rTypedParm, boost::algorithm::is_any_of(","));
+  //   if (CurParm.size() != 2)
+  //   {
+  //     Log::Write("os_windows") << "malformed parameter typed value" << LogEnd;
+  //     return false;
+  //   }
 
-    TypeDetail ParmTpDtl;
-    if (!_GetTypeFromDatabase(CurParm[0], ParmTpDtl))
-    {
-      Log::Write("os_windows") << "unknown type for one of parameters" << LogEnd;
-      return false;
-    }
+  //   TypeDetail ParmTpDtl;
+  //   if (!_GetTypeFromDatabase(CurParm[0], ParmTpDtl))
+  //   {
+  //     Log::Write("os_windows") << "unknown type for one of parameters" << LogEnd;
+  //     return false;
+  //   }
 
-    ValueDetail ParmValDtl(CurParm[1]);
+  //   ValueDetail ParmValDtl(CurParm[1]);
 
-    ParmsTpValList.push_back(TypedValueDetail(std::make_shared<TypeDetail>(ParmTpDtl), ParmValDtl));
-  }
+  //   ParmsTpValList.push_back(TypedValueDetail(std::make_shared<TypeDetail>(ParmTpDtl), ParmValDtl));
+  // }
 
-  rFcnDtl = FunctionDetail(Name, ResType, ParmsTpValList);
-  return true;
+  // rFcnDtl = FunctionDetail(Name, ResType, ParmsTpValList);
+  // return true;
 }
 
 bool WindowsOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const
@@ -266,52 +287,54 @@ bool WindowsOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail&
 
 bool WindowsOperatingSystem::_OpenDatabaseIfNeeded(void) const
 {
-  if (m_Database != nullptr)
-    return true;
+  return false;
+  // if (m_Database != nullptr)
+  //   return true;
 
-  if (sqlite3_open_v2("windows.db", &m_Database, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_open: " << sqlite3_errmsg(m_Database) << LogEnd;
-    sqlite3_close(m_Database);
-    m_Database = nullptr;
-    return false;
-  }
+  // if (sqlite3_open_v2("windows.db", &m_Database, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)
+  // {
+  //   Log::Write("os_windows") << "sqlite3_open: " << sqlite3_errmsg(m_Database) << LogEnd;
+  //   sqlite3_close(m_Database);
+  //   m_Database = nullptr;
+  //   return false;
+  // }
 
-  return true;
+  // return true;
 }
 
 bool WindowsOperatingSystem::_GetTypeFromDatabase(std::string const& rTypeId, TypeDetail& rTpDtl) const
 {
-  if (!_OpenDatabaseIfNeeded())
-    return false;
+  return false;
+  // if (!_OpenDatabaseIfNeeded())
+  //   return false;
 
-  std::ostringstream Query;
-  Query << "SELECT * FROM Types WHERE id = '" << rTypeId << "'";
+  // std::ostringstream Query;
+  // Query << "SELECT * FROM Types WHERE id = '" << rTypeId << "'";
 
-  sqlite3_stmt *pStmt = nullptr;
-  if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
-  {
-    Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
-    return false;
-  }
+  // sqlite3_stmt *pStmt = nullptr;
+  // if (sqlite3_prepare_v2(m_Database, Query.str().c_str(), -1, &pStmt, nullptr) != SQLITE_OK)
+  // {
+  //   Log::Write("os_windows") << "sqlite3_prepare: " << sqlite3_errmsg(m_Database) << LogEnd;
+  //   return false;
+  // }
 
-  if (sqlite3_step(pStmt) != SQLITE_ROW)
-  {
-    sqlite3_finalize(pStmt);
-    return false;
-  }
+  // if (sqlite3_step(pStmt) != SQLITE_ROW)
+  // {
+  //   sqlite3_finalize(pStmt);
+  //   return false;
+  // }
 
-  auto pTypeName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
-  if (pTypeName == nullptr)
-  {
-    sqlite3_finalize(pStmt);
-    return false;
-  }
+  // auto pTypeName = reinterpret_cast<char const*>(sqlite3_column_text(pStmt, 1));
+  // if (pTypeName == nullptr)
+  // {
+  //   sqlite3_finalize(pStmt);
+  //   return false;
+  // }
 
-  rTpDtl = TypeDetail(pTypeName, TypeDetail::UnknownType, 0);
-  sqlite3_finalize(pStmt);
+  // rTpDtl = TypeDetail(pTypeName, TypeDetail::UnknownType, 0);
+  // sqlite3_finalize(pStmt);
 
-  return true;
+  // return true;
 }
 
 bool WindowsOperatingSystem::GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const

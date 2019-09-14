@@ -54,7 +54,7 @@ medusa_include_module_if_needed(ldr raw)           # Raw
 # operating system
 
 medusa_include_module_if_needed(os unix)           # UNIX
-# medusa_include_module_if_needed(os windows)        # Windows
+medusa_include_module_if_needed(os windows)        # Windows
 
 # tool
 

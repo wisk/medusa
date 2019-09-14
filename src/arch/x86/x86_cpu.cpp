@@ -708,7 +708,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   switch (m_Bits)
   {
   case X86_Bit_16:
-    Result = fmt::format("ax: {:#04x} bx: {:#04x} cx: {:#04x} dx: {:#04x}\nsi: {:#04x} di: {:#04x} sp: {:#04x} bp: {:#04x}\nip: {:#04x} flags: {}"
+    Result = fmt::format("ax: {:#06x} bx: {:#06x} cx: {:#06x} dx: {:#06x}\nsi: {:#06x} di: {:#06x} sp: {:#06x} bp: {:#06x}\nip: {:#06x} flags: {}"
      , m_Context.a.w, m_Context.b.w, m_Context.c.w, m_Context.d.w, m_Context.si.w, m_Context.di.w, m_Context.sp.w, m_Context.bp.w, m_Context.ip.w, FmtFlags);
 
     //Result += fmt::format(
@@ -719,7 +719,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
     break;
 
   case X86_Bit_32:
-    Result = fmt::format("eax: {:#08x} ebx: {:#08x} ecx: {:#08x} edx: {:#08x}\nesi: {:#08x} edi: {:#08x} esp: {:#08x} ebp: {:#08x}\neip: {:#08x} eflags: {}"
+    Result = fmt::format("eax: {:#010x} ebx: {:#010x} ecx: {:#010x} edx: {:#010x}\nesi: {:#010x} edi: {:#010x} esp: {:#010x} ebp: {:#010x}\neip: {:#010x} eflags: {}"
      , m_Context.a.e, m_Context.b.e, m_Context.c.e, m_Context.d.e, m_Context.si.e, m_Context.di.e, m_Context.sp.e, m_Context.bp.e, m_Context.ip.e, FmtFlags);
 
     //Result += fmt::format(
@@ -731,11 +731,11 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
 
   case X86_Bit_64:
     Result = fmt::format(
-      "rax: {:#016x} rbx:    {:#016x} rcx: {:#016x} rdx: {:#016x}\n"
-      "rsi: {:#016x} rdi:    {:#016x} rsp: {:#016x} rbp: {:#016x}\n"
-      "r8:  {:#016x} r9:     {:#016x} r10: {:#016x} r11: {:#016x}\n"
-      "r12: {:#016x} r13:    {:#016x} r14: {:#016x} r15: {:#016x}\n"
-      "rip: {:#016x} rflags: {}"
+      "rax: {:#018x} rbx:    {:#018x} rcx: {:#018x} rdx: {:#018x}\n"
+      "rsi: {:#018x} rdi:    {:#018x} rsp: {:#018x} rbp: {:#018x}\n"
+      "r8:  {:#018x} r9:     {:#018x} r10: {:#018x} r11: {:#018x}\n"
+      "r12: {:#018x} r13:    {:#018x} r14: {:#018x} r15: {:#018x}\n"
+      "rip: {:#018x} rflags: {}"
      , m_Context.a.r  , m_Context.b.r  , m_Context.c.r  , m_Context.d.r
      , m_Context.si.r , m_Context.di.r , m_Context.sp.r , m_Context.bp.r
      , m_Context.r8.r , m_Context.r9.r , m_Context.r10.r, m_Context.r11.r
@@ -756,7 +756,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   default: return "";
   }
 
-  Result += fmt::format("\ncs: {:#04x} ds: {:#04x} es: {:#04x} ss: {:#04x} fs: {:#04x} gs: {:#04x}"
+  Result += fmt::format("\ncs: {:#06x} ds: {:#06x} es: {:#06x} ss: {:#06x} fs: {:#06x} gs: {:#06x}"
    , m_Context.cs, m_Context.ds, m_Context.es, m_Context.ss, m_Context.fs, m_Context.gs);
   Result += "\n";
   return Result;
