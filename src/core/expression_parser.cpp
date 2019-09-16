@@ -524,8 +524,7 @@ namespace action
     }
   };
 
-  template<>
-  struct make_expression<grammar::expr_assign> {
+  template<> struct make_expression<grammar::expr_assign> {
     template<typename Input>
     static void apply(Input const& rIn, ExpressionState& rExprState) {
       auto spSrc = rExprState.Pop();
@@ -544,7 +543,7 @@ Expression::VSPType Expression::Parse(std::string const& rExpressions, CpuInform
   Expression::VSPType ParsedExprs;
   ExpressionState ExprState(ParsedExprs, rCpuInfo, Mode);
   //pegtl::trace_string<grammar::start>(rExpressions, __FILE__, ExprState);
-  pegtl::memory_input<> Input(rExpressions, "expressions");
+  pegtl::string_input<> Input(rExpressions, "expressions");
   if (!pegtl::parse<grammar::start, action::make_expression>(Input, ExprState))
     Log::Write("core").Level(LogError) << "failed to parse expressions" << LogEnd;
   ExprState.Finalize();

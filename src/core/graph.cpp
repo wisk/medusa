@@ -98,6 +98,8 @@ namespace medusa
 
   bool Graph::ToGraphViz(std::string& rGraphVizCode) const
   {
+    return false;
+    /*
     std::ostringstream Output;
     boost::dynamic_properties DynProp;
 
@@ -105,8 +107,8 @@ namespace medusa
     DynProp
       .property("node_id",   boost::get(boost::vertex_index,            m_Graph))
       .property("addresses", boost::get(&VertexProperties::m_Addresses, const_cast<Graph::Type&>(m_Graph)))
-      .property("type",      boost::get(&VertexProperties::m_Flags,     const_cast<Graph::Type&>(m_Graph)))
-      .property("type",      boost::get(&EdgeProperties::m_Type,        const_cast<Graph::Type&>(m_Graph)))
+ //     .property("type",      boost::get(&VertexProperties::m_Flags,     const_cast<Graph::Type&>(m_Graph)))
+ //     .property("type",      boost::get(&EdgeProperties::m_Type,        const_cast<Graph::Type&>(m_Graph)))
       ;
 
     try
@@ -120,10 +122,13 @@ namespace medusa
 
     rGraphVizCode = std::move(Output.str());
     return true;
+    */
   }
 
   bool Graph::FromGraphViz(Graph& rGraph, std::string const & rGraphVizCode)
   {
+    return false;
+    /*
     Graph::Type LoadedGraph(0);
     std::istringstream Input(rGraphVizCode);
     boost::dynamic_properties DynProp(boost::ignore_other_properties);
@@ -145,6 +150,7 @@ namespace medusa
       return false;
     }
     return true;
+    */
   }
 
   void Graph::AddVertex(Graph::VertexProperties const& rVertex)

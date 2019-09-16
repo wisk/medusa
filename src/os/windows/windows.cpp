@@ -83,12 +83,12 @@ bool WindowsOperatingSystem::InitializeContext(
   if (StkReg == 0)
     return false;
   u32 StkRegBitSize = rCpuInfo.GetSizeOfRegisterInBit(StkReg);
-  u64 StkAddr = 0x200000;
-  u32 StkSize = 0x10000;
-  if (!rMemCtxt.AllocateMemory(StkAddr, StkSize, ReadWrite, nullptr))
+  u64 StkLimit = 0x200000;
+  u32 StkSize = 0x3000;
+  if (!rMemCtxt.AllocateMemory(StkLimit, StkSize, ReadWrite, nullptr))
     return false;
-  StkAddr += StkSize;
-  StkAddr -= 0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
+  u64 StkBase = StkLimit + StkSize;
+  u64 StkAddr = StkBase -  0x8 * 4; // home space http://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/
   if (!rCpuCtxt.WriteRegister(StkReg, &StkAddr, StkRegBitSize)) // FIXME: should not be endian safe...
     return false;
 
@@ -111,17 +111,20 @@ bool WindowsOperatingSystem::InitializeContext(
   // TODO: create a fake _TEB/_PEB
   if (!rMemCtxt.AllocateMemory(Teb64LinAddr, 0x1000, ReadWrite, nullptr))
       return false;
-  // Init TIB::StackLimit
-  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x10, static_cast<u64>(StkAddr)))
+  // Init _TEB::NtTib::StackBase
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x08, static_cast<u64>(StkBase)))
+    return false;
+  // Init _TEB::NtTib::StackLimit
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x10, static_cast<u64>(StkLimit)))
       return false;
   // Init TIB::Self
-  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x30, static_cast<u64>(Teb32LinAddr)))
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x30, static_cast<u64>(Teb64LinAddr)))
       return false;
   // Allocate fake _PEB
   if (!rMemCtxt.AllocateMemory(Peb64LinAddr, 0x1000, ReadWrite, nullptr))
       return false;
   // Write _TEB::Peb
-  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x60, static_cast<u64>(Peb32LinAddr)))
+  if (!rMemCtxt.WriteMemory(Teb64LinAddr + 0x60, static_cast<u64>(Peb64LinAddr)))
       return false;
   // Set _PEB::BeingDebugged to false
   if (!rMemCtxt.WriteMemory(Peb64LinAddr + 0x2, static_cast<u8>(0x00)))

@@ -454,10 +454,10 @@ MultiCell::SPType MemoryDatabase::GetMultiCell(Address const &rAddress) const
   int Id;
   OffsetType Offset;
   if (!_ConvertAddressToId(rAddress, Id, Offset))
-    return false;
+    return nullptr;
   auto itMultiCellPair = m_MultiCellsMap.find(std::make_pair(Id, Offset));
   if (itMultiCellPair == std::cend(m_MultiCellsMap))
-    return false;
+    return nullptr;
   return itMultiCellPair->second;
 }
 

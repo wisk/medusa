@@ -363,4 +363,25 @@ bool MemoryContext::_FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemCh
   return false;
 }
 
+bool medusa::StaticContext::GetRegister(std::string const& rRegisterName, void* pValue, size_t ValueSize)
+{
+  return false;
+}
+
+bool medusa::StaticContext::SetRegister(std::string const& rRegisterName, void const* pValue, size_t ValueSize)
+{
+  return false;
+}
+
+bool medusa::StaticContext::GetFeature(std::string const & rFeatureName, void * pValue, size_t ValueSize)
+{
+  return false;
+}
+
+bool medusa::StaticContext::SetFeature(std::string const & rFeatureName, void const * pValue, size_t ValueSize)
+{
+  return false;
+}
+
+
 MEDUSA_NAMESPACE_END

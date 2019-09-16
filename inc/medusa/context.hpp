@@ -146,6 +146,21 @@ private:
   MemoryContext const& operator=(MemoryContext const&);
 };
 
+class StaticContext
+{
+public:
+  StaticContext(CpuInformation const& rCpuInformation) : m_rCpuInformation(rCpuInformation) {}
+
+  bool GetRegister(std::string const& rRegisterName, void* pValue, size_t ValueSize);
+  bool SetRegister(std::string const& rRegisterName, void const* pValue, size_t ValueSize);
+
+  bool GetFeature(std::string const& rFeatureName, void* pValue, size_t ValueSize);
+  bool SetFeature(std::string const& rFeatureName, void const* pValue, size_t ValueSize);
+
+private:
+  CpuInformation const& m_rCpuInformation;
+};
+
 template<> MEDUSA_EXPORT bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const;
 template<> MEDUSA_EXPORT bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal);
 
