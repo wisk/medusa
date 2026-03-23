@@ -1,10 +1,10 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/database.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -12,8 +12,8 @@ namespace pydusa
 {
 }
 
-void PydusaDatabase(py::module& rMod)
+void PydusaDatabase(nb::module_& rMod)
 {
-  py::class_<Database, Database::SPType>(rMod, "Database")
+  nb::class_<Database>(rMod, "Database")
   ;
 }

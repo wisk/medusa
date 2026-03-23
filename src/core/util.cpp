@@ -78,7 +78,7 @@ std::string Sha1(void const *pData, size_t Length)
 {
   std::ostringstream Result;
   boost::uuids::detail::sha1 Sha1;
-  unsigned int Digest[5];
+  boost::uuids::detail::sha1::digest_type Digest;
 
   Result << std::hex << std::setfill('0') << std::setw(2);
 
@@ -99,7 +99,7 @@ Id Sha1(std::string const &rName)
 {
   Id Sha1Id;
   boost::uuids::detail::sha1 Sha1;
-  unsigned int Digest[5];
+  boost::uuids::detail::sha1::digest_type Digest;
 
   Sha1.process_bytes(rName.c_str(), rName.size());
   Sha1.get_digest(Digest);

@@ -38,9 +38,9 @@ std::string Medusa::GetVersion(void)
   char const* pBuildDate = __DATE__;
   char const* pBuildTime = __TIME__;
   return fmt::format("Medusa {}.{}.{} ({}) {} - {}"
-    , Version::Major
-    , Version::Minor
-    , Version::Patch
+    , static_cast<int>(Version::Major)
+    , static_cast<int>(Version::Minor)
+    , static_cast<int>(Version::Patch)
     , pBuildType
     , pBuildDate
     , pBuildTime);
@@ -100,7 +100,10 @@ bool Medusa::DefaultModuleSelector(
     TagType ArchTag;
     u8 ArchMode;
     if (!rModMgr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
+    {
+      Log::Write("core").Level(LogError) << "unable to find architecture: " << ArchName << LogEnd;
       return false;
+    }
     rspArchitectures.push_back(rModMgr.GetArchitecture(ArchTag));
   }
 
@@ -123,6 +126,8 @@ bool Medusa::NewDocument(
     UserConfiguration UserCfg;
     auto ModPath = UserCfg.GetOption("core.modules_path");
     if (ModPath.empty())
+      ModPath = ".";
+    if (!boost::filesystem::is_directory(ModPath))
       ModPath = ".";
     rModMgr.InitializeModules(ModPath);
 

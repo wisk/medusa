@@ -1,14 +1,15 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 #include <medusa/module.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 using namespace medusa;
 
-void PydusaModule(py::module& rMod)
+void PydusaModule(nb::module_& rMod)
 {
   rMod.def("get_architecture", [](Tag ArchTag) -> Architecture::SPType
   {

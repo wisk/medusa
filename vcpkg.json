@@ -1,0 +1,26 @@
+{
+  "name": "medusa",
+  "version": "0.5.4",
+  "description": "A modular and interactive binary disassembler",
+  "homepage": "https://github.com/wisk/medusa",
+  "dependencies": [
+    {
+      "name": "boost-system",
+      "version>=": "1.83.0"
+    },
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-graph",
+    "boost-regex",
+    "boost-signals2",
+    "boost-uuid",
+    "boost-multiprecision",
+    "boost-locale",
+    "pegtl",
+    "catch2",
+    "fmt",
+    "nanobind",
+    "sqlite3",
+    "sqlite-orm"
+  ]
+}

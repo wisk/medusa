@@ -115,9 +115,12 @@ public:
   void SetDefaultArchitectureTag(Tag arch);
   void SetDefaultArchitectureMode(u8 mode);
 
-  void SetName(std::string const& Name) { m_Name = Name;     }
-  void SetAccess(Access Access)         { m_Access = Access; }
-  void SetId(u32 Id)                    { m_Id = Id;         }
+  void SetName(std::string const& Name)   { m_Name = Name;     }
+  void SetAccess(Access Access)           { m_Access = Access; }
+  void SetId(u32 Id)                      { m_Id = Id;         }
+  void SetBaseAddress(Address const& Addr){ m_BaseAddress = Addr; }
+  void SetArchitectureTag(Tag ArchTag)    { m_DefaultArchitectureTag = ArchTag;   }
+  void SetArchitectureMode(u8 ArchMode)   { m_DefaultArchitectureMode = ArchMode; }
 
   OffsetType     GetFileOffset(void)  const { return m_FileOffset;  }
   u32            GetFileSize(void)    const { return m_FileSize;    }

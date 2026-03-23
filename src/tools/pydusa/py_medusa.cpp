@@ -2,7 +2,9 @@
 
 #include <iostream>
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/shared_ptr.h>
 
 #include <medusa/medusa.hpp>
 #include <medusa/module.hpp>
@@ -11,7 +13,7 @@
 #include <medusa/architecture.hpp>
 #include <medusa/os.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -59,22 +61,22 @@ namespace pydusa
     return pCore->GetDocument().GetCell(rAddress);
   }
 
-  static py::str Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
+  static nb::object Medusa_FormatCell(Medusa* pCore, Address const& rAddress, Cell::SPType spCell)
   {
     if (spCell == nullptr)
-      return py::none();
+      return nb::none();
 
     auto const& rModMgr = ModuleManager::Instance();
     auto spArch = rModMgr.GetArchitecture(spCell->GetArchitectureTag());
     if (spArch == nullptr)
-      return py::none();
+      return nb::none();
 
     PrintData PD;
     PD.PrependAddress(false);
     if (!spArch->FormatCell(pCore->GetDocument(), rAddress, *spCell, PD))
-      return py::none();
+      return nb::none();
 
-    return py::cast(PD.GetTexts());
+    return nb::cast(PD.GetTexts());
   }
 
   static Cell::SPType Medusa_DisassembleCurrentInstruction(Medusa* pCore, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt)
@@ -124,9 +126,9 @@ namespace pydusa
   }
 }
 
-void InitBitVector(BitVector& rInstance, u16 BitSize, py::int_& rValue)
+void InitBitVector(BitVector& rInstance, u16 BitSize, nb::int_& rValue)
 {
-  new(&rInstance) BitVector(BitSize, rValue.cast<u64>());
+  new(&rInstance) BitVector(BitSize, nb::cast<u64>(rValue));
 }
 
 std::string BitVector_ToString(BitVector* pBv)
@@ -134,17 +136,17 @@ std::string BitVector_ToString(BitVector* pBv)
   return pBv->ToString(0x10);
 }
 
-void PydusaMedusa(py::module& rMod)
+void PydusaMedusa(nb::module_& rMod)
 {
 
   // TODO(wisk): move this to py_types.cpp
-  py::class_<BitVector>(rMod, "BitVector")
+  nb::class_<BitVector>(rMod, "BitVector")
     .def("__init__", &InitBitVector)
     .def("__str__", BitVector_ToString)
     ;
 
-  py::class_<Medusa>(rMod, "Medusa")
-    .def(py::init<>())
+  nb::class_<Medusa>(rMod, "Medusa")
+    .def(nb::init<>())
 
     .def("open_executable", pydusa::Medusa_OpenExecutable)
     .def("open_database",  pydusa::Medusa_OpenDatabase)
@@ -153,7 +155,7 @@ void PydusaMedusa(py::module& rMod)
     .def("add_task", (bool (Medusa::*)(std::string const&, Address const&))&Medusa::AddTask)
     .def("wait_for_tasks", &Medusa::WaitForTasks)
 
-    .def_property_readonly("document", pydusa::Medusa_GetDocument, py::return_value_policy::reference_internal)
+    .def_prop_ro("document", pydusa::Medusa_GetDocument, nb::rv_policy::reference_internal)
 
     //.def("make_address", pydusa::Medusa_MakeAddress)
 

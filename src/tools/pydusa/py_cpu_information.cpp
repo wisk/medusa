@@ -1,10 +1,11 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 #include <medusa/information.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -15,18 +16,18 @@ namespace pydusa
     return pCpuInfo->ConvertNameToIdentifier(rIdName);
   }
 
-  py::object CpuInformation_ConvertIdentifierToName(CpuInformation const* pCpuInfo, u32 IdVal)
+  nb::object CpuInformation_ConvertIdentifierToName(CpuInformation const* pCpuInfo, u32 IdVal)
   {
     auto pIdName = pCpuInfo->ConvertIdentifierToName(IdVal);
     if (pIdName == nullptr)
-      return py::none();
-    return py::str(pIdName);
+      return nb::none();
+    return nb::str(pIdName);
   }
 }
 
-void PydusaCpuInformation(py::module& rMod)
+void PydusaCpuInformation(nb::module_& rMod)
 {
-  py::class_<CpuInformation>(rMod, "CpuInformation")
+  nb::class_<CpuInformation>(rMod, "CpuInformation")
     .def("__getattr__", pydusa::CpuInformation_ConvertNameToIdentifier)
     .def("__getitem__", pydusa::CpuInformation_ConvertIdentifierToName)
     .def("get_identifier_bit_size", &CpuInformation::GetSizeOfRegisterInBit)

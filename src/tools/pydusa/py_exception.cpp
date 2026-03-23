@@ -1,10 +1,10 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/exception.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -12,6 +12,6 @@ namespace pydusa
 {
 }
 
-void PydusaException(py::module& rMod)
+void PydusaException(nb::module_& rMod)
 {
 }

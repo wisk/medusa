@@ -1,10 +1,11 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 #include <medusa/compilation.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -15,28 +16,28 @@ namespace pydusa
     return pCompiler->Compile(rOutputFile);
   }
 
-  py::bytes Compiler_CompileToBuffer(Compiler* pCompiler)
+  nb::object Compiler_CompileToBuffer(Compiler* pCompiler)
   {
     std::vector<u8> Buffer;
     if (!pCompiler->Compile(Buffer))
-      return py::none();
-    return py::bytes(reinterpret_cast<char const*>(Buffer.data()), Buffer.size());
+      return nb::none();
+    return nb::bytes(Buffer.data(), Buffer.size());
   }
 
-  bool Compiler_AddCode(Compiler* pCompiler, std::string const& rCodeName, py::list const& rCode)
+  bool Compiler_AddCode(Compiler* pCompiler, std::string const& rCodeName, nb::list const& rCode)
   {
     Expression::VSPType rExprs;
     for (auto spExpr : rCode)
-      rExprs.push_back(py::cast<Expression::SPType>(spExpr));
+      rExprs.push_back(nb::cast<Expression::SPType>(spExpr));
     return pCompiler->AddCode(rCodeName, rExprs);
   }
 }
 
-void PydusaCompiler(py::module& rMod)
+void PydusaCompiler(nb::module_& rMod)
 {
-  py::class_<Compiler, Compiler::SPType>(rMod, "Compiler")
-    .def_property("format", &Compiler::GetFormat, &Compiler::SetFormat)
-    .def_property("entry_point", &Compiler::GetEntryPoint, &Compiler::SetEntryPoint)
+  nb::class_<Compiler>(rMod, "Compiler")
+    .def_prop_rw("format", &Compiler::GetFormat, &Compiler::SetFormat)
+    .def_prop_rw("entry_point", &Compiler::GetEntryPoint, &Compiler::SetEntryPoint)
 
     .def("add_code", pydusa::Compiler_AddCode)
     .def("add_data", &Compiler::AddData)

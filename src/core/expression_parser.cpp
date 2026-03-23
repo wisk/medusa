@@ -1,10 +1,11 @@
 #include "medusa/expression.hpp"
 
+#include <stack>
 #include <tao/pegtl.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-namespace pegtl = tao::TAO_PEGTL_NAMESPACE;
+namespace pegtl = tao::pegtl;
 
 namespace grammar
 {
@@ -148,9 +149,12 @@ namespace grammar
   struct expr_mem;
   struct expr_mem_base : pegtl::sor< expr_bv, expr_id > {};
   struct expr_mem_off : pegtl::sor< expr_bv, expr_id, expr_var_use, expr_sym, expr_mem, expr_un, expr_bin > {};
-    struct expr_mem_with_base : pegtl::seq<
+  // Use lookahead (pegtl::at) to check for base:colon before committing to parsing the base expression,
+  // avoiding side effects from backtracking when no colon follows.
+  struct expr_mem_base_lookahead : pegtl::seq< pegtl::at< expr_mem_base, pegtl::one< ':' > >, expr_mem_base, pegtl::one< ':' > > {};
+  struct expr_mem_with_base : pegtl::seq<
     pref_mem, lit_dec, pegtl::one< '(' >,
-    expr_mem_base, pegtl::one< ':' >,
+    expr_mem_base_lookahead,
     expr_mem_off,
     pegtl::one< ')' >
     > {};
@@ -159,11 +163,12 @@ namespace grammar
     expr_mem_off,
     pegtl::one< ')' >
   > {};
-  struct expr_mem : pegtl::sor< expr_mem_with_base, expr_mem_without_base > {}; // FIXME(wisk): the base expression already pushes an expression...
+  struct expr_mem : pegtl::sor< expr_mem_with_base, expr_mem_without_base > {};
 
+  struct expr_addr_base_lookahead : pegtl::seq< pegtl::at< expr_mem_base, pegtl::one< ':' > >, expr_mem_base, pegtl::one< ':' > > {};
   struct expr_addr_with_base : pegtl::seq<
     pref_addr, lit_dec, pegtl::one< '(' >,
-    expr_mem_base, pegtl::one< ':' >,
+    expr_addr_base_lookahead,
     expr_mem_off,
     pegtl::one< ')' >
   > {};
@@ -172,7 +177,7 @@ namespace grammar
     expr_mem_off,
     pegtl::one< ')' >
   > {};
-  struct expr_addr : pegtl::sor< expr_addr_with_base, expr_addr_without_base > {}; // FIXME(wisk): same issue here (see above)
+  struct expr_addr : pegtl::sor< expr_addr_with_base, expr_addr_without_base > {};
 
   struct expr_lval   : pegtl::sor< expr_id, expr_var_use, expr_sym, expr_mem > {};
   struct expr_rval   : pegtl::sor< expr_bv, expr_id, expr_var_use, expr_sym, expr_mem, expr_addr, expr_un, expr_bin > {};

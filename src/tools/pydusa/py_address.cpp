@@ -1,28 +1,28 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/address.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaAddress(py::module& rMod)
+void PydusaAddress(nb::module_& rMod)
 {
-  auto const& rAddressClass = py::class_<Address>(rMod, "Address")
-    .def(py::init<>())
-    .def(py::init<OffsetType>())
-    .def(py::init<BaseType, OffsetType>())
-    .def(py::init<Address::Type, OffsetType>())
-    .def(py::init<Address::Type, BaseType, OffsetType>())
+  auto const& rAddressClass = nb::class_<Address>(rMod, "Address")
+    .def(nb::init<>())
+    .def(nb::init<OffsetType>())
+    .def(nb::init<BaseType, OffsetType>())
+    .def(nb::init<Address::Type, OffsetType>())
+    .def(nb::init<Address::Type, BaseType, OffsetType>())
 
     .def("__str__", &Address::ToString)
-    .def_property("base", &Address::GetBase, &Address::SetBase)
-    .def_property("offset", &Address::GetOffset, &Address::SetOffset)
+    .def_prop_rw("base", &Address::GetBase, &Address::SetBase)
+    .def_prop_rw("offset", &Address::GetOffset, &Address::SetOffset)
   ;
 
-  py::enum_<Address::Type>(rAddressClass, "Type")
+  nb::enum_<Address::Type>(rAddressClass, "Type")
     .value("UNKNOWN", Address::UnknownType)
     .value("DEFAULT", Address::DefaultType)
     .value("PHYSICAL", Address::PhysicalType)

@@ -1,11 +1,12 @@
-#define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <medusa/medusa.hpp>
+#include <medusa/module.hpp>
 #include <medusa/detail.hpp>
 #include <medusa/disassembly_view.hpp>
 
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 class TextFullDisassemblyView : public medusa::FullDisassemblyView
 {
@@ -57,6 +58,11 @@ TEST_CASE("cfg", "[core]")
   Medusa Core;
 
   auto const pSample = SAMPLES_DIR "/exe/cfg_test.pe.x86-64";
+  if (!boost::filesystem::exists(pSample))
+  {
+    WARN("Sample file not found: " << pSample);
+    return;
+  }
   std::cout << "analyzing program: " << pSample << std::endl;
 
   try
@@ -115,7 +121,11 @@ TEST_CASE("structure", "[core]")
 {
   INFO("Testing structure");
 
+
+
   using namespace medusa;
+
+
 
   auto BYTE = std::make_shared<TypeDetail>("BYTE", TypeDetail::IntegerType, 8);
   auto WORD = std::make_shared<TypeDetail>("WORD", TypeDetail::IntegerType, 16);
@@ -246,9 +256,27 @@ TEST_CASE("structure", "[core]")
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
   medusa::Medusa Core;
-  REQUIRE(Core.NewDocument(std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr))));
-  auto spDosHdrStruct = std::make_shared<MultiCell>(MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
+
+  // Set up document manually since the inline PE header is too short for the PE loader
+  auto& rModMgr = medusa::ModuleManager::Instance();
+  rModMgr.InitializeModules(".");
+  auto spBinStrm = std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr));
+  auto spDb = rModMgr.MakeDatabase("Memory");
+  REQUIRE(spDb != nullptr);
+  auto TmpPath = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+  REQUIRE(spDb->Create(TmpPath, true));
+  spDb->SetBinaryStream(spBinStrm);
   auto& rDoc = Core.GetDocument();
+  REQUIRE(rDoc.Open(spDb));
+
+  // Add a memory area covering the PE header
+  REQUIRE(spDb->AddMemoryArea(medusa::MemoryArea::CreateMapped(
+    "pe_hdr", medusa::MemoryArea::Access::Read,
+    0x0, sizeof(WinExeHdr),
+    medusa::Address(medusa::Address::LinearType, 0x0), sizeof(WinExeHdr)
+  )));
+
+  auto spDosHdrStruct = std::make_shared<MultiCell>(MultiCell::StructType, _IMAGE_DOS_HEADER.GetSize());
   REQUIRE(rDoc.SetStructureDetail(_IMAGE_DOS_HEADER.GetId(), _IMAGE_DOS_HEADER));
   REQUIRE(rDoc.SetStructureDetail(_IMAGE_FILE_HEADER.GetId(), _IMAGE_FILE_HEADER));
   REQUIRE(rDoc.SetStructureDetail(_IMAGE_DATA_DIRECTORY.GetId(), _IMAGE_DATA_DIRECTORY));

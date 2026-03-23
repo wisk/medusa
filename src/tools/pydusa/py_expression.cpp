@@ -1,13 +1,15 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/stl.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/function.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/vector.h>
 
 #include <medusa/expression.hpp>
 #include <medusa/expression_visitor.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -20,22 +22,22 @@ char const* GetExprIdIdentifier(IdentifierExpression *e)
 // Type of operation expression: get enumeration name from value
 OperationExpression::Type expr_op_get_name(OperationExpression::Type t) { return t; }
 
-void PydusaExpression(py::module& rMod)
+void PydusaExpression(nb::module_& rMod)
 {
 
   // base expression class
 
-  py::class_<Expression, Expression::SPType> pyExpr(rMod, "Expression");
+  nb::class_<Expression> pyExpr(rMod, "Expression");
   pyExpr
     .def("__str__", &Expression::ToString)
     .def_static("parse", &Expression::Parse)
     .def("update_child", &Expression::UpdateChild)
     .def("compare", &Expression::Compare)
     .def("visit", &Expression::Visit)
-    .def_property_readonly("bit_size", &Expression::GetBitSize)
+    .def_prop_ro("bit_size", &Expression::GetBitSize)
     ;
 
-  py::enum_<Expression::CompareType>(pyExpr, "Compare")
+  nb::enum_<Expression::CompareType>(pyExpr, "Compare")
     .value("UNKNOWN", Expression::CmpUnknown)
     .value("DIFFERENT", Expression::CmpDifferent)
     .value("SAME_EXPRESSION", Expression::CmpSameExpression)
@@ -44,106 +46,106 @@ void PydusaExpression(py::module& rMod)
 
   // condition expression class inherited from base expression class
 
-  auto const& rConditionExpressionClass = py::class_<ConditionExpression, ConditionExpression::SPType, Expression>(rMod, "ConditionExpression")
+  auto const& rConditionExpressionClass = nb::class_<ConditionExpression, Expression>(rMod, "ConditionExpression")
     .def("__str__", &ConditionExpression::ToString)
-    .def_property_readonly("type", &ConditionExpression::GetType)
-    .def_property_readonly("condition", &ConditionExpression::GetCondition)
-    .def_property_readonly("opposite_condition", &ConditionExpression::GetOppositeCondition)
-    .def_property_readonly("referenced_expression", &ConditionExpression::GetReferenceExpression)
-    .def_property_readonly("tested_expression", &ConditionExpression::GetTestExpression)
+    .def_prop_ro("type", &ConditionExpression::GetType)
+    .def_prop_ro("condition", &ConditionExpression::GetCondition)
+    .def_prop_ro("opposite_condition", &ConditionExpression::GetOppositeCondition)
+    .def_prop_ro("referenced_expression", &ConditionExpression::GetReferenceExpression)
+    .def_prop_ro("tested_expression", &ConditionExpression::GetTestExpression)
     ;
 
-  auto const& rTernaryConditionExpressionClass = py::class_<TernaryConditionExpression, TernaryConditionExpression::SPType, ConditionExpression>(rMod, "TernaryConditionExpression")
-    .def_property_readonly("true_expression", &TernaryConditionExpression::GetTrueExpression)
-    .def_property_readonly("false_expression", &TernaryConditionExpression::GetFalseExpression)
+  auto const& rTernaryConditionExpressionClass = nb::class_<TernaryConditionExpression, ConditionExpression>(rMod, "TernaryConditionExpression")
+    .def_prop_ro("true_expression", &TernaryConditionExpression::GetTrueExpression)
+    .def_prop_ro("false_expression", &TernaryConditionExpression::GetFalseExpression)
     ;
 
-  auto const& rIfElseConditionExpressionClass = py::class_<IfElseConditionExpression, IfElseConditionExpression::SPType, ConditionExpression>(rMod, "IfElseConditionExpression")
-    .def_property_readonly("then_expression", &IfElseConditionExpression::GetThenExpression)
-    .def_property_readonly("else_expression", &IfElseConditionExpression::GetElseExpression)
+  auto const& rIfElseConditionExpressionClass = nb::class_<IfElseConditionExpression, ConditionExpression>(rMod, "IfElseConditionExpression")
+    .def_prop_ro("then_expression", &IfElseConditionExpression::GetThenExpression)
+    .def_prop_ro("else_expression", &IfElseConditionExpression::GetElseExpression)
     ;
 
-  auto const& rWhileConditionExpressionClass = py::class_<WhileConditionExpression, WhileConditionExpression::SPType, ConditionExpression>(rMod, "WhileConditionExpression")
-    .def_property_readonly("body_expression", &WhileConditionExpression::GetBodyExpression)
+  auto const& rWhileConditionExpressionClass = nb::class_<WhileConditionExpression, ConditionExpression>(rMod, "WhileConditionExpression")
+    .def_prop_ro("body_expression", &WhileConditionExpression::GetBodyExpression)
     ;
 
   // constant expression class inherited from base expression class
 
-  auto const& rBitVectorExpressionClass = py::class_<BitVectorExpression, BitVectorExpression::SPType, Expression>(rMod, "BitVectorExpression")
+  auto const& rBitVectorExpressionClass = nb::class_<BitVectorExpression, Expression>(rMod, "BitVectorExpression")
     .def("__str__", &BitVectorExpression::ToString)
-    .def_property_readonly("value", &BitVectorExpression::GetInt)
+    .def_prop_ro("value", &BitVectorExpression::GetInt)
     ;
 
   // identifier expression class inherited from base expression class
 
-  auto const& rIdentifierExpressionClass = py::class_<IdentifierExpression, IdentifierExpression::SPType, Expression>(rMod, "IdentifierExpression")
+  auto const& rIdentifierExpressionClass = nb::class_<IdentifierExpression, Expression>(rMod, "IdentifierExpression")
     .def("__str__", &IdentifierExpression::ToString)
-    .def_property_readonly("identifier", &GetExprIdIdentifier)
+    .def_prop_ro("identifier", &GetExprIdIdentifier)
     ;
 
-  auto const& rTrackExpressionClass = py::class_<TrackExpression, TrackExpression::SPType, Expression>(rMod, "TrackExpression")
+  auto const& rTrackExpressionClass = nb::class_<TrackExpression, Expression>(rMod, "TrackExpression")
     .def("__str__", &TrackExpression::ToString)
-    .def_property_readonly("tracked_expression", &TrackExpression::GetTrackedExpression)
-    .def_property_readonly("tracked_address", &TrackExpression::GetTrackAddress)
-    .def_property_readonly("tracked_position", &TrackExpression::GetTrackPosition)
+    .def_prop_ro("tracked_expression", &TrackExpression::GetTrackedExpression)
+    .def_prop_ro("tracked_address", &TrackExpression::GetTrackAddress)
+    .def_prop_ro("tracked_position", &TrackExpression::GetTrackPosition)
     ;
 
   // assignment expression class inherited from base expression class
 
-  auto const& rAssignmentExpressionClass = py::class_<AssignmentExpression, AssignmentExpression::SPType, Expression>(rMod, "AssignmentExpression")
+  auto const& rAssignmentExpressionClass = nb::class_<AssignmentExpression, Expression>(rMod, "AssignmentExpression")
     .def("__str__", &AssignmentExpression::ToString)
-    .def_property_readonly("destination_expression", &AssignmentExpression::GetDestinationExpression)
-    .def_property_readonly("source_expression", &AssignmentExpression::GetSourceExpression)
+    .def_prop_ro("destination_expression", &AssignmentExpression::GetDestinationExpression)
+    .def_prop_ro("source_expression", &AssignmentExpression::GetSourceExpression)
     ;
 
   // memory expression class inherited from base expression class
 
-  auto const& rMemoryExpressionClass = py::class_<MemoryExpression, MemoryExpression::SPType, Expression>(rMod, "MemoryExpression")
+  auto const& rMemoryExpressionClass = nb::class_<MemoryExpression, Expression>(rMod, "MemoryExpression")
     .def("__str__", &MemoryExpression::ToString)
-    .def_property_readonly("access_bit_size", &MemoryExpression::GetAccessSizeInBit)
-    .def_property_readonly("base_expression", &MemoryExpression::GetBaseExpression)
-    .def_property_readonly("offset_expression", &MemoryExpression::GetOffsetExpression)
-    .def_property_readonly("is_deferencable", &MemoryExpression::IsDereferencable)
+    .def_prop_ro("access_bit_size", &MemoryExpression::GetAccessSizeInBit)
+    .def_prop_ro("base_expression", &MemoryExpression::GetBaseExpression)
+    .def_prop_ro("offset_expression", &MemoryExpression::GetOffsetExpression)
+    .def_prop_ro("is_deferencable", &MemoryExpression::IsDereferencable)
     ;
 
   // symbolic expression class inherited from base expression class
 
-  auto const& rSymbolicExpressionClass = py::class_<SymbolicExpression, SymbolicExpression::SPType, Expression>(rMod, "SymbolicExpression")
+  auto const& rSymbolicExpressionClass = nb::class_<SymbolicExpression, Expression>(rMod, "SymbolicExpression")
     .def("__str__", &SymbolicExpression::ToString)
-    .def_property_readonly("type", &SymbolicExpression::GetType)
-    .def_property_readonly("value", &SymbolicExpression::GetValue)
-    .def_property_readonly("address", &SymbolicExpression::GetAddress)
-    .def_property_readonly("expression", &SymbolicExpression::GetExpression)
+    .def_prop_ro("type", &SymbolicExpression::GetType)
+    .def_prop_ro("value", &SymbolicExpression::GetValue)
+    .def_prop_ro("address", &SymbolicExpression::GetAddress)
+    .def_prop_ro("expression", &SymbolicExpression::GetExpression)
     ;
 
   // variable expression class inherited from base expression class
 
-  auto const& rVariableExpressionClass = py::class_<VariableExpression, VariableExpression::SPType, Expression>(rMod, "VariableExpression")
+  auto const& rVariableExpressionClass = nb::class_<VariableExpression, Expression>(rMod, "VariableExpression")
     .def("__str__", &VariableExpression::ToString)
-    .def_property_readonly("name", &VariableExpression::GetName)
-    .def_property_readonly("type", &VariableExpression::GetType)
+    .def_prop_ro("name", &VariableExpression::GetName)
+    .def_prop_ro("type", &VariableExpression::GetType)
     ;
 
   // operation expression class inherited from base expression class
 
-  auto const& rOperationExpressionClass = py::class_<OperationExpression, OperationExpression::SPType, Expression>(rMod, "OperationExpression")
+  auto const& rOperationExpressionClass = nb::class_<OperationExpression, Expression>(rMod, "OperationExpression")
     .def("__str__", &OperationExpression::ToString)
-    .def_property_readonly("operation", &OperationExpression::GetOperation)
+    .def_prop_ro("operation", &OperationExpression::GetOperation)
     ;
 
   // UnaryOperationExpression expression class inherited from operation expression class
 
-  auto const& rUnaryOperationExpressionClass = py::class_<UnaryOperationExpression, UnaryOperationExpression::SPType, OperationExpression>(rMod, "UnaryOperationExpression")
+  auto const& rUnaryOperationExpressionClass = nb::class_<UnaryOperationExpression, OperationExpression>(rMod, "UnaryOperationExpression")
     .def("__str__", &UnaryOperationExpression::ToString)
-    .def_property_readonly("expression", &UnaryOperationExpression::GetExpression)
+    .def_prop_ro("expression", &UnaryOperationExpression::GetExpression)
     ;
 
   // BinaryOperationExpression expression class inherited from operation expression class
 
-  auto const& rBinaryOperationClass = py::class_<BinaryOperationExpression, BinaryOperationExpression::SPType, OperationExpression>(rMod, "BinaryOperationExpression")
+  auto const& rBinaryOperationClass = nb::class_<BinaryOperationExpression, OperationExpression>(rMod, "BinaryOperationExpression")
     .def("__str__", &BinaryOperationExpression::ToString)
-    .def_property_readonly("left_expression", &BinaryOperationExpression::GetLeftExpression)
-    .def_property_readonly("right_expression", &BinaryOperationExpression::GetRightExpression)
+    .def_prop_ro("left_expression", &BinaryOperationExpression::GetLeftExpression)
+    .def_prop_ro("right_expression", &BinaryOperationExpression::GetRightExpression)
     ;
 
   // helpers used to create instance of a specific expression type
@@ -164,7 +166,7 @@ void PydusaExpression(py::module& rMod)
 
   // exposing enumerations
 
-  py::enum_<ConditionExpression::Type>(rConditionExpressionClass, "Type")
+  nb::enum_<ConditionExpression::Type>(rConditionExpressionClass, "Type")
     .value("COND_UNKNOWN", ConditionExpression::CondUnk)
     .value("COND_EQ",      ConditionExpression::CondEq)
     .value("COND_NE",      ConditionExpression::CondNe)
@@ -178,7 +180,7 @@ void PydusaExpression(py::module& rMod)
     .value("COND_SLE",     ConditionExpression::CondSle)
     ;
 
-  py::enum_<OperationExpression::Type>(rOperationExpressionClass, "Type")
+  nb::enum_<OperationExpression::Type>(rOperationExpressionClass, "Type")
     .value("OP_UNK",         OperationExpression::OpUnk)
     .value("OP_NOT",         OperationExpression::OpNot)
     .value("OP_NEG",         OperationExpression::OpNeg)
@@ -208,7 +210,7 @@ void PydusaExpression(py::module& rMod)
     ;
   rMod.def("expr_op_get_name", expr_op_get_name);
 
-  py::enum_<SymbolicExpression::Type>(rSymbolicExpressionClass, "Type")
+  nb::enum_<SymbolicExpression::Type>(rSymbolicExpressionClass, "Type")
     .value("SYM_UNKNOWN",           SymbolicExpression::Unknown)
     .value("SYM_RETURNED_VALUE",    SymbolicExpression::ReturnedValue)
     .value("SYM_FROM_PARAMETER",    SymbolicExpression::FromParameter)
@@ -217,35 +219,35 @@ void PydusaExpression(py::module& rMod)
     .value("SYM_UNDEFINED",         SymbolicExpression::Undefined)
     ;
 
-  py::enum_<VariableExpression::Type>(rVariableExpressionClass, "Type")
+  nb::enum_<VariableExpression::Type>(rVariableExpressionClass, "Type")
     .value("VAR_UNKNOWN",    VariableExpression::Unknown)
     .value("VAR_ALLOC",      VariableExpression::Alloc)
     .value("VAR_FREE",       VariableExpression::Free)
     .value("VAR_USE",        VariableExpression::Use)
     ;
 
-  py::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
+  nb::class_<ExpressionVisitor>(rMod, "ExpressionVisitor");
 
-  py::class_<NormalizeIdentifier, ExpressionVisitor>(rMod, "NormalizeIdentifier")
-    .def(py::init<CpuInformation const&, u8>())
+  nb::class_<NormalizeIdentifier, ExpressionVisitor>(rMod, "NormalizeIdentifier")
+    .def(nb::init<CpuInformation const&, u8>())
     ;
 
-  py::class_<IdentifierToVariable, ExpressionVisitor>(rMod, "IdentifierToVariable")
-    .def(py::init<>())
-    .def_property_readonly("used_identifier", &IdentifierToVariable::GetUsedId)
+  nb::class_<IdentifierToVariable, ExpressionVisitor>(rMod, "IdentifierToVariable")
+    .def(nb::init<>())
+    .def_prop_ro("used_identifier", &IdentifierToVariable::GetUsedId)
     ;
 
-  py::class_<SimplifyVisitor, ExpressionVisitor>(rMod, "SimplifyVisitor")
-    .def(py::init<>())
+  nb::class_<SimplifyVisitor, ExpressionVisitor>(rMod, "SimplifyVisitor")
+    .def(nb::init<>())
     ;
 
-  py::class_<FilterVisitor, ExpressionVisitor>(rMod, "FilterVisitor")
-    .def(py::init<FilterVisitor::Matcher, size_t>())
+  nb::class_<FilterVisitor, ExpressionVisitor>(rMod, "FilterVisitor")
+    .def(nb::init<FilterVisitor::Matcher, size_t>())
     .def("get_matched_expressions", &FilterVisitor::GetMatchedExpressions)
     ;
 
-  py::class_<SymbolicVisitor, ExpressionVisitor>(rMod, "SymbolicVisitor")
-    .def(py::init<Document const&, u8, bool>())
+  nb::class_<SymbolicVisitor, ExpressionVisitor>(rMod, "SymbolicVisitor")
+    .def(nb::init<Document const&, u8, bool>())
     .def("fork", &SymbolicVisitor::Fork)
     .def_static("remove_expression_annotations", &SymbolicVisitor::RemoveExpressionAnnotations)
     .def("get_value", &SymbolicVisitor::GetValue)
@@ -256,6 +258,6 @@ void PydusaExpression(py::module& rMod)
     .def("update_address", &SymbolicVisitor::UpdateAddress)
     .def("find_all_paths", &SymbolicVisitor::FindAllPaths)
     .def("__str__", &SymbolicVisitor::ToString)
-    //.def_property_readonly("expressions", &SymbolicVisitor::GetExpressions)
+    //.def_prop_ro("expressions", &SymbolicVisitor::GetExpressions)
     ;
 }

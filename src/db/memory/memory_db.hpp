@@ -123,7 +123,7 @@ public:
 private:
   struct MemoryAreaSorter
   {
-    bool operator()(MemoryArea const& rLhs, MemoryArea const& rRhs)
+    bool operator()(MemoryArea const& rLhs, MemoryArea const& rRhs) const
     {
       return rLhs.GetBaseAddress() < rRhs.GetBaseAddress();
     }
@@ -168,6 +168,21 @@ private:
   std::unordered_map<MemoryAreaRelatedType, CellData, boost::hash<MemoryAreaRelatedType>> m_CellsMap;
 
   std::unordered_map<MemoryAreaRelatedType, std::string, boost::hash<MemoryAreaRelatedType>> m_CommentsMap;
+
+  std::unordered_map<Id, StructureDetail> m_StructureDetailsMap;
+  std::unordered_map<Id, ValueDetail> m_ValueDetailsMap;
+  std::unordered_map<Id, FunctionDetail> m_FunctionDetailsMap;
+
+  // Maps address (via MemoryAreaRelatedType) + index to detail ID
+  using DetailBindingKey = std::pair<MemoryAreaRelatedType, u8>;
+  struct DetailBindingKeyHash {
+    size_t operator()(DetailBindingKey const& k) const {
+      size_t seed = boost::hash<MemoryAreaRelatedType>()(k.first);
+      boost::hash_combine(seed, k.second);
+      return seed;
+    }
+  };
+  std::unordered_map<DetailBindingKey, Id, DetailBindingKeyHash> m_DetailBindingsMap;
 };
 
 extern "C" DB_MEMORY_EXPORT Database* GetDatabase(void);

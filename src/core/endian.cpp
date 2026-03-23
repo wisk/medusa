@@ -4,9 +4,9 @@ MEDUSA_NAMESPACE_BEGIN
 
 bool TestEndian(EEndianness Endianness)
 {
-#if defined(BOOST_LITTLE_ENDIAN)
+#if defined(MEDUSA_LITTLE_ENDIAN)
   return (Endianness == BigEndian);
-#elif defined(BOOST_BIG_ENDIAN)
+#elif defined(MEDUSA_BIG_ENDIAN)
   return (Endianness == LittleEndian);
 #else
 # error Unable to determine the current endianness

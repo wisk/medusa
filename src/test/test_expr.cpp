@@ -1,5 +1,4 @@
-#define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <medusa/expression.hpp>
 #include <medusa/expression_filter.hpp>

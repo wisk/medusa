@@ -83,9 +83,9 @@ private:
     case EM_X86_64:
       return "x86/64-bit";
     case EM_ARM:
-      return "arm";
+      return "ARM";
     case EM_AVR:
-      return "avr";
+      return "AVR";
     default:
       return "unknown";
     }

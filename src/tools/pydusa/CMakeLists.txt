@@ -23,10 +23,11 @@ set(SRC
   py_module.cpp
 )
 
-find_package(pybind11 CONFIG REQUIRED)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(nanobind CONFIG REQUIRED)
 
-add_library(pydusa SHARED ${SRC})
-target_link_libraries(pydusa medusa pybind11::embed pybind11::module)
+nanobind_add_module(pydusa ${SRC})
+target_link_libraries(pydusa PRIVATE medusa)
 set_target_properties(
   pydusa
   PROPERTIES
@@ -36,11 +37,4 @@ set_target_properties(
 
 set_target_properties(pydusa PROPERTIES PREFIX "")
 
-if(WIN32)
-  if (MSVC)
-    set_target_properties(pydusa PROPERTIES SUFFIX ".pyd")
-  endif()
-  install(TARGETS pydusa RUNTIME DESTINATION ${MEDUSA_MODULE_PATH})
-else()
-  install(TARGETS pydusa LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})
-endif()
+install(TARGETS pydusa LIBRARY DESTINATION ${MEDUSA_MODULE_PATH})

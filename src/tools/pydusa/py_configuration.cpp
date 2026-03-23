@@ -1,16 +1,16 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/configuration.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaConfiguration(py::module& rMod)
+void PydusaConfiguration(nb::module_& rMod)
 {
-  py::class_<ConfigurationModel>(rMod, "ConfigurationModel")
+  nb::class_<ConfigurationModel>(rMod, "ConfigurationModel")
     .def("set_bool", &ConfigurationModel::SetBoolean)
     .def("set_enum", &ConfigurationModel::SetEnum)
     .def("is_set",   &ConfigurationModel::IsSet)

@@ -26,6 +26,9 @@ ScrollbarAddress::~ScrollbarAddress(void)
 void ScrollbarAddress::OnAddressUpdated(medusa::Address::Vector const& rAddresses)
 {
   auto const& doc = _core.GetDocument();
+  _maxPos = doc.GetNumberOfAddress();
+  if (_maxPos == 0)
+    return;
 
   if (!rAddresses.empty())
   {
@@ -60,41 +63,9 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::Vector const& rAddresse
 
 void ScrollbarAddress::Refresh(void)
 {
-  // FIXME(wisk):
-  //auto const& rDoc = _core.GetDocument();
-  //_maxPos = rDoc.GetNumberOfAddress();
-  //_mutex.lock();
-  //QPainter p(&_img);
-  //rDoc.ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
-  //{
-  //  rMemArea.ForEachCellData([&](medusa::OffsetType Offset, medusa::CellData::SPType spCellData)
-  //  {
-  //    medusa::Address CurAddr = rMemArea.GetBaseAddress() + rMemArea.MakeAddress(Offset);
-  //    medusa::u32 Pos;
-  //    if (!rDoc.ConvertAddressToPosition(CurAddr, Pos))
-  //      return;
-
-  //    size_t CellLen = spCellData->GetSize();
-  //    auto h = static_cast<int>(static_cast<medusa::u64>(CellLen) * _img.height() / _maxPos);
-  //    if (h == 0)
-  //      h = 1;
-
-  //    auto y = static_cast<int>(static_cast<medusa::u64>(Pos) * _img.height() / _maxPos);
-
-  //    QColor CurClr(_CellTypeToColor(spCellData->GetType()));
-  //    QColor LastClr = _img.toImage().pixel(QPoint(0, y));
-  //      CurClr.setRgbF(
-  //        (CurClr.redF() + LastClr.redF()) / 2,
-  //        (CurClr.greenF() + LastClr.greenF()) / 2,
-  //        (CurClr.blueF() + LastClr.blueF()) / 2);
-
-  //    p.setPen(CurClr);
-  //    p.setBrush(CurClr);
-
-  //    p.drawRect(0, y, _width * 3, h); // LATER: see above about * 3
-  //  });
-  //});
-  //_mutex.unlock();
+  _maxPos = _core.GetDocument().GetNumberOfAddress();
+  // TODO(wisk): re-implement using current Document API
+  // (ForEachMemoryArea / ForEachCellData no longer exist)
 }
 
 void ScrollbarAddress::paintEvent(QPaintEvent * evt)
@@ -130,6 +101,8 @@ void ScrollbarAddress::mousePressEvent(QMouseEvent * evt)
 
 void ScrollbarAddress::mouseMoveEvent(QMouseEvent * evt)
 {
+  if (_img.height() == 0 || _maxPos == 0)
+    return;
   if (evt->buttons() & Qt::LeftButton)
   {
     auto pos = static_cast<int>(static_cast<medusa::u64>(evt->y()) * _maxPos / _img.height());

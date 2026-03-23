@@ -1,10 +1,10 @@
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include "pydusa.hpp"
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
-PYBIND11_MODULE(pydusa, m)
+NB_MODULE(pydusa, m)
 {
   m.doc() = "pydusa is python binding for medusa";
 

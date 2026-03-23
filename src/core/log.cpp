@@ -24,7 +24,7 @@ LogWrapper& LogWrapper::Flush(void)
 {
   if (m_pLog)
   {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
+    std::lock_guard<boost::recursive_mutex> lock(m_Mutex);
     m_pLog(m_rBuffer);
     m_rBuffer = m_Name;
     m_rBuffer += ": ";
@@ -126,7 +126,7 @@ template<> LogWrapper& LogWrapper::operator<<(Address Addr)
 {
   if (_CheckLogLevel())
   {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
+    std::lock_guard<boost::recursive_mutex> lock(m_Mutex);
     m_rBuffer += Addr.ToString();
   }
   return *this;
@@ -136,7 +136,7 @@ template<> LogWrapper& LogWrapper::operator<<(std::string Msg)
 {
   if (_CheckLogLevel())
   {
-    boost::recursive_mutex::scoped_lock(m_Mutex);
+    std::lock_guard<boost::recursive_mutex> lock(m_Mutex);
     m_rBuffer += Msg;
   }
   return *this;

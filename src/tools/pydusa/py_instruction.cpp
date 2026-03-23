@@ -1,46 +1,46 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/instruction.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  py::list Instruction_Semantic(Instruction* pInsn)
+  nb::list Instruction_Semantic(Instruction* pInsn)
   {
-    py::list Sem;
+    nb::list Sem;
     for (auto& rspExpr : pInsn->GetSemantic())
-      Sem.append(py::cast(rspExpr));
+      Sem.append(nb::cast(rspExpr));
     return Sem;
   }
 
-  py::list Instruction_Operands(Instruction* pInsn)
+  nb::list Instruction_Operands(Instruction* pInsn)
   {
-    py::list Oprds;
+    nb::list Oprds;
     pInsn->ForEachOperand([&](Expression::SPType spOprdExpr)
     {
-      Oprds.append(py::cast(spOprdExpr));
+      Oprds.append(nb::cast(spOprdExpr));
     });
     return Oprds;
   }
 
-  py::str Instruction_GetFormat(Instruction* pInsn)
+  nb::str Instruction_GetFormat(Instruction* pInsn)
   {
-    return py::str(pInsn->GetFormat());
+    return nb::str(pInsn->GetFormat());
   }
 }
 
-void PydusaInstruction(py::module& rMod)
+void PydusaInstruction(nb::module_& rMod)
 {
-  py::class_<Instruction, Instruction::SPType>(rMod, "Instruction", py::base<Cell>())
+  nb::class_<Instruction, Cell>(rMod, "Instruction")
     .def("__str__", &Instruction::ToString)
     .def("__len__", &Instruction::GetSize)
-    .def_property_readonly("format", pydusa::Instruction_GetFormat)
-    .def_property_readonly("semantic", pydusa::Instruction_Semantic)
-    .def_property_readonly("operands", pydusa::Instruction_Operands)
+    .def_prop_ro("format", pydusa::Instruction_GetFormat)
+    .def_prop_ro("semantic", pydusa::Instruction_Semantic)
+    .def_prop_ro("operands", pydusa::Instruction_Operands)
     ;
 }

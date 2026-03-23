@@ -1,16 +1,16 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/loader.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaLoader(py::module& rMod)
+void PydusaLoader(nb::module_& rMod)
 {
-  py::class_<Loader, Loader::SPType>(rMod, "Loader")
-    .def_property_readonly("name", &Loader::GetName)
+  nb::class_<Loader>(rMod, "Loader")
+    .def_prop_ro("name", &Loader::GetName)
   ;
 }

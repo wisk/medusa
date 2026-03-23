@@ -1,15 +1,19 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/stl.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/function.h>
+#include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/vector.h>
 
 #include <medusa/document.hpp>
 #include <medusa/execution.hpp>
 #include <medusa/module.hpp>
 #include <medusa/user_configuration.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -93,41 +97,41 @@ namespace pydusa
     return pExecution->Hook(rLabelName, Type, Callback);
   }
 
-  py::object Execution_GetFunctionParameter(Execution* pExecution, std::string const& rCallConv, u32 ParamNo)
+  nb::object Execution_GetFunctionParameter(Execution* pExecution, std::string const& rCallConv, u32 ParamNo)
   {
     BitVector ParamVal;
     if (!pExecution->GetFunctionParameter(rCallConv, ParamNo, ParamVal))
-      return py::none();
-    return py::cast(ParamVal.ConvertTo<u64>());
+      return nb::none();
+    return nb::cast(ParamVal.ConvertTo<u64>());
   }
 
-  py::object Execution_GetCallingConvention(Execution const* pExecution, Address const& rAddress)
+  nb::object Execution_GetCallingConvention(Execution const* pExecution, Address const& rAddress)
   {
     std::string CallConv;
     if (!pExecution->GetCallingConvention(CallConv, rAddress))
-      return py::none();
-    return py::cast(CallConv);
+      return nb::none();
+    return nb::cast(CallConv);
   }
 }
 
-void PydusaExecution(py::module& rMod)
+void PydusaExecution(nb::module_& rMod)
 {
-  py::enum_<Emulator::HookType>(rMod, "Hook")
+  nb::enum_<Emulator::HookType>(rMod, "Hook")
     .value("UNKNOWN", Emulator::HookUnknown)
     .value("READ",    Emulator::HookOnRead)
     .value("WRITE",   Emulator::HookOnWrite)
     .value("EXECUTE", Emulator::HookOnExecute)
     ;
 
-  py::enum_<Emulator::ReturnType>(rMod, "Emulator")
+  nb::enum_<Emulator::ReturnType>(rMod, "Emulator")
     .value("ERROR",    Emulator::Error)
     .value("BREAK",    Emulator::Break)
     .value("CONTINUE", Emulator::Continue)
     .value("STOP",     Emulator::Stop)
     ;
 
-  py::class_<Execution>(rMod, "Execution")
-    .def(py::init<Document&>())
+  nb::class_<Execution>(rMod, "Execution")
+    .def(nb::init<Document&>())
 
     .def("init", &Execution::Initialize)
     .def("set_emulator", &Execution::SetEmulator)
@@ -144,7 +148,7 @@ void PydusaExecution(py::module& rMod)
     .def("get_function_parameter", pydusa::Execution_GetFunctionParameter)
     .def("return_from_function", &Execution::ReturnFromFunction)
     .def("return_value_from_function", &Execution::ReturnValueFromFunction)
-    .def_property_readonly("cpu", &Execution::GetCpuContext, py::return_value_policy::reference_internal)
-    .def_property_readonly("mem", &Execution::GetMemoryContext, py::return_value_policy::reference_internal)
+    .def_prop_ro("cpu", &Execution::GetCpuContext, nb::rv_policy::reference_internal)
+    .def_prop_ro("mem", &Execution::GetMemoryContext, nb::rv_policy::reference_internal)
     ;
 }

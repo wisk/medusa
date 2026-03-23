@@ -1,5 +1,4 @@
-#define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <medusa/module.hpp>
 #include <medusa/medusa.hpp>
@@ -7,6 +6,11 @@
 #include <medusa/execution.hpp>
 
 #include <iostream>
+
+TEST_CASE("emulation placeholder", "[emul]")
+{
+  WARN("Emulation tests are currently disabled (all commented out)");
+}
 
 //TEST_CASE("arm", "[emul_interpreter_arm]")
 //{

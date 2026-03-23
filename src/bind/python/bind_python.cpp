@@ -11,9 +11,23 @@ MEDUSA_NAMESPACE_USE
 
 std::once_flag g_PythonInit;
 
+static bool g_PythonAvailable = false;
+
+static void EnsurePythonInitialized()
+{
+  std::call_once(g_PythonInit, [](){
+    // Pre-check: try to configure Python without aborting
+    PyStatus status;
+    PyConfig config;
+    PyConfig_InitPythonConfig(&config);
+    status = Py_InitializeFromConfig(&config);
+    PyConfig_Clear(&config);
+    g_PythonAvailable = !PyStatus_Exception(status);
+  });
+}
+
 BindingPython::BindingPython(void)
 {
-  std::call_once(g_PythonInit, [](){ Py_Initialize(); });
 }
 
 BindingPython::~BindingPython(void)
@@ -66,10 +80,6 @@ bool BindingPython::Bind(Medusa& rCore)
   if (!Execute(BindMedusa))
     return false;
 
-  return false;
-  //py::module m("pydusa", "pydusa module");
-  //m.attr("core") = py::cast(rCore);
-
   return true;
 }
 
@@ -84,23 +94,12 @@ bool BindingPython::Unbind(Medusa& rCore)
   return Execute(UnbindMedusa);
 }
 
-//ref: http://www.boost.org/doc/libs/1_57_0/libs/python/doc/tutorial/doc/html/python/embedding.html
 bool BindingPython::Execute(std::string const& rCode)
 {
-  return false;
-  //auto MainModule = py::import("__main__");
-  //auto MainNamespace = MainModule.attr("__dict__");
-
-  //try
-  //{
-  //  auto Ignored = py::exec(rCode.c_str(), MainNamespace);
-  //}
-  //catch (py::error_already_set const&)
-  //{
-  //  PyErr_Print();
-  //  return false;
-  //}
-  //return true;
+  EnsurePythonInitialized();
+  if (!g_PythonAvailable)
+    return false;
+  return PyRun_SimpleString(rCode.c_str()) == 0;
 }
 
 Binding* GetBinding(void) { return new BindingPython; }

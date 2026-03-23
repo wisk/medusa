@@ -56,22 +56,22 @@ bool Document::Close(void)
 void Document::Connect(u32 Type, Document::Subscriber* pSubscriber)
 {
   if (Type & Subscriber::Quit)
-    pSubscriber->m_QuitConnection = m_QuitSignal.connect(boost::bind(&Subscriber::OnQuit, pSubscriber));
+    pSubscriber->m_QuitConnection = m_QuitSignal.connect([pSubscriber]() { pSubscriber->OnQuit(); });
 
   if (Type & Subscriber::DocumentUpdated)
-    pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect(boost::bind(&Subscriber::OnDocumentUpdated, pSubscriber));
+    pSubscriber->m_DocumentUpdatedConnection = m_DocumentUpdatedSignal.connect([pSubscriber]() { pSubscriber->OnDocumentUpdated(); });
 
   if (Type & Subscriber::MemoryAreaUpdated)
-    pSubscriber->m_MemoryAreaUpdatedConnection = m_MemoryAreaUpdatedSignal.connect(boost::bind(&Subscriber::OnMemoryAreaUpdated, pSubscriber, _1, _2));
+    pSubscriber->m_MemoryAreaUpdatedConnection = m_MemoryAreaUpdatedSignal.connect([pSubscriber](MemoryArea const& rMemArea, bool Removed) { pSubscriber->OnMemoryAreaUpdated(rMemArea, Removed); });
 
   if (Type & Subscriber::AddressUpdated)
-    pSubscriber->m_AddressUpdatedConnection = m_AddressUpdatedSignal.connect(boost::bind(&Subscriber::OnAddressUpdated, pSubscriber, _1));
+    pSubscriber->m_AddressUpdatedConnection = m_AddressUpdatedSignal.connect([pSubscriber](Address::Vector const& rAddresses) { pSubscriber->OnAddressUpdated(rAddresses); });
 
   if (Type & Subscriber::LabelUpdated)
-    pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect(boost::bind(&Subscriber::OnLabelUpdated, pSubscriber, _1, _2, _3));
+    pSubscriber->m_LabelUpdatedConnection = m_LabelUpdatedSignal.connect([pSubscriber](Address const& rAddr, Label const& rLbl, bool Removed) { pSubscriber->OnLabelUpdated(rAddr, rLbl, Removed); });
 
   if (Type & Subscriber::TaskUpdated)
-    pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect(boost::bind(&Subscriber::OnTaskUpdated, pSubscriber, _1, _2));
+    pSubscriber->m_TaskUpdatedConnection = m_TaskUpdatedSignal.connect([pSubscriber](std::string const& rTaskName, u8 Progress) { pSubscriber->OnTaskUpdated(rTaskName, Progress); });
 }
 
 bool Document::GetImageBase(ImageBaseType& rImageBase) const
@@ -672,9 +672,7 @@ Address Document::MakeAddress(BaseType Base, OffsetType Offset) const
     return false;
   if (!GetMemoryArea(Address(AddrType, Base, Offset), MemArea))
     return Address();
-  Address Addr;
-  Addr.SetOffset(Offset);
-  return Addr;
+  return Address(AddrType, Base, Offset);
 }
 
 bool Document::GetPreviousAddressInHistory(Address& rAddress)

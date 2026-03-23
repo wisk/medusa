@@ -64,6 +64,7 @@ bool ModuleManager::_LoadModule(Path const& rModulePath, void* const pMod, Modul
       return true;
     }
     m_Loaders.push_back(pGetLoader);
+    Log::Write("core").Level(LogInfo) << "loader module " << pLdr->GetName() << " loaded" << LogEnd;
     delete pLdr;
     return true;
   }

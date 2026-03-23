@@ -1,24 +1,24 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/cell.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaCell(py::module& rMod)
+void PydusaCell(nb::module_& rMod)
 {
-  py::enum_<Cell::Type>(rMod, "CellType")
+  nb::enum_<Cell::Type>(rMod, "CellType")
     .value("INSTRUCTION", Cell::InstructionType)
     .value("VALUE",       Cell::ValueType)
     .value("CHARACTER",   Cell::CharacterType)
     .value("STRING",      Cell::StringType)
     ;
 
-  py::class_<Cell, Cell::SPType>(rMod, "Cell")
-    .def_property_readonly("type", &Cell::GetType)
+  nb::class_<Cell>(rMod, "Cell")
+    .def_prop_ro("type", &Cell::GetType)
     .def("__len__",       &Cell::GetSize)
   ;
 }

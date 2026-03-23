@@ -4,7 +4,14 @@
 #include "medusa/namespace.hpp"
 #include "medusa/types.hpp"
 #include "medusa/export.hpp"
-#include <boost/detail/endian.hpp>
+// Detect endianness without Boost
+#if defined(_WIN32) || defined(__LITTLE_ENDIAN__) || \
+    (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#  define MEDUSA_LITTLE_ENDIAN 1
+#elif defined(__BIG_ENDIAN__) || \
+    (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+#  define MEDUSA_BIG_ENDIAN 1
+#endif
 
 MEDUSA_NAMESPACE_BEGIN
 

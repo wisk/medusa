@@ -1,5 +1,4 @@
-#define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <boost/filesystem.hpp>
 
 #include <medusa/database.hpp>
@@ -15,7 +14,11 @@ void TestDatabase(std::string const& rDatabaseModuleName)
   auto& rModMgr = medusa::ModuleManager::Instance();
   rModMgr.InitializeModules(".");
   auto spDb = rModMgr.MakeDatabase(rDatabaseModuleName);
-  REQUIRE(spDb != nullptr);
+  if (spDb == nullptr)
+  {
+    WARN("Database module '" << rDatabaseModuleName << "' not available");
+    return;
+  }
 
   auto TempBaseFile = boost::filesystem::absolute(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path());
   {

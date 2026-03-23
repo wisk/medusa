@@ -1,22 +1,22 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/architecture.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaArchitecture(py::module& rMod)
+void PydusaArchitecture(nb::module_& rMod)
 {
-  py::class_<Architecture, Architecture::SPType>(rMod, "Architecture")
-    .def_property_readonly("name", &Architecture::GetName)
+  nb::class_<Architecture>(rMod, "Architecture")
+    .def_prop_ro("name", &Architecture::GetName)
     .def("translate",      &Architecture::Translate)
     .def("disassemble",    &Architecture::Disassemble)
     .def("get_endianness", &Architecture::GetEndianness)
     .def("format_cell",       &Architecture::FormatCell)
     .def("format_multicell",  &Architecture::FormatMultiCell)
-    .def_property_readonly("information", &Architecture::GetCpuInformation, py::return_value_policy::reference_internal)
+    .def_prop_ro("information", &Architecture::GetCpuInformation, nb::rv_policy::reference_internal)
     ;
 }

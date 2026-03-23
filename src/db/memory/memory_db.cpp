@@ -128,7 +128,20 @@ bool MemoryDatabase::Flush(void)
 
 bool MemoryDatabase::Close(void)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  m_MemoryAreas.clear();
+  m_LabelsMap.clear();
+  m_ReverseLabelsMap.clear();
+  m_CrossReferencesToFrom.clear();
+  m_CrossReferencesFromTo.clear();
+  m_MultiCellsMap.clear();
+  m_CellLayoutMap.clear();
+  m_CommentsMap.clear();
+  m_StructureDetailsMap.clear();
+  m_ValueDetailsMap.clear();
+  m_FunctionDetailsMap.clear();
+  m_DetailBindingsMap.clear();
+  return true;
 }
 
 bool MemoryDatabase::RegisterArchitectureTag(Tag ArchitectureTag)
@@ -157,6 +170,38 @@ std::vector<Tag> MemoryDatabase::GetArchitectureTags(void) const
 bool MemoryDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag, u8 Mode,
   Database::SetArchitectureModeType SetArchMode)
 {
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  if (SetArchMode == Database::SetArchitectureModeType::ByMemoryArea)
+  {
+    // Find the memory area and update its architecture
+    for (auto it = m_MemoryAreas.begin(); it != m_MemoryAreas.end(); ++it)
+    {
+      if (it->GetBaseAddress().IsBetween(it->GetSize(), rAddress))
+      {
+        auto MemArea = *it;
+        m_MemoryAreas.erase(it);
+        MemArea.SetArchitectureTag(ArchitectureTag);
+        MemArea.SetArchitectureMode(Mode);
+        m_MemoryAreas.insert(MemArea);
+        return true;
+      }
+    }
+    return false;
+  }
+  else if (SetArchMode == Database::SetArchitectureModeType::ByCell)
+  {
+    int Id;
+    OffsetType Offset;
+    if (!_ConvertAddressToId(rAddress, Id, Offset))
+      return false;
+    auto Key = std::make_pair(Id, Offset);
+    auto itCell = m_CellsMap.find(Key);
+    if (itCell == m_CellsMap.end())
+      return false;
+    itCell->second.SetArchitectureTag(ArchitectureTag);
+    itCell->second.SetMode(Mode);
+    return true;
+  }
   return false;
 }
 
@@ -207,11 +252,33 @@ bool MemoryDatabase::AddMemoryArea(MemoryArea const& rMemArea)
 
 bool MemoryDatabase::RemoveMemoryArea(MemoryArea const& rMemArea)
 {
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  for (auto it = m_MemoryAreas.begin(); it != m_MemoryAreas.end(); ++it)
+  {
+    if (it->GetId() == rMemArea.GetId())
+    {
+      m_CellLayoutMap.erase(it->GetId());
+      m_MemoryAreas.erase(it);
+      return true;
+    }
+  }
   return false;
 }
 
 bool MemoryDatabase::MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress)
 {
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  for (auto it = m_MemoryAreas.begin(); it != m_MemoryAreas.end(); ++it)
+  {
+    if (it->GetId() == rMemArea.GetId())
+    {
+      auto MovedMemArea = *it;
+      m_MemoryAreas.erase(it);
+      MovedMemArea.SetBaseAddress(rBaseAddress);
+      m_MemoryAreas.insert(MovedMemArea);
+      return true;
+    }
+  }
   return false;
 }
 
@@ -234,6 +301,45 @@ bool MemoryDatabase::SetDefaultAddressingType(Address::Type AddressType)
 // See document.hpp Document::Translate
 bool MemoryDatabase::TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const
 {
+  std::lock_guard<std::mutex> Lock(m_Lock);
+
+  for (auto const& rMemArea : m_MemoryAreas)
+  {
+    if (rMemArea.GetType() != MemoryArea::MappedType && rMemArea.GetType() != MemoryArea::PhysicalType)
+      continue;
+
+    auto const& rBaseAddr = rMemArea.GetBaseAddress();
+
+    // Relative → Physical: find mapped area containing the relative address, compute file offset
+    if (rAddress.GetAddressingType() == Address::RelativeType && ToConvert == Address::PhysicalType)
+    {
+      if (rMemArea.GetType() != MemoryArea::MappedType)
+        continue;
+      if (rBaseAddr.GetAddressingType() != Address::RelativeType)
+        continue;
+      auto Off = rAddress.GetOffset();
+      auto BaseOff = rBaseAddr.GetOffset();
+      if (Off >= BaseOff && Off < BaseOff + rMemArea.GetSize())
+      {
+        rTranslatedAddress = Address(Address::PhysicalType, rMemArea.GetFileOffset() + (Off - BaseOff));
+        return true;
+      }
+    }
+
+    // Physical → Linear: find area by file offset, compute linear address
+    if (rAddress.GetAddressingType() == Address::PhysicalType && ToConvert == Address::LinearType)
+    {
+      if (rMemArea.GetType() != MemoryArea::MappedType)
+        continue;
+      auto FileOff = rAddress.GetOffset();
+      if (FileOff >= rMemArea.GetFileOffset() && FileOff < rMemArea.GetFileOffset() + rMemArea.GetFileSize())
+      {
+        rTranslatedAddress = Address(Address::LinearType, m_ImageBase + rBaseAddr.GetOffset() + (FileOff - rMemArea.GetFileOffset()));
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
@@ -340,11 +446,32 @@ bool MemoryDatabase::MoveAddress(Address const &rAddress, Address &rMovedAddress
 
 bool MemoryDatabase::ConvertAddressToPosition(Address const &rAddress, u32 &rPosition) const
 {
+  u32 Pos = 0;
+  for (auto const& rMemArea : m_MemoryAreas)
+  {
+    auto const& rBaseAddr = rMemArea.GetBaseAddress();
+    if (rBaseAddr.IsBetween(rMemArea.GetSize(), rAddress))
+    {
+      rPosition = Pos + static_cast<u32>(rAddress.GetOffset() - rBaseAddr.GetOffset());
+      return true;
+    }
+    Pos += rMemArea.GetSize();
+  }
   return false;
 }
 
 bool MemoryDatabase::ConvertPositionToAddress(u32 Position, Address &rAddress) const
 {
+  u32 Pos = 0;
+  for (auto const& rMemArea : m_MemoryAreas)
+  {
+    if (Position < Pos + rMemArea.GetSize())
+    {
+      rAddress = rMemArea.GetBaseAddress() + (Position - Pos);
+      return true;
+    }
+    Pos += rMemArea.GetSize();
+  }
   return false;
 }
 
@@ -436,17 +563,63 @@ bool MemoryDatabase::AddCrossReference(Address const &rTo, Address const &rFrom)
 
 bool MemoryDatabase::RemoveCrossReference(Address const &rFrom)
 {
-  return false;
+  int IdFrom;
+  OffsetType OffsetFrom;
+  if (!_ConvertAddressToId(rFrom, IdFrom, OffsetFrom))
+    return false;
+  auto FromPair = std::make_pair(IdFrom, OffsetFrom);
+  auto itFromTo = m_CrossReferencesFromTo.find(FromPair);
+  if (itFromTo == m_CrossReferencesFromTo.end())
+    return false;
+  for (auto const& rToPair : itFromTo->second)
+  {
+    auto itToFrom = m_CrossReferencesToFrom.find(rToPair);
+    if (itToFrom != m_CrossReferencesToFrom.end())
+    {
+      auto& rFromVec = itToFrom->second;
+      rFromVec.erase(std::remove(rFromVec.begin(), rFromVec.end(), FromPair), rFromVec.end());
+      if (rFromVec.empty())
+        m_CrossReferencesToFrom.erase(itToFrom);
+    }
+  }
+  m_CrossReferencesFromTo.erase(itFromTo);
+  return true;
 }
 
 bool MemoryDatabase::GetCrossReferenceFrom(Address const &rTo, Address::Vector &rFrom) const
 {
-  return false;
+  int Id;
+  OffsetType Offset;
+  if (!_ConvertAddressToId(rTo, Id, Offset))
+    return false;
+  auto it = m_CrossReferencesToFrom.find(std::make_pair(Id, Offset));
+  if (it == m_CrossReferencesToFrom.end())
+    return false;
+  for (auto const& rPair : it->second)
+  {
+    Address Addr;
+    if (_ConvertIdToAddress(rPair.first, rPair.second, 0, Addr))
+      rFrom.push_back(Addr);
+  }
+  return !rFrom.empty();
 }
 
 bool MemoryDatabase::GetCrossReferenceTo(Address const &rFrom, Address::Vector &rTo) const
 {
-  return false;
+  int Id;
+  OffsetType Offset;
+  if (!_ConvertAddressToId(rFrom, Id, Offset))
+    return false;
+  auto it = m_CrossReferencesFromTo.find(std::make_pair(Id, Offset));
+  if (it == m_CrossReferencesFromTo.end())
+    return false;
+  for (auto const& rPair : it->second)
+  {
+    Address Addr;
+    if (_ConvertIdToAddress(rPair.first, rPair.second, 0, Addr))
+      rTo.push_back(Addr);
+  }
+  return !rTo.empty();
 }
 
 MultiCell::SPType MemoryDatabase::GetMultiCell(Address const &rAddress) const
@@ -579,45 +752,92 @@ bool MemoryDatabase::SetComment(Address const &rAddress, std::string const &rCom
 
 bool MemoryDatabase::GetValueDetail(Id ConstId, ValueDetail &rConstDtl) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  auto it = m_ValueDetailsMap.find(ConstId);
+  if (it == m_ValueDetailsMap.end())
+    return false;
+  rConstDtl = it->second;
+  return true;
 }
 
 bool MemoryDatabase::SetValueDetail(Id ConstId, ValueDetail const &rConstDtl)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  m_ValueDetailsMap[ConstId] = rConstDtl;
+  return true;
 }
 
 bool MemoryDatabase::GetFunctionDetail(Id FuncId, FunctionDetail &rFuncDtl) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  auto it = m_FunctionDetailsMap.find(FuncId);
+  if (it == m_FunctionDetailsMap.end())
+    return false;
+  rFuncDtl = it->second;
+  return true;
 }
 
 bool MemoryDatabase::SetFunctionDetail(Id FuncId, FunctionDetail const &rFuncDtl)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  m_FunctionDetailsMap[FuncId] = rFuncDtl;
+  return true;
 }
 
 bool MemoryDatabase::GetStructureDetail(Id StructId, StructureDetail &rStructDtl) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  auto it = m_StructureDetailsMap.find(StructId);
+  if (it == m_StructureDetailsMap.end())
+    return false;
+  rStructDtl = it->second;
+  return true;
 }
 
 bool MemoryDatabase::SetStructureDetail(Id StructId, StructureDetail const &rStructDtl)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  m_StructureDetailsMap[StructId] = rStructDtl;
+  return true;
 }
 
 bool MemoryDatabase::RetrieveDetailId(Address const &rAddress, u8 Index, Id &rDtlId) const
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  int MemId;
+  OffsetType Offset;
+  if (!_ConvertAddressToId(rAddress, MemId, Offset))
+    return false;
+  auto Key = std::make_pair(std::make_pair(MemId, Offset), Index);
+  auto it = m_DetailBindingsMap.find(Key);
+  if (it == m_DetailBindingsMap.end())
+    return false;
+  rDtlId = it->second;
+  return true;
 }
 
 bool MemoryDatabase::BindDetailId(Address const &rAddress, u8 Index, Id DtlId)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  int MemId;
+  OffsetType Offset;
+  if (!_ConvertAddressToId(rAddress, MemId, Offset))
+    return false;
+  m_DetailBindingsMap[std::make_pair(std::make_pair(MemId, Offset), Index)] = DtlId;
+  return true;
 }
 
 bool MemoryDatabase::UnbindDetailId(Address const &rAddress, u8 Index)
 {
-  return false;
+  std::lock_guard<std::mutex> Lock(m_Lock);
+  int MemId;
+  OffsetType Offset;
+  if (!_ConvertAddressToId(rAddress, MemId, Offset))
+    return false;
+  auto Key = std::make_pair(std::make_pair(MemId, Offset), Index);
+  auto it = m_DetailBindingsMap.find(Key);
+  if (it == m_DetailBindingsMap.end())
+    return false;
+  m_DetailBindingsMap.erase(it);
+  return true;
 }

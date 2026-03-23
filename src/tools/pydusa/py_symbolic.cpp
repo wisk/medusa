@@ -1,10 +1,10 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <medusa/symbolic.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 MEDUSA_NAMESPACE_USE
 
@@ -13,6 +13,6 @@ namespace pydusa
 
 }
 
-void PydusaSymbolic(py::module& rMod)
+void PydusaSymbolic(nb::module_& rMod)
 {
 }

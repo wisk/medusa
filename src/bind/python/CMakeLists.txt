@@ -1,7 +1,7 @@
-find_package(pybind11 CONFIG REQUIRED)
+find_package(Python3 COMPONENTS Development REQUIRED)
 
-pybind11_add_module(bind_python SHARED bind_python.cpp bind_python.hpp)
-target_link_libraries(bind_python PRIVATE medusa)
+add_library(bind_python SHARED bind_python.cpp bind_python.hpp)
+target_link_libraries(bind_python PRIVATE medusa Python3::Python)
 set_target_properties(bind_python PROPERTIES
   FOLDER "Bindings"
   PREFIX "")

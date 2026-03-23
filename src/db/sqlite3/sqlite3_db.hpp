@@ -218,7 +218,7 @@ namespace
         , make_column("image_base", &FileInformationTable::ImageBase)
       )
       , make_table("MemoryArea"
-        , make_column("id", &MemoryAreaTable::Id, autoincrement(), primary_key())
+        , make_column("id", &MemoryAreaTable::Id, primary_key().autoincrement())
         , make_column("name", &MemoryAreaTable::Name)
         , make_column("type", &MemoryAreaTable::Type)
         , make_column("access", &MemoryAreaTable::Access)

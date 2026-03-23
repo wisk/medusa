@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 # Name
 
@@ -57,7 +57,7 @@ endif()
 # Features
 
 ## C++
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG(-fabi-version=9 HAVE_ABI_VERSION)
 if (HAVE_ABI_VERSION)
@@ -73,14 +73,17 @@ endif()
 ##   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
 ## endif()
 
-# src: ogdf cmake
+# Compiler warnings and defines
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   add_definitions(
     "/DNOMINMAX"
     "/D_CRT_SECURE_NO_WARNINGS"
     "/D_SCL_SECURE_NO_WARNINGS"
     "/wd4251" "/wd4503"
-    "/Zm256")
+    "/Zm256"
+    "/utf-8")
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU|Clang")
+  add_compile_options(-Wall -Wextra -Wno-unused-parameter)
 endif()
 
 # Sources

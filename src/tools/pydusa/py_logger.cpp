@@ -1,10 +1,11 @@
 #include "pydusa.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/stl/string.h>
 
 #include <medusa/log.hpp>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 namespace pydusa
 {
@@ -33,7 +34,7 @@ namespace pydusa
 
 MEDUSA_NAMESPACE_USE
 
-void PydusaLogger(py::module& rMod)
+void PydusaLogger(nb::module_& rMod)
 {
   rMod.def("log_to_stdout", pydusa::SetLogToStdOut);
   rMod.def("std_write", pydusa::Std_Write);
