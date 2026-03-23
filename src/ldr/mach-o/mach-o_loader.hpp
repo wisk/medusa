@@ -5,6 +5,7 @@
 #include <medusa/document.hpp>
 #include <medusa/loader.hpp>
 #include <medusa/log.hpp>
+#include <medusa/module.hpp>
 
 #include <list>
 
@@ -29,37 +30,32 @@ typedef enum {
 class MachOLoader : public Loader
 {
 public:
-                      MachOLoader(void);
   virtual std::string GetName(void) const;
   virtual u8          GetDepth(void) const;
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm) const;
+  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+  virtual bool        Map(Document& rDoc) const;
+  virtual bool        Map(Document& rDoc, Address const& rImgBase) const;
+  virtual void        Analyze(Document& rDoc) const {}
 
 private:
-    template<int bit> void Map(Document& rDoc, Architecture::VSPType const& rArchs);
-    template<int bit> void MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode);
-                      void GetEntryPointV1(Document& rDoc, int LoadCmdOff);
-                      void GetEntryPointV2(Document& rDoc, int LoadCmdOff);
-    template<int bit> void GetSymbols(Document& rDoc, int LoadCmdOff);
-    template<int bit> void GetDynamicSymbols(Document& rDoc, int LoadCmdOff);
+    template<int bit> bool MapImpl(Document& rDoc) const;
+    template<int bit> void MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode,
+                                      EEndianness Endian, u32 HeaderOffset,
+                                      u64& rTextSectionVMAddr, u64& rImportsAddress, u32& rSymbolsIndex) const;
+                      void GetEntryPointV1(Document& rDoc, int LoadCmdOff, u32 Machine, EEndianness Endian,
+                                           u64& rEntryPoint, EntryPoBitVector& rEntryPoBitVector) const;
+                      void GetEntryPointV2(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                                           u64& rEntryPoint, EntryPoBitVector& rEntryPoBitVector) const;
+    template<int bit> void GetSymbols(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                                      u32& rSymbolsOffset, u32& rStringsOffset) const;
+    template<int bit> void GetDynamicSymbols(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                                             u32 SymbolsOffset, u32 StringsOffset,
+                                             u64 ImportsAddress, u32 SymbolsIndex) const;
 
-    bool                   _FindArchitectureTagAndModeByMachine(
-        Architecture::VSPType const& rArchs,
-        Tag& rArchTag, u8& rArchMode) const;
+    static bool _GetMachineAndEndian(BinaryStream const& rBinStrm, u32& rMachine, bool& rArch64, EEndianness& rEndian, u32& rHeaderOffset);
 
-    u32            m_HeaderOffset;
-    u32            m_Machine;
-    bool           m_Arch64;
-    EEndianness    m_Endian;
-    u64            m_EntryPoint;
-    EntryPoBitVector m_EntryPoBitVector;
-    u64            m_TextSectionVMAddr;
-    u32            m_SymbolsOffset;
-    u32            m_StringsOffset;
-    u64            m_ImportsAddress;
-    u32            m_SymbolsIndex;
+    static std::string _GetArchitectureName(u32 Machine, bool Arch64);
 };
 
 extern "C" LDR_MACH_O_EXPORT Loader* GetLoader(void);

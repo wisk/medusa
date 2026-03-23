@@ -2,42 +2,25 @@
 #include "mach-o_loader.hpp"
 #include "mach-o_traits.hpp"
 #include <medusa/medusa.hpp>
-#include <boost/foreach.hpp>
 
 #define LOG_WR Log::Write("ldr_mach-o")
 
 #define TEXT_SECTION "__TEXT,__text"
 
-MachOLoader::MachOLoader(void) :
-  m_HeaderOffset(0),
-  m_Machine(0),
-  m_Arch64(false),
-  m_Endian(EndianUnknown),
-  m_EntryPoint(0x0),
-  m_EntryPoBitVector(ENTRYPOINT_NONE),
-  m_TextSectionVMAddr(0x0),
-  m_SymbolsOffset(0x0),
-  m_StringsOffset(0x0),
-  m_ImportsAddress(0x0),
-  m_SymbolsIndex(0x0)
+bool MachOLoader::_GetMachineAndEndian(BinaryStream const& rBinStrm, u32& rMachine, bool& rArch64, EEndianness& rEndian, u32& rHeaderOffset)
 {
-}
-
-// FIXME(KS): This code is not endian safe
-bool MachOLoader::IsCompatible(BinaryStream const& rBinStrm)
-{
-  m_HeaderOffset = 0;
+  rHeaderOffset = 0;
   typedef MachOTraits<32> MachOType;
   MachOType::MachOHeader  Header;
 
-  if (!rBinStrm.Read(m_HeaderOffset, &Header, sizeof(Header))) {
+  if (!rBinStrm.Read(rHeaderOffset, &Header, sizeof(Header))) {
     return false;
   }
 
   /* TODO : Support Fat binaries */
   if (Header.magic == FAT_MAGIC || Header.magic == FAT_CIGAM) {
 
-    m_Endian = (Header.magic == FAT_MAGIC) ? BigEndian : LittleEndian;
+    rEndian = (Header.magic == FAT_MAGIC) ? BigEndian : LittleEndian;
 
     // NumOfFatArch and FatArch structure are always in big endian
     u32 NumOfFatArch = 0;
@@ -51,42 +34,61 @@ bool MachOLoader::IsCompatible(BinaryStream const& rBinStrm)
     if (!rBinStrm.Read(0x8, &FatArch, sizeof(FatArch)))
       return false;
     MachOType::EndianSwap(FatArch, BigEndian);
-    m_HeaderOffset = FatArch.offset;
-    if (!rBinStrm.Read(m_HeaderOffset, &Header, sizeof(Header)))
+    rHeaderOffset = FatArch.offset;
+    if (!rBinStrm.Read(rHeaderOffset, &Header, sizeof(Header)))
       return false;
 
   } else if ( Header.magic == MH_MAGIC
     || Header.magic == MH_MAGIC_64) {
 
-      m_Endian = LittleEndian;
+      rEndian = LittleEndian;
 
   } else if (Header.magic == MH_CIGAM
           || Header.magic == MH_CIGAM_64) {
 
-      m_Endian = BigEndian;
+      rEndian = BigEndian;
 
   } else {
     return false;
   }
 
-  MachOType::EndianSwap(Header, m_Endian);
+  MachOType::EndianSwap(Header, rEndian);
 
   /* Avoid file types that have not been tested */
   if (Header.filetype != MH_EXECUTE) {
     return false;
   }
 
-  m_Arch64  = Header.magic == MH_MAGIC_64;
-  m_Machine = Header.cputype;
+  rArch64  = Header.magic == MH_MAGIC_64;
+  rMachine = Header.cputype;
 
   return true;
 }
 
+std::string MachOLoader::_GetArchitectureName(u32 Machine, bool Arch64)
+{
+  switch (Machine)
+  {
+  case CPU_TYPE_X86:    return "x86/32-bit";
+  case CPU_TYPE_X86_64: return "x86/64-bit";
+  case CPU_TYPE_ARM:    return "ARM";
+  default:              return "";
+  }
+}
+
+// FIXME(KS): This code is not endian safe
+bool MachOLoader::IsCompatible(BinaryStream const& rBinStrm) const
+{
+  u32 HeaderOffset;
+  u32 Machine;
+  bool Arch64;
+  EEndianness Endian;
+  return _GetMachineAndEndian(rBinStrm, Machine, Arch64, Endian, HeaderOffset);
+}
+
 std::string MachOLoader::GetName(void) const
 {
-  return m_Arch64
-    ? "Mach-O 64-bit"
-    : "Mach-O 32-bit";
+  return "Mach-O";
 }
 
 u8 MachOLoader::GetDepth(void) const
@@ -94,88 +96,122 @@ u8 MachOLoader::GetDepth(void) const
   return 1;
 }
 
-bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+std::vector<std::string> MachOLoader::GetUsedArchitectures(BinaryStream const& rBinStrm) const
 {
-  if (m_Arch64) {
-    Map<64>(rDoc, rArchs);
-  } else {
-    Map<32>(rDoc, rArchs);
-  }
+  u32 HeaderOffset, Machine;
+  bool Arch64;
+  EEndianness Endian;
+  std::vector<std::string> Result;
 
-  return true;
+  if (_GetMachineAndEndian(rBinStrm, Machine, Arch64, Endian, HeaderOffset))
+  {
+    auto ArchName = _GetArchitectureName(Machine, Arch64);
+    if (!ArchName.empty())
+      Result.push_back(ArchName);
+  }
+  return Result;
 }
 
-bool MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
+bool MachOLoader::Map(Document& rDoc) const
+{
+  BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
+  u32 HeaderOffset, Machine;
+  bool Arch64;
+  EEndianness Endian;
+
+  if (!_GetMachineAndEndian(rBinStrm, Machine, Arch64, Endian, HeaderOffset))
+    return false;
+
+  if (Arch64) {
+    return MapImpl<64>(rDoc);
+  } else {
+    return MapImpl<32>(rDoc);
+  }
+}
+
+bool MachOLoader::Map(Document& rDoc, Address const& rImgBase) const
 {
   return false;
 }
 
 template<int bit>
-void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+bool MachOLoader::MapImpl(Document& rDoc) const
 {
   BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
+  auto const&                     rModMngr = ModuleManager::Instance();
   typedef MachOTraits<bit>        MachOType;
   typename MachOType::MachOHeader Header;
   int                             LoadCmdOff;
 
-  Tag ArchTag;
+  u32 HeaderOffset, Machine;
+  bool Arch64;
+  EEndianness Endian;
+  if (!_GetMachineAndEndian(rBinStrm, Machine, Arch64, Endian, HeaderOffset))
+    return false;
+
+  auto ArchName = _GetArchitectureName(Machine, Arch64);
+  if (ArchName.empty())
+    return false;
+
+  TagType ArchTag;
   u8  ArchMode;
-  if (!_FindArchitectureTagAndModeByMachine(rArchs, ArchTag, ArchMode)) {
+  if (!rModMngr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode)) {
     LOG_WR << "Cannot identify architecture and mode" << LogEnd;
-    return;
+    return false;
   }
 
-  if (!rBinStrm.Read(m_HeaderOffset, &Header, sizeof(Header))) {
+  if (!rBinStrm.Read(HeaderOffset, &Header, sizeof(Header))) {
     LOG_WR << "Cannot read mach-o header" << LogEnd;
-    return;
+    return false;
   }
-  MachOType::EndianSwap(Header, m_Endian); // TODO(KS): understand which structures are big/little endian...
+  MachOType::EndianSwap(Header, Endian);
 
-  LoadCmdOff = m_HeaderOffset + sizeof(Header);
+  u64 EntryPoint = 0;
+  EntryPoBitVector EntryPoBV = ENTRYPOINT_NONE;
+  u64 TextSectionVMAddr = 0;
+  u32 SymbolsOffset = 0;
+  u32 StringsOffset = 0;
+  u64 ImportsAddress = 0;
+  u32 SymbolsIndex = 0;
+
+  LoadCmdOff = HeaderOffset + sizeof(Header);
   for (u32 i = 0; i < Header.ncmds; i++) {
     typename MachOType::LoadCmd LoadCmd;
 
     if (!rBinStrm.Read(LoadCmdOff, &LoadCmd, sizeof(LoadCmd))) {
       LOG_WR << "Cannot read load command" << LogEnd;
-      return;
+      return false;
     }
-    MachOType::EndianSwap(LoadCmd, m_Endian);
+    MachOType::EndianSwap(LoadCmd, Endian);
 
     switch (LoadCmd.cmd) {
     case LC_SEGMENT:
     case LC_SEGMENT_64:
-      MachOLoader::MapSegment<bit>(rDoc, LoadCmdOff, ArchTag, ArchMode);
+      MapSegment<bit>(rDoc, LoadCmdOff, ArchTag, ArchMode, Endian, HeaderOffset,
+                      TextSectionVMAddr, ImportsAddress, SymbolsIndex);
       break;
 
     case LC_SYMTAB:
-      MachOLoader::GetSymbols<bit>(rDoc, LoadCmdOff);
+      GetSymbols<bit>(rDoc, LoadCmdOff, Endian, SymbolsOffset, StringsOffset);
       break;
 
     case LC_DYSYMTAB:
-      MachOLoader::GetDynamicSymbols<bit>(rDoc, LoadCmdOff);
+      GetDynamicSymbols<bit>(rDoc, LoadCmdOff, Endian, SymbolsOffset, StringsOffset,
+                             ImportsAddress, SymbolsIndex);
       break;
-
-      /*        case LC_LOAD_DYLIB:
-      break;
-
-      case LC_DYSYMTAB:
-      break;*/
 
       /* Entry point (up to Mac OS X 10.7) */
     case LC_THREAD:
     case LC_UNIXTHREAD:
-      MachOLoader::GetEntryPointV1(rDoc, LoadCmdOff + sizeof(LoadCmd));
+      GetEntryPointV1(rDoc, LoadCmdOff + sizeof(LoadCmd), Machine, Endian, EntryPoint, EntryPoBV);
       break;
 
       /* Entry point (since Mac OS X 10.8) */
     case LC_MAIN:
-      MachOLoader::GetEntryPointV2(rDoc, LoadCmdOff + sizeof(LoadCmd));
+      GetEntryPointV2(rDoc, LoadCmdOff + sizeof(LoadCmd), Endian, EntryPoint, EntryPoBV);
       break;
 
     default:
-      //printf("[load_command %d]", i);
-      //printf("  cmd:%d   size:%d\n",
-      //       LoadCmd.cmd & ~LC_REQ_DYLD, LoadCmd.cmdsize);
       break;
     }
 
@@ -184,17 +220,21 @@ void MachOLoader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
 
   /* We wait until here to add the start label because we might
   need fields from different load commands. */
-  if (m_EntryPoBitVector == ENTRYPOINT_OFFSET) {
-    if (m_TextSectionVMAddr) {
-      m_EntryPoint = m_TextSectionVMAddr + m_EntryPoint;
+  if (EntryPoBV == ENTRYPOINT_OFFSET) {
+    if (TextSectionVMAddr) {
+      EntryPoint = TextSectionVMAddr + EntryPoint;
     }
   }
-  rDoc.AddLabel(Address(Address::LinearType, 0x0, m_EntryPoint, 0x10, bit),
+  rDoc.AddLabel(Address(Address::LinearType, 0x0, EntryPoint, 0x10, bit),
     Label("start", Label::Code | Label::Exported));
+
+  return true;
 }
 
 template<int bit>
-void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode)
+void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 ArchMode,
+                              EEndianness Endian, u32 HeaderOffset,
+                              u64& rTextSectionVMAddr, u64& rImportsAddress, u32& rSymbolsIndex) const
 {
   BinaryStream const&         rBinStrm = rDoc.GetBinaryStream();
   typedef MachOTraits<bit>    MachOType;
@@ -208,7 +248,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
     LOG_WR << "Cannot read segment command" << LogEnd;
     return;
   }
-  MachOType::EndianSwap(Segment, m_Endian);
+  MachOType::EndianSwap(Segment, Endian);
   SegmentName = reinterpret_cast<char *>(Segment.segname);
   LoadCmdOff += sizeof(Segment);
 
@@ -219,7 +259,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
         << LogEnd;
       return;
     }
-    MachOType::EndianSwap(Segment, m_Endian);
+    MachOType::EndianSwap(Section, Endian);
 
     FullSectionName  = SegmentName;
     FullSectionName += ",";
@@ -227,7 +267,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
 
     /* We might need this address to compute the entrypoint */
     if (FullSectionName == TEXT_SECTION) {
-      m_TextSectionVMAddr = Section.addr;
+      rTextSectionVMAddr = Section.addr;
     }
 
     LOG_WR << "Section found"
@@ -245,7 +285,6 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
       MemAreaFlags |= MemoryArea::Access::Execute;
     }
 
-    MemoryArea* pNewMemArea = nullptr;
     bool Res;
 
     if ((Section.flags & SECTION_TYPE) == S_ZEROFILL) {
@@ -269,38 +308,23 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
     if (!Res)
       LOG_WR << "failed to add memory area" << LogEnd;
 
-    if ((Section.flags & SECTION_TYPE) == S_CSTRING_LITERALS)
-      for (Address CurAddr = pNewMemArea->GetBaseAddress(), EndAddr = pNewMemArea->GetBaseAddress() + pNewMemArea->GetSize();
-        CurAddr < EndAddr;)
-      {
-        if (!rDoc.MakeString(CurAddr, String::Utf8Type))
-        {
-          CurAddr += 1;
-          continue;
-        }
-        if (!rDoc.GetNextAddress(CurAddr, CurAddr))
-        {
-          CurAddr += 1;
-          continue;
-        }
-      }
-
     // TODO: Is it the only way to import symbols in Mach-O?
     if ((Section.flags & SECTION_TYPE) == S_LAZY_SYMBOL_POINTERS)
     {
-      m_ImportsAddress = Section.addr;
-      m_SymbolsIndex   = Section.reserved1;
+      rImportsAddress = Section.addr;
+      rSymbolsIndex   = Section.reserved1;
     }
 
     LoadCmdOff += sizeof(Section);
   }
 }
 
-void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
+void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff, u32 Machine, EEndianness Endian,
+                                   u64& rEntryPoint, EntryPoBitVector& rEntryPoBitVector) const
 {
   BinaryStream const& rBinStrm = rDoc.GetBinaryStream();
 
-  switch (m_Machine) {
+  switch (Machine) {
   case CPU_TYPE_X86:
     {
       typedef MachOTraits<32>   MachOType;
@@ -311,7 +335,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
         LOG_WR << "Cannot read processor state header" << LogEnd;
         return;
       }
-      MachOType::EndianSwap(x86StateHeader, m_Endian);
+      MachOType::EndianSwap(x86StateHeader, Endian);
       LoadCmdOff += sizeof(x86StateHeader);
 
       if (x86StateHeader.flavor != x86_THREAD_STATE32) {
@@ -323,10 +347,10 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
         LOG_WR << "Cannot read processor state" << LogEnd;
         return;
       }
-      MachOType::EndianSwap(x86State, m_Endian);
+      MachOType::EndianSwap(x86State, Endian);
 
-      m_EntryPoint     = x86State.eip;
-      m_EntryPoBitVector = ENTRYPOINT_VMADDR;
+      rEntryPoint       = x86State.eip;
+      rEntryPoBitVector = ENTRYPOINT_VMADDR;
     }
     break;
 
@@ -340,7 +364,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
         LOG_WR << "Cannot read processor state header" << LogEnd;
         return;
       }
-      MachOType::EndianSwap(x86StateHeader, m_Endian);
+      MachOType::EndianSwap(x86StateHeader, Endian);
       LoadCmdOff += sizeof(x86StateHeader);
 
       if (x86StateHeader.flavor != x86_THREAD_STATE32) {
@@ -352,10 +376,10 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
         LOG_WR << "Cannot read processor state" << LogEnd;
         return;
       }
-      MachOType::EndianSwap(x86State, m_Endian);
+      MachOType::EndianSwap(x86State, Endian);
 
-      m_EntryPoint     = x86State.rip;
-      m_EntryPoBitVector = ENTRYPOINT_VMADDR;
+      rEntryPoint       = x86State.rip;
+      rEntryPoBitVector = ENTRYPOINT_VMADDR;
     }
     break;
 
@@ -377,7 +401,8 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff)
   }
 }
 
-void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff)
+void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                                   u64& rEntryPoint, EntryPoBitVector& rEntryPoBitVector) const
 {
   BinaryStream const&     rBinStrm = rDoc.GetBinaryStream();
   typedef MachOTraits<32> MachOType;
@@ -387,14 +412,15 @@ void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff)
     LOG_WR << "Cannot read entry point command" << LogEnd;
     return;
   }
-  MachOType::EndianSwap(EntryPoint, m_Endian);
+  MachOType::EndianSwap(EntryPoint, Endian);
 
-  m_EntryPoint     = EntryPoint.entryoff;
-  m_EntryPoBitVector = ENTRYPOINT_OFFSET;
+  rEntryPoint       = EntryPoint.entryoff;
+  rEntryPoBitVector = ENTRYPOINT_OFFSET;
 }
 
 template<int bit>
-void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
+void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                              u32& rSymbolsOffset, u32& rStringsOffset) const
 {
   BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
   typedef MachOTraits<bit>        MachOType;
@@ -405,15 +431,17 @@ void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff)
     LOG_WR << "Cannot read symtab command" << LogEnd;
     return;
   }
-  MachOType::EndianSwap(SymTab, m_Endian);
-  m_SymbolsOffset = SymTab.symoff;
-  m_StringsOffset = SymTab.stroff;
+  MachOType::EndianSwap(SymTab, Endian);
+  rSymbolsOffset = SymTab.symoff;
+  rStringsOffset = SymTab.stroff;
 }
 
 template<int bit>
-void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
+void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff, EEndianness Endian,
+                                     u32 SymbolsOffset, u32 StringsOffset,
+                                     u64 ImportsAddress, u32 SymbolsIndex) const
 {
-  if (m_SymbolsOffset == 0x0) {
+  if (SymbolsOffset == 0x0) {
     LOG_WR << "Unable to get imported symbols, symbol offset is not yet initialized" << LogEnd;
     return;
   }
@@ -428,8 +456,8 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     return;
   }
 
-  u64 ImpAddr = m_ImportsAddress;
-  for (u32 i = m_SymbolsIndex; i < DySymTab.nindirectsyms; ++i, ImpAddr += (bit / 8))
+  u64 ImpAddr = ImportsAddress;
+  for (u32 i = SymbolsIndex; i < DySymTab.nindirectsyms; ++i, ImpAddr += (bit / 8))
   {
     u32 SymIdx;
 
@@ -440,7 +468,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     typename MachOType::Symbol Sym;
 
     /* Read Symbol */
-    if (!rBinStrm.Read(m_SymbolsOffset + sizeof(Sym) * SymIdx, &Sym, sizeof(Sym))) {
+    if (!rBinStrm.Read(SymbolsOffset + sizeof(Sym) * SymIdx, &Sym, sizeof(Sym))) {
       LOG_WR << "Cannot read the symbol " << i << LogEnd;
       continue;
     }
@@ -448,7 +476,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
     std::string SymName;
 
     /* Read Symbol Name */
-    if (!rBinStrm.Read(m_StringsOffset + Sym.n_strx, SymName)) {
+    if (!rBinStrm.Read(StringsOffset + Sym.n_strx, SymName)) {
       LOG_WR << "Cannot read the symbol name " << i << LogEnd;
       continue;
     }
@@ -457,57 +485,4 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff)
       Address(Address::LinearType, 0x0, ImpAddr, 0x10, bit),
       Label(SymName, Label::Imported | Label::Data));
   }
-}
-
-void MachOLoader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
-{
-  std::string ArchName;
-
-  switch (m_Machine)
-  {
-  case CPU_TYPE_X86:
-  case CPU_TYPE_X86_64: ArchName = "x86"; break;
-  case CPU_TYPE_ARM:    ArchName = "ARM";       break;
-  default:                                      return;
-  }
-
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [&ArchName](Architecture::SPType spArch)
-  { return spArch->GetName() != ArchName; }), std::end(rArchs));
-}
-
-bool MachOLoader::_FindArchitectureTagAndModeByMachine(
-  Architecture::VSPType const& rArchs,
-  Tag& rArchTag, u8& rArchMode) const
-{
-  std::string ArchTagName, ArchModeName;
-
-  switch (m_Machine)
-  {
-  case CPU_TYPE_X86:
-    ArchTagName  = "x86";
-    ArchModeName = "32-bit";
-    break;
-
-  case CPU_TYPE_X86_64:
-    ArchTagName  = "x86";
-    ArchModeName = "64-bit";
-    break;
-
-  case CPU_TYPE_ARM:
-    ArchTagName = "ARM";
-    break;
-  }
-
-  for (auto spArch : rArchs)
-  {
-
-    if (ArchTagName == spArch->GetName())
-    {
-      rArchTag  = spArch->GetTag();
-      rArchMode = spArch->GetModeByName(ArchModeName);
-      return true;
-    }
-  }
-
-  return false;
 }

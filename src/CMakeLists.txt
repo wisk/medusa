@@ -46,7 +46,7 @@ medusa_include_module_if_needed(emul llvm)         # LLVM
 medusa_include_module_if_needed(ldr bs)            # BootSector
 medusa_include_module_if_needed(ldr elf)           # ELF
 medusa_include_module_if_needed(ldr gb)            # GameBoy ROM
-# medusa_include_module_if_needed(ldr mach-o)        # Mach-O
+medusa_include_module_if_needed(ldr mach-o)        # Mach-O
 medusa_include_module_if_needed(ldr pe)            # PE
 medusa_include_module_if_needed(ldr raw)           # Raw
 # medusa_include_module_if_needed(ldr st62)          # ST62
