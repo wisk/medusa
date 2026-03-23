@@ -112,20 +112,20 @@ void ModuleManager::LoadDatabases(Path const& rModPath)
 {
   try
   {
-    const boost::filesystem::path CurDir = rModPath;
+    const std::filesystem::path CurDir = rModPath;
     Module Module;
 
-    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
+    Log::Write("core") << "Module directory: " << std::filesystem::absolute(CurDir) << LogEnd;
 
-    boost::filesystem::directory_iterator End;
-    for (boost::filesystem::directory_iterator It(CurDir);
+    std::filesystem::directory_iterator End;
+    for (std::filesystem::directory_iterator It(CurDir);
       It != End; ++It) {
       auto const &rFilename = It->path().string();
 
       if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      auto FullPath = boost::filesystem::system_complete(*It);
+      auto FullPath = std::filesystem::absolute(It->path());
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void *pMod = Module.Load(FullPath);
@@ -144,17 +144,17 @@ void ModuleManager::LoadDatabases(Path const& rModPath)
   }
 }
 
-void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm)
+void ModuleManager::LoadModules(Path const& rModPath, BinaryStream const& rBinStrm)
 {
   try
   {
-    const boost::filesystem::path CurDir = rModPath;
+    const std::filesystem::path CurDir = rModPath;
     Module Module;
 
-    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
+    Log::Write("core") << "Module directory: " << std::filesystem::absolute(CurDir) << LogEnd;
 
-    boost::filesystem::directory_iterator End;
-    for (boost::filesystem::directory_iterator It(CurDir);
+    std::filesystem::directory_iterator End;
+    for (std::filesystem::directory_iterator It(CurDir);
       It != End; ++It)
     {
       auto const& rFilename = It->path().string();
@@ -162,7 +162,7 @@ void ModuleManager::LoadModules(boost::filesystem::path const& rModPath, BinaryS
       if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      auto FullPath = boost::filesystem::system_complete(*It).string();
+      auto FullPath = std::filesystem::absolute(It->path()).string();
       Log::Write("core") << "Module: \"" << rFilename << "\" ";
 
       void* pMod = Module.Load(FullPath);

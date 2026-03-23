@@ -11,7 +11,7 @@ MEDUSA_NAMESPACE_USE
 
 namespace pydusa
 {
-  void (FileBinaryStream::*pFileBinaryStream_Open)(boost::filesystem::path const&) = &FileBinaryStream::Open;
+  void (FileBinaryStream::*pFileBinaryStream_Open)(Path const&) = &FileBinaryStream::Open;
 
   static nb::object FileBinaryStream_Read(FileBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {

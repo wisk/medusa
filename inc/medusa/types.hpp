@@ -4,7 +4,7 @@
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include <boost/uuid/uuid.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 #if defined WIN32 || defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
 
@@ -296,7 +296,7 @@ inline constexpr Tag/*Type*/ MakeTag(u8 A, u8 B, u8 C, u8 D)
 
 // Misc
 typedef boost::uuids::uuid      Id;
-typedef boost::filesystem::path Path;
+typedef std::filesystem::path Path;
 
 
 MEDUSA_NAMESPACE_END

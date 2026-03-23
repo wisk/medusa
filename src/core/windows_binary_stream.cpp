@@ -1,5 +1,7 @@
 #include "medusa/binary_stream.hpp"
 
+#include <chrono>
+#include <string>
 #include <Windows.h>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -19,7 +21,7 @@ BinaryStream::~BinaryStream(void)
 
 /* file binary stream */
 
-FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
+FileBinaryStream::FileBinaryStream(Path const& rFilePath)
 : BinaryStream()
 , m_FileHandle(INVALID_HANDLE_VALUE)
 , m_MapHandle(nullptr)
@@ -32,7 +34,7 @@ FileBinaryStream::~FileBinaryStream(void)
   Close();
 }
 
-void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
+void FileBinaryStream::Open(Path const& rFilePath)
 {
   if (m_pBuffer != nullptr)
     throw Exception("Binary stream: close the current file first before opening a new one");
@@ -121,7 +123,7 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
 
 void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
-  m_Path = boost::filesystem::unique_path();
+  m_Path = std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
   m_pBuffer = ::malloc(MemSize);
   if (m_pBuffer == nullptr)
    throw Exception_System("malloc");

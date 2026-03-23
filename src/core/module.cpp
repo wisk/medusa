@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -165,10 +165,10 @@ void ModuleManager::InitializeModules(Path const& rModPath)
     auto CurDir = rModPath;
     Module Module;
 
-    Log::Write("core") << "Module directory: " << boost::filesystem::system_complete(CurDir) << LogEnd;
+    Log::Write("core") << "Module directory: " << std::filesystem::absolute(CurDir) << LogEnd;
 
-    boost::filesystem::directory_iterator End;
-    for (boost::filesystem::directory_iterator It(CurDir);
+    std::filesystem::directory_iterator End;
+    for (std::filesystem::directory_iterator It(CurDir);
       It != End; ++It)
     {
       auto const& rFilename = It->path().string();
@@ -176,7 +176,7 @@ void ModuleManager::InitializeModules(Path const& rModPath)
       if (rFilename.substr(rFilename.find_last_of(".") + 1) != Module::GetExtension())
         continue;
 
-      auto FullPath = boost::filesystem::system_complete(*It).string();
+      auto FullPath = std::filesystem::absolute(It->path()).string();
       void* pMod = Module.Load(FullPath);
 
       Log::Write("core") << "Module: \"" << rFilename << "\" ";

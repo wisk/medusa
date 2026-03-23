@@ -1,13 +1,13 @@
 #include "medusa/user_configuration.hpp"
 #include "medusa/config.hpp"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 MEDUSA_NAMESPACE_BEGIN
 
 UserConfiguration::UserConfiguration(void)
 {
-  namespace fs = boost::filesystem;
-  fs::path HomePath;
+  namespace fs = std::filesystem;
+  std::filesystem::path HomePath;
 
 #ifdef WIN32
   HomePath = _wgetenv(L"APPDATA");
@@ -28,7 +28,7 @@ UserConfiguration::UserConfiguration(void)
 #endif
 
   if (!fs::exists(HomePath))
-    boost::filesystem::create_directory(HomePath);
+    std::filesystem::create_directory(HomePath);
 
   m_CfgPath = HomePath /= "cfg.ini";
 
@@ -161,7 +161,7 @@ bool UserConfiguration::_WriteDefaultOption(std::string const& rKey)
 
 bool UserConfiguration::_WriteDefaultOptions(void)
 {
-  if (boost::filesystem::exists(m_CfgPath))
+  if (std::filesystem::exists(m_CfgPath))
     return false;
 
   try

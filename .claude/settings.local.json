@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"boost::filesystem\\\\|boost/filesystem\" C:/Users/kszku/Codes/Tools/medusa/src/core/*.cpp C:/Users/kszku/Codes/Tools/medusa/inc/medusa/*.hpp)",
+      "Bash(grep -rln \"boost::filesystem\\\\|boost/filesystem\" C:/Users/kszku/Codes/Tools/medusa/src/core/*.cpp C:/Users/kszku/Codes/Tools/medusa/inc/medusa/*.hpp)"
+    ]
+  }
+}

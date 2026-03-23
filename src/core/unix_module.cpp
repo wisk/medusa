@@ -1,5 +1,5 @@
 #include <dlfcn.h>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "medusa/namespace.hpp"
 #include "medusa/module.hpp"
@@ -16,7 +16,7 @@ char const* Module::GetExtension(void)
 #endif
 }
 
-void* Module::ImplLoadLibrary(boost::filesystem::path const& rModulePath)
+void* Module::ImplLoadLibrary(std::filesystem::path const& rModulePath)
 {
   auto ModuleName = rModulePath.stem().string();
   void* pModule = m_ModuleMap[ModuleName];

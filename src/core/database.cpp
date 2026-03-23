@@ -21,17 +21,17 @@ std::string Database::GetExtension(void) const
   return ".mdb"; // generic name
 }
 
-bool Database::IsCompatible(boost::filesystem::path const& rDatabasePath) const
+bool Database::IsCompatible(Path const& rDatabasePath) const
 {
   return false;
 }
 
-bool Database::Open(boost::filesystem::path const& rDatabasePath)
+bool Database::Open(Path const& rDatabasePath)
 {
   return false;
 }
 
-bool Database::Create(boost::filesystem::path const& rDatabasePath, bool Force)
+bool Database::Create(Path const& rDatabasePath, bool Force)
 {
   return false;
 }

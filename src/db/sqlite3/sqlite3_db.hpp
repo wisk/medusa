@@ -313,7 +313,7 @@ private:
 public:
   virtual std::string GetName(void) const;
   virtual std::string GetExtension(void) const;
-  virtual bool IsCompatible(boost::filesystem::path const& rDatabasePath) const;
+  virtual bool IsCompatible(Path const& rDatabasePath) const;
 
   virtual bool Open(Path const& rFilePath);
   virtual bool Create(Path const& rDatabasePath, bool Force);
@@ -412,8 +412,8 @@ private:
   typedef std::map<std::pair<u32, OffsetType>, Label> LabelCacheType;
   mutable LabelCacheType m_LabelCache;
 
-  static bool _FileExists(boost::filesystem::path const& rFilePath);
-  static bool _FileRemoves(boost::filesystem::path const& rFilePath);
+  static bool _FileExists(Path const& rFilePath);
+  static bool _FileRemoves(Path const& rFilePath);
 };
 
 extern "C" DB_SQLITE3_EXPORT Database* GetDatabase(void);

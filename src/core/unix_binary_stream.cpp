@@ -4,7 +4,8 @@
 #include <unistd.h>
 #include <cstdlib>
 #include "medusa/binary_stream.hpp"
-#include <boost/filesystem/operations.hpp>
+#include <chrono>
+#include <string>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -23,7 +24,7 @@ BinaryStream::~BinaryStream(void)
 
 /* file binary stream */
 
-FileBinaryStream::FileBinaryStream(boost::filesystem::path const& rFilePath)
+FileBinaryStream::FileBinaryStream(Path const& rFilePath)
 : BinaryStream()
 , m_FileHandle(-1)
 , m_MapHandle()
@@ -37,7 +38,7 @@ FileBinaryStream::~FileBinaryStream(void)
   Close();
 }
 
-void FileBinaryStream::Open(boost::filesystem::path const& rFilePath)
+void FileBinaryStream::Open(Path const& rFilePath)
 {
   m_Path = rFilePath;
   m_FileHandle = open(rFilePath.string().c_str(), O_RDONLY);
@@ -90,7 +91,7 @@ MemoryBinaryStream::~MemoryBinaryStream(void)
 
 void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
 {
-  m_Path = boost::filesystem::unique_path();
+  m_Path = std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
   m_pBuffer = ::malloc(MemSize);
   if (m_pBuffer == nullptr)
     throw Exception_System("open");

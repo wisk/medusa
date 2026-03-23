@@ -56,8 +56,8 @@ public:
     return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
   }
 
-  void LoadDatabases(boost::filesystem::path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
-  void LoadModules(boost::filesystem::path const& rModPath, BinaryStream const& rBinStrm);
+  void LoadDatabases(Path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
+  void LoadModules(Path const& rModPath, BinaryStream const& rBinStrm);
   void UnloadModules(void);
 
   // Architecture

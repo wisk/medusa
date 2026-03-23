@@ -169,12 +169,12 @@ bool Sqlite3Database::IsCompatible(Path const &rDatabasePath) const
 
 bool Sqlite3Database::_FileExists(Path const &rFilePath)
 {
-  return boost::filesystem::exists(rFilePath);
+  return std::filesystem::exists(rFilePath);
 }
 
 bool Sqlite3Database::_FileRemoves(Path const &rFilePath)
 {
-  return boost::filesystem::remove(rFilePath);
+  return std::filesystem::remove(rFilePath);
 }
 
 bool Sqlite3Database::Open(Path const &rDatabasePath)

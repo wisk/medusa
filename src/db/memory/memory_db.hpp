@@ -38,7 +38,7 @@ public:
 
   virtual std::string GetName(void) const;
   virtual std::string GetExtension(void) const;
-  virtual bool IsCompatible(boost::filesystem::path const& rDatabasePath) const;
+  virtual bool IsCompatible(Path const& rDatabasePath) const;
 
   virtual bool Open(Path const& rFilePath);
   virtual bool Create(Path const& rDatabasePath, bool Force);

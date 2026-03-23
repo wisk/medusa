@@ -6,7 +6,9 @@
 #include <medusa/disassembly_view.hpp>
 
 #include <iostream>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+#include <chrono>
+#include <string>
 
 class TextFullDisassemblyView : public medusa::FullDisassemblyView
 {
@@ -58,7 +60,7 @@ TEST_CASE("cfg", "[core]")
   Medusa Core;
 
   auto const pSample = SAMPLES_DIR "/exe/cfg_test.pe.x86-64";
-  if (!boost::filesystem::exists(pSample))
+  if (!std::filesystem::exists(pSample))
   {
     WARN("Sample file not found: " << pSample);
     return;
@@ -263,7 +265,7 @@ TEST_CASE("structure", "[core]")
   auto spBinStrm = std::make_shared<medusa::MemoryBinaryStream>(WinExeHdr, sizeof(WinExeHdr));
   auto spDb = rModMgr.MakeDatabase("Memory");
   REQUIRE(spDb != nullptr);
-  auto TmpPath = boost::filesystem::temp_directory_path() / boost::filesystem::unique_path();
+  auto TmpPath = std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
   REQUIRE(spDb->Create(TmpPath, true));
   spDb->SetBinaryStream(spBinStrm);
   auto& rDoc = Core.GetDocument();

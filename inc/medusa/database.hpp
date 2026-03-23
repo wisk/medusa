@@ -14,8 +14,6 @@
 #include "medusa/xref.hpp"
 #include "medusa/detail.hpp"
 
-#include <boost/filesystem/path.hpp>
-
 MEDUSA_NAMESPACE_BEGIN
 
 class MEDUSA_EXPORT Database : public IsConfigurable

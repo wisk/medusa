@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <list>
 #include <algorithm>
-#include <boost/filesystem/operations.hpp>
+#include <chrono>
 #include <fmt/format.h>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -60,7 +60,7 @@ bool Medusa::IgnoreDatabasePath(
         Path& rDatabasePath,
   std::list<Filter> const& rExtensionFilter)
 {
-  rDatabasePath = boost::filesystem::unique_path();
+  rDatabasePath = std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
   return true;
 }
 
@@ -127,7 +127,7 @@ bool Medusa::NewDocument(
     auto ModPath = UserCfg.GetOption("core.modules_path");
     if (ModPath.empty())
       ModPath = ".";
-    if (!boost::filesystem::is_directory(ModPath))
+    if (!std::filesystem::is_directory(ModPath))
       ModPath = ".";
     rModMgr.InitializeModules(ModPath);
 

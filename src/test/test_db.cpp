@@ -1,5 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+#include <chrono>
+#include <string>
 
 #include <medusa/database.hpp>
 #include <medusa/module.hpp>
@@ -20,7 +22,7 @@ void TestDatabase(std::string const& rDatabaseModuleName)
     return;
   }
 
-  auto TempBaseFile = boost::filesystem::absolute(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path());
+  auto TempBaseFile = std::filesystem::absolute(std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
   {
     INFO("TempBaseFile: " << TempBaseFile.string());
     REQUIRE(spDb->Create(TempBaseFile, true));
@@ -157,7 +159,7 @@ TEST_CASE("sqlite3", "[db_sqlite3]")
 //    {
 //        INFO("Current database name: " + db->GetName());
 //
-//        auto TempBaseFile = boost::filesystem::absolute(boost::filesystem::temp_directory_path() / boost::filesystem::unique_path());
+//        auto TempBaseFile = std::filesystem::absolute(std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
 //        INFO("Created unique  path: " + TempBaseFile.string());
 //        CHECK(db->Create(TempBaseFile,true));
 //        

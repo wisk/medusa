@@ -46,9 +46,9 @@ public:
   }
 
 private:
-  typedef std::map< boost::filesystem::path, void* > TModuleMap;
+  typedef std::map< Path, void* > TModuleMap;
 
-  void* ImplLoadLibrary(boost::filesystem::path const& LibraryPath);
+  void* ImplLoadLibrary(Path const& LibraryPath);
 #ifdef __MINGW32__
   FARPROC WINAPI Module::ImplGetFunctionAddress(void* pModule, std::string const& FunctionName)
 #else

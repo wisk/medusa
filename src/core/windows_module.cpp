@@ -1,6 +1,6 @@
 #include <Windows.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "medusa/namespace.hpp"
 #include "medusa/module.hpp"
@@ -12,9 +12,9 @@ char const* Module::GetExtension(void)
   return "dll";
 }
 
-void* Module::ImplLoadLibrary(boost::filesystem::path const& ModulePath)
+void* Module::ImplLoadLibrary(std::filesystem::path const& ModulePath)
 {
-  boost::filesystem::path Path = ModulePath;
+  std::filesystem::path Path = ModulePath;
 
   auto ModuleName = Path.stem().string();
   void* pModule = m_ModuleMap[ModuleName];
