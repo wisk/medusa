@@ -181,9 +181,8 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
   Query << "SELECT * FROM Functions WHERE id LIKE '";
   // HACK: This is a workaround since GUID is 128-bit long and SHA-1 digest is 160-bit (stupid mistake)
   // We could: use MD5 instead, pray god not to have hash collision, or redesign ID...
-  auto pIdValues = reinterpret_cast<u8 const*>(FunctionId.data);
   for (size_t i = 0; i < FunctionId.size(); ++i)
-    Query << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(pIdValues[i]);
+    Query << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(FunctionId.data[i]);
   Query << "%'";
 
   sqlite3_stmt *pStmt = nullptr;

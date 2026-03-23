@@ -17,7 +17,7 @@ add_subdirectory(core)
 # architectures
 
 medusa_include_module_if_needed(arch arm)          # ARM
-#medusa_include_module_if_needed(arch avr8)         # AVR8
+# medusa_include_module_if_needed(arch avr8)         # AVR8 (needs rewrite for new Instruction API)
 # medusa_include_module_if_needed(arch st62)         # ST62
 medusa_include_module_if_needed(arch x86)          # X86
 medusa_include_module_if_needed(arch z80)          # Zilog80 (GameBoy)
@@ -54,7 +54,7 @@ medusa_include_module_if_needed(ldr raw)           # Raw
 # operating system
 
 medusa_include_module_if_needed(os unix)           # UNIX
-# medusa_include_module_if_needed(os windows)        # Windows
+medusa_include_module_if_needed(os windows)        # Windows
 
 # tool
 
