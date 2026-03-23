@@ -20,7 +20,7 @@ medusa_include_module_if_needed(arch arm)          # ARM
 #medusa_include_module_if_needed(arch avr8)         # AVR8
 # medusa_include_module_if_needed(arch st62)         # ST62
 medusa_include_module_if_needed(arch x86)          # X86
-# medusa_include_module_if_needed(arch z80)          # Zilog80 (GameBoy)
+medusa_include_module_if_needed(arch z80)          # Zilog80 (GameBoy)
 
 # binding
 
@@ -45,7 +45,7 @@ medusa_include_module_if_needed(emul llvm)         # LLVM
 
 medusa_include_module_if_needed(ldr bs)            # BootSector
 medusa_include_module_if_needed(ldr elf)           # ELF
-# medusa_include_module_if_needed(ldr gb)            # GameBoy ROM
+medusa_include_module_if_needed(ldr gb)            # GameBoy ROM
 # medusa_include_module_if_needed(ldr mach-o)        # Mach-O
 medusa_include_module_if_needed(ldr pe)            # PE
 medusa_include_module_if_needed(ldr raw)           # Raw

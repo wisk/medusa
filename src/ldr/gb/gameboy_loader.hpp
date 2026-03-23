@@ -22,17 +22,19 @@ class GameBoyLoader : public Loader
 public:
   virtual std::string GetName(void) const;
   virtual u8          GetDepth(void) const { return 1; }
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
-  virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
-  virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm) const;
+  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const { return GetName(); }
+  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const { return ""; }
+  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+  virtual bool        Map(Document& rDoc) const;
+  virtual bool        Map(Document& rDoc, Address const& rImgBase) const;
+  virtual void        Analyze(Document& rDoc) const;
 
 private:
   typedef u16 LogicalType;
-  BaseType GetNumberOfBank(void) const;
+  BaseType GetNumberOfBank(BinaryStream const& rBinStrm) const;
   enum     { BankSize = 0x4000 };
-
-  GameBoyRom m_GameBoyRom;
+  static bool ReadHeader(BinaryStream const& rBinStrm, GameBoyRom& rRom);
 };
 
 extern "C" LDR_GB_EXPORT Loader* GetLoader(void);
