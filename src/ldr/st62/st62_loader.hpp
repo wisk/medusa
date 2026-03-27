@@ -21,7 +21,7 @@ class ST62Loader : public Loader
 public:
   virtual std::string GetName(void) const;
   virtual u8          GetDepth(void) const { return 1; }
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm);
+  virtual bool        IsCompatible(BinaryStream const& rBinStrm) const;
   virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs);
   virtual bool        Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase);
   virtual void        FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const;

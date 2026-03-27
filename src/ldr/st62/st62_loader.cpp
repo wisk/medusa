@@ -13,7 +13,7 @@ std::string ST62Loader::GetName(void) const
   return "ST62 ROM";
 }
 
-bool ST62Loader::IsCompatible(BinaryStream const& rBinStrm)
+bool ST62Loader::IsCompatible(BinaryStream const& rBinStrm) const
 {
   u8 vector[0x10];
 

@@ -194,10 +194,10 @@ bool PeLoader::Map(Document& rDoc, Address const& rImgBase) const
   {
   case PE_NT_OPTIONAL_HDR32_MAGIC: return _Map<32>(rDoc, ImageBase);
   case PE_NT_OPTIONAL_HDR64_MAGIC: return _Map<64>(rDoc, ImageBase);
-  default: assert(0 && "Unknown magic");
+  default:
+    Log::Write("ldr_pe").Level(LogError) << "unknown PE magic: " << Magic << LogEnd;
+    return false;
   }
-
-  return true;
 }
 
 template<int bit> bool PeLoader::_Map(Document& rDoc, u64 ImgBase) const

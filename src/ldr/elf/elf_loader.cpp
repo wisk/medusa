@@ -57,10 +57,10 @@ bool ElfLoader::Map(Document& rDoc) const
   {
   case 32: Map<32>(rDoc); break;
   case 64: Map<64>(rDoc); break;
-  default: assert(0 && "Unknown ELF class");
+  default:
+    Log::Write("ldr_elf").Level(LogError) << "unknown ELF class" << LogEnd;
+    return false;
   }
-
-  return true;
 }
 
 bool ElfLoader::Map(Document& rDoc, Address const& rImgBase) const
