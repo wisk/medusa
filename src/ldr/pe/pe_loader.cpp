@@ -405,7 +405,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       }
       OrgThunkOff += sizeof(CurOrgThunk);
       CurOrgThunk.Swap(LittleEndian);
-      if (!memcmp(&CurOrgThunk, &EndThunk, sizeof(CurThunk)))
+      if (!memcmp(&CurOrgThunk, &EndThunk, sizeof(EndThunk)))
         break;
 
       if (!rBinStrm.Read(ThunkOff, &CurThunk, sizeof(CurThunk)))
@@ -415,7 +415,7 @@ template<int bit> bool PeLoader::_ResolveImports(Document& rDoc, u64 ImageBase, 
       }
       ThunkOff += sizeof(CurThunk);
       CurThunk.Swap(LittleEndian);
-      if (!memcmp(&CurThunk, &EndThunk, sizeof(CurOrgThunk)))
+      if (!memcmp(&CurThunk, &EndThunk, sizeof(EndThunk)))
         break;
 
       std::string SymName = ImpName + "!";

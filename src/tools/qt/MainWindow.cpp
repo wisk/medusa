@@ -34,7 +34,7 @@ MainWindow::MainWindow(QString const& rFilePath, QString const& rDbPath)
 {
   this->setupUi(this);
 
-  medusa::Log::SetLog(boost::bind(&MainWindow::appendLog, this, _1));
+  medusa::Log::SetLog([this](std::string const& rMsg) { appendLog(rMsg); });
 
   this->tabWidget->setTabsClosable(true);
 

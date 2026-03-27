@@ -1,5 +1,4 @@
 #include "medusa/xref.hpp"
-#include <boost/foreach.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

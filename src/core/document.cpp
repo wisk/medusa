@@ -4,8 +4,6 @@
 #include "medusa/log.hpp"
 #include "medusa/module.hpp"
 
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

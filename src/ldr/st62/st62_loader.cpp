@@ -6,7 +6,6 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
-#include <boost/foreach.hpp>
 
 std::string ST62Loader::GetName(void) const
 {

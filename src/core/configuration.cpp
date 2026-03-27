@@ -1,10 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include "medusa/configuration.hpp"
 #include "medusa/namespace.hpp"
 #include "medusa/log.hpp"
-
-#include <boost/foreach.hpp>
-#include <sstream>
 
 MEDUSA_NAMESPACE_USE
 

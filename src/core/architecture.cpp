@@ -395,15 +395,11 @@ bool Architecture::FormatString(
   if (rDoc.ConvertAddressToFileOffset(rAddr, FileOff) == false)
     return false;
 
-  char* pStrBuf = new char[StrLen];
-  if (rDoc.GetBinaryStream().Read(FileOff, pStrBuf, StrLen) == false)
-  {
-    delete[] pStrBuf;
+  std::vector<char> StrBuf(StrLen);
+  if (rDoc.GetBinaryStream().Read(FileOff, StrBuf.data(), StrLen) == false)
     return false;
-  }
 
-  std::string OrgStr = pStrTrait->ConvertToUtf8(pStrBuf, StrLen);
-  delete[] pStrBuf;
+  std::string OrgStr = pStrTrait->ConvertToUtf8(StrBuf.data(), StrLen);
   if (OrgStr.empty())
     return false;
   std::string FmtStr;

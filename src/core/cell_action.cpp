@@ -1,8 +1,6 @@
 #include "medusa/cell_action.hpp"
 #include "medusa/module.hpp"
 #include "medusa/log.hpp"
-#include <boost/bind.hpp>
-#include <boost/range/algorithm_ext/erase.hpp>
 
 MEDUSA_NAMESPACE_USE
 

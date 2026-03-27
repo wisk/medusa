@@ -5,9 +5,7 @@
 #include <exception>
 #include <stdexcept>
 #include <limits>
-#include <boost/foreach.hpp>
-#include <boost/algorithm/string/join.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/program_options.hpp>
 
 #include <medusa/configuration.hpp>
@@ -248,7 +246,7 @@ void TextLog(std::string const & rMsg)
 
 int main(int argc, char **argv)
 {
-  namespace fs = boost::filesystem;
+  namespace fs = std::filesystem;
   fs::path file_path;
   fs::path db_path;
   fs::path mod_path;
@@ -298,7 +296,7 @@ int main(int argc, char **argv)
     Medusa m;
     if (!m.NewDocument(
       std::make_shared<FileBinaryStream>(file_path), true,
-      [&](boost::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
+      [&](std::filesystem::path& rDatabasePath, std::list<Medusa::Filter> const& rExtensionFilter)
     {
       rDatabasePath = db_path;
       return true;

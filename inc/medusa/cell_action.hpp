@@ -4,9 +4,6 @@
 #include <string>
 #include <map>
 
-#include <boost/bind.hpp>
-#include <boost/range/algorithm_ext/erase.hpp>
-
 #include "medusa/namespace.hpp"
 #include "medusa/export.hpp"
 #include "medusa/types.hpp"
