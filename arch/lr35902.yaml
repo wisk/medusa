@@ -1,7 +1,7 @@
 #
 ## Description ################################################################
-# This yaml file tries do detail all z80 instruction.
-# It's used by Medusa to generate c++ code in order to disassemble z80
+# This yaml file details all Sharp LR35902 (GameBoy CPU) instructions.
+# It's used by Medusa to generate c++ code in order to disassemble LR35902
 # executable.
 # Check out http://github.com/wisk/medusa for further information.
 
@@ -10,7 +10,7 @@
 # ref: http://www.z80.info/opcodes.txt
 
 architecture_information:
-  name: z80
+  name: lr35902
 
 instruction:
   table:

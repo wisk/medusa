@@ -32,8 +32,8 @@ bool GameBoyLoader::IsCompatible(BinaryStream const& rBinStrm) const
 
 std::vector<std::string> GameBoyLoader::GetUsedArchitectures(BinaryStream const& rBinStrm) const
 {
-  // GameBoy uses the Sharp LR35902 (SM83), a Z80-derivative
-  return { "Zilog 80/LR35902" };
+  // GameBoy uses the Sharp LR35902 (SM83)
+  return { "Sharp LR35902/LR35902" };
 }
 
 bool GameBoyLoader::Map(Document& rDoc) const
@@ -46,9 +46,9 @@ bool GameBoyLoader::Map(Document& rDoc) const
   auto const& rModMgr = ModuleManager::Instance();
   TagType ArchTag;
   u8 ArchMode;
-  if (!rModMgr.ConvertArchitectureNameToTagAndMode("Zilog 80/LR35902", ArchTag, ArchMode))
+  if (!rModMgr.ConvertArchitectureNameToTagAndMode("Sharp LR35902/LR35902", ArchTag, ArchMode))
   {
-    Log::Write("ldr_gb") << "unable to find Z80/LR35902 architecture" << LogEnd;
+    Log::Write("ldr_gb") << "unable to find LR35902 architecture" << LogEnd;
     return false;
   }
 

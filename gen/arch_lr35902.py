@@ -3,18 +3,19 @@ from helper import *
 
 import ast
 
-class Z80ArchConvertion(ArchConvertion):
+class LR35902ArchConvertion(ArchConvertion):
     def __init__(self, arch):
         ArchConvertion.__init__(self, arch)
         self.id_mapper = {
-        'cf':'Z80_Flg_C',  'zf':'Z80_Flg_Z',
-        'a':'Z80_Reg_A',   'b':'Z80_Reg_B',   'c':'Z80_Reg_C',   'd':'Z80_Reg_D',
-        'e':'Z80_Reg_E',   'f':'Z80_Reg_F',
-        'h':'Z80_Reg_H',   'l':'Z80_Reg_L',
-        'af':'Z80_Reg_AF', 'bc':'Z80_Reg_BC', 'de':'Z80_Reg_DE', 'hl':'Z80_Reg_HL',
-        'sp':'Z80_Reg_Sp', 'pc':'Z80_Reg_Pc' }
+        'cf':'LR35902_Flg_C',  'hf':'LR35902_Flg_H',
+        'nf':'LR35902_Flg_N', 'zf':'LR35902_Flg_Z',
+        'a':'LR35902_Reg_A',   'b':'LR35902_Reg_B',   'c':'LR35902_Reg_C',   'd':'LR35902_Reg_D',
+        'e':'LR35902_Reg_E',   'f':'LR35902_Reg_F',
+        'h':'LR35902_Reg_H',   'l':'LR35902_Reg_L',
+        'af':'LR35902_Reg_AF', 'bc':'LR35902_Reg_BC', 'de':'LR35902_Reg_DE', 'hl':'LR35902_Reg_HL',
+        'sp':'LR35902_Reg_Sp', 'pc':'LR35902_Reg_Pc' }
 
-    def _Z80_GenerateOperandCode(self, insn):
+    def _LR35902_GenerateOperandCode(self, insn):
         class OprdVst(ast.NodeVisitor):
             def __init__(self, parent, insn):
                 self.parent = parent
@@ -128,7 +129,7 @@ class Z80ArchConvertion(ArchConvertion):
         return res
 
 
-    def _Z80_GenerateDispatcher(self, tbl, depth):
+    def _LR35902_GenerateDispatcher(self, tbl, depth):
         res = '++rInsn.Size();\n'
         res += self._GenerateRead('Opcode%d' % depth, 'Offset + %d' % depth, 8)
         insn_cases = []
@@ -136,7 +137,7 @@ class Z80ArchConvertion(ArchConvertion):
             case_stmt = ''
             if 'reference' in insn:
                 case_stmt += 'rInsn.Size() += %d;\n' % (depth + 1)
-                case_stmt += self._GenerateBrace(self._Z80_GenerateDispatcher(self.arch['instruction'][insn['reference']], depth + 1))
+                case_stmt += self._GenerateBrace(self._LR35902_GenerateDispatcher(self.arch['instruction'][insn['reference']], depth + 1))
             else:
                 case_stmt += 'rInsn.SetName("%s");\n' % insn['mnemonic']
                 cond = { 'jmp':'Instruction::JumpType', 'call':'Instruction::CallType', 'ret':'Instruction::ReturnType', 'cond':'Instruction::ConditionalType' }
@@ -145,7 +146,7 @@ class Z80ArchConvertion(ArchConvertion):
                     # HACK: since medusa doesn't support unary operator,
                     # we need to encode the not on flag using instruction prefix
                     if insn_attr == 'not_flag':
-                        case_stmt += 'rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;\n'
+                        case_stmt += 'rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;\n'
                         continue
 
                     insn_sub_type.append(cond[insn_attr])
@@ -155,7 +156,7 @@ class Z80ArchConvertion(ArchConvertion):
                 tested_flag = { 'cf' }
 
                 if len(insn['operand']) != 0:
-                    case_stmt += self._GenerateBrace(self._Z80_GenerateOperandCode(insn))
+                    case_stmt += self._GenerateBrace(self._LR35902_GenerateOperandCode(insn))
 
             case_stmt += 'return true;\n'
 
@@ -170,9 +171,9 @@ class Z80ArchConvertion(ArchConvertion):
         return ''
 
     def GenerateSource(self):
-        dispatcher = self._Z80_GenerateDispatcher(self.arch['instruction']['table'], 0)
+        dispatcher = self._LR35902_GenerateDispatcher(self.arch['instruction']['table'], 0)
 
-        return 'bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)\n{\n%s}\n' % Indent(dispatcher)
+        return 'bool LR35902Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)\n{\n%s}\n' % Indent(dispatcher)
 
     def GenerateOpcodeEnum(self):
         return ''

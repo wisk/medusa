@@ -1,6 +1,6 @@
 /* This file has been automatically generated, you must _NOT_ edit it directly. (Wed Oct  5 22:57:00 2016) */
-#include "z80_architecture.hpp"
-bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
+#include "lr35902_architecture.hpp"
+bool LR35902Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
   ++rInsn.Size();
   u8 Opcode0;
@@ -15,7 +15,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x01:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_BC, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -33,11 +33,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x02:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_BC, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -46,7 +46,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x03:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_BC, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -55,7 +55,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x04:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -64,7 +64,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x05:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -73,7 +73,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x06:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -91,7 +91,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x07:
     rInsn.SetName("rlc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -109,7 +109,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -118,11 +118,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x09:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_BC, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -131,11 +131,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_BC, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -144,7 +144,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0b:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_BC, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -153,7 +153,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0c:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -162,7 +162,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0d:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -171,7 +171,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -189,7 +189,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x0f:
     rInsn.SetName("rrc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -201,7 +201,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x11:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -219,11 +219,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x12:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_DE, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -232,7 +232,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x13:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -241,7 +241,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x14:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -250,7 +250,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x15:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -259,7 +259,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x16:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -277,7 +277,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x17:
     rInsn.SetName("rl");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -293,7 +293,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd0 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Pc, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd0 == nullptr)
         return false;
@@ -303,11 +303,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x19:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -316,11 +316,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_DE, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -329,7 +329,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1b:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -338,7 +338,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1c:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -347,7 +347,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1d:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -356,7 +356,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -374,7 +374,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x1f:
     rInsn.SetName("rr");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -382,10 +382,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0x20:
     rInsn.SetName("jr");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -395,7 +395,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Pc, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
@@ -405,7 +405,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x21:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -423,11 +423,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x22:
     rInsn.SetName("ldi");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -436,7 +436,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x23:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -445,7 +445,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x24:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -454,7 +454,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x25:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -463,7 +463,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x26:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -485,7 +485,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("jr");
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -495,7 +495,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Pc, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
@@ -505,11 +505,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x29:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -518,11 +518,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x2a:
     rInsn.SetName("ldi");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -531,7 +531,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x2b:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -540,7 +540,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x2c:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -549,7 +549,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x2d:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -558,7 +558,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x2e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -578,10 +578,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0x30:
     rInsn.SetName("jr");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -591,7 +591,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Pc, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
@@ -601,7 +601,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x31:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -619,11 +619,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x32:
     rInsn.SetName("ldd");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -632,7 +632,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x33:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -641,7 +641,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x34:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -650,7 +650,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x35:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -659,7 +659,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x36:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -681,7 +681,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("jr");
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -691,7 +691,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Pc, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Pc, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
@@ -701,11 +701,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x39:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -714,11 +714,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x3a:
     rInsn.SetName("ldd");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -727,7 +727,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x3b:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -736,7 +736,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x3c:
     rInsn.SetName("inc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -745,7 +745,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x3d:
     rInsn.SetName("dec");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -754,7 +754,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x3e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -775,11 +775,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x40:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -788,11 +788,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x41:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -801,11 +801,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x42:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -814,11 +814,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x43:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -827,11 +827,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x44:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -840,11 +840,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x45:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -853,11 +853,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x46:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -866,11 +866,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x47:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -879,11 +879,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x48:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -892,11 +892,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x49:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -905,11 +905,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -918,11 +918,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4b:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -931,11 +931,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4c:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -944,11 +944,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4d:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -957,11 +957,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -970,11 +970,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x4f:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -983,11 +983,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x50:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -996,11 +996,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x51:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1009,11 +1009,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x52:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1022,11 +1022,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x53:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1035,11 +1035,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x54:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1048,11 +1048,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x55:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1061,11 +1061,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x56:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1074,11 +1074,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x57:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1087,11 +1087,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x58:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1100,11 +1100,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x59:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1113,11 +1113,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1126,11 +1126,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5b:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1139,11 +1139,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5c:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1152,11 +1152,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5d:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1165,11 +1165,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1178,11 +1178,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x5f:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1191,11 +1191,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x60:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1204,11 +1204,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x61:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1217,11 +1217,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x62:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1230,11 +1230,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x63:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1243,11 +1243,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x64:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1256,11 +1256,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x65:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1269,11 +1269,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x66:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1282,11 +1282,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x67:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1295,11 +1295,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x68:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1308,11 +1308,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x69:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1321,11 +1321,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1334,11 +1334,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6b:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1347,11 +1347,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6c:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1360,11 +1360,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6d:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1373,11 +1373,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1386,11 +1386,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x6f:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1399,11 +1399,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x70:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1412,11 +1412,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x71:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1425,11 +1425,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x72:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1438,11 +1438,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x73:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1451,11 +1451,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x74:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1464,11 +1464,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x75:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1480,11 +1480,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x77:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1493,11 +1493,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x78:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1506,11 +1506,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x79:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1519,11 +1519,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7a:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1532,11 +1532,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7b:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1545,11 +1545,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7c:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1558,11 +1558,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7d:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1571,11 +1571,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7e:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1584,11 +1584,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x7f:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1597,11 +1597,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x80:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1610,11 +1610,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x81:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1623,11 +1623,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x82:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1636,11 +1636,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x83:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1649,11 +1649,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x84:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1662,11 +1662,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x85:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1675,11 +1675,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x86:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1688,11 +1688,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x87:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1701,11 +1701,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x88:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1714,11 +1714,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x89:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1727,11 +1727,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8a:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1740,11 +1740,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8b:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1753,11 +1753,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8c:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1766,11 +1766,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8d:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1779,11 +1779,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8e:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1792,11 +1792,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x8f:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1805,11 +1805,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x90:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1818,11 +1818,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x91:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1831,11 +1831,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x92:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1844,11 +1844,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x93:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1857,11 +1857,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x94:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1870,11 +1870,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x95:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1883,11 +1883,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x96:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1896,11 +1896,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x97:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1909,11 +1909,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x98:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1922,11 +1922,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x99:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1935,11 +1935,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9a:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1948,11 +1948,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9b:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1961,11 +1961,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9c:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1974,11 +1974,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9d:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -1987,11 +1987,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9e:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2000,11 +2000,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0x9f:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2013,11 +2013,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa0:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2026,11 +2026,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa1:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2039,11 +2039,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa2:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2052,11 +2052,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa3:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2065,11 +2065,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa4:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2078,11 +2078,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa5:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2091,11 +2091,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa6:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2104,11 +2104,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa7:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2117,11 +2117,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa8:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2130,11 +2130,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xa9:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2143,11 +2143,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xaa:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2156,11 +2156,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xab:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2169,11 +2169,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xac:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2182,11 +2182,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xad:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2195,11 +2195,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xae:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2208,11 +2208,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xaf:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2221,11 +2221,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb0:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2234,11 +2234,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb1:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2247,11 +2247,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb2:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2260,11 +2260,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb3:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2273,11 +2273,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb4:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2286,11 +2286,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb5:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2299,11 +2299,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb6:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2312,11 +2312,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb7:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2325,11 +2325,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb8:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2338,11 +2338,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xb9:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2351,11 +2351,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xba:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2364,11 +2364,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xbb:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2377,11 +2377,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xbc:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2390,11 +2390,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xbd:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2403,11 +2403,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xbe:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2416,11 +2416,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xbf:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -2428,10 +2428,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0xc0:
     rInsn.SetName("ret");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2442,10 +2442,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0xc2:
     rInsn.SetName("jp");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2492,7 +2492,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xc5:
     rInsn.SetName("push");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_BC, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_BC, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2501,7 +2501,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xc6:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2529,7 +2529,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("ret");
     rInsn.SubType() |= Instruction::ReturnType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2543,7 +2543,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("jp");
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -2571,7 +2571,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x00:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2580,7 +2580,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x01:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2589,7 +2589,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x02:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2598,7 +2598,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x03:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2607,7 +2607,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x04:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2616,7 +2616,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x05:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2625,7 +2625,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x06:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2634,7 +2634,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x07:
         rInsn.SetName("rlc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2643,7 +2643,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x08:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2652,7 +2652,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x09:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2661,7 +2661,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0a:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2670,7 +2670,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0b:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2679,7 +2679,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0c:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2688,7 +2688,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0d:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2697,7 +2697,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0e:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2706,7 +2706,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x0f:
         rInsn.SetName("rrc");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2715,7 +2715,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x10:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2724,7 +2724,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x11:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2733,7 +2733,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x12:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2742,7 +2742,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x13:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2751,7 +2751,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x14:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2760,7 +2760,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x15:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2769,7 +2769,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x16:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2778,7 +2778,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x17:
         rInsn.SetName("rl");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2787,7 +2787,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x18:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2796,7 +2796,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x19:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2805,7 +2805,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1a:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2814,7 +2814,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1b:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2823,7 +2823,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1c:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2832,7 +2832,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1d:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2841,7 +2841,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1e:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2850,7 +2850,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x1f:
         rInsn.SetName("rr");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2859,7 +2859,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x20:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2868,7 +2868,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x21:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2877,7 +2877,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x22:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2886,7 +2886,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x23:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2895,7 +2895,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x24:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2904,7 +2904,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x25:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2913,7 +2913,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x26:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2922,7 +2922,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x27:
         rInsn.SetName("sla");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2931,7 +2931,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x28:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2940,7 +2940,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x29:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2949,7 +2949,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2a:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2958,7 +2958,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2b:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2967,7 +2967,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2c:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2976,7 +2976,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2d:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2985,7 +2985,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2e:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -2994,7 +2994,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x2f:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3003,7 +3003,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x30:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3012,7 +3012,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x31:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3021,7 +3021,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x32:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3030,7 +3030,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x33:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3039,7 +3039,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x34:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3048,7 +3048,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x35:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3057,7 +3057,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x36:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3066,7 +3066,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x37:
         rInsn.SetName("swap");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3075,7 +3075,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x38:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3084,7 +3084,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x39:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3093,7 +3093,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3a:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3102,7 +3102,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3b:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3111,7 +3111,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3c:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3120,7 +3120,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3d:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3129,7 +3129,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3e:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3138,7 +3138,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x3f:
         rInsn.SetName("sra");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3151,7 +3151,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3164,7 +3164,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3177,7 +3177,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3190,7 +3190,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3203,7 +3203,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3216,7 +3216,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3229,7 +3229,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3242,7 +3242,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3251,7 +3251,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x48:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3264,7 +3264,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3277,7 +3277,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3290,7 +3290,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3303,7 +3303,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3316,7 +3316,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3329,7 +3329,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3342,7 +3342,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3355,7 +3355,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3368,7 +3368,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3381,7 +3381,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3394,7 +3394,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3407,7 +3407,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3420,7 +3420,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3433,7 +3433,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3446,7 +3446,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3455,7 +3455,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x58:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3468,7 +3468,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3481,7 +3481,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3494,7 +3494,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3507,7 +3507,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3520,7 +3520,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3533,7 +3533,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3546,7 +3546,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3559,7 +3559,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3572,7 +3572,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3585,7 +3585,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3598,7 +3598,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3611,7 +3611,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3624,7 +3624,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3637,7 +3637,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3650,7 +3650,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3659,7 +3659,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x68:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3672,7 +3672,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3685,7 +3685,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3698,7 +3698,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3711,7 +3711,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3724,7 +3724,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3737,7 +3737,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3750,7 +3750,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3763,7 +3763,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3776,7 +3776,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3789,7 +3789,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3802,7 +3802,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3815,7 +3815,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3828,7 +3828,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3841,7 +3841,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3854,7 +3854,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3863,7 +3863,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x78:
         rInsn.SetName("bit");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -3876,7 +3876,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3889,7 +3889,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3902,7 +3902,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3915,7 +3915,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3928,7 +3928,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3941,7 +3941,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3954,7 +3954,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3967,7 +3967,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3980,7 +3980,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -3993,7 +3993,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4006,7 +4006,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4019,7 +4019,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4032,7 +4032,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4045,7 +4045,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4058,7 +4058,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4067,7 +4067,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x88:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4080,7 +4080,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4093,7 +4093,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4106,7 +4106,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4119,7 +4119,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4132,7 +4132,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4145,7 +4145,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4158,7 +4158,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4171,7 +4171,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4184,7 +4184,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4197,7 +4197,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4210,7 +4210,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4223,7 +4223,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4236,7 +4236,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4249,7 +4249,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4262,7 +4262,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4271,7 +4271,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0x98:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4284,7 +4284,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4297,7 +4297,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4310,7 +4310,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4323,7 +4323,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4336,7 +4336,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4349,7 +4349,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4362,7 +4362,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4375,7 +4375,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4388,7 +4388,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4401,7 +4401,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4414,7 +4414,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4427,7 +4427,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4440,7 +4440,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4453,7 +4453,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4466,7 +4466,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4475,7 +4475,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xa8:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4488,7 +4488,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4501,7 +4501,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4514,7 +4514,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4527,7 +4527,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4540,7 +4540,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4553,7 +4553,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4566,7 +4566,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4579,7 +4579,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4592,7 +4592,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4605,7 +4605,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4618,7 +4618,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4631,7 +4631,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4644,7 +4644,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4657,7 +4657,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4670,7 +4670,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4679,7 +4679,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xb8:
         rInsn.SetName("res");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4692,7 +4692,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4705,7 +4705,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4718,7 +4718,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4731,7 +4731,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4744,7 +4744,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4757,7 +4757,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4770,7 +4770,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4783,7 +4783,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4796,7 +4796,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4809,7 +4809,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4822,7 +4822,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4835,7 +4835,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4848,7 +4848,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4861,7 +4861,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4874,7 +4874,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4883,7 +4883,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xc8:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -4896,7 +4896,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4909,7 +4909,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4922,7 +4922,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4935,7 +4935,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4948,7 +4948,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4961,7 +4961,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4974,7 +4974,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -4987,7 +4987,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5000,7 +5000,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5013,7 +5013,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5026,7 +5026,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5039,7 +5039,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5052,7 +5052,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5065,7 +5065,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5078,7 +5078,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5087,7 +5087,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xd8:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5100,7 +5100,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5113,7 +5113,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5126,7 +5126,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5139,7 +5139,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5152,7 +5152,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5165,7 +5165,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5178,7 +5178,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5191,7 +5191,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5204,7 +5204,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5217,7 +5217,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5230,7 +5230,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5243,7 +5243,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5256,7 +5256,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5269,7 +5269,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5282,7 +5282,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5291,7 +5291,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xe8:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5304,7 +5304,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5317,7 +5317,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5330,7 +5330,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5343,7 +5343,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5356,7 +5356,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5369,7 +5369,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5382,7 +5382,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5395,7 +5395,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5408,7 +5408,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5421,7 +5421,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5434,7 +5434,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5447,7 +5447,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5460,7 +5460,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5473,7 +5473,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5486,7 +5486,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5495,7 +5495,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       case 0xf8:
         rInsn.SetName("set");
         {
-          auto spOprd0 = Expr::MakeId(Z80_Reg_B, &m_CpuInfo);
+          auto spOprd0 = Expr::MakeId(LR35902_Reg_B, &m_CpuInfo);
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
@@ -5508,7 +5508,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_C, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_C, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5521,7 +5521,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_D, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_D, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5534,7 +5534,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_E, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_E, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5547,7 +5547,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_H, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_H, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5560,7 +5560,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_L, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_L, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5573,7 +5573,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+          auto spOprd1 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5586,7 +5586,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
           if (spOprd0 == nullptr)
             return false;
           rInsn.AddOperand(spOprd0);
-          auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+          auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
           if (spOprd1 == nullptr)
             return false;
           rInsn.AddOperand(spOprd1);
@@ -5600,7 +5600,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("call");
     rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_Z, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_Z, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5633,7 +5633,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xce:
     rInsn.SetName("adc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5660,10 +5660,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0xd0:
     rInsn.SetName("ret");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5672,7 +5672,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xd1:
     rInsn.SetName("pop");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5680,10 +5680,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0xd2:
     rInsn.SetName("jp");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5703,10 +5703,10 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     return true;
   case 0xd4:
     rInsn.SetName("call");
-    rInsn.Prefix() |= Z80_Insn_Prefix_NotFlag;
+    rInsn.Prefix() |= LR35902_Insn_Prefix_NotFlag;
     rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5724,7 +5724,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xd5:
     rInsn.SetName("push");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_DE, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_DE, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5733,7 +5733,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xd6:
     rInsn.SetName("sub");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5762,7 +5762,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("ret");
     rInsn.SubType() |= Instruction::ReturnType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5776,7 +5776,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("jp");
     rInsn.SubType() |= Instruction::JumpType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5798,7 +5798,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     rInsn.SetName("call");
     rInsn.SubType() |= Instruction::CallType | Instruction::ConditionalType;
     {
-      auto spOprd0 = Expr::MakeId(Z80_Flg_C, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Flg_C, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5819,7 +5819,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xde:
     rInsn.SetName("sbc");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5858,7 +5858,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5867,7 +5867,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xe1:
     rInsn.SetName("pop");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5878,11 +5878,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
     {
       auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeBinOp(OperationExpression::OpAdd,
         Expr::MakeBitVector(16, 0xff00),
-        Expr::MakeId(Z80_Reg_C, &m_CpuInfo)), true);
+        Expr::MakeId(LR35902_Reg_C, &m_CpuInfo)), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5897,7 +5897,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xe5:
     rInsn.SetName("push");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5906,7 +5906,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xe6:
     rInsn.SetName("and");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5933,7 +5933,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xe8:
     rInsn.SetName("add");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5951,7 +5951,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xe9:
     rInsn.SetName("jp");
     {
-      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(Z80_Reg_HL, &m_CpuInfo), true);
+      auto spOprd0 = Expr::MakeMem(8, nullptr, Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo), true);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -5969,7 +5969,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -5987,7 +5987,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xee:
     rInsn.SetName("xor");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6015,7 +6015,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf0:
     rInsn.SetName("ldh");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6035,7 +6035,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf1:
     rInsn.SetName("pop");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_AF, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_AF, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6053,7 +6053,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf5:
     rInsn.SetName("push");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_AF, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_AF, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6062,7 +6062,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf6:
     rInsn.SetName("or");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6089,7 +6089,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf8:
     rInsn.SetName("ldhl");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6099,7 +6099,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
 
       rInsn.Size() += sizeof(Imm);
       auto spOprd1 = Expr::MakeBinOp(OperationExpression::OpAdd,
-        Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo),
+        Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo),
         Expr::MakeBitVector(16, SignExtend<s64, 8>(Imm)));
       if (spOprd1 == nullptr)
         return false;
@@ -6109,11 +6109,11 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xf9:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_Sp, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_Sp, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
-      auto spOprd1 = Expr::MakeId(Z80_Reg_HL, &m_CpuInfo);
+      auto spOprd1 = Expr::MakeId(LR35902_Reg_HL, &m_CpuInfo);
       if (spOprd1 == nullptr)
         return false;
       rInsn.AddOperand(spOprd1);
@@ -6122,7 +6122,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xfa:
     rInsn.SetName("ld");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);
@@ -6149,7 +6149,7 @@ bool Z80Architecture::Disassemble(BinaryStream const& rBinStrm, OffsetType Offse
   case 0xfe:
     rInsn.SetName("cp");
     {
-      auto spOprd0 = Expr::MakeId(Z80_Reg_A, &m_CpuInfo);
+      auto spOprd0 = Expr::MakeId(LR35902_Reg_A, &m_CpuInfo);
       if (spOprd0 == nullptr)
         return false;
       rInsn.AddOperand(spOprd0);

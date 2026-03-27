@@ -1,5 +1,5 @@
-#ifndef ARCH_GAMEBOY_HPP
-#define ARCH_GAMEBOY_HPP
+#ifndef ARCH_LR35902_HPP
+#define ARCH_LR35902_HPP
 
 #include "medusa/types.hpp"
 #include "medusa/extend.hpp"
@@ -9,27 +9,26 @@
 #include "medusa/context.hpp"
 
 #if defined(_WIN32) || defined(WIN32)
-# ifdef arch_z80_EXPORTS
-#  define ARCH_Z80_EXPORT __declspec(dllexport)
+# ifdef arch_lr35902_EXPORTS
+#  define ARCH_LR35902_EXPORT __declspec(dllexport)
 # else
-#  define ARCH_Z80_EXPORT __declspec(dllimport)
+#  define ARCH_LR35902_EXPORT __declspec(dllimport)
 # endif
 #else
-# define ARCH_Z80_EXPORT
+# define ARCH_LR35902_EXPORT
 #endif
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" ARCH_Z80_EXPORT Architecture* GetArchitecture(void);
+extern "C" ARCH_LR35902_EXPORT Architecture* GetArchitecture(void);
 
-// TODO: is gameboy CPU really a Z80? http://www.assemblergames.com/forums/archive/index.php/t-20518.html
-class Z80Architecture : public Architecture
+class LR35902Architecture : public Architecture
 {
 private:
-  class Z80CpuInformation : public CpuInformation
+  class LR35902CpuInformation : public CpuInformation
   {
   public:
-    Z80CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('z', '8', '0')) {}
+    LR35902CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('l', 'r', '3')) {}
     virtual char const* ConvertIdentifierToName(u32 Id) const;
     virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
     virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
@@ -37,23 +36,21 @@ private:
     virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
   } m_CpuInfo;
 
-  enum Z80Mode
+  enum LR35902Mode
   {
-    Z80_Mode_Unknown,
-    Z80_Mode_Original,
-    Z80_Mode_LR35902,
+    LR35902_Mode_Default = 1,
   };
 
-  enum Z80TestedFlag
+  enum LR35902InsnPrefix
   {
-    Z80_Insn_Prefix_None,
-    Z80_Insn_Prefix_NotFlag,
+    LR35902_Insn_Prefix_None,
+    LR35902_Insn_Prefix_NotFlag,
   };
 
 public:
-  Z80Architecture(void) : Architecture(MEDUSA_ARCH_TAG('z','8','0')) {}
+  LR35902Architecture(void) : Architecture(MEDUSA_ARCH_TAG('l','r','3')) {}
 
-  virtual std::string           GetName(void) const { return "Zilog 80"; }
+  virtual std::string           GetName(void) const { return "Sharp LR35902"; }
   virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff);
   virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
   virtual NamedModeVector       GetModes(void) const;
@@ -67,33 +64,31 @@ public:
     Address       const& rAddr,
     Instruction   const& rInsn,
     PrintData          & rPrintData) const;
-
-private:
 };
 
-enum Z80Identifiers
+enum LR35902Identifiers
 {
-  Z80_Reg_Unknown,
+  LR35902_Reg_Unknown,
 
-  Z80_Flg_C,
-  Z80_Flg_H,
-  Z80_Flg_N,
-  Z80_Flg_Z,
+  LR35902_Flg_C,
+  LR35902_Flg_H,
+  LR35902_Flg_N,
+  LR35902_Flg_Z,
 
-  Z80_Reg_A,
-  Z80_Reg_B,
-  Z80_Reg_C,
-  Z80_Reg_D,
-  Z80_Reg_E,
-  Z80_Reg_F,
-  Z80_Reg_H,
-  Z80_Reg_L,
-  Z80_Reg_AF,
-  Z80_Reg_BC,
-  Z80_Reg_DE,
-  Z80_Reg_HL,
-  Z80_Reg_Sp,
-  Z80_Reg_Pc,
+  LR35902_Reg_A,
+  LR35902_Reg_B,
+  LR35902_Reg_C,
+  LR35902_Reg_D,
+  LR35902_Reg_E,
+  LR35902_Reg_F,
+  LR35902_Reg_H,
+  LR35902_Reg_L,
+  LR35902_Reg_AF,
+  LR35902_Reg_BC,
+  LR35902_Reg_DE,
+  LR35902_Reg_HL,
+  LR35902_Reg_Sp,
+  LR35902_Reg_Pc,
 };
 
-#endif // !ARCH_GAMEBOY_HPP
+#endif // !ARCH_LR35902_HPP

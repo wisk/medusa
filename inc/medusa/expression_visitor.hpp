@@ -68,7 +68,7 @@ class MEDUSA_EXPORT EvaluateVisitor : public ExpressionVisitor
 public:
   // LATER: It'd be better to use a context filled by the architecture itself in order to correctly
   // map the PC pointer. On some architecture the PC is set on multiple register (e.g.: x86 cs:offset,
-  // z80/gb bank:offset...).
+  // lr35902/gb bank:offset...).
   EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef = true);
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
