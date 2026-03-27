@@ -206,7 +206,7 @@ target_link_libraries(medusa
 if (OGDF_FOUND)
   target_link_libraries(medusa
     PUBLIC
-    COIN OGDF
+    OGDF::OGDF
   )
 endif ()
 

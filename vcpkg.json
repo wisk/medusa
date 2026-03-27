@@ -4,6 +4,7 @@
   "description": "A modular and interactive binary disassembler",
   "homepage": "https://github.com/wisk/medusa",
   "dependencies": [
+    "boost-atomic",
     "boost-system",
     "boost-filesystem",
     "boost-program-options",
@@ -19,5 +20,20 @@
     "nanobind",
     "sqlite3",
     "sqlite-orm"
-  ]
+  ],
+  "features": {
+    "gui": {
+      "description": "Qt5-based GUI frontend (qMedusa)",
+      "dependencies": [
+        "qt5-base",
+        "qt5-widgets"
+      ]
+    },
+    "ogdf": {
+      "description": "OGDF graph layout support",
+      "dependencies": [
+        "ogdf"
+      ]
+    }
+  }
 }
