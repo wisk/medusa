@@ -11,9 +11,9 @@
 MEDUSA_NAMESPACE_BEGIN
 
 typedef void*              FileHandleType;
-#define INVALID_FILE_VALUE (FileHandleType)-1;
+#define INVALID_FILE_VALUE ((FileHandleType)-1)
 typedef void*              MapHandleType;
-#define INVALID_MAP_VALUE  (MapHandleType)nullptr;
+#define INVALID_MAP_VALUE  ((MapHandleType)nullptr)
 
 MEDUSA_NAMESPACE_END
 
@@ -22,9 +22,9 @@ MEDUSA_NAMESPACE_END
 MEDUSA_NAMESPACE_BEGIN
 
 typedef int               FileHandleType;
-#define INVALID_FILE_VALUE (FileHandleType)-1;
+#define INVALID_FILE_VALUE ((FileHandleType)-1)
 typedef void*             MapHandleType;
-#define INVALID_MAP_VALUE (FileHandleType*)-1; // MAP_ERROR
+#define INVALID_MAP_VALUE  ((MapHandleType)-1) // MAP_FAILED
 
 MEDUSA_NAMESPACE_END
 
