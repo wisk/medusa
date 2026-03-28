@@ -3,10 +3,8 @@
 
 #include <mutex>
 #include <unordered_map>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
 #include <filesystem>
+#include <string>
 
 #include <medusa/namespace.hpp>
 #include <medusa/types.hpp>
@@ -29,6 +27,9 @@ private:
 
   bool _WriteDefaultOption(std::string const& rKey);
   bool _WriteDefaultOptions(void);
+
+  static std::unordered_map<std::string, std::string> _ReadIni(std::filesystem::path const& rPath);
+  static bool _WriteIni(std::filesystem::path const& rPath, std::unordered_map<std::string, std::string> const& rData);
 
   typedef std::mutex MutexType;
   mutable MutexType m_Mutex;

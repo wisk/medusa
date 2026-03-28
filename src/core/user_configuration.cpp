@@ -1,6 +1,9 @@
 #include "medusa/user_configuration.hpp"
 #include "medusa/config.hpp"
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -13,7 +16,7 @@ UserConfiguration::UserConfiguration(void)
   HomePath = _wgetenv(L"APPDATA");
   if (HomePath.empty())
   {
-    std::cerr << "unable to get the %APPDATA% directory" << std::endl;
+    std::cerr << "unable to get the %APPDATA% directory\n";
     return;
   }
   HomePath /= "medusa";
@@ -21,7 +24,7 @@ UserConfiguration::UserConfiguration(void)
   HomePath = getenv("HOME");
   if (HomePath.empty())
   {
-    std::cerr << "unable to get $HOME directory" << std::endl;
+    std::cerr << "unable to get $HOME directory\n";
     return;
   }
   HomePath /= ".medusa";
@@ -34,36 +37,35 @@ UserConfiguration::UserConfiguration(void)
 
   if (!fs::exists(m_CfgPath))
     if (!_WriteDefaultOptions())
-      std::cerr << "unable to write default configuration file" << std::endl;
+      std::cerr << "unable to write default configuration file\n";
 }
 
 UserConfiguration::~UserConfiguration(void)
 {
 }
 
-
-// TODO: handle return value
 bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue)
 {
   try
   {
     std::lock_guard<MutexType> Lock(m_Mutex);
-    namespace pt = boost::property_tree;
-    pt::ptree PropTree;
-    pt::ini_parser::read_ini(m_CfgPath.string(), PropTree);
-    rValue = PropTree.get<std::string>(rKey);
-    return true;
+    auto Data = _ReadIni(m_CfgPath);
+    auto it = Data.find(rKey);
+    if (it != Data.end())
+    {
+      rValue = it->second;
+      return true;
+    }
   }
-  catch (std::exception&)
-  {
-    auto const& rDefOpts = _GetDefaultOptions();
-    auto const itOpt = rDefOpts.find(rKey);
-    if (itOpt == std::end(rDefOpts))
-      return false;
-    if (!SetOption(rKey, itOpt->second))
-      return false;
-    return true;
-  }
+  catch (std::exception&) {}
+
+  auto const& rDefOpts = _GetDefaultOptions();
+  auto const itOpt = rDefOpts.find(rKey);
+  if (itOpt == std::end(rDefOpts))
+    return false;
+  rValue = itOpt->second;
+  SetOption(rKey, itOpt->second);
+  return true;
 }
 
 std::string UserConfiguration::GetOption(std::string const& rKey)
@@ -74,22 +76,18 @@ std::string UserConfiguration::GetOption(std::string const& rKey)
   return Opt;
 }
 
-// TODO: handle return value
 bool UserConfiguration::SetOption(std::string const& rKey, std::string const& rValue)
 {
   try
   {
     std::lock_guard<MutexType> Lock(m_Mutex);
-    namespace pt = boost::property_tree;
-    pt::ptree PropTree;
-    pt::ini_parser::read_ini(m_CfgPath.string(), PropTree);
-    PropTree.put(rKey, rValue);
-    pt::ini_parser::write_ini(m_CfgPath.string(), PropTree);
-    return true;
+    auto Data = _ReadIni(m_CfgPath);
+    Data[rKey] = rValue;
+    return _WriteIni(m_CfgPath, Data);
   }
   catch (std::exception& e)
   {
-    std::cerr << "exception: " << e.what() << std::endl;
+    std::cerr << "exception: " << e.what() << "\n";
     return false;
   }
 }
@@ -167,21 +165,87 @@ bool UserConfiguration::_WriteDefaultOptions(void)
   try
   {
     std::lock_guard<MutexType> Lock(m_Mutex);
-    namespace pt = boost::property_tree;
-    pt::ptree PropTree;
-
     auto const& rDefOpts = _GetDefaultOptions();
-    for (auto const& rOptPair : rDefOpts)
-      PropTree.put(rOptPair.first, rOptPair.second);
-
-    pt::ini_parser::write_ini(m_CfgPath.string(), PropTree);
-    return true;
+    std::unordered_map<std::string, std::string> Data(rDefOpts.begin(), rDefOpts.end());
+    return _WriteIni(m_CfgPath, Data);
   }
   catch (std::exception& e)
   {
-    std::cerr << e.what() << std::endl;
+    std::cerr << e.what() << "\n";
     return false;
   }
+}
+
+std::unordered_map<std::string, std::string> UserConfiguration::_ReadIni(std::filesystem::path const& rPath)
+{
+  std::unordered_map<std::string, std::string> Result;
+  std::ifstream File(rPath);
+  if (!File.is_open())
+    return Result;
+
+  std::string Line, Section;
+  while (std::getline(File, Line))
+  {
+    // trim whitespace
+    auto start = Line.find_first_not_of(" \t\r\n");
+    if (start == std::string::npos) continue;
+    Line = Line.substr(start);
+    auto end = Line.find_last_not_of(" \t\r\n");
+    if (end != std::string::npos) Line.resize(end + 1);
+
+    if (Line.empty() || Line[0] == ';' || Line[0] == '#')
+      continue;
+
+    if (Line.front() == '[' && Line.back() == ']')
+    {
+      Section = Line.substr(1, Line.size() - 2);
+      continue;
+    }
+
+    auto eq = Line.find('=');
+    if (eq == std::string::npos)
+      continue;
+
+    auto Key = Line.substr(0, eq);
+    auto Val = Line.substr(eq + 1);
+
+    // trim key/value
+    while (!Key.empty() && (Key.back() == ' ' || Key.back() == '\t')) Key.pop_back();
+    auto vs = Val.find_first_not_of(" \t");
+    if (vs != std::string::npos) Val = Val.substr(vs);
+
+    std::string FullKey = Section.empty() ? Key : Section + "." + Key;
+    Result[FullKey] = Val;
+  }
+  return Result;
+}
+
+bool UserConfiguration::_WriteIni(std::filesystem::path const& rPath,
+  std::unordered_map<std::string, std::string> const& rData)
+{
+  // Group by section (part before the dot)
+  std::map<std::string, std::map<std::string, std::string>> Sections;
+  for (auto const& [FullKey, Val] : rData)
+  {
+    auto dot = FullKey.find('.');
+    if (dot != std::string::npos)
+      Sections[FullKey.substr(0, dot)][FullKey.substr(dot + 1)] = Val;
+    else
+      Sections[""][FullKey] = Val;
+  }
+
+  std::ofstream File(rPath);
+  if (!File.is_open())
+    return false;
+
+  for (auto const& [Section, Keys] : Sections)
+  {
+    if (!Section.empty())
+      File << "[" << Section << "]\n";
+    for (auto const& [Key, Val] : Keys)
+      File << Key << "=" << Val << "\n";
+  }
+  return true;
 }
 
 MEDUSA_NAMESPACE_END

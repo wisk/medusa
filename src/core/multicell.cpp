@@ -1,5 +1,4 @@
 #include "medusa/multicell.hpp"
-#include <boost/uuid/uuid_io.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

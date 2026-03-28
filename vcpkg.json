@@ -6,10 +6,8 @@
   "dependencies": [
     "boost-bimap",
     "boost-graph",
-    "boost-locale",
     "boost-multiprecision",
     "boost-program-options",
-    "boost-property-tree",
     "boost-signals2",
     "boost-uuid",
     "pegtl",

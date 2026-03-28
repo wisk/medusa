@@ -142,7 +142,7 @@ endif()
 
 add_compile_definitions(BOOST_ALL_NO_LIB=1)
 set(Boost_USE_STATIC_LIBS TRUE)
-find_package(Boost REQUIRED COMPONENTS program_options graph locale)
+find_package(Boost REQUIRED COMPONENTS program_options graph)
 
 ## PEGTL
 
@@ -185,7 +185,6 @@ endif()
 target_link_libraries(medusa
   PUBLIC
   Boost::boost
-  Boost::locale
   Boost::program_options
   Boost::graph
 
