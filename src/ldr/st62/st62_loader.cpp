@@ -1,5 +1,6 @@
 #include "medusa/medusa.hpp"
 #include "medusa/log.hpp"
+#include "medusa/module.hpp"
 
 #include "st62_loader.hpp"
 
@@ -49,26 +50,19 @@ bool ST62Loader::IsCompatible(BinaryStream const& rBinStrm) const
   return true;
 }
 
-bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
+std::vector<std::string> ST62Loader::GetUsedArchitectures(BinaryStream const& rBinStrm) const
 {
-  auto itArch = std::find_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
-  {
-    if (spArch->GetName() == "ST62")
-      return true;
-    return false;
-  });
+  return { "ST62/ST62x25" };
+}
 
-  if (itArch == std::end(rArchs))
+bool ST62Loader::Map(Document& rDoc) const
+{
+  auto const& rModMgr = ModuleManager::Instance();
+  TagType ArchTag;
+  u8 ArchMode;
+  if (!rModMgr.ConvertArchitectureNameToTagAndMode("ST62/ST62x25", ArchTag, ArchMode))
   {
     Log::Write("ldr_st62") << "unable to find ST62 architecture" << LogEnd;
-    return false;
-  }
-
-  Tag ArchTag = (*itArch)->GetTag();
-  u8 ArchMode = (*itArch)->GetModeByName("ST62x25");
-  if (ArchMode == 0)
-  {
-    Log::Write("ldr_st62") << "unable to set ST62x25 mode" << LogEnd;
     return false;
   }
 
@@ -85,19 +79,39 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
     ArchTag, ArchMode
     ));
 
-  // Try and decode jump instruction @ reset vector to create start label
-  Instruction insn;
+  return true;
+}
 
-  if ((*itArch)->Disassemble(rDoc.GetBinaryStream(), 0xFFE, insn, ArchMode) &&
-      insn.GetSubType() & Instruction::JumpType) {
-    Address CurAddr;
-    Address DstAddr;
-    rDoc.ConvertPositionToAddress(0xFFE, CurAddr);
-    if (insn.GetOperandReference(rDoc, 0, CurAddr, DstAddr, false)) {
-      rDoc.AddLabel(DstAddr, Label("start", Label::Code | Label::Global));
+bool ST62Loader::Map(Document& rDoc, Address const& rImgBase) const
+{
+  return false;
+}
+
+void ST62Loader::Analyze(Document& rDoc) const
+{
+  // Try and decode jump instruction @ reset vector to create start label
+  auto const& rModMgr = ModuleManager::Instance();
+  TagType ArchTag;
+  u8 ArchMode;
+  if (!rModMgr.ConvertArchitectureNameToTagAndMode("ST62/ST62x25", ArchTag, ArchMode))
+    return;
+
+  auto spArch = rModMgr.GetArchitecture(ArchTag);
+  if (spArch != nullptr)
+  {
+    Instruction insn;
+    if (spArch->Disassemble(rDoc.GetBinaryStream(), 0xFFE, insn, ArchMode) &&
+        insn.GetSubType() & Instruction::JumpType)
+    {
+      Address CurAddr;
+      Address DstAddr;
+      rDoc.ConvertPositionToAddress(0xFFE, CurAddr);
+      if (insn.GetOperandReference(rDoc, 0, CurAddr, DstAddr, false))
+        rDoc.AddLabel(DstAddr, Label("start", Label::Code | Label::Global));
     }
   }
 
+  // Interrupt vectors
   rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF0, 12, 12), Label("ADC_vec", Label::Code | Label::Global));
   rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF2, 12, 12), Label("TIMER_vec", Label::Code | Label::Global));
   rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFF4, 12, 12), Label("PORTB_vec", Label::Code | Label::Global));
@@ -105,6 +119,7 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFFC, 12, 12), Label("NMI_vec", Label::Code | Label::Global));
   rDoc.AddLabel(Address(Address::LinearType, 0x000, 0xFFE, 12, 12), Label("RESET_vec", Label::Code | Label::Global));
 
+  // I/O and special registers
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x80, 16, 8), Label("X", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x81, 16, 8), Label("Y", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0x82, 16, 8), Label("V", Label::Data | Label::Global));
@@ -127,17 +142,4 @@ bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs)
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD4, 16, 8), Label("TSCR", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xD8, 16, 8), Label("WDT", Label::Data | Label::Global));
   rDoc.AddLabel(Address(Address::LogicalType, 0x1000, 0xFF, 16, 8), Label("A", Label::Data | Label::Global));
-
-  return true;
-}
-
-bool ST62Loader::Map(Document& rDoc, Architecture::VSPType const& rArchs, Address const& rImgBase)
-{
-  return false;
-}
-
-void ST62Loader::FilterAndConfigureArchitectures(Architecture::VSPType& rArchs) const
-{
-  rArchs.erase(std::remove_if(std::begin(rArchs), std::end(rArchs), [](Architecture::SPType spArch)
-  { return spArch->GetName() != "ST62"; }), std::end(rArchs));
 }

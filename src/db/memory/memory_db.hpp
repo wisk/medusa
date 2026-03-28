@@ -4,8 +4,6 @@
 #include <medusa/namespace.hpp>
 #include <medusa/database.hpp>
 
-#include <boost/functional/hash.hpp>
-
 #include <type_traits>
 #include <vector>
 #include <functional>
@@ -22,6 +20,17 @@ MEDUSA_NAMESPACE_USE
 #else
 #define DB_MEMORY_EXPORT
 #endif
+
+struct PairHash
+{
+  template<typename T1, typename T2>
+  size_t operator()(std::pair<T1, T2> const& p) const
+  {
+    size_t h1 = std::hash<T1>{}(p.first);
+    size_t h2 = std::hash<T2>{}(p.second);
+    return h1 ^ (h2 * 0x9e3779b97f4a7c15 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+  }
+};
 
 class MemoryDatabase : public medusa::Database
 {
@@ -140,13 +149,13 @@ private:
 
   using MemoryAreaRelatedType = std::pair<int, OffsetType>;
   
-  std::unordered_map<MemoryAreaRelatedType, Label, boost::hash<MemoryAreaRelatedType>> m_LabelsMap;
+  std::unordered_map<MemoryAreaRelatedType, Label, PairHash> m_LabelsMap;
   std::unordered_map<std::string, MemoryAreaRelatedType> m_ReverseLabelsMap;
 
-  std::unordered_map<MemoryAreaRelatedType, std::vector<MemoryAreaRelatedType>, boost::hash<MemoryAreaRelatedType>> m_CrossReferencesToFrom;
-  std::unordered_map<MemoryAreaRelatedType, std::vector<MemoryAreaRelatedType>, boost::hash<MemoryAreaRelatedType>> m_CrossReferencesFromTo;
+  std::unordered_map<MemoryAreaRelatedType, std::vector<MemoryAreaRelatedType>, PairHash> m_CrossReferencesToFrom;
+  std::unordered_map<MemoryAreaRelatedType, std::vector<MemoryAreaRelatedType>, PairHash> m_CrossReferencesFromTo;
 
-  std::unordered_map<MemoryAreaRelatedType, MultiCell::SPType, boost::hash<MemoryAreaRelatedType>> m_MultiCellsMap;
+  std::unordered_map<MemoryAreaRelatedType, MultiCell::SPType, PairHash> m_MultiCellsMap;
 
   class CellLayout
   {
@@ -165,9 +174,9 @@ private:
   };
   using CellLayoutVectorType = std::vector<CellLayout>;
   std::unordered_map<int, CellLayoutVectorType> m_CellLayoutMap;
-  std::unordered_map<MemoryAreaRelatedType, CellData, boost::hash<MemoryAreaRelatedType>> m_CellsMap;
+  std::unordered_map<MemoryAreaRelatedType, CellData, PairHash> m_CellsMap;
 
-  std::unordered_map<MemoryAreaRelatedType, std::string, boost::hash<MemoryAreaRelatedType>> m_CommentsMap;
+  std::unordered_map<MemoryAreaRelatedType, std::string, PairHash> m_CommentsMap;
 
   std::unordered_map<Id, StructureDetail> m_StructureDetailsMap;
   std::unordered_map<Id, ValueDetail> m_ValueDetailsMap;
@@ -177,9 +186,9 @@ private:
   using DetailBindingKey = std::pair<MemoryAreaRelatedType, u8>;
   struct DetailBindingKeyHash {
     size_t operator()(DetailBindingKey const& k) const {
-      size_t seed = boost::hash<MemoryAreaRelatedType>()(k.first);
-      boost::hash_combine(seed, k.second);
-      return seed;
+      size_t h1 = PairHash{}(k.first);
+      size_t h2 = std::hash<u8>{}(k.second);
+      return h1 ^ (h2 * 0x9e3779b97f4a7c15 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
     }
   };
   std::unordered_map<DetailBindingKey, Id, DetailBindingKeyHash> m_DetailBindingsMap;

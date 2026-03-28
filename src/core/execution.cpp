@@ -1,7 +1,8 @@
 #include "medusa/execution.hpp"
 #include "medusa/module.hpp"
-
 #include "medusa/log.hpp"
+
+#include <atomic>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -79,11 +80,10 @@ bool Execution::SetStackMemory()
   auto const ReadWrite = MemoryArea::Access::Read | MemoryArea::Access::Write;
 
   void* pStkMem;
-  if (!m_pMemCtxt->AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem)) {
-    {
-      Log::Write("core").Level(LogError) << "cannot allocate stack memory" << LogEnd;
-      return false;
-    }
+  if (!m_pMemCtxt->AllocateMemory(StkPtr, StkLen, ReadWrite, &pStkMem))
+  {
+    Log::Write("core").Level(LogError) << "cannot allocate stack memory" << LogEnd;
+    return false;
   }
 
   u32 StkReg = rCpuInfo.GetRegisterByType(CpuInformation::StackPointerRegister, m_pCpuCtxt->GetMode());
@@ -187,7 +187,9 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
       return false;
     }
 
-  static u64 s_FakeAddr = 0xdead7700; // FIXME: this is a dirty hack
+  static std::atomic<u64> s_FakeAddr{0xdead7700};
+  u64 FakeAddr = s_FakeAddr.fetch_add(4);
+
   auto const& rAddr     = m_rDoc.GetAddressFromLabelName(rFuncName);
   auto const& rLbl      = m_rDoc.GetLabelFromAddress(rAddr);
 
@@ -196,9 +198,6 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
       Log::Write("core").Level(LogError) << "function: " << rFuncName << " is not imported" << LogEnd;
       return false;
     }
-  // FIXME(wisk): sometime it's almost impossible to determine if a imported symbol is a function or a variable...
-  //if (!rLbl.IsFunction())
-  //  return false;
 
   auto const* pCpuInfo = m_spArch->GetCpuInformation();
   if (pCpuInfo == nullptr)
@@ -214,7 +213,7 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
       return false;
     }
 
-  if (!m_spEmul->WriteMemory(rAddr, &s_FakeAddr, PcSize))
+  if (!m_spEmul->WriteMemory(rAddr, &FakeAddr, PcSize))
     {
       Log::Write("core").Level(LogError) << "can't write memory" << LogEnd;
       return false;
@@ -222,16 +221,14 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
 
   {
     std::lock_guard<std::mutex> Lock(m_HookMutex);
-    m_HookName[s_FakeAddr] = rFuncName;
+    m_HookName[FakeAddr] = rFuncName;
   }
 
-  if (!m_spEmul->AddHook(s_FakeAddr, Emulator::HookOnExecute, HkCb))
+  if (!m_spEmul->AddHook(FakeAddr, Emulator::HookOnExecute, HkCb))
     {
       Log::Write("core").Level(LogError) << "can't add hook" << LogEnd;
       return false;
     }
-
-  s_FakeAddr += 4;
 
   return true;
 }
