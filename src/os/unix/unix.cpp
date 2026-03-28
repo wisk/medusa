@@ -7,7 +7,7 @@
 #include <medusa/expression_visitor.hpp>
 #include <medusa/emulation.hpp>
 
-#include <boost/range/adaptor/reversed.hpp>
+#include <ranges>
 
 std::string UnixOperatingSystem::GetName(void) const
 {
@@ -58,7 +58,7 @@ bool UnixOperatingSystem::InitializeContext(
   /* Write environ data */
   std::vector<u64> EnvPtr;
   EnvPtr.reserve(rEnv.size());
-  for (auto const& rEnvVar : boost::adaptors::reverse(rEnv))
+  for (auto const& rEnvVar : std::views::reverse(rEnv))
   {
     auto EnvVarLen = rEnvVar.length() + 1;
     StkOff += EnvVarLen;
@@ -68,7 +68,7 @@ bool UnixOperatingSystem::InitializeContext(
   /* Write arguments data */
   std::vector<u64> ArgsPtr;
   ArgsPtr.reserve(rArgs.size());
-  for (auto const& rArgVar : boost::adaptors::reverse(rArgs))
+  for (auto const& rArgVar : std::views::reverse(rArgs))
   {
     auto ArgVarLen = rArgVar.length() + 1;
     StkOff += ArgVarLen;

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <sstream>
 #include <format>
-#include <boost/algorithm/string.hpp>
+#include <cctype>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -84,11 +84,11 @@ std::string Label::GetLabel(void) const
         Maj = true;
         continue;
       }
-      boost::to_lower(CurChr);
+      std::transform(CurChr.begin(), CurChr.end(), CurChr.begin(), ::tolower);
       if (Maj)
       {
         Maj = false;
-        boost::to_upper(CurChr);
+        std::transform(CurChr.begin(), CurChr.end(), CurChr.begin(), ::toupper);
       }
       Result += CurChr;
 

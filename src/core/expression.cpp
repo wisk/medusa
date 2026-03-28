@@ -1,12 +1,28 @@
 #include "medusa/expression.hpp"
 #include "medusa/extend.hpp"
 #include <sstream>
+#include <algorithm>
 #include <format>
-#include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/range/adaptor/reversed.hpp>
+#include <numeric>
+#include <ranges>
 
 MEDUSA_NAMESPACE_USE
+
+namespace {
+  std::string JoinStrings(std::vector<std::string> const& v, std::string const& sep) {
+    std::string result;
+    for (size_t i = 0; i < v.size(); ++i) {
+      if (i > 0) result += sep;
+      result += v[i];
+    }
+    return result;
+  }
+
+  bool EndsWith(std::string const& s, std::string const& suffix) {
+    if (suffix.size() > s.size()) return false;
+    return s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0;
+  }
+}
 
 void Track::Context::TrackId(u32 Id, Address const& rCurAddr)
 {
@@ -82,7 +98,7 @@ std::string BindExpression::ToString(void) const
       ExprsStrList.push_back(spExpr->ToString());
   });
 
-  return boost::algorithm::join(ExprsStrList, "; ");
+  return JoinStrings(ExprsStrList, "; ");
 }
 
 Expression::SPType BindExpression::Clone(void) const
@@ -677,7 +693,7 @@ UnaryOperationExpression::~UnaryOperationExpression(void)
 std::string UnaryOperationExpression::ToString(void) const
 {
   auto OpStr = OperationExpression::ToString();
-  if (boost::algorithm::ends_with(OpStr, "()"))
+  if (EndsWith(OpStr, "()"))
     OpStr.erase(OpStr.length() - 2, 2);
   return OpStr + "(" + m_spExpr->ToString() + ")";
 }
@@ -736,7 +752,7 @@ std::string BinaryOperationExpression::ToString(void) const
 {
   std::string Res;
   auto OpStr = OperationExpression::ToString();
-  if (boost::algorithm::ends_with(OpStr, "()"))
+  if (EndsWith(OpStr, "()"))
   {
     OpStr.erase(OpStr.length() - 2, 2);
     Res = OpStr;
@@ -1149,7 +1165,7 @@ std::string VectorIdentifierExpression::ToString(void) const
       return "";
     VecStr.push_back(pCurIdStr);
   }
-  return "{ " + boost::algorithm::join(VecStr, ", ") + " }";
+  return "{ " + JoinStrings(VecStr, ", ") + " }";
 }
 
 Expression::SPType VectorIdentifierExpression::Clone(void) const
@@ -1210,7 +1226,7 @@ bool VectorIdentifierExpression::Read(CpuContext *pCpuCtxt, MemoryContext* pMemC
 
 bool VectorIdentifierExpression::Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData)
 {
-  for (auto Id : boost::adaptors::reverse(m_VecId))
+  for (auto Id : std::views::reverse(m_VecId))
   {
     if (rData.empty())
       return false;

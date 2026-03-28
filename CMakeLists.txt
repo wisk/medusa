@@ -58,6 +58,7 @@ endif()
 
 ## C++
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG(-fabi-version=9 HAVE_ABI_VERSION)
 if (HAVE_ABI_VERSION)

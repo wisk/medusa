@@ -3,7 +3,6 @@
 
 #include <medusa/expression_visitor.hpp>
 
-#include <boost/algorithm/string/join.hpp>
 #include <format>
 
 ArmArchitecture::ArmArchitecture(void)

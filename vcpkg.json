@@ -4,7 +4,6 @@
   "description": "A modular and interactive binary disassembler",
   "homepage": "https://github.com/wisk/medusa",
   "dependencies": [
-    "boost-algorithm",
     "boost-atomic",
     "boost-bimap",
     "boost-filesystem",
@@ -13,10 +12,7 @@
     "boost-multiprecision",
     "boost-program-options",
     "boost-property-tree",
-    "boost-random",
-    "boost-range",
     "boost-regex",
-    "boost-serialization",
     "boost-signals2",
     "boost-system",
     "boost-uuid",

@@ -2,7 +2,8 @@
 
 #include <algorithm>
 
-#include <boost/algorithm/string.hpp>
+#include <numeric>
+#include <sstream>
 
 MEDUSA_NAMESPACE_USE;
 
@@ -156,7 +157,8 @@ void FormatDisassembly::_FormatCell(Address const& rAddress, u32 Flags)
   if (m_rCore.GetDocument().GetComment(rAddress, Cmt))
   {
     std::vector<std::string> CmtLines;
-    boost::split(CmtLines, Cmt, boost::is_any_of("\n"));
+    { std::istringstream iss(Cmt); std::string line;
+      while (std::getline(iss, line, '\n')) CmtLines.push_back(std::move(line)); }
     auto itCmtLine = std::begin(CmtLines), itCmtLineEnd = std::end(CmtLines);
     if (itCmtLine == itCmtLineEnd)
       return;
@@ -208,7 +210,12 @@ void FormatDisassembly::_FormatCrossReference(Address const& rAddress, u32 Flags
     --CrossReferenceLimit;
   }
 
-  std::string Buffer = "; xref: " + boost::algorithm::join(AddrFromStr, ", ");
+  std::string JoinedXrefs;
+  for (size_t i = 0; i < AddrFromStr.size(); ++i) {
+    if (i > 0) JoinedXrefs += ", ";
+    JoinedXrefs += AddrFromStr[i];
+  }
+  std::string Buffer = "; xref: " + JoinedXrefs;
   if (CrossReferenceLimit == 0)
     Buffer += ", ...";
   if (Flags & AddNewLineBeforeCrossReference)

@@ -1,6 +1,6 @@
 #include "medusa/address.hpp"
 
-#include <boost/algorithm/string.hpp>
+#include <algorithm>
 #include <medusa/exception.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -8,7 +8,9 @@ MEDUSA_NAMESPACE_BEGIN
 Address::Address(std::string const& rAddrName)
 {
   std::string AddrStr = rAddrName;
-  boost::algorithm::trim(AddrStr);
+  auto notSpace = [](unsigned char c) { return !std::isspace(c); };
+  AddrStr.erase(AddrStr.begin(), std::find_if(AddrStr.begin(), AddrStr.end(), notSpace));
+  AddrStr.erase(std::find_if(AddrStr.rbegin(), AddrStr.rend(), notSpace).base(), AddrStr.end());
   m_Base       = 0;
   m_Offset     = 0;
   m_BaseSize   = 16;

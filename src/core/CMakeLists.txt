@@ -142,7 +142,7 @@ endif()
 
 add_definitions("-DBOOST_ALL_NO_LIB=1")
 set(Boost_USE_STATIC_LIBS TRUE)
-find_package(Boost REQUIRED COMPONENTS system atomic filesystem program_options graph locale random regex serialization)
+find_package(Boost REQUIRED COMPONENTS system atomic filesystem program_options graph locale regex)
 
 ## PEGTL
 
@@ -190,9 +190,7 @@ target_link_libraries(medusa
   Boost::locale
   Boost::program_options
   Boost::graph
-  Boost::random
   Boost::regex
-  Boost::serialization
 
   ${CRYPT_LIBRARIES}
 

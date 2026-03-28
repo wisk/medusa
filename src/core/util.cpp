@@ -1,46 +1,48 @@
 #include "medusa/util.hpp"
 
 #include <sstream>
+#include <iomanip>
+#include <random>
 
-// base64
-#include <boost/archive/iterators/insert_linebreaks.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/archive/iterators/ostream_iterator.hpp>
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/archive/iterators/binary_from_base64.hpp>
-
-// sha1
+// sha1 / uuid
 #include <boost/uuid/name_generator.hpp>
-
-// random
 #include <boost/uuid/random_generator.hpp>
-#include <boost/random.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 
-// ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
+namespace {
+  static constexpr char s_Base64Chars[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+  static constexpr unsigned char s_Base64Decode[256] = {
+    ['A']=0, ['B']=1, ['C']=2, ['D']=3, ['E']=4, ['F']=5, ['G']=6, ['H']=7,
+    ['I']=8, ['J']=9, ['K']=10,['L']=11,['M']=12,['N']=13,['O']=14,['P']=15,
+    ['Q']=16,['R']=17,['S']=18,['T']=19,['U']=20,['V']=21,['W']=22,['X']=23,
+    ['Y']=24,['Z']=25,['a']=26,['b']=27,['c']=28,['d']=29,['e']=30,['f']=31,
+    ['g']=32,['h']=33,['i']=34,['j']=35,['k']=36,['l']=37,['m']=38,['n']=39,
+    ['o']=40,['p']=41,['q']=42,['r']=43,['s']=44,['t']=45,['u']=46,['v']=47,
+    ['w']=48,['x']=49,['y']=50,['z']=51,['0']=52,['1']=53,['2']=54,['3']=55,
+    ['4']=56,['5']=57,['6']=58,['7']=59,['+']=60,['/']=61,
+  };
+}
+
 std::string Base64Encode(void const *pRawData, u32 Size)
 {
-  try
-  {
-    static const std::string Base64Padding[] = {"", "==","="};
-    namespace bai = boost::archive::iterators;
-    typedef bai::base64_from_binary<bai::transform_width<char const*, 6, 8>> Base64EncodeType;
-    std::stringstream os;
+  auto pData = reinterpret_cast<u8 const*>(pRawData);
+  std::string result;
+  result.reserve((Size + 2) / 3 * 4);
 
-    std::copy(
-      Base64EncodeType(pRawData),
-      Base64EncodeType(reinterpret_cast<u8 const *>(pRawData) + Size),
-      bai::ostream_iterator<char>(os));
+  for (u32 i = 0; i < Size; i += 3) {
+    u32 n = static_cast<u32>(pData[i]) << 16;
+    if (i + 1 < Size) n |= static_cast<u32>(pData[i + 1]) << 8;
+    if (i + 2 < Size) n |= static_cast<u32>(pData[i + 2]);
 
-    os << Base64Padding[Size % 3];
-    return os.str();
+    result += s_Base64Chars[(n >> 18) & 0x3F];
+    result += s_Base64Chars[(n >> 12) & 0x3F];
+    result += (i + 1 < Size) ? s_Base64Chars[(n >> 6) & 0x3F] : '=';
+    result += (i + 2 < Size) ? s_Base64Chars[n & 0x3F] : '=';
   }
-  catch (std::exception &e)
-  {
-    Log::Write("db_text") << "exception: " << e.what() << LogEnd;
-  }
-  return "";
+  return result;
 }
 
 std::string Base64Encode(std::string const &rRawData)
@@ -50,27 +52,26 @@ std::string Base64Encode(std::string const &rRawData)
 
 std::string Base64Decode(std::string const &rBase64Data)
 {
-  std::string Res;
+  std::string result;
+  result.reserve(rBase64Data.size() * 3 / 4);
 
-  try
-  {
-    namespace bai = boost::archive::iterators;
-    typedef bai::transform_width<bai::binary_from_base64<const char *>, 8, 6> Base64DecodeType;
+  for (size_t i = 0; i < rBase64Data.size(); ) {
+    if (rBase64Data[i] == '=' || rBase64Data[i] == '\0') break;
 
-    auto const End = rBase64Data.size();
-    Base64DecodeType itBase64(rBase64Data.c_str());
-    for (std::string::size_type Cur = 0; Cur < End; ++Cur)
-    {
-      Res += *itBase64;
-      ++itBase64;
-    }
-    return Res;
+    u32 a = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    if (i >= rBase64Data.size()) break;
+    u32 b = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    result += static_cast<char>((a << 2) | (b >> 4));
+
+    if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
+    u32 c = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    result += static_cast<char>(((b & 0x0F) << 4) | (c >> 2));
+
+    if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
+    u32 d = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    result += static_cast<char>(((c & 0x03) << 6) | d);
   }
-  // NOTE: we assume we got an exception if the decoding is done (which cannot be always true...)
-  catch (std::exception &)
-  {
-  }
-  return Res;
+  return result;
 }
 
 
@@ -116,7 +117,8 @@ Id Sha1(std::string const &rName)
 
 Id RandomId(void)
 {
-  boost::uuids::basic_random_generator<boost::mt19937> Gen;
+  static std::mt19937 rng{std::random_device{}()};
+  boost::uuids::basic_random_generator<std::mt19937> Gen(rng);
   return Gen();
 }
 

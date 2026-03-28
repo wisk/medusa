@@ -5,8 +5,17 @@
 
 #include <iomanip>
 #include <sstream>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
+
+namespace {
+  std::vector<std::string> SplitString(std::string const& s, char delim) {
+    std::vector<std::string> result;
+    std::istringstream iss(s);
+    std::string token;
+    while (std::getline(iss, token, delim))
+      result.push_back(std::move(token));
+    return result;
+  }
+}
 
 // FIXME: the code is x86 specific
 
@@ -230,12 +239,12 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
   }
 
   std::vector<std::string> TypedParms;
-  boost::algorithm::split(TypedParms, Parms, boost::algorithm::is_any_of(";"));
+  auto TypedParms = SplitString(Parms, ';');
 
   for (auto const& rTypedParm : TypedParms)
   {
     std::vector<std::string> CurParm;
-    boost::algorithm::split(CurParm, rTypedParm, boost::algorithm::is_any_of(","));
+    auto CurParm = SplitString(rTypedParm, ',');
     if (CurParm.size() != 2)
     {
       Log::Write("os_windows") << "malformed parameter typed value" << LogEnd;
