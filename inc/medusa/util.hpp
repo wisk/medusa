@@ -12,7 +12,6 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-// ref: http://stackoverflow.com/questions/7053538/how-do-i-encode-a-string-to-base64-using-only-boost
 std::string MEDUSA_EXPORT Base64Encode(void const *pRawData, u32 Size);
 std::string MEDUSA_EXPORT Base64Encode(std::string const &rRawData);
 

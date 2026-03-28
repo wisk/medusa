@@ -15,8 +15,6 @@
 #include "medusa/analyzer.hpp"
 
 #include <vector>
-#include <iostream>
-#include <iomanip>
 #include <string>
 #include <tuple>
 

@@ -7,9 +7,6 @@
 #include "medusa/endian.hpp"
 #include "medusa/document.hpp"
 #include "medusa/configuration.hpp"
-
-#include "medusa/export.hpp"
-
 #include "medusa/architecture.hpp"
 
 #include <vector>

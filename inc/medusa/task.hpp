@@ -3,7 +3,6 @@
 
 #include "medusa/namespace.hpp"
 
-#include <iostream>
 #include <thread>
 #include <queue>
 #include <condition_variable>
