@@ -49,7 +49,7 @@ private:
   medusa::OperatingSystem::SPType       m_spOpratingSystem;
   QLineEdit*                            m_pModulePathWidget;
 
-  class ConfigurationVisitor : public boost::static_visitor<>
+  class ConfigurationVisitor
   {
   public:
     ConfigurationVisitor(QVBoxLayout *pLayout, medusa::ConfigurationModel& rCfgMdl);

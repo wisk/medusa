@@ -8,11 +8,11 @@
 #include "medusa/label.hpp"
 
 #include <string>
-#include <boost/variant.hpp>
+#include <variant>
 
 MEDUSA_NAMESPACE_BEGIN
 
-class MEDUSA_EXPORT EventHandler : public boost::static_visitor<bool>
+class MEDUSA_EXPORT EventHandler
 {
 public:
   class Quit {};
@@ -34,7 +34,7 @@ public:
     UpdateType m_Type;
   };
 
-  typedef boost::variant<Quit, DocumentUpdated, LabelUpdated> EventType;
+  typedef std::variant<Quit, DocumentUpdated, LabelUpdated> EventType;
 
   virtual bool OnQuit(void)                        { return false; }
   virtual bool OnDocumentUpdated(void)             { return true;  }
@@ -42,7 +42,7 @@ public:
 
   bool operator()(EventType const& rEvent)
   {
-    return boost::apply_visitor(*this, rEvent);
+    return std::visit(*this, rEvent);
   }
 
   bool operator()(Quit const&)                   { return OnQuit();                }

@@ -7,8 +7,6 @@
 #include "medusa/address.hpp"
 #include "medusa/graph.hpp"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/uuid/uuid.hpp>
 
 #include <string>
 #include <map>

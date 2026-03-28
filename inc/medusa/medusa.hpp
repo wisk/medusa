@@ -20,8 +20,6 @@
 #include <string>
 #include <tuple>
 
-#include <boost/thread/mutex.hpp>
-#include <boost/shared_ptr.hpp>
 
 MEDUSA_NAMESPACE_BEGIN
 

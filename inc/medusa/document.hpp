@@ -17,9 +17,6 @@
 #include <set>
 #include <mutex>
 #include <boost/bimap.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread.hpp>
 #include <boost/signals2.hpp>
 
 MEDUSA_NAMESPACE_BEGIN

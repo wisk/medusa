@@ -10,10 +10,9 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <boost/function.hpp>
-#include <boost/thread/recursive_mutex.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/type_traits.hpp>
+#include <functional>
+#include <mutex>
+#include <type_traits>
 #include <unordered_map>
 
 #ifdef _MSC_VER
@@ -35,7 +34,7 @@ enum LogLevelType
 class MEDUSA_EXPORT LogWrapper
 {
 public:
-  typedef boost::function<void(std::string const&)> LoggerCallback;
+  typedef std::function<void(std::string const&)> LoggerCallback;
   typedef LogWrapper& (*LoggerFunction)(LogWrapper&);
 
   LogWrapper(LoggerCallback pLog, std::string const& rName, std::string& rBuffer);
@@ -47,7 +46,7 @@ public:
 
     std::ostringstream oss;
 
-    if (boost::is_arithmetic<T>::value)
+    if constexpr (std::is_arithmetic_v<T>)
     {
       oss << std::hex << std::internal << "0x" << std::setfill('0') << std::setw(sizeof(Value) * 2) << Value;
     }
@@ -67,7 +66,7 @@ public:
   void Unlock(void);
 
 private:
-  typedef boost::recursive_mutex MutexType;
+  typedef std::recursive_mutex MutexType;
 
   bool _CheckLogLevel(void) const;
 
@@ -91,9 +90,12 @@ MEDUSA_EXPORT LogWrapper& LogEnd(LogWrapper& rLogWrapper);
 MEDUSA_EXPORT LogWrapper& LogLevel(LogWrapper& rLogWrapper, LogLevelType NewLvl);
 
 //! this class allows core or modules to log information
-class MEDUSA_EXPORT Log : boost::noncopyable
+class MEDUSA_EXPORT Log
 {
 public:
+  Log(Log const&) = delete;
+  Log& operator=(Log const&) = delete;
+
   static void SetLog(LogWrapper::LoggerCallback pLog)
   { m_pLog = pLog; }
 

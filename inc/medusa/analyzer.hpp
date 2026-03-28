@@ -10,7 +10,6 @@
 #include <fstream>
 #include <string>
 
-#include <boost/thread/mutex.hpp>
 #include <boost/graph/graphviz.hpp>
 
 MEDUSA_NAMESPACE_BEGIN

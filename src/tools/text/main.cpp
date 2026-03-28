@@ -71,7 +71,7 @@ public:
   }
 };
 
-struct AskForConfiguration : public boost::static_visitor<>
+struct AskForConfiguration
 {
   AskForConfiguration(ConfigurationModel& rCfgMdl) : m_rCfgMdl(rCfgMdl) {}
 
@@ -350,7 +350,7 @@ int main(int argc, char **argv)
       {
         std::cout << "Configuration:" << std::endl;
         for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
-          boost::apply_visitor(AskForConfiguration(CfgMdl), itCfg->second);
+          std::visit(AskForConfiguration(CfgMdl), itCfg->second);
       }
 
       auto const& all_dbs = mod_mgr.GetDatabases();

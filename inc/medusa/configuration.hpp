@@ -8,7 +8,7 @@
 #include <list>
 #include <string>
 #include <unordered_map>
-#include <boost/variant.hpp>
+#include <variant>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -89,7 +89,7 @@ public:
   typedef Configuration::NamedValue<Path, Path> NamedPath;
 
   // Variant
-  typedef boost::variant<
+  typedef std::variant<
     NamedBool,
     NamedUint8, NamedUint16, NamedUint32, NamedUint64,
     NamedEnum, NamedString, NamedPath

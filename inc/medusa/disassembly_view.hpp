@@ -12,7 +12,7 @@
 #include <map>
 #include <set>
 #include <iterator>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -116,7 +116,7 @@ public:
   u8               GetSelectionIndex(void) const;
 
 protected:
-  typedef boost::recursive_mutex MutexType;
+  typedef std::recursive_mutex MutexType;
 
   struct TextPosition
   {

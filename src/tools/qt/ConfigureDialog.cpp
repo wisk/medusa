@@ -277,7 +277,7 @@ void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel& r
   {
     auto pVst = new ConfigurationVisitor(ConfigurationLayout, rConfigurationModel);
     m_Visitors.push_back(pVst);
-    boost::apply_visitor(*pVst, itCfg->second);
+    std::visit(*pVst, itCfg->second);
   }
   ConfigurationLayout->addSpacerItem(new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Minimum));
 }

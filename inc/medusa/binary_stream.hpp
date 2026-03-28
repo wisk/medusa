@@ -13,7 +13,7 @@
 #include <cstring>
 #include <memory>
 
-#include <boost/type_traits.hpp>
+#include <type_traits>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -282,8 +282,8 @@ protected:
     if (Position + sizeof(DataType) > m_Size)
       return false;
 
-    typename boost::remove_const<DataType>::type* pDataPosition
-      = reinterpret_cast< typename boost::remove_const<DataType>::type* >(m_pBuffer) + Position;
+    typename std::remove_const_t<DataType>* pDataPosition
+      = reinterpret_cast< typename std::remove_const_t<DataType>* >(m_pBuffer) + Position;
 
     *pDataPosition = rData;
     if (TestEndian(m_Endianness))

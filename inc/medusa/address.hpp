@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <list>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 #include <functional>
 #include <cstdio>
 
