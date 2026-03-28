@@ -145,38 +145,3 @@ TEST_CASE("sqlite3", "[db_sqlite3]")
   TestDatabase("Sqlite3");
 }
 
-//TEST_CASE("all database modules", "[db_*]") {
-//    using namespace medusa;
-//    auto& rModMgr = medusa::ModuleManager::Instance();
-//    rModMgr.UnloadModules();
-//    rModMgr.LoadDatabases(".");
-//    auto const& all_dbs = rModMgr.GetDatabases();
-//    
-//    auto const pSample = SAMPLES_DIR "/exe/hello_world.elf.arm-7";
-//    auto spFileBinStrm = std::make_shared<FileBinaryStream>(pSample);
-//    INFO("Using samples path \"" SAMPLES_DIR "\"");
-//    for (auto &db : all_dbs)
-//    {
-//        INFO("Current database name: " + db->GetName());
-//
-//        auto TempBaseFile = std::filesystem::absolute(std::filesystem::temp_directory_path() / std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
-//        INFO("Created unique  path: " + TempBaseFile.string());
-//        CHECK(db->Create(TempBaseFile,true));
-//        
-//        db->SetBinaryStream(spFileBinStrm);
-//        medusa::Label SampleLabel("test string",Label::Type::String);
-//        medusa::Address SampleAddress;
-//        db->AddLabel(SampleAddress,SampleLabel);
-//        CHECK(db->Flush());
-//        CHECK(db->Close());
-//        
-//        CHECK(db->Open(TempBaseFile));
-//        medusa::Label OutLabel;
-//        CHECK(db->GetLabel(SampleAddress,OutLabel));
-//        CHECK(OutLabel.GetName() == SampleLabel.GetName());
-//        CHECK(db->Close());
-//
-//        boost::filesystem::remove(TempBaseFile);
-//    }
-//    spFileBinStrm->Close();
-//}
