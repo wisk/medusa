@@ -140,9 +140,9 @@ endif()
 
 ## Boost
 
-add_definitions("-DBOOST_ALL_NO_LIB=1")
+add_compile_definitions(BOOST_ALL_NO_LIB=1)
 set(Boost_USE_STATIC_LIBS TRUE)
-find_package(Boost REQUIRED COMPONENTS system atomic filesystem program_options graph locale regex)
+find_package(Boost REQUIRED COMPONENTS program_options graph locale)
 
 ## PEGTL
 
@@ -185,12 +185,9 @@ endif()
 target_link_libraries(medusa
   PUBLIC
   Boost::boost
-  Boost::system
-  Boost::filesystem
   Boost::locale
   Boost::program_options
   Boost::graph
-  Boost::regex
 
   ${CRYPT_LIBRARIES}
 

@@ -12,9 +12,13 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-class EventQueue : public boost::noncopyable
+class EventQueue
 {
+  EventQueue(EventQueue const&) = delete;
+  EventQueue& operator=(EventQueue const&) = delete;
+
 public:
+  EventQueue() = default;
   typedef std::mutex MutexType;
 
   void Push(EventHandler::EventType const& rEvent);

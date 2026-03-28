@@ -76,13 +76,8 @@ endif()
 
 # Compiler warnings and defines
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  add_definitions(
-    "/DNOMINMAX"
-    "/D_CRT_SECURE_NO_WARNINGS"
-    "/D_SCL_SECURE_NO_WARNINGS"
-    "/wd4251" "/wd4503"
-    "/Zm256"
-    "/utf-8")
+  add_compile_definitions(NOMINMAX _CRT_SECURE_NO_WARNINGS _SCL_SECURE_NO_WARNINGS)
+  add_compile_options(/wd4251 /wd4503 /Zm256 /utf-8)
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU|Clang")
   add_compile_options(-Wall -Wextra -Wno-unused-parameter)
 endif()
