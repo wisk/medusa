@@ -238,12 +238,10 @@ bool WindowsOperatingSystem::GetFunctionDetail(Id FunctionId, FunctionDetail& rF
     return true;
   }
 
-  std::vector<std::string> TypedParms;
   auto TypedParms = SplitString(Parms, ';');
 
   for (auto const& rTypedParm : TypedParms)
   {
-    std::vector<std::string> CurParm;
     auto CurParm = SplitString(rTypedParm, ',');
     if (CurParm.size() != 2)
     {

@@ -40,3 +40,6 @@ set(SRC
   )
 
 medusa_add_module(arch x86 "${HDR}" "${SRC}")
+if (MSVC)
+  target_compile_options(arch_x86 PRIVATE /bigobj)
+endif()

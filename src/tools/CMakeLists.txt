@@ -1,4 +1,4 @@
-add_subdirectory(text)
+# add_subdirectory(text) # TODO: update to current ModuleManager/Medusa API
 
 find_package(Python COMPONENTS Interpreter Development QUIET)
 find_package(nanobind CONFIG QUIET)

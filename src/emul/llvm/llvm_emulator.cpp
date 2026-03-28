@@ -4,7 +4,11 @@
 #include <medusa/expression_visitor.hpp>
 
 #ifdef WIN32
-# include "llvm/Support/Host.h"
+# if __has_include("llvm/TargetParser/Host.h")
+#  include "llvm/TargetParser/Host.h"
+# else
+#  include "llvm/Support/Host.h"
+# endif
 #endif
 
 #include <llvm/IR/Verifier.h>

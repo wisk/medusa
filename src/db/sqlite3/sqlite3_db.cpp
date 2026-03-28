@@ -445,7 +445,7 @@ bool Sqlite3Database::GetCrossReferenceTo(Address const &rFrom, Address::Vector 
 
 MultiCell::SPType Sqlite3Database::GetMultiCell(Address const &rAddress) const
 {
-  return false;
+  return nullptr;
 }
 
 bool Sqlite3Database::SetMultiCell(Address const &rAddress, MultiCell::SPType spMultiCell)
