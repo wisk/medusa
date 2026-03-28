@@ -14,16 +14,15 @@ namespace {
   static constexpr char s_Base64Chars[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-  static constexpr unsigned char s_Base64Decode[256] = {
-    ['A']=0, ['B']=1, ['C']=2, ['D']=3, ['E']=4, ['F']=5, ['G']=6, ['H']=7,
-    ['I']=8, ['J']=9, ['K']=10,['L']=11,['M']=12,['N']=13,['O']=14,['P']=15,
-    ['Q']=16,['R']=17,['S']=18,['T']=19,['U']=20,['V']=21,['W']=22,['X']=23,
-    ['Y']=24,['Z']=25,['a']=26,['b']=27,['c']=28,['d']=29,['e']=30,['f']=31,
-    ['g']=32,['h']=33,['i']=34,['j']=35,['k']=36,['l']=37,['m']=38,['n']=39,
-    ['o']=40,['p']=41,['q']=42,['r']=43,['s']=44,['t']=45,['u']=46,['v']=47,
-    ['w']=48,['x']=49,['y']=50,['z']=51,['0']=52,['1']=53,['2']=54,['3']=55,
-    ['4']=56,['5']=57,['6']=58,['7']=59,['+']=60,['/']=61,
-  };
+  static unsigned char Base64CharToIndex(unsigned char c)
+  {
+    if (c >= 'A' && c <= 'Z') return c - 'A';
+    if (c >= 'a' && c <= 'z') return c - 'a' + 26;
+    if (c >= '0' && c <= '9') return c - '0' + 52;
+    if (c == '+') return 62;
+    if (c == '/') return 63;
+    return 0;
+  }
 }
 
 std::string Base64Encode(void const *pRawData, u32 Size)
@@ -58,17 +57,17 @@ std::string Base64Decode(std::string const &rBase64Data)
   for (size_t i = 0; i < rBase64Data.size(); ) {
     if (rBase64Data[i] == '=' || rBase64Data[i] == '\0') break;
 
-    u32 a = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    u32 a = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
     if (i >= rBase64Data.size()) break;
-    u32 b = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    u32 b = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
     result += static_cast<char>((a << 2) | (b >> 4));
 
     if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
-    u32 c = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    u32 c = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
     result += static_cast<char>(((b & 0x0F) << 4) | (c >> 2));
 
     if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
-    u32 d = s_Base64Decode[static_cast<u8>(rBase64Data[i++])];
+    u32 d = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
     result += static_cast<char>(((c & 0x03) << 6) | d);
   }
   return result;
