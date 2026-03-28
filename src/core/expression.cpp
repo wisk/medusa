@@ -1,7 +1,7 @@
 #include "medusa/expression.hpp"
 #include "medusa/extend.hpp"
 #include <sstream>
-#include <fmt/format.h>
+#include <format>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/range/adaptor/reversed.hpp>
@@ -157,7 +157,7 @@ std::string ConditionExpression::ToString(void) const
   if (m_spRefExpr == nullptr || m_spTestExpr == nullptr || m_Type >= (sizeof(s_StrCond) / sizeof(*s_StrCond)))
     return "";
 
-  return fmt::format("({} {} {})", m_spRefExpr->ToString(), s_StrCond[m_Type], m_spTestExpr->ToString());
+  return std::format("({} {} {})", m_spRefExpr->ToString(), s_StrCond[m_Type], m_spTestExpr->ToString());
 }
 
 Expression::SPType ConditionExpression::Clone(void) const
@@ -332,8 +332,8 @@ IfElseConditionExpression::~IfElseConditionExpression(void)
 std::string IfElseConditionExpression::ToString(void) const
 {
   if (m_spElseExpr == nullptr)
-    return fmt::format("if {} { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString());
-  return fmt::format("if {} { {} } else { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString(), m_spElseExpr->ToString());
+    return std::format("if {} { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString());
+  return std::format("if {} { {} } else { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString(), m_spElseExpr->ToString());
 }
 
 Expression::SPType IfElseConditionExpression::Clone(void) const
@@ -417,7 +417,7 @@ WhileConditionExpression::~WhileConditionExpression(void)
 
 std::string WhileConditionExpression::ToString(void) const
 {
-  return fmt::format("while {} { {} }", ConditionExpression::ToString(), m_spBodyExpr->ToString());
+  return std::format("while {} { {} }", ConditionExpression::ToString(), m_spBodyExpr->ToString());
 }
 
 Expression::SPType WhileConditionExpression::Clone(void) const
@@ -489,7 +489,7 @@ AssignmentExpression::~AssignmentExpression(void)
 
 std::string AssignmentExpression::ToString(void) const
 {
-  return fmt::format("({} = {})", m_spDstExpr->ToString(), m_spSrcExpr->ToString());
+  return std::format("({} = {})", m_spDstExpr->ToString(), m_spSrcExpr->ToString());
 }
 
 Expression::SPType AssignmentExpression::Clone(void) const
@@ -1067,7 +1067,7 @@ std::string IdentifierExpression::ToString(void) const
 
   if (pIdName == 0) return "";
 
-  return fmt::format("Id{}({})", m_pCpuInfo->GetSizeOfRegisterInBit(m_Id), pIdName);
+  return std::format("Id{}({})", m_pCpuInfo->GetSizeOfRegisterInBit(m_Id), pIdName);
 }
 
 Expression::SPType IdentifierExpression::Clone(void) const
@@ -1238,7 +1238,7 @@ TrackExpression::~TrackExpression(void)
 
 std::string TrackExpression::ToString(void) const
 {
-  return fmt::format("Trk({}, {}, {})", m_CurAddr.ToString(), static_cast<unsigned int>(m_Pos), m_spTrkExpr->ToString());
+  return std::format("Trk({}, {}, {})", m_CurAddr.ToString(), static_cast<unsigned int>(m_Pos), m_spTrkExpr->ToString());
 }
 
 Expression::SPType TrackExpression::Clone(void) const
@@ -1310,7 +1310,7 @@ std::string VariableExpression::ToString(void) const
   default: return "<invalid variable>";
   }
 
-  return fmt::format("Var{}[{}] {}", m_BitSize, Str, m_Name);
+  return std::format("Var{}[{}] {}", m_BitSize, Str, m_Name);
 }
 
 Expression::SPType VariableExpression::Clone(void) const
@@ -1356,9 +1356,9 @@ std::string MemoryExpression::ToString(void) const
 {
   auto const pMemType = m_Dereference ? "Mem" : "Addr";
   if (m_spBaseExpr == nullptr)
-    return fmt::format("{}{}({})", pMemType, m_AccessSizeInBit, m_spOffExpr->ToString());
+    return std::format("{}{}({})", pMemType, m_AccessSizeInBit, m_spOffExpr->ToString());
 
-  return fmt::format("{}{}({}:{})", pMemType, m_AccessSizeInBit, m_spBaseExpr->ToString(), m_spOffExpr->ToString());
+  return std::format("{}{}({}:{})", pMemType, m_AccessSizeInBit, m_spBaseExpr->ToString(), m_spOffExpr->ToString());
 }
 
 Expression::SPType MemoryExpression::Clone(void) const
@@ -1538,8 +1538,8 @@ std::string SymbolicExpression::ToString(void) const
   default:                pType = "???";      break;
   }
   if (m_spExpr == nullptr)
-    return fmt::format("Sym({}, \"{}\", {})", pType, m_Value, m_Address.ToString());
-  return fmt::format("Sym({}, \"{}\", {}, {})", pType, m_Value, m_Address.ToString(), m_spExpr->ToString());
+    return std::format("Sym({}, \"{}\", {})", pType, m_Value, m_Address.ToString());
+  return std::format("Sym({}, \"{}\", {}, {})", pType, m_Value, m_Address.ToString(), m_spExpr->ToString());
 }
 
 Expression::SPType SymbolicExpression::Clone(void) const

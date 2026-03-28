@@ -10,7 +10,7 @@
 #include <list>
 #include <algorithm>
 #include <chrono>
-#include <fmt/format.h>
+#include <format>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -37,7 +37,7 @@ std::string Medusa::GetVersion(void)
 #endif
   char const* pBuildDate = __DATE__;
   char const* pBuildTime = __TIME__;
-  return fmt::format("Medusa {}.{}.{} ({}) {} - {}"
+  return std::format("Medusa {}.{}.{} ({}) {} - {}"
     , static_cast<int>(Version::Major)
     , static_cast<int>(Version::Minor)
     , static_cast<int>(Version::Patch)

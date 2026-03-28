@@ -5,7 +5,7 @@
 
 #include <mutex>
 
-#include <fmt/format.h>
+#include <format>
 
 MEDUSA_NAMESPACE_USE
 
@@ -45,7 +45,7 @@ bool BindingPython::Bind(Medusa& rCore)
   medusa::UserConfiguration UsrCfg;
   UsrCfg.GetOption("core.modules_path", ModPath);
 
-  auto const AddCurDirToPythonPath = fmt::format(
+  auto const AddCurDirToPythonPath = std::format(
     "import sys\n"
     "medusa_path = '{}'\n"
     "if not medusa_path in sys.path:\n"

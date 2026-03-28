@@ -1,6 +1,6 @@
 #include "medusa/instruction.hpp"
 #include "medusa/expression_visitor.hpp"
-#include <fmt/format.h>
+#include <format>
 
 MEDUSA_NAMESPACE_BEGIN
 
@@ -37,7 +37,7 @@ Instruction::~Instruction(void)
 
 std::string Instruction::ToString(void) const
 {
-  std::string Res = fmt::format("mnem: {}({:#08x}), length: {}, prefix: {:#08x}, oprd: {}",
+  std::string Res = std::format("mnem: {}({:#08x}), length: {}, prefix: {:#08x}, oprd: {}",
     m_pName, m_Opcode, m_spDna->GetSize(), m_Prefix, m_Operands.size());
   if (m_Operands.empty())
     return Res;

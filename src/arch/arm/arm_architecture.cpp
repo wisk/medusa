@@ -4,7 +4,7 @@
 #include <medusa/expression_visitor.hpp>
 
 #include <boost/algorithm/string/join.hpp>
-#include <fmt/format.h>
+#include <format>
 
 ArmArchitecture::ArmArchitecture(void)
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
@@ -248,7 +248,7 @@ std::string ArmArchitecture::ARMCpuContext::ToString(void) const
   CPSR += (m_Context.CPSR & ARM_CSPR_V) ? "V" : "v";
   CPSR += (m_Context.CPSR & ARM_CSPR_T) ? "T" : "t";
 
-  return fmt::format(
+  return std::format(
       "r0:{:#08x} r1:{:#08x} r2: {:#08x} r3:%08x\n"
       "r4:{:#08x} r5:{:#08x} r6: {:#08x} r7:%08x\n"
       "r8:{:#08x} r9:{:#08x} r10:{:#08x} fp:%08x\n"

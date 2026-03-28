@@ -3,7 +3,7 @@
 #include <medusa/medusa.hpp>
 #include "medusa/expression_visitor.hpp"
 
-#include <fmt/format.h>
+#include <format>
 
 char const* St62Architecture::ST62CpuInformation::ConvertIdentifierToName(u32 Id) const
 {
@@ -188,7 +188,7 @@ bool St62Architecture::St62CpuContext::SetAddress(CpuContext::AddressKind AddrKi
 
 std::string St62Architecture::St62CpuContext::ToString(void) const
 {
-  return fmt::format(
+  return std::format(
     "A:0x%02x X:0x%02x Y: 0x%02x V:0x%02x W:0x%02x\n"
     "pc:%03x flags: %s%s  stack:%03x %03x %03x %03x %03x %03x"
     , m_Context.A, m_Context.X, m_Context.Y

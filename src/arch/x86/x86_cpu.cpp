@@ -1,6 +1,6 @@
 #include "x86_architecture.hpp"
 
-#include <fmt/format.h>
+#include <format>
 
 template<unsigned _BitSize>
 void ReadSseRegister(u128 const& rReg, void* pVal)
@@ -708,10 +708,10 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   switch (m_Bits)
   {
   case X86_Bit_16:
-    Result = fmt::format("ax: {:#04x} bx: {:#04x} cx: {:#04x} dx: {:#04x}\nsi: {:#04x} di: {:#04x} sp: {:#04x} bp: {:#04x}\nip: {:#04x} flags: {}"
+    Result = std::format("ax: {:#04x} bx: {:#04x} cx: {:#04x} dx: {:#04x}\nsi: {:#04x} di: {:#04x} sp: {:#04x} bp: {:#04x}\nip: {:#04x} flags: {}"
      , m_Context.a.w, m_Context.b.w, m_Context.c.w, m_Context.d.w, m_Context.si.w, m_Context.di.w, m_Context.sp.w, m_Context.bp.w, m_Context.ip.w, FmtFlags);
 
-    //Result += fmt::format(
+    //Result += std::format(
     //  "\nxmm0: {} xmm1: {}\nxmm2: {} xmm3: {}\n"
     //    "xmm4: {} xmm5: {}\nxmm6: {} xmm7: {}"
     // , m_Context.xyzmm[0].str(), m_Context.xyzmm[1].str(), m_Context.xyzmm[2].str(), m_Context.xyzmm[3].str()
@@ -719,10 +719,10 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
     break;
 
   case X86_Bit_32:
-    Result = fmt::format("eax: {:#08x} ebx: {:#08x} ecx: {:#08x} edx: {:#08x}\nesi: {:#08x} edi: {:#08x} esp: {:#08x} ebp: {:#08x}\neip: {:#08x} eflags: {}"
+    Result = std::format("eax: {:#08x} ebx: {:#08x} ecx: {:#08x} edx: {:#08x}\nesi: {:#08x} edi: {:#08x} esp: {:#08x} ebp: {:#08x}\neip: {:#08x} eflags: {}"
      , m_Context.a.e, m_Context.b.e, m_Context.c.e, m_Context.d.e, m_Context.si.e, m_Context.di.e, m_Context.sp.e, m_Context.bp.e, m_Context.ip.e, FmtFlags);
 
-    //Result += fmt::format(
+    //Result += std::format(
     //  "\nxmm0: {} xmm1: {}\nxmm2: {} xmm3: {}\n"
     //    "xmm4: {} xmm5: {}\nxmm6: {} xmm7: {}"
     // , m_Context.xyzmm[0], m_Context.xyzmm[1], m_Context.xyzmm[2], m_Context.xyzmm[3]
@@ -730,7 +730,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
     break;
 
   case X86_Bit_64:
-    Result = fmt::format(
+    Result = std::format(
       "rax: {:#016x} rbx:    {:#016x} rcx: {:#016x} rdx: {:#016x}\n"
       "rsi: {:#016x} rdi:    {:#016x} rsp: {:#016x} rbp: {:#016x}\n"
       "r8:  {:#016x} r9:     {:#016x} r10: {:#016x} r11: {:#016x}\n"
@@ -742,7 +742,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
      , m_Context.r12.r, m_Context.r13.r, m_Context.r14.r, m_Context.r15.r
      , m_Context.ip.r , FmtFlags);
 
-    //Result += fmt::format(
+    //Result += std::format(
     //  "\nxmm0:  {} xmm1:  {}\nxmm2:  {} xmm3:  {}\n"
     //   "xmm4:  {} xmm5:  {}\nxmm6:  {} xmm7:  {}\n"
     //   "xmm8:  {} xmm9:  {}\nxmm10: {} xmm11: {}\n"
@@ -756,7 +756,7 @@ std::string X86Architecture::X86CpuContext::ToString(void) const
   default: return "";
   }
 
-  Result += fmt::format("\ncs: {:#04x} ds: {:#04x} es: {:#04x} ss: {:#04x} fs: {:#04x} gs: {:#04x}"
+  Result += std::format("\ncs: {:#04x} ds: {:#04x} es: {:#04x} ss: {:#04x} fs: {:#04x} gs: {:#04x}"
    , m_Context.cs, m_Context.ds, m_Context.es, m_Context.ss, m_Context.fs, m_Context.gs);
   Result += "\n";
   return Result;

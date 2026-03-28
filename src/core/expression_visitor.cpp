@@ -1,7 +1,7 @@
 #include "medusa/bits.hpp"
 #include "medusa/expression_visitor.hpp"
 #include "medusa/expression_filter.hpp"
-#include <fmt/format.h>
+#include <format>
 #include <algorithm>
 
 MEDUSA_NAMESPACE_BEGIN

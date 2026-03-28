@@ -4,19 +4,24 @@
   "description": "A modular and interactive binary disassembler",
   "homepage": "https://github.com/wisk/medusa",
   "dependencies": [
+    "boost-algorithm",
     "boost-atomic",
-    "boost-system",
+    "boost-bimap",
     "boost-filesystem",
-    "boost-program-options",
     "boost-graph",
-    "boost-regex",
-    "boost-signals2",
-    "boost-uuid",
-    "boost-multiprecision",
     "boost-locale",
+    "boost-multiprecision",
+    "boost-program-options",
+    "boost-property-tree",
+    "boost-random",
+    "boost-range",
+    "boost-regex",
+    "boost-serialization",
+    "boost-signals2",
+    "boost-system",
+    "boost-uuid",
     "pegtl",
     "catch2",
-    "fmt",
     "nanobind",
     "sqlite3",
     "sqlite-orm"
@@ -33,6 +38,12 @@
       "description": "OGDF graph layout support",
       "dependencies": [
         "ogdf"
+      ]
+    },
+    "llvm": {
+      "description": "LLVM-based compiler and emulator modules",
+      "dependencies": [
+        "llvm"
       ]
     }
   }
