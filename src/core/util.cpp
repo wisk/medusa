@@ -57,17 +57,17 @@ std::string Base64Decode(std::string const &rBase64Data)
   for (size_t i = 0; i < rBase64Data.size(); ) {
     if (rBase64Data[i] == '=' || rBase64Data[i] == '\0') break;
 
-    u32 a = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
+    u32 a = Base64CharToIndex(static_cast<unsigned char>(rBase64Data[i++]));
     if (i >= rBase64Data.size()) break;
-    u32 b = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
+    u32 b = Base64CharToIndex(static_cast<unsigned char>(rBase64Data[i++]));
     result += static_cast<char>((a << 2) | (b >> 4));
 
     if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
-    u32 c = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
+    u32 c = Base64CharToIndex(static_cast<unsigned char>(rBase64Data[i++]));
     result += static_cast<char>(((b & 0x0F) << 4) | (c >> 2));
 
     if (i >= rBase64Data.size() || rBase64Data[i] == '=') break;
-    u32 d = Base64CharToIndex(static_cast<u8>(rBase64Data[i++])];
+    u32 d = Base64CharToIndex(static_cast<unsigned char>(rBase64Data[i++]));
     result += static_cast<char>(((c & 0x03) << 6) | d);
   }
   return result;
@@ -86,13 +86,14 @@ std::string Sha1(void const *pData, size_t Length)
   Sha1.get_digest(Digest);
   for (int i = 0; i < 4; ++i)
   {
-    Result << ((Digest[i] >> 24) & 0xFF);
-    Result << ((Digest[i] >> 16) & 0xFF);
-    Result << ((Digest[i] >>  8) & 0xFF);
-    Result << ((Digest[i] >>  0) & 0xFF);
+    auto d = static_cast<uint32_t>(Digest[i]);
+    Result << ((d >> 24) & 0xFF);
+    Result << ((d >> 16) & 0xFF);
+    Result << ((d >>  8) & 0xFF);
+    Result << ((d >>  0) & 0xFF);
   }
 
-  return std::move(Result.str());
+  return Result.str();
 }
 
 Id Sha1(std::string const &rName)
@@ -105,10 +106,11 @@ Id Sha1(std::string const &rName)
   Sha1.get_digest(Digest);
   for (int i = 0; i < 4; ++i)
   {
-    *(Sha1Id.begin() + i * 4 + 0) = ((Digest[i] >> 24) & 0xFF);
-    *(Sha1Id.begin() + i * 4 + 1) = ((Digest[i] >> 16) & 0xFF);
-    *(Sha1Id.begin() + i * 4 + 2) = ((Digest[i] >>  8) & 0xFF);
-    *(Sha1Id.begin() + i * 4 + 3) = ((Digest[i] >>  0) & 0xFF);
+    auto d = static_cast<uint32_t>(Digest[i]);
+    *(Sha1Id.begin() + i * 4 + 0) = ((d >> 24) & 0xFF);
+    *(Sha1Id.begin() + i * 4 + 1) = ((d >> 16) & 0xFF);
+    *(Sha1Id.begin() + i * 4 + 2) = ((d >>  8) & 0xFF);
+    *(Sha1Id.begin() + i * 4 + 3) = ((d >>  0) & 0xFF);
   }
 
   return Sha1Id;

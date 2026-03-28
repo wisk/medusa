@@ -211,9 +211,9 @@ void FormatDisassembly::_FormatCrossReference(Address const& rAddress, u32 Flags
   }
 
   std::string JoinedXrefs;
-  for (size_t i = 0; i < AddrFromStr.size(); ++i) {
-    if (i > 0) JoinedXrefs += ", ";
-    JoinedXrefs += AddrFromStr[i];
+  for (auto const& s : AddrFromStr) {
+    if (!JoinedXrefs.empty()) JoinedXrefs += ", ";
+    JoinedXrefs += s;
   }
   std::string Buffer = "; xref: " + JoinedXrefs;
   if (CrossReferenceLimit == 0)

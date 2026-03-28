@@ -9,11 +9,14 @@
 MEDUSA_NAMESPACE_USE
 
 namespace {
-  std::string JoinStrings(std::vector<std::string> const& v, std::string const& sep) {
+  template<typename Container>
+  std::string JoinStrings(Container const& c, std::string const& sep) {
     std::string result;
-    for (size_t i = 0; i < v.size(); ++i) {
-      if (i > 0) result += sep;
-      result += v[i];
+    bool first = true;
+    for (auto const& s : c) {
+      if (!first) result += sep;
+      first = false;
+      result += s;
     }
     return result;
   }
@@ -348,8 +351,8 @@ IfElseConditionExpression::~IfElseConditionExpression(void)
 std::string IfElseConditionExpression::ToString(void) const
 {
   if (m_spElseExpr == nullptr)
-    return std::format("if {} { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString());
-  return std::format("if {} { {} } else { {} }", ConditionExpression::ToString(), m_spThenExpr->ToString(), m_spElseExpr->ToString());
+    return std::format("if {} {{ {} }}", ConditionExpression::ToString(), m_spThenExpr->ToString());
+  return std::format("if {} {{ {} }} else {{ {} }}", ConditionExpression::ToString(), m_spThenExpr->ToString(), m_spElseExpr->ToString());
 }
 
 Expression::SPType IfElseConditionExpression::Clone(void) const
@@ -433,7 +436,7 @@ WhileConditionExpression::~WhileConditionExpression(void)
 
 std::string WhileConditionExpression::ToString(void) const
 {
-  return std::format("while {} { {} }", ConditionExpression::ToString(), m_spBodyExpr->ToString());
+  return std::format("while {} {{ {} }}", ConditionExpression::ToString(), m_spBodyExpr->ToString());
 }
 
 Expression::SPType WhileConditionExpression::Clone(void) const
