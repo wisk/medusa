@@ -9,7 +9,7 @@ set(SRC
 
 find_package(LLVM CONFIG)
 
-if (LLVM_FOUND)
+if (LLVM_FOUND AND LLVM_PACKAGE_VERSION VERSION_LESS "16.0")
   message(STATUS "LLVM found: ${LLVM_PACKAGE_VERSION}")
 
   add_library(emul_llvm SHARED ${SRC})
@@ -31,5 +31,9 @@ if (LLVM_FOUND)
     LIBRARY DESTINATION ${MEDUSA_MODULE_PATH}
   )
 else()
-  message(STATUS "LLVM not found, emul_llvm will not be built")
+  if (LLVM_FOUND)
+    message(STATUS "LLVM ${LLVM_PACKAGE_VERSION} found but too new (need <16), emul_llvm will not be built")
+  else()
+    message(STATUS "LLVM not found, emul_llvm will not be built")
+  endif()
 endif()
