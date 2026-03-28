@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <limits>
 #include <filesystem>
-#include <boost/program_options.hpp>
+#include <CLI/CLI.hpp>
 
 #include <medusa/configuration.hpp>
 #include <medusa/address.hpp>
@@ -253,16 +253,16 @@ int main(int argc, char **argv)
 
   bool auto_cfg = false;
 
-  // TODO: implement database loading...
-  namespace po = boost::program_options;
-  po::options_description desc("Allowed options");
-  desc.add_options()
-    ("help,h", "produce help message")
-    ("exec", po::value<fs::path>(&file_path)->required(), "executable path")
-    ("db", po::value<fs::path>(&db_path)->required(), "database path")
-    ("auto", "configure module automatically")
-    ;
-  po::variables_map var_map;
+  CLI::App app{"Medusa text disassembler"};
+  std::string file_str, db_str;
+  app.add_option("--exec", file_str, "executable path")->required();
+  app.add_option("--db", db_str, "database path")->required();
+  app.add_flag("--auto", auto_cfg, "configure module automatically");
+
+  CLI11_PARSE(app, argc, argv);
+
+  file_path = file_str;
+  db_path = db_str;
 
   Log::SetLog(TextLog);
 
@@ -275,19 +275,6 @@ int main(int argc, char **argv)
 
   try
   {
-    po::store(po::command_line_parser(argc, argv).options(desc).run(), var_map);
-
-    if (var_map.count("help"))
-    {
-      std::cout << desc << std::endl;
-      return EXIT_SUCCESS;
-    }
-
-    // notify function must be called AFTER we checked the argument ``help''
-    po::notify(var_map);
-
-    if (var_map.count("auto"))
-      auto_cfg = true;
 
     Log::Write("ui_text") << "Analyzing the following file: \"" << file_path.string() << "\"" << LogEnd;
     Log::Write("ui_text") << "Database will be saved to the file: \"" << db_path.string() << "\"" << LogEnd;

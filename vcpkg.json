@@ -4,12 +4,11 @@
   "description": "A modular and interactive binary disassembler",
   "homepage": "https://github.com/wisk/medusa",
   "dependencies": [
-    "boost-bimap",
     "boost-graph",
     "boost-multiprecision",
-    "boost-program-options",
     "boost-signals2",
     "boost-uuid",
+    "cli11",
     "pegtl",
     "catch2",
     "nanobind",

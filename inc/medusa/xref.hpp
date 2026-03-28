@@ -6,30 +6,23 @@
 #include "medusa/types.hpp"
 #include "medusa/address.hpp"
 
-#include <list>
-#include <boost/bimap.hpp>
-#include <boost/bimap/unordered_multiset_of.hpp>
+#include <unordered_map>
 
 MEDUSA_NAMESPACE_BEGIN
 
-//! XRefs handles a cross-reference.
+//! XRefs handles cross-references using two synchronized multimaps.
 class MEDUSA_EXPORT XRefs
 {
 public:
    XRefs(void) {}
   ~XRefs(void) {}
 
-  typedef boost::bimaps::unordered_multiset_of<Address, std::hash<Address>> UnorderedMultiSetOfAddressType;
-
-  typedef boost::bimap<
-    UnorderedMultiSetOfAddressType,
-    UnorderedMultiSetOfAddressType
-  > TXRefs;
+  typedef std::unordered_multimap<Address, Address, std::hash<Address>> XRefMapType;
 
   //! Add new cross-reference
   bool AddXRef(Address const& rTo, Address const& rFrom);
 
-  //! Remove a cross-reference
+  //! Remove a cross-reference by source address
   bool RemoveRef(Address const& rFrom);
 
   //! Get all addresses which access to a specific address
@@ -47,11 +40,12 @@ public:
   //! Erase all cross-references
   void EraseAll(void);
 
-  //! Get all cross-references
-  TXRefs const& GetAllXRefs(void) const { return m_XRefs; }
+  //! Get the To→From map (left side)
+  XRefMapType const& GetXRefsFrom(void) const { return m_ToFrom; }
 
 private:
-  TXRefs m_XRefs;
+  XRefMapType m_ToFrom;  // key=To, value=From
+  XRefMapType m_FromTo;  // key=From, value=To
 };
 
 MEDUSA_NAMESPACE_END
