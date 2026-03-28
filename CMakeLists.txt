@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.14)
 
 # Name
 
@@ -59,20 +59,8 @@ endif()
 ## C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG(-fabi-version=9 HAVE_ABI_VERSION)
-if (HAVE_ABI_VERSION)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fabi-version=9")
-endif()
-# TODO(wisk): set default visiblity as hidden on ELF
-## CHECK_CXX_COMPILER_FLAG(-fvisibility=hidden HAVE_VISIBILITY_HIDDEN)
-## if (HAVE_VISIBILITY_HIDDEN)
-##   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-## endif()
-## CHECK_CXX_COMPILER_FLAG(-fvisibility-inlines-hidden HAVE_VISIBILITY_INLINES_HIDDEN)
-## if (HAVE_VISIBILITY_INLINES_HIDDEN)
-##   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
-## endif()
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 # Compiler warnings and defines
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
