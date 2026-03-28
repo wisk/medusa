@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "medusa/binary_stream.hpp"
 #include <chrono>
+#include <filesystem>
 #include <string>
 
 MEDUSA_NAMESPACE_BEGIN
@@ -48,7 +49,7 @@ void FileBinaryStream::Open(Path const& rFilePath)
 
   struct stat sb;
 
-  m_MapHandle = NULL;
+  m_MapHandle = nullptr;
 
   if (fstat(m_FileHandle, &sb) == -1)
     throw Exception_System("fstat");

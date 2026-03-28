@@ -11,6 +11,8 @@
 #include "medusa/context.hpp"
 #include "medusa/emulation.hpp"
 
+#include <memory>
+
 MEDUSA_NAMESPACE_BEGIN
 
 class MEDUSA_EXPORT Execution
@@ -35,9 +37,9 @@ public:
   std::string GetHookName(void) const;
   Address GetHookAddress(std::string const& rHkFuncName) const;
 
-  MemoryContext*       GetMemoryContext(void) { return m_pMemCtxt; }
+  MemoryContext*       GetMemoryContext(void) { return m_pMemCtxt.get(); }
   // LATER: implement thread instead of cpu context
-  CpuContext*          GetCpuContext(void)    { return m_pCpuCtxt; }
+  CpuContext*          GetCpuContext(void)    { return m_pCpuCtxt.get(); }
   Document&            GetDocument(void)      { return m_rDoc;     }
   Architecture::SPType GetArchitecture(void)  { return m_spArch;   }
 
@@ -46,17 +48,16 @@ public:
   bool ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const;
   bool ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const;
 
-private:
-  Execution(Execution const&);
-  Execution const& operator=(Execution const&);
+  Execution(Execution const&) = delete;
+  Execution& operator=(Execution const&) = delete;
 
 private:
-  Document&               m_rDoc;
-  Architecture::SPType    m_spArch;
-  OperatingSystem::SPType m_spOs;
-  CpuContext*             m_pCpuCtxt;
-  MemoryContext*          m_pMemCtxt;
-  CpuInformation const*   m_pCpuInfo;
+  Document&                        m_rDoc;
+  Architecture::SPType             m_spArch;
+  OperatingSystem::SPType          m_spOs;
+  std::unique_ptr<CpuContext>      m_pCpuCtxt;
+  std::unique_ptr<MemoryContext>   m_pMemCtxt;
+  CpuInformation const*            m_pCpuInfo;
   Emulator::SPType        m_spEmul;
 
   mutable std::mutex         m_HookMutex;

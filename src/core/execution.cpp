@@ -9,20 +9,15 @@ MEDUSA_NAMESPACE_BEGIN
 Execution::Execution(Document& rDoc)
 : m_rDoc(rDoc)
 , m_spArch(nullptr), m_spOs(nullptr)
-, m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
 {
 }
 
-Execution::~Execution(void)
-{
-  delete m_pCpuCtxt;
-  delete m_pMemCtxt;
-}
+Execution::~Execution(void) = default;
 
 bool Execution::SetCpuMemContext(Address const& StartAddr)
 {
-  m_pCpuCtxt = m_spArch->MakeCpuContext();
-  m_pMemCtxt = m_spArch->MakeMemoryContext();
+  m_pCpuCtxt.reset(m_spArch->MakeCpuContext());
+  m_pMemCtxt.reset(m_spArch->MakeMemoryContext());
   if (m_pCpuCtxt == nullptr || m_pMemCtxt == nullptr)
   {
     Log::Write("core").Level(LogError) << "failed to make context for execution" << LogEnd;
@@ -36,7 +31,7 @@ bool Execution::SetCpuMemContext(Address const& StartAddr)
     return false;
   }
 
-  if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt))
+  if (!m_pMemCtxt->MapDocument(m_rDoc, m_pCpuCtxt.get()))
   {
     Log::Write("core").Level(LogError) << "unable to map document for execution" << LogEnd;
     return false;
@@ -46,8 +41,8 @@ bool Execution::SetCpuMemContext(Address const& StartAddr)
 
 bool Execution::Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir)
 {
-  delete m_pCpuCtxt;
-  delete m_pMemCtxt;
+  m_pCpuCtxt.reset();
+  m_pMemCtxt.reset();
 
   auto StartAddr = m_rDoc.GetStartAddress();
   auto const& rModMgr = ModuleManager::Instance();
@@ -128,7 +123,7 @@ bool Execution::SetEmulator(std::string const& rEmulatorName)
     Log::Write("core").Level(LogError) << "cannot make emulator" << LogEnd;
     return false;
   }
-  m_spEmul->Initialize(m_spArch->GetCpuInformation(), m_pCpuCtxt, m_pMemCtxt);
+  m_spEmul->Initialize(m_spArch->GetCpuInformation(), m_pCpuCtxt.get(), m_pMemCtxt.get());
   return true;
 }
 
@@ -294,7 +289,7 @@ bool Execution::GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, 
     return false;
   }
 
-  return pCallConv->GetParameter(m_pCpuCtxt, m_pMemCtxt, ParamNo, rParamValue);
+  return pCallConv->GetParameter(m_pCpuCtxt.get(), m_pMemCtxt.get(), ParamNo, rParamValue);
 }
 
 bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) const
@@ -306,7 +301,7 @@ bool Execution::ReturnFromFunction(std::string const& rCallConv, u16 ParamNo) co
     return false;
   }
 
-  return pCallConv->ReturnFromFunction(m_pCpuCtxt, m_pMemCtxt, ParamNo);
+  return pCallConv->ReturnFromFunction(m_pCpuCtxt.get(), m_pMemCtxt.get(), ParamNo);
 }
 
 bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamNo, BitVector const& rRetVal) const
@@ -318,7 +313,7 @@ bool Execution::ReturnValueFromFunction(std::string const& rCallConv, u16 ParamN
     return false;
   }
 
-  return pCallConv->ReturnValueFromFunction(m_pCpuCtxt, m_pMemCtxt, ParamNo, rRetVal);
+  return pCallConv->ReturnValueFromFunction(m_pCpuCtxt.get(), m_pMemCtxt.get(), ParamNo, rRetVal);
 }
 
 MEDUSA_NAMESPACE_END

@@ -1,6 +1,7 @@
 #include "medusa/binary_stream.hpp"
 
 #include <chrono>
+#include <filesystem>
 #include <string>
 #include <Windows.h>
 

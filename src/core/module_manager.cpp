@@ -1,5 +1,7 @@
 #include "medusa/module_manager.hpp"
 
+#include <filesystem>
+
 template<typename ModuleType>
 bool ModuleManager::_DoLoad(
   Path const& rModulePath,
