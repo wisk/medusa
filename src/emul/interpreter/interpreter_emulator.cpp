@@ -53,8 +53,9 @@ Emulator::ReturnType InterpreterEmulator::Execute(Expression::VSPType const& rEx
     auto spCurExpr = spExpr->Visit(&Visitor);
     if (spCurExpr == nullptr)
     {
-      std::cout << m_pCpuCtxt->ToString() << std::endl;
-      std::cout << spExpr->ToString() << std::endl;
+      Log::Write("emul_interpreter").Level(LogError) << "expression visitor failed" << LogEnd;
+      Log::Write("emul_interpreter").Level(LogError) << m_pCpuCtxt->ToString() << LogEnd;
+      Log::Write("emul_interpreter").Level(LogError) << spExpr->ToString() << LogEnd;
       return Error;
     }
   }

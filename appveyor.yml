@@ -2,44 +2,36 @@ version: 0.5.{build}
 branches:
   only:
   - dev
-image: Visual Studio 2017
+  - modernize-and-fix
+image: Visual Studio 2022
 configuration:
 - Release
 - Debug
 platform: x64
 environment:
-  PYTHON: C:\Python37-x64
-  QT: C:\Qt\5.11.2\msvc2017_64
+  VCPKG_DEFAULT_TRIPLET: x64-windows
 install:
 - cmd: >-
-    set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
-
-    python --version
-
-    set CMAKE_PREFIX_PATH=%QT%
-
     cd C:\Tools\vcpkg
 
     git pull
 
     .\bootstrap-vcpkg.bat
 
-    vcpkg install boost-system:x64-windows boost-filesystem:x64-windows boost-program-options:x64-windows boost-graph:x64-windows boost-regex:x64-windows boost-uuid:x64-windows boost-multiprecision:x64-windows boost-signals2:x64-windows pegtl:x64-windows pybind11:x64-windows catch2:x64-windows fmt:x64-windows ogdf:x64-windows sqlite-orm:x64-windows
-
     cd "%APPVEYOR_BUILD_FOLDER%"
+
+    vcpkg install --triplet x64-windows
 cache: c:\tools\vcpkg\installed\
 before_build:
 - cmd: >-
-    git submodule update --init --recursive
-
     md build
 
     cd build
 
-    cmake -G"Visual Studio 15 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+    cmake -G"Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 build:
   project: C:\projects\medusa\build\Medusa.sln
   parallel: true
   verbosity: minimal
 test_script:
-- cmd: ctest -VV -C Release
+- cmd: ctest -VV -C %CONFIGURATION% --timeout 30
