@@ -43,7 +43,7 @@ std::string ElfLoader::GetDetailedName(BinaryStream const& rBinStrm) const
 
 std::string ElfLoader::GetSystemName(BinaryStream const& rBinStrm) const
 {
-  return "unix"; // TODO: be more precise than that
+  return "UNIX"; // matches UnixOperatingSystem::GetName()
 }
 
 std::vector<std::string> ElfLoader::GetUsedArchitectures(BinaryStream const& rBinStrm) const

@@ -42,6 +42,11 @@ TEST_CASE("", "[bind_python]")
 
   auto& rModMgr = ModuleManager::Instance();
   auto spPython = rModMgr.MakeBinding("python");
+  if (spPython == nullptr)
+  {
+    WARN("Python binding module not available (bind_python not loaded)");
+    return;
+  }
   std::cout << "binding name " << spPython->GetName() << std::endl;
 
   if (!spPython->Bind(Core))

@@ -404,11 +404,12 @@ private:
           Log::Write("ldr_elf").Level(LogError) << "failed to convert DYN" << LogEnd;
           return false;
         }
-        if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl), RelaTblOff))
-        {
-          Log::Write("ldr_elf").Level(LogError) << "failed to convert RELA" << LogEnd;
-          return false;
-        }
+        if (RelaTbl != 0x0)
+          if (!rDoc.ConvertAddressToFileOffset(Address(Address::LinearType, 0x0, RelaTbl), RelaTblOff))
+          {
+            Log::Write("ldr_elf").Level(LogError) << "failed to convert RELA" << LogEnd;
+            return false;
+          }
 
         std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
         std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
