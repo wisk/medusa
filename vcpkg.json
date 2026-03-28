@@ -11,11 +11,16 @@
     "cli11",
     "pegtl",
     "catch2",
-    "nanobind",
     "sqlite3",
     "sqlite-orm"
   ],
   "features": {
+    "pydusa": {
+      "description": "Python bindings (pydusa via nanobind)",
+      "dependencies": [
+        "nanobind"
+      ]
+    },
     "gui": {
       "description": "Qt5-based GUI frontend (qMedusa)",
       "dependencies": [
