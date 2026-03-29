@@ -6,7 +6,7 @@ else()
   set(WORKING_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 endif()
 set(SAMPLES_DIR ${CMAKE_SOURCE_DIR}/samples)
-add_definitions(-DSAMPLES_DIR="${SAMPLES_DIR}")
+add_compile_definitions(SAMPLES_DIR="${SAMPLES_DIR}")
 
 find_package(Catch2 CONFIG REQUIRED)
 

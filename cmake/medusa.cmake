@@ -1,6 +1,3 @@
-function(medusa_add_core include_files source_files)
-endfunction()
-
 macro(medusa_add_module type name include_files source_files)
 
   set(MEDUSA_FOLDER "")
@@ -26,7 +23,6 @@ macro(medusa_add_module type name include_files source_files)
   message(STATUS "Build ${MEDUSA_MODULE} (${MEDUSA_FOLDER})")
 
   add_library(${MEDUSA_MODULE} SHARED ${source_files} ${include_files})
-# target_include_directories(${MEDUSA_MODULE} PRIVATE ${include_files})
   target_link_libraries(${MEDUSA_MODULE} medusa)
   set_target_properties(${MEDUSA_MODULE} PROPERTIES
     LINKER_LANGUAGE CXX
@@ -40,14 +36,4 @@ macro(medusa_add_module type name include_files source_files)
     LIBRARY DESTINATION ${MEDUSA_MODULE_PATH}
   )
 
-  if (MEDUSA_CMAKE_USE_COTIRE)
-    cotire(${MEDUSA_MODULE})
-  endif()
-
 endmacro()
-
-function(medusa_add_tool target include_files source_files)
-endfunction()
-
-function(medusa_add_test target include_files source_files)
-endfunction()

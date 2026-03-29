@@ -212,10 +212,6 @@ generate_export_header(medusa
   EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/inc/medusa/export.hpp
 )
 
-if (MEDUSA_CMAKE_USE_COTIRE)
-  cotire(medusa)
-endif()
-
 if (WIN32)
   install(TARGETS medusa RUNTIME DESTINATION ${MEDUSA_EXECUTABLE_PATH})
 else ()
