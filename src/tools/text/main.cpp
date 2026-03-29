@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+#include <algorithm>
 #include <limits>
 #include <filesystem>
 #include <CLI/CLI.hpp>
@@ -296,12 +297,12 @@ int main(int argc, char **argv)
       OperatingSystem::SPType& rspOperatingSystem
       )
     {
-      auto& mod_mgr = ModuleManager::Instance();
+      auto const& mod_mgr = ModuleManager::Instance();
 
-      mod_mgr.UnloadModules();
-      mod_mgr.LoadModules(mod_path, *rspBinStrm);
-
-      auto const& all_ldrs = mod_mgr.GetLoaders();
+      auto all_ldrs = mod_mgr.MakeAllLoaders();
+      all_ldrs.erase(std::remove_if(all_ldrs.begin(), all_ldrs.end(),
+        [&rspBinStrm](Loader::SPType spLdr) { return !spLdr->IsCompatible(*rspBinStrm); }),
+        all_ldrs.end());
 
       if (all_ldrs.empty())
       {
@@ -317,17 +318,29 @@ int main(int argc, char **argv)
       {
         std::cout << "Choose a executable format:" << std::endl;
         AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
-        rspLoader = AskForLoader(mod_mgr.GetLoaders());
+        rspLoader = AskForLoader(all_ldrs);
       }
 
       Log::Write("ui_text").Level(LogInfo) << "Interpreting executable format using \"" << rspLoader->GetName() << "\"...\n" << LogEnd;
 
-      rspArchitectures = mod_mgr.GetArchitectures();
-      rspLoader->FilterAndConfigureArchitectures(rspArchitectures);
+      auto ArchNames = rspLoader->GetUsedArchitectures(*rspBinStrm);
+      for (auto const& ArchName : ArchNames)
+      {
+        TagType ArchTag;
+        u8 ArchMode;
+        if (!mod_mgr.ConvertArchitectureNameToTagAndMode(ArchName, ArchTag, ArchMode))
+        {
+          Log::Write("ui_text").Level(LogError) << "unable to find architecture: " << ArchName << LogEnd;
+          return false;
+        }
+        rspArchitectures.push_back(mod_mgr.GetArchitecture(ArchTag));
+      }
       if (rspArchitectures.empty())
         throw std::runtime_error("no architecture module available");
 
-      rspOperatingSystem = mod_mgr.GetOperatingSystem(rspLoader, rspArchitectures.front());
+      auto const& rSysName = rspLoader->GetSystemName(*rspBinStrm);
+      if (!rSysName.empty())
+        rspOperatingSystem = mod_mgr.GetOperatingSystem(rSysName);
 
       std::cout << std::endl;
 
@@ -340,28 +353,15 @@ int main(int argc, char **argv)
           std::visit(AskForConfiguration(CfgMdl), itCfg->second);
       }
 
-      auto const& all_dbs = mod_mgr.GetDatabases();
-
-      if (all_dbs.empty())
+      rspDatabase = mod_mgr.MakeDatabase("Memory");
+      if (rspDatabase == nullptr)
       {
         Log::Write("ui_text") << "no database module available" << LogEnd;
         return false;
       }
 
-      if (auto_cfg)
-      {
-        rspDatabase = all_dbs.front();
-      }
-      else
-      {
-        AskFor<Database::VSPType::value_type, Database::VSPType> AskForDb;
-        rspDatabase = AskForDb(mod_mgr.GetDatabases());
-      }
-
       return true;
-    },
-      [](){ Log::Write("ui_text") << "Analyzing..." << LogEnd; return true; },
-      [](){ return true; }))
+    }))
       throw std::runtime_error("failed to create new document");
 
     m.WaitForTasks();
