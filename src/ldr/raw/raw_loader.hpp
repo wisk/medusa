@@ -19,17 +19,17 @@ MEDUSA_NAMESPACE_USE
 class RawLoader : public Loader
 {
 public:
-  virtual std::string GetName(void) const { return "raw"; }
-  virtual u8          GetDepth(void) const { return 0; }
+  std::string GetName(void) const override { return "raw"; }
+  u8          GetDepth(void) const override { return 0; }
 
-  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const { return true; }
-  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const { return GetName(); }
-  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const { return ""; }
-  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const { return { "*" }; }
+  bool                     IsCompatible(BinaryStream const& rBinStrm) const override { return true; }
+  std::string              GetDetailedName(BinaryStream const& rBinStrm) const override { return GetName(); }
+  std::string              GetSystemName(BinaryStream const& rBinStrm) const override { return ""; }
+  std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const override { return { "*" }; }
 
-  virtual bool Map(Document& rDoc) const;
-  virtual bool Map(Document& rDoc, Address const& rImgBase) const { return false; }
-  virtual void Analyze(Document& rDoc) const {}
+  bool Map(Document& rDoc) const override;
+  bool Map(Document& rDoc, Address const& rImgBase) const override { return false; }
+  void Analyze(Document& rDoc) const override {}
 };
 
 extern "C" LDR_RAW_EXPORT Loader* GetLoader(void);

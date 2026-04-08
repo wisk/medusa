@@ -16,7 +16,7 @@ public:
   using SPType = std::shared_ptr<Compiler>;
   using VSPType = std::vector<SPType>;
 
-  virtual ~Compiler(void) {}
+  virtual ~Compiler(void) = default;
 
   virtual std::string GetName(void) const = 0;
 

@@ -30,13 +30,13 @@ enum EntryPoBitVector {
 class MachOLoader : public Loader
 {
 public:
-  virtual std::string GetName(void) const;
-  virtual u8          GetDepth(void) const;
-  virtual bool        IsCompatible(BinaryStream const& rBinStrm) const;
-  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
-  virtual bool        Map(Document& rDoc) const;
-  virtual bool        Map(Document& rDoc, Address const& rImgBase) const;
-  virtual void        Analyze(Document& rDoc) const {}
+  std::string GetName(void) const override;
+  u8          GetDepth(void) const override;
+  bool        IsCompatible(BinaryStream const& rBinStrm) const override;
+  std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const override;
+  bool        Map(Document& rDoc) const override;
+  bool        Map(Document& rDoc, Address const& rImgBase) const override;
+  void        Analyze(Document& rDoc) const override {}
 
 private:
     template<int bit> bool MapImpl(Document& rDoc) const;

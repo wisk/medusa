@@ -23,19 +23,19 @@ class PeLoader : public Loader
 {
 public:
   // Generic methods
-  virtual std::string GetName(void) const { return "PE"; }
-  virtual u8          GetDepth(void) const { return 2; }
+  std::string GetName(void) const override { return "PE"; }
+  u8          GetDepth(void) const override { return 2; }
 
   // Only binary stream is needed
-  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const;
-  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const;
-  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const;
-  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+  bool                     IsCompatible(BinaryStream const& rBinStrm) const override;
+  std::string              GetDetailedName(BinaryStream const& rBinStrm) const override;
+  std::string              GetSystemName(BinaryStream const& rBinStrm) const override;
+  std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const override;
 
   // Document is required
-  virtual bool Map(Document& rDoc) const;
-  virtual bool Map(Document& rDoc, Address const& rImgBase) const;
-  virtual void Analyze(Document& rDoc) const {}
+  bool Map(Document& rDoc) const override;
+  bool Map(Document& rDoc, Address const& rImgBase) const override;
+  void Analyze(Document& rDoc) const override {}
 
 private:
   static bool _GetInformation(BinaryStream const& rBinStrm, u16& rMachine, u16& rMagic, u64& rImageBase);

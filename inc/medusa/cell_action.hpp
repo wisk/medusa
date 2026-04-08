@@ -29,7 +29,7 @@ public:
   static SPType        Create(Medusa& rCore, FullDisassemblyView* pView);
   static char const* GetBindingName(void);
 
-  virtual ~Action(void) {}
+  virtual ~Action(void) = default;
 
   virtual std::string GetName(void) const = 0;
   virtual std::string GetDescription(void) const = 0;

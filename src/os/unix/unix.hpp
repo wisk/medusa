@@ -19,23 +19,23 @@ MEDUSA_NAMESPACE_USE
 class UnixOperatingSystem : public OperatingSystem
 {
 public:
-  virtual std::string GetName(void) const;
-  virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const;
+  std::string GetName(void) const override;
+  bool IsSupported(Loader const& rLdr, Architecture const& rArch) const override;
 
-  virtual bool InitializeContext(
+  bool InitializeContext(
     Document const& rDoc,
     CpuContext& rCpuCtxt, MemoryContext& rMemCtxt,
-    std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const;
+    std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir) const override;
 
-  virtual bool AnalyzeFunction(Document& rDoc, Address const& rAddress);
-  virtual Expression::VSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr);
+  bool AnalyzeFunction(Document& rDoc, Address const& rAddress) override;
+  Expression::VSPType ExecuteSymbol(Document& rDoc, Address const& rSymAddr) override;
 
-  virtual bool ProvideDetails(Document& rDoc) const;
-  virtual bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const;
-  virtual bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const;
-  virtual bool GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const;
+  bool ProvideDetails(Document& rDoc) const override;
+  bool GetValueDetail(Id ValueId, ValueDetail& rValDtl) const override;
+  bool GetFunctionDetail(Id FunctionId, FunctionDetail& rFcnDtl) const override;
+  bool GetStructureDetail(Id StructureId, StructureDetail& rStructDtl) const override;
 
-  virtual bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const;
+  bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const override;
 };
 
 extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem(void);

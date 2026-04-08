@@ -43,91 +43,91 @@ private:
 
 public:
   MemoryDatabase(void);
-  virtual ~MemoryDatabase(void);
+  ~MemoryDatabase(void) override;
 
-  virtual std::string GetName(void) const;
-  virtual std::string GetExtension(void) const;
-  virtual bool IsCompatible(Path const& rDatabasePath) const;
+  std::string GetName(void) const override;
+  std::string GetExtension(void) const override;
+  bool IsCompatible(Path const& rDatabasePath) const override;
 
-  virtual bool Open(Path const& rFilePath);
-  virtual bool Create(Path const& rDatabasePath, bool Force);
-  virtual bool Flush(void);
-  virtual bool Close(void);
+  bool Open(Path const& rFilePath) override;
+  bool Create(Path const& rDatabasePath, bool Force) override;
+  bool Flush(void) override;
+  bool Close(void) override;
 
   // BinaryStream
   //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
 
   // Architecture
-  virtual bool RegisterArchitectureTag(Tag ArchitectureTag);
-  virtual bool UnregisterArchitectureTag(Tag ArchitectureTag);
-  virtual std::vector<Tag> GetArchitectureTags(void) const;
+  bool RegisterArchitectureTag(Tag ArchitectureTag) override;
+  bool UnregisterArchitectureTag(Tag ArchitectureTag) override;
+  std::vector<Tag> GetArchitectureTags(void) const override;
 
-  virtual bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode);
+  bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode) override;
 
   // Image base
-  virtual bool GetImageBase(ImageBaseType& rImageBase) const;
-  virtual bool SetImageBase(ImageBaseType ImageBase);
+  bool GetImageBase(ImageBaseType& rImageBase) const override;
+  bool SetImageBase(ImageBaseType ImageBase) override;
 
   // MemoryArea
-  virtual bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const;
-  virtual void ForEachMemoryArea(MemoryAreaCallback Callback) const;
-  virtual bool AddMemoryArea(MemoryArea const& rMemArea);
-  virtual bool RemoveMemoryArea(MemoryArea const& rMemArea);
-  virtual bool MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress);
+  bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const override;
+  void ForEachMemoryArea(MemoryAreaCallback Callback) const override;
+  bool AddMemoryArea(MemoryArea const& rMemArea) override;
+  bool RemoveMemoryArea(MemoryArea const& rMemArea) override;
+  bool MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress) override;
 
 
   // Address
-  virtual bool GetDefaultAddressingType(Address::Type& rAddressType) const;
-  virtual bool SetDefaultAddressingType(Address::Type AddressType);
-  virtual bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
-  virtual bool GetFirstAddress(Address& rAddress) const;
-  virtual bool GetLastAddress(Address& rAddress) const;
-  virtual bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  virtual bool ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const;
-  virtual bool ConvertPositionToAddress(u32 Position, Address& rAddress) const;
+  bool GetDefaultAddressingType(Address::Type& rAddressType) const override;
+  bool SetDefaultAddressingType(Address::Type AddressType) override;
+  bool TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const override;
+  bool GetFirstAddress(Address& rAddress) const override;
+  bool GetLastAddress(Address& rAddress) const override;
+  bool MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const override;
+  bool ConvertAddressToPosition(Address const& rAddress, u32& rPosition) const override;
+  bool ConvertPositionToAddress(u32 Position, Address& rAddress) const override;
 
   // Label
-  virtual bool AddLabel(Address const& rAddress, Label const& rLbl);
-  virtual bool RemoveLabel(Address const& rAddress);
+  bool AddLabel(Address const& rAddress, Label const& rLbl) override;
+  bool RemoveLabel(Address const& rAddress) override;
 
-  virtual bool GetLabel(Address const& rAddress, Label& rLbl) const;
-  virtual bool GetLabelAddress(Label const& rLabel, Address& rAddress) const;
+  bool GetLabel(Address const& rAddress, Label& rLbl) const override;
+  bool GetLabelAddress(Label const& rLabel, Address& rAddress) const override;
 
-  virtual void ForEachLabel(LabelCallback Callback);
+  void ForEachLabel(LabelCallback Callback) override;
 
   // CrossRef
-  virtual bool AddCrossReference(Address const& rTo, Address const& rFrom);
-  virtual bool RemoveCrossReference(Address const& rFrom);
-  virtual bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const;
-  virtual bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const;
+  bool AddCrossReference(Address const& rTo, Address const& rFrom) override;
+  bool RemoveCrossReference(Address const& rFrom) override;
+  bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const override;
+  bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const override;
 
   // MultiCell
-  virtual MultiCell::SPType GetMultiCell(Address const& rAddress) const;
-  virtual bool              SetMultiCell(Address const& rAddress, MultiCell::SPType spMultiCell);
-  virtual bool              DeleteMultiCell(Address const& rAddress);
+  MultiCell::SPType GetMultiCell(Address const& rAddress) const override;
+  bool              SetMultiCell(Address const& rAddress, MultiCell::SPType spMultiCell) override;
+  bool              DeleteMultiCell(Address const& rAddress) override;
 
   // Cell (data)
-  virtual bool GetCellData(Address const& rAddress, CellData& rCellData) const;
-  virtual bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::Vector& rDeletedCellAddresses, bool Force);
-  virtual bool DeleteCellData(Address const& rAddress);
+  bool GetCellData(Address const& rAddress, CellData& rCellData) const override;
+  bool SetCellData(Address const& rAddress, CellData const& rCellData, Address::Vector& rDeletedCellAddresses, bool Force) override;
+  bool DeleteCellData(Address const& rAddress) override;
 
   // Comment
-  virtual bool GetComment(Address const& rAddress, std::string& rComment) const;
-  virtual bool SetComment(Address const& rAddress, std::string const& rComment);
+  bool GetComment(Address const& rAddress, std::string& rComment) const override;
+  bool SetComment(Address const& rAddress, std::string const& rComment) override;
 
   // Detail
-  virtual bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const;
-  virtual bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
+  bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const override;
+  bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl) override;
 
-  virtual bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const;
-  virtual bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
+  bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const override;
+  bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl) override;
 
-  virtual bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const;
-  virtual bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
+  bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const override;
+  bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl) override;
 
-  virtual bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const;
-  virtual bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId);
-  virtual bool UnbindDetailId(Address const& rAddress, u8 Index);
+  bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const override;
+  bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId) override;
+  bool UnbindDetailId(Address const& rAddress, u8 Index) override;
 
 private:
   struct MemoryAreaSorter
@@ -148,7 +148,7 @@ private:
   std::set<MemoryArea, MemoryAreaSorter> m_MemoryAreas;
 
   using MemoryAreaRelatedType = std::pair<int, OffsetType>;
-  
+
   std::unordered_map<MemoryAreaRelatedType, Label, PairHash> m_LabelsMap;
   std::unordered_map<std::string, MemoryAreaRelatedType> m_ReverseLabelsMap;
 

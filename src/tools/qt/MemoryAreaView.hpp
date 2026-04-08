@@ -13,7 +13,7 @@ class MemoryAreaView : public QTreeView, public medusa::View
 
 public:
     MemoryAreaView(QWidget * parent, medusa::Medusa& core);
-    virtual ~MemoryAreaView(void) {}
+    ~MemoryAreaView(void) override = default;
 
     virtual void OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool removed);
     void Refresh(void);

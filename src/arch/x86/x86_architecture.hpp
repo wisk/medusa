@@ -36,30 +36,30 @@ private:
   {
   public:
     X86CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('x', '8', '6')) {}
-    virtual char const* ConvertIdentifierToName(u32 Id) const;
-    virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
-    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
-    virtual bool NormalizeRegister(u32 Id, u8 Mode, u32& rExtId, u64& rMask) const;
+    char const* ConvertIdentifierToName(u32 Id) const override;
+    u32 ConvertNameToIdentifier(std::string const& rName) const override;
+    u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
+    u32 GetSizeOfRegisterInBit(u32 Id) const override;
+    bool IsRegisterAliased(u32 Id0, u32 Id1) const override;
+    bool NormalizeRegister(u32 Id, u8 Mode, u32& rExtId, u64& rMask) const override;
   } m_CpuInfo;
 
   class X86CpuContext : public CpuContext
   {
   public:
     X86CpuContext(u8 Bits, CpuInformation const& rCpuInfo);
-    virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
-    virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
-    virtual void* GetRegisterAddress(u32 Register);
-    virtual void* GetContextAddress(void) { return &m_Context; }
-    virtual u16 GetRegisterOffset(u32 Register);
-    virtual void GetRegisters(RegisterList& RegList) const;
-    virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
-    virtual u8 GetMode(void) const;
-    virtual void SetMode(u8 Mode);
-    virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const;
-    virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr);
-    virtual std::string ToString(void) const;
+    bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const override;
+    bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) override;
+    void* GetRegisterAddress(u32 Register) override;
+    void* GetContextAddress(void) override { return &m_Context; }
+    u16 GetRegisterOffset(u32 Register) override;
+    void GetRegisters(RegisterList& RegList) const override;
+    bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const override;
+    u8 GetMode(void) const override;
+    void SetMode(u8 Mode) override;
+    bool GetAddress(AddressKind AddrKind, Address& rAddr) const override;
+    bool SetAddress(AddressKind AddrKind, Address const& rAddr) override;
+    std::string ToString(void) const override;
 
   private:
     union X86Register
@@ -84,13 +84,13 @@ private:
 
 public:
   X86Architecture(void);
-  ~X86Architecture(void) {}
+  ~X86Architecture(void) override {}
 
-  virtual std::string           GetName(void) const { return "x86"; }
-  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) { return false; }
-  virtual EEndianness           GetEndianness(void) { return LittleEndian; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
-  virtual NamedModeVector       GetModes(void) const
+  std::string           GetName(void) const override { return "x86"; }
+  bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) override { return false; }
+  EEndianness           GetEndianness(void) override { return LittleEndian; }
+  bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
+  NamedModeVector       GetModes(void) const override
   {
     NamedModeVector X86Modes;
     X86Modes.reserve(3);
@@ -101,26 +101,26 @@ public:
     return X86Modes;
   }
 
-  virtual u8                    GetDefaultMode(Address const&) const
+  u8                    GetDefaultMode(Address const&) const override
   {
     return 0;
   }
 
-  virtual bool FormatInstruction(
+  bool FormatInstruction(
     Document      const& rDoc,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    PrintData          & rPrintData) const;
+    PrintData          & rPrintData) const override;
 
-  virtual CpuInformation    const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const;
-  virtual std::vector<std::string> GetCallingConventionNames(void) const;
+  CpuInformation    const* GetCpuInformation(void) const override { return &m_CpuInfo; }
+  CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const override;
+  std::vector<std::string> GetCallingConventionNames(void) const override;
 
-  virtual CpuContext*    MakeCpuContext(void)    const { return new X86CpuContext(0, m_CpuInfo); }
-  virtual MemoryContext* MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  CpuContext*    MakeCpuContext(void)    const override { return new X86CpuContext(0, m_CpuInfo); }
+  MemoryContext* MakeMemoryContext(void) const override { return new MemoryContext(m_CpuInfo); }
 
-  virtual bool HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
-  virtual bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
+  bool HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr) override;
+  bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode) override;
 
 private:
 #include "x86_operand.ipp"

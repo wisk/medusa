@@ -22,12 +22,12 @@ class BindingPython : public Binding
 {
 public:
   BindingPython(void);
-  virtual ~BindingPython(void);
+  ~BindingPython(void) override;
 
-  virtual std::string GetName(void) const;
-  virtual bool Bind(Medusa& rCore);
-  virtual bool Unbind(Medusa& rCore);
-  virtual bool Execute(std::string const& rCode);
+  std::string GetName(void) const override;
+  bool Bind(Medusa& rCore) override;
+  bool Unbind(Medusa& rCore) override;
+  bool Execute(std::string const& rCode) override;
 };
 
 #endif // !BIND_PYTHON_HPP

@@ -40,7 +40,7 @@ public:
 
   Cell(CellData::SPType spDna) : m_spDna(spDna) {}
 
-  virtual ~Cell(void) { }
+  virtual ~Cell(void) = default;
 
   size_t GetSize(void)    const { return m_spDna->GetSize(); }
   u8     GetType(void)    const { return m_spDna->GetType(); }

@@ -26,17 +26,17 @@ MEDUSA_NAMESPACE_USE
 class ElfLoader : public Loader
 {
 public:
-  virtual std::string GetName(void) const { return "ELF"; }
-  virtual u8          GetDepth(void) const { return 1; }
+  std::string GetName(void) const override { return "ELF"; }
+  u8          GetDepth(void) const override { return 1; }
 
-  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const;
-  virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const;
-  virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const;
-  virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const;
+  bool                     IsCompatible(BinaryStream const& rBinStrm) const override;
+  std::string              GetDetailedName(BinaryStream const& rBinStrm) const override;
+  std::string              GetSystemName(BinaryStream const& rBinStrm) const override;
+  std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const override;
 
-  virtual bool Map(Document& rDoc) const;
-  virtual bool Map(Document& rDoc, Address const& rImgBase) const;
-  virtual void Analyze(Document& rDoc) const {}
+  bool Map(Document& rDoc) const override;
+  bool Map(Document& rDoc, Address const& rImgBase) const override;
+  void Analyze(Document& rDoc) const override {}
 
 private:
   static EEndianness _GetEndianness(BinaryStream const& rBinStrm)
@@ -147,7 +147,7 @@ private:
         Log::Write("ldr_elf") << "Section string size is corrupted" << LogEnd;
       else
       {
-        upShStrTbl.reset(new char[static_cast<u32>(ShStrShdr.sh_size)]);
+        upShStrTbl = std::make_unique<char[]>(static_cast<u32>(ShStrShdr.sh_size));
         if (!rBinStrm.Read(ShStrShdr.sh_offset, upShStrTbl.get(), static_cast<u32>(ShStrShdr.sh_size)))
         {
           Log::Write("ldr_elf") << "Can't read string SHDR" << LogEnd;
@@ -351,7 +351,7 @@ private:
 
       if (rPhdr.p_type == PT_DYNAMIC)
       {
-        std::unique_ptr<u8[]> upDynamic(new u8[rPhdr.p_filesz]);
+        auto upDynamic = std::make_unique<u8[]>(rPhdr.p_filesz);
         if (!rBinStrm.Read(rPhdr.p_offset, upDynamic.get(), rPhdr.p_filesz))
         {
           Log::Write("ldr_elf") << "Can't read DYN" << LogEnd;
@@ -411,9 +411,9 @@ private:
             return false;
           }
 
-        std::unique_ptr<u8[]>   upReloc(new u8[JmpRelSz]);
-        std::unique_ptr<char[]> upDynSymStr(new char[DynStrSz]);
-        std::unique_ptr<u8[]>   upRelocA(new u8[RelaSz]);
+        auto upReloc    = std::make_unique<u8[]>(JmpRelSz);
+        auto upDynSymStr = std::make_unique<char[]>(DynStrSz);
+        auto upRelocA   = std::make_unique<u8[]>(RelaSz);
 
         if (JmpRelTblOff != 0x0)
           if (!rBinStrm.Read(JmpRelTblOff, upReloc.get(), JmpRelSz))

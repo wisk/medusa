@@ -17,7 +17,7 @@ class LabelView : public QTreeView, public medusa::View
 
 public:
   LabelView(QWidget * parent, medusa::Medusa& core);
-  virtual ~LabelView(void) {}
+  ~LabelView(void) override = default;
 
   virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
 

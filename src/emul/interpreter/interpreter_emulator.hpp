@@ -21,10 +21,10 @@ class InterpreterEmulator : public Emulator
 {
 public:
   InterpreterEmulator(void);
-  virtual ~InterpreterEmulator(void);
+  ~InterpreterEmulator(void) override;
 
-  virtual std::string GetName(void) const { return "interpreter"; }
-  virtual ReturnType Execute(Expression::VSPType const& rExprs);
+  std::string GetName(void) const override { return "interpreter"; }
+  ReturnType Execute(Expression::VSPType const& rExprs) override;
 
 protected:
   std::unordered_map<std::string, BitVector> m_Vars;
@@ -36,23 +36,23 @@ private:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, BitVector>& rVars)
       : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_NrOfValueToRead(), m_State(Unknown) {}
 
-    virtual ~InterpreterExpressionVisitor(void);
+    ~InterpreterExpressionVisitor(void) override;
 
-    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
-    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
-    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+    Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+    Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+    Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+    Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+    Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+    Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+    Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr) override;
+    Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr) override;
+    Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr) override;
+    Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+    Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+    Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+    Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+    Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+    Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
   protected:
     HookAddressHashMap const& m_rHooks;

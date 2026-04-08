@@ -29,11 +29,11 @@ private:
   {
   public:
     LR35902CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('l', 'r', '3')) {}
-    virtual char const* ConvertIdentifierToName(u32 Id) const;
-    virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
-    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const;
+    char const* ConvertIdentifierToName(u32 Id) const override;
+    u32 ConvertNameToIdentifier(std::string const& rName) const override;
+    u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
+    u32 GetSizeOfRegisterInBit(u32 Id) const override;
+    bool IsRegisterAliased(u32 Id0, u32 Id1) const override;
   } m_CpuInfo;
 
   enum LR35902Mode
@@ -50,20 +50,20 @@ private:
 public:
   LR35902Architecture(void) : Architecture(MEDUSA_ARCH_TAG('l','r','3')) {}
 
-  virtual std::string           GetName(void) const { return "Sharp LR35902"; }
-  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff);
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
-  virtual NamedModeVector       GetModes(void) const;
-  virtual EEndianness           GetEndianness(void) { return LittleEndian; }
-  virtual CpuInformation const* GetCpuInformation(void) const { return &m_CpuInfo; }
-  virtual CpuContext*           MakeCpuContext(void) const { return nullptr; }
-  virtual MemoryContext*        MakeMemoryContext(void) const { return new MemoryContext(m_CpuInfo); }
+  std::string           GetName(void) const override { return "Sharp LR35902"; }
+  bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff) override;
+  bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
+  NamedModeVector       GetModes(void) const override;
+  EEndianness           GetEndianness(void) override { return LittleEndian; }
+  CpuInformation const* GetCpuInformation(void) const override { return &m_CpuInfo; }
+  CpuContext*           MakeCpuContext(void) const override { return nullptr; }
+  MemoryContext*        MakeMemoryContext(void) const override { return new MemoryContext(m_CpuInfo); }
 
-  virtual bool FormatInstruction(
+  bool FormatInstruction(
     Document      const& rDoc,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    PrintData          & rPrintData) const;
+    PrintData          & rPrintData) const override;
 };
 
 enum LR35902Identifiers

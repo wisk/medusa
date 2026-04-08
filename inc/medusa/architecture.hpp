@@ -43,6 +43,7 @@ public:
   using NamedModeVector = std::vector<NamedMode>;
 
   Architecture(Tag ArchTag);
+  virtual ~Architecture(void) = default;
 
   //! This method returns the name of the current architecture.
   virtual std::string GetName(void) const;

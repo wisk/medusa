@@ -14,7 +14,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Task
 {
 public:
-  virtual ~Task(void) {}
+  virtual ~Task(void) = default;
   virtual std::string GetName(void) const = 0;
   virtual void Run(void) = 0;
 };

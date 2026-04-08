@@ -15,7 +15,7 @@ namespace pydusa
 
   static nb::object FileBinaryStream_Read(FileBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {
-    std::unique_ptr<char[]> upBuffer(new char[Size]);
+    auto upBuffer = std::make_unique<char[]>(Size);
     if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
       return nb::none();
     return nb::bytes(upBuffer.get(), Size);
@@ -28,7 +28,7 @@ namespace pydusa
 
   static nb::object MemoryBinaryStream_Read(MemoryBinaryStream *pBinStrm, unsigned int Offset, size_t Size)
   {
-    std::unique_ptr<char[]> upBuffer(new char[Size]);
+    auto upBuffer = std::make_unique<char[]>(Size);
     if (!pBinStrm->Read(Offset, upBuffer.get(), Size))
       return nb::none();
     return nb::bytes(upBuffer.get(), Size);

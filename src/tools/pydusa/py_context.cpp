@@ -145,7 +145,7 @@ namespace pydusa
 
   nb::object MemoryContext_ReadBuffer(MemoryContext* pMemCtxt, u64 LinAddr, u32 Size)
   {
-    std::unique_ptr<char[]> upBuffer(new char[Size]);
+    auto upBuffer = std::make_unique<char[]>(Size);
     if (!pMemCtxt->ReadMemory(LinAddr, upBuffer.get(), Size))
       return nb::none();
     return nb::bytes(upBuffer.get(), Size);

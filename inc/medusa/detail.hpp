@@ -31,7 +31,7 @@ public:
   using SPType = std::shared_ptr<Detail>;
 
   Detail(Kind Kind = Unknown, SPType spParent = nullptr, std::string const& rName = "");
-  virtual ~Detail(void) {}
+  virtual ~Detail(void) = default;
 
   bool IsValid(void) const { return m_IsValid; }
 

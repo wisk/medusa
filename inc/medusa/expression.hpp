@@ -84,7 +84,7 @@ public:
     CmpIdentical,
   };
 
-  virtual ~Expression(void) {}
+  virtual ~Expression(void) = default;
 
   static Expression::VSPType Parse(std::string const& rExpressions, CpuInformation const& rCpuInfo, u8 Mode);
 
@@ -480,7 +480,7 @@ class MEDUSA_EXPORT BitVectorExpression : public Expression
 public:
   BitVectorExpression(u16 BitSize, ap_int Value);
   BitVectorExpression(BitVector const& rValue);
-  virtual ~BitVectorExpression(void) {}
+  virtual ~BitVectorExpression(void) = default;
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -577,7 +577,7 @@ class MEDUSA_EXPORT IdentifierExpression : public Expression
 public:
   IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo);
 
-  virtual ~IdentifierExpression(void) {}
+  virtual ~IdentifierExpression(void) = default;
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -605,7 +605,7 @@ class MEDUSA_EXPORT VectorIdentifierExpression : public Expression
 public:
   VectorIdentifierExpression(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
 
-  virtual ~VectorIdentifierExpression(void) {}
+  virtual ~VectorIdentifierExpression(void) = default;
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -745,7 +745,7 @@ public:
 
   SymbolicExpression(Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr);
 
-  virtual ~SymbolicExpression(void) {}
+  virtual ~SymbolicExpression(void) = default;
 
   virtual std::string ToString(void) const;
   virtual Expression::SPType Clone(void) const;
@@ -771,6 +771,8 @@ private:
 class MEDUSA_EXPORT ExpressionVisitor
 {
 public:
+  virtual ~ExpressionVisitor(void) = default;
+
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
   virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
   virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);

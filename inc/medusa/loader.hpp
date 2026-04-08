@@ -19,7 +19,7 @@ public:
   using SPType  = std::shared_ptr<Loader>;
   using VSPType = std::vector<SPType>;
 
-  virtual             ~Loader(void) {}
+  virtual             ~Loader(void) = default;
 
   // Generic methods
   virtual std::string GetName(void) const = 0;

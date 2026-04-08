@@ -68,7 +68,7 @@ namespace medusa
 
     RawLen += sizeof(Utf16Char); // include L'\0'
 
-    auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
+    auto upStrBuf = std::make_unique<u8[]>(RawLen);
     if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
     {
       Log::Write("core") << "Unable to read utf-16 string at " << m_Addr << LogEnd;

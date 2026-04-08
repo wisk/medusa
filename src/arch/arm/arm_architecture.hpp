@@ -33,31 +33,31 @@ class ArmArchitecture : public Architecture
   {
   public:
     ARMCpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
-    virtual char const* ConvertIdentifierToName(u32 Id) const;
-    virtual u32 ConvertNameToIdentifier(std::string const& rName) const;
-    virtual u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const;
-    virtual u32 GetSizeOfRegisterInBit(u32 Id) const;
-    virtual bool IsRegisterAliased(u32 Id0, u32 Id1) const { return false; }
+    char const* ConvertIdentifierToName(u32 Id) const override;
+    u32 ConvertNameToIdentifier(std::string const& rName) const override;
+    u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
+    u32 GetSizeOfRegisterInBit(u32 Id) const override;
+    bool IsRegisterAliased(u32 Id0, u32 Id1) const override { return false; }
   } m_CpuInfo;
 
   class ARMCpuContext : public CpuContext
   {
   public:
     ARMCpuContext(CpuInformation const& rCpuInfo) : CpuContext(rCpuInfo) { memset(&m_Context, 0x0, sizeof(m_Context)); }
-    virtual bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const;
-    virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize);
-    virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
-    virtual u8 GetMode(void) const;
-    virtual void SetMode(u8 Mode);
-    virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const;
-    virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr);
-    virtual std::string ToString(void) const;
+    bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const override;
+    bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) override;
+    bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const override;
+    u8 GetMode(void) const override;
+    void SetMode(u8 Mode) override;
+    bool GetAddress(AddressKind AddrKind, Address& rAddr) const override;
+    bool SetAddress(AddressKind AddrKind, Address const& rAddr) override;
+    std::string ToString(void) const override;
 
-    virtual void* GetRegisterAddress(u32 Register);
-    virtual void* GetContextAddress(void);
-    virtual u16   GetRegisterOffset(u32 Register);
+    void* GetRegisterAddress(u32 Register) override;
+    void* GetContextAddress(void) override;
+    u16   GetRegisterOffset(u32 Register) override;
 
-    virtual void  GetRegisters(RegisterList& RegList) const;
+    void  GetRegisters(RegisterList& RegList) const override;
 
   private:
     struct
@@ -69,14 +69,14 @@ class ArmArchitecture : public Architecture
 
 public:
   ArmArchitecture(void);
-  ~ArmArchitecture(void) {}
+  ~ArmArchitecture(void) override {}
 
-  virtual std::string           GetName(void) const                                    { return "ARM"; }
-  virtual bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) { return false; }
-  virtual Address               CurrentAddress(Address const& rAddr, Instruction const& rInsn) const;
-  virtual EEndianness           GetEndianness(void)                                    { return LittleEndian; }
-  virtual bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
-  virtual NamedModeVector       GetModes(void) const
+  std::string           GetName(void) const override                                   { return "ARM"; }
+  bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) override { return false; }
+  Address               CurrentAddress(Address const& rAddr, Instruction const& rInsn) const override;
+  EEndianness           GetEndianness(void) override                                   { return LittleEndian; }
+  bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
+  NamedModeVector       GetModes(void) const override
   {
     NamedModeVector ArmModes;
     ArmModes.reserve(4);
@@ -84,31 +84,31 @@ public:
     ArmModes.push_back(NamedMode("thumb",   ARM_ModeThumb));
     return ArmModes;
   }
-  virtual u8                    GetDefaultMode(Address const& rAddress) const
+  u8                    GetDefaultMode(Address const& rAddress) const override
   { return rAddress.GetOffset() & 1 ? ARM_ModeThumb : ARM_ModeArm; }
 
-  virtual bool FormatOperand(
+  bool FormatOperand(
     Document      const& rDoc,
     Address       const& rAddress,
     Instruction   const& rInstruction,
     u8                   OperandNo,
-    PrintData          & rPrintData) const;
+    PrintData          & rPrintData) const override;
 
-  virtual bool                  FormatInstruction(
+  bool                  FormatInstruction(
     Document      const& rDoc,
     Address       const& rAddr,
     Instruction   const& rInsn,
-    PrintData          & rPrintData) const;
+    PrintData          & rPrintData) const override;
 
-  virtual CpuInformation    const* GetCpuInformation(void) const                                         { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
-  virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const;
-  virtual std::vector<std::string> GetCallingConventionNames(void) const                                 { return{ "aapcs" }; }
+  CpuInformation    const* GetCpuInformation(void) const override                                        { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+  CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const override;
+  std::vector<std::string> GetCallingConventionNames(void) const override                                { return{ "aapcs" }; }
 
-  virtual CpuContext*           MakeCpuContext(void) const                             { return new ARMCpuContext(*GetCpuInformation()); }
-  virtual MemoryContext*        MakeMemoryContext(void) const                          { return new MemoryContext(*GetCpuInformation()); }
+  CpuContext*           MakeCpuContext(void) const override                            { return new ARMCpuContext(*GetCpuInformation()); }
+  MemoryContext*        MakeMemoryContext(void) const override                         { return new MemoryContext(*GetCpuInformation()); }
 
-  virtual bool                  HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
-  virtual bool                  EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
+  bool                  HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr) override;
+  bool                  EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode) override;
 
 #include "arm_opcode.ipp"
 };

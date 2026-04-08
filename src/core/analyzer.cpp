@@ -93,7 +93,7 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
         if (Utf16Str.IsFinalCharacter(Utf16Char) && RawLen != 0x0)
         {
           RawLen += sizeof(Utf16Char);
-          auto upStrBuf = std::unique_ptr<u8[]>(new u8[RawLen]);
+          auto upStrBuf = std::make_unique<u8[]>(RawLen);
           if (!rBinStrm.Read(StrOff, upStrBuf.get(), RawLen))
           {
             Log::Write("core") << "Unable to read utf-16 string at " << rAddress << LogEnd;

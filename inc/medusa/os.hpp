@@ -26,7 +26,7 @@ public:
   using SPType  = std::shared_ptr<OperatingSystem>;
   using VSPType = std::vector<SPType>;
 
-  virtual ~OperatingSystem(void) {}
+  virtual ~OperatingSystem(void) = default;
 
   virtual std::string GetName(void) const = 0;
   virtual bool IsSupported(Loader const& rLdr, Architecture const& rArch) const = 0;
