@@ -20,7 +20,7 @@ private:
   class Block
   {
   public:
-    typedef std::function<bool(Expression::SPType)> ExpressionMatcher;
+    using ExpressionMatcher = std::function<bool(Expression::SPType)>;
 
     Block(u32 PcRegid = 0);
     Block(Block const& rBlk);
@@ -79,7 +79,7 @@ public:
   Symbolic(Document &rDoc);
   ~Symbolic(void);
 
-  typedef std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::Vector& rNextAddresses)> Callback;
+  using Callback = std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::Vector& rNextAddresses)>;
 
   void FollowFunction(bool FollowFunction);
 

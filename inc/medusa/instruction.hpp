@@ -20,7 +20,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Instruction : public Cell
 {
 public:
-  typedef std::shared_ptr<Instruction> SPType;
+  using SPType = std::shared_ptr<Instruction>;
 
   enum
   {
@@ -76,7 +76,7 @@ public:
   Expression::SPType GetOperand(u8 OprdNo) const;
   bool               GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rCurAddr, Address& rDstAddr, bool EvalMemRef = true) const;
   u8                 GetNumberOfOperand(void) const;
-  typedef std::function<void (Expression::SPType const& rspOprdExpr)> OperandCallback;
+  using OperandCallback = std::function<void (Expression::SPType const& rspOprdExpr)>;
   void               ForEachOperand(OperandCallback OprdCb) const;
 
   void SetFormat(char const* pFormat);

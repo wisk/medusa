@@ -103,7 +103,7 @@ struct AskForConfiguration
 
       if (Choose == 0 || Choose == 1)
       {
-        m_rCfgMdl.SetEnum(rBool.GetName(), Choose ? true : false);
+        m_rCfgMdl.SetEnum(rBool.GetName(), Choose);
         return;
       }
     }
@@ -211,7 +211,7 @@ struct AskForConfiguration
         It != rEnum.GetConfigurationValue().end(); ++It)
         if (It->second == Choose)
         {
-          m_rCfgMdl.SetEnum(rEnum.GetName(), Choose ? true : false);
+          m_rCfgMdl.SetEnum(rEnum.GetName(), Choose);
           return;
         }
     }

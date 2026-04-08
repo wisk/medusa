@@ -101,7 +101,7 @@ private:
     if (Endianness == EndianUnknown)
       return false;
 
-    typedef ElfTraits<bit> ElfType;
+    using ElfType = ElfTraits<bit>;
     typename ElfType::Ehdr Ehdr;
     typename ElfType::Shdr ShStrShdr;
     ::memset(&ShStrShdr, 0x0, sizeof(ShStrShdr));

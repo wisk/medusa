@@ -17,7 +17,7 @@ public:
    XRefs(void) {}
   ~XRefs(void) {}
 
-  typedef std::unordered_multimap<Address, Address, std::hash<Address>> XRefMapType;
+  using XRefMapType = std::unordered_multimap<Address, Address, std::hash<Address>>;
 
   //! Add new cross-reference
   bool AddXRef(Address const& rTo, Address const& rFrom);

@@ -21,11 +21,11 @@ MEDUSA_NAMESPACE_USE
 #  define LDR_MACH_O_EXPORT
 #endif
 
-typedef enum {
+enum EntryPoBitVector {
     ENTRYPOINT_NONE,
     ENTRYPOINT_VMADDR,
     ENTRYPOINT_OFFSET,
-} EntryPoBitVector;
+};
 
 class MachOLoader : public Loader
 {

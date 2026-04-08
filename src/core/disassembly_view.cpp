@@ -47,7 +47,7 @@ Appearance::MapType& Appearance::GetFonts(void)
 void FormatDisassembly::operator()(Address const& rAddress, u32 Flags, u16 LinesNo)
 {
   m_rPrintData.Clear();
-  m_rPrintData.PrependAddress(Flags & ShowAddress ? true : false);
+  m_rPrintData.PrependAddress((Flags & ShowAddress) != 0);
 
   auto& rDoc = m_rCore.GetDocument();
   Address CurAddr = rAddress;
@@ -68,7 +68,7 @@ void FormatDisassembly::operator()(Address::Vector const& rAddresses, u32 Flags)
   if (rAddresses.empty())
     return;
 
-  m_rPrintData.PrependAddress(Flags & ShowAddress ? true : false);
+  m_rPrintData.PrependAddress((Flags & ShowAddress) != 0);
   m_rPrintData.SetIndent(Flags & Indent ? 8 : 2);
 
   for (auto const& CurAddr : rAddresses)

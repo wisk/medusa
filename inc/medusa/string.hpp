@@ -20,7 +20,7 @@ public:
 class Utf8StringTrait : public StringTrait
 {
 public:
-  typedef s8          CharType;
+  using CharType = s8;
   virtual bool        IsValidCharacter(int Char) const;
   virtual bool        IsFinalCharacter(int Char) const;
   virtual std::string ConvertToUtf8(void* pStrBuf, size_t StrBufLen) const;
@@ -31,7 +31,7 @@ public:
 class Utf16StringTrait : public StringTrait
 {
 public:
-  typedef s16         CharType;
+  using CharType = s16;
   virtual bool        IsValidCharacter(int Char) const;
   virtual bool        IsFinalCharacter(int Char) const;
   virtual std::string ConvertToUtf8(void* pStrBuf, size_t StrBufLen) const;

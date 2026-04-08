@@ -14,8 +14,8 @@ MEDUSA_NAMESPACE_BEGIN
 
 namespace Configuration
 {
-  typedef std::pair <std::string, u32> NamedField;
-  typedef std::list <NamedField      > Enum;
+  using NamedField = std::pair<std::string, u32>;
+  using Enum       = std::list<NamedField>;
 
   template<typename ConfigType, typename ValueType>
   class NamedValue
@@ -71,32 +71,32 @@ class MEDUSA_EXPORT ConfigurationModel
 {
 public:
   // Boolean type
-  typedef Configuration::NamedValue<bool, bool> NamedBool;
+  using NamedBool = Configuration::NamedValue<bool, bool>;
 
   // Integer type
-  typedef Configuration::NamedValue<u8,  u8>  NamedUint8;
-  typedef Configuration::NamedValue<u16, u16> NamedUint16;
-  typedef Configuration::NamedValue<u32, u32> NamedUint32;
-  typedef Configuration::NamedValue<u64, u64> NamedUint64;
+  using NamedUint8  = Configuration::NamedValue<u8,  u8>;
+  using NamedUint16 = Configuration::NamedValue<u16, u16>;
+  using NamedUint32 = Configuration::NamedValue<u32, u32>;
+  using NamedUint64 = Configuration::NamedValue<u64, u64>;
 
   // Enum type
-  typedef Configuration::NamedValue<Configuration::Enum, u32> NamedEnum;
+  using NamedEnum = Configuration::NamedValue<Configuration::Enum, u32>;
 
   // String type
-  typedef Configuration::NamedValue<std::string, std::string> NamedString;
+  using NamedString = Configuration::NamedValue<std::string, std::string>;
 
   // Path
-  typedef Configuration::NamedValue<Path, Path> NamedPath;
+  using NamedPath = Configuration::NamedValue<Path, Path>;
 
   // Variant
-  typedef std::variant<
+  using VariantNamedValue = std::variant<
     NamedBool,
     NamedUint8, NamedUint16, NamedUint32, NamedUint64,
     NamedEnum, NamedString, NamedPath
-  > VariantNamedValue;
-  typedef std::unordered_map< std::string, VariantNamedValue> VariantNamedValueMapType;
+  >;
+  using VariantNamedValueMapType = std::unordered_map<std::string, VariantNamedValue>;
 
-  typedef VariantNamedValueMapType::const_iterator ConstIterator;
+  using ConstIterator = VariantNamedValueMapType::const_iterator;
 
   void InsertBoolean(std::string const& rName, bool DefaultValue = false);
   void InsertUint8(std::string const& rName, u8 DefaultValue = 0);

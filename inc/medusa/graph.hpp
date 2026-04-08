@@ -14,7 +14,7 @@ namespace medusa
   {
   public:
 
-    typedef std::shared_ptr<Graph> SPType;
+    using SPType = std::shared_ptr<Graph>;
 
     struct MEDUSA_EXPORT VertexProperties
     {
@@ -81,21 +81,21 @@ namespace medusa
 
     };
 
-    typedef boost::adjacency_list <
+    using Type = boost::adjacency_list <
       boost::vecS, boost::vecS, boost::bidirectionalS,
       VertexProperties,
       EdgeProperties,
       GraphProperties
-    > Type;
+    >;
 
     Type      & operator ()(void)       { return m_Graph; }
     Type const& operator ()(void) const { return m_Graph; }
 
-    typedef boost::graph_traits<Type>::vertex_descriptor VertexDescriptor;
-    typedef boost::graph_traits<Type>::edge_descriptor   EdgeDescriptor;
+    using VertexDescriptor = boost::graph_traits<Type>::vertex_descriptor;
+    using EdgeDescriptor   = boost::graph_traits<Type>::edge_descriptor;
 
-    typedef boost::graph_traits<Type>::vertex_iterator   VertexIterator;
-    typedef boost::graph_traits<Type>::edge_descriptor   EdgeIterator;
+    using VertexIterator   = boost::graph_traits<Type>::vertex_iterator;
+    using EdgeIterator     = boost::graph_traits<Type>::edge_descriptor;
 
     bool ToGraphViz(std::string& rGraphVizCode) const;
     static bool FromGraphViz(Graph& rGraph, std::string const& rGraphVizCode);
@@ -123,7 +123,7 @@ namespace medusa
     bool Contains(Address const& rAddress) const;
 
   private:
-    typedef std::map<Address, VertexDescriptor> VertexMap;
+    using VertexMap = std::map<Address, VertexDescriptor>;
 
     Type            m_Graph;
     VertexMap       m_VertexMap;

@@ -18,13 +18,13 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Action
 {
 public:
-  typedef std::shared_ptr<Action> SPType;
-  typedef std::list<SPType> SPTypeList;
+  using SPType = std::shared_ptr<Action>;
+  using SPTypeList = std::list<SPType>;
 
-  typedef SPType (*CreateType)(Medusa& rCore, FullDisassemblyView* pView);
-  typedef std::map<char const*, CreateType> MapType;
+  using CreateType = SPType (*)(Medusa& rCore, FullDisassemblyView* pView);
+  using MapType = std::map<char const*, CreateType>;
 
-  typedef std::pair<Address, Address> RangeAddress;
+  using RangeAddress = std::pair<Address, Address>;
 
   static SPType        Create(Medusa& rCore, FullDisassemblyView* pView);
   static char const* GetBindingName(void);

@@ -31,7 +31,7 @@ public:
   virtual void        Analyze(Document& rDoc) const;
 
 private:
-  typedef u16 LogicalType;
+  using LogicalType = u16;
   BaseType GetNumberOfBank(BinaryStream const& rBinStrm) const;
   enum     { BankSize = 0x4000 };
   static bool ReadHeader(BinaryStream const& rBinStrm, GameBoyRom& rRom);

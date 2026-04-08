@@ -25,7 +25,7 @@ public:
   virtual bool Execute(std::string const& rCode) = 0;
 };
 
-typedef Binding* (*TGetBinding)(void);
+using TGetBinding = Binding* (*)();
 
 MEDUSA_NAMESPACE_END
 

@@ -23,8 +23,8 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT OperatingSystem : public IsConfigurable
 {
 public:
-  typedef std::shared_ptr<OperatingSystem> SPType;
-  typedef std::vector<SPType>              VSPType;
+  using SPType  = std::shared_ptr<OperatingSystem>;
+  using VSPType = std::vector<SPType>;
 
   virtual ~OperatingSystem(void) {}
 
@@ -49,7 +49,7 @@ public:
   virtual bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const = 0;
 };
 
-typedef OperatingSystem* (*TGetOperatingSystem)(void);
+using TGetOperatingSystem = OperatingSystem* (*)();
 
 MEDUSA_NAMESPACE_END
 

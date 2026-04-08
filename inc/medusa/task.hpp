@@ -22,7 +22,7 @@ public:
 class TaskManager
 {
 public:
-  typedef std::function<void (Task const*)> NotifyFunctionType;
+  using NotifyFunctionType = std::function<void (Task const*)>;
 
   TaskManager(NotifyFunctionType const& rNotify);
   ~TaskManager(void);

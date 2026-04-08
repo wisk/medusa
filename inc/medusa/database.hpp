@@ -25,11 +25,11 @@ public:
     ByMemoryArea,
   };
 
-  typedef std::shared_ptr<Database> SPType;
-  typedef std::vector<SPType> VSPType;
+  using SPType = std::shared_ptr<Database>;
+  using VSPType = std::vector<SPType>;
 
-  typedef std::function<void (MemoryArea const& rMemoryArea)>                MemoryAreaCallback;
-  typedef std::function<void (Address const& rAddress, Label const& rLabel)> LabelCallback;
+  using MemoryAreaCallback = std::function<void (MemoryArea const& rMemoryArea)>;
+  using LabelCallback = std::function<void (Address const& rAddress, Label const& rLabel)>;
 
   Database(void);
   virtual ~Database(void);
@@ -126,7 +126,7 @@ protected:
   std::string m_OsName;
 };
 
-typedef Database* (*TGetDatabase)(void);
+using TGetDatabase = Database* (*)();
 
 MEDUSA_NAMESPACE_END
 

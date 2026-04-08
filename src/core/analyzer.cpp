@@ -37,8 +37,8 @@ Task* Analyzer::CreateTask(std::string const& rTaskName, Document& rDoc)
       rDoc.ForEachLabel([&](Address const& rAddr, Label const& rLabel)
       {
         u16 LblType     = rLabel.GetType() & Label::CellMask;
-        bool IsExported = ((rLabel.GetType() & Label::AccessMask) == Label::Exported) ? true : false;
-        bool IsGlobal   = ((rLabel.GetType() & Label::AccessMask) == Label::Global) ? true : false;
+        bool IsExported = (rLabel.GetType() & Label::AccessMask) == Label::Exported;
+        bool IsGlobal   = (rLabel.GetType() & Label::AccessMask) == Label::Global;
 
         if (!(LblType == Label::Function || ((LblType == Label::Code) && (IsExported || IsGlobal))))
           return;

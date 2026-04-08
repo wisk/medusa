@@ -28,7 +28,7 @@ public:
       : m_pName(pName), m_pDescription(pDescription) {}
   };
 
-  typedef std::map<std::string, Information> MapType;
+  using MapType = std::map<std::string, Information>;
 
   static MapType& GetColors(void);
   static MapType& GetFonts(void);
@@ -74,7 +74,7 @@ public:
   void GetDimension(u32& rWidth, u32& rHeight) const;
 
 protected:
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
 
   mutable MutexType m_Mutex;
   Medusa&           m_rCore;
@@ -116,7 +116,7 @@ public:
   u8               GetSelectionIndex(void) const;
 
 protected:
-  typedef std::recursive_mutex MutexType;
+  using MutexType = std::recursive_mutex;
 
   struct TextPosition
   {

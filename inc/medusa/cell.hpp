@@ -23,7 +23,7 @@ public:
     StringType        //! String cell.
   };
 
-  typedef std::shared_ptr<Cell> SPType;
+  using SPType = std::shared_ptr<Cell>;
 
   /*! Cell constructor.
    * \param Type defines the type of cell @see Type.

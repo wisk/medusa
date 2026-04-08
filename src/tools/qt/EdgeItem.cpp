@@ -34,7 +34,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 {
   computeCoordinates();
   std::vector<QPointF> points;
-  bool revLine = (_startItem->y() > _endItem->y()) ? true : false;
+  bool revLine = _startItem->y() > _endItem->y();
   QColor curClr = revLine ? _clr.darker() : _clr.lighter();
 
   painter->setRenderHint(QPainter::Antialiasing);
@@ -54,7 +54,7 @@ void EdgeItem::computeCoordinates(void)
   std::vector<QPointF> points;
   points.reserve(2);
 
-  bool revLine = (_startItem->y() > _endItem->y()) ? true : false;
+  bool revLine = _startItem->y() > _endItem->y();
 
   if (_startItem != _endItem)
   {
@@ -135,7 +135,7 @@ void EdgeItem::computeCoordinates(void)
 
   else
   {
-    // NOTE: bézier curves rendering is not that fancy
+    // NOTE: bï¿½zier curves rendering is not that fancy
     //QPointF lastPoint = points.front();
     //for (size_t i = 1; i + 1 < points.size(); ++i)
     //{

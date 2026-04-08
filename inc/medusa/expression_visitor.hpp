@@ -31,7 +31,7 @@ public:
 class MEDUSA_EXPORT FilterVisitor : public ExpressionVisitor
 {
 public:
-  typedef std::function <Expression::SPType(Expression::SPType spExpr)> Matcher;
+  using Matcher = std::function <Expression::SPType(Expression::SPType spExpr)>;
   FilterVisitor(Matcher ExprMatcher, size_t NrOfResult = 0) : m_ExprMatcher(ExprMatcher), m_NbrOfResult(NrOfResult) {}
 
   virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
@@ -147,10 +147,10 @@ public:
   bool BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate = false);
   bool UpdateAddress(Architecture& rArch, Address const& rAddr);
 
-  typedef std::function<bool(Expression::SPType& rspExpr)> Updater;
+  using Updater = std::function<bool(Expression::SPType& rspExpr)>;
   bool UpdateExpression(Expression::SPType spKeyExpr, Updater updt);
 
-  typedef std::function<void(Expression::SPType spDstExpr, Expression::VSPType spCondExprs)> DestinationPathCallbackType;
+  using DestinationPathCallbackType = std::function<void(Expression::SPType spDstExpr, Expression::VSPType spCondExprs)>;
   bool FindAllPaths(int& rNumOfPathFound, Architecture& rArch, DestinationPathCallbackType DstPathCb);
 
 protected:
@@ -158,7 +158,7 @@ protected:
   bool _RemoveExpression(Expression::SPType spKeyExpr);
   bool _EvaluateCondition(u8 CondOp, BitVectorExpression::SPType spConstRefExpr, BitVectorExpression::SPType spConstTestExpr, bool& rRes) const;
 
-  typedef std::vector<std::pair<Expression::SPType, Expression::SPType>> SymbolicContextType;
+  using SymbolicContextType = std::vector<std::pair<Expression::SPType, Expression::SPType>>;
   Document const&                   m_rDoc;
   u8                                m_Mode;
   SymbolicContextType               m_SymCtxt;

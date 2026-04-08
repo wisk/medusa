@@ -11,7 +11,7 @@ namespace arm
     if (Amount <= 0)
       return std::make_tuple(Value, false);
     auto Result = Value << Amount;
-    auto CarryOut = Value & (1 << (32 - Amount)) ? true : false;
+    auto CarryOut = (Value & (1 << (32 - Amount))) != 0;
     return std::make_tuple(Result, CarryOut);
   }
 
@@ -20,7 +20,7 @@ namespace arm
     if (Amount <= 0)
       return std::make_tuple(Value, false);
     auto Result = Value >> Amount;
-    auto CarryOut = (Value & (1 << (Amount - 1))) ? true : false;
+    auto CarryOut = (Value & (1 << (Amount - 1))) != 0;
     return std::make_tuple(Result, CarryOut);
   }
 
@@ -30,7 +30,7 @@ namespace arm
       return std::make_tuple(Value, false);
 
     auto Result = Value >> Amount;
-    auto CarryOut = (Value & (1 << (Amount - 1))) ? true : false;
+    auto CarryOut = (Value & (1 << (Amount - 1))) != 0;
     return std::make_tuple(Result, CarryOut);
   }
 
@@ -41,14 +41,14 @@ namespace arm
 
     auto Shift = Amount % 32;
     auto Result = (Value >> Shift) | (Value << (32 - Shift));
-    auto CarryOut = (Result & (1 << 31)) ? true : false;
+    auto CarryOut = (Result & (1 << 31)) != 0;
     return std::make_tuple(Result, CarryOut);
   }
 
   std::tuple<medusa::u32, bool> RRX_C(medusa::u32 Value, bool CarryIn)
   {
     auto Result = (CarryIn ? (1 << 31) : 0x0) | (Value >> 1);
-    auto CarryOut = (Value & 1) ? true : false;
+    auto CarryOut = (Value & 1) != 0;
     return std::make_tuple(Result, CarryOut);
   }
 

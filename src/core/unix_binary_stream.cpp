@@ -13,7 +13,7 @@ MEDUSA_NAMESPACE_BEGIN
 /* binary stream */
 
 BinaryStream::BinaryStream(void)
-  : m_pBuffer(NULL)
+  : m_pBuffer(nullptr)
   , m_Size(0x0)
   , m_Endianness(EndianUnknown)
 {
@@ -57,7 +57,7 @@ void FileBinaryStream::Open(Path const& rFilePath)
   m_Size = sb.st_size;
 
   m_pBuffer = mmap(
-      NULL,
+      nullptr,
       m_Size,
       PROT_READ,
       MAP_SHARED,

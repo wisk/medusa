@@ -17,7 +17,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT MultiCell
 {
 public:
-  typedef std::shared_ptr<MultiCell> SPType;
+  using SPType = std::shared_ptr<MultiCell>;
 
   enum Type
   {

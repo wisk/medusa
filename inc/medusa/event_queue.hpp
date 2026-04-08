@@ -19,7 +19,7 @@ class EventQueue
 
 public:
   EventQueue() = default;
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
 
   void Push(EventHandler::EventType const& rEvent);
   void Quit(void);

@@ -34,7 +34,7 @@ public:
     UpdateType m_Type;
   };
 
-  typedef std::variant<Quit, DocumentUpdated, LabelUpdated> EventType;
+  using EventType = std::variant<Quit, DocumentUpdated, LabelUpdated>;
 
   virtual bool OnQuit(void)                        { return false; }
   virtual bool OnDocumentUpdated(void)             { return true;  }

@@ -45,7 +45,7 @@ public:
     }
   };
 
-  typedef std::function<void (OffsetType, CellData::SPType)> CellDataPredicat;
+  using CellDataPredicat = std::function<void (OffsetType, CellData::SPType)>;
 
   MemoryArea(void)
     : m_Id(), m_Name("")

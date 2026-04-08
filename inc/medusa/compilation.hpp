@@ -13,8 +13,8 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Compiler
 {
 public:
-  typedef std::shared_ptr<Compiler> SPType;
-  typedef std::vector<SPType> VSPType;
+  using SPType = std::shared_ptr<Compiler>;
+  using VSPType = std::vector<SPType>;
 
   virtual ~Compiler(void) {}
 
@@ -42,7 +42,7 @@ protected:
   std::unordered_map<std::string, std::vector<u8>> m_DataMap;
 };
 
-typedef Compiler* (*TGetCompiler)(void);
+using TGetCompiler = Compiler* (*)();
 
 MEDUSA_NAMESPACE_END
 

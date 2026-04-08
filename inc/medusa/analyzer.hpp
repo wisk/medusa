@@ -32,7 +32,7 @@ protected:
 class AnalyzerTask : public Task
 {
 public:
-  typedef std::function<void(Document& rDoc)> TaskFunctionType;
+  using TaskFunctionType = std::function<void(Document& rDoc)>;
 
   AnalyzerTask(std::string const& rTaskName, Document& rDoc, TaskFunctionType TaskFunc)
     : m_Name(rTaskName), m_rDoc(rDoc), m_TaskFunc(TaskFunc) {}
@@ -49,7 +49,7 @@ private:
 class AnalyzerTaskAddress : public Task
 {
 public:
-  typedef std::function<void(Document& rDoc, Address const& rAddr)> TaskFunctionType;
+  using TaskFunctionType = std::function<void(Document& rDoc, Address const& rAddr)>;
 
   AnalyzerTaskAddress(std::string const& rTaskName, Document& rDoc, Address const& rAddr, TaskFunctionType TaskFunc)
     : m_Name(rTaskName), m_rDoc(rDoc), m_Addr(rAddr), m_TaskFunc(TaskFunc) {}

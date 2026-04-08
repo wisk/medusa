@@ -36,11 +36,11 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Architecture : public IsConfigurable
 {
 public:
-  typedef std::shared_ptr<Architecture> SPType;
-  typedef std::vector<SPType>           VSPType;
-  typedef std::map<Tag, SPType>         TagMap;
-  typedef std::tuple<const char*, u8>   NamedMode;
-  typedef std::vector<NamedMode>        NamedModeVector;
+  using SPType = std::shared_ptr<Architecture>;
+  using VSPType = std::vector<SPType>;
+  using TagMap = std::map<Tag, SPType>;
+  using NamedMode = std::tuple<const char*, u8>;
+  using NamedModeVector = std::vector<NamedMode>;
 
   Architecture(Tag ArchTag);
 
@@ -174,7 +174,7 @@ protected:
   Tag                m_Tag;
 };
 
-typedef Architecture* (*TGetArchitecture)(void);
+using TGetArchitecture = Architecture* (*)();
 
 MEDUSA_NAMESPACE_END
 

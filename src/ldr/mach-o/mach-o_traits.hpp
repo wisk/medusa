@@ -12,18 +12,18 @@ struct MachOTraits
 template<>
 struct MachOTraits<32>
 {
-    typedef mach_header          MachOHeader;
-    typedef fat_header           FatHeader;
-    typedef fat_arch             FatArch;
-    typedef load_command         LoadCmd;
-    typedef segment_command      Segment;
-    typedef section              Section;
-    typedef x86_state_hdr        x86StateHeader;
-    typedef x86_thread_state32_t x86State;
-    typedef entry_point_command  EntryPoint;
-    typedef symtab_command       SymbolTable;
-    typedef dysymtab_command     DynamicSymbolTable;
-    typedef nlist                Symbol;
+    using MachOHeader       = mach_header;
+    using FatHeader         = fat_header;
+    using FatArch           = fat_arch;
+    using LoadCmd           = load_command;
+    using Segment           = segment_command;
+    using Section           = section;
+    using x86StateHeader    = x86_state_hdr;
+    using x86State          = x86_thread_state32_t;
+    using EntryPoint        = entry_point_command;
+    using SymbolTable       = symtab_command;
+    using DynamicSymbolTable = dysymtab_command;
+    using Symbol            = nlist;
 
     static void EndianSwap(Symbol& Symbol, EEndianness Endianness)
     {
@@ -211,18 +211,18 @@ struct MachOTraits<32>
 template<>
 struct MachOTraits<64>
 {
-    typedef mach_header_64       MachOHeader;
-    typedef fat_header           FatHeader;
-    typedef fat_arch             FatArch;
-    typedef load_command         LoadCmd;
-    typedef segment_command_64   Segment;
-    typedef section_64           Section;
-    typedef x86_state_hdr        x86StateHeader;
-    typedef x86_thread_state64_t x86State;
-    typedef entry_point_command  EntryPoint;
-    typedef symtab_command       SymbolTable;
-    typedef dysymtab_command     DynamicSymbolTable;
-    typedef nlist_64             Symbol;
+    using MachOHeader       = mach_header_64;
+    using FatHeader         = fat_header;
+    using FatArch           = fat_arch;
+    using LoadCmd           = load_command;
+    using Segment           = segment_command_64;
+    using Section           = section_64;
+    using x86StateHeader    = x86_state_hdr;
+    using x86State          = x86_thread_state64_t;
+    using EntryPoint        = entry_point_command;
+    using SymbolTable       = symtab_command;
+    using DynamicSymbolTable = dysymtab_command;
+    using Symbol            = nlist_64;
 
     static void EndianSwap(Symbol& Symbol, EEndianness Endianness)
     {

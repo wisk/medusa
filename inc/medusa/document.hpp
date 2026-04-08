@@ -27,7 +27,7 @@ class MEDUSA_EXPORT Document
   Document& operator=(Document const&) = delete;
 
 public:
-  typedef boost::signals2::connection ConnectionType;
+  using ConnectionType = boost::signals2::connection;
 
   class MEDUSA_EXPORT Subscriber
   {
@@ -55,19 +55,19 @@ public:
     }
 
   private:
-    typedef boost::signals2::signal<void (void)>                                                       QuitSignalType;
-    typedef boost::signals2::signal<void (void)>                                                       DocumentUpdatedSignalType;
-    typedef boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)>                   MemoryAreaUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address::Vector const& rAddresses)>                          AddressUpdatedSignalType;
-    typedef boost::signals2::signal<void (Address const& rAddress, Label const& rLabel, bool Removed)> LabelUpdatedSignalType;
-    typedef boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>                    TaskUpdatedSignalType;
+    using QuitSignalType              = boost::signals2::signal<void (void)>;
+    using DocumentUpdatedSignalType   = boost::signals2::signal<void (void)>;
+    using MemoryAreaUpdatedSignalType = boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)>;
+    using AddressUpdatedSignalType    = boost::signals2::signal<void (Address::Vector const& rAddresses)>;
+    using LabelUpdatedSignalType      = boost::signals2::signal<void (Address const& rAddress, Label const& rLabel, bool Removed)>;
+    using TaskUpdatedSignalType       = boost::signals2::signal<void (std::string const& rTaskName, u8 Status)>;
 
-    typedef QuitSignalType::slot_type              QuitSlotType;
-    typedef DocumentUpdatedSignalType::slot_type   DocumentUpdatedSlotType;
-    typedef MemoryAreaUpdatedSignalType::slot_type MemoryAreaUpdatedSlotType;
-    typedef AddressUpdatedSignalType::slot_type    AddressUpdatedSlotType;
-    typedef LabelUpdatedSignalType::slot_type      LabelUpdatedSlotType;
-    typedef TaskUpdatedSignalType                  TaskUpdatedSlotType;
+    using QuitSlotType              = QuitSignalType::slot_type;
+    using DocumentUpdatedSlotType   = DocumentUpdatedSignalType::slot_type;
+    using MemoryAreaUpdatedSlotType = MemoryAreaUpdatedSignalType::slot_type;
+    using AddressUpdatedSlotType    = AddressUpdatedSignalType::slot_type;
+    using LabelUpdatedSlotType      = LabelUpdatedSignalType::slot_type;
+    using TaskUpdatedSlotType       = TaskUpdatedSignalType;
 
     Document::ConnectionType m_QuitConnection;
     Document::ConnectionType m_DocumentUpdatedConnection;
@@ -261,7 +261,7 @@ private:
   bool _ApplyType(Address const& rAddr, TypeDetail::SPType const& rspTpDtl);
   bool _ApplyValue(Address const& rAddr, ValueDetail const& rValDtl);
 
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
 
   Database::SPType                        m_spDatabase;
   mutable MutexType                       m_CellMutex;

@@ -6,12 +6,12 @@
 
 namespace medusa
 {
-  typedef std::unordered_map<std::string, Expression::SPType> NamedExpressionType;
+  using NamedExpressionType = std::unordered_map<std::string, Expression::SPType>;
 
   class MEDUSA_EXPORT ExpressionPattern
   {
   public:
-    typedef std::shared_ptr<ExpressionPattern> SPType;
+    using SPType = std::shared_ptr<ExpressionPattern>;
 
     ExpressionPattern(std::string const& rPatternName = "");
 
@@ -39,7 +39,7 @@ namespace medusa
     bool Execute(Expression::SPType spExpr);
     Expression::SPType GetExpression(std::string const& rExprName);
 
-    typedef std::function<void(std::string const& rExprName, Expression::SPType& rspExpr)> Callback;
+    using Callback = std::function<void(std::string const& rExprName, Expression::SPType& rspExpr)>;
     void ForEach(Callback cb);
 
   private:
@@ -69,7 +69,7 @@ namespace medusa
     class MEDUSA_EXPORT Callback : public ExpressionPattern
     {
     public:
-      typedef std::function<bool(Expression::SPType spExpr)> Type;
+      using Type = std::function<bool(Expression::SPType spExpr)>;
 
       Callback(Type Callback) : m_Callback(Callback) {}
       Callback(std::string const& rPatternName, Type Callback) : ExpressionPattern(rPatternName), m_Callback(Callback) {}

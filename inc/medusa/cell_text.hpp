@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_BEGIN
 class Mark
 {
 public:
-  typedef std::list<Mark> List;
+  using List = std::list<Mark>;
 
   enum Type
   {
@@ -135,11 +135,10 @@ public:
   u16 GetHeight(void) const
   { return m_Height; }
 
-  typedef std::function<void (
+  using LineCallback = std::function<void (
     Address const& rAddress,
     std::string const& rText,
-    Mark::List const& rMarks)>
-    LineCallback;
+    Mark::List const& rMarks)>;
   void ForEachLine(LineCallback Callback) const;
 
   void Clear(void);
@@ -161,34 +160,34 @@ private:
   u16                 m_Height;
   u8                  m_Indent;
 
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   mutable MutexType m_Mutex;
 };
 
 class MEDUSA_EXPORT GraphData
 {
 public:
-  typedef std::tuple<PrintData, u16 /* X */, u16 /* Y */> VertexDataType;
+  using VertexDataType = std::tuple<PrintData, u16 /* X */, u16 /* Y */>;
 
   bool AddVertex(PrintData const& rPD, u16 X = 0, u16 Y = 0);
   bool GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) const;
   bool SetVertexPosition(Address const& rVtxAddr, u16 X, u16 Y);
 
-  typedef std::function<void(PrintData const& rPD, u16 X, u16 Y)> VertexCallbackType;
+  using VertexCallbackType = std::function<void(PrintData const& rPD, u16 X, u16 Y)>;
   void ForEachVertex(VertexCallbackType CB) const;
 
-  typedef std::vector<std::tuple<u16 /* X */, u16 /* Y */>> BendsType;
+  using BendsType = std::vector<std::tuple<u16 /* X */, u16 /* Y */>>;
   bool GetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType& rBends) const;
   void SetBends(Graph::EdgeDescriptor const& rEdgeDesc, BendsType const& rBends);
 
 private:
-  typedef std::unordered_map<Address, VertexDataType> AddressVertexMapType;
+  using AddressVertexMapType = std::unordered_map<Address, VertexDataType>;
   AddressVertexMapType m_Map;
 
-  typedef std::map<Graph::EdgeDescriptor, BendsType> BendsMapType;
+  using BendsMapType = std::map<Graph::EdgeDescriptor, BendsType>;
   BendsMapType m_Bends;
 
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   mutable MutexType m_Mutex;
 };
 

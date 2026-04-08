@@ -10,7 +10,7 @@
 bool MachOLoader::_GetMachineAndEndian(BinaryStream const& rBinStrm, u32& rMachine, bool& rArch64, EEndianness& rEndian, u32& rHeaderOffset)
 {
   rHeaderOffset = 0;
-  typedef MachOTraits<32> MachOType;
+  using MachOType = MachOTraits<32>;
   MachOType::MachOHeader  Header;
 
   if (!rBinStrm.Read(rHeaderOffset, &Header, sizeof(Header))) {
@@ -139,7 +139,7 @@ bool MachOLoader::MapImpl(Document& rDoc) const
 {
   BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
   auto const&                     rModMngr = ModuleManager::Instance();
-  typedef MachOTraits<bit>        MachOType;
+  using MachOType = MachOTraits<bit>;
   typename MachOType::MachOHeader Header;
   int                             LoadCmdOff;
 
@@ -237,7 +237,7 @@ void MachOLoader::MapSegment(Document& rDoc, int LoadCmdOff, Tag ArchTag, u8 Arc
                               u64& rTextSectionVMAddr, u64& rImportsAddress, u32& rSymbolsIndex) const
 {
   BinaryStream const&         rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<bit>    MachOType;
+  using MachOType = MachOTraits<bit>;
   typename MachOType::Segment Segment;
   typename MachOType::Section Section;
   std::string                 SegmentName;
@@ -327,7 +327,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff, u32 Machine, E
   switch (Machine) {
   case CPU_TYPE_X86:
     {
-      typedef MachOTraits<32>   MachOType;
+      using MachOType = MachOTraits<32>;
       MachOType::x86StateHeader x86StateHeader;
       MachOType::x86State       x86State;
 
@@ -356,7 +356,7 @@ void MachOLoader::GetEntryPointV1(Document& rDoc, int LoadCmdOff, u32 Machine, E
 
   case CPU_TYPE_X86_64:
     {
-      typedef MachOTraits<64>   MachOType;
+      using MachOType = MachOTraits<64>;
       MachOType::x86StateHeader x86StateHeader;
       MachOType::x86State       x86State;
 
@@ -405,7 +405,7 @@ void MachOLoader::GetEntryPointV2(Document& rDoc, int LoadCmdOff, EEndianness En
                                    u64& rEntryPoint, EntryPoBitVector& rEntryPoBitVector) const
 {
   BinaryStream const&     rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<32> MachOType;
+  using MachOType = MachOTraits<32>;
   MachOType::EntryPoint   EntryPoint;
 
   if (!rBinStrm.Read(LoadCmdOff, &EntryPoint, sizeof(EntryPoint))) {
@@ -423,7 +423,7 @@ void MachOLoader::GetSymbols(Document& rDoc, int LoadCmdOff, EEndianness Endian,
                               u32& rSymbolsOffset, u32& rStringsOffset) const
 {
   BinaryStream const&             rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<bit>        MachOType;
+  using MachOType = MachOTraits<bit>;
   typename MachOType::SymbolTable SymTab;
 
   /* Read Symbol Table */
@@ -447,7 +447,7 @@ void MachOLoader::GetDynamicSymbols(Document& rDoc, int LoadCmdOff, EEndianness 
   }
 
   BinaryStream const&                    rBinStrm = rDoc.GetBinaryStream();
-  typedef MachOTraits<bit>               MachOType;
+  using MachOType = MachOTraits<bit>;
   typename MachOType::DynamicSymbolTable DySymTab;
 
   /* Read Dynamic Symbol Table */

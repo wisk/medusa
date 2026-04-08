@@ -10,9 +10,9 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef void*              FileHandleType;
+using FileHandleType = void*;
 #define INVALID_FILE_VALUE ((FileHandleType)-1)
-typedef void*              MapHandleType;
+using MapHandleType = void*;
 #define INVALID_MAP_VALUE  ((MapHandleType)nullptr)
 
 MEDUSA_NAMESPACE_END
@@ -21,9 +21,9 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef int               FileHandleType;
+using FileHandleType = int;
 #define INVALID_FILE_VALUE ((FileHandleType)-1)
-typedef void*             MapHandleType;
+using MapHandleType = void*;
 #define INVALID_MAP_VALUE  ((MapHandleType)-1) // MAP_FAILED
 
 MEDUSA_NAMESPACE_END
@@ -36,38 +36,37 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-typedef  int8_t           s8;
-typedef uint8_t           u8;
+using s8    = int8_t;
+using u8    = uint8_t;
 
-typedef  int16_t          s16;
-typedef uint16_t          u16;
+using s16   = int16_t;
+using u16   = uint16_t;
 
-typedef  int32_t          s32;
-typedef uint32_t          u32;
+using s32   = int32_t;
+using u32   = uint32_t;
 
-typedef  int64_t          s64;
-typedef uint64_t          u64;
+using s64   = int64_t;
+using u64   = uint64_t;
 
-typedef boost::multiprecision::int128_t   s128;
-typedef boost::multiprecision::uint128_t  u128;
+using s128  = boost::multiprecision::int128_t;
+using u128  = boost::multiprecision::uint128_t;
 
-typedef boost::multiprecision::int256_t   s256;
-typedef boost::multiprecision::uint256_t  u256;
+using s256  = boost::multiprecision::int256_t;
+using u256  = boost::multiprecision::uint256_t;
 
-typedef boost::multiprecision::int512_t   s512;
-typedef boost::multiprecision::uint512_t  u512;
+using s512  = boost::multiprecision::int512_t;
+using u512  = boost::multiprecision::uint512_t;
 
-typedef boost::multiprecision::int1024_t  s1024;
-typedef boost::multiprecision::uint1024_t u1024;
+using s1024 = boost::multiprecision::int1024_t;
+using u1024 = boost::multiprecision::uint1024_t;
 
-typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
+using ap_int = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<
   0, 0,
   boost::multiprecision::signed_magnitude,
-  boost::multiprecision::unchecked>>
-  ap_int;
+  boost::multiprecision::unchecked>>;
 
 // boost::multiprecision::cpp_int doesn't support arbitrary unsigned int
-typedef ap_int ap_uint;
+using ap_uint = ap_int;
 
 class MEDUSA_EXPORT BitVector
 {
@@ -98,7 +97,7 @@ public:
   template<typename _Ty>
   typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo(void) const
   {
-    return m_Value.convert_to<u8>() ? true : false;
+    return m_Value.convert_to<u8>() != 0;
   }
 
   template<typename _Ty>
@@ -251,9 +250,9 @@ template<> float  BitVector::ConvertTo<float> (void) const;
 template<> double BitVector::ConvertTo<double>(void) const;
 
 // Address type
-typedef u16 BaseType;
-typedef u64 OffsetType;
-typedef u64 ImageBaseType;
+using BaseType     = u16;
+using OffsetType   = u64;
+using ImageBaseType = u64;
 
 //// Architecture
 //class Tag
@@ -287,16 +286,16 @@ typedef u64 ImageBaseType;
 //  u32 m_Value;
 //};
 
-typedef u32 TagType;
-typedef u32 Tag/*Type*/;
+using TagType = u32;
+using Tag     = u32;
 inline constexpr Tag/*Type*/ MakeTag(u8 A, u8 B, u8 C, u8 D)
 {
   return A << 24 | B << 16 | C << 8 | D << 0;
 }
 
 // Misc
-typedef boost::uuids::uuid      Id;
-typedef std::filesystem::path Path;
+using Id   = boost::uuids::uuid;
+using Path = std::filesystem::path;
 
 
 MEDUSA_NAMESPACE_END
@@ -308,10 +307,10 @@ MEDUSA_NAMESPACE_END
 
 namespace std
 {
-  template<> struct make_signed<medusa::u128 > { typedef medusa::s128  type; };
-  template<> struct make_signed<medusa::u256 > { typedef medusa::s256  type; };
-  template<> struct make_signed<medusa::u512 > { typedef medusa::s512  type; };
-  template<> struct make_signed<medusa::u1024> { typedef medusa::s1024 type; };
+  template<> struct make_signed<medusa::u128 > { using type = medusa::s128;  };
+  template<> struct make_signed<medusa::u256 > { using type = medusa::s256;  };
+  template<> struct make_signed<medusa::u512 > { using type = medusa::s512;  };
+  template<> struct make_signed<medusa::u1024> { using type = medusa::s1024; };
 }
 
 #endif // MEDUSA_TYPES_HPP

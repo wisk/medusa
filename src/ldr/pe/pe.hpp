@@ -256,7 +256,7 @@ struct PeExportDirectory
 struct PeThunkData32
 {
   void Swap(EEndianness Endianness);
-  bool IsOrdinal(void) const { return Ordinal & PE_ORDINAL_FLAG32 ? true : false; }
+  bool IsOrdinal(void) const { return (Ordinal & PE_ORDINAL_FLAG32) != 0; }
   u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
   union
   {
@@ -270,7 +270,7 @@ struct PeThunkData32
 struct PeThunkData64
 {
   void Swap(EEndianness Endianness);
-  bool IsOrdinal(void) const { return Ordinal & PE_ORDINAL_FLAG64 ? true : false; }
+  bool IsOrdinal(void) const { return (Ordinal & PE_ORDINAL_FLAG64) != 0; }
   u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
   union
   {
@@ -292,30 +292,30 @@ template<int bit> struct PeTraits {};
 
 template<> struct PeTraits<32>
 {
-  typedef PeDosHeader        DosHeader;
-  typedef PeFileHeader       FileHeader;
-  typedef PeDataDirectory    DataDirectory;
-  typedef PeOptionalHeader32 OptionalHeader;
-  typedef PeNtHeaders32      NtHeaders;
-  typedef PeSectionHeader    SectionHeader;
-  typedef PeImportDescriptor ImportDescriptor;
-  typedef PeThunkData32      ThunkData;
-  typedef PeImportByName     ImportByName;
-  typedef PeExportDirectory  ExportDirectory;
+  using DosHeader        = PeDosHeader;
+  using FileHeader       = PeFileHeader;
+  using DataDirectory    = PeDataDirectory;
+  using OptionalHeader   = PeOptionalHeader32;
+  using NtHeaders        = PeNtHeaders32;
+  using SectionHeader    = PeSectionHeader;
+  using ImportDescriptor = PeImportDescriptor;
+  using ThunkData        = PeThunkData32;
+  using ImportByName     = PeImportByName;
+  using ExportDirectory  = PeExportDirectory;
 };
 
 template<> struct PeTraits<64>
 {
-  typedef PeDosHeader         DosHeader;
-  typedef PeFileHeader        FileHeader;
-  typedef PeDataDirectory     DataDirectory;
-  typedef PeOptionalHeader64  OptionalHeader;
-  typedef PeNtHeaders64       NtHeaders;
-  typedef PeSectionHeader     SectionHeader;
-  typedef PeImportDescriptor  ImportDescriptor;
-  typedef PeThunkData64       ThunkData;
-  typedef PeImportByName      ImportByName;
-  typedef PeExportDirectory   ExportDirectory;
+  using DosHeader        = PeDosHeader;
+  using FileHeader       = PeFileHeader;
+  using DataDirectory    = PeDataDirectory;
+  using OptionalHeader   = PeOptionalHeader64;
+  using NtHeaders        = PeNtHeaders64;
+  using SectionHeader    = PeSectionHeader;
+  using ImportDescriptor = PeImportDescriptor;
+  using ThunkData        = PeThunkData64;
+  using ImportByName     = PeImportByName;
+  using ExportDirectory  = PeExportDirectory;
 };
 
 #endif // !LDR_PE_TYPE_HPP

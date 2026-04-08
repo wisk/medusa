@@ -28,7 +28,7 @@ public:
     Function,
   };
 
-  typedef std::shared_ptr<Detail> SPType;
+  using SPType = std::shared_ptr<Detail>;
 
   Detail(Kind Kind = Unknown, SPType spParent = nullptr, std::string const& rName = "");
   virtual ~Detail(void) {}
@@ -71,7 +71,7 @@ public:
     TypedefType,
   };
 
-  typedef std::shared_ptr<TypeDetail> SPType;
+  using SPType = std::shared_ptr<TypeDetail>;
 
   TypeDetail(std::string const& rName = "", Type Type = UnknownType, u32 BitSize = 0);
 
@@ -164,7 +164,7 @@ private:
 class MEDUSA_EXPORT TypedValueDetail : public Detail
 {
 public:
-  typedef std::list<TypedValueDetail> List;
+  using List = std::list<TypedValueDetail>;
 
   TypedValueDetail(
     std::string const& rTypeName = "", TypeDetail::Type Type = TypeDetail::UnknownType, u8 Size = 0,

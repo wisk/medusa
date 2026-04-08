@@ -46,7 +46,7 @@ public:
   }
 
 private:
-  typedef std::map< Path, void* > TModuleMap;
+  using TModuleMap = std::map< Path, void* >;
 
   void* ImplLoadLibrary(Path const& LibraryPath);
 #ifdef __MINGW32__
@@ -66,7 +66,7 @@ struct ModuleTraits
 };
 
 #define DECL_MODULE_TRAITS(mod_name, func_type, prefix, func_name)\
-  typedef ModuleTraits<func_type> mod_name;\
+  using mod_name = ModuleTraits<func_type>;\
   template<> inline char const* mod_name::GetPrefix(void) { return prefix; }\
   template<> inline char const* mod_name::GetExportedFunctionName(void) { return func_name; }
 
@@ -103,7 +103,7 @@ public:
   template<typename ExportedFunctionType>
   ExportedFunctionType LoadModule(Path const& rModPath, std::string rModName)
   {
-    typedef ModuleTraits<ExportedFunctionType> ModuleType;
+    using ModuleType = ModuleTraits<ExportedFunctionType>;
     Module Mod;
     std::string FullModName = ModuleType::GetPrefix();
     FullModName += rModName;
@@ -144,7 +144,7 @@ public:
   Compiler::SPType        MakeCompiler(std::string const& rCompilerName) const;
 
 private:
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   MutexType m_Mutex;
 
 

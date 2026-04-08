@@ -30,8 +30,8 @@ private:
   bool _DoLoadModule(Path const& rModulePath, void* const pModule, Module& rModule);
 
 public:
-  typedef std::map<std::string, TGetBinding>  BindingMap;
-  typedef std::map<std::string, TGetEmulator> EmulatorMap;
+  using BindingMap  = std::map<std::string, TGetBinding>;
+  using EmulatorMap = std::map<std::string, TGetEmulator>;
 
 
   static ModuleManager& Instance(void)
@@ -46,7 +46,7 @@ public:
   template<typename ExportedFunctionType>
   ExportedFunctionType ModuleManager::LoadModule(Path const& rModPath, std::string rModName)
   {
-    typedef ModuleTraits<ExportedFunctionType> ModuleType;
+    using ModuleType = ModuleTraits<ExportedFunctionType>;
     Module Mod;
     std::string FullModName = ModuleType::GetPrefix();
     FullModName += rModName;
@@ -79,7 +79,7 @@ public:
   Architecture::VSPType   GetArchitectures(void) const;
 
 private:
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   MutexType                m_Mutex;
 
   u32                      m_ArchIdPool;

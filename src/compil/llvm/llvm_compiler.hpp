@@ -56,7 +56,7 @@ public:
 private:
   llvm::IRBuilder<> m_Builder;
 
-  typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
+  using VarMapType = std::unordered_map<std::string, std::tuple<u32, llvm::Value*>>;
   VarMapType m_Vars;
 
   class LlvmExpressionVisitor : public ExpressionVisitor

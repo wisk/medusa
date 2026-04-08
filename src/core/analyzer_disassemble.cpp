@@ -428,8 +428,8 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
   return true;
 }
 
-  typedef std::map<Expression::SPType, Expression::SPType> SymbolicContextType;
-  typedef std::unordered_map<Address, SymbolicContextType> SymbolicContextMapType;
+  using SymbolicContextType = std::map<Expression::SPType, Expression::SPType>;
+  using SymbolicContextMapType = std::unordered_map<Address, SymbolicContextType>;
 
   bool AnalyzerDisassemble::DisassembleUsingSymbolicExecution(void)
   {
@@ -438,7 +438,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
       return true;
 
     Address::Vector Addresses;
-    typedef std::tuple<Address, Address, Graph::EdgeProperties::Type> TupleEdge;
+    using TupleEdge = std::tuple<Address, Address, Graph::EdgeProperties::Type>;
     std::vector<TupleEdge> Branches, AllBranches;
     std::unordered_map<Address, bool> VisitedAddresses;
     Address::Vector ExitAddrs;

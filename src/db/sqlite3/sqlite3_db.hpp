@@ -400,16 +400,16 @@ private:
   using StorageType = decltype(MakeStorage(""));
   std::shared_ptr<StorageType> m_spStorage;
 
-  typedef std::vector<MemoryArea> MemoryAreaCacheType;
+  using MemoryAreaCacheType = std::vector<MemoryArea>;
   mutable MemoryAreaCacheType m_MemoryAreaCache;
 
-  typedef std::vector<std::tuple<u32, OffsetType, CellData>> CellDataCacheType;
+  using CellDataCacheType = std::vector<std::tuple<u32, OffsetType, CellData>>;
   mutable CellDataCacheType m_CellDataCache;
 
-  typedef std::map<std::pair<u32, OffsetType>, bool> CellLayoutCacheType;
+  using CellLayoutCacheType = std::map<std::pair<u32, OffsetType>, bool>;
   CellLayoutCacheType m_CellLayoutCache;
 
-  typedef std::map<std::pair<u32, OffsetType>, Label> LabelCacheType;
+  using LabelCacheType = std::map<std::pair<u32, OffsetType>, Label>;
   mutable LabelCacheType m_LabelCache;
 
   static bool _FileExists(Path const& rFilePath);

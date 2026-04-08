@@ -16,8 +16,8 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Loader : public IsConfigurable
 {
 public:
-  typedef std::shared_ptr<Loader> SPType;
-  typedef std::vector<SPType>    VSPType;
+  using SPType  = std::shared_ptr<Loader>;
+  using VSPType = std::vector<SPType>;
 
   virtual             ~Loader(void) {}
 
@@ -37,7 +37,7 @@ public:
   virtual void        Analyze(Document& rDoc) const = 0;
 };
 
-typedef Loader* (*TGetLoader)(void);
+using TGetLoader = Loader* (*)();
 
 MEDUSA_NAMESPACE_END
 

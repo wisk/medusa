@@ -34,8 +34,8 @@ enum LogLevelType
 class MEDUSA_EXPORT LogWrapper
 {
 public:
-  typedef std::function<void(std::string const&)> LoggerCallback;
-  typedef LogWrapper& (*LoggerFunction)(LogWrapper&);
+  using LoggerCallback = std::function<void(std::string const&)>;
+  using LoggerFunction = LogWrapper& (*)(LogWrapper&);
 
   LogWrapper(LoggerCallback pLog, std::string const& rName, std::string& rBuffer);
 
@@ -66,7 +66,7 @@ public:
   void Unlock(void);
 
 private:
-  typedef std::recursive_mutex MutexType;
+  using MutexType = std::recursive_mutex;
 
   bool _CheckLogLevel(void) const;
 
@@ -107,7 +107,7 @@ private:
   Log(void);
   ~Log(void);
 
-  typedef std::map<std::string, std::string> LogMap;
+  using LogMap = std::map<std::string, std::string>;
 
   static LogMap                     m_LogMap;
   static LogWrapper::LoggerCallback m_pLog;

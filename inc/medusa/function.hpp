@@ -12,7 +12,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Function : public MultiCell
 {
 public:
-  typedef std::list<Function> List;
+  using List = std::list<Function>;
 
   Function(u16 Size, u16 InsnCnt);
 

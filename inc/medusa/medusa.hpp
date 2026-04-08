@@ -41,23 +41,23 @@ public:
     OperatingSystem::SPType spOperatingSystem,
     bool StartAnalyzer = true);
 
-  typedef std::tuple<std::string, std::string> Filter;
-  typedef std::function<bool (
+  using Filter = std::tuple<std::string, std::string>;
+  using AskDatabaseFunctionType = std::function<bool (
     Path& rDatabasePath,
     std::list<Filter> const& rExtensionFilter
-    )> AskDatabaseFunctionType;
+    )>;
 
   static bool IgnoreDatabasePath(
     Path& rDatabasePath,
     std::list<Filter> const& rExtensionFilter);
 
-  typedef std::function<bool (
+  using ModuleSelectorFunctionType = std::function<bool (
     BinaryStream::SPType& rspBinStrm,
     Database::SPType& rspDatabase,
     Loader::SPType& rspLoader,
     Architecture::VSPType& rspArchitectures,
     OperatingSystem::SPType& rspOperatingSystem
-    )> ModuleSelectorFunctionType;
+    )>;
 
   static bool DefaultModuleSelector(
     BinaryStream::SPType& rspBinStrm,
@@ -66,7 +66,7 @@ public:
     Architecture::VSPType& rspArchitectures,
     OperatingSystem::SPType& rspOperatingSystem);
 
-  typedef std::function<bool (void)> FunctionType;
+  using FunctionType = std::function<bool (void)>;
 
   bool NewDocument(
     BinaryStream::SPType spBinStrm,
@@ -126,7 +126,7 @@ private:
   Document    m_Document;
   Analyzer    m_Analyzer;
 
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   mutable MutexType  m_Mutex;
 };
 

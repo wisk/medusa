@@ -31,7 +31,7 @@ private:
   static std::unordered_map<std::string, std::string> _ReadIni(std::filesystem::path const& rPath);
   static bool _WriteIni(std::filesystem::path const& rPath, std::unordered_map<std::string, std::string> const& rData);
 
-  typedef std::mutex MutexType;
+  using MutexType = std::mutex;
   mutable MutexType m_Mutex;
 
   std::filesystem::path m_CfgPath;

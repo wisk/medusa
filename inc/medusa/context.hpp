@@ -18,7 +18,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT CpuContext
 {
 public:
-  typedef std::list<u32> RegisterList;
+  using RegisterList = std::list<u32>;
 
   virtual ~CpuContext() {}
 
@@ -69,7 +69,7 @@ public:
 
 protected:
   CpuInformation const& m_rCpuInfo;
-  typedef std::unordered_map<Address, u64> AddressMap;
+  using AddressMap = std::unordered_map<Address, u64>;
   AddressMap m_AddressMap;
   u32 m_Exception;
   mutable std::mutex m_CpuLock;
@@ -106,7 +106,7 @@ public:
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
   ~MemoryContext(void);
 
-  typedef std::function<void (MemoryChunk const& rMemChunk)> CallbackType;
+  using CallbackType = std::function<void (MemoryChunk const& rMemChunk)>;
   void ForEachMemoryChunk(CallbackType Callback);
   virtual bool ReadMemory(u64 LinAddr, void* pVal, u32 Size) const;
   template<typename _MemTy>
@@ -137,7 +137,7 @@ protected:
 
   CpuInformation const& m_rCpuInfo;
 
-  typedef std::vector<MemoryChunk> MemoryChunksType;
+  using MemoryChunksType = std::vector<MemoryChunk>;
   MemoryChunksType m_Memories;
   mutable std::recursive_mutex m_MemoryLock;
 

@@ -56,16 +56,16 @@ public:
   virtual bool InvalidateCache(void);
 
 private:
-  typedef bool (*BasicBlockCode)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
+  using BasicBlockCode = bool (*)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
 
   llvm::IRBuilder<>             m_Builder;
 
-  typedef std::unordered_map<std::string, std::tuple<u32, llvm::Value*>> VarMapType;
+  using VarMapType = std::unordered_map<std::string, std::tuple<u32, llvm::Value*>>;
   VarMapType m_Vars;
 
   // TODO: Implement InvalidateCache to handle self-modifying code
   // TODO: Implement a method in CpuContext to get the current address (we can't always rely on CpuInformation::ProgramPointerRegister)
-  typedef std::unordered_map<u64, BasicBlockCode>   FunctionCacheType;
+  using FunctionCacheType = std::unordered_map<u64, BasicBlockCode>;
   FunctionCacheType             m_FunctionCache;
 
   class LlvmJitHelper

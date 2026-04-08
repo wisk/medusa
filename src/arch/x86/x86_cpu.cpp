@@ -77,7 +77,7 @@ bool X86Architecture::X86CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSi
 #define READ_S(seg)   *reinterpret_cast<u16 *>(pVal) = m_Context.seg;
 #define READ_R_E(reg) *reinterpret_cast<u32 *>(pVal) = m_Context.reg.e;
 #define READ_R_R(reg) *reinterpret_cast<u64 *>(pVal) = m_Context.reg.r;
-#define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
+#define READ_F(flg)   *reinterpret_cast<bool*>(pVal) = (m_Context.flg) != 0;
 #define READ_R_X(reg) ReadSseRegister<128>(m_Context.reg, pVal);
 
   switch (Reg)
@@ -214,7 +214,7 @@ bool X86Architecture::X86CpuContext::WriteRegister(u32 Reg, void const* pVal, u3
 #define WRITE_S(seg)   m_Context.seg     = *reinterpret_cast<u16 const*>(pVal);
 #define WRITE_R_E(reg) m_Context.reg.r   = *reinterpret_cast<u32 const*>(pVal); /* AMD64 clears 32MSB of register */
 #define WRITE_R_R(reg) m_Context.reg.r   = *reinterpret_cast<u64 const*>(pVal);
-#define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) ? true : false;
+#define WRITE_F(flg)   m_Context.flg     = *reinterpret_cast<u8  const*>(pVal) != 0;
 #define WRITE_R_X(reg) WriteSseRegister<128>(m_Context.reg, pVal);
 
 

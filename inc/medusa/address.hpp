@@ -34,7 +34,7 @@ public:
     LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
   };
 
-  typedef std::vector<Address> Vector;
+  using Vector = std::vector<Address>;
 
   /*!
    * \param Type defines the kind of address.

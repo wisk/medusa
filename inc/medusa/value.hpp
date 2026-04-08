@@ -16,7 +16,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Value : public Cell
 {
 public:
-  typedef std::shared_ptr<Value> SPType;
+  using SPType = std::shared_ptr<Value>;
 
   Value(u8 SubType = ValueDetail::HexadecimalType, u16 Length = 1)
     : Cell(Cell::ValueType, SubType, Length)

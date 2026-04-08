@@ -10,23 +10,23 @@ template<int N> struct ElfTraits
 
 template<> struct ElfTraits<32>
 {
-  typedef Elf32_Half    Half;
-  typedef Elf32_Word    Word;
-  typedef Elf32_Sword   Sword;
-  typedef Elf32_Xword   Xword;
-  typedef Elf32_Sxword  Sxword;
-  typedef Elf32_Addr    Addr;
-  typedef Elf32_Off     Off;
-  typedef Elf32_Section Section;
-  typedef Elf32_Versym  Versym;
+  using Half    = Elf32_Half;
+  using Word    = Elf32_Word;
+  using Sword   = Elf32_Sword;
+  using Xword   = Elf32_Xword;
+  using Sxword  = Elf32_Sxword;
+  using Addr    = Elf32_Addr;
+  using Off     = Elf32_Off;
+  using Section = Elf32_Section;
+  using Versym  = Elf32_Versym;
 
-  typedef Elf32_Ehdr    Ehdr;
-  typedef Elf32_Shdr    Shdr;
-  typedef Elf32_Phdr    Phdr;
-  typedef Elf32_Sym     Sym;
-  typedef Elf32_Rel     Rel;
-  typedef Elf32_Rela    Rela;
-  typedef Elf32_Dyn     Dyn;
+  using Ehdr = Elf32_Ehdr;
+  using Shdr = Elf32_Shdr;
+  using Phdr = Elf32_Phdr;
+  using Sym  = Elf32_Sym;
+  using Rel  = Elf32_Rel;
+  using Rela = Elf32_Rela;
+  using Dyn  = Elf32_Dyn;
 
   static void EndianSwap(Ehdr& rEhdr, EEndianness Endianness)
   {
@@ -124,23 +124,23 @@ template<> struct ElfTraits<32>
 
 template<> struct ElfTraits<64>
 {
-  typedef Elf64_Half    Half;
-  typedef Elf64_Word    Word;
-  typedef Elf64_Sword   Sword;
-  typedef Elf64_Xword   Xword;
-  typedef Elf64_Sxword  Sxword;
-  typedef Elf64_Addr    Addr;
-  typedef Elf64_Off     Off;
-  typedef Elf64_Section Section;
-  typedef Elf64_Versym  Versym;
+  using Half    = Elf64_Half;
+  using Word    = Elf64_Word;
+  using Sword   = Elf64_Sword;
+  using Xword   = Elf64_Xword;
+  using Sxword  = Elf64_Sxword;
+  using Addr    = Elf64_Addr;
+  using Off     = Elf64_Off;
+  using Section = Elf64_Section;
+  using Versym  = Elf64_Versym;
 
-  typedef Elf64_Ehdr    Ehdr;
-  typedef Elf64_Shdr    Shdr;
-  typedef Elf64_Phdr    Phdr;
-  typedef Elf64_Sym     Sym;
-  typedef Elf64_Rel     Rel;
-  typedef Elf64_Rela    Rela;
-  typedef Elf64_Dyn     Dyn;
+  using Ehdr = Elf64_Ehdr;
+  using Shdr = Elf64_Shdr;
+  using Phdr = Elf64_Phdr;
+  using Sym  = Elf64_Sym;
+  using Rel  = Elf64_Rel;
+  using Rela = Elf64_Rela;
+  using Dyn  = Elf64_Dyn;
 
   static void EndianSwap(Ehdr& rEhdr, EEndianness Endianness)
   {

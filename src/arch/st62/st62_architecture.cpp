@@ -86,7 +86,7 @@ u32 St62Architecture::ST62CpuInformation::GetSizeOfRegisterInBit(u32 Id) const
 
 bool St62Architecture::St62CpuContext::ReadRegister(u32 Reg, void* pVal, u32 BitSize) const
 {
-#define READ_F(flg)        if (BitSize != 1)  return false; *reinterpret_cast<bool*>(pVal) = (m_Context.flg) ? true : false;
+#define READ_F(flg)        if (BitSize != 1)  return false; *reinterpret_cast<bool*>(pVal) = (m_Context.flg) != 0;
 #define READ_REGISTER(reg) if (BitSize != 8)  return false; *reinterpret_cast<u8  *>(pVal) = m_Context.reg;
 #define READ_PC(reg)       if (BitSize != 16) return false; *reinterpret_cast<u16 *>(pVal) = m_Context.reg;
   switch (Reg)
@@ -116,7 +116,7 @@ bool St62Architecture::St62CpuContext::ReadRegister(u32 Reg, void* pVal, u32 Bit
 
 bool St62Architecture::St62CpuContext::WriteRegister(u32 Reg, void const* pVal, u32 BitSize)
 {
-#define WRITE_F(flg)        if (BitSize != 1)  return false; m_Context.flg = *reinterpret_cast<u8 const*>(pVal) ? true : false;
+#define WRITE_F(flg)        if (BitSize != 1)  return false; m_Context.flg = *reinterpret_cast<u8 const*>(pVal) != 0;
 #define WRITE_REGISTER(reg) if (BitSize != 8)  return false; m_Context.reg = *reinterpret_cast<u8 const*>(pVal);
 #define WRITE_PC(reg)       if (BitSize != 16) return false; m_Context.reg = *reinterpret_cast<u16 const*>(pVal);
   switch (Reg)

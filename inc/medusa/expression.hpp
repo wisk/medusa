@@ -28,7 +28,7 @@ namespace Track
     std::unordered_map<u32, Address> m_TrackedId;
   };
 
-  typedef std::tuple<u32, Address> Id;
+  using Id = std::tuple<u32, Address>;
 
   class MEDUSA_EXPORT BackTrackContext
   {
@@ -48,11 +48,11 @@ namespace Track
 class MEDUSA_EXPORT Expression : public std::enable_shared_from_this<Expression>
 {
 public:
-  typedef std::shared_ptr<Expression> SPType;
-  typedef std::list<Expression::SPType> LSPType;
-  typedef std::vector<Expression::SPType> VSPType;
+  using SPType = std::shared_ptr<Expression>;
+  using LSPType = std::list<Expression::SPType>;
+  using VSPType = std::vector<Expression::SPType>;
 
-  typedef std::deque<BitVector> DataContainerType;
+  using DataContainerType = std::deque<BitVector>;
 
   enum Kind
   {
@@ -121,7 +121,7 @@ typename T::SPType expr_cast(Expression::SPType spExpr)
 
 #define DECL_EXPR(EXPR_NAME, EXPR_KIND, BASE_EXPR_NAME)\
   public:\
-  typedef std::shared_ptr<EXPR_NAME> SPType;\
+  using SPType = std::shared_ptr<EXPR_NAME>;\
   virtual Kind GetClassKind(void) const { return EXPR_KIND; }\
   static  Kind GetStaticClassKind(void) { return EXPR_KIND; }\
   virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == EXPR_KIND || BASE_EXPR_NAME::IsKindOf(ExprKind); }
@@ -223,7 +223,7 @@ private:
 class MEDUSA_EXPORT ConditionExpression : public Expression
 {
 public:
-  typedef std::shared_ptr<ConditionExpression> SPType;
+  using SPType = std::shared_ptr<ConditionExpression>;
 
   enum Type
   {

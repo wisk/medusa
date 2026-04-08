@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Emulator
 {
 public:
-  typedef std::shared_ptr<Emulator> SPType;
+  using SPType = std::shared_ptr<Emulator>;
 
   Emulator(void);
   virtual ~Emulator(void);
@@ -76,7 +76,7 @@ public:
     HookOnExecute = 0x4,
   };
 
-  typedef std::function<ReturnType(CpuContext*, MemoryContext*, Address const&)> HookCallback;
+  using HookCallback = std::function<ReturnType(CpuContext*, MemoryContext*, Address const&)>;
 
   virtual bool AddHookOnInstruction(HookCallback InsnCb);
   virtual bool AddHook(Address const& rAddress, Emulator::HookType Type, HookCallback Callback);
@@ -88,7 +88,7 @@ public:
   virtual bool InvalidateCache(void);
 
 protected:
-  typedef std::function<bool (Address const&, Instruction&, Architecture&, u8)> DisasmCbType;
+  using DisasmCbType = std::function<bool (Address const&, Instruction&, Architecture&, u8)>;
   bool _Disassemble(Address const& rAddress, DisasmCbType Cb);
 
   // Semantic cache
@@ -106,15 +106,15 @@ protected:
   CpuInformation const* m_pCpuInfo;
   CpuContext*           m_pCpuCtxt;
   MemoryContext*        m_pMemCtxt;
-  typedef std::unordered_map<Address, HookInformation> HookAddressHashMap;
+  using HookAddressHashMap = std::unordered_map<Address, HookInformation>;
   HookAddressHashMap    m_Hooks;
   HookCallback          m_InsnCb;
 
-  typedef std::unordered_map<Address, Expression::VSPType> SemanticCacheType;
+  using SemanticCacheType = std::unordered_map<Address, Expression::VSPType>;
   SemanticCacheType m_SemCache;
 };
 
-typedef Emulator* (*TGetEmulator)(void);
+using TGetEmulator = Emulator* (*)();
 
 MEDUSA_NAMESPACE_END
 

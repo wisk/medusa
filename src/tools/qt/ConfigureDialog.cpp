@@ -322,7 +322,7 @@ void ConfigureDialog::ConfigurationVisitor::operator()(medusa::ConfigurationMode
 
   auto pChkBox = new QCheckBox;
   m_pWidget = pChkBox;
-  pChkBox->setChecked(rBool.GetValue() ? true : false);
+  pChkBox->setChecked(rBool.GetValue());
   connect(pChkBox, &QCheckBox::toggled, [&](bool Toggled)
   {
     m_rCfgMdl.SetBoolean(rBool.GetName(), Toggled ? 1 : 0);
