@@ -94,28 +94,30 @@ public:
 
   explicit BitVector(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
-  template<typename _Ty>
-  typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo() const
+  template<typename T>
+    requires std::is_same_v<T, bool>
+  T ConvertTo() const
   {
     return m_Value.convert_to<u8>() != 0;
   }
 
-  template<typename _Ty>
-  typename std::enable_if<boost::multiprecision::is_signed_number<_Ty>::value, _Ty>::type ConvertTo() const
+  template<typename T>
+    requires boost::multiprecision::is_signed_number<T>::value
+  T ConvertTo() const
   {
-    return m_Value.convert_to<_Ty>();
+    return m_Value.convert_to<T>();
   }
 
-  template<typename _Ty>
-  typename std::enable_if<boost::multiprecision::is_unsigned_number<_Ty>::value, _Ty>::type ConvertTo() const
+  template<typename T>
+    requires boost::multiprecision::is_unsigned_number<T>::value
+  T ConvertTo() const
   {
-
-    auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
+    auto Res = static_cast<T>(m_Value.convert_to<typename std::make_signed<T>::type>());
     if (Res == 0)
       return 0;
     if (m_Value.backend().sign())
     {
-      _Ty Mask = 1;
+      T Mask = 1;
       Mask <<= m_BitSize;
       --Mask;
       auto Msb = boost::multiprecision::msb(m_Value);

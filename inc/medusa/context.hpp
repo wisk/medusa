@@ -28,7 +28,7 @@ public:
     AddressExecution,
   };
 
-  CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
+  explicit CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
   [[nodiscard]] virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const = 0;
   template<typename _RegTy>
@@ -103,7 +103,7 @@ public:
     { return m_LinearAddress == LinAddr; }
   };
 
-  MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
+  explicit MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
   ~MemoryContext();
 
   using CallbackType = std::function<void (MemoryChunk const& rMemChunk)>;

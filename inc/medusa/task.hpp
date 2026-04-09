@@ -24,7 +24,7 @@ class TaskManager
 public:
   using NotifyFunctionType = std::function<void (Task const*)>;
 
-  TaskManager(NotifyFunctionType const& rNotify);
+  explicit TaskManager(NotifyFunctionType const& rNotify);
   ~TaskManager();
 
   void Start();

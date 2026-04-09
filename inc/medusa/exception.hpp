@@ -13,7 +13,7 @@ class MEDUSA_EXPORT Exception
 {
 public:
   Exception()                                  : m_ExceptionMessage("Unknown exception")  {}
-  Exception(std::string const& ExceptionMessage)  : m_ExceptionMessage(ExceptionMessage)      {}
+  explicit Exception(std::string const& ExceptionMessage)  : m_ExceptionMessage(ExceptionMessage)      {}
   ~Exception() {}
 
   std::string const& What() const { return m_ExceptionMessage; }
@@ -27,7 +27,7 @@ class MEDUSA_EXPORT Exception_System : public Exception
 {
 public:
   Exception_System() : Exception(ErrorCodeToMessage()) {}
-  Exception_System(std::string const& FunctionName) : Exception("")
+  explicit Exception_System(std::string const& FunctionName) : Exception("")
   { m_ExceptionMessage = FunctionName; m_ExceptionMessage += ": "; m_ExceptionMessage += ErrorCodeToMessage(); }
   ~Exception_System() {}
 
@@ -40,7 +40,7 @@ class MEDUSA_EXPORT Exception_NotImplemented : public Exception
 {
 public:
   Exception_NotImplemented() : Exception("Not implemented") {}
-  Exception_NotImplemented(std::string const& FeatureName) : Exception("")
+  explicit Exception_NotImplemented(std::string const& FeatureName) : Exception("")
   { m_ExceptionMessage = FeatureName + ": not implemented"; }
   ~Exception_NotImplemented() {}
 };

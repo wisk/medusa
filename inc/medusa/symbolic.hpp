@@ -76,7 +76,7 @@ public:
     std::map<Address, Block> m_Blocks;
   };
 
-  Symbolic(Document &rDoc);
+  explicit Symbolic(Document &rDoc);
   ~Symbolic();
 
   using Callback = std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::Vector& rNextAddresses)>;
@@ -101,7 +101,7 @@ private:
 class MEDUSA_EXPORT Symbolic2
 {
 public:
-  Symbolic2(Document& rDoc);
+  explicit Symbolic2(Document& rDoc);
 
   bool AddBlock(Address const& rAddr);
   bool GetBlock(Address const& rAddr, Expression::VSPType& rBlocks);

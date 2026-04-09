@@ -52,7 +52,7 @@ protected:
 class MEDUSA_EXPORT NormalizeExpression : public ExpressionSimplifier
 {
 public:
-  NormalizeExpression(Expression::SPType spExpr);
+  explicit NormalizeExpression(Expression::SPType spExpr);
 
   bool _RunOnce() override;
   bool _Finalize() override;
@@ -64,7 +64,7 @@ protected:
 class MEDUSA_EXPORT ConstantPropagation : public ExpressionSimplifier
 {
 public:
-  ConstantPropagation(Expression::SPType spExpr);
+  explicit ConstantPropagation(Expression::SPType spExpr);
 
   bool _RunOnce() override;
   bool _Finalize() override;
@@ -76,7 +76,7 @@ protected:
 class MEDUSA_EXPORT ExpressionRewriter : public ExpressionSimplifier
 {
 public:
-  ExpressionRewriter(Expression::SPType& rspExpr);
+  explicit ExpressionRewriter(Expression::SPType& rspExpr);
 
 protected:
   bool _RunOnce() override;

@@ -30,7 +30,7 @@ public:
 
   using SPType = std::shared_ptr<Detail>;
 
-  Detail(Kind Kind = Unknown, SPType spParent = nullptr, std::string const& rName = "");
+  explicit Detail(Kind Kind = Unknown, SPType spParent = nullptr, std::string const& rName = "");
   virtual ~Detail() = default;
 
   bool IsValid() const { return m_IsValid; }
@@ -73,7 +73,7 @@ public:
 
   using SPType = std::shared_ptr<TypeDetail>;
 
-  TypeDetail(std::string const& rName = "", Type Type = UnknownType, u32 BitSize = 0);
+  explicit TypeDetail(std::string const& rName = "", Type Type = UnknownType, u32 BitSize = 0);
 
   virtual Type        GetType() const;
   virtual u32         GetSize() const;
@@ -150,7 +150,7 @@ public:
     DefaultType     = HexadecimalType,
   };
 
-  ValueDetail(std::string const& rName = "", Type ValueType = UnknownType, Id RefId = Id());
+  explicit ValueDetail(std::string const& rName = "", Type ValueType = UnknownType, Id RefId = Id());
 
   virtual std::string Dump()     const;
   Type                GetType()  const;
@@ -223,7 +223,7 @@ private:
 class MEDUSA_EXPORT StructureDetail : public TypeDetail
 {
 public:
-  StructureDetail(std::string const& rName = "", u32 Alignment = 0);
+  explicit StructureDetail(std::string const& rName = "", u32 Alignment = 0);
 
   virtual u32 GetSize() const;
   virtual std::string Dump() const;
@@ -256,7 +256,7 @@ public:
   //{
   //};
 
-  FunctionDetail(std::string const& rName = "",
+  explicit FunctionDetail(std::string const& rName = "",
     TypeDetail const& rReturnType = TypeDetail(),
     TypedValueDetail::List const& rParameters = TypedValueDetail::List(),
     std::string const& rCallConvName = "");

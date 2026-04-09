@@ -227,7 +227,7 @@ class MEDUSA_EXPORT BindExpression : public Expression
   DECL_EXPR(BindExpression, Expression::Kind::Bind, Expression)
 
 public:
-  BindExpression(Expression::LSPType const& rExprs);
+  explicit BindExpression(Expression::LSPType const& rExprs);
   virtual ~BindExpression();
 
   Expression::LSPType& GetBoundExpressions() { return m_Expressions; }
@@ -431,7 +431,7 @@ public:
   };
 
   //! pLeftExpr and pRightExpr must be allocated by standard new
-  OperationExpression(Type OpType);
+  explicit OperationExpression(Type OpType);
   virtual ~OperationExpression();
 
   virtual std::string ToString() const;
@@ -504,7 +504,7 @@ class MEDUSA_EXPORT BitVectorExpression : public Expression
 
 public:
   BitVectorExpression(u16 BitSize, ap_int Value);
-  BitVectorExpression(BitVector const& rValue);
+  explicit BitVectorExpression(BitVector const& rValue);
   virtual ~BitVectorExpression() = default;
 
   virtual std::string ToString() const;

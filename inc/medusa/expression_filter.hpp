@@ -13,7 +13,7 @@ namespace medusa
   public:
     using SPType = std::shared_ptr<ExpressionPattern>;
 
-    ExpressionPattern(std::string const& rPatternName = "");
+    explicit ExpressionPattern(std::string const& rPatternName = "");
 
     virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
     {
@@ -34,7 +34,7 @@ namespace medusa
   class MEDUSA_EXPORT ExpressionFilter
   {
   public:
-    ExpressionFilter(ExpressionPattern::SPType spPattern);
+    explicit ExpressionFilter(ExpressionPattern::SPType spPattern);
 
     bool Execute(Expression::SPType spExpr);
     Expression::SPType GetExpression(std::string const& rExprName);
@@ -52,7 +52,7 @@ namespace medusa
     class MEDUSA_EXPORT Any : public ExpressionPattern
     {
     public:
-      Any(std::string const& rPatternName) : ExpressionPattern(rPatternName) {}
+      explicit Any(std::string const& rPatternName) : ExpressionPattern(rPatternName) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
       {
@@ -71,7 +71,7 @@ namespace medusa
     public:
       using Type = std::function<bool(Expression::SPType spExpr)>;
 
-      Callback(Type Callback) : m_Callback(Callback) {}
+      explicit Callback(Type Callback) : m_Callback(Callback) {}
       Callback(std::string const& rPatternName, Type Callback) : ExpressionPattern(rPatternName), m_Callback(Callback) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
@@ -94,7 +94,7 @@ namespace medusa
     class MEDUSA_EXPORT Memory : public ExpressionPattern
     {
     public:
-      Memory(ExpressionPattern::SPType spOffsetPattern)
+      explicit Memory(ExpressionPattern::SPType spOffsetPattern)
         : m_spOffsetPattern(spOffsetPattern) {}
       Memory(ExpressionPattern::SPType spBasePattern, ExpressionPattern::SPType spOffsetPattern)
         : m_spBasePattern(spBasePattern), m_spOffsetPattern(spOffsetPattern) {}
@@ -134,7 +134,7 @@ namespace medusa
     class AnyUnary : public ExpressionPattern
     {
     public:
-      AnyUnary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
+      explicit AnyUnary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
       AnyUnary(std::string const& rPatternName, ExpressionPattern::SPType spPattern) : ExpressionPattern(rPatternName), m_spPattern(spPattern) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const
@@ -163,7 +163,7 @@ namespace medusa
     class Unary : public ExpressionPattern
     {
     public:
-      Unary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
+      explicit Unary(ExpressionPattern::SPType spPattern) : m_spPattern(spPattern) {}
       Unary(std::string const& rPatternName, ExpressionPattern::SPType spPattern) : ExpressionPattern(rPatternName), m_spPattern(spPattern) {}
 
       virtual bool Filter(NamedExpressionType& rNamedExprs, Expression::SPType spExpr) const

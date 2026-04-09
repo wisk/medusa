@@ -24,7 +24,7 @@ public:
     InvalidRegister
   };
 
-  CpuInformation(Tag ArchTag = MEDUSA_ARCH_UNK) : m_ArchTag(ArchTag) {}
+  explicit CpuInformation(Tag ArchTag = MEDUSA_ARCH_UNK) : m_ArchTag(ArchTag) {}
   Tag          GetArchitectureTag() const { return m_ArchTag; }
 
   virtual char const* ConvertIdentifierToName(u32 Id)                   const = 0;

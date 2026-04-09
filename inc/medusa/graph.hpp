@@ -29,7 +29,7 @@ namespace medusa
     public:
 
       VertexProperties();
-      VertexProperties(Address::Vector const& rAddrs);
+      explicit VertexProperties(Address::Vector const& rAddrs);
 
       VertexProperties& operator=(VertexProperties const& rVtxProp);
 

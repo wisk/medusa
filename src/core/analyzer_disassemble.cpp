@@ -3,6 +3,8 @@
 #include "medusa/expression_visitor.hpp"
 #include "medusa/graph.hpp"
 
+#include <stack>
+
 namespace medusa
 {
   bool AnalyzerDisassemble::DisassembleOneInstruction(Tag ArchTag, u8 ArchMode)

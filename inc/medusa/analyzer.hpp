@@ -9,8 +9,6 @@
 
 #include <string>
 
-#include <boost/graph/graphviz.hpp>
-
 MEDUSA_NAMESPACE_BEGIN
 
 class AnalyzerPass

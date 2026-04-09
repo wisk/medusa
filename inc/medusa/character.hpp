@@ -17,11 +17,11 @@ public:
     AsciiCharacterType
   };
 
-  Character(u8 SubType = UnknownCharacterType, u16 Length = 1)
+  explicit Character(u8 SubType = UnknownCharacterType, u16 Length = 1)
     : Cell(Cell::CharacterType, SubType, Length)
   {}
 
-  Character(CellData::SPType spDna) : Cell(spDna) {}
+  explicit Character(CellData::SPType spDna) : Cell(spDna) {}
 };
 
 MEDUSA_NAMESPACE_END

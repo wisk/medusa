@@ -33,7 +33,7 @@ public:
   static constexpr Type StructType   = Type::StructType;
   static constexpr Type ArrayType    = Type::ArrayType;
 
-  MultiCell(Type McType = Type::UnknownType, u16 Size = 0x0)
+  explicit MultiCell(Type McType = Type::UnknownType, u16 Size = 0x0)
     : m_Type(McType)
     , m_Size(Size)
   {}

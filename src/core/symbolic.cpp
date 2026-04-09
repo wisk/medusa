@@ -3,6 +3,8 @@
 #include "medusa/expression_simplifier.hpp"
 #include "medusa/expression_visitor.hpp"
 
+#include <stack>
+
 MEDUSA_NAMESPACE_USE;
 
 Symbolic::Block::Block(u32 PcRegId) : m_PcRegId(PcRegId)

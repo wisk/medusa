@@ -51,9 +51,9 @@ public:
    * \param Opcode is the unique id for a kind of instruction.
    * \param Length is the length of this instruction.
    */
-  Instruction(char const* pName = nullptr, u32 Opcode = InvalidOpcode, u16 Length = 0);
+  explicit Instruction(char const* pName = nullptr, u32 Opcode = InvalidOpcode, u16 Length = 0);
 
-  Instruction(CellData::SPType spDna);
+  explicit Instruction(CellData::SPType spDna);
 
   ~Instruction();
 

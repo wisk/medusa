@@ -18,7 +18,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Execution
 {
 public:
-  Execution(Document& rDoc);
+  explicit Execution(Document& rDoc);
   ~Execution();
 
   bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);

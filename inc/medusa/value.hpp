@@ -18,10 +18,10 @@ class MEDUSA_EXPORT Value : public Cell
 public:
   using SPType = std::shared_ptr<Value>;
 
-  Value(u8 SubType = ValueDetail::HexadecimalType, u16 Length = 1)
+  explicit Value(u8 SubType = ValueDetail::HexadecimalType, u16 Length = 1)
     : Cell(Cell::ValueType, SubType, Length)
   {}
-  Value(CellData::SPType spDna) : Cell(spDna) {}
+  explicit Value(CellData::SPType spDna) : Cell(spDna) {}
   virtual ~Value() = default;
 
   void Modify(u8&  rValue) const;

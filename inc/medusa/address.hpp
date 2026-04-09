@@ -100,7 +100,7 @@ public:
     , m_OffsetSize(64)
   {}
 
-  Address(std::string const& rAddrName);
+  explicit Address(std::string const& rAddrName);
 
   Address()
     : m_Type(UnknownType)

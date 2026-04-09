@@ -42,7 +42,7 @@ public:
   using NamedMode = std::tuple<const char*, u8>;
   using NamedModeVector = std::vector<NamedMode>;
 
-  Architecture(Tag ArchTag);
+  explicit Architecture(Tag ArchTag);
   virtual ~Architecture() = default;
 
   //! This method returns the name of the current architecture.

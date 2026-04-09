@@ -1,6 +1,8 @@
 #include "medusa/analyzer.hpp"
 #include "medusa/module.hpp"
 
+#include <stack>
+
 namespace medusa
 {
   bool AnalyzerFunction::CreateFunction()
