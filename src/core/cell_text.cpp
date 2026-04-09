@@ -53,7 +53,7 @@ PrintData::PrintData(PrintData const& rPD)
 
 PrintData& PrintData::operator()(Address const& rAddress)
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   m_CurrentAddress = rAddress;
   return *this;
 }
@@ -124,7 +124,7 @@ PrintData& PrintData::AppendNewLine()
   if (m_PrependAddress && m_CurrentText.empty())
     AppendAddress(m_CurrentAddress).AppendSpace(m_Indent);
 
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   ++m_Height;
   if (m_LineWidth > m_Width)
     m_Width = m_LineWidth;
@@ -150,7 +150,7 @@ Address::Vector PrintData::GetAddresses() const
 {
   Address::Vector Addrs;
 
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& Line : m_Lines)
     Addrs.push_back(Line.GetAddress());
   Addrs.push_back(m_CurrentAddress);
@@ -159,7 +159,7 @@ Address::Vector PrintData::GetAddresses() const
 
 bool PrintData::GetFirstAddress(Address& rAddress) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   if (m_Lines.empty())
     return false;
   rAddress = m_Lines.front().GetAddress();
@@ -168,7 +168,7 @@ bool PrintData::GetFirstAddress(Address& rAddress) const
 
 bool PrintData::GetLastAddress(Address& rAddress) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   if (m_Lines.empty())
     return false;
   rAddress = m_Lines.back().GetAddress();
@@ -179,7 +179,7 @@ std::string PrintData::GetTexts() const
 {
   std::string Texts;
 
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rLine : m_Lines)
     Texts += rLine.GetText();
   Texts += m_CurrentText;
@@ -191,7 +191,7 @@ std::vector<std::string> PrintData::GetTextLines() const
   std::vector<std::string> Lines;
   Lines.reserve(m_Lines.size());
 
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rLine : m_Lines)
     Lines.push_back(rLine.GetText());
   return Lines;
@@ -201,7 +201,7 @@ Mark::List PrintData::GetMarks() const
 {
   Mark::List Marks;
 
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rLine : m_Lines)
     for (auto const& rMark : rLine.GetMarks())
       Marks.push_back(rMark);
@@ -212,7 +212,7 @@ Mark::List PrintData::GetMarks() const
 
 bool PrintData::GetLine(u16 LineNo, u16& rOffset, LineData& rLine) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   if (m_Lines.empty())
     return false;
@@ -246,7 +246,7 @@ bool PrintData::GetLine(u16 LineNo, u16& rOffset, LineData& rLine) const
 
 bool PrintData::GetLine(Address const& rAddress, u16 Offset, LineData& rLine) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rCurLine : m_Lines)
   {
     if (rCurLine.GetAddress() == rAddress)
@@ -265,7 +265,7 @@ bool PrintData::GetLine(Address const& rAddress, u16 Offset, LineData& rLine) co
 
 u16 PrintData::GetLineNo(Address const& rAddress) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   u16 LineNo = 0x0;
   for (auto const& rCurLine : m_Lines)
     if (rCurLine.GetAddress() == rAddress)
@@ -276,7 +276,7 @@ u16 PrintData::GetLineNo(Address const& rAddress) const
 bool PrintData::GetLineOffset(Address const& rAddress, u16& rOffset) const
 {
   rOffset = 0;
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rCurLine : m_Lines)
   {
     if (rCurLine.GetAddress() == rAddress)
@@ -297,7 +297,7 @@ bool PrintData::GetOperandNo(Address const& rAddress, u16 xOffset, u16 yOffset, 
 
 bool PrintData::Contains(Address const& rAddress) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rCurLine : m_Lines)
     if (rCurLine.GetAddress() == rAddress)
       return true;
@@ -306,7 +306,7 @@ bool PrintData::Contains(Address const& rAddress) const
 
 void PrintData::ForEachLine(LineCallback Callback) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
   for (auto const& rLine : m_Lines)
     Callback(rLine.GetAddress(), rLine.GetText(), rLine.GetMarks());
 }
@@ -318,7 +318,7 @@ void PrintData::_AppendText(std::string const& rText, Mark::Type MarkType)
 
   u16 TextLen = static_cast<u16>(rText.length());
   {
-    std::lock_guard<MutexType> Lock(m_Mutex);
+    std::lock_guard Lock(m_Mutex);
     m_CurrentText.append(rText);
     m_CurrentMarks.push_back(Mark(MarkType, TextLen));
     m_LineWidth += TextLen;
@@ -330,7 +330,7 @@ void PrintData::_AppendText(std::string const& rText, Mark::Type MarkType)
 
 void PrintData::Clear()
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   m_CurrentAddress = Address();
   m_CurrentText.clear();
@@ -344,7 +344,7 @@ void PrintData::Clear()
 
 bool GraphData::AddVertex(PrintData const& rPD, u16 X, u16 Y)
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   Address VtxAddr;
   if (!rPD.GetFirstAddress(VtxAddr))
@@ -357,7 +357,7 @@ bool GraphData::AddVertex(PrintData const& rPD, u16 X, u16 Y)
 
 bool GraphData::GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   auto itVtxData = m_Map.find(rVtxAddr);
   if (itVtxData == std::end(m_Map))
@@ -369,7 +369,7 @@ bool GraphData::GetVertexPosition(Address const& rVtxAddr, u16& rX, u16& rY) con
 
 bool GraphData::SetVertexPosition(Address const& rVtxAddr, u16 X, u16 Y)
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   auto itVtxData = m_Map.find(rVtxAddr);
   if (itVtxData == std::end(m_Map))
@@ -381,7 +381,7 @@ bool GraphData::SetVertexPosition(Address const& rVtxAddr, u16 X, u16 Y)
 
 void GraphData::ForEachVertex(GraphData::VertexCallbackType CB) const
 {
-  std::lock_guard<MutexType> Lock(m_Mutex);
+  std::lock_guard Lock(m_Mutex);
 
   for (auto const& rVtxPair : m_Map)
   {

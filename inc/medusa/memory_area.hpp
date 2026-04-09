@@ -102,14 +102,14 @@ public:
     return MemArea;
   }
 
-  std::string ToString() const;
+  [[nodiscard]] std::string ToString() const;
 
   // Information methods
-  std::string const& GetName()             const { return m_Name;                    }
-  Type               GetType()             const { return m_Type;                    }
-  Access             GetAccess()           const { return m_Access;                  }
-  Tag                GetArchitectureTag()  const { return m_DefaultArchitectureTag;  }
-  u8                 GetArchitectureMode() const { return m_DefaultArchitectureMode; }
+  [[nodiscard]] std::string const& GetName()             const { return m_Name;                    }
+  [[nodiscard]] Type               GetType()             const { return m_Type;                    }
+  [[nodiscard]] Access             GetAccess()           const { return m_Access;                  }
+  [[nodiscard]] Tag                GetArchitectureTag()  const { return m_DefaultArchitectureTag;  }
+  [[nodiscard]] u8                 GetArchitectureMode() const { return m_DefaultArchitectureMode; }
 
   // Set Architecture Tag and Mode
   void SetDefaultArchitectureTag(Tag arch);
@@ -122,11 +122,11 @@ public:
   void SetArchitectureTag(Tag ArchTag)    { m_DefaultArchitectureTag = ArchTag;   }
   void SetArchitectureMode(u8 ArchMode)   { m_DefaultArchitectureMode = ArchMode; }
 
-  OffsetType     GetFileOffset()  const { return m_FileOffset;  }
-  u32            GetFileSize()    const { return m_FileSize;    }
-  Address const& GetBaseAddress() const { return m_BaseAddress; }
-  u32            GetSize()        const { return m_Size;        }
-  u32            GetId()          const { return m_Id;          }
+  [[nodiscard]] OffsetType     GetFileOffset()  const { return m_FileOffset;  }
+  [[nodiscard]] u32            GetFileSize()    const { return m_FileSize;    }
+  [[nodiscard]] Address const& GetBaseAddress() const { return m_BaseAddress; }
+  [[nodiscard]] u32            GetSize()        const { return m_Size;        }
+  [[nodiscard]] u32            GetId()          const { return m_Id;          }
 
 protected:
   u32         m_Id;

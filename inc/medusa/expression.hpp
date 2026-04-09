@@ -21,8 +21,8 @@ namespace Track
   {
   public:
     void TrackId(u32 Id, Address const& rCurAddr);
-    bool GetTrackAddress(u32 RegId, Address& rTrackedAddress);
-    bool IsEmpty() const { return m_TrackedId.empty(); }
+    [[nodiscard]] bool GetTrackAddress(u32 RegId, Address& rTrackedAddress);
+    [[nodiscard]] bool IsEmpty() const { return m_TrackedId.empty(); }
 
   private:
     std::unordered_map<u32, Address> m_TrackedId;
@@ -35,8 +35,8 @@ namespace Track
   public:
     void TrackId(Track::Id const& rId) { m_Ids.insert(rId); }
     void UntrackId(Track::Id const& rId) { m_Ids.erase(rId); }
-    bool IsTracked(Track::Id const& rId) const { return m_Ids.find(rId) != std::end(m_Ids); }
-    bool IsEmpty() const { return m_Ids.empty(); }
+    [[nodiscard]] bool IsTracked(Track::Id const& rId) const { return m_Ids.find(rId) != std::end(m_Ids); }
+    [[nodiscard]] bool IsEmpty() const { return m_Ids.empty(); }
 
   private:
     std::set<Track::Id> m_Ids;
@@ -88,25 +88,25 @@ public:
 
   static Expression::VSPType Parse(std::string const& rExpressions, CpuInformation const& rCpuInfo, u8 Mode);
 
-  virtual std::string ToString() const = 0;
-  virtual Expression::SPType Clone() const = 0;
-  virtual u32 GetBitSize() const = 0;
+  [[nodiscard]] virtual std::string ToString() const = 0;
+  [[nodiscard]] virtual Expression::SPType Clone() const = 0;
+  [[nodiscard]] virtual u32 GetBitSize() const = 0;
   virtual Expression::SPType Visit(ExpressionVisitor* pVisitor) = 0;
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
-  virtual CompareType Compare(Expression::SPType spExpr) const = 0;
+  [[nodiscard]] virtual CompareType Compare(Expression::SPType spExpr) const = 0;
 
-  virtual Kind GetClassKind() const { return Unknown; }
-  static  Kind GetStaticClassKind() { return Unknown; }
-  virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
+  [[nodiscard]] virtual Kind GetClassKind() const { return Unknown; }
+  [[nodiscard]] static  Kind GetStaticClassKind() { return Unknown; }
+  [[nodiscard]] virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
 
   virtual void   Prepare(DataContainerType& rData) const { rData.resize(1); }
-  virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const { return false; }
+  [[nodiscard]] virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const { return false; }
   virtual bool   Write(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) { return false; }
-  virtual bool   GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const { return false; }
-  virtual SPType ToAddress() const { return nullptr; }
+  [[nodiscard]] virtual bool   GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, Address& rAddress) const { return false; }
+  [[nodiscard]] virtual SPType ToAddress() const { return nullptr; }
 
   template <typename T>
-  bool IsClassOf() const { return IsKindOf(T::GetStaticClassKind()); }
+  [[nodiscard]] bool IsClassOf() const { return IsKindOf(T::GetStaticClassKind()); }
 };
 
 template <typename T>
@@ -122,9 +122,9 @@ typename T::SPType expr_cast(Expression::SPType spExpr)
 #define DECL_EXPR(EXPR_NAME, EXPR_KIND, BASE_EXPR_NAME)\
   public:\
   using SPType = std::shared_ptr<EXPR_NAME>;\
-  virtual Kind GetClassKind() const { return EXPR_KIND; }\
-  static  Kind GetStaticClassKind() { return EXPR_KIND; }\
-  virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == EXPR_KIND || BASE_EXPR_NAME::IsKindOf(ExprKind); }
+  [[nodiscard]] Kind GetClassKind() const override { return EXPR_KIND; }\
+  [[nodiscard]] static  Kind GetStaticClassKind() { return EXPR_KIND; }\
+  [[nodiscard]] bool IsKindOf(Kind ExprKind) const override { return ExprKind == EXPR_KIND || BASE_EXPR_NAME::IsKindOf(ExprKind); }
 
 
 // unary operations
@@ -818,7 +818,7 @@ namespace Expr
   MEDUSA_EXPORT Expression::SPType MakeSym(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr = nullptr);
   MEDUSA_EXPORT Expression::SPType MakeSys(std::string const& rName, Address const& rAddr);
 
-  MEDUSA_EXPORT bool TestKind(Expression::Kind Kind, Expression::SPType spExpr);
+  [[nodiscard]] MEDUSA_EXPORT bool TestKind(Expression::Kind Kind, Expression::SPType spExpr);
 }
 
 

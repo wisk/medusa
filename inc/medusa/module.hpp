@@ -94,7 +94,7 @@ public:
   static ModuleManager& Instance()
   {
     static std::mutex		mutex;
-    std::lock_guard<std::mutex> lock(mutex);
+    std::lock_guard lock(mutex);
     static ModuleManager ModMgr;
 
     return ModMgr;

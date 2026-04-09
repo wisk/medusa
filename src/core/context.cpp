@@ -6,14 +6,14 @@ MEDUSA_NAMESPACE_BEGIN
 template<>
 bool CpuContext::ReadRegister<bool>(u32 Reg, bool& rVal) const
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   return ReadRegister(Reg, &rVal, 1);
 }
 
 template<>
 bool CpuContext::WriteRegister<bool>(u32 Reg, bool const& rVal)
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   u8 Tmp = rVal ? 1 : 0;
   return WriteRegister(Reg, &Tmp, 1);
 }
@@ -49,7 +49,7 @@ namespace
 template<>
 bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
   switch (RegBitSize)
   {
@@ -68,7 +68,7 @@ bool CpuContext::ReadRegister<BitVector>(u32 Reg, BitVector& rVal) const
 template<>
 bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal)
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   auto RegBitSize = m_rCpuInfo.GetSizeOfRegisterInBit(Reg);
   switch (RegBitSize)
   {
@@ -86,7 +86,7 @@ bool CpuContext::WriteRegister<BitVector>(u32 Reg, BitVector const& rVal)
 
 bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   auto itAddr = m_AddressMap.find(Address(rLogicalAddress.GetBase(), 0x0));
   if (itAddr != std::end(m_AddressMap))
   {
@@ -100,14 +100,14 @@ bool CpuContext::Translate(Address const& rLogicalAddress, u64& rLinearAddress) 
 
 bool CpuContext::AddMapping(Address const& rLogicalAddress, u64 LinearAddress)
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   m_AddressMap[rLogicalAddress] = LinearAddress;
   return true;
 }
 
 bool CpuContext::RemoveMapping(Address const& rLogicalAddress)
 {
-  std::lock_guard<std::mutex> Lock(m_CpuLock);
+  std::lock_guard Lock(m_CpuLock);
   auto itAddr = m_AddressMap.find(rLogicalAddress);
   if (itAddr == std::end(m_AddressMap))
     return false;
@@ -140,7 +140,7 @@ namespace
 template<>
 bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   switch (rVal.GetBitSize())
   {
   default:  return false;
@@ -157,7 +157,7 @@ bool MemoryContext::ReadMemory<BitVector>(u64 LinAddr, BitVector& rVal) const
 template<>
 bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   switch (rVal.GetBitSize())
   {
   default:  return false;
@@ -173,14 +173,14 @@ bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal)
 
 MemoryContext::~MemoryContext()
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   for (auto& rMemChunk : m_Memories)
     rMemChunk.m_spMemStrm->Close();
 }
 
 bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   MemoryChunk MemChnk;
   if (!_FindMemoryChunk(LinearAddress, MemChnk))
     return false;
@@ -193,7 +193,7 @@ bool MemoryContext::ReadMemory(u64 LinearAddress, void* pValue, u32 ValueSize) c
 
 bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 ValueSize)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   MemoryChunk MemChnk;
   if (!_FindMemoryChunk(LinearAddress, MemChnk))
     return false;
@@ -206,7 +206,7 @@ bool MemoryContext::WriteMemory(u64 LinearAddress, void const* pValue, u32 Value
 
 void MemoryContext::ForEachMemoryChunk(CallbackType Callback)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   if (m_Memories.empty())
     return;
 
@@ -218,7 +218,7 @@ void MemoryContext::ForEachMemoryChunk(CallbackType Callback)
 
 bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, MemoryArea::Access& rFlags) const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   MemoryChunk MemChk;
 
   rOffset = 0;
@@ -235,7 +235,7 @@ bool MemoryContext::FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u3
 
 bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32& rSize, MemoryArea::Access& rFlags) const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
 
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
@@ -253,7 +253,7 @@ bool MemoryContext::FindMemory(u64 LinAddr, void*& prAddress, u32& rOffset, u32&
 
 bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Flags, void** ppRawMemory)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   if (ppRawMemory)
     *ppRawMemory = nullptr;
 
@@ -267,7 +267,7 @@ bool MemoryContext::AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Fla
 
 bool MemoryContext::ProtectMemory(u64 LinAddr, MemoryArea::Access Flags)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   auto itMemChnk = std::find(std::begin(m_Memories), std::end(m_Memories), LinAddr);
   if (itMemChnk == std::end(m_Memories))
     return false;
@@ -277,7 +277,7 @@ bool MemoryContext::ProtectMemory(u64 LinAddr, MemoryArea::Access Flags)
 
 bool MemoryContext::FreeMemory(u64 LinAddr)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   auto itMemChnk = std::find(std::begin(m_Memories), std::end(m_Memories), LinAddr);
   if (itMemChnk == std::end(m_Memories))
     return false;
@@ -288,7 +288,7 @@ bool MemoryContext::FreeMemory(u64 LinAddr)
 
 bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt)
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   bool Res = true;
   rDoc.ForEachMemoryArea([&](MemoryArea const& rMemArea)
   {
@@ -331,7 +331,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
 
 std::string MemoryContext::ToString() const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   if (m_Memories.empty())
     return "";
 
@@ -350,7 +350,7 @@ std::string MemoryContext::ToString() const
 
 bool MemoryContext::_FindMemoryChunk(u64 LinearAddress, MemoryChunk& rFoundMemChnk) const
 {
-  std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
+  std::lock_guard Lock(m_MemoryLock);
   for (MemoryChunk const& rMemChnk : m_Memories)
   {
 

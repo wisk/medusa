@@ -102,17 +102,17 @@ public:
   {}
 
   //! This method converts the current address to a string.
-  std::string ToString() const;
+  [[nodiscard]] std::string ToString() const;
 
   //! This method allows to mask an offset accordingly the current offset size.
-  OffsetType SanitizeOffset(OffsetType Offset) const;
+  [[nodiscard]] OffsetType SanitizeOffset(OffsetType Offset) const;
   void SanitizeOffset(OffsetType& rOffset);
 
-  Type       GetAddressingType() const { return m_Type;       }
-  BaseType   GetBase()           const { return m_Base;       }
-  OffsetType GetOffset()         const { return m_Offset;     }
-  u8         GetBaseSize()       const { return m_BaseSize;   }
-  u8         GetOffsetSize()     const { return m_OffsetSize; }
+  [[nodiscard]] Type       GetAddressingType() const { return m_Type;       }
+  [[nodiscard]] BaseType   GetBase()           const { return m_Base;       }
+  [[nodiscard]] OffsetType GetOffset()         const { return m_Offset;     }
+  [[nodiscard]] u8         GetBaseSize()       const { return m_BaseSize;   }
+  [[nodiscard]] u8         GetOffsetSize()     const { return m_OffsetSize; }
 
   // Set
   void      SetAddressingType(Type AddressingType) { m_Type       = AddressingType;             }
@@ -125,33 +125,33 @@ public:
    * \param Off is the offset of the boundary.
    * \return Returns true if this address is contained in [Off:Off+Size].
    */
-  bool IsBetween(u64 Size, OffsetType Off) const;
-  bool IsBetween(u64 Size, Address const& Addr) const;
+  [[nodiscard]] bool IsBetween(u64 Size, OffsetType Off) const;
+  [[nodiscard]] bool IsBetween(u64 Size, Address const& Addr) const;
 
   //! This method returns true if base and offset are egal.
-  bool operator==(Address const& rAddr) const;
+  [[nodiscard]] bool operator==(Address const& rAddr) const;
 
   //! This method returns true if base and offset are different.
-  bool operator!=(Address const& rAddr) const;
+  [[nodiscard]] bool operator!=(Address const& rAddr) const;
 
   //! This method returns an address where its offset is the current offset plus Off.
-  Address operator+(OffsetType Off) const;
-  Address operator+(Address const& Addr) const;
+  [[nodiscard]] Address operator+(OffsetType Off) const;
+  [[nodiscard]] Address operator+(Address const& Addr) const;
 
   //! This method add a offset to the current address offset.
   Address operator+=(OffsetType Off);
 
   //! This method returns true if both base and offset are inferior to rAddr.
-  bool operator<(Address const& rAddr) const;
+  [[nodiscard]] bool operator<(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are inferior or equal to rAddr.
-  bool operator<=(Address const& rAddr) const;
+  [[nodiscard]] bool operator<=(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are superior to rAddr.
-  bool operator>(Address const& rAddr) const;
+  [[nodiscard]] bool operator>(Address const& rAddr) const;
 
   //! This method returns true if both base and offset are superior or equal to rAddr.
-  bool operator>=(Address const& rAddr) const;
+  [[nodiscard]] bool operator>=(Address const& rAddr) const;
 
 protected:
   void SanitizeOffset() { SanitizeOffset(m_Offset); }

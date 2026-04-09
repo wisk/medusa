@@ -128,7 +128,7 @@ bool MemoryDatabase::Flush()
 
 bool MemoryDatabase::Close()
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   m_MemoryAreas.clear();
   m_LabelsMap.clear();
   m_ReverseLabelsMap.clear();
@@ -170,7 +170,7 @@ std::vector<Tag> MemoryDatabase::GetArchitectureTags() const
 bool MemoryDatabase::SetArchitecture(Address const &rAddress, Tag ArchitectureTag, u8 Mode,
   Database::SetArchitectureModeType SetArchMode)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   if (SetArchMode == Database::SetArchitectureModeType::ByMemoryArea)
   {
     // Find the memory area and update its architecture
@@ -252,7 +252,7 @@ bool MemoryDatabase::AddMemoryArea(MemoryArea const& rMemArea)
 
 bool MemoryDatabase::RemoveMemoryArea(MemoryArea const& rMemArea)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   for (auto it = m_MemoryAreas.begin(); it != m_MemoryAreas.end(); ++it)
   {
     if (it->GetId() == rMemArea.GetId())
@@ -267,7 +267,7 @@ bool MemoryDatabase::RemoveMemoryArea(MemoryArea const& rMemArea)
 
 bool MemoryDatabase::MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   for (auto it = m_MemoryAreas.begin(); it != m_MemoryAreas.end(); ++it)
   {
     if (it->GetId() == rMemArea.GetId())
@@ -301,7 +301,7 @@ bool MemoryDatabase::SetDefaultAddressingType(Address::Type AddressType)
 // See document.hpp Document::Translate
 bool MemoryDatabase::TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
 
   for (auto const& rMemArea : m_MemoryAreas)
   {
@@ -752,7 +752,7 @@ bool MemoryDatabase::SetComment(Address const &rAddress, std::string const &rCom
 
 bool MemoryDatabase::GetValueDetail(Id ConstId, ValueDetail &rConstDtl) const
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   auto it = m_ValueDetailsMap.find(ConstId);
   if (it == m_ValueDetailsMap.end())
     return false;
@@ -762,14 +762,14 @@ bool MemoryDatabase::GetValueDetail(Id ConstId, ValueDetail &rConstDtl) const
 
 bool MemoryDatabase::SetValueDetail(Id ConstId, ValueDetail const &rConstDtl)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   m_ValueDetailsMap[ConstId] = rConstDtl;
   return true;
 }
 
 bool MemoryDatabase::GetFunctionDetail(Id FuncId, FunctionDetail &rFuncDtl) const
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   auto it = m_FunctionDetailsMap.find(FuncId);
   if (it == m_FunctionDetailsMap.end())
     return false;
@@ -779,14 +779,14 @@ bool MemoryDatabase::GetFunctionDetail(Id FuncId, FunctionDetail &rFuncDtl) cons
 
 bool MemoryDatabase::SetFunctionDetail(Id FuncId, FunctionDetail const &rFuncDtl)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   m_FunctionDetailsMap[FuncId] = rFuncDtl;
   return true;
 }
 
 bool MemoryDatabase::GetStructureDetail(Id StructId, StructureDetail &rStructDtl) const
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   auto it = m_StructureDetailsMap.find(StructId);
   if (it == m_StructureDetailsMap.end())
     return false;
@@ -796,14 +796,14 @@ bool MemoryDatabase::GetStructureDetail(Id StructId, StructureDetail &rStructDtl
 
 bool MemoryDatabase::SetStructureDetail(Id StructId, StructureDetail const &rStructDtl)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   m_StructureDetailsMap[StructId] = rStructDtl;
   return true;
 }
 
 bool MemoryDatabase::RetrieveDetailId(Address const &rAddress, u8 Index, Id &rDtlId) const
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   int MemId;
   OffsetType Offset;
   if (!_ConvertAddressToId(rAddress, MemId, Offset))
@@ -818,7 +818,7 @@ bool MemoryDatabase::RetrieveDetailId(Address const &rAddress, u8 Index, Id &rDt
 
 bool MemoryDatabase::BindDetailId(Address const &rAddress, u8 Index, Id DtlId)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   int MemId;
   OffsetType Offset;
   if (!_ConvertAddressToId(rAddress, MemId, Offset))
@@ -829,7 +829,7 @@ bool MemoryDatabase::BindDetailId(Address const &rAddress, u8 Index, Id DtlId)
 
 bool MemoryDatabase::UnbindDetailId(Address const &rAddress, u8 Index)
 {
-  std::lock_guard<std::mutex> Lock(m_Lock);
+  std::lock_guard Lock(m_Lock);
   int MemId;
   OffsetType Offset;
   if (!_ConvertAddressToId(rAddress, MemId, Offset))

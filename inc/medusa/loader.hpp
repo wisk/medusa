@@ -26,14 +26,14 @@ public:
   virtual u8          GetDepth() const = 0;
 
   // Only binary stream is needed
-  virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const = 0;
+  [[nodiscard]] virtual bool       IsCompatible(BinaryStream const& rBinStrm) const = 0;
   virtual std::string              GetDetailedName(BinaryStream const& rBinStrm) const { return GetName(); }
   virtual std::string              GetSystemName(BinaryStream const& rBinStrm) const { return ""; }
   virtual std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const = 0;
 
   // Document is required
-  virtual bool        Map(Document& rDoc) const = 0;
-  virtual bool        Map(Document& rDoc, Address const& rImgBase) const = 0;
+  [[nodiscard]] virtual bool        Map(Document& rDoc) const = 0;
+  [[nodiscard]] virtual bool        Map(Document& rDoc, Address const& rImgBase) const = 0;
   virtual void        Analyze(Document& rDoc) const = 0;
 };
 

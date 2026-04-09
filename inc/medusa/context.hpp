@@ -30,42 +30,42 @@ public:
 
   CpuContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
 
-  virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const = 0;
+  [[nodiscard]] virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const = 0;
   template<typename _RegTy>
-  bool ReadRegister(u32 Reg, _RegTy& rVal) const
+  [[nodiscard]] bool ReadRegister(u32 Reg, _RegTy& rVal) const
   {
     return ReadRegister(Reg, &rVal, sizeof(rVal) * 8);
   }
 
-  virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) = 0;
+  [[nodiscard]] virtual bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) = 0;
   template<typename _RegTy>
-  bool WriteRegister(u32 Reg, _RegTy const& rVal)
+  [[nodiscard]] bool WriteRegister(u32 Reg, _RegTy const& rVal)
   {
     return WriteRegister(Reg, &rVal, sizeof(rVal) * 8);
   }
 
-  virtual void* GetRegisterAddress(u32 Register) = 0;
-  virtual void* GetContextAddress() = 0;
-  virtual u16   GetRegisterOffset(u32 Register) = 0;
+  [[nodiscard]] virtual void* GetRegisterAddress(u32 Register) = 0;
+  [[nodiscard]] virtual void* GetContextAddress() = 0;
+  [[nodiscard]] virtual u16   GetRegisterOffset(u32 Register) = 0;
 
   virtual void  GetRegisters(RegisterList& RegList) const = 0;
 
-  virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
-  virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
-  virtual bool RemoveMapping(Address const& rLogicalAddress);
+  [[nodiscard]] virtual bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const;
+  [[nodiscard]] virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
+  [[nodiscard]] virtual bool RemoveMapping(Address const& rLogicalAddress);
 
-  virtual u8   GetMode() const = 0;
+  [[nodiscard]] virtual u8   GetMode() const = 0;
   virtual void SetMode(u8 Mode) = 0;
 
-  virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const = 0;
-  virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr) = 0;
+  [[nodiscard]] virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const = 0;
+  [[nodiscard]] virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr) = 0;
 
-  virtual u32  GetException() const { return m_Exception; }
+  [[nodiscard]] virtual u32  GetException() const { return m_Exception; }
   virtual void SetException(u32 Excpt) { m_Exception = Excpt; }
 
-  virtual std::string ToString() const = 0;
+  [[nodiscard]] virtual std::string ToString() const = 0;
 
-  CpuInformation const& GetCpuInformation() const { return m_rCpuInfo; }
+  [[nodiscard]] CpuInformation const& GetCpuInformation() const { return m_rCpuInfo; }
 
 protected:
   CpuInformation const& m_rCpuInfo;
@@ -93,13 +93,13 @@ public:
     MemoryChunk(u64 LinAddr = 0x0, void* Buffer = nullptr, u32 Size = 0x0, MemoryArea::Access Flags = MemoryArea::Access::NoAccess)
       : m_LinearAddress(LinAddr), m_spMemStrm(std::make_shared<MemoryBinaryStream>(Buffer, Size)), m_Flags(Flags) {}
 
-    bool operator<(MemoryChunk const& rMemChunk) const
+    [[nodiscard]] bool operator<(MemoryChunk const& rMemChunk) const
     { return m_LinearAddress < rMemChunk.m_LinearAddress; }
 
-    bool operator==(MemoryChunk const& rMemChunk) const
+    [[nodiscard]] bool operator==(MemoryChunk const& rMemChunk) const
     { return m_LinearAddress == rMemChunk.m_LinearAddress; }
 
-    bool operator==(u64 LinAddr) const
+    [[nodiscard]] bool operator==(u64 LinAddr) const
     { return m_LinearAddress == LinAddr; }
   };
 
@@ -108,32 +108,32 @@ public:
 
   using CallbackType = std::function<void (MemoryChunk const& rMemChunk)>;
   void ForEachMemoryChunk(CallbackType Callback);
-  virtual bool ReadMemory(u64 LinAddr, void* pVal, u32 Size) const;
+  [[nodiscard]] virtual bool ReadMemory(u64 LinAddr, void* pVal, u32 Size) const;
   template<typename _MemTy>
-  bool ReadMemory(u64 LinAddr, _MemTy& rVal) const
+  [[nodiscard]] bool ReadMemory(u64 LinAddr, _MemTy& rVal) const
   {
     return ReadMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool WriteMemory(u64 LinAddr, void const* pVal, u32 Size);
+  [[nodiscard]] virtual bool WriteMemory(u64 LinAddr, void const* pVal, u32 Size);
   template<typename _MemTy>
-  bool WriteMemory(u64 LinAddr, _MemTy const& rVal)
+  [[nodiscard]] bool WriteMemory(u64 LinAddr, _MemTy const& rVal)
   {
     return WriteMemory(LinAddr, &rVal, sizeof(rVal));
   }
 
-  virtual bool FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, MemoryArea::Access& rFlags) const;
-  virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, MemoryArea::Access& rFlags) const;
+  [[nodiscard]] virtual bool FindMemory(u64 LinAddr, BinaryStream::SPType& rspBinStrm, u32& rOffset, MemoryArea::Access& rFlags) const;
+  [[nodiscard]] virtual bool FindMemory(u64 LinAddr, void*& prAddr, u32& rOffset, u32& rSize, MemoryArea::Access& rFlags) const;
 
-  virtual bool AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Flags, void** ppRawMemory);
-  virtual bool ProtectMemory(u64 LinAddr, MemoryArea::Access Flags); // TODO: add protection by pages
-  virtual bool FreeMemory(u64 LinAddr);
-  virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
+  [[nodiscard]] virtual bool AllocateMemory(u64 LinAddr, u32 Size, MemoryArea::Access Flags, void** ppRawMemory);
+  [[nodiscard]] virtual bool ProtectMemory(u64 LinAddr, MemoryArea::Access Flags); // TODO: add protection by pages
+  [[nodiscard]] virtual bool FreeMemory(u64 LinAddr);
+  [[nodiscard]] virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 
-  virtual std::string ToString() const;
+  [[nodiscard]] virtual std::string ToString() const;
 
 protected:
-  virtual bool _FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
+  [[nodiscard]] virtual bool _FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;
 
   CpuInformation const& m_rCpuInfo;
 

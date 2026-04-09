@@ -90,24 +90,24 @@ public:
 
   // Database
 
-  bool Open(Database::SPType spDb);
-  bool Flush();
-  bool Close();
+  [[nodiscard]] bool Open(Database::SPType spDb);
+  [[nodiscard]] bool Flush();
+  [[nodiscard]] bool Close();
 
   // Subscriber
 
   void Connect(u32 Type, Subscriber* pSubscriber);
 
   // Image base
-  virtual bool GetImageBase(ImageBaseType& rImageBase) const;
-  virtual bool SetImageBase(ImageBaseType ImageBase);
+  [[nodiscard]] virtual bool GetImageBase(ImageBaseType& rImageBase) const;
+  [[nodiscard]] virtual bool SetImageBase(ImageBaseType ImageBase);
 
   // Memory Area
-  bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const;
+  [[nodiscard]] bool GetMemoryArea(Address const& rAddress, MemoryArea& rMemArea) const;
   void ForEachMemoryArea(Database::MemoryAreaCallback Callback) const;
-  bool AddMemoryArea(MemoryArea const& rMemArea);
-  bool RemoveMemoryArea(MemoryArea const& rMemArea);
-  bool MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress);
+  [[nodiscard]] bool AddMemoryArea(MemoryArea const& rMemArea);
+  [[nodiscard]] bool RemoveMemoryArea(MemoryArea const& rMemArea);
+  [[nodiscard]] bool MoveMemoryArea(MemoryArea const& rMemArea, Address const& rBaseAddress);
 
   // Binary Stream
 
@@ -122,19 +122,19 @@ public:
   Address GetAddressFromLabelName(std::string const& rLabel) const;
 
        //! This method add a new label.
-  bool AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
-  bool RemoveLabel(Address const& rAddr);
+  [[nodiscard]] bool AddLabel(Address const& rAddr, Label const& rLabel, bool Force = true);
+  [[nodiscard]] bool RemoveLabel(Address const& rAddr);
   void ForEachLabel(Database::LabelCallback Callback) const;
 
   // CrossRef
-  bool AddCrossReference(Address const& rTo, Address const& rFrom);
-  bool RemoveCrossReference(Address const& rFrom);
-  bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const;
-  bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const;
+  [[nodiscard]] bool AddCrossReference(Address const& rTo, Address const& rFrom);
+  [[nodiscard]] bool RemoveCrossReference(Address const& rFrom);
+  [[nodiscard]] bool GetCrossReferenceFrom(Address const& rTo, Address::Vector& rFrom) const;
+  [[nodiscard]] bool GetCrossReferenceTo(Address const& rFrom, Address::Vector& rTo) const;
 
   // Comment
-  bool GetComment(Address const& rAddress, std::string& rComment) const;
-  bool SetComment(Address const& rAddress, std::string const& rComment);
+  [[nodiscard]] bool GetComment(Address const& rAddress, std::string& rComment) const;
+  [[nodiscard]] bool SetComment(Address const& rAddress, std::string const& rComment);
 
   // Cell
                      /*! This method returns a cell by its address.
@@ -152,11 +152,11 @@ public:
                        * \param Force makes the old cell to be deleted.
                        * \return Returns true if the new cell is added, otherwise it returns false.
                        */
-  bool                SetCell(Address const& rAddr, Cell::SPType spCell, bool Force = false);
-  bool                SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force = false);
-  bool                SetArchitecture(Address const& rAddr, Tag TagArch, u8 Mode, Database::SetArchitectureModeType SetArchMode);
-                     
-  bool                DeleteCell(Address const& rAddr);
+  [[nodiscard]] bool  SetCell(Address const& rAddr, Cell::SPType spCell, bool Force = false);
+  [[nodiscard]] bool  SetCellWithLabel(Address const& rAddr, Cell::SPType spCell, Label const& rLabel, bool Force = false);
+  [[nodiscard]] bool  SetArchitecture(Address const& rAddr, Tag TagArch, u8 Mode, Database::SetArchitectureModeType SetArchMode);
+
+  [[nodiscard]] bool  DeleteCell(Address const& rAddr);
 
   // Value
 
@@ -165,10 +165,10 @@ public:
    *  \param NewValueSize must be 8 or 16 or 32 or 64
    *  \param Force makes this method to erase others cells if needed
    */
-  bool ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
+  [[nodiscard]] bool ChangeValueSize(Address const& rValueAddr, u8 NewValueSize, bool Force = false);
 
   // String
-  bool MakeString(Address const& rAddress, u8 StringType, u16 StringLength = -1, bool Force = false);
+  [[nodiscard]] bool MakeString(Address const& rAddress, u8 StringType, u16 StringLength = -1, bool Force = false);
 
   // MultiCell
 
@@ -181,29 +181,29 @@ public:
                     *  \param Force removes the old MultiCell if set.
                     *  \return Returns true if the new multicell is added, otherwise it returns false.
                     */
-  bool             SetMultiCell(Address const& rAddr, MultiCell::SPType spMultiCell, bool Force = true);
+  [[nodiscard]] bool             SetMultiCell(Address const& rAddr, MultiCell::SPType spMultiCell, bool Force = true);
 
                    /*! This method returns all couple Address and MultiCell
                    */
   // Detail
 
-  bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const;
-  bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
+  [[nodiscard]] bool GetValueDetail(Id ConstId, ValueDetail& rConstDtl) const;
+  [[nodiscard]] bool SetValueDetail(Id ConstId, ValueDetail const& rConstDtl);
 
-  bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const;
-  bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
+  [[nodiscard]] bool GetFunctionDetail(Id FuncId, FunctionDetail& rFuncDtl) const;
+  [[nodiscard]] bool SetFunctionDetail(Id FuncId, FunctionDetail const& rFuncDtl);
 
-  bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const;
-  bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
+  [[nodiscard]] bool GetStructureDetail(Id StructId, StructureDetail& rStructDtl) const;
+  [[nodiscard]] bool SetStructureDetail(Id StructId, StructureDetail const& rStructDtl);
 
-  bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const;
-  bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId);
-  bool UnbindDetailId(Address const& rAddress, u8 Index);
+  [[nodiscard]] bool RetrieveDetailId(Address const& rAddress, u8 Index, Id& rDtlId) const;
+  [[nodiscard]] bool BindDetailId(Address const& rAddress, u8 Index, Id DtlId);
+  [[nodiscard]] bool UnbindDetailId(Address const& rAddress, u8 Index);
 
   // Address
 
-  bool GetDefaultAddressingType(Address::Type& rAddressType) const;
-  bool SetDefaultAddressingType(Address::Type AddressType);
+  [[nodiscard]] bool GetDefaultAddressingType(Address::Type& rAddressType) const;
+  [[nodiscard]] bool SetDefaultAddressingType(Address::Type AddressType);
           /*! This method makes an Address.
            *  \param Base is the base address.
            *  \param Offset is the offset address.
@@ -211,33 +211,33 @@ public:
            */
   Address MakeAddress(BaseType Base, OffsetType Offset) const;
 
-  bool    GetPreviousAddressInHistory(Address& rAddress);
-  bool    GetNextAddressInHistory(Address& rAddress);
+  [[nodiscard]] bool    GetPreviousAddressInHistory(Address& rAddress);
+  [[nodiscard]] bool    GetNextAddressInHistory(Address& rAddress);
   void    InsertAddressInHistory(Address const& rAddress);
 
           /*! This method converts an Address to a offset (memory area relative).
            * \return Returns true if the conversion is possible, otherwise it returns false.
            */
-  bool    ConvertAddressToFileOffset(Address const& rAddr, OffsetType& rFileOffset) const;
+  [[nodiscard]] bool    ConvertAddressToFileOffset(Address const& rAddr, OffsetType& rFileOffset) const;
 
-  bool    ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const;
-  bool    ConvertPositionToAddress(u32 Position, Address& rAddr) const;
+  [[nodiscard]] bool    ConvertAddressToPosition(Address const& rAddr, u32& rPosition) const;
+  [[nodiscard]] bool    ConvertPositionToAddress(u32 Position, Address& rAddr) const;
 
   // Implemented possibilities:
   // - Logical Address → Virtual Address → (Relative Address → Physical address)
   // - (Physical Address → Relative Address) → Virtual Address → Logical Address (might not normalized)
   // - Architecture Address → ? (depends on architecture)
   // - ? → Architecture Address (might not be normalized)
-  bool    TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
+  [[nodiscard]] bool    TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
   Address GetStartAddress() const;
   Address GetFirstAddress() const;
   Address GetLastAddress()  const;
   u32     GetNumberOfAddress() const;
 
-  bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
-  bool    GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
-  bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
-  bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
+  [[nodiscard]] bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
+  [[nodiscard]] bool    GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
+  [[nodiscard]] bool    GetNextAddress(Address const& rAddress, Address& rNextAddress) const;
+  [[nodiscard]] bool    GetNearestAddress(Address const& rAddress, Address& rNearestAddress) const;
 
   // Helper
 

@@ -23,9 +23,9 @@ namespace Configuration
   public:
     NamedValue(std::string const& rName = "", ConfigType Value = ConfigType()) : m_Name(rName), m_Value(Value) {}
 
-    std::string const& GetName() const { return m_Name; }
-    ValueType GetValue() const { return m_Value; }
-    ConfigType const& GetConfigurationValue() const { return m_Value; }
+    [[nodiscard]] std::string const& GetName() const { return m_Name; }
+    [[nodiscard]] ValueType GetValue() const { return m_Value; }
+    [[nodiscard]] ConfigType const& GetConfigurationValue() const { return m_Value; }
     void SetValue(ValueType Value) { m_Value = Value; }
 
   private:
@@ -38,9 +38,9 @@ namespace Configuration
   public:
     NamedValue(std::string const& rName = "", Configuration::Enum Value = Configuration::Enum()) : m_Name(rName), m_Value(Value) {}
 
-    std::string const& GetName() const { return m_Name; }
-    Enum const& GetConfigurationValue() const { return m_Value; }
-    u32 GetValue() const
+    [[nodiscard]] std::string const& GetName() const { return m_Name; }
+    [[nodiscard]] Enum const& GetConfigurationValue() const { return m_Value; }
+    [[nodiscard]] u32 GetValue() const
     {
       for (auto ValuePair : m_Value)
         if (ValuePair.first == "")
@@ -116,19 +116,19 @@ public:
   void SetString(std::string const& rName, std::string const& Value = "");
   void SetPath(std::string const& rName, Path const& rValue = "");
 
-  bool IsSet(std::string const& rName) const;
+  [[nodiscard]] bool IsSet(std::string const& rName) const;
 
-  bool        GetBoolean(std::string const& rName) const;
-  u8          GetUint8(std::string const& rName) const;
-  u16         GetUint16(std::string const& rName) const;
-  u32         GetUint32(std::string const& rName) const;
-  u64         GetUint64(std::string const& rName) const;
-  u32         GetEnum(std::string const& rName) const;
-  std::string GetString(std::string const& rName) const;
-  Path        GetPath(std::string const& rName) const;
+  [[nodiscard]] bool        GetBoolean(std::string const& rName) const;
+  [[nodiscard]] u8          GetUint8(std::string const& rName) const;
+  [[nodiscard]] u16         GetUint16(std::string const& rName) const;
+  [[nodiscard]] u32         GetUint32(std::string const& rName) const;
+  [[nodiscard]] u64         GetUint64(std::string const& rName) const;
+  [[nodiscard]] u32         GetEnum(std::string const& rName) const;
+  [[nodiscard]] std::string GetString(std::string const& rName) const;
+  [[nodiscard]] Path        GetPath(std::string const& rName) const;
 
-  ConstIterator  Begin() const { return std::begin(m_Values); }
-  ConstIterator  End()   const { return std::end(m_Values); }
+  [[nodiscard]] ConstIterator  Begin() const { return std::begin(m_Values); }
+  [[nodiscard]] ConstIterator  End()   const { return std::end(m_Values); }
 
 private:
   VariantNamedValueMapType m_Values;

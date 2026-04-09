@@ -28,12 +28,12 @@ public:
                                   Medusa();
                                  ~Medusa();
 
-  static std::string              GetVersion();
+  [[nodiscard]] static std::string GetVersion();
 
-  bool                            AddTask(Task* pTask);
+  [[nodiscard]] bool              AddTask(Task* pTask);
   void                            WaitForTasks();
 
-  bool                            Start(
+  [[nodiscard]] bool              Start(
     BinaryStream::SPType spBinaryStream,
     Database::SPType spDatabase,
     Loader::SPType spLoader,
@@ -68,13 +68,13 @@ public:
 
   using FunctionType = std::function<bool ()>;
 
-  bool NewDocument(
+  [[nodiscard]] bool NewDocument(
     BinaryStream::SPType spBinStrm,
     bool StartAnalyzer = true,
     AskDatabaseFunctionType AskDatabase = IgnoreDatabasePath,
     ModuleSelectorFunctionType ModuleSelector = DefaultModuleSelector);
-  bool OpenDocument(AskDatabaseFunctionType AskDatabase);
-  bool CloseDocument();
+  [[nodiscard]] bool OpenDocument(AskDatabaseFunctionType AskDatabase);
+  [[nodiscard]] bool CloseDocument();
 
                                   //! This method returns the current document.
   Document&       GetDocument()       { return m_Document; }
@@ -91,36 +91,36 @@ public:
   * \param rAddr is the start address.
   * \param rCfg is the filled control flow graph.
   */
-  bool BuildControlFlowGraph(Address const& rAddr, Graph& rCfg);
+  [[nodiscard]] bool BuildControlFlowGraph(Address const& rAddr, Graph& rCfg);
 
-  bool FormatCell(
+  [[nodiscard]] bool FormatCell(
     Address const& rAddress,
     Cell const&    rCell,
     PrintData&     rPrintData) const;
 
-  bool FormatMultiCell(
+  [[nodiscard]] bool FormatMultiCell(
     Address const&   rAddress,
     MultiCell const& rMultiCell,
     PrintData&       rPrintData) const;
 
-  bool FormatGraph(
+  [[nodiscard]] bool FormatGraph(
     Graph const& rGraph,
     GraphData&   rGraphData) const;
 
                                   //! This method makes a fully filled Address if possible. @see Address
-  Address MakeAddress(OffsetType Offset);
-  Address MakeAddress(BaseType Base, OffsetType Offset);
-  Address MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, OffsetType Offset);
-  Address MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, BaseType Base, OffsetType Offset);
+  [[nodiscard]] Address MakeAddress(OffsetType Offset);
+  [[nodiscard]] Address MakeAddress(BaseType Base, OffsetType Offset);
+  [[nodiscard]] Address MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, OffsetType Offset);
+  [[nodiscard]] Address MakeAddress(Loader::SPType pLoader, Architecture::SPType pArch, BaseType Base, OffsetType Offset);
 
-  bool CreateFunction(Address const& rAddr);
-  bool CreateUtf8String(Address const& rAddr);
-  bool CreateUtf16String(Address const& rAddr);
+  [[nodiscard]] bool CreateFunction(Address const& rAddr);
+  [[nodiscard]] bool CreateUtf8String(Address const& rAddr);
+  [[nodiscard]] bool CreateUtf16String(Address const& rAddr);
   void FindFunctionAddressFromAddress(Address::Vector& rFunctionAddress, Address const& rAddress) const;
 
-  bool AddTask(std::string const& rTaskName);
-  bool AddTask(std::string const& rTaskName, Address const& rAddr);
-  bool AddTask(std::string const& rTaskName, Address const& rAddr, Architecture& rArch, u8 Mode);
+  [[nodiscard]] bool AddTask(std::string const& rTaskName);
+  [[nodiscard]] bool AddTask(std::string const& rTaskName, Address const& rAddr);
+  [[nodiscard]] bool AddTask(std::string const& rTaskName, Address const& rAddr, Architecture& rArch, u8 Mode);
 private:
   TaskManager m_TaskManager;
   Document    m_Document;

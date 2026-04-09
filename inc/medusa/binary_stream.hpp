@@ -66,39 +66,39 @@ public:
   void SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, s8  &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, s8  &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, u8  &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, u8  &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, s16 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, s16 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, u16 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, u16 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, s32 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, s32 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, u32 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, u32 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, s64 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, s64 &rData) const
   { return ReadGeneric(Position, rData); }
 
   //! This method reads according to the size of rData and performs a swap if needed.
-  bool Read(OffsetType Position, u64 &rData) const
+  [[nodiscard]] bool Read(OffsetType Position, u64 &rData) const
   { return ReadGeneric(Position, rData); }
 
   template<typename _Tp>
-  bool Read(OffsetType Position, u64& rData, bool SignExtend) const
+  [[nodiscard]] bool Read(OffsetType Position, u64& rData, bool SignExtend) const
   {
     _Tp Val;
 
@@ -111,7 +111,7 @@ public:
     return true;
   }
 
-  bool Read(OffsetType Position, u64& rData, u32 Size, bool SignExtend) const
+  [[nodiscard]] bool Read(OffsetType Position, u64& rData, u32 Size, bool SignExtend) const
   {
     switch (Size)
     {
@@ -124,7 +124,7 @@ public:
   }
 
   template<typename T, size_t N>
-  bool Read(OffsetType Position, T (&rData)[N]) const
+  [[nodiscard]] bool Read(OffsetType Position, T (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
@@ -149,7 +149,7 @@ public:
     return StrLen;
   }
 
-  bool Read(OffsetType Position, std::string& rString) const
+  [[nodiscard]] bool Read(OffsetType Position, std::string& rString) const
   {
     u16 StrLen = StringLength(Position);
     if (StrLen == 0)
@@ -161,13 +161,13 @@ public:
   }
 
   //! This method reads a buffer, no swap will be performed.
-  bool Read(OffsetType Position, void* pData, size_t Length) const
+  [[nodiscard]] bool Read(OffsetType Position, void* pData, size_t Length) const
   {
     return Read(Position, static_cast<u8*>(pData), Length);
   }
 
   //! This method reads a buffer, no swap will be performed.
-  bool Read(OffsetType Position, u8* pData, size_t Length) const
+  [[nodiscard]] bool Read(OffsetType Position, u8* pData, size_t Length) const
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -180,28 +180,28 @@ public:
     return true;
   }
 
-  bool Write(OffsetType Position, s8  const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, s8  const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(OffsetType Position, u8  const& rData)
-  { return WriteGeneric(Position, rData); }
-
-  bool Write(OffsetType Position, s16 const& rData)
-  { return WriteGeneric(Position, rData); }
-  bool Write(OffsetType Position, u16 const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, u8  const& rData)
   { return WriteGeneric(Position, rData); }
 
-  bool Write(OffsetType Position, s32 const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, s16 const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(OffsetType Position, u32 const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, u16 const& rData)
   { return WriteGeneric(Position, rData); }
 
-  bool Write(OffsetType Position, s64 const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, s32 const& rData)
   { return WriteGeneric(Position, rData); }
-  bool Write(OffsetType Position, u64 const& rData)
+  [[nodiscard]] bool Write(OffsetType Position, u32 const& rData)
+  { return WriteGeneric(Position, rData); }
+
+  [[nodiscard]] bool Write(OffsetType Position, s64 const& rData)
+  { return WriteGeneric(Position, rData); }
+  [[nodiscard]] bool Write(OffsetType Position, u64 const& rData)
   { return WriteGeneric(Position, rData); }
 
   template<typename T, size_t N>
-  bool Write(OffsetType Position, T const (&rData)[N]) const
+  [[nodiscard]] bool Write(OffsetType Position, T const (&rData)[N]) const
   {
     for (size_t i = 0; i < N; ++i)
     {
@@ -213,12 +213,12 @@ public:
     return true;
   }
 
-  bool Write(OffsetType Position, void const* pData, size_t Length)
+  [[nodiscard]] bool Write(OffsetType Position, void const* pData, size_t Length)
   {
     return Write(Position, static_cast<u8 const*>(pData), Length);
   }
 
-  bool Write(OffsetType Position, u8 const* pData, size_t Length)
+  [[nodiscard]] bool Write(OffsetType Position, u8 const* pData, size_t Length)
   {
     if (m_pBuffer == nullptr)
       return false;
@@ -231,7 +231,7 @@ public:
     return true;
   }
 
-  bool Write(OffsetType Position, int Val, size_t Length)
+  [[nodiscard]] bool Write(OffsetType Position, int Val, size_t Length)
   {
     if (m_pBuffer == nullptr)
       return false;

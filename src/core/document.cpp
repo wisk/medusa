@@ -41,7 +41,7 @@ bool Document::Close()
     m_spDatabase = nullptr;
   }
   m_QuitSignal();
-  std::lock_guard<MutexType> Lock(m_CellMutex);
+  std::lock_guard Lock(m_CellMutex);
   m_QuitSignal.disconnect_all_slots();
   m_DocumentUpdatedSignal.disconnect_all_slots();
   m_MemoryAreaUpdatedSignal.disconnect_all_slots();
@@ -309,7 +309,7 @@ Cell::SPType Document::GetCell(Address const& rAddr)
     Log::Write("core") << "database is null" << LogEnd;
     return nullptr;
   }
-  std::lock_guard<MutexType> Lock(m_CellMutex);
+  std::lock_guard Lock(m_CellMutex);
 
   CellData CurCellData;
 
@@ -352,7 +352,7 @@ Cell::SPType const Document::GetCell(Address const& rAddr) const
     Log::Write("core") << "database is null" << LogEnd;
     return nullptr;
   }
-  std::lock_guard<MutexType> Lock(m_CellMutex);
+  std::lock_guard Lock(m_CellMutex);
 
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
@@ -675,7 +675,7 @@ Address Document::MakeAddress(BaseType Base, OffsetType Offset) const
 
 bool Document::GetPreviousAddressInHistory(Address& rAddress)
 {
-  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+  std::lock_guard Lock(m_AddressHistoryMutex);
 
   if (m_AddressHistoryIndex == 0)
     return false;
@@ -687,7 +687,7 @@ bool Document::GetPreviousAddressInHistory(Address& rAddress)
 
 bool Document::GetNextAddressInHistory(Address& rAddress)
 {
-  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+  std::lock_guard Lock(m_AddressHistoryMutex);
 
   if (m_AddressHistoryIndex + 1 >= m_AddressHistory.size())
     return false;
@@ -700,7 +700,7 @@ bool Document::GetNextAddressInHistory(Address& rAddress)
 // LATER: it could be better to keep next addresses, but we've to limit the amount of addresses in the container
 void Document::InsertAddressInHistory(Address const& rAddress)
 {
-  std::lock_guard<MutexType> Lock(m_AddressHistoryMutex);
+  std::lock_guard Lock(m_AddressHistoryMutex);
 
   if (!m_AddressHistory.empty() && m_AddressHistory.back() == rAddress)
     return;

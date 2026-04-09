@@ -215,7 +215,7 @@ bool Execution::HookFunction(std::string const& rFuncName, Emulator::HookCallbac
     }
 
   {
-    std::lock_guard<std::mutex> Lock(m_HookMutex);
+    std::lock_guard Lock(m_HookMutex);
     m_HookName[FakeAddr] = rFuncName;
   }
 
@@ -256,7 +256,7 @@ std::string Execution::GetHookName() const
   if (!m_pCpuCtxt->ReadRegister(PrgReg, &PrgRegVal, PrgRegSize))
     return "";
 
-  std::lock_guard<std::mutex> Lock(m_HookMutex);
+  std::lock_guard Lock(m_HookMutex);
   auto itHookPair = m_HookName.find(PrgRegVal);
   if (itHookPair == std::end(m_HookName))
     return "";
@@ -265,7 +265,7 @@ std::string Execution::GetHookName() const
 
 Address Execution::GetHookAddress(std::string const& rHkFuncName) const
 {
-  std::lock_guard<std::mutex> Lock(m_HookMutex);
+  std::lock_guard Lock(m_HookMutex);
   for (auto const& rHkPr : m_HookName)
     if (rHkPr.second == rHkFuncName)
       return rHkPr.first;

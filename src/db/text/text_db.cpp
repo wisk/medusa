@@ -19,7 +19,7 @@ TextDatabase::TextDatabase(void) : m_DirtyLabels(false), m_IsIteratingLabels(fal
 
 TextDatabase::~TextDatabase(void)
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (auto* pMemArea : m_MemoryAreas)
     delete pMemArea;
 }
@@ -331,7 +331,7 @@ bool TextDatabase::Flush(void)
 
   // Save architecture tag
   {
-    std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+    std::lock_guard Lock(m_ArchitectureTagLock);
     TextFile << "## Architecture\n";
     char const* pSep = "";
     for (Tag ArchTag : m_ArchitectureTags)
@@ -344,7 +344,7 @@ bool TextDatabase::Flush(void)
 
   // Save memory area
   {
-    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    std::lock_guard Lock(m_MemoryAreaLock);
     TextFile << "## MemoryArea\n";
     for (MemoryArea* pMemArea : m_MemoryAreas)
     {
@@ -358,7 +358,7 @@ bool TextDatabase::Flush(void)
 
   // Save label
   {
-    std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+    std::lock_guard Lock(m_LabelLock);
     TextFile << "## Label\n";
     for (auto itLabel = std::begin(m_LabelMap.left); itLabel != std::end(m_LabelMap.left); ++itLabel)
       TextFile << itLabel->first.Dump() << " " << itLabel->second.Dump() << "\n" << std::flush;
@@ -366,7 +366,7 @@ bool TextDatabase::Flush(void)
 
   // Save cross reference
   {
-    std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+    std::lock_guard Lock(m_CrossReferencesLock);
     TextFile << "## CrossReference\n";
     for (auto itXref = std::begin(m_CrossReferences.GetAllXRefs().left); itXref != std::end(m_CrossReferences.GetAllXRefs().left); ++itXref)
     {
@@ -381,7 +381,7 @@ bool TextDatabase::Flush(void)
 
   // Save multicell
   {
-    std::lock_guard<std::mutex> Lock(m_MultiCellsLock);
+    std::lock_guard Lock(m_MultiCellsLock);
     TextFile << "## MultiCell\n";
     for (auto itMultiCell = std::begin(m_MultiCells); itMultiCell != std::end(m_MultiCells); ++itMultiCell)
       TextFile << itMultiCell->first.Dump() << " " << itMultiCell->second.Dump() << "\n" << std::flush;
@@ -389,7 +389,7 @@ bool TextDatabase::Flush(void)
 
   // Save comment
   {
-    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    std::lock_guard Lock(m_MemoryAreaLock);
     TextFile << "## Comment\n";
     for (auto itComment = std::begin(m_Comments); itComment != std::end(m_Comments); ++itComment)
     {
@@ -410,21 +410,21 @@ bool TextDatabase::Close(void)
 
 bool TextDatabase::RegisterArchitectureTag(Tag ArchitectureTag)
 {
-  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  std::lock_guard Lock(m_ArchitectureTagLock);
   m_ArchitectureTags.push_back(ArchitectureTag);
   return true;
 }
 
 bool TextDatabase::UnregisterArchitectureTag(Tag ArchitectureTag)
 {
-  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  std::lock_guard Lock(m_ArchitectureTagLock);
   m_ArchitectureTags.remove(ArchitectureTag);
   return true;
 }
 
 std::list<Tag> TextDatabase::GetArchitectureTags(void) const
 {
-  std::lock_guard<std::mutex> Lock(m_ArchitectureTagLock);
+  std::lock_guard Lock(m_ArchitectureTagLock);
   return m_ArchitectureTags;
 }
 
@@ -434,7 +434,7 @@ bool TextDatabase::SetArchitecture(Address const& rAddress, Tag ArchitectureTag,
   {
   case ByCell:
   {
-    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    std::lock_guard Lock(m_MemoryAreaLock);
 
     for (MemoryArea* pMemArea : m_MemoryAreas)
     {
@@ -457,7 +457,7 @@ bool TextDatabase::SetArchitecture(Address const& rAddress, Tag ArchitectureTag,
 
   case ByMemoryArea:
   {
-    std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+    std::lock_guard Lock(m_MemoryAreaLock);
     for (MemoryArea* pMemArea : m_MemoryAreas)
     {
       if (pMemArea->IsCellPresent(rAddress))
@@ -480,7 +480,7 @@ bool TextDatabase::SetArchitecture(Address const& rAddress, Tag ArchitectureTag,
 
 bool TextDatabase::AddMemoryArea(MemoryArea* pMemArea)
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   m_MemoryAreas.insert(pMemArea);
   return true;
 }
@@ -494,7 +494,7 @@ void TextDatabase::ForEachMemoryArea(MemoryAreaCallback Callback) const
 
 MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (MemoryArea* pMemArea : m_MemoryAreas)
     if (pMemArea->IsCellPresent(rAddress))
       return pMemArea;
@@ -503,7 +503,7 @@ MemoryArea const* TextDatabase::GetMemoryArea(Address const& rAddress) const
 
 bool TextDatabase::GetFirstAddress(Address& rAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   if (m_MemoryAreas.empty())
     return false;
   rAddress = (*m_MemoryAreas.begin())->GetBaseAddress();
@@ -512,7 +512,7 @@ bool TextDatabase::GetFirstAddress(Address& rAddress) const
 
 bool TextDatabase::GetLastAddress(Address& rAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   if (m_MemoryAreas.empty())
     return false;
   auto itLastMemArea = m_MemoryAreas.end();
@@ -543,7 +543,7 @@ bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosit
   if (pMemArea == nullptr)
     return false;
 
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (MemoryArea* pMemArea : m_MemoryAreas)
   {
     if (pMemArea->IsCellPresent(rAddress))
@@ -559,7 +559,7 @@ bool TextDatabase::ConvertAddressToPosition(Address const& rAddress, u32& rPosit
 
 bool TextDatabase::ConvertPositionToAddress(u32 Position, Address& rAddress) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (MemoryArea* pMemArea : m_MemoryAreas)
   {
     u32 Size = pMemArea->GetSize();
@@ -575,7 +575,7 @@ bool TextDatabase::ConvertPositionToAddress(u32 Position, Address& rAddress) con
 
 bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 {
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+  std::lock_guard Lock(m_LabelLock);
   m_LabelMap.left.insert(LabelBimapType::left_value_type(rAddress, rLabel));
   if (m_IsIteratingLabels)
     m_VisitedLabels[rAddress] = false;
@@ -584,7 +584,7 @@ bool TextDatabase::AddLabel(Address const& rAddress, Label const& rLabel)
 
 bool TextDatabase::RemoveLabel(Address const& rAddress)
 {
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+  std::lock_guard Lock(m_LabelLock);
 
   auto itLbl = m_LabelMap.left.find(rAddress);
   if (itLbl == std::end(m_LabelMap.left))
@@ -601,7 +601,7 @@ bool TextDatabase::RemoveLabel(Address const& rAddress)
 
 bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
 {
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+  std::lock_guard Lock(m_LabelLock);
   auto itLbl = m_LabelMap.left.find(rAddress);
   if (itLbl == std::end(m_LabelMap.left))
     return false;
@@ -612,7 +612,7 @@ bool TextDatabase::GetLabel(Address const& rAddress, Label& rLabel) const
 
 bool TextDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
 {
-  std::lock_guard<std::recursive_mutex> Lock(m_LabelLock);
+  std::lock_guard Lock(m_LabelLock);
   auto itLbl = m_LabelMap.right.find(rLabel);
   if (itLbl == std::end(m_LabelMap.right))
     return false;
@@ -626,7 +626,7 @@ bool TextDatabase::GetLabelAddress(Label const& rLabel, Address& rAddress) const
 void TextDatabase::ForEachLabel(LabelCallback Callback)
 {
   static std::mutex s_ForEachLabelMutex;
-  std::lock_guard<std::mutex> Lock(s_ForEachLabelMutex);
+  std::lock_guard Lock(s_ForEachLabelMutex);
 
   m_IsIteratingLabels = true;
   for (auto itCurAddrLbl = std::begin(m_LabelMap.left), itEndAddrLbl = std::end(m_LabelMap.left); itCurAddrLbl != itEndAddrLbl; ++itCurAddrLbl)
@@ -651,57 +651,57 @@ void TextDatabase::ForEachLabel(LabelCallback Callback)
 
 bool TextDatabase::AddCrossReference(Address const& rTo, Address const& rFrom)
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.AddXRef(rTo, rFrom);
 }
 
 bool TextDatabase::RemoveCrossReference(Address const& rFrom)
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.RemoveRef(rFrom);
 }
 
 bool TextDatabase::RemoveCrossReferences(void)
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   m_CrossReferences.EraseAll();
   return true;
 }
 
 bool TextDatabase::HasCrossReferenceFrom(Address const& rTo) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.HasXRefFrom(rTo);
 }
 
 bool TextDatabase::GetCrossReferenceFrom(Address const& rTo, Address::List& rFromList) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.From(rTo, rFromList);
 }
 
 bool TextDatabase::HasCrossReferenceTo(Address const& rFrom) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.HasXRefTo(rFrom);
 }
 
 bool TextDatabase::GetCrossReferenceTo(Address const& rFrom, Address::List& rToList) const
 {
-  std::lock_guard<std::mutex> Lock(m_CrossReferencesLock);
+  std::lock_guard Lock(m_CrossReferencesLock);
   return m_CrossReferences.To(rFrom, rToList);
 }
 
 bool TextDatabase::AddMultiCell(Address const& rAddress, MultiCell const& rMultiCell)
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   m_MultiCells[rAddress] = rMultiCell;
   return true;
 }
 
 bool TextDatabase::RemoveMultiCell(Address const& rAddress)
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
 
   auto itMultiCell = m_MultiCells.find(rAddress);
   if (itMultiCell == std::end(m_MultiCells))
@@ -712,7 +712,7 @@ bool TextDatabase::RemoveMultiCell(Address const& rAddress)
 
 bool TextDatabase::GetMultiCell(Address const& rAddress, MultiCell& rMultiCell) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   auto itMultiCell = m_MultiCells.find(rAddress);
   if (itMultiCell == std::end(m_MultiCells))
     return false;
@@ -735,7 +735,7 @@ bool TextDatabase::GetCellData(Address const& rAddress, CellData& rCellData)
 bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellData, Address::List& rDeletedCellAddresses, bool Force)
 {
   MemoryArea* pCurMemArea = nullptr;
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (MemoryArea* pMemArea : m_MemoryAreas)
     if (pMemArea->IsCellPresent(rAddress))
     {
@@ -751,7 +751,7 @@ bool TextDatabase::SetCellData(Address const& rAddress, CellData const& rCellDat
 bool TextDatabase::DeleteCellData(Address const& rAddress)
 {
   MemoryArea* pCurMemArea = nullptr;
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   for (MemoryArea* pMemArea : m_MemoryAreas)
     if (pMemArea->IsCellPresent(rAddress))
     {
@@ -766,7 +766,7 @@ bool TextDatabase::DeleteCellData(Address const& rAddress)
 
 bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) const
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
   auto itCmt = m_Comments.find(rAddress);
   if (itCmt == std::end(m_Comments))
     return false;
@@ -776,7 +776,7 @@ bool TextDatabase::GetComment(Address const& rAddress, std::string& rComment) co
 
 bool TextDatabase::SetComment(Address const& rAddress, std::string const& rComment)
 {
-  std::lock_guard<std::mutex> Lock(m_MemoryAreaLock);
+  std::lock_guard Lock(m_MemoryAreaLock);
 
   if (rComment.empty())
   {

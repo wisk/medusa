@@ -49,7 +49,7 @@ bool UserConfiguration::GetOption(std::string const& rKey, std::string& rValue)
 {
   try
   {
-    std::lock_guard<MutexType> Lock(m_Mutex);
+    std::lock_guard Lock(m_Mutex);
     auto Data = _ReadIni(m_CfgPath);
     auto it = Data.find(rKey);
     if (it != Data.end())
@@ -81,7 +81,7 @@ bool UserConfiguration::SetOption(std::string const& rKey, std::string const& rV
 {
   try
   {
-    std::lock_guard<MutexType> Lock(m_Mutex);
+    std::lock_guard Lock(m_Mutex);
     auto Data = _ReadIni(m_CfgPath);
     Data[rKey] = rValue;
     return _WriteIni(m_CfgPath, Data);
@@ -165,7 +165,7 @@ bool UserConfiguration::_WriteDefaultOptions()
 
   try
   {
-    std::lock_guard<MutexType> Lock(m_Mutex);
+    std::lock_guard Lock(m_Mutex);
     auto const& rDefOpts = _GetDefaultOptions();
     std::unordered_map<std::string, std::string> Data(rDefOpts.begin(), rDefOpts.end());
     return _WriteIni(m_CfgPath, Data);
