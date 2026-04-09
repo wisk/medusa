@@ -123,7 +123,7 @@ void ScrollbarAddress::setCurrentAddress(medusa::Address const& addr)
     emit updated();
 }
 
-QColor const& ScrollbarAddress::_CellTypeToColor(medusa::u8 CellType) const
+QColor const& ScrollbarAddress::_CellTypeToColor(medusa::Cell::Type CellType) const
 {
   static const QColor s_InsClr(0x01, 0xa9, 0xdb);
   static const QColor s_ValClr(0x8a, 0x08, 0x4b);

@@ -108,7 +108,7 @@ bool LR35902Architecture::Translate(Address const& rVirtAddr, OffsetType& rPhysO
 Architecture::NamedModeVector LR35902Architecture::GetModes() const
 {
   NamedModeVector Modes;
-  Modes.push_back(NamedMode("LR35902", LR35902_Mode_Default));
+  Modes.push_back(NamedMode("LR35902", static_cast<u8>(LR35902Mode::Default)));
   return Modes;
 }
 
@@ -132,7 +132,7 @@ bool LR35902Architecture::FormatInstruction(
     rPrintData.MarkOffset();
 
     // HACK: handle not flag now
-    if (OprdIdx == 0 && rInsn.GetPrefix() == LR35902_Insn_Prefix_NotFlag)
+    if (OprdIdx == 0 && rInsn.GetPrefix() == static_cast<u8>(LR35902InsnPrefix::NotFlag))
     {
       auto spFirstRegister = expr_cast<IdentifierExpression>(rInsn.GetOperand(0));
       if (spFirstRegister != nullptr)

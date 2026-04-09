@@ -72,7 +72,7 @@ namespace soci
     {
       if (ind == i_null)
       {
-        cd = CellData(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+        cd = CellData(static_cast<u8>(Cell::ValueType), ValueDetail::HexadecimalType, 1);
         return;
       }
 

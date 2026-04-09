@@ -19,7 +19,7 @@ class MEDUSA_EXPORT MultiCell
 public:
   using SPType = std::shared_ptr<MultiCell>;
 
-  enum Type
+  enum class Type : u8
   {
     UnknownType,
     FunctionType,
@@ -27,15 +27,21 @@ public:
     ArrayType
   };
 
-  MultiCell(u8 Type = UnknownType, u16 Size = 0x0)
-    : m_Type(Type)
+  // Backward-compatible aliases so MultiCell::FunctionType etc. still compile
+  static constexpr Type UnknownType  = Type::UnknownType;
+  static constexpr Type FunctionType = Type::FunctionType;
+  static constexpr Type StructType   = Type::StructType;
+  static constexpr Type ArrayType    = Type::ArrayType;
+
+  MultiCell(Type McType = Type::UnknownType, u16 Size = 0x0)
+    : m_Type(McType)
     , m_Size(Size)
   {}
 
   std::string Dump() const;
 
   //! This method returns the multicell type.
-  u8 GetType() const { return m_Type; }
+  Type GetType() const { return m_Type; }
 
   //! This method returns the size of multicell.
   u16 GetSize() const { return m_Size; }
@@ -44,7 +50,7 @@ public:
   void          SetGraph(Graph::SPType spGraph) { m_spGraph = spGraph; }
 
 protected:
-  u8            m_Type;
+  Type          m_Type;
   u16           m_Size;
   Graph::SPType m_spGraph;
 };

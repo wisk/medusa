@@ -676,7 +676,7 @@ bool MemoryDatabase::GetCellData(Address const &rAddress, CellData &rCellData) c
     auto itCellDataPair = m_CellsMap.find(std::make_pair(Id, Offset));
     if (itCellDataPair == std::cend(m_CellsMap))
     {
-      rCellData = CellData(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+      rCellData = CellData(static_cast<u8>(Cell::ValueType), ValueDetail::HexadecimalType, 1);
       return true;
     }
     rCellData = itCellDataPair->second;

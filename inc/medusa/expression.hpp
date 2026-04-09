@@ -54,7 +54,7 @@ public:
 
   using DataContainerType = std::deque<BitVector>;
 
-  enum Kind
+  enum class Kind
   {
     Unknown,
     Sys,
@@ -76,13 +76,38 @@ public:
     Sym,
   };
 
-  enum CompareType
+  enum class CompareType
   {
     CmpUnknown,
     CmpDifferent,
     CmpSameExpression,
     CmpIdentical,
   };
+
+  // Backward-compatible aliases for generated code that uses Expression::Id, Expression::Mem, etc.
+  static constexpr Kind Unknown      = Kind::Unknown;
+  static constexpr Kind Sys          = Kind::Sys;
+  static constexpr Kind Bind         = Kind::Bind;
+  static constexpr Kind Cond         = Kind::Cond;
+  static constexpr Kind TernaryCond  = Kind::TernaryCond;
+  static constexpr Kind IfElseCond   = Kind::IfElseCond;
+  static constexpr Kind WhileCond    = Kind::WhileCond;
+  static constexpr Kind Assign       = Kind::Assign;
+  static constexpr Kind Op           = Kind::Op;
+  static constexpr Kind UnOp         = Kind::UnOp;
+  static constexpr Kind BinOp        = Kind::BinOp;
+  static constexpr Kind Const        = Kind::Const;
+  static constexpr Kind Id           = Kind::Id;
+  static constexpr Kind VecId        = Kind::VecId;
+  static constexpr Kind Track        = Kind::Track;
+  static constexpr Kind Var          = Kind::Var;
+  static constexpr Kind Mem          = Kind::Mem;
+  static constexpr Kind Sym          = Kind::Sym;
+
+  static constexpr CompareType CmpUnknown        = CompareType::CmpUnknown;
+  static constexpr CompareType CmpDifferent      = CompareType::CmpDifferent;
+  static constexpr CompareType CmpSameExpression = CompareType::CmpSameExpression;
+  static constexpr CompareType CmpIdentical      = CompareType::CmpIdentical;
 
   virtual ~Expression() = default;
 
@@ -95,9 +120,9 @@ public:
   virtual bool UpdateChild(Expression::SPType spOldExpr, Expression::SPType spNewExpr) = 0;
   [[nodiscard]] virtual CompareType Compare(Expression::SPType spExpr) const = 0;
 
-  [[nodiscard]] virtual Kind GetClassKind() const { return Unknown; }
-  [[nodiscard]] static  Kind GetStaticClassKind() { return Unknown; }
-  [[nodiscard]] virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Unknown; }
+  [[nodiscard]] virtual Kind GetClassKind() const { return Kind::Unknown; }
+  [[nodiscard]] static  Kind GetStaticClassKind() { return Kind::Unknown; }
+  [[nodiscard]] virtual bool IsKindOf(Kind ExprKind) const { return ExprKind == Kind::Unknown; }
 
   virtual void   Prepare(DataContainerType& rData) const { rData.resize(1); }
   [[nodiscard]] virtual bool   Read(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt, DataContainerType& rData) const { return false; }
@@ -174,7 +199,7 @@ MEDUSA_EXPORT Expression::SPType ARS       (Expression::SPType const spLeftExpr,
 
 class MEDUSA_EXPORT SystemExpression : public Expression
 {
-  DECL_EXPR(SystemExpression, Expression::Sys, Expression)
+  DECL_EXPR(SystemExpression, Expression::Kind::Sys, Expression)
 
 public:
   SystemExpression(std::string const& rExprName, Address const& rAddr);
@@ -199,7 +224,7 @@ protected:
 
 class MEDUSA_EXPORT BindExpression : public Expression
 {
-  DECL_EXPR(BindExpression, Expression::Bind, Expression)
+  DECL_EXPR(BindExpression, Expression::Kind::Bind, Expression)
 
 public:
   BindExpression(Expression::LSPType const& rExprs);
@@ -265,7 +290,7 @@ protected:
 
 class MEDUSA_EXPORT TernaryConditionExpression : public ConditionExpression
 {
-  DECL_EXPR(TernaryConditionExpression, Expression::TernaryCond, Expression)
+  DECL_EXPR(TernaryConditionExpression, Expression::Kind::TernaryCond, Expression)
 
 public:
   TernaryConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spTrueExpr, Expression::SPType spFalseExpr);
@@ -288,7 +313,7 @@ protected:
 
 class MEDUSA_EXPORT IfElseConditionExpression : public ConditionExpression
 {
-  DECL_EXPR(IfElseConditionExpression, Expression::IfElseCond, Expression)
+  DECL_EXPR(IfElseConditionExpression, Expression::Kind::IfElseCond, Expression)
 
 public:
   IfElseConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spThenExpr, Expression::SPType spElseExpr);
@@ -311,7 +336,7 @@ protected:
 
 class MEDUSA_EXPORT WhileConditionExpression : public ConditionExpression
 {
-  DECL_EXPR(WhileConditionExpression, Expression::WhileCond, Expression)
+  DECL_EXPR(WhileConditionExpression, Expression::Kind::WhileCond, Expression)
 
 public:
   WhileConditionExpression(Type CondType, Expression::SPType spRefExpr, Expression::SPType spTestExpr, Expression::SPType spBodyExpr);
@@ -334,7 +359,7 @@ protected:
 
 class MEDUSA_EXPORT AssignmentExpression : public Expression
 {
-  DECL_EXPR(AssignmentExpression, Expression::Assign, Expression)
+  DECL_EXPR(AssignmentExpression, Expression::Kind::Assign, Expression)
 
 public:
   AssignmentExpression(Expression::SPType spDstExpr, Expression::SPType spSrcExpr);
@@ -357,7 +382,7 @@ private:
 
 class MEDUSA_EXPORT OperationExpression : public Expression
 {
-  DECL_EXPR(OperationExpression, Expression::Op, Expression)
+  DECL_EXPR(OperationExpression, Expression::Kind::Op, Expression)
 
 public:
   enum Type
@@ -424,7 +449,7 @@ protected:
 
 class MEDUSA_EXPORT UnaryOperationExpression : public OperationExpression
 {
-  DECL_EXPR(UnaryOperationExpression, Expression::UnOp, Expression)
+  DECL_EXPR(UnaryOperationExpression, Expression::Kind::UnOp, Expression)
 
 public:
   UnaryOperationExpression(Type OpType, Expression::SPType spExpr);
@@ -445,7 +470,7 @@ private:
 
 class MEDUSA_EXPORT BinaryOperationExpression : public OperationExpression
 {
-  DECL_EXPR(BinaryOperationExpression, Expression::BinOp, Expression)
+  DECL_EXPR(BinaryOperationExpression, Expression::Kind::BinOp, Expression)
 
 public:
   BinaryOperationExpression(Type OpType, Expression::SPType spLeftExpr, Expression::SPType spRightExpr);
@@ -475,7 +500,7 @@ private:
 
 class MEDUSA_EXPORT BitVectorExpression : public Expression
 {
-  DECL_EXPR(BitVectorExpression, Expression::Const, Expression)
+  DECL_EXPR(BitVectorExpression, Expression::Kind::Const, Expression)
 
 public:
   BitVectorExpression(u16 BitSize, ap_int Value);
@@ -572,7 +597,7 @@ private:
 
 class MEDUSA_EXPORT IdentifierExpression : public Expression
 {
-  DECL_EXPR(IdentifierExpression, Expression::Id, Expression)
+  DECL_EXPR(IdentifierExpression, Expression::Kind::Id, Expression)
 
 public:
   IdentifierExpression(u32 Id, CpuInformation const* pCpuInfo);
@@ -600,7 +625,7 @@ protected:
 
 class MEDUSA_EXPORT VectorIdentifierExpression : public Expression
 {
-  DECL_EXPR(VectorIdentifierExpression, Expression::VecId, Expression);
+  DECL_EXPR(VectorIdentifierExpression, Expression::Kind::VecId, Expression);
 
 public:
   VectorIdentifierExpression(std::vector<u32> const& rVecId, CpuInformation const* pCpuInfo);
@@ -629,7 +654,7 @@ protected:
 
 class MEDUSA_EXPORT TrackExpression : public Expression
 {
-  DECL_EXPR(TrackExpression, Expression::Track, Expression)
+  DECL_EXPR(TrackExpression, Expression::Kind::Track, Expression)
 
 public:
   TrackExpression(Expression::SPType spTrkExpr, Address const& rCurAddr, u8 Pos);
@@ -657,7 +682,7 @@ private:
 
 class MEDUSA_EXPORT VariableExpression : public Expression
 {
-  DECL_EXPR(VariableExpression, Expression::Var, Expression)
+  DECL_EXPR(VariableExpression, Expression::Kind::Var, Expression)
 
 public:
   enum Type
@@ -694,7 +719,7 @@ protected:
 
 class MEDUSA_EXPORT MemoryExpression : public Expression
 {
-  DECL_EXPR(MemoryExpression, Expression::Mem, Expression)
+  DECL_EXPR(MemoryExpression, Expression::Kind::Mem, Expression)
 
 public:
   MemoryExpression(u32 AccessSize, Expression::SPType spExprBase, Expression::SPType spExprOffset, bool Dereference = true);
@@ -730,7 +755,7 @@ private:
 
 class MEDUSA_EXPORT SymbolicExpression : public Expression
 {
-  DECL_EXPR(SymbolicExpression, Expression::Sym, Expression)
+  DECL_EXPR(SymbolicExpression, Expression::Kind::Sym, Expression)
 
 public:
   enum Type

@@ -1654,7 +1654,7 @@ MultiCell::SPType SociDatabase::GetMultiCell(Address const &rAddress) const
     if (!m_Session.got_data())
       return nullptr;
 
-    switch (Type)
+    switch (static_cast<MultiCell::Type>(Type))
     {
     case MultiCell::ArrayType:
       break;
@@ -1788,7 +1788,7 @@ bool SociDatabase::DeleteMultiCell(Address const &rAddress)
     if (!m_Session.got_data())
       return false;
 
-    switch (Type)
+    switch (static_cast<MultiCell::Type>(Type))
     {
     case MultiCell::ArrayType:
       break;
@@ -1836,7 +1836,7 @@ bool SociDatabase::GetCellData(Address const &rAddress, CellData &rCellData) con
       , soci::use(Id), soci::use(Offset);
     if (!m_Session.got_data())
     {
-      rCellData = CellData(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+      rCellData = CellData(static_cast<u8>(Cell::ValueType), ValueDetail::HexadecimalType, 1);
       return true;
     }
     Offset -= CellOffset;
@@ -1856,7 +1856,7 @@ bool SociDatabase::GetCellData(Address const &rAddress, CellData &rCellData) con
       , soci::use(Id, "memory_area_id"), soci::use(Offset, "memory_area_offset");
     if (!m_Session.got_data())
     {
-      rCellData = CellData(Cell::ValueType, ValueDetail::HexadecimalType, 1);
+      rCellData = CellData(static_cast<u8>(Cell::ValueType), ValueDetail::HexadecimalType, 1);
       return true;
     }
   }

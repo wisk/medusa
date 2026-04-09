@@ -14,7 +14,7 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Cell
 {
 public:
-  enum Type
+  enum class Type : u8
   {
     CellType,         //! Undefined cell.
     InstructionType,  //! Instruction cell.
@@ -22,6 +22,13 @@ public:
     CharacterType,    //! Character cell.
     StringType        //! String cell.
   };
+
+  // Backward-compatible aliases so Cell::InstructionType etc. still compile
+  static constexpr Type CellType        = Type::CellType;
+  static constexpr Type InstructionType = Type::InstructionType;
+  static constexpr Type ValueType       = Type::ValueType;
+  static constexpr Type CharacterType   = Type::CharacterType;
+  static constexpr Type StringType      = Type::StringType;
 
   using SPType = std::shared_ptr<Cell>;
 
@@ -31,11 +38,11 @@ public:
    * \param rComment is a the comment for the current cell.
    */
   Cell(
-    u8 Type, u8 SubType,
+    Type CellType, u8 SubType,
     u16 Size = 0x0
     )
   {
-    m_spDna = std::make_shared<CellData>(Type, SubType, Size);
+    m_spDna = std::make_shared<CellData>(static_cast<u8>(CellType), SubType, Size);
   }
 
   Cell(CellData::SPType spDna) : m_spDna(spDna) {}
@@ -43,7 +50,7 @@ public:
   virtual ~Cell() = default;
 
   size_t GetSize()    const { return m_spDna->GetSize(); }
-  u8     GetType()    const { return m_spDna->GetType(); }
+  Type   GetType()    const { return static_cast<Type>(m_spDna->GetType()); }
   u8     GetSubType() const { return m_spDna->GetSubType(); }
   u8     GetMode()    const { return m_spDna->GetMode(); }
 

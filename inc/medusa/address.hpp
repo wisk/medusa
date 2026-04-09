@@ -23,7 +23,7 @@ class MEDUSA_EXPORT Address
 {
 public:
 
-  enum Type : u8
+  enum class Type : u8
   {
     UnknownType,      //! Used only in case of error or default
     DefaultType,      //! Defined by the loader
@@ -33,6 +33,15 @@ public:
     RelativeType,     //! Relative to a image base (RVA)
     LogicalType,      //! Base:Offset (used for x86, video games consoles with MBC, ...)
   };
+
+  // Backward-compatible aliases so Address::LinearType etc. still compile
+  static constexpr Type UnknownType      = Type::UnknownType;
+  static constexpr Type DefaultType      = Type::DefaultType;
+  static constexpr Type PhysicalType     = Type::PhysicalType;
+  static constexpr Type ArchitectureType = Type::ArchitectureType;
+  static constexpr Type LinearType       = Type::LinearType;
+  static constexpr Type RelativeType     = Type::RelativeType;
+  static constexpr Type LogicalType      = Type::LogicalType;
 
   using Vector = std::vector<Address>;
 

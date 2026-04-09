@@ -317,7 +317,7 @@ Cell::SPType Document::GetCell(Address const& rAddr)
     return nullptr;
   auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
-  switch (CurCellData.GetType())
+  switch (static_cast<Cell::Type>(CurCellData.GetType()))
   {
   case Cell::ValueType:     return std::make_shared<Value>(spCellData);
   case Cell::CharacterType: return std::make_shared<Character>(spCellData);
@@ -359,7 +359,7 @@ Cell::SPType const Document::GetCell(Address const& rAddr) const
     return nullptr;
   auto spCellData = std::make_shared<CellData>(CurCellData); // TODO: we can avoid this
 
-  switch (CurCellData.GetType())
+  switch (static_cast<Cell::Type>(CurCellData.GetType()))
   {
   case Cell::ValueType:     return std::make_shared<Value>(spCellData);
   case Cell::CharacterType: return std::make_shared<Character>(spCellData);
@@ -387,7 +387,7 @@ Cell::SPType const Document::GetCell(Address const& rAddr) const
   return nullptr;
 }
 
-u8 Document::GetCellType(Address const& rAddr) const
+Cell::Type Document::GetCellType(Address const& rAddr) const
 {
   if (m_spDatabase == nullptr)
   {
@@ -396,18 +396,18 @@ u8 Document::GetCellType(Address const& rAddr) const
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
     return Cell::CellType;
-  return CurCellData.GetType();
+  return static_cast<Cell::Type>(CurCellData.GetType());
 }
 
 u8 Document::GetCellSubType(Address const& rAddr) const
 {
   if (m_spDatabase == nullptr)
   {
-    return Cell::CellType;
+    return static_cast<u8>(Cell::CellType);
   }
   CellData CurCellData;
   if (!m_spDatabase->GetCellData(rAddr, CurCellData))
-    return Cell::CellType;
+    return static_cast<u8>(Cell::CellType);
   return CurCellData.GetSubType();
 }
 
@@ -876,7 +876,7 @@ bool Document::ContainsUnknown(Address const& rAddress) const
   if (!m_spDatabase->GetCellData(rAddress, CurCellData))
     return false;
 
-  return CurCellData.GetType() == Cell::ValueType && CurCellData.GetSize() == 1;
+  return static_cast<Cell::Type>(CurCellData.GetType()) == Cell::ValueType && CurCellData.GetSize() == 1;
 }
 
 Tag Document::GetArchitectureTag(Address const& rAddress) const

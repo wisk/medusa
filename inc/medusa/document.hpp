@@ -143,7 +143,7 @@ public:
   Cell::SPType        GetCell(Address const& rAddr);
   Cell::SPType const  GetCell(Address const& rAddr) const;
                      
-  u8                  GetCellType(Address const& rAddr) const;
+  Cell::Type          GetCellType(Address const& rAddr) const;
   u8                  GetCellSubType(Address const& rAddr) const;
                      
                       /*! This method adds a new cell.

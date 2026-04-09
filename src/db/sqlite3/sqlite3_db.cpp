@@ -302,7 +302,7 @@ bool Sqlite3Database::AddMemoryArea(MemoryArea const& rMemArea)
     rMemArea.GetArchitectureMode(),
     rMemArea.GetFileOffset(),
     rMemArea.GetFileSize(),
-    rBaseAddr.GetAddressingType(), rBaseAddr.GetBase(), rBaseAddr.GetOffset(), rBaseAddr.GetBaseSize(), rBaseAddr.GetOffsetSize(),
+    static_cast<std::underlying_type<Address::Type>::type>(rBaseAddr.GetAddressingType()), rBaseAddr.GetBase(), rBaseAddr.GetOffset(), rBaseAddr.GetBaseSize(), rBaseAddr.GetOffsetSize(),
     rMemArea.GetSize()
   };
   m_spStorage->insert(MemAreaTbl);

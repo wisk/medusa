@@ -246,7 +246,7 @@ bool TextDatabase::Open(boost::filesystem::path const& rDatabasePath)
         issMc >> McAddr;
         issMc.seekg(::strlen(" mc("), std::ios::cur);
         issMc >> std::hex >> McId >> McType >> McSize;
-        auto ParseType = [](char Type) -> u8
+        auto ParseType = [](char Type) -> MultiCell::Type
         {
           switch (Type)
           {

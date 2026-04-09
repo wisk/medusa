@@ -95,7 +95,7 @@ void TestDatabase(std::string const& rDatabaseModuleName)
 
   {
     INFO("Cell data");
-    medusa::CellData CellData(medusa::Cell::InstructionType, 0x0, 0x5);
+    medusa::CellData CellData(static_cast<medusa::u8>(medusa::Cell::InstructionType), 0x0, 0x5);
     medusa::CellData DummyCellData;
     medusa::Address::Vector V;
     CHECK(spDb->GetCellData(BaseAddr + 10, DummyCellData)); // return a default value
