@@ -122,7 +122,7 @@ public:
         return nullptr;
     }
 
-    return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
+    return reinterpret_cast<ExportedFunctionType>(Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName()));
   }
 
   void InitializeModules(Path const& rModPath);

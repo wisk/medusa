@@ -287,7 +287,7 @@ Loader::VSPType ModuleManager::MakeAllLoaders(void) const
   {
     return spLdr0->GetDepth() > spLdr1->GetDepth();
   });
-  return std::move(Ldrs);
+  return Ldrs;
 }
 
 Loader::VSPType ModuleManager::MakeAllLoaders(BinaryStream::SPType spBinStrm) const
@@ -302,7 +302,7 @@ Loader::VSPType ModuleManager::MakeAllLoaders(BinaryStream::SPType spBinStrm) co
   {
     return spLdr0->GetDepth() > spLdr1->GetDepth();
   });
-  return std::move(Ldrs);
+  return Ldrs;
 }
 
 Database::SPType ModuleManager::MakeDatabase(std::string const& rDatabaseName) const

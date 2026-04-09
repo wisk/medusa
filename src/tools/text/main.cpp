@@ -32,7 +32,7 @@ public:
 
   void Print(void)
   {
-    std::cout << m_PrintData.GetTexts() << std::endl;
+    std::cout << m_PrintData.GetTexts() << '\n';
   }
 
 };
@@ -57,7 +57,7 @@ public:
       size_t Count = 0;
       for (typename Container::const_iterator i = c.begin(); i != c.end(); ++i)
       {
-        std::cout << Count << " " << (*i)->GetName() << std::endl;
+        std::cout << Count << " " << (*i)->GetName() << '\n';
         Count++;
       }
       size_t Input;
@@ -80,8 +80,8 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedBool const& rBool) const
   {
-    std::cout << rBool.GetName() << " " << rBool.GetValue() << std::endl;
-    std::cout << "true/false" << std::endl;
+    std::cout << rBool.GetName() << " " << rBool.GetValue() << '\n';
+    std::cout << "true/false" << '\n';
 
     while (true)
     {
@@ -111,7 +111,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedUint8 const& rUint8) const
   {
-    std::cout << rUint8.GetName() << " " << static_cast<int>(rUint8.GetValue()) << std::endl;
+    std::cout << rUint8.GetName() << " " << static_cast<int>(rUint8.GetValue()) << '\n';
 
     while (true)
     {
@@ -129,7 +129,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedUint16 const& rUint16) const
   {
-    std::cout << rUint16.GetName() << " " << static_cast<int>(rUint16.GetValue()) << std::endl;
+    std::cout << rUint16.GetName() << " " << static_cast<int>(rUint16.GetValue()) << '\n';
 
     while (true)
     {
@@ -147,7 +147,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedUint32 const& rUint32) const
   {
-    std::cout << rUint32.GetName() << " " << static_cast<int>(rUint32.GetValue()) << std::endl;
+    std::cout << rUint32.GetName() << " " << static_cast<int>(rUint32.GetValue()) << '\n';
 
     while (true)
     {
@@ -165,7 +165,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedUint64 const& rUint64) const
   {
-    std::cout << rUint64.GetName() << " " << static_cast<int>(rUint64.GetValue()) << std::endl;
+    std::cout << rUint64.GetName() << " " << static_cast<int>(rUint64.GetValue()) << '\n';
 
     while (true)
     {
@@ -184,7 +184,7 @@ struct AskForConfiguration
   void operator()(ConfigurationModel::NamedEnum const& rEnum) const
   {
     std::cout << std::dec;
-    std::cout << "ENUM TYPE: " << rEnum.GetName() << std::endl;
+    std::cout << "ENUM TYPE: " << rEnum.GetName() << '\n';
     for (Configuration::Enum::const_iterator It = rEnum.GetConfigurationValue().begin();
       It != rEnum.GetConfigurationValue().end(); ++It)
     {
@@ -192,7 +192,7 @@ struct AskForConfiguration
         std::cout << "* ";
       else
         std::cout << "  ";
-      std::cout << It->first << ": " << It->second << std::endl;
+      std::cout << It->first << ": " << It->second << '\n';
     }
 
     while (true)
@@ -219,7 +219,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedString const& rString) const
   {
-    std::cout << rString.GetName() << " " << rString.GetValue() << std::endl;
+    std::cout << rString.GetName() << " " << rString.GetValue() << '\n';
     std::string Result;
 
     std::getline(std::cin, Result, '\n');
@@ -230,7 +230,7 @@ struct AskForConfiguration
 
   void operator()(ConfigurationModel::NamedPath const& rPath) const
   {
-    std::cout << rPath.GetName() << " " << rPath.GetValue() << std::endl;
+    std::cout << rPath.GetName() << " " << rPath.GetValue() << '\n';
     std::string Result;
 
     std::getline(std::cin, Result, '\n');
@@ -316,7 +316,7 @@ int main(int argc, char **argv)
       }
       else
       {
-        std::cout << "Choose a executable format:" << std::endl;
+        std::cout << "Choose a executable format:" << '\n';
         AskFor<Loader::VSPType::value_type, Loader::VSPType> AskForLoader;
         rspLoader = AskForLoader(all_ldrs);
       }
@@ -342,13 +342,13 @@ int main(int argc, char **argv)
       if (!rSysName.empty())
         rspOperatingSystem = mod_mgr.GetOperatingSystem(rSysName);
 
-      std::cout << std::endl;
+      std::cout << '\n';
 
       ConfigurationModel CfgMdl;
 
       if (!auto_cfg)
       {
-        std::cout << "Configuration:" << std::endl;
+        std::cout << "Configuration:" << '\n';
         for (ConfigurationModel::ConstIterator itCfg = CfgMdl.Begin(), itEnd = CfgMdl.End(); itCfg != CfgMdl.End(); ++itCfg)
           std::visit(AskForConfiguration(CfgMdl), itCfg->second);
       }
@@ -373,12 +373,12 @@ int main(int argc, char **argv)
   }
   catch (std::exception& e)
   {
-    std::cerr << e.what() << std::endl;
+    std::cerr << e.what() << '\n';
     return EXIT_FAILURE;
   }
   catch (Exception& e)
   {
-    std::cerr << e.What() << std::endl;
+    std::cerr << e.What() << '\n';
     return EXIT_FAILURE;
   }
 

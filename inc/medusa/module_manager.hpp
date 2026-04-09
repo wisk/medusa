@@ -53,7 +53,7 @@ public:
     FullModName += ".";
     FullModName += Module::GetExtension();
 
-    return (ExportedFunctionType)Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName());
+    return reinterpret_cast<ExportedFunctionType>(Mod.Load<ExportedFunctionType>(pModHandle, ModuleType::GetExportedFunctionName()));
   }
 
   void LoadDatabases(Path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
