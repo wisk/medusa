@@ -9,20 +9,20 @@ using namespace medusa;
 class AapcsCallingConvention : public CallingConvention
 {
 public:
-  virtual bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const;
-  virtual bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo) const;
-  virtual bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const;
+  bool               GetParameter(CpuContext const* pCpuCtxt, MemoryContext const* pMemCtxt, u16 ParamNr, BitVector& rParamVal) const override;
+  bool               ReturnFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo) const override;
+  bool               ReturnValueFromFunction(CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, u16 ParamNo, BitVector const& rRetVal) const override;
 
-  virtual Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy) const;
-  virtual Expression::SPType EmitReturnFromFunction(u16 ParamNo) const;
-  virtual Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const;
+  Expression::SPType EmitGetParameter(u16 ParamNr, ValueType ParamTy) const override;
+  Expression::SPType EmitReturnFromFunction(u16 ParamNo) const override;
+  Expression::SPType EmitReturnValueFromFunction(u16 ParamNo, BitVector const& rRetVal) const override;
 
-  virtual bool               AnalyzeArgument(
-    Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const;
-  virtual bool               AnalyzeParameter(
-    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
-  virtual RegisterType       GetRegisterType(u32 Id)                                          const;
-  virtual StackCleanerType   StackCleanupBy()                                             const;
+  bool               AnalyzeArgument(
+    Expression::SPType spExpr, u16& rArgNr, ValueType& rArgTy)                                const override;
+  bool               AnalyzeParameter(
+    Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const override;
+  RegisterType       GetRegisterType(u32 Id)                                          const override;
+  StackCleanerType   StackCleanupBy()                                             const override;
 
 private:
 };

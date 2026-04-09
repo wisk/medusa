@@ -28,8 +28,8 @@ protected:
   Expression::LSPType& m_rExprs;
   AssignmentExpression::SPType m_spResExpr;
 
-  virtual bool _RunOnce();
-  virtual bool _Finalize();
+  bool _RunOnce() override;
+  bool _Finalize() override;
 
 private:
   Expression::SPType __FindTrackedIdExpression(u32 Id, Address const& rAddr);
@@ -44,8 +44,8 @@ protected:
   Expression::SPType m_spMergedExpr;
   Expression::VSPType m_rExprsPool;
 
-  virtual bool _RunOnce();
-  virtual bool _Finalize();
+  bool _RunOnce() override;
+  bool _Finalize() override;
 };
 
 //https://english.stackexchange.com/questions/35860/normalization-vs-canonicalization
@@ -54,8 +54,8 @@ class MEDUSA_EXPORT NormalizeExpression : public ExpressionSimplifier
 public:
   NormalizeExpression(Expression::SPType spExpr);
 
-  virtual bool _RunOnce();
-  virtual bool _Finalize();
+  bool _RunOnce() override;
+  bool _Finalize() override;
 
 protected:
   Expression::SPType m_spExpr;
@@ -66,8 +66,8 @@ class MEDUSA_EXPORT ConstantPropagation : public ExpressionSimplifier
 public:
   ConstantPropagation(Expression::SPType spExpr);
 
-  virtual bool _RunOnce();
-  virtual bool _Finalize();
+  bool _RunOnce() override;
+  bool _Finalize() override;
 
 protected:
   Expression::SPType m_spExpr;
@@ -79,8 +79,8 @@ public:
   ExpressionRewriter(Expression::SPType& rspExpr);
 
 protected:
-  virtual bool _RunOnce();
-  virtual bool _Finalize();
+  bool _RunOnce() override;
+  bool _Finalize() override;
 
   Expression::SPType& m_rspExpr;
 };

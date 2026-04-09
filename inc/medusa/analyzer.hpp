@@ -7,7 +7,6 @@
 #include "medusa/architecture.hpp"
 #include "medusa/task.hpp"
 
-#include <fstream>
 #include <string>
 
 #include <boost/graph/graphviz.hpp>
