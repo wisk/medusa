@@ -1,5 +1,5 @@
 #include "interpreter_emulator.hpp"
 
-Emulator* GetEmulator(void) { return new InterpreterEmulator(); }
+Emulator* GetEmulator() { return new InterpreterEmulator(); }
 
-int main(void) { return 0; }
+int main() { return 0; }

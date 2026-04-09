@@ -19,12 +19,12 @@ BasicBlockItem::BasicBlockItem(QObject* pParent, medusa::Medusa& rCore, medusa::
   _Update();
 }
 
-void BasicBlockItem::OnDocumentUpdated(void)
+void BasicBlockItem::OnDocumentUpdated()
 {
   m_NeedRepaint = true;
 }
 
-QRectF BasicBlockItem::boundingRect(void) const
+QRectF BasicBlockItem::boundingRect() const
 {
   return QRectF(0, 0, m_Width, m_Height);
 }
@@ -144,7 +144,7 @@ void BasicBlockItem::paintText(QPainter& p)
   });
 }
 
-void BasicBlockItem::_Update(void)
+void BasicBlockItem::_Update()
 {
   m_Fx->setBlurRadius(25.0);
   setGraphicsEffect(m_Fx);

@@ -3,7 +3,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-u8 Operand::GetLength(void) const
+u8 Operand::GetLength() const
 {
   switch (m_Type & MS_MASK)
   {
@@ -29,7 +29,7 @@ u8 Operand::GetLength(void) const
   return 0;
 }
 
-u8 Operand::GetRawLength(void) const
+u8 Operand::GetRawLength() const
 {
   switch (m_Type & DS_MASK)
   {
@@ -41,7 +41,7 @@ u8 Operand::GetRawLength(void) const
   }
 }
 
-u32 Operand::GetBitSize(void) const
+u32 Operand::GetBitSize() const
 {
   switch (m_Type & MS_MASK)
   {

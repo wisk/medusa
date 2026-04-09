@@ -2,4 +2,4 @@
 
 Emulator* GetEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt) { return new LlvmEmulator(pCpuInfo, pCpuCtxt, pMemCtxt); }
 
-int main(void) { return 0; }
+int main() { return 0; }

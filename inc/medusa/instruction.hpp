@@ -13,8 +13,8 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-#define I_NONE 0x0
-#define P_NONE 0x0
+inline constexpr u32 I_NONE = 0x0;
+inline constexpr u32 P_NONE = 0x0;
 
 //! Instruction is a Cell which handles an instruction for any Architecture.
 class MEDUSA_EXPORT Instruction : public Cell
@@ -55,27 +55,27 @@ public:
 
   Instruction(CellData::SPType spDna);
 
-  ~Instruction(void);
+  ~Instruction();
 
-  std::string ToString(void) const;
+  std::string ToString() const;
 
-  char const* GetFormat(void) const;
-  char const* GetName(void) const;
-  u32         GetOpcode(void) const;
-  u32         GetPrefix(void) const;
-  u32         GetAttributes(void) const;
+  char const* GetFormat() const;
+  char const* GetName() const;
+  u32         GetOpcode() const;
+  u32         GetPrefix() const;
+  u32         GetAttributes() const;
 
-  u32 GetTestedFlags(void) const;
-  u32 GetUpdatedFlags(void) const;
-  u32 GetClearedFlags(void) const;
-  u32 GetFixedFlags(void) const;
+  u32 GetTestedFlags() const;
+  u32 GetUpdatedFlags() const;
+  u32 GetClearedFlags() const;
+  u32 GetFixedFlags() const;
 
-  Expression::LSPType const& GetSemantic(void) const;
+  Expression::LSPType const& GetSemantic() const;
 
   void               AddOperand(Expression::SPType spOprdExpr);
   Expression::SPType GetOperand(u8 OprdNo) const;
   bool               GetOperandReference(Document const& rDoc, u8 OprdNo, Address const& rCurAddr, Address& rDstAddr, bool EvalMemRef = true) const;
-  u8                 GetNumberOfOperand(void) const;
+  u8                 GetNumberOfOperand() const;
   using OperandCallback = std::function<void (Expression::SPType const& rspOprdExpr)>;
   void               ForEachOperand(OperandCallback OprdCb) const;
 
@@ -95,8 +95,8 @@ public:
   void AddPreSemantic(Expression::SPType spExpr);
   void AddPostSemantic(Expression::SPType spExpr);
 
-  u16& Size(void);
-  u32& Prefix(void);
+  u16& Size();
+  u32& Prefix();
 
 private:
   char const*         m_pFormat;          /*! This string holds the format of the instruction                     */

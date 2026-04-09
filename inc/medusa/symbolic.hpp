@@ -26,7 +26,7 @@ private:
     Block(Block const& rBlk);
     Block& operator=(Block const& rBlk);
 
-    ~Block(void);
+    ~Block();
 
     void SetPcRegisterId(u32 PcRegId) { m_PcRegId = PcRegId; }
 
@@ -35,17 +35,17 @@ private:
 
     void AddExpression(Expression::SPType spExpr);
     Expression::SPType BackTrackExpression(ExpressionMatcher Matcher) const;
-    Expression::LSPType const& GetTrackedExpressions(void) const { return m_TrackedExprs; }
+    Expression::LSPType const& GetTrackedExpressions() const { return m_TrackedExprs; }
 
     void AddParentBlock(Address const& rAddr);
-    std::set<Address> const& GetParentBlocks(void) const;
+    std::set<Address> const& GetParentBlocks() const;
 
     void AddConditionalExpression(Expression const* pExpr);
-    Expression::LSPType const& GetConditionalExpressions(void) const;
+    Expression::LSPType const& GetConditionalExpressions() const;
 
     bool Contains(Address const& rAddr) const;
-    Address GetLastAddress(void) const;
-    bool IsEndOfBlock(void) const;
+    Address GetLastAddress() const;
+    bool IsEndOfBlock() const;
 
     void ForEachAddress(std::function<bool(Address const& rAddress)> Callback) const;
 
@@ -65,11 +65,11 @@ public:
     bool AddBlock(Address const& rBlkAddr, Block &rBlk);
 
     Expression::LSPType BacktrackRegister(Address const& RegAddr, u32 RegId) const;
-    Expression::VSPType GetExpressions(void) const;
+    Expression::VSPType GetExpressions() const;
 
-    Track::Context& GetTrackContext(void) { return m_TrackCtxt; }
+    Track::Context& GetTrackContext() { return m_TrackCtxt; }
 
-    std::string ToString(void) const;
+    std::string ToString() const;
 
   private:
     Track::Context m_TrackCtxt;
@@ -77,7 +77,7 @@ public:
   };
 
   Symbolic(Document &rDoc);
-  ~Symbolic(void);
+  ~Symbolic();
 
   using Callback = std::function<bool (Symbolic::Context const& rSymCtxt, Address const& rCurAddr, Address::Vector& rNextAddresses)>;
 

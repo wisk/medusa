@@ -14,13 +14,13 @@ TaskManager::TaskManager(NotifyFunctionType const& rNotify)
   Start();
 }
 
-TaskManager::~TaskManager(void)
+TaskManager::~TaskManager()
 {
   if (m_Running)
     Stop();
 }
 
-void TaskManager::Start(void)
+void TaskManager::Start()
 {
   if (m_Running)
     return;
@@ -79,7 +79,7 @@ void TaskManager::Start(void)
   });
 }
 
-void TaskManager::Stop(void)
+void TaskManager::Stop()
 {
   if (!m_Running)
     return;
@@ -94,7 +94,7 @@ void TaskManager::Stop(void)
     m_Thread.join();
 }
 
-void TaskManager::Wait(void)
+void TaskManager::Wait()
 {
   { std::unique_lock<std::mutex> Lock(m_Mutex);
     if (m_Tasks.empty())

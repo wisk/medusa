@@ -2,7 +2,7 @@
 
 namespace medusa
 {
-  bool AnalyzerString::CreateUtf8String(void)
+  bool AnalyzerString::CreateUtf8String()
   {
     static Utf8StringTrait Utf8Str;
     s8 CurChar;
@@ -38,7 +38,7 @@ namespace medusa
     return m_rDoc.SetCellWithLabel(m_Addr, spString, Label(StrData, Label::String | Label::Global), true);
   }
 
-  bool AnalyzerString::CreateUtf16String(void)
+  bool AnalyzerString::CreateUtf16String()
   {
     static Utf16StringTrait Utf16Str;
     Utf16StringTrait::CharType Utf16Char;

@@ -27,7 +27,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" ARCH_X86_EXPORT Architecture* GetArchitecture(void);
+extern "C" ARCH_X86_EXPORT Architecture* GetArchitecture();
 
 class X86Architecture : public Architecture
 {
@@ -35,7 +35,7 @@ private:
   class X86CpuInformation : public CpuInformation
   {
   public:
-    X86CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('x', '8', '6')) {}
+    X86CpuInformation() : CpuInformation(MEDUSA_ARCH_TAG('x', '8', '6')) {}
     char const* ConvertIdentifierToName(u32 Id) const override;
     u32 ConvertNameToIdentifier(std::string const& rName) const override;
     u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
@@ -51,15 +51,15 @@ private:
     bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const override;
     bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) override;
     void* GetRegisterAddress(u32 Register) override;
-    void* GetContextAddress(void) override { return &m_Context; }
+    void* GetContextAddress() override { return &m_Context; }
     u16 GetRegisterOffset(u32 Register) override;
     void GetRegisters(RegisterList& RegList) const override;
     bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const override;
-    u8 GetMode(void) const override;
+    u8 GetMode() const override;
     void SetMode(u8 Mode) override;
     bool GetAddress(AddressKind AddrKind, Address& rAddr) const override;
     bool SetAddress(AddressKind AddrKind, Address const& rAddr) override;
-    std::string ToString(void) const override;
+    std::string ToString() const override;
 
   private:
     union X86Register
@@ -83,14 +83,14 @@ private:
   };
 
 public:
-  X86Architecture(void);
-  ~X86Architecture(void) override {}
+  X86Architecture();
+  ~X86Architecture() override {}
 
-  std::string           GetName(void) const override { return "x86"; }
+  std::string           GetName() const override { return "x86"; }
   bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) override { return false; }
-  EEndianness           GetEndianness(void) override { return LittleEndian; }
+  EEndianness           GetEndianness() override { return LittleEndian; }
   bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
-  NamedModeVector       GetModes(void) const override
+  NamedModeVector       GetModes() const override
   {
     NamedModeVector X86Modes;
     X86Modes.reserve(3);
@@ -112,12 +112,12 @@ public:
     Instruction   const& rInsn,
     PrintData          & rPrintData) const override;
 
-  CpuInformation    const* GetCpuInformation(void) const override { return &m_CpuInfo; }
+  CpuInformation    const* GetCpuInformation() const override { return &m_CpuInfo; }
   CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const override;
-  std::vector<std::string> GetCallingConventionNames(void) const override;
+  std::vector<std::string> GetCallingConventionNames() const override;
 
-  CpuContext*    MakeCpuContext(void)    const override { return new X86CpuContext(0, m_CpuInfo); }
-  MemoryContext* MakeMemoryContext(void) const override { return new MemoryContext(m_CpuInfo); }
+  CpuContext*    MakeCpuContext()    const override { return new X86CpuContext(0, m_CpuInfo); }
+  MemoryContext* MakeMemoryContext() const override { return new MemoryContext(m_CpuInfo); }
 
   bool HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr) override;
   bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode) override;

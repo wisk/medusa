@@ -17,7 +17,7 @@ EdgeItem::EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType ty
 }
 
 #ifdef MEDUSA_HAS_OGDF
-QPainterPath EdgeItem::shape(void) const
+QPainterPath EdgeItem::shape() const
 {
   QPainterPath path;
   path.addPath(_line);
@@ -25,7 +25,7 @@ QPainterPath EdgeItem::shape(void) const
   return path;
 }
 
-QRectF EdgeItem::boundingRect(void) const
+QRectF EdgeItem::boundingRect() const
 {
   return shape().boundingRect();
 }
@@ -48,7 +48,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
   painter->drawPath(_head);
 }
 
-void EdgeItem::computeCoordinates(void)
+void EdgeItem::computeCoordinates()
 {
   prepareGeometryChange();
   std::vector<QPointF> points;

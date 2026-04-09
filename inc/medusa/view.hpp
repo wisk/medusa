@@ -15,7 +15,7 @@ class MEDUSA_EXPORT View : public Document::Subscriber
 {
 public:
   View(u32 Type, Document& rDoc);
-  virtual ~View(void);
+  virtual ~View();
 
 protected:
   Document& m_rDoc;

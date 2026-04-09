@@ -25,14 +25,14 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" ARCH_ARM_EXPORT Architecture* GetArchitecture(void);
+extern "C" ARCH_ARM_EXPORT Architecture* GetArchitecture();
 
 class ArmArchitecture : public Architecture
 {
   class ARMCpuInformation : public CpuInformation
   {
   public:
-    ARMCpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
+    ARMCpuInformation() : CpuInformation(MEDUSA_ARCH_TAG('a', 'r', 'm')) {}
     char const* ConvertIdentifierToName(u32 Id) const override;
     u32 ConvertNameToIdentifier(std::string const& rName) const override;
     u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
@@ -47,14 +47,14 @@ class ArmArchitecture : public Architecture
     bool ReadRegister (u32 Reg, void*       pVal, u32 BitSize) const override;
     bool WriteRegister(u32 Reg, void const* pVal, u32 BitSize) override;
     bool Translate(Address const& rLogicalAddress, u64& rLinearAddress) const override;
-    u8 GetMode(void) const override;
+    u8 GetMode() const override;
     void SetMode(u8 Mode) override;
     bool GetAddress(AddressKind AddrKind, Address& rAddr) const override;
     bool SetAddress(AddressKind AddrKind, Address const& rAddr) override;
-    std::string ToString(void) const override;
+    std::string ToString() const override;
 
     void* GetRegisterAddress(u32 Register) override;
-    void* GetContextAddress(void) override;
+    void* GetContextAddress() override;
     u16   GetRegisterOffset(u32 Register) override;
 
     void  GetRegisters(RegisterList& RegList) const override;
@@ -68,15 +68,15 @@ class ArmArchitecture : public Architecture
   };
 
 public:
-  ArmArchitecture(void);
-  ~ArmArchitecture(void) override {}
+  ArmArchitecture();
+  ~ArmArchitecture() override {}
 
-  std::string           GetName(void) const override                                   { return "ARM"; }
+  std::string           GetName() const override                                   { return "ARM"; }
   bool                  Translate(Address const& rVirtAddr, OffsetType& rPhysOff) override { return false; }
   Address               CurrentAddress(Address const& rAddr, Instruction const& rInsn) const override;
-  EEndianness           GetEndianness(void) override                                   { return LittleEndian; }
+  EEndianness           GetEndianness() override                                   { return LittleEndian; }
   bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
-  NamedModeVector       GetModes(void) const override
+  NamedModeVector       GetModes() const override
   {
     NamedModeVector ArmModes;
     ArmModes.reserve(4);
@@ -100,12 +100,12 @@ public:
     Instruction   const& rInsn,
     PrintData          & rPrintData) const override;
 
-  CpuInformation    const* GetCpuInformation(void) const override                                        { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
+  CpuInformation    const* GetCpuInformation() const override                                        { static ARMCpuInformation ArmCpuInfo; return &ArmCpuInfo; }
   CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const override;
-  std::vector<std::string> GetCallingConventionNames(void) const override                                { return{ "aapcs" }; }
+  std::vector<std::string> GetCallingConventionNames() const override                                { return{ "aapcs" }; }
 
-  CpuContext*           MakeCpuContext(void) const override                            { return new ARMCpuContext(*GetCpuInformation()); }
-  MemoryContext*        MakeMemoryContext(void) const override                         { return new MemoryContext(*GetCpuInformation()); }
+  CpuContext*           MakeCpuContext() const override                            { return new ARMCpuContext(*GetCpuInformation()); }
+  MemoryContext*        MakeMemoryContext() const override                         { return new MemoryContext(*GetCpuInformation()); }
 
   bool                  HandleExpression(Expression::LSPType & rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr) override;
   bool                  EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode) override;

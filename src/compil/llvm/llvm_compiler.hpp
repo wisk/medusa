@@ -46,12 +46,12 @@ extern "C" COMPIL_LLVM_EXPORT Compiler* GetCompiler(void);
 class LlvmCompiler : public Compiler
 {
 public:
-  LlvmCompiler(void);
-  virtual ~LlvmCompiler(void);
+  LlvmCompiler();
+  ~LlvmCompiler() override;
 
-  virtual std::string GetName(void) const { return "llvm"; }
+  std::string GetName() const override { return "llvm"; }
 
-  virtual bool Compile(std::vector<u8>& rBuffer);
+  bool Compile(std::vector<u8>& rBuffer) override;
 
 private:
   llvm::IRBuilder<> m_Builder;
@@ -67,23 +67,23 @@ private:
       VarMapType& rVars,
       llvm::IRBuilder<>& rBuilder);
 
-    virtual ~LlvmExpressionVisitor(void);
+    ~LlvmExpressionVisitor() override;
 
-    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
-    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
-    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+    Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+    Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+    Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+    Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+    Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+    Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+    Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr) override;
+    Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr) override;
+    Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr) override;
+    Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+    Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+    Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+    Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+    Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+    Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
   protected:
     llvm::Value* _MakeInteger(BitVector const& rInt) const;

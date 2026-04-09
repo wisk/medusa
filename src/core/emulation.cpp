@@ -3,11 +3,11 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Emulator::Emulator(void) : m_pCpuInfo(nullptr), m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
+Emulator::Emulator() : m_pCpuInfo(nullptr), m_pCpuCtxt(nullptr), m_pMemCtxt(nullptr)
 {
 }
 
-Emulator::~Emulator(void)
+Emulator::~Emulator()
 {
 }
 
@@ -135,7 +135,7 @@ bool Emulator::RemoveHook(Address const& rAddress)
   return true;
 }
 
-Emulator::ReturnType Emulator::CallInstructionHook(void)
+Emulator::ReturnType Emulator::CallInstructionHook()
 {
   if (!m_InsnCb)
     return Continue;
@@ -162,7 +162,7 @@ Emulator::ReturnType Emulator::CallHookOnExecutionIfNeeded(Address const& rAddre
   return itHook->second.m_Callback(m_pCpuCtxt, m_pMemCtxt, rAddress);
 }
 
-bool Emulator::InvalidateCache(void)
+bool Emulator::InvalidateCache()
 {
   return false;
 }

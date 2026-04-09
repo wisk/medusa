@@ -159,7 +159,7 @@ LlvmEmulator::LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt,
   llvm::InitializeNativeTargetAsmPrinter();
 }
 
-LlvmEmulator::~LlvmEmulator(void)
+LlvmEmulator::~LlvmEmulator()
 {
 }
 
@@ -392,20 +392,20 @@ Emulator::ReturnType LlvmEmulator::Execute(Address const& rAddress)
   return CallHookOnExecutionIfNeeded(NextAddr);
 }
 
-bool LlvmEmulator::InvalidateCache(void)
+bool LlvmEmulator::InvalidateCache()
 {
   m_JitHelper = LlvmJitHelper();
   m_FunctionCache.clear();
   return true;
 }
 
-LlvmEmulator::LlvmJitHelper::LlvmJitHelper(void)
+LlvmEmulator::LlvmJitHelper::LlvmJitHelper()
 : m_pCurMod(nullptr)
 {
 
 }
 
-LlvmEmulator::LlvmJitHelper::~LlvmJitHelper(void)
+LlvmEmulator::LlvmJitHelper::~LlvmJitHelper()
 {
   for (auto& rModEE : m_ModuleExecEngineMap)
   {
@@ -575,11 +575,11 @@ void LlvmEmulator::LlvmJitHelper::_CreateModule(std::string const& rModName)
   m_Modules.push_back(m_pCurMod);
 }
 
-//LlvmEmulator::EventListener::EventListener(void)
+//LlvmEmulator::EventListener::EventListener()
 //{
 //}
 //
-//LlvmEmulator::EventListener::~EventListener(void)
+//LlvmEmulator::EventListener::~EventListener()
 //{
 //}
 //
@@ -608,7 +608,7 @@ LlvmEmulator::LlvmExpressionVisitor::LlvmExpressionVisitor(
 {
 }
 
-LlvmEmulator::LlvmExpressionVisitor::~LlvmExpressionVisitor(void)
+LlvmEmulator::LlvmExpressionVisitor::~LlvmExpressionVisitor()
 {
   while (!m_ValueStack.empty())
   {

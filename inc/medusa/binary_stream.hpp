@@ -23,8 +23,8 @@ class MEDUSA_EXPORT BinaryStream
 public:
   using SPType = std::shared_ptr<BinaryStream>;
 
-  BinaryStream(void);
-  virtual ~BinaryStream(void);
+  BinaryStream();
+  virtual ~BinaryStream();
 
   BinaryStream(BinaryStream const&) = delete;
   BinaryStream& operator=(BinaryStream const&) = delete;
@@ -54,13 +54,13 @@ public:
     return *this;
   }
 
-  virtual void Close(void) = 0;
+  virtual void Close() = 0;
 
   //! This method returns a path for the binary stream (for memory binary stream it redirects to a tmp file)
-  Path GetPath(void) const { return m_Path; }
+  Path GetPath() const { return m_Path; }
 
   //! This method returns the current endianness.
-  EEndianness GetEndianness(void) const { return m_Endianness; }
+  EEndianness GetEndianness() const { return m_Endianness; }
 
   //! This method sets the desired endianness.
   void SetEndianness(EEndianness Endianness) { m_Endianness = Endianness;  }
@@ -244,11 +244,11 @@ public:
     return true;
   }
 
-  u32         GetSize(void)   const { return m_Size;    }
-  void*       GetBuffer(void)       { return m_pBuffer; }
-  void const* GetBuffer(void) const { return m_pBuffer; }
+  u32         GetSize()   const { return m_Size;    }
+  void*       GetBuffer()       { return m_pBuffer; }
+  void const* GetBuffer() const { return m_pBuffer; }
 
-  std::string const &GetSha1(void) const
+  std::string const &GetSha1() const
   {
     if (m_Sha1.empty())
       m_Sha1 = Sha1(m_pBuffer, m_Size);
@@ -303,7 +303,7 @@ class MEDUSA_EXPORT FileBinaryStream : public BinaryStream
 {
 public:
   FileBinaryStream(Path const& rFilePath = Path());
-  virtual ~FileBinaryStream(void);
+  virtual ~FileBinaryStream();
 
   FileBinaryStream(FileBinaryStream&& mBinStrm)
   {
@@ -337,7 +337,7 @@ public:
   }
 
   void Open(Path const& rFilePath);
-  void Close(void);
+  void Close();
 
 protected:
   FileHandleType m_FileHandle;
@@ -349,7 +349,7 @@ class MEDUSA_EXPORT MemoryBinaryStream : public BinaryStream
 {
 public:
   MemoryBinaryStream(void const* pMem = nullptr, u32 MemSize = 0);
-  virtual ~MemoryBinaryStream(void);
+  virtual ~MemoryBinaryStream();
 
   MemoryBinaryStream(MemoryBinaryStream&& mBinStrm)
   {
@@ -377,7 +377,7 @@ public:
   }
 
   void Open(void const* pMem, u32 MemSize);
-  void Close(void);
+  void Close();
 };
 
 MEDUSA_NAMESPACE_END

@@ -12,14 +12,14 @@ MEDUSA_NAMESPACE_BEGIN
 
 /* binary stream */
 
-BinaryStream::BinaryStream(void)
+BinaryStream::BinaryStream()
   : m_pBuffer(nullptr)
   , m_Size(0x0)
   , m_Endianness(EndianUnknown)
 {
 }
 
-BinaryStream::~BinaryStream(void)
+BinaryStream::~BinaryStream()
 {
 }
 
@@ -34,7 +34,7 @@ FileBinaryStream::FileBinaryStream(Path const& rFilePath)
   Open(rFilePath);
 }
 
-FileBinaryStream::~FileBinaryStream(void)
+FileBinaryStream::~FileBinaryStream()
 {
   Close();
 }
@@ -68,7 +68,7 @@ void FileBinaryStream::Open(Path const& rFilePath)
     throw Exception_System("mmap");
 }
 
-void FileBinaryStream::Close(void)
+void FileBinaryStream::Close()
 {
   if (m_pBuffer != MAP_FAILED)
     munmap(m_pBuffer, m_Size);
@@ -85,7 +85,7 @@ MemoryBinaryStream::MemoryBinaryStream(void const* pMem, u32 MemSize)
   Open(pMem, MemSize);
 }
 
-MemoryBinaryStream::~MemoryBinaryStream(void)
+MemoryBinaryStream::~MemoryBinaryStream()
 {
   Close();
 }
@@ -102,7 +102,7 @@ void MemoryBinaryStream::Open(void const* pMem, u32 MemSize)
     ::memcpy(m_pBuffer, pMem, MemSize);
 }
 
-void MemoryBinaryStream::Close(void)
+void MemoryBinaryStream::Close()
 {
   ::free(m_pBuffer);
   m_pBuffer = nullptr;

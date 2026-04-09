@@ -2,11 +2,11 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Binding::Binding(void)
+Binding::Binding()
 {
 }
 
-Binding::~Binding(void)
+Binding::~Binding()
 {
 }
 

@@ -20,7 +20,7 @@ std::string MEDUSA_EXPORT Base64Decode(std::string const &rBase64Data);
 std::string MEDUSA_EXPORT Sha1(void const *pData, size_t Length);
 Id          MEDUSA_EXPORT Sha1(std::string const &Name);
 
-Id          MEDUSA_EXPORT RandomId(void);
+Id          MEDUSA_EXPORT RandomId();
 
 void        MEDUSA_EXPORT HexDump(std::ostringstream& rOut, void const* pData, u16 DataLen, Address const& rAddr);
 

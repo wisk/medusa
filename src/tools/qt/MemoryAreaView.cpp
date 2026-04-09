@@ -34,7 +34,7 @@ void MemoryAreaView::OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool
 }
 
 
-void MemoryAreaView::Refresh(void)
+void MemoryAreaView::Refresh()
 {
   _core.GetDocument().ForEachMemoryArea([&](medusa::MemoryArea const& rMemArea)
   {

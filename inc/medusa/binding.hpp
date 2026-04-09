@@ -16,10 +16,10 @@ class MEDUSA_EXPORT Binding
 public:
   using SPType = std::shared_ptr<Binding>;
 
-  Binding(void);
-  virtual ~Binding(void);
+  Binding();
+  virtual ~Binding();
 
-  virtual std::string GetName(void) const = 0;
+  virtual std::string GetName() const = 0;
   virtual bool Bind(Medusa& rCore) = 0;
   virtual bool Unbind(Medusa& rCore) = 0;
   virtual bool Execute(std::string const& rCode) = 0;

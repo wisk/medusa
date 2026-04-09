@@ -53,7 +53,7 @@ public:
   virtual bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const { return false; }
   virtual RegisterType       GetRegisterType(u32 Id)                                          const { return UnknownRegister; }
-  virtual StackCleanerType   StackCleanupBy(void)                                             const { return StackCleanedByUnknown; }
+  virtual StackCleanerType   StackCleanupBy()                                             const { return StackCleanedByUnknown; }
 };
 
 MEDUSA_NAMESPACE_END

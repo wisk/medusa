@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-char const* Module::GetExtension(void)
+char const* Module::GetExtension()
 {
   return "dll";
 }

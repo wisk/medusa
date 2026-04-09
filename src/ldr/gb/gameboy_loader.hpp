@@ -20,8 +20,8 @@ MEDUSA_NAMESPACE_USE
 class GameBoyLoader : public Loader
 {
 public:
-  std::string GetName(void) const override;
-  u8          GetDepth(void) const override { return 1; }
+  std::string GetName() const override;
+  u8          GetDepth() const override { return 1; }
   bool        IsCompatible(BinaryStream const& rBinStrm) const override;
   std::string              GetDetailedName(BinaryStream const& rBinStrm) const override { return GetName(); }
   std::string              GetSystemName(BinaryStream const& rBinStrm) const override { return ""; }
@@ -37,6 +37,6 @@ private:
   static bool ReadHeader(BinaryStream const& rBinStrm, GameBoyRom& rRom);
 };
 
-extern "C" LDR_GB_EXPORT Loader* GetLoader(void);
+extern "C" LDR_GB_EXPORT Loader* GetLoader();
 
 #endif // LDR_GAMEBOY_HPP

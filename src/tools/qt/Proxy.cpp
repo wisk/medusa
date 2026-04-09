@@ -5,7 +5,7 @@
 
 #include <QApplication>
 
-void AddDisassemblyViewAction::Do(void)
+void AddDisassemblyViewAction::Do()
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -13,7 +13,7 @@ void AddDisassemblyViewAction::Do(void)
   mainWin->addDisassemblyView(m_pView->GetCursorAddress());
 }
 
-void AddSemanticViewAction::Do(void)
+void AddSemanticViewAction::Do()
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -21,7 +21,7 @@ void AddSemanticViewAction::Do(void)
   mainWin->addSemanticView(m_pView->GetCursorAddress());
 }
 
-void AddGraphViewAction::Do(void)
+void AddGraphViewAction::Do()
 {
   auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
   if (mainWin == nullptr)
@@ -29,7 +29,7 @@ void AddGraphViewAction::Do(void)
   mainWin->addGraphView(m_pView->GetCursorAddress());
 }
 
-//void AddControlFlowGraphViewAction::Do(void)
+//void AddControlFlowGraphViewAction::Do()
 //{
 //  auto mainWin = dynamic_cast<MainWindow*>(qApp->activeWindow());
 //  if (mainWin == nullptr)
@@ -37,13 +37,13 @@ void AddGraphViewAction::Do(void)
 //  mainWin->addControlFlowGraphView(m_pView->GetCursorAddress());
 //}
 
-void ShowCommentDialog::Do(void)
+void ShowCommentDialog::Do()
 {
   CommentDialog CmtDlg(qApp->activeWindow(), m_rCore, m_pView->GetCursorAddress());
   CmtDlg.exec();
 }
 
-void ShowLabelDialog::Do(void)
+void ShowLabelDialog::Do()
 {
   LabelDialog LblDlg(qApp->activeWindow(), m_rCore, m_pView->GetCursorAddress());
   LblDlg.exec();

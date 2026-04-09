@@ -116,7 +116,7 @@ Id Sha1(std::string const &rName)
   return Sha1Id;
 }
 
-Id RandomId(void)
+Id RandomId()
 {
   static std::mt19937 rng{std::random_device{}()};
   boost::uuids::basic_random_generator<std::mt19937> Gen(rng);

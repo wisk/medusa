@@ -3,20 +3,20 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Database::Database(void)
+Database::Database()
 {
 }
 
-Database::~Database(void)
+Database::~Database()
 {
 }
 
-std::string Database::GetName(void) const
+std::string Database::GetName() const
 {
   return "Invalid";
 }
 
-std::string Database::GetExtension(void) const
+std::string Database::GetExtension() const
 {
   return ".mdb"; // generic name
 }
@@ -36,12 +36,12 @@ bool Database::Create(Path const& rDatabasePath, bool Force)
   return false;
 }
 
-bool Database::Flush(void)
+bool Database::Flush()
 {
   return false;
 }
 
-bool Database::Close(void)
+bool Database::Close()
 {
   return false;
 }
@@ -52,7 +52,7 @@ Database& Database::SetBinaryStream(BinaryStream::SPType spBinStrm)
   return *this;
 }
 
-BinaryStream& Database::GetBinaryStream(void)
+BinaryStream& Database::GetBinaryStream()
 {
   // TODO(wisk): don't need a shared ptr here
   return *m_spBinStrm;
@@ -64,7 +64,7 @@ Database& Database::SetOperatingSystemName(std::string const& rOperatingSystemNa
   return *this;
 }
 
-std::string Database::GetOperatingSystemName(void) const
+std::string Database::GetOperatingSystemName() const
 {
   return m_OsName;
 }

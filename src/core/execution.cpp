@@ -12,7 +12,7 @@ Execution::Execution(Document& rDoc)
 {
 }
 
-Execution::~Execution(void) = default;
+Execution::~Execution() = default;
 
 bool Execution::SetCpuMemContext(Address const& StartAddr)
 {
@@ -159,7 +159,7 @@ bool Execution::Execute(Address const& rAddr)
   return true;
 }
 
-bool Execution::InvalidateCache(void)
+bool Execution::InvalidateCache()
 {
   if (m_spEmul == nullptr)
     return false;
@@ -244,7 +244,7 @@ bool Execution::Hook(std::string const& rLabelName, Emulator::HookType Type, Emu
   return true;
 }
 
-std::string Execution::GetHookName(void) const
+std::string Execution::GetHookName() const
 {
   u32 PrgReg = m_pCpuCtxt->GetCpuInformation().GetRegisterByType(CpuInformation::ProgramPointerRegister, m_pCpuCtxt->GetMode());
   if (PrgReg == 0)

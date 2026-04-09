@@ -85,7 +85,7 @@ CallingConvention::RegisterType AapcsCallingConvention::GetRegisterType(u32 Id) 
   return UnknownRegister;
 }
 
-CallingConvention::StackCleanerType AapcsCallingConvention::StackCleanupBy(void) const
+CallingConvention::StackCleanerType AapcsCallingConvention::StackCleanupBy() const
 {
   return StackCleanedByUnknown;
 }

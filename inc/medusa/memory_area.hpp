@@ -47,7 +47,7 @@ public:
 
   using CellDataPredicat = std::function<void (OffsetType, CellData::SPType)>;
 
-  MemoryArea(void)
+  MemoryArea()
     : m_Id(), m_Name("")
     , m_Type(UnknownType), m_Access(Access::NoAccess)
     , m_DefaultArchitectureTag(MEDUSA_ARCH_UNK), m_DefaultArchitectureMode()
@@ -102,14 +102,14 @@ public:
     return MemArea;
   }
 
-  std::string ToString(void) const;
+  std::string ToString() const;
 
   // Information methods
-  std::string const& GetName(void)             const { return m_Name;                    }
-  Type               GetType(void)             const { return m_Type;                    }
-  Access             GetAccess(void)           const { return m_Access;                  }
-  Tag                GetArchitectureTag(void)  const { return m_DefaultArchitectureTag;  }
-  u8                 GetArchitectureMode(void) const { return m_DefaultArchitectureMode; }
+  std::string const& GetName()             const { return m_Name;                    }
+  Type               GetType()             const { return m_Type;                    }
+  Access             GetAccess()           const { return m_Access;                  }
+  Tag                GetArchitectureTag()  const { return m_DefaultArchitectureTag;  }
+  u8                 GetArchitectureMode() const { return m_DefaultArchitectureMode; }
 
   // Set Architecture Tag and Mode
   void SetDefaultArchitectureTag(Tag arch);
@@ -122,11 +122,11 @@ public:
   void SetArchitectureTag(Tag ArchTag)    { m_DefaultArchitectureTag = ArchTag;   }
   void SetArchitectureMode(u8 ArchMode)   { m_DefaultArchitectureMode = ArchMode; }
 
-  OffsetType     GetFileOffset(void)  const { return m_FileOffset;  }
-  u32            GetFileSize(void)    const { return m_FileSize;    }
-  Address const& GetBaseAddress(void) const { return m_BaseAddress; }
-  u32            GetSize(void)        const { return m_Size;        }
-  u32            GetId(void)          const { return m_Id;          }
+  OffsetType     GetFileOffset()  const { return m_FileOffset;  }
+  u32            GetFileSize()    const { return m_FileSize;    }
+  Address const& GetBaseAddress() const { return m_BaseAddress; }
+  u32            GetSize()        const { return m_Size;        }
+  u32            GetId()          const { return m_Id;          }
 
 protected:
   u32         m_Id;

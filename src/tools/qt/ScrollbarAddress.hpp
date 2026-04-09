@@ -14,11 +14,11 @@ class ScrollbarAddress : public QWidget, public medusa::View
 
 public:
   ScrollbarAddress(QWidget * parent, medusa::Medusa & core);
-  virtual ~ScrollbarAddress(void);
+  virtual ~ScrollbarAddress();
 
   virtual void OnAddressUpdated(medusa::Address::Vector const& rAddresses);
 
-  void Refresh(void);
+  void Refresh();
 
 public slots:
   void setCurrentAddress(medusa::Address const& addr);
@@ -31,7 +31,7 @@ protected:
 
 signals:
   void goTo(medusa::Address const& addr);
-  void updated(void);
+  void updated();
 
 private:
   QColor const& _CellTypeToColor(medusa::u8 CellType) const;

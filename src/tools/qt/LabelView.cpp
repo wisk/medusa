@@ -33,7 +33,7 @@ void LabelView::OnLabelUpdated(medusa::Address const& address, medusa::Label con
     emit labelAdded(address, label);
 }
 
-void LabelView::Refresh(void)
+void LabelView::Refresh()
 {
   _mutex.lock();
   auto pModel = model();

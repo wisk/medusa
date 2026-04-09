@@ -20,7 +20,7 @@ namespace medusa
       return false;
     }
 
-    operator SPType(void)
+    operator SPType()
     {
       return nullptr;
     }
@@ -60,7 +60,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Any>(m_PatternName);
       }
@@ -82,7 +82,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Callback>(m_PatternName, m_Callback);
       }
@@ -121,7 +121,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Memory>(m_PatternName, m_spBasePattern, m_spOffsetPattern);
       }
@@ -150,7 +150,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<AnyUnary>(m_PatternName, m_spPattern);
       }
@@ -182,7 +182,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Unary>(m_PatternName, m_spPattern);
       }
@@ -221,7 +221,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<AnyBinary>(m_PatternName, m_spLeftPattern, m_spRightPattern);
       }
@@ -257,7 +257,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Binary>(m_PatternName, m_spLeftPattern, m_spRightPattern);
       }
@@ -307,7 +307,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<AnyCondition>(m_PatternName, m_spRefPattern, m_spTestPattern);
       }
@@ -339,7 +339,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Condition>(m_PatternName, m_spRefPattern, m_spTestPattern);
       }
@@ -383,7 +383,7 @@ namespace medusa
         return true;
       }
 
-      operator SPType(void)
+      operator SPType()
       {
         return std::make_shared<Ternary>(m_PatternName, m_spCondPattern, m_spTruePattern, m_spFalsePattern);
       }

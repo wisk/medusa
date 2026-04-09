@@ -17,7 +17,7 @@ public:
   Function(u16 Size, u16 InsnCnt);
 
   //! This method returns the number of instruction.
-  u16 GetInstructionCount(void) const { return m_InsnCnt; }
+  u16 GetInstructionCount() const { return m_InsnCnt; }
 
 private:
   u16 m_InsnCnt;

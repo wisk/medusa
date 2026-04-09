@@ -198,12 +198,12 @@ public:
     , m_rCpuInfo(rCpuInfo), m_Mode(Mode)
   {}
 
-  CpuInformation const& GetCpuInformation(void) const
+  CpuInformation const& GetCpuInformation() const
   {
     return m_rCpuInfo;
   }
 
-  u8 GetMode(void) const
+  u8 GetMode() const
   {
     return m_Mode;
   }
@@ -213,7 +213,7 @@ public:
     m_ExprStk.push(spExpression);
   }
 
-  Expression::SPType Pop(void)
+  Expression::SPType Pop()
   {
     if (m_ExprStk.empty())
       return nullptr;
@@ -227,7 +227,7 @@ public:
     m_rResExpr.push_back(spParsedExpression);
   }
 
-  bool Finalize(void)
+  bool Finalize()
   {
     if (m_ExprStk.empty())
       return true;

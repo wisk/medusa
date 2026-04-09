@@ -7,12 +7,12 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Document::Document(void)
+Document::Document()
 : m_AddressHistoryIndex()
 {
 }
 
-Document::~Document(void)
+Document::~Document()
 {
   Close();
 }
@@ -25,14 +25,14 @@ bool Document::Open(Database::SPType spDb)
   return true;
 }
 
-bool Document::Flush(void)
+bool Document::Flush()
 {
   if (m_spDatabase == nullptr)
     return false;
   return m_spDatabase->Flush();
 }
 
-bool Document::Close(void)
+bool Document::Close()
 {
   if (m_spDatabase)
   {
@@ -817,7 +817,7 @@ bool Document::TranslateAddress(Address const& rAddress, Address::Type ToConvert
   return m_spDatabase->TranslateAddress(rAddress, ToConvert, rTranslatedAddress);
 }
 
-Address Document::GetStartAddress(void) const
+Address Document::GetStartAddress() const
 {
   if (m_spDatabase == nullptr)
     return Address();
@@ -828,7 +828,7 @@ Address Document::GetStartAddress(void) const
   return StartAddr;
 }
 
-Address Document::GetFirstAddress(void) const
+Address Document::GetFirstAddress() const
 {
   if (m_spDatabase == nullptr)
     return Address();
@@ -837,7 +837,7 @@ Address Document::GetFirstAddress(void) const
   return FirstAddr;
 }
 
-Address Document::GetLastAddress(void) const
+Address Document::GetLastAddress() const
 {
   if (m_spDatabase == nullptr)
     return Address();
@@ -846,7 +846,7 @@ Address Document::GetLastAddress(void) const
   return LastAddr;
 }
 
-u32 Document::GetNumberOfAddress(void) const
+u32 Document::GetNumberOfAddress() const
 {
   if (m_spDatabase == nullptr)
     return 0;
@@ -903,7 +903,7 @@ Tag Document::GetArchitectureTag(Address const& rAddress) const
   return ArchTag;
 }
 
-std::vector<Tag> Document::GetArchitectureTags(void) const
+std::vector<Tag> Document::GetArchitectureTags() const
 {
   if (m_spDatabase == nullptr)
     return {};
@@ -1131,7 +1131,7 @@ bool Document::_ApplyValue(Address const& rAddr, ValueDetail const& rValDtl)
   return true;
 }
 
-std::string Document::GetOperatingSystemName(void) const
+std::string Document::GetOperatingSystemName() const
 {
   if (m_spDatabase == nullptr)
     return "";

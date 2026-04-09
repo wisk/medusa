@@ -54,7 +54,7 @@ bool XRefs::HasXRefFrom(Address const& rTo) const
   return m_ToFrom.find(rTo) != m_ToFrom.end();
 }
 
-void XRefs::EraseAll(void)
+void XRefs::EraseAll()
 {
   m_ToFrom.clear();
   m_FromTo.clear();

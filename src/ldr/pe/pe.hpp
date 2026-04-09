@@ -68,7 +68,7 @@ struct PeDosHeader
 {
   void Swap(EEndianness Endianness);
   enum { kMagic = PE_DOS_SIGNATURE };
-  bool IsValid(void) const { return e_magic == kMagic; }
+  bool IsValid() const { return e_magic == kMagic; }
   u16 e_magic;
   u16 e_cblp;
   u16 e_cp;
@@ -113,7 +113,7 @@ struct PeOptionalHeader32
 {
   void Swap(EEndianness Endianness);
   enum { kMagic = 0x10b };
-  bool IsValid(void) const { return Magic == kMagic; }
+  bool IsValid() const { return Magic == kMagic; }
   u16             Magic;
   u8              MajorLinkerVersion;
   u8              MinorLinkerVersion;
@@ -151,7 +151,7 @@ struct PeNtHeaders32
 {
   void Swap(EEndianness Endianness);
   enum { kSignature = PE_NT_SIGNATURE };
-  bool IsValid(void) const { return Signature == kSignature; }
+  bool IsValid() const { return Signature == kSignature; }
   u32                Signature;
   PeFileHeader       FileHeader;
   PeOptionalHeader32 OptionalHeader;
@@ -161,7 +161,7 @@ struct PeOptionalHeader64
 {
   void Swap(EEndianness Endianness);
   enum { kMagic = 0x20b };
-  bool IsValid(void) const { return Magic == kMagic; }
+  bool IsValid() const { return Magic == kMagic; }
   u16             Magic;
   u8              MajorLinkerVersion;
   u8              MinorLinkerVersion;
@@ -198,7 +198,7 @@ struct PeNtHeaders64
 {
   void Swap(EEndianness Endianness);
   enum { kSignature = PE_NT_SIGNATURE };
-  bool IsValid(void) const { return Signature == kSignature; }
+  bool IsValid() const { return Signature == kSignature; }
   u32                Signature;
   PeFileHeader       FileHeader;
   PeOptionalHeader64 OptionalHeader;
@@ -256,8 +256,8 @@ struct PeExportDirectory
 struct PeThunkData32
 {
   void Swap(EEndianness Endianness);
-  bool IsOrdinal(void) const { return (Ordinal & PE_ORDINAL_FLAG32) != 0; }
-  u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
+  bool IsOrdinal() const { return (Ordinal & PE_ORDINAL_FLAG32) != 0; }
+  u16  GetOrdinal() const { return Ordinal & 0xffff; }
   union
   {
     u32 ForwarderString;
@@ -270,8 +270,8 @@ struct PeThunkData32
 struct PeThunkData64
 {
   void Swap(EEndianness Endianness);
-  bool IsOrdinal(void) const { return (Ordinal & PE_ORDINAL_FLAG64) != 0; }
-  u16  GetOrdinal(void) const { return Ordinal & 0xffff; }
+  bool IsOrdinal() const { return (Ordinal & PE_ORDINAL_FLAG64) != 0; }
+  u16  GetOrdinal() const { return Ordinal & 0xffff; }
   union
   {
     u64 ForwarderString;

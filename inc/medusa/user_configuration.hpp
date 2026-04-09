@@ -15,18 +15,18 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT UserConfiguration
 {
 public:
-  UserConfiguration(void);
-  ~UserConfiguration(void);
+  UserConfiguration();
+  ~UserConfiguration();
 
   bool GetOption(std::string const& rKey, std::string& rValue);
   std::string GetOption(std::string const& rKey);
   bool SetOption(std::string const& rKey, std::string const& rValue);
 
 private:
-  std::unordered_map<std::string, std::string> const& _GetDefaultOptions(void) const;
+  std::unordered_map<std::string, std::string> const& _GetDefaultOptions() const;
 
   bool _WriteDefaultOption(std::string const& rKey);
-  bool _WriteDefaultOptions(void);
+  bool _WriteDefaultOptions();
 
   static std::unordered_map<std::string, std::string> _ReadIni(std::filesystem::path const& rPath);
   static bool _WriteIni(std::filesystem::path const& rPath, std::unordered_map<std::string, std::string> const& rData);

@@ -27,11 +27,11 @@ LabelDialog::LabelDialog(QWidget * pParent, medusa::Medusa& rCore, medusa::Addre
   }
 }
 
-LabelDialog::~LabelDialog(void)
+LabelDialog::~LabelDialog()
 {
 }
 
-void LabelDialog::SetLabel(void)
+void LabelDialog::SetLabel()
 {
   medusa::u16 LblType = 0x0;
 

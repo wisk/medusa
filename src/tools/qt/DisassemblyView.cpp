@@ -46,7 +46,7 @@ DisassemblyView::DisassemblyView(QWidget * parent, medusa::Medusa * core)
   _UpdateActions();
 }
 
-DisassemblyView::~DisassemblyView(void)
+DisassemblyView::~DisassemblyView()
 {
 }
 
@@ -66,7 +66,7 @@ bool DisassemblyView::goTo(medusa::Address const& address)
   return true;
 }
 
-void DisassemblyView::setFont(void)
+void DisassemblyView::setFont()
 {
   medusa::UserConfiguration UserCfg;
   QString fontInfo = QString::fromStdString(UserCfg.GetOption("font.listing"));
@@ -82,7 +82,7 @@ void DisassemblyView::setFont(void)
   viewUpdated();
 }
 
-void DisassemblyView::viewUpdated(void)
+void DisassemblyView::viewUpdated()
 {
   Refresh();
 
@@ -98,7 +98,7 @@ void DisassemblyView::horizontalScrollBarChanged(int n)
   emit viewUpdated();
 }
 
-void DisassemblyView::listingUpdated(void)
+void DisassemblyView::listingUpdated()
 {
   // OPTIMIZEME: this part of code is too time consumming
   // we should find a way to only update when it's necessary
@@ -108,7 +108,7 @@ void DisassemblyView::listingUpdated(void)
   _needRepaint = true;
 }
 
-void DisassemblyView::updateCursor(void)
+void DisassemblyView::updateCursor()
 {
   _cursorBlink = _cursorBlink ? false : true;
   viewport()->update();
@@ -702,7 +702,7 @@ bool DisassemblyView::convertMouseToAddress(QMouseEvent * evt, medusa::Address &
   return convertPositionToAddress(evt->pos(), addr);
 }
 
-void DisassemblyView::_UpdateActions(void)
+void DisassemblyView::_UpdateActions()
 {
   auto ActionsMap = medusa::Action::GetMap();
   AddUiActions(ActionsMap);

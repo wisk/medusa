@@ -30,8 +30,8 @@ public:
 
   using MapType = std::map<std::string, Information>;
 
-  static MapType& GetColors(void);
-  static MapType& GetFonts(void);
+  static MapType& GetColors();
+  static MapType& GetFonts();
 };
 
 class MEDUSA_EXPORT FormatDisassembly
@@ -68,7 +68,7 @@ class MEDUSA_EXPORT DisassemblyView : public View
 {
 public:
   DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& rAddress);
-  virtual ~DisassemblyView(void);
+  virtual ~DisassemblyView();
 
   bool GetAddressFromPosition(Address& rAddress, u32 xPos, u32 yPos) const;
   void GetDimension(u32& rWidth, u32& rHeight) const;
@@ -87,14 +87,14 @@ class MEDUSA_EXPORT FullDisassemblyView : public View
 {
 public:
   FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Width, u32 Height, Address const& rAddress);
-  virtual ~FullDisassemblyView(void);
+  virtual ~FullDisassemblyView();
 
   Cell::SPType       GetCellFromPosition(u32 xChar, u32 yChar);
   Cell::SPType const GetCellFromPosition(u32 xChar, u32 yChar) const;
   void               GetDimension(u32& rWidth, u32& rHeight) const;
 
   void             Resize(u32 Width, u32 Height);
-  void             Refresh(void);
+  void             Refresh();
 
   bool             MoveView(s32 xOffset, s32 yOffset);   //! Relative to the view
   bool             MoveCursor(s32 xOffset, s32 yOffset, bool& rInvalidateView); //! Relative to the view
@@ -107,13 +107,13 @@ public:
 
   void             BeginSelection(u32 x, u32 y);        //! Absolute to the view
   void             EndSelection(u32 x, u32 y);          //! Absolute to the view
-  void             ResetSelection(void);
+  void             ResetSelection();
 
 
-  Address          GetCursorAddress(void)         const { return m_Cursor.m_Address;         }
-  Address          GetSelectionFirstAddress(void) const { return m_SelectionBegin.m_Address; }
-  Address          GetSelectionLastAddress(void)  const { return m_SelectionEnd.m_Address;   }
-  u8               GetSelectionIndex(void) const;
+  Address          GetCursorAddress()         const { return m_Cursor.m_Address;         }
+  Address          GetSelectionFirstAddress() const { return m_SelectionBegin.m_Address; }
+  Address          GetSelectionLastAddress()  const { return m_SelectionEnd.m_Address;   }
+  u8               GetSelectionIndex() const;
 
 protected:
   using MutexType = std::recursive_mutex;

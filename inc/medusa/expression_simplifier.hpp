@@ -8,13 +8,13 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT ExpressionSimplifier
 {
 public:
-  ExpressionSimplifier(void) : m_IsDone(false) {}
+  ExpressionSimplifier() : m_IsDone(false) {}
 
-  bool Execute(void);
+  bool Execute();
 
 protected:
-  virtual bool _RunOnce(void) = 0;
-  virtual bool _Finalize(void) = 0;
+  virtual bool _RunOnce() = 0;
+  virtual bool _Finalize() = 0;
 
   bool m_IsDone;
 };
@@ -28,8 +28,8 @@ protected:
   Expression::LSPType& m_rExprs;
   AssignmentExpression::SPType m_spResExpr;
 
-  virtual bool _RunOnce(void);
-  virtual bool _Finalize(void);
+  virtual bool _RunOnce();
+  virtual bool _Finalize();
 
 private:
   Expression::SPType __FindTrackedIdExpression(u32 Id, Address const& rAddr);
@@ -44,8 +44,8 @@ protected:
   Expression::SPType m_spMergedExpr;
   Expression::VSPType m_rExprsPool;
 
-  virtual bool _RunOnce(void);
-  virtual bool _Finalize(void);
+  virtual bool _RunOnce();
+  virtual bool _Finalize();
 };
 
 //https://english.stackexchange.com/questions/35860/normalization-vs-canonicalization
@@ -54,8 +54,8 @@ class MEDUSA_EXPORT NormalizeExpression : public ExpressionSimplifier
 public:
   NormalizeExpression(Expression::SPType spExpr);
 
-  virtual bool _RunOnce(void);
-  virtual bool _Finalize(void);
+  virtual bool _RunOnce();
+  virtual bool _Finalize();
 
 protected:
   Expression::SPType m_spExpr;
@@ -66,8 +66,8 @@ class MEDUSA_EXPORT ConstantPropagation : public ExpressionSimplifier
 public:
   ConstantPropagation(Expression::SPType spExpr);
 
-  virtual bool _RunOnce(void);
-  virtual bool _Finalize(void);
+  virtual bool _RunOnce();
+  virtual bool _Finalize();
 
 protected:
   Expression::SPType m_spExpr;
@@ -79,8 +79,8 @@ public:
   ExpressionRewriter(Expression::SPType& rspExpr);
 
 protected:
-  virtual bool _RunOnce(void);
-  virtual bool _Finalize(void);
+  virtual bool _RunOnce();
+  virtual bool _Finalize();
 
   Expression::SPType& m_rspExpr;
 };

@@ -12,11 +12,11 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Exception
 {
 public:
-  Exception(void)                                  : m_ExceptionMessage("Unknown exception")  {}
+  Exception()                                  : m_ExceptionMessage("Unknown exception")  {}
   Exception(std::string const& ExceptionMessage)  : m_ExceptionMessage(ExceptionMessage)      {}
-  ~Exception(void) {}
+  ~Exception() {}
 
-  std::string const& What(void) const { return m_ExceptionMessage; }
+  std::string const& What() const { return m_ExceptionMessage; }
 
 protected:
   std::string m_ExceptionMessage;
@@ -26,23 +26,23 @@ protected:
 class MEDUSA_EXPORT Exception_System : public Exception
 {
 public:
-  Exception_System(void) : Exception(ErrorCodeToMessage()) {}
+  Exception_System() : Exception(ErrorCodeToMessage()) {}
   Exception_System(std::string const& FunctionName) : Exception("")
   { m_ExceptionMessage = FunctionName; m_ExceptionMessage += ": "; m_ExceptionMessage += ErrorCodeToMessage(); }
-  ~Exception_System(void) {}
+  ~Exception_System() {}
 
 private:
-  static std::string ErrorCodeToMessage(void);
+  static std::string ErrorCodeToMessage();
 };
 
 //! Exception_NotImplemented is n exception threw when a feature is not implemented.
 class MEDUSA_EXPORT Exception_NotImplemented : public Exception
 {
 public:
-  Exception_NotImplemented(void) : Exception("Not implemented") {}
+  Exception_NotImplemented() : Exception("Not implemented") {}
   Exception_NotImplemented(std::string const& FeatureName) : Exception("")
   { m_ExceptionMessage = FeatureName + ": not implemented"; }
-  ~Exception_NotImplemented(void) {}
+  ~Exception_NotImplemented() {}
 };
 
 MEDUSA_NAMESPACE_END

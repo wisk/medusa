@@ -6,7 +6,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string Exception_System::ErrorCodeToMessage(void)
+std::string Exception_System::ErrorCodeToMessage()
 {
   HLOCAL hLocal = nullptr;
 
@@ -36,7 +36,7 @@ MEDUSA_NAMESPACE_END
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string Exception_System::ErrorCodeToMessage(void)
+std::string Exception_System::ErrorCodeToMessage()
 {
   return strerror(errno);
 }

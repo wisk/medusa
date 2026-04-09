@@ -22,7 +22,7 @@ public:
   using MutexType = std::mutex;
 
   void Push(EventHandler::EventType const& rEvent);
-  void Quit(void);
+  void Quit();
   bool WaitAndHandleEvent(EventHandler& rEvtHdl);
 
   void ProcessQueue(EventHandler& rEvtHdl);

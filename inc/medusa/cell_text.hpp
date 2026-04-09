@@ -42,8 +42,8 @@ public:
     : m_Type(Type), m_Length(static_cast<u16>(Length))
   {}
 
-  u16 GetType(void)   const { return m_Type;   }
-  u16 GetSize(void) const { return m_Length; }
+  u16 GetType()   const { return m_Type;   }
+  u16 GetSize() const { return m_Length; }
 
 private:
   u16 m_Type;
@@ -56,9 +56,9 @@ public:
   LineData(Address const& rAddress = Address(), std::string const& rText = "", Mark::List const& rMarks = Mark::List(), std::set<u16> const& rOperandsOffset = std::set<u16>())
     : m_Address(rAddress), m_Text(rText), m_Marks(rMarks), m_OperandsOffset(rOperandsOffset) {}
 
-  Address     const& GetAddress(void)         const { return m_Address; }
-  std::string const& GetText(void)            const { return m_Text; }
-  Mark::List  const& GetMarks(void)           const { return m_Marks; }
+  Address     const& GetAddress()         const { return m_Address; }
+  std::string const& GetText()            const { return m_Text; }
+  Mark::List  const& GetMarks()           const { return m_Marks; }
 
   bool               GetOperandNo(u16 Offset, u8& rOperandNo) const;
 
@@ -72,7 +72,7 @@ private:
 class MEDUSA_EXPORT PrintData
 {
 public:
-  PrintData(void);
+  PrintData();
 
   PrintData(PrintData const& rPD);
 
@@ -109,19 +109,19 @@ public:
 
   PrintData& AppendAddress(Address const& rAddress);
   PrintData& AppendSpace(u16 SpaceNo = 1);
-  PrintData& AppendNewLine(void);
+  PrintData& AppendNewLine();
 
-  PrintData& MarkOffset(void);
+  PrintData& MarkOffset();
 
-  Address::Vector GetAddresses(void) const;
+  Address::Vector GetAddresses() const;
   bool          GetFirstAddress(Address& rAddress) const;
   bool          GetLastAddress(Address& rAddress) const;
-  std::string   GetTexts(void) const;
-  std::vector<std::string> GetTextLines(void) const;
-  Mark::List    GetMarks(void) const;
+  std::string   GetTexts() const;
+  std::vector<std::string> GetTextLines() const;
+  Mark::List    GetMarks() const;
   bool          GetLine(u16 LineNo, u16& rOffset, LineData& rLine) const;
   bool          GetLine(Address const& rAddress, u16 Offset, LineData& rLine) const;
-  std::string const& GetCurrentText(void) const { return m_CurrentText; }
+  std::string const& GetCurrentText() const { return m_CurrentText; }
   u16           GetLineNo(Address const& rAddress) const;
   bool          GetLineOffset(Address const& rAddress, u16& rOffset) const;
 
@@ -130,9 +130,9 @@ public:
   bool          Contains(Address const& rAddress) const;
 
 
-  u16 GetWidth(void) const
+  u16 GetWidth() const
   { return std::max(m_Width, m_LineWidth); }
-  u16 GetHeight(void) const
+  u16 GetHeight() const
   { return m_Height; }
 
   using LineCallback = std::function<void (
@@ -141,7 +141,7 @@ public:
     Mark::List const& rMarks)>;
   void ForEachLine(LineCallback Callback) const;
 
-  void Clear(void);
+  void Clear();
 
 private:
   void _AppendText(std::string const& rText, Mark::Type MarkType);

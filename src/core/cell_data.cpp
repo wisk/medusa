@@ -4,7 +4,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string CellData::Dump(void) const
+std::string CellData::Dump() const
 {
   std::ostringstream oss;
   oss

@@ -224,7 +224,7 @@ CallingConvention::RegisterType CdeclCallingConvention::GetRegisterType(u32 Id) 
   }
 }
 
-CallingConvention::StackCleanerType CdeclCallingConvention::StackCleanupBy(void) const
+CallingConvention::StackCleanerType CdeclCallingConvention::StackCleanupBy() const
 {
   return StackCleanedByCaller;
 }
@@ -451,7 +451,7 @@ CallingConvention::RegisterType StdCallCallingConvention::GetRegisterType(u32 Id
   }
 }
 
-CallingConvention::StackCleanerType StdCallCallingConvention::StackCleanupBy(void) const
+CallingConvention::StackCleanerType StdCallCallingConvention::StackCleanupBy() const
 {
   return StackCleanedByCallee;
 }
@@ -571,7 +571,7 @@ CallingConvention::RegisterType MsX64CallingConvention::GetRegisterType(u32 Id) 
   }
 }
 
-CallingConvention::StackCleanerType MsX64CallingConvention::StackCleanupBy(void) const
+CallingConvention::StackCleanerType MsX64CallingConvention::StackCleanupBy() const
 {
   return StackCleanedByCallee;
 }
@@ -684,7 +684,7 @@ CallingConvention::RegisterType SystemVCallingConvention::GetRegisterType(u32 Id
   }
 }
 
-CallingConvention::StackCleanerType SystemVCallingConvention::StackCleanupBy(void) const
+CallingConvention::StackCleanerType SystemVCallingConvention::StackCleanupBy() const
 {
   return StackCleanedByCallee;
 }

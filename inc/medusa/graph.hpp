@@ -28,28 +28,28 @@ namespace medusa
 
     public:
 
-      VertexProperties(void);
+      VertexProperties();
       VertexProperties(Address::Vector const& rAddrs);
 
       VertexProperties& operator=(VertexProperties const& rVtxProp);
 
-      Address::Vector const& GetAddresses(void)              const { return m_Addresses; }
+      Address::Vector const& GetAddresses()              const { return m_Addresses; }
       bool                   GetFirstAddress(Address& rAddr) const;
       bool                   GetLastAddress(Address& rAddr)  const;
-      size_t                 GetSize(void)                   const { return m_Addresses.size(); }
+      size_t                 GetSize()                   const { return m_Addresses.size(); }
       bool                   Contains(Address const& rAddr)  const;
       bool                   Split(Address const& rAddr, Address::Vector& rSplittedAddrs, Address* pPrevAddr = nullptr);
 
       bool                   GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const;
       bool                   GetNextAddress(Address const& rAddr, Address& rNextAddr) const;
 
-      bool                   IsHead(void)   const { return m_Flags & Head   ? true : false; }
-      bool                   IsEnd(void)    const { return m_Flags & End    ? true : false; }
-      bool                   IsInLoop(void) const { return m_Flags & InLoop ? true : false; }
+      bool                   IsHead()   const { return m_Flags & Head   ? true : false; }
+      bool                   IsEnd()    const { return m_Flags & End    ? true : false; }
+      bool                   IsInLoop() const { return m_Flags & InLoop ? true : false; }
 
-      void                   MarkAsHead(void)   { m_Flags |= Head;   }
-      void                   MarkAsEnd(void)    { m_Flags |= End;    }
-      void                   MarkAsInLoop(void) { m_Flags |= InLoop; }
+      void                   MarkAsHead()   { m_Flags |= Head;   }
+      void                   MarkAsEnd()    { m_Flags |= End;    }
+      void                   MarkAsInLoop() { m_Flags |= InLoop; }
 
       Address::Vector m_Addresses;
       u32 m_Flags;
@@ -70,7 +70,7 @@ namespace medusa
 
       EdgeProperties(Type Type = Unknown) : m_Type(Type) {}
 
-      Type GetType(void) const { return static_cast<Type>(m_Type); }
+      Type GetType() const { return static_cast<Type>(m_Type); }
 
       u32 m_Type;
     };
@@ -88,8 +88,8 @@ namespace medusa
       GraphProperties
     >;
 
-    Type      & operator ()(void)       { return m_Graph; }
-    Type const& operator ()(void) const { return m_Graph; }
+    Type      & operator ()()       { return m_Graph; }
+    Type const& operator ()() const { return m_Graph; }
 
     using VertexDescriptor = boost::graph_traits<Type>::vertex_descriptor;
     using EdgeDescriptor   = boost::graph_traits<Type>::edge_descriptor;

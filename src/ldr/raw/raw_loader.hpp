@@ -19,8 +19,8 @@ MEDUSA_NAMESPACE_USE
 class RawLoader : public Loader
 {
 public:
-  std::string GetName(void) const override { return "raw"; }
-  u8          GetDepth(void) const override { return 0; }
+  std::string GetName() const override { return "raw"; }
+  u8          GetDepth() const override { return 0; }
 
   bool                     IsCompatible(BinaryStream const& rBinStrm) const override { return true; }
   std::string              GetDetailedName(BinaryStream const& rBinStrm) const override { return GetName(); }
@@ -32,6 +32,6 @@ public:
   void Analyze(Document& rDoc) const override {}
 };
 
-extern "C" LDR_RAW_EXPORT Loader* GetLoader(void);
+extern "C" LDR_RAW_EXPORT Loader* GetLoader();
 
 #endif // !LDR_RAW_HPP

@@ -10,7 +10,7 @@ class BindingView : public QWidget, public Ui::BindingView
 {
 public:
   BindingView(medusa::Medusa& rCore);
-  ~BindingView(void);
+  ~BindingView();
 
 private:
   medusa::Medusa& m_rCore;

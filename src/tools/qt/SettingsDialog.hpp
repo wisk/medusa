@@ -18,7 +18,7 @@ public:
   ~SettingsDialog();
 
 protected slots:
-  void    SaveSettings(void);
+  void    SaveSettings();
 
 private:
   medusa::Medusa& m_rCore;

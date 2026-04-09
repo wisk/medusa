@@ -638,7 +638,7 @@ bool X86Architecture::X86CpuContext::Translate(Address const& rLogicalAddress, u
   return false;
 }
 
-u8 X86Architecture::X86CpuContext::GetMode(void) const
+u8 X86Architecture::X86CpuContext::GetMode() const
 {
   return m_Bits;
 }
@@ -690,7 +690,7 @@ bool X86Architecture::X86CpuContext::SetAddress(CpuContext::AddressKind AddrKind
   return true;
 }
 
-std::string X86Architecture::X86CpuContext::ToString(void) const
+std::string X86Architecture::X86CpuContext::ToString() const
 {
   std::string Result = "";
 

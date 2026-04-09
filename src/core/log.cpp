@@ -20,7 +20,7 @@ LogWrapper::LogWrapper(LoggerCallback pLog, std::string const& rName, std::strin
   }
 }
 
-LogWrapper& LogWrapper::Flush(void)
+LogWrapper& LogWrapper::Flush()
 {
   if (m_pLog)
   {
@@ -38,7 +38,7 @@ LogWrapper& LogWrapper::Level(LogLevelType NewLvl)
   return *this;
 }
 
-std::string& LogWrapper::GetBuffer(void)
+std::string& LogWrapper::GetBuffer()
 {
   return m_rBuffer;
 }
@@ -48,17 +48,17 @@ void LogWrapper::Write(char const* pMsg)
   m_rBuffer += pMsg;
 }
 
-void LogWrapper::Lock(void)
+void LogWrapper::Lock()
 {
   m_Mutex.lock();
 }
 
-void LogWrapper::Unlock(void)
+void LogWrapper::Unlock()
 {
   m_Mutex.unlock();
 }
 
-bool LogWrapper::_CheckLogLevel(void) const
+bool LogWrapper::_CheckLogLevel() const
 {
   static std::unordered_map<std::string, LogLevelType> Str2LogLvl
   {
@@ -175,7 +175,7 @@ LogWrapper Log::Write(std::string const& rType)
   return LogWrapper(Log::m_pLog, rType, Log::m_LogMap[rType]);
 }
 
-void Log::Flush(void)
+void Log::Flush()
 {
   m_LogMap.clear();
 }
@@ -198,11 +198,11 @@ bool Log::ChangeLogLevel(LogLevelType NewLvl)
   return UsrCfg.SetOption("core.log_level", itLvl->second);
 }
 
-Log::Log(void)
+Log::Log()
 {
 }
 
-Log::~Log(void)
+Log::~Log()
 {
   Flush();
 }

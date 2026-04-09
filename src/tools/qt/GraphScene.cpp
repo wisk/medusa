@@ -25,7 +25,7 @@ GraphScene::GraphScene(QObject* pParent, medusa::Medusa& rCore, medusa::Address 
     medusa::Log::Write("ui_qt") << "failed to build graph for: " << m_GraphAddr << medusa::LogEnd;
 }
 
-bool GraphScene::_Update(void)
+bool GraphScene::_Update()
 {
   medusa::UserConfiguration UserCfg;
   setBackgroundBrush(QBrush(QColor(QString::fromStdString(UserCfg.GetOption("color.background_listing")))));

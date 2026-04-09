@@ -31,17 +31,17 @@ public:
   using SPType = std::shared_ptr<Detail>;
 
   Detail(Kind Kind = Unknown, SPType spParent = nullptr, std::string const& rName = "");
-  virtual ~Detail(void) = default;
+  virtual ~Detail() = default;
 
-  bool IsValid(void) const { return m_IsValid; }
+  bool IsValid() const { return m_IsValid; }
 
-  Kind   GetKind(void)   const { return m_Kind;  }
-  SPType GetParent(void) const { return m_spParent; }
+  Kind   GetKind()   const { return m_Kind;  }
+  SPType GetParent() const { return m_spParent; }
 
-  virtual std::string const& GetName(void) const { return m_Name; }
-  Id GetId(void) const { return m_Id; }
+  virtual std::string const& GetName() const { return m_Name; }
+  Id GetId() const { return m_Id; }
 
-  virtual std::string Dump(void) const { return "<unknown>"; }
+  virtual std::string Dump() const { return "<unknown>"; }
 
 protected:
   mutable bool m_IsValid;
@@ -75,11 +75,11 @@ public:
 
   TypeDetail(std::string const& rName = "", Type Type = UnknownType, u32 BitSize = 0);
 
-  virtual Type        GetType(void) const;
-  virtual u32         GetSize(void) const;
-  virtual u32         GetBitSize(void) const;
+  virtual Type        GetType() const;
+  virtual u32         GetSize() const;
+  virtual u32         GetBitSize() const;
 
-  virtual std::string Dump(void) const;
+  virtual std::string Dump() const;
 
 protected:
   TypeDetail(Kind Kind, std::string const& rName, Type Type);
@@ -152,9 +152,9 @@ public:
 
   ValueDetail(std::string const& rName = "", Type ValueType = UnknownType, Id RefId = Id());
 
-  virtual std::string Dump(void)     const;
-  Type                GetType(void)  const;
-  Id                  GetRefId(void) const;
+  virtual std::string Dump()     const;
+  Type                GetType()  const;
+  Id                  GetRefId() const;
 
 private:
   Type        m_Type;
@@ -171,11 +171,11 @@ public:
     std::string const& rValueName = "", ValueDetail::Type ValueType = ValueDetail::UnknownType, Id RefId = Id());
   TypedValueDetail(TypeDetail::SPType spType, ValueDetail const& rValue);
 
-  virtual u32 GetSize(void) const;
-  virtual std::string Dump(void) const;
+  virtual u32 GetSize() const;
+  virtual std::string Dump() const;
 
-  TypeDetail::SPType const& GetType(void)  const;
-  ValueDetail        const& GetValue(void) const;
+  TypeDetail::SPType const& GetType()  const;
+  ValueDetail        const& GetValue() const;
 
 protected:
   TypeDetail::SPType m_spType;
@@ -196,12 +196,12 @@ class MEDUSA_EXPORT StaticArrayDetail : public TypeDetail
 public:
   StaticArrayDetail(TypeDetail::SPType spElementType, u32 NumberOfElements);
 
-  virtual u32         GetSize(void) const;
-  virtual u32         GetBitSize(void) const;
-  virtual std::string Dump(void) const;
+  virtual u32         GetSize() const;
+  virtual u32         GetBitSize() const;
+  virtual std::string Dump() const;
 
-  TypeDetail::SPType const& GetElementType(void) const;
-  u32 GetNumberOfElements(void) const;
+  TypeDetail::SPType const& GetElementType() const;
+  u32 GetNumberOfElements() const;
 
 private:
   TypeDetail::SPType m_spElementType;
@@ -225,8 +225,8 @@ class MEDUSA_EXPORT StructureDetail : public TypeDetail
 public:
   StructureDetail(std::string const& rName = "", u32 Alignment = 0);
 
-  virtual u32 GetSize(void) const;
-  virtual std::string Dump(void) const;
+  virtual u32 GetSize() const;
+  virtual std::string Dump() const;
 
   bool GetFieldByName(std::string const& rFieldName, TypedValueDetail& rField);
   bool GetFieldByOffset(u32 Offset, TypedValueDetail& rField);
@@ -261,10 +261,10 @@ public:
     TypedValueDetail::List const& rParameters = TypedValueDetail::List(),
     std::string const& rCallConvName = "");
 
-  virtual std::string                Dump(void)                     const;
-  TypeDetail                  const& GetReturnType(void)            const;
-  std::list<TypedValueDetail> const& GetParameters(void)            const;
-  std::string                 const& GetCallingConventionName(void) const;
+  virtual std::string                Dump()                     const;
+  TypeDetail                  const& GetReturnType()            const;
+  std::list<TypedValueDetail> const& GetParameters()            const;
+  std::string                 const& GetCallingConventionName() const;
 
 private:
   TypeDetail             m_ReturnType;

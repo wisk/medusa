@@ -14,9 +14,9 @@ MEDUSA_NAMESPACE_BEGIN
 class Task
 {
 public:
-  virtual ~Task(void) = default;
-  virtual std::string GetName(void) const = 0;
-  virtual void Run(void) = 0;
+  virtual ~Task() = default;
+  virtual std::string GetName() const = 0;
+  virtual void Run() = 0;
 };
 
 class TaskManager
@@ -25,11 +25,11 @@ public:
   using NotifyFunctionType = std::function<void (Task const*)>;
 
   TaskManager(NotifyFunctionType const& rNotify);
-  ~TaskManager(void);
+  ~TaskManager();
 
-  void Start(void);
-  void Stop(void);
-  void Wait(void);
+  void Start();
+  void Stop();
+  void Wait();
 
   bool AddTask(Task* pTask);
 

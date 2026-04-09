@@ -9,6 +9,6 @@ View::View(u32 Type, Document& rDoc)
   rDoc.Connect(Type, this);
 }
 
-View::~View(void)
+View::~View()
 {
 }

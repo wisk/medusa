@@ -101,7 +101,7 @@ u16 Utf16StringTrait::CharacterLength(int Char) const
   return sizeof(CharType);
 }
 
-StringTrait const* String::GetStringTrait(void) const
+StringTrait const* String::GetStringTrait() const
 {
   static Utf8StringTrait  Utf8;
   static Utf16StringTrait Utf16;

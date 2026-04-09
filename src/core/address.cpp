@@ -46,7 +46,7 @@ Address::Address(std::string const& rAddrName)
   issOffset >> std::hex >> m_Offset;
 }
 
-std::string Address::ToString(void) const
+std::string Address::ToString() const
 {
   std::ostringstream oss;
 

@@ -31,7 +31,7 @@ void MemoryArea::SetDefaultArchitectureMode(u8 Mode)
   m_DefaultArchitectureMode = Mode;
 }
 
-std::string MemoryArea::ToString(void) const
+std::string MemoryArea::ToString() const
 {
   char Buf[4];
   Buf[0] = to_bool(m_Access & MemoryArea::Access::Read)    ? 'R' : '-';

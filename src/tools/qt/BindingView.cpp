@@ -37,6 +37,6 @@ BindingView::BindingView(medusa::Medusa& rCore) : m_rCore(rCore), m_spCurBinding
   BindingCombo->addItem("python");
 }
 
-BindingView::~BindingView(void)
+BindingView::~BindingView()
 {
 }

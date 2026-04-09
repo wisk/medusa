@@ -20,7 +20,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" ARCH_LR35902_EXPORT Architecture* GetArchitecture(void);
+extern "C" ARCH_LR35902_EXPORT Architecture* GetArchitecture();
 
 class LR35902Architecture : public Architecture
 {
@@ -28,7 +28,7 @@ private:
   class LR35902CpuInformation : public CpuInformation
   {
   public:
-    LR35902CpuInformation(void) : CpuInformation(MEDUSA_ARCH_TAG('l', 'r', '3')) {}
+    LR35902CpuInformation() : CpuInformation(MEDUSA_ARCH_TAG('l', 'r', '3')) {}
     char const* ConvertIdentifierToName(u32 Id) const override;
     u32 ConvertNameToIdentifier(std::string const& rName) const override;
     u32 GetRegisterByType(CpuInformation::Type RegType, u8 Mode) const override;
@@ -48,16 +48,16 @@ private:
   };
 
 public:
-  LR35902Architecture(void) : Architecture(MEDUSA_ARCH_TAG('l','r','3')) {}
+  LR35902Architecture() : Architecture(MEDUSA_ARCH_TAG('l','r','3')) {}
 
-  std::string           GetName(void) const override { return "Sharp LR35902"; }
+  std::string           GetName() const override { return "Sharp LR35902"; }
   bool                  Translate(Address const& rVirtAddr, OffsetType& rPhyslOff) override;
   bool                  Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode) override;
-  NamedModeVector       GetModes(void) const override;
-  EEndianness           GetEndianness(void) override { return LittleEndian; }
-  CpuInformation const* GetCpuInformation(void) const override { return &m_CpuInfo; }
-  CpuContext*           MakeCpuContext(void) const override { return nullptr; }
-  MemoryContext*        MakeMemoryContext(void) const override { return new MemoryContext(m_CpuInfo); }
+  NamedModeVector       GetModes() const override;
+  EEndianness           GetEndianness() override { return LittleEndian; }
+  CpuInformation const* GetCpuInformation() const override { return &m_CpuInfo; }
+  CpuContext*           MakeCpuContext() const override { return nullptr; }
+  MemoryContext*        MakeMemoryContext() const override { return new MemoryContext(m_CpuInfo); }
 
   bool FormatInstruction(
     Document      const& rDoc,

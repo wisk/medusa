@@ -210,7 +210,7 @@ void ModuleManager::LoadModules(Path const& rModPath, BinaryStream const& rBinSt
   });
 }
 
-void ModuleManager::UnloadModules(void)
+void ModuleManager::UnloadModules()
 {
   m_DefaultArchitectureTag = MEDUSA_ARCH_UNK;
   m_Loaders.clear();
@@ -293,7 +293,7 @@ bool ModuleManager::UnregisterArchitecture(Architecture::SPType spArch)
   return true; /* Not implemented */
 }
 
-void ModuleManager::ResetArchitecture(void)
+void ModuleManager::ResetArchitecture()
 {
   m_Architectures.clear();
 }
@@ -347,17 +347,17 @@ Compiler::SPType ModuleManager::GetCompiler(std::string const & rCompilerName)
   return nullptr;
 }
 
-Database::VSPType ModuleManager::GetDatabases(void) const
+Database::VSPType ModuleManager::GetDatabases() const
 {
   return m_Databases;
 }
 
-Loader::VSPType ModuleManager::GetLoaders(void) const
+Loader::VSPType ModuleManager::GetLoaders() const
 {
   return m_Loaders;
 }
 
-Architecture::VSPType ModuleManager::GetArchitectures(void) const
+Architecture::VSPType ModuleManager::GetArchitectures() const
 {
   return m_Architectures;
 }

@@ -32,15 +32,15 @@ public:
     , m_Size(Size)
   {}
 
-  std::string Dump(void) const;
+  std::string Dump() const;
 
   //! This method returns the multicell type.
-  u8 GetType(void) const { return m_Type; }
+  u8 GetType() const { return m_Type; }
 
   //! This method returns the size of multicell.
-  u16 GetSize(void) const { return m_Size; }
+  u16 GetSize() const { return m_Size; }
 
-  Graph::SPType GetGraph(void)                  { return m_spGraph;    }
+  Graph::SPType GetGraph()                  { return m_spGraph;    }
   void          SetGraph(Graph::SPType spGraph) { m_spGraph = spGraph; }
 
 protected:

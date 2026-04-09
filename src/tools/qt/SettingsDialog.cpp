@@ -30,13 +30,13 @@ namespace qMedusa
       });
     }
 
-    QString GetColorName(void) const
+    QString GetColorName() const
     {
       return m_Color.name();
     }
 
   private:
-    void _UpdateColor(void)
+    void _UpdateColor()
     {
       QPalette Pal = palette();
       Pal.setColor(QPalette::Button, m_Color);
@@ -68,13 +68,13 @@ namespace qMedusa
       });
     }
 
-    QString GetFontName(void) const
+    QString GetFontName() const
     {
       return m_Font.toString();
     }
 
   private:
-    void _UpdateFont(void)
+    void _UpdateFont()
     {
       setText(m_Font.toString());
     }

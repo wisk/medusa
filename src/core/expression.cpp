@@ -48,16 +48,16 @@ SystemExpression::SystemExpression(std::string const& rName, Address const& rAdd
 {
 }
 
-SystemExpression::~SystemExpression(void)
+SystemExpression::~SystemExpression()
 {
 }
 
-std::string SystemExpression::ToString(void) const
+std::string SystemExpression::ToString() const
 {
   return m_Address.ToString() + " " + m_Name;
 }
 
-Expression::SPType SystemExpression::Clone(void) const
+Expression::SPType SystemExpression::Clone() const
 {
   return std::make_shared<SystemExpression>(m_Name, m_Address);
 }
@@ -87,11 +87,11 @@ BindExpression::BindExpression(Expression::LSPType const& rExprs)
     m_Expressions.push_back(spExpr);
 }
 
-BindExpression::~BindExpression(void)
+BindExpression::~BindExpression()
 {
 }
 
-std::string BindExpression::ToString(void) const
+std::string BindExpression::ToString() const
 {
   std::list<std::string> ExprsStrList;
 
@@ -104,7 +104,7 @@ std::string BindExpression::ToString(void) const
   return JoinStrings(ExprsStrList, "; ");
 }
 
-Expression::SPType BindExpression::Clone(void) const
+Expression::SPType BindExpression::Clone() const
 {
   Expression::LSPType ExprListCloned;
   std::for_each(std::begin(m_Expressions), std::end(m_Expressions), [&](Expression::SPType spExpr)
@@ -166,11 +166,11 @@ ConditionExpression::ConditionExpression(Type CondType, Expression::SPType spRef
 {
 }
 
-ConditionExpression::~ConditionExpression(void)
+ConditionExpression::~ConditionExpression()
 {
 }
 
-std::string ConditionExpression::ToString(void) const
+std::string ConditionExpression::ToString() const
 {
   static const char *s_StrCond[] = { "???", "==", "!=", "u>", "u>=", "u<", "u<=", "s>", "s>=", "s<", "s<=" };
   if (m_spRefExpr == nullptr || m_spTestExpr == nullptr || m_Type >= (sizeof(s_StrCond) / sizeof(*s_StrCond)))
@@ -179,7 +179,7 @@ std::string ConditionExpression::ToString(void) const
   return std::format("({} {} {})", m_spRefExpr->ToString(), s_StrCond[m_Type], m_spTestExpr->ToString());
 }
 
-Expression::SPType ConditionExpression::Clone(void) const
+Expression::SPType ConditionExpression::Clone() const
 {
   return Expr::MakeCond(m_Type, m_spRefExpr, m_spTestExpr);
 }
@@ -227,7 +227,7 @@ Expression::CompareType ConditionExpression::Compare(Expression::SPType spExpr) 
   return CmpIdentical;
 }
 
-ConditionExpression::Type ConditionExpression::GetOppositeCondition(void) const
+ConditionExpression::Type ConditionExpression::GetOppositeCondition() const
 {
   switch (m_Type)
   {
@@ -251,11 +251,11 @@ TernaryConditionExpression::TernaryConditionExpression(Type CondType, Expression
 {
 }
 
-TernaryConditionExpression::~TernaryConditionExpression(void)
+TernaryConditionExpression::~TernaryConditionExpression()
 {
 }
 
-std::string TernaryConditionExpression::ToString(void) const
+std::string TernaryConditionExpression::ToString() const
 {
   std::string Result = ConditionExpression::ToString();
   Result += " ? (";
@@ -269,7 +269,7 @@ std::string TernaryConditionExpression::ToString(void) const
   return Result;
 }
 
-Expression::SPType TernaryConditionExpression::Clone(void) const
+Expression::SPType TernaryConditionExpression::Clone() const
 {
   return std::make_shared<TernaryConditionExpression>(
     m_Type,
@@ -344,18 +344,18 @@ IfElseConditionExpression::IfElseConditionExpression(Type CondType, Expression::
 {
 }
 
-IfElseConditionExpression::~IfElseConditionExpression(void)
+IfElseConditionExpression::~IfElseConditionExpression()
 {
 }
 
-std::string IfElseConditionExpression::ToString(void) const
+std::string IfElseConditionExpression::ToString() const
 {
   if (m_spElseExpr == nullptr)
     return std::format("if {} {{ {} }}", ConditionExpression::ToString(), m_spThenExpr->ToString());
   return std::format("if {} {{ {} }} else {{ {} }}", ConditionExpression::ToString(), m_spThenExpr->ToString(), m_spElseExpr->ToString());
 }
 
-Expression::SPType IfElseConditionExpression::Clone(void) const
+Expression::SPType IfElseConditionExpression::Clone() const
 {
   return Expr::MakeIfElseCond(
     m_Type,
@@ -430,16 +430,16 @@ WhileConditionExpression::WhileConditionExpression(Type CondType, Expression::SP
 {
 }
 
-WhileConditionExpression::~WhileConditionExpression(void)
+WhileConditionExpression::~WhileConditionExpression()
 {
 }
 
-std::string WhileConditionExpression::ToString(void) const
+std::string WhileConditionExpression::ToString() const
 {
   return std::format("while {} {{ {} }}", ConditionExpression::ToString(), m_spBodyExpr->ToString());
 }
 
-Expression::SPType WhileConditionExpression::Clone(void) const
+Expression::SPType WhileConditionExpression::Clone() const
 {
   return std::make_shared<WhileConditionExpression>(m_Type, m_spRefExpr->Clone(), m_spTestExpr->Clone(), m_spBodyExpr->Clone());
 }
@@ -502,21 +502,21 @@ AssignmentExpression::AssignmentExpression(Expression::SPType spDstExpr, Express
   assert(spSrcExpr != nullptr && "Source expression is null");
 }
 
-AssignmentExpression::~AssignmentExpression(void)
+AssignmentExpression::~AssignmentExpression()
 {
 }
 
-std::string AssignmentExpression::ToString(void) const
+std::string AssignmentExpression::ToString() const
 {
   return std::format("({} = {})", m_spDstExpr->ToString(), m_spSrcExpr->ToString());
 }
 
-Expression::SPType AssignmentExpression::Clone(void) const
+Expression::SPType AssignmentExpression::Clone() const
 {
   return std::make_shared<AssignmentExpression>(m_spDstExpr->Clone(), m_spSrcExpr->Clone());
 }
 
-u32 AssignmentExpression::GetBitSize(void) const
+u32 AssignmentExpression::GetBitSize() const
 {
   return std::max(m_spDstExpr->GetBitSize(), m_spSrcExpr->GetBitSize());
 }
@@ -566,11 +566,11 @@ OperationExpression::OperationExpression(Type OpType)
 {
 }
 
-OperationExpression::~OperationExpression(void)
+OperationExpression::~OperationExpression()
 {
 }
 
-std::string OperationExpression::ToString(void) const
+std::string OperationExpression::ToString() const
 {
   switch (m_OpType)
   {
@@ -616,7 +616,7 @@ std::string OperationExpression::ToString(void) const
   }
 }
 
-u32 OperationExpression::GetBitSize(void) const
+u32 OperationExpression::GetBitSize() const
 {
   return 0;
 }
@@ -631,13 +631,13 @@ Expression::CompareType OperationExpression::Compare(Expression::SPType spExpr) 
   return CmpIdentical;
 }
 
-OperationExpression::Type OperationExpression::GetOperation(void) const
+OperationExpression::Type OperationExpression::GetOperation() const
 {
   return m_OpType;
 }
 
 // TODO(wisk): handle more operations
-OperationExpression::Type OperationExpression::GetOppositeOperation(void) const
+OperationExpression::Type OperationExpression::GetOppositeOperation() const
 {
   switch (m_OpType)
   {
@@ -689,11 +689,11 @@ UnaryOperationExpression::UnaryOperationExpression(Type OpType, Expression::SPTy
 
 }
 
-UnaryOperationExpression::~UnaryOperationExpression(void)
+UnaryOperationExpression::~UnaryOperationExpression()
 {
 }
 
-std::string UnaryOperationExpression::ToString(void) const
+std::string UnaryOperationExpression::ToString() const
 {
   auto OpStr = OperationExpression::ToString();
   if (EndsWith(OpStr, "()"))
@@ -701,13 +701,13 @@ std::string UnaryOperationExpression::ToString(void) const
   return OpStr + "(" + m_spExpr->ToString() + ")";
 }
 
-Expression::SPType UnaryOperationExpression::Clone(void) const
+Expression::SPType UnaryOperationExpression::Clone() const
 {
   return Expr::MakeUnOp(static_cast<OperationExpression::Type>(m_OpType),
     m_spExpr->Clone());
 }
 
-u32 UnaryOperationExpression::GetBitSize(void) const
+u32 UnaryOperationExpression::GetBitSize() const
 {
   return m_spExpr->GetBitSize();
 }
@@ -747,11 +747,11 @@ BinaryOperationExpression::BinaryOperationExpression(Type OpType, Expression::SP
   assert(spRightExpr != nullptr);
 }
 
-BinaryOperationExpression::~BinaryOperationExpression(void)
+BinaryOperationExpression::~BinaryOperationExpression()
 {
 }
 
-std::string BinaryOperationExpression::ToString(void) const
+std::string BinaryOperationExpression::ToString() const
 {
   std::string Res;
   auto OpStr = OperationExpression::ToString();
@@ -778,13 +778,13 @@ std::string BinaryOperationExpression::ToString(void) const
   return Res;
 }
 
-Expression::SPType BinaryOperationExpression::Clone(void) const
+Expression::SPType BinaryOperationExpression::Clone() const
 {
   return Expr::MakeBinOp(static_cast<OperationExpression::Type>(m_OpType),
     m_spLeftExpr->Clone(), m_spRightExpr->Clone());
 }
 
-u32 BinaryOperationExpression::GetBitSize(void) const
+u32 BinaryOperationExpression::GetBitSize() const
 {
   switch (m_OpType)
   {
@@ -861,7 +861,7 @@ BitVectorExpression::BitVectorExpression(BitVector const& rValue)
 {
 }
 
-std::string BitVectorExpression::ToString(void) const
+std::string BitVectorExpression::ToString() const
 {
   std::string Res("bv");
   Res += std::to_string(m_Value.GetBitSize());
@@ -871,7 +871,7 @@ std::string BitVectorExpression::ToString(void) const
   return Res;
 }
 
-Expression::SPType BitVectorExpression::Clone(void) const
+Expression::SPType BitVectorExpression::Clone() const
 {
   return std::make_shared<BitVectorExpression>(m_Value);
 }
@@ -920,7 +920,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 // {
 // }
 
-// std::string IntegerExpression::ToString(void) const
+// std::string IntegerExpression::ToString() const
 // {
 //   std::string Res("int");
 //   Res += std::to_string(m_Value.GetBitSize());
@@ -930,7 +930,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 //   return Res;
 // }
 
-// Expression::SPType IntegerExpression::Clone(void) const
+// Expression::SPType IntegerExpression::Clone() const
 // {
 //   return std::make_shared<IntegerExpression>(m_Value);
 // }
@@ -986,7 +986,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 // {
 // }
 
-// std::string FloatingPointExpression::ToString(void) const
+// std::string FloatingPointExpression::ToString() const
 // {
 //   std::string Res("float");
 //   Res += std::to_string(GetBitSize());
@@ -1005,7 +1005,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 //   return Res;
 // }
 
-// u32 FloatingPointExpression::GetBitSize(void) const
+// u32 FloatingPointExpression::GetBitSize() const
 // {
 //   switch (m_Precision)
 //   {
@@ -1035,7 +1035,7 @@ bool BitVectorExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCt
 //   return CmpIdentical;
 // }
 
-// Expression::SPType FloatingPointExpression::Clone(void) const
+// Expression::SPType FloatingPointExpression::Clone() const
 // {
 //   return std::make_shared<FloatingPointExpression>(m_Value);
 // }
@@ -1080,7 +1080,7 @@ IdentifierExpression::IdentifierExpression(u32 Id, CpuInformation const* pCpuInf
   : m_Id(Id), m_pCpuInfo(pCpuInfo) {}
 
 
-std::string IdentifierExpression::ToString(void) const
+std::string IdentifierExpression::ToString() const
 {
   auto pIdName = m_pCpuInfo->ConvertIdentifierToName(m_Id);
 
@@ -1089,12 +1089,12 @@ std::string IdentifierExpression::ToString(void) const
   return std::format("Id{}({})", m_pCpuInfo->GetSizeOfRegisterInBit(m_Id), pIdName);
 }
 
-Expression::SPType IdentifierExpression::Clone(void) const
+Expression::SPType IdentifierExpression::Clone() const
 {
   return std::make_shared<IdentifierExpression>(m_Id, m_pCpuInfo);
 }
 
-u32 IdentifierExpression::GetBitSize(void) const
+u32 IdentifierExpression::GetBitSize() const
 {
   return m_pCpuInfo->GetSizeOfRegisterInBit(m_Id);
 }
@@ -1157,7 +1157,7 @@ VectorIdentifierExpression::VectorIdentifierExpression(std::vector<u32> const& r
 {
 }
 
-std::string VectorIdentifierExpression::ToString(void) const
+std::string VectorIdentifierExpression::ToString() const
 {
   std::vector<std::string> VecStr;
   VecStr.reserve(m_VecId.size());
@@ -1171,12 +1171,12 @@ std::string VectorIdentifierExpression::ToString(void) const
   return "{ " + JoinStrings(VecStr, ", ") + " }";
 }
 
-Expression::SPType VectorIdentifierExpression::Clone(void) const
+Expression::SPType VectorIdentifierExpression::Clone() const
 {
   return std::make_shared<VectorIdentifierExpression>(m_VecId, m_pCpuInfo);
 }
 
-u32 VectorIdentifierExpression::GetBitSize(void) const
+u32 VectorIdentifierExpression::GetBitSize() const
 {
   u32 SizeInBit = 0;
   for (auto Id : m_VecId)
@@ -1251,21 +1251,21 @@ TrackExpression::TrackExpression(Expression::SPType spTrkExpr, Address const& rC
   : m_spTrkExpr(spTrkExpr), m_CurAddr(rCurAddr), m_Pos(Pos) {}
 
 
-TrackExpression::~TrackExpression(void)
+TrackExpression::~TrackExpression()
 {
 }
 
-std::string TrackExpression::ToString(void) const
+std::string TrackExpression::ToString() const
 {
   return std::format("Trk({}, {}, {})", m_CurAddr.ToString(), static_cast<unsigned int>(m_Pos), m_spTrkExpr->ToString());
 }
 
-Expression::SPType TrackExpression::Clone(void) const
+Expression::SPType TrackExpression::Clone() const
 {
   return std::make_shared<TrackExpression>(m_spTrkExpr, m_CurAddr, m_Pos);
 }
 
-u32 TrackExpression::GetBitSize(void) const
+u32 TrackExpression::GetBitSize() const
 {
   return m_spTrkExpr->GetBitSize();
 }
@@ -1313,11 +1313,11 @@ VariableExpression::VariableExpression(std::string const& rVarName, VariableExpr
     Log::Write("core").Level(LogError) << "try to allocate a 0-bit variable" << LogEnd;
 }
 
-VariableExpression::~VariableExpression(void)
+VariableExpression::~VariableExpression()
 {
 }
 
-std::string VariableExpression::ToString(void) const
+std::string VariableExpression::ToString() const
 {
   std::string Str = "";
 
@@ -1332,12 +1332,12 @@ std::string VariableExpression::ToString(void) const
   return std::format("Var{}[{}] {}", m_BitSize, Str, m_Name);
 }
 
-Expression::SPType VariableExpression::Clone(void) const
+Expression::SPType VariableExpression::Clone() const
 {
   return Expr::MakeVar(m_Name, m_VarType, m_BitSize);
 }
 
-u32 VariableExpression::GetBitSize(void) const
+u32 VariableExpression::GetBitSize() const
 {
   return m_BitSize;
 }
@@ -1367,11 +1367,11 @@ MemoryExpression::MemoryExpression(u32 AccessSize, Expression::SPType spExprBase
   assert(spExprOffset != nullptr);
 }
 
-MemoryExpression::~MemoryExpression(void)
+MemoryExpression::~MemoryExpression()
 {
 }
 
-std::string MemoryExpression::ToString(void) const
+std::string MemoryExpression::ToString() const
 {
   auto const pMemType = m_Dereference ? "Mem" : "Addr";
   if (m_spBaseExpr == nullptr)
@@ -1380,7 +1380,7 @@ std::string MemoryExpression::ToString(void) const
   return std::format("{}{}({}:{})", pMemType, m_AccessSizeInBit, m_spBaseExpr->ToString(), m_spOffExpr->ToString());
 }
 
-Expression::SPType MemoryExpression::Clone(void) const
+Expression::SPType MemoryExpression::Clone() const
 {
   if (m_spBaseExpr == nullptr)
     return std::make_shared<MemoryExpression>(m_AccessSizeInBit, nullptr, m_spOffExpr->Clone(), m_Dereference);
@@ -1388,7 +1388,7 @@ Expression::SPType MemoryExpression::Clone(void) const
   return std::make_shared<MemoryExpression>(m_AccessSizeInBit, m_spBaseExpr->Clone(), m_spOffExpr->Clone(), m_Dereference);
 }
 
-u32 MemoryExpression::GetBitSize(void) const
+u32 MemoryExpression::GetBitSize() const
 {
   return m_AccessSizeInBit;
 }
@@ -1488,7 +1488,7 @@ bool MemoryExpression::GetAddress(CpuContext *pCpuCtxt, MemoryContext* pMemCtxt,
   return true;
 }
 
-Expression::SPType MemoryExpression::ToAddress(void) const
+Expression::SPType MemoryExpression::ToAddress() const
 {
   return Expr::MakeMem(m_AccessSizeInBit,
     m_spBaseExpr,
@@ -1543,7 +1543,7 @@ Expression::CompareType MemoryExpression::Compare(Expression::SPType spExpr) con
 SymbolicExpression::SymbolicExpression(SymbolicExpression::Type SymType, std::string const& rValue, Address const& rAddr, Expression::SPType spExpr)
   : m_Type(SymType), m_Value(rValue), m_Address(rAddr), m_spExpr(spExpr) {}
 
-std::string SymbolicExpression::ToString(void) const
+std::string SymbolicExpression::ToString() const
 {
   char const* pType = nullptr;
   switch (m_Type)
@@ -1561,12 +1561,12 @@ std::string SymbolicExpression::ToString(void) const
   return std::format("Sym({}, \"{}\", {}, {})", pType, m_Value, m_Address.ToString(), m_spExpr->ToString());
 }
 
-Expression::SPType SymbolicExpression::Clone(void) const
+Expression::SPType SymbolicExpression::Clone() const
 {
   return std::make_shared<SymbolicExpression>(m_Type, m_Value, m_Address, m_spExpr);
 }
 
-u32 SymbolicExpression::GetBitSize(void) const
+u32 SymbolicExpression::GetBitSize() const
 {
   if (m_spExpr == nullptr)
     return 0;

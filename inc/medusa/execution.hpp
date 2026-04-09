@@ -19,7 +19,7 @@ class MEDUSA_EXPORT Execution
 {
 public:
   Execution(Document& rDoc);
-  ~Execution(void);
+  ~Execution();
 
   bool Initialize(std::vector<std::string> const& rArgs, std::vector<std::string> const& rEnv, std::string const& rCurWrkDir);
   bool SetEmulator(std::string const& rEmulatorName);
@@ -28,20 +28,20 @@ public:
 
   bool Execute(Address const& rAddr);
 
-  bool InvalidateCache(void);
+  bool InvalidateCache();
 
   bool HookInstruction(Emulator::HookCallback HkCb);
   bool HookFunction(std::string const& rFuncName, Emulator::HookCallback HkCb);
   bool Hook(Address const& rAddress, Emulator::HookType Type, Emulator::HookCallback Callback);
   bool Hook(std::string const& rLabelName, Emulator::HookType Type, Emulator::HookCallback Callback);
-  std::string GetHookName(void) const;
+  std::string GetHookName() const;
   Address GetHookAddress(std::string const& rHkFuncName) const;
 
-  MemoryContext*       GetMemoryContext(void) { return m_pMemCtxt.get(); }
+  MemoryContext*       GetMemoryContext() { return m_pMemCtxt.get(); }
   // LATER: implement thread instead of cpu context
-  CpuContext*          GetCpuContext(void)    { return m_pCpuCtxt.get(); }
-  Document&            GetDocument(void)      { return m_rDoc;     }
-  Architecture::SPType GetArchitecture(void)  { return m_spArch;   }
+  CpuContext*          GetCpuContext()    { return m_pCpuCtxt.get(); }
+  Document&            GetDocument()      { return m_rDoc;     }
+  Architecture::SPType GetArchitecture()  { return m_spArch;   }
 
   bool GetCallingConvention(std::string& rCallingConvention, Address const& rAddress) const;
   bool GetFunctionParameter(std::string const& rCallConv, u16 ParamNo, BitVector& rParamVal) const;

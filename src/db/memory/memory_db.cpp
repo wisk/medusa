@@ -4,12 +4,12 @@
 #include <medusa/log.hpp>
 #include <medusa/util.hpp>
 
-MemoryDatabase::MemoryDatabase(void)
+MemoryDatabase::MemoryDatabase()
   : m_ImageBase(0x0), m_DefaultAddressingType(Address::UnknownType)
 {
 }
 
-MemoryDatabase::~MemoryDatabase(void)
+MemoryDatabase::~MemoryDatabase()
 {
 }
 
@@ -96,12 +96,12 @@ bool MemoryDatabase::_GetPreviousMemoryAreaId(MemoryArea const& rMemoryArea, Mem
   return false;
 }
 
-std::string MemoryDatabase::GetName(void) const
+std::string MemoryDatabase::GetName() const
 {
   return "Memory";
 }
 
-std::string MemoryDatabase::GetExtension(void) const
+std::string MemoryDatabase::GetExtension() const
 {
   return "";
 }
@@ -121,12 +121,12 @@ bool MemoryDatabase::Create(Path const &rDatabasePath, bool Force)
   return true;
 }
 
-bool MemoryDatabase::Flush(void)
+bool MemoryDatabase::Flush()
 {
   return true;
 }
 
-bool MemoryDatabase::Close(void)
+bool MemoryDatabase::Close()
 {
   std::lock_guard<std::mutex> Lock(m_Lock);
   m_MemoryAreas.clear();
@@ -162,7 +162,7 @@ bool MemoryDatabase::UnregisterArchitectureTag(Tag ArchitectureTag)
   return true;
 }
 
-std::vector<Tag> MemoryDatabase::GetArchitectureTags(void) const
+std::vector<Tag> MemoryDatabase::GetArchitectureTags() const
 {
   return m_ArchitectureTags;
 }

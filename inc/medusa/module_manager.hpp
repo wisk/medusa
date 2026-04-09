@@ -14,8 +14,8 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT ModuleManager
 {
 private:
-  ModuleManager(void) : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}
-  ~ModuleManager(void) {}
+  ModuleManager() : m_ArchIdPool(0x0), m_DefaultArchitectureTag(MEDUSA_ARCH_UNK) {}
+  ~ModuleManager() {}
   ModuleManager(ModuleManager const&);
   ModuleManager& operator=(ModuleManager const&);
 
@@ -34,7 +34,7 @@ public:
   using EmulatorMap = std::map<std::string, TGetEmulator>;
 
 
-  static ModuleManager& Instance(void)
+  static ModuleManager& Instance()
   {
     static std::mutex		mutex;
     std::lock_guard<std::mutex> lock(mutex);
@@ -58,14 +58,14 @@ public:
 
   void LoadDatabases(Path const& rModPath); // TODO: since we can't afford to have binstrm, we should change this method name
   void LoadModules(Path const& rModPath, BinaryStream const& rBinStrm);
-  void UnloadModules(void);
+  void UnloadModules();
 
   // Architecture
   Architecture::SPType    GetArchitecture(Tag ArchTag) const;
   Architecture::SPType    FindArchitecture(Tag ArchTag) const;
   bool                    RegisterArchitecture(Architecture::SPType spArch);
   bool                    UnregisterArchitecture(Architecture::SPType spArch);
-  void                    ResetArchitecture(void);
+  void                    ResetArchitecture();
 
   TGetBinding             GetBinding(std::string const& rBindingName);
   TGetEmulator            GetEmulator(std::string const& rEmulatorName);
@@ -73,10 +73,10 @@ public:
   OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
   Database::SPType        GetDatabase(std::string const& rDatabaseName);
   Compiler::SPType        GetCompiler(std::string const& rCompilerName);
-  Database::VSPType       GetDatabases(void) const;
+  Database::VSPType       GetDatabases() const;
 
-  Loader::VSPType         GetLoaders(void) const;
-  Architecture::VSPType   GetArchitectures(void) const;
+  Loader::VSPType         GetLoaders() const;
+  Architecture::VSPType   GetArchitectures() const;
 
 private:
   using MutexType = std::mutex;

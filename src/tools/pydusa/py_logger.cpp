@@ -14,7 +14,7 @@ namespace pydusa
     std::cout << rMsg << std::flush;
   }
 
-  void SetLogToStdOut(void)
+  void SetLogToStdOut()
   {
     medusa::Log::SetLog(PythonLogger);
   }
@@ -26,7 +26,7 @@ namespace pydusa
       medusa::Log::Write("pydusa") << medusa::LogFlush;
   }
 
-  void Std_Flush(void)
+  void Std_Flush()
   {
     medusa::Log::Write("pydusa") << medusa::LogFlush;
   }

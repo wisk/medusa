@@ -2,7 +2,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string MultiCell::Dump(void) const
+std::string MultiCell::Dump() const
 {
   char TypeChr = '?';
   switch (m_Type)

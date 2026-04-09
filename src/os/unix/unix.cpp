@@ -9,7 +9,7 @@
 
 #include <ranges>
 
-std::string UnixOperatingSystem::GetName(void) const
+std::string UnixOperatingSystem::GetName() const
 {
   // TODO: add more detail like if it's linux/*BSD/...
   return "UNIX";

@@ -14,8 +14,8 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT XRefs
 {
 public:
-   XRefs(void) {}
-  ~XRefs(void) {}
+   XRefs() {}
+  ~XRefs() {}
 
   using XRefMapType = std::unordered_multimap<Address, Address, std::hash<Address>>;
 
@@ -38,10 +38,10 @@ public:
   bool HasXRefFrom(Address const& rTo) const;
 
   //! Erase all cross-references
-  void EraseAll(void);
+  void EraseAll();
 
   //! Get the To→From map (left side)
-  XRefMapType const& GetXRefsFrom(void) const { return m_ToFrom; }
+  XRefMapType const& GetXRefsFrom() const { return m_ToFrom; }
 
 private:
   XRefMapType m_ToFrom;  // key=To, value=From

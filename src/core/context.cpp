@@ -171,7 +171,7 @@ bool MemoryContext::WriteMemory<BitVector>(u64 LinAddr, BitVector const& rVal)
   }
 }
 
-MemoryContext::~MemoryContext(void)
+MemoryContext::~MemoryContext()
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   for (auto& rMemChunk : m_Memories)
@@ -329,7 +329,7 @@ bool MemoryContext::MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt
   return Res;
 }
 
-std::string MemoryContext::ToString(void) const
+std::string MemoryContext::ToString() const
 {
   std::lock_guard<decltype(m_MemoryLock)> Lock(m_MemoryLock);
   if (m_Memories.empty())

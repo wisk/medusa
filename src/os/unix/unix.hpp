@@ -19,7 +19,7 @@ MEDUSA_NAMESPACE_USE
 class UnixOperatingSystem : public OperatingSystem
 {
 public:
-  std::string GetName(void) const override;
+  std::string GetName() const override;
   bool IsSupported(Loader const& rLdr, Architecture const& rArch) const override;
 
   bool InitializeContext(
@@ -38,6 +38,6 @@ public:
   bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const override;
 };
 
-extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem(void);
+extern "C" OS_UNIX_EXPORT OperatingSystem* GetOperatingSystem();
 
 #endif // !OS_UNIX_HPP

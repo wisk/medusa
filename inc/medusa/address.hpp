@@ -93,7 +93,7 @@ public:
 
   Address(std::string const& rAddrName);
 
-  Address(void)
+  Address()
     : m_Type(UnknownType)
     , m_Base(0x0)
     , m_Offset(0x0)
@@ -102,17 +102,17 @@ public:
   {}
 
   //! This method converts the current address to a string.
-  std::string ToString(void) const;
+  std::string ToString() const;
 
   //! This method allows to mask an offset accordingly the current offset size.
   OffsetType SanitizeOffset(OffsetType Offset) const;
   void SanitizeOffset(OffsetType& rOffset);
 
-  Type       GetAddressingType(void) const { return m_Type;       }
-  BaseType   GetBase(void)           const { return m_Base;       }
-  OffsetType GetOffset(void)         const { return m_Offset;     }
-  u8         GetBaseSize(void)       const { return m_BaseSize;   }
-  u8         GetOffsetSize(void)     const { return m_OffsetSize; }
+  Type       GetAddressingType() const { return m_Type;       }
+  BaseType   GetBase()           const { return m_Base;       }
+  OffsetType GetOffset()         const { return m_Offset;     }
+  u8         GetBaseSize()       const { return m_BaseSize;   }
+  u8         GetOffsetSize()     const { return m_OffsetSize; }
 
   // Set
   void      SetAddressingType(Type AddressingType) { m_Type       = AddressingType;             }
@@ -154,7 +154,7 @@ public:
   bool operator>=(Address const& rAddr) const;
 
 protected:
-  void SanitizeOffset(void) { SanitizeOffset(m_Offset); }
+  void SanitizeOffset() { SanitizeOffset(m_Offset); }
 
 private:
   Type       m_Type;

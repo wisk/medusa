@@ -575,7 +575,7 @@ static Expression::SPType __DecodeModRmAddress(CpuInformation* pCpuInfo, BinaryS
 
 Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
-  auto Ap16 = [&](void) -> Expression::SPType
+  auto Ap16 = [&]() -> Expression::SPType
   {
     u16 Seg;
     u16 Off;
@@ -590,7 +590,7 @@ Expression::SPType X86Architecture::__Decode_Ap(BinaryStream const& rBinStrm, Of
     return Expr::MakeMem(16, spConstSeg, spConstOff, false);
   };
 
-  auto Ap32 = [&](void) -> Expression::SPType
+  auto Ap32 = [&]() -> Expression::SPType
   {
     u16 Seg;
     u32 Off;

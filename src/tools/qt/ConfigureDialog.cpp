@@ -34,28 +34,28 @@ ConfigureDialog::ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SPType 
   _DisplayDocumentOptions();
 }
 
-ConfigureDialog::~ConfigureDialog(void)
+ConfigureDialog::~ConfigureDialog()
 {
   _DestroyTree();
   _ClearOptions();
 }
 
-medusa::Database::SPType ConfigureDialog::GetSelectedDatabase(void) const
+medusa::Database::SPType ConfigureDialog::GetSelectedDatabase() const
 {
   return m_spDatabase;
 }
 
-medusa::Loader::SPType ConfigureDialog::GetSelectedLoader(void) const
+medusa::Loader::SPType ConfigureDialog::GetSelectedLoader() const
 {
   return m_spLoader;
 }
 
-medusa::Architecture::VSPType ConfigureDialog::GetSelectedArchitectures(void) const
+medusa::Architecture::VSPType ConfigureDialog::GetSelectedArchitectures() const
 {
   return m_spArchitectures;
 }
 
-medusa::OperatingSystem::SPType ConfigureDialog::GetSelectedOperatingSystem(void) const
+medusa::OperatingSystem::SPType ConfigureDialog::GetSelectedOperatingSystem() const
 {
   return m_spOpratingSystem;
 }
@@ -94,13 +94,13 @@ void ConfigureDialog::OnItemClicked(QTreeWidgetItem* pItem, int Column)
   }
 }
 
-void ConfigureDialog::OnAccepted(void)
+void ConfigureDialog::OnAccepted()
 {
   close();
   done(QDialog::Accepted);
 }
 
-void ConfigureDialog::_GetModulesByLoader(void)
+void ConfigureDialog::_GetModulesByLoader()
 {
   if (m_spLoader == nullptr)
   {
@@ -120,7 +120,7 @@ void ConfigureDialog::_GetModulesByLoader(void)
 }
 
 
-void ConfigureDialog::_GetDefaultModules(void)
+void ConfigureDialog::_GetDefaultModules()
 {
   medusa::ModuleManager& rModMgr = medusa::ModuleManager::Instance();
   medusa::UserConfiguration UserCfg;
@@ -143,7 +143,7 @@ void ConfigureDialog::_GetDefaultModules(void)
   _GetModulesByLoader();
 }
 
-void ConfigureDialog::_CreateTree(void)
+void ConfigureDialog::_CreateTree()
 {
   auto pDocTree = new QTreeWidgetItem(ConfigurationTree);
   pDocTree->setText(0, "Document");
@@ -181,13 +181,13 @@ void ConfigureDialog::_CreateTree(void)
   ConfigurationTree->expandAll();
 }
 
-void ConfigureDialog::_UpdateTree(void)
+void ConfigureDialog::_UpdateTree()
 {
   _DestroyTree();
   _CreateTree();
 }
 
-void ConfigureDialog::_DestroyTree(void)
+void ConfigureDialog::_DestroyTree()
 {
   if (ConfigurationTree->topLevelItemCount() == 0)
     return;
@@ -204,7 +204,7 @@ void ConfigureDialog::_AddTreeChild(QTreeWidgetItem* pParent, QString const& rIc
   pParent->addChild(pTreeItem);
 }
 
-void ConfigureDialog::_DisplayDocumentOptions(void)
+void ConfigureDialog::_DisplayDocumentOptions()
 {
   auto& rModMgr = medusa::ModuleManager::Instance();
   medusa::UserConfiguration UserCfg;
@@ -282,7 +282,7 @@ void ConfigureDialog::_DisplayConfigurationOptions(medusa::ConfigurationModel& r
   ConfigurationLayout->addSpacerItem(new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Minimum));
 }
 
-void ConfigureDialog::_ClearOptions(void)
+void ConfigureDialog::_ClearOptions()
 {
   delete m_pModulePathWidget;
   m_pModulePathWidget = nullptr;

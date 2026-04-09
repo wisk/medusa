@@ -45,7 +45,7 @@ public:
   }
 
   virtual void* GetRegisterAddress(u32 Register) = 0;
-  virtual void* GetContextAddress(void) = 0;
+  virtual void* GetContextAddress() = 0;
   virtual u16   GetRegisterOffset(u32 Register) = 0;
 
   virtual void  GetRegisters(RegisterList& RegList) const = 0;
@@ -54,18 +54,18 @@ public:
   virtual bool AddMapping(Address const& rLogicalAddress, u64 LinearAddress);
   virtual bool RemoveMapping(Address const& rLogicalAddress);
 
-  virtual u8   GetMode(void) const = 0;
+  virtual u8   GetMode() const = 0;
   virtual void SetMode(u8 Mode) = 0;
 
   virtual bool GetAddress(AddressKind AddrKind, Address& rAddr) const = 0;
   virtual bool SetAddress(AddressKind AddrKind, Address const& rAddr) = 0;
 
-  virtual u32  GetException(void) const { return m_Exception; }
+  virtual u32  GetException() const { return m_Exception; }
   virtual void SetException(u32 Excpt) { m_Exception = Excpt; }
 
-  virtual std::string ToString(void) const = 0;
+  virtual std::string ToString() const = 0;
 
-  CpuInformation const& GetCpuInformation(void) const { return m_rCpuInfo; }
+  CpuInformation const& GetCpuInformation() const { return m_rCpuInfo; }
 
 protected:
   CpuInformation const& m_rCpuInfo;
@@ -104,7 +104,7 @@ public:
   };
 
   MemoryContext(CpuInformation const& rCpuInfo) : m_rCpuInfo(rCpuInfo) {}
-  ~MemoryContext(void);
+  ~MemoryContext();
 
   using CallbackType = std::function<void (MemoryChunk const& rMemChunk)>;
   void ForEachMemoryChunk(CallbackType Callback);
@@ -130,7 +130,7 @@ public:
   virtual bool FreeMemory(u64 LinAddr);
   virtual bool MapDocument(Document const& rDoc, CpuContext const* pCpuCtxt);
 
-  virtual std::string ToString(void) const;
+  virtual std::string ToString() const;
 
 protected:
   virtual bool _FindMemoryChunk(u64 LinearAddress, MemoryChunk& rMemChnk) const;

@@ -336,12 +336,12 @@ Path ConfigurationModel::GetPath(std::string const& rName) const
   return pResult->GetValue();
 }
 
-ConfigurationModel& IsConfigurable::GetConfigurationModel(void)
+ConfigurationModel& IsConfigurable::GetConfigurationModel()
 {
   return m_CfgMdl;
 }
 
-ConfigurationModel const& IsConfigurable::GetConfigurationModel(void) const
+ConfigurationModel const& IsConfigurable::GetConfigurationModel() const
 {
   return m_CfgMdl;
 }

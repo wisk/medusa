@@ -3,7 +3,7 @@
 
 namespace medusa
 {
-  bool AnalyzerFunction::CreateFunction(void)
+  bool AnalyzerFunction::CreateFunction()
   {
     Address FuncEnd;
     u16 FuncLen;

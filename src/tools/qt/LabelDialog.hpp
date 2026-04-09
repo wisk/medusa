@@ -12,10 +12,10 @@ class LabelDialog : public QDialog, public Ui::LabelDialog
 
 public:
   LabelDialog(QWidget* pParent, medusa::Medusa& rCore, medusa::Address const& rAddress);
-  ~LabelDialog(void);
+  ~LabelDialog();
 
 protected slots:
-  void SetLabel(void);
+  void SetLabel();
 
 private:
   medusa::Medusa& m_rCore;

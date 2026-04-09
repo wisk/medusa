@@ -30,8 +30,8 @@ enum EntryPoBitVector {
 class MachOLoader : public Loader
 {
 public:
-  std::string GetName(void) const override;
-  u8          GetDepth(void) const override;
+  std::string GetName() const override;
+  u8          GetDepth() const override;
   bool        IsCompatible(BinaryStream const& rBinStrm) const override;
   std::vector<std::string> GetUsedArchitectures(BinaryStream const& rBinStrm) const override;
   bool        Map(Document& rDoc) const override;
@@ -58,6 +58,6 @@ private:
     static std::string _GetArchitectureName(u32 Machine, bool Arch64);
 };
 
-extern "C" LDR_MACH_O_EXPORT Loader* GetLoader(void);
+extern "C" LDR_MACH_O_EXPORT Loader* GetLoader();
 
 #endif // LDR_MACH_O_HPP

@@ -4,7 +4,7 @@
 
 namespace medusa
 {
-  bool AnalyzerInstruction::FindCrossReference(void)
+  bool AnalyzerInstruction::FindCrossReference()
   {
     auto spArch = ModuleManager::Instance().GetArchitecture(m_rInsn.GetArchitectureTag());
     if (spArch == nullptr)
@@ -61,7 +61,7 @@ namespace medusa
     return true;
   }
 
-  bool AnalyzerInstruction::FindString(void)
+  bool AnalyzerInstruction::FindString()
   {
     return false;
   }

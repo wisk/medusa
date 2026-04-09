@@ -33,7 +33,7 @@ Symbolic::Block& Symbolic::Block::operator=(Symbolic::Block const& rBlk)
   return *this;
 }
 
-Symbolic::Block::~Block(void)
+Symbolic::Block::~Block()
 {
 }
 
@@ -80,7 +80,7 @@ void Symbolic::Block::AddParentBlock(Address const& rAddress)
   m_ParentBlocks.insert(rAddress);
 }
 
-std::set<Address> const& Symbolic::Block::GetParentBlocks(void) const
+std::set<Address> const& Symbolic::Block::GetParentBlocks() const
 {
   return m_ParentBlocks;
 }
@@ -90,7 +90,7 @@ void Symbolic::Block::AddConditionalExpression(Expression const* pExpr)
   m_CondExprs.push_back(pExpr->Clone());
 }
 
-Expression::LSPType const& Symbolic::Block::GetConditionalExpressions(void) const
+Expression::LSPType const& Symbolic::Block::GetConditionalExpressions() const
 {
   return m_CondExprs;
 }
@@ -103,14 +103,14 @@ bool Symbolic::Block::Contains(Address const& rAddr) const
   return false;
 }
 
-Address Symbolic::Block::GetLastAddress(void) const
+Address Symbolic::Block::GetLastAddress() const
 {
   if (m_Addresses.empty())
     return Address();
   return *m_Addresses.rbegin();
 }
 
-bool Symbolic::Block::IsEndOfBlock(void) const
+bool Symbolic::Block::IsEndOfBlock() const
 {
   if (m_PcRegId == 0)
     return false;
@@ -197,12 +197,12 @@ Expression::LSPType Symbolic::Context::BacktrackRegister(Address const& RegAddr,
   return Exprs;
 }
 
-Expression::VSPType Symbolic::Context::GetExpressions(void) const
+Expression::VSPType Symbolic::Context::GetExpressions() const
 {
   return Expression::VSPType();
 }
 
-std::string Symbolic::Context::ToString(void) const
+std::string Symbolic::Context::ToString() const
 {
   std::string Res = "";
   for (auto const& rBlockPair : m_Blocks)
@@ -225,7 +225,7 @@ Symbolic::Symbolic(Document& rDoc) : m_rDoc(rDoc), m_pCpuInfo(nullptr), m_PcRegI
 {
 }
 
-Symbolic::~Symbolic(void)
+Symbolic::~Symbolic()
 {
 }
 

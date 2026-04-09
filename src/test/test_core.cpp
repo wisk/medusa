@@ -17,7 +17,7 @@ public:
     : FullDisassemblyView(rCore, FormatFlags, Width, Height, rAddress)
   {}
 
-  void Print(void)
+  void Print()
   {
     std::cout << m_PrintData.GetTexts() << std::flush;
   }

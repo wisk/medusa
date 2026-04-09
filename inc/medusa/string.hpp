@@ -55,7 +55,7 @@ public:
   String(CellData::SPType spDna)
     : Cell(spDna) {}
 
-  StringTrait const* GetStringTrait(void) const;
+  StringTrait const* GetStringTrait() const;
 };
 
 MEDUSA_NAMESPACE_END

@@ -11,7 +11,7 @@ void EventQueue::Push(EventHandler::EventType const& rEvent)
   m_CondVar.notify_one();
 }
 
-void EventQueue::Quit(void)
+void EventQueue::Quit()
 {
   Push(EventHandler::Quit());
 }

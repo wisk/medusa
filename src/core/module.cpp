@@ -278,7 +278,7 @@ Loader::SPType ModuleManager::MakeLoader(std::string const& rLoaderName) const
   return nullptr;
 }
 
-Loader::VSPType ModuleManager::MakeAllLoaders(void) const
+Loader::VSPType ModuleManager::MakeAllLoaders() const
 {
   Loader::VSPType Ldrs;
   for (auto const& rLdrMaker : m_Loaders)
@@ -314,7 +314,7 @@ Database::SPType ModuleManager::MakeDatabase(std::string const& rDatabaseName) c
   return Database::SPType(pMakeDb());
 }
 
-Database::VSPType ModuleManager::MakeAllDatabases(void) const
+Database::VSPType ModuleManager::MakeAllDatabases() const
 {
   Database::VSPType Dbs;
   for (auto const& itDb : m_Databases)

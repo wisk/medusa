@@ -27,17 +27,17 @@ public:
   using RangeAddress = std::pair<Address, Address>;
 
   static SPType        Create(Medusa& rCore, FullDisassemblyView* pView);
-  static char const* GetBindingName(void);
+  static char const* GetBindingName();
 
-  virtual ~Action(void) = default;
+  virtual ~Action() = default;
 
-  virtual std::string GetName(void) const = 0;
-  virtual std::string GetDescription(void) const = 0;
-  virtual std::string GetIconName(void) const = 0;
-  virtual bool        IsCompatible(void) const = 0;
-  virtual void        Do(void) = 0;
+  virtual std::string GetName() const = 0;
+  virtual std::string GetDescription() const = 0;
+  virtual std::string GetIconName() const = 0;
+  virtual bool        IsCompatible() const = 0;
+  virtual void        Do() = 0;
 
-  static MapType  GetMap(void);
+  static MapType  GetMap();
   static SPTypeList GetSpecificActions(Medusa& rCore, FullDisassemblyView* pView, Address const& rAddress);
 
 protected:

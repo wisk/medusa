@@ -12,10 +12,10 @@ class CommentDialog : public QDialog, public Ui::CommentDialog
 
 public:
   CommentDialog(QWidget* pParent, medusa::Medusa& rCore, medusa::Address const& rAddress);
-  ~CommentDialog(void);
+  ~CommentDialog();
 
 protected slots:
-  void SetComment(void);
+  void SetComment();
 
 private:
   medusa::Medusa& m_rCore;

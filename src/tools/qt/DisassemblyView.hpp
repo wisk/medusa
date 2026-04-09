@@ -27,7 +27,7 @@ class DisassemblyView : public QAbstractScrollArea, public medusa::FullDisassemb
 
 public:
   DisassemblyView(QWidget * parent, medusa::Medusa * core);
-  ~DisassemblyView(void);
+  ~DisassemblyView();
 
   virtual void OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses);
 
@@ -38,15 +38,15 @@ signals:
   void SemanticViewAdded(medusa::Address const& funcAddr);
   void GraphViewAdded(medusa::Address const& funcAddr);
   void ControlFlowGraphViewAdded(medusa::Address const& funcAddr);
-  void viewportUpdated(void);
+  void viewportUpdated();
   void cursorAddressUpdated(medusa::Address const& addr);
 
 public slots:
-  void setFont(void);
-  void viewUpdated(void);
+  void setFont();
+  void viewUpdated();
   void horizontalScrollBarChanged(int n);
-  void listingUpdated(void);
-  void updateCursor(void);
+  void listingUpdated();
+  void updateCursor();
   void showContextMenu(QPoint const& pos);
   void OnUiActionTriggered(medusa::Action::SPType spAction);
 
@@ -73,7 +73,7 @@ private:
   bool convertPositionToAddress(QPoint const & pos, medusa::Address & addr);
   bool convertMouseToAddress(QMouseEvent * evt, medusa::Address & addr);
 
-  void _UpdateActions(void);
+  void _UpdateActions();
 
   bool             _needRepaint;
   medusa::Medusa * _core;

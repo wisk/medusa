@@ -8,7 +8,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-UserConfiguration::UserConfiguration(void)
+UserConfiguration::UserConfiguration()
 {
   namespace fs = std::filesystem;
   std::filesystem::path HomePath;
@@ -41,7 +41,7 @@ UserConfiguration::UserConfiguration(void)
       std::cerr << "unable to write default configuration file\n";
 }
 
-UserConfiguration::~UserConfiguration(void)
+UserConfiguration::~UserConfiguration()
 {
 }
 
@@ -93,7 +93,7 @@ bool UserConfiguration::SetOption(std::string const& rKey, std::string const& rV
   }
 }
 
-std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefaultOptions(void) const
+std::unordered_map<std::string, std::string> const& UserConfiguration::_GetDefaultOptions() const
 {
   static std::unordered_map<std::string, std::string> s_DefOpts
   {
@@ -158,7 +158,7 @@ bool UserConfiguration::_WriteDefaultOption(std::string const& rKey)
   return SetOption(rKey, itOpt->second);
 }
 
-bool UserConfiguration::_WriteDefaultOptions(void)
+bool UserConfiguration::_WriteDefaultOptions()
 {
   if (std::filesystem::exists(m_CfgPath))
     return false;

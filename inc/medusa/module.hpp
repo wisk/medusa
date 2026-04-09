@@ -19,15 +19,15 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Module
 {
 public:
-  Module(void) {}
-  ~Module(void) {}
+  Module() {}
+  ~Module() {}
 
   void* Load(Path const& ModulePath)
   {
     return ImplLoadLibrary(ModulePath);
   }
 
-  static char const* GetExtension(void);
+  static char const* GetExtension();
 
   template<typename FuncType>
   FuncType Load(Path const& ModulePath, std::string const& FunctionName)
@@ -61,14 +61,14 @@ private:
 template<typename ExportedFunctionType>
 struct ModuleTraits
 {
-  static inline char const* GetPrefix(void);
-  static inline char const* GetExportedFunctionName(void);
+  static inline char const* GetPrefix();
+  static inline char const* GetExportedFunctionName();
 };
 
 #define DECL_MODULE_TRAITS(mod_name, func_type, prefix, func_name)\
   using mod_name = ModuleTraits<func_type>;\
-  template<> inline char const* mod_name::GetPrefix(void) { return prefix; }\
-  template<> inline char const* mod_name::GetExportedFunctionName(void) { return func_name; }
+  template<> inline char const* mod_name::GetPrefix() { return prefix; }\
+  template<> inline char const* mod_name::GetExportedFunctionName() { return func_name; }
 
 DECL_MODULE_TRAITS(ArchitectureModuleTraits,    TGetArchitecture,    "arch_",   "GetArchitecture")
 DECL_MODULE_TRAITS(BindingModuleTraits,         TGetBinding,         "bind_",   "GetBinding")
@@ -83,15 +83,15 @@ DECL_MODULE_TRAITS(OperatingSystemModuleTraits, TGetOperatingSystem, "os_",     
 class MEDUSA_EXPORT ModuleManager
 {
 private:
-  ModuleManager(void) {}
-  ~ModuleManager(void) {}
+  ModuleManager() {}
+  ~ModuleManager() {}
   ModuleManager(ModuleManager const&);
   ModuleManager& operator=(ModuleManager const&);
 
   bool _LoadModule(Path const& rModulePath, void* const pModule, Module& rModule);
 
 public:
-  static ModuleManager& Instance(void)
+  static ModuleManager& Instance()
   {
     static std::mutex		mutex;
     std::lock_guard<std::mutex> lock(mutex);
@@ -135,10 +135,10 @@ public:
   OperatingSystem::SPType GetOperatingSystem(std::string const& rOperatingSystemName) const;
 
   Loader::SPType          MakeLoader(std::string const& rLoaderName) const;
-  Loader::VSPType         MakeAllLoaders(void) const;
+  Loader::VSPType         MakeAllLoaders() const;
   Loader::VSPType         MakeAllLoaders(BinaryStream::SPType spBinStrm) const;
   Database::SPType        MakeDatabase(std::string const& rDatabaseName) const;
-  Database::VSPType       MakeAllDatabases(void) const;
+  Database::VSPType       MakeAllDatabases() const;
   Binding::SPType         MakeBinding(std::string const& rBindingName) const;
   Emulator::SPType        MakeEmulator(std::string const& rEmulatorName) const;
   Compiler::SPType        MakeCompiler(std::string const& rCompilerName) const;

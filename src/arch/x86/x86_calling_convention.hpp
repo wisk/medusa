@@ -28,7 +28,7 @@ public:
   bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const override;
   RegisterType       GetRegisterType(u32 Id)                                          const override;
-  StackCleanerType   StackCleanupBy(void)                                             const override;
+  StackCleanerType   StackCleanupBy()                                             const override;
 
 private:
   u8 m_Mode;
@@ -56,7 +56,7 @@ public:
   bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const override;
   RegisterType       GetRegisterType(u32 Id)                                          const override;
-  StackCleanerType   StackCleanupBy(void)                                             const override;
+  StackCleanerType   StackCleanupBy()                                             const override;
 
 private:
   u8 m_Mode;
@@ -84,7 +84,7 @@ public:
   bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const override;
   RegisterType       GetRegisterType(u32 Id)                                          const override;
-  StackCleanerType   StackCleanupBy(void)                                             const override;
+  StackCleanerType   StackCleanupBy()                                             const override;
 
 private:
   CpuInformation const& m_rCpuInfo;
@@ -111,7 +111,7 @@ public:
   bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const override;
   RegisterType       GetRegisterType(u32 Id)                                          const override;
-  StackCleanerType   StackCleanupBy(void)                                             const override;
+  StackCleanerType   StackCleanupBy()                                             const override;
 
 private:
   CpuInformation const& m_rCpuInfo;

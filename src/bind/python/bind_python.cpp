@@ -26,15 +26,15 @@ static void EnsurePythonInitialized()
   });
 }
 
-BindingPython::BindingPython(void)
+BindingPython::BindingPython()
 {
 }
 
-BindingPython::~BindingPython(void)
+BindingPython::~BindingPython()
 {
 }
 
-std::string BindingPython::GetName(void) const
+std::string BindingPython::GetName() const
 {
   return "python";
 }
@@ -102,6 +102,6 @@ bool BindingPython::Execute(std::string const& rCode)
   return PyRun_SimpleString(rCode.c_str()) == 0;
 }
 
-Binding* GetBinding(void) { return new BindingPython; }
+Binding* GetBinding() { return new BindingPython; }
 
-int main(void) { return 0; }
+int main() { return 0; }

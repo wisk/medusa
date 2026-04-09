@@ -19,11 +19,11 @@ public:
   using SPType  = std::shared_ptr<Loader>;
   using VSPType = std::vector<SPType>;
 
-  virtual             ~Loader(void) = default;
+  virtual             ~Loader() = default;
 
   // Generic methods
-  virtual std::string GetName(void) const = 0;
-  virtual u8          GetDepth(void) const = 0;
+  virtual std::string GetName() const = 0;
+  virtual u8          GetDepth() const = 0;
 
   // Only binary stream is needed
   virtual bool                     IsCompatible(BinaryStream const& rBinStrm) const = 0;

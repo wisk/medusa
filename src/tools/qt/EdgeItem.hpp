@@ -23,12 +23,12 @@ public:
   EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType type);
 
 #ifdef MEDUSA_HAS_OGDF
-  int type(void) const { return Type; }
-  virtual QRectF boundingRect(void) const;
-  virtual QPainterPath shape(void) const;
+  int type() const { return Type; }
+  virtual QRectF boundingRect() const;
+  virtual QPainterPath shape() const;
   void setBends(ogdf::DPolyline const& bends) { _bends = bends; }
   void SetBends(medusa::GraphData::BendsType const& rBends) { m_Bends = rBends; }
-  void computeCoordinates(void);
+  void computeCoordinates();
 
 protected:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);

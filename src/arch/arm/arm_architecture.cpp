@@ -5,7 +5,7 @@
 
 #include <format>
 
-ArmArchitecture::ArmArchitecture(void)
+ArmArchitecture::ArmArchitecture()
   : Architecture(MEDUSA_ARCH_TAG('a', 'r', 'm'))
   , m_CpuInfo()
 {
@@ -190,7 +190,7 @@ bool ArmArchitecture::ARMCpuContext::Translate(Address const& rLogicalAddress, u
   return true;
 }
 
-u8 ArmArchitecture::ARMCpuContext::GetMode(void) const
+u8 ArmArchitecture::ARMCpuContext::GetMode() const
 {
   return (m_Context.CPSR & ARM_CSPR_T) ? ARM_ModeThumb : ARM_ModeArm;
 }
@@ -238,7 +238,7 @@ bool ArmArchitecture::ARMCpuContext::SetAddress(CpuContext::AddressKind AddrKind
   }
 }
 
-std::string ArmArchitecture::ARMCpuContext::ToString(void) const
+std::string ArmArchitecture::ARMCpuContext::ToString() const
 {
   std::string CPSR = "";
   CPSR += (m_Context.CPSR & ARM_CSPR_N) ? "N" : "n";
@@ -284,7 +284,7 @@ void* ArmArchitecture::ARMCpuContext::GetRegisterAddress(u32 Register)
   }
 }
 
-void* ArmArchitecture::ARMCpuContext::GetContextAddress(void)
+void* ArmArchitecture::ARMCpuContext::GetContextAddress()
 {
   return &m_Context;
 }

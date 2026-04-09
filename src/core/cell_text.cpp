@@ -27,7 +27,7 @@ bool LineData::GetOperandNo(u16 Offset, u8& rOperandNo) const
   return true;
 }
 
-PrintData::PrintData(void)
+PrintData::PrintData()
   : m_Width(), m_LineWidth(), m_Height()
   , m_PrependAddress(true)
   , m_Indent(2)
@@ -119,7 +119,7 @@ PrintData& PrintData::AppendSpace(u16 SpaceNo)
   return *this;
 }
 
-PrintData& PrintData::AppendNewLine(void)
+PrintData& PrintData::AppendNewLine()
 {
   if (m_PrependAddress && m_CurrentText.empty())
     AppendAddress(m_CurrentAddress).AppendSpace(m_Indent);
@@ -140,13 +140,13 @@ PrintData& PrintData::AppendNewLine(void)
   return *this;
 }
 
-PrintData& PrintData::MarkOffset(void)
+PrintData& PrintData::MarkOffset()
 {
   m_CurrentOperandsOffset.insert(m_CurrentText.length());
   return *this;
 }
 
-Address::Vector PrintData::GetAddresses(void) const
+Address::Vector PrintData::GetAddresses() const
 {
   Address::Vector Addrs;
 
@@ -175,7 +175,7 @@ bool PrintData::GetLastAddress(Address& rAddress) const
   return true;
 }
 
-std::string PrintData::GetTexts(void) const
+std::string PrintData::GetTexts() const
 {
   std::string Texts;
 
@@ -186,7 +186,7 @@ std::string PrintData::GetTexts(void) const
   return Texts;
 }
 
-std::vector<std::string> PrintData::GetTextLines(void) const
+std::vector<std::string> PrintData::GetTextLines() const
 {
   std::vector<std::string> Lines;
   Lines.reserve(m_Lines.size());
@@ -197,7 +197,7 @@ std::vector<std::string> PrintData::GetTextLines(void) const
   return Lines;
 }
 
-Mark::List PrintData::GetMarks(void) const
+Mark::List PrintData::GetMarks() const
 {
   Mark::List Marks;
 
@@ -328,7 +328,7 @@ void PrintData::_AppendText(std::string const& rText, Mark::Type MarkType)
     AppendSpace(16 - TextLen);
 }
 
-void PrintData::Clear(void)
+void PrintData::Clear()
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 

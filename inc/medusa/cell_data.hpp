@@ -33,22 +33,22 @@ public:
     , m_ArchTag(ArchTag)
   {}
 
-  std::string Dump(void) const;
+  std::string Dump() const;
 
 
-  u8  GetType(void)            const { return m_Type;        }
-  u8  GetSubType(void)         const { return m_SubType;     }
-  u16 GetSize(void)            const { return m_Size;        }
-  u16 GetFormatStyle(void)     const { return m_FormatStyle; }
-  u8  GetFlags(void)           const { return m_Flags;       }
-  Tag GetArchitectureTag(void) const { return m_ArchTag;     }
-  u8  GetMode(void)            const { return m_Mode;        }
+  u8  GetType()            const { return m_Type;        }
+  u8  GetSubType()         const { return m_SubType;     }
+  u16 GetSize()            const { return m_Size;        }
+  u16 GetFormatStyle()     const { return m_FormatStyle; }
+  u8  GetFlags()           const { return m_Flags;       }
+  Tag GetArchitectureTag() const { return m_ArchTag;     }
+  u8  GetMode()            const { return m_Mode;        }
 
   void SetArchitectureTag(Tag ArchTag) { m_ArchTag = ArchTag; }
   void SetMode(u8 Mode)                { m_Mode = Mode; }
 
-  u8& SubType(void) { return m_SubType; }
-  u16& Size(void)   { return m_Size;    }
+  u8& SubType() { return m_SubType; }
+  u16& Size()   { return m_Size;    }
 
 protected:
   u8  m_Type;         //! This field defines the type of cell

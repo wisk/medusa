@@ -19,7 +19,7 @@ public:
 
 public:
   Ui::Goto *ui;
-  medusa::Address address(void) const;
+  medusa::Address address() const;
 };
 
 #endif // !QMEDUSA_GOTO_HPP

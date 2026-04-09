@@ -4,7 +4,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-bool ExpressionSimplifier::Execute(void)
+bool ExpressionSimplifier::Execute()
 {
   do
   {
@@ -51,7 +51,7 @@ TrackedIdPropagation::TrackedIdPropagation(Expression::LSPType & rExprs, u32 Id)
   //}
 }
 
-bool TrackedIdPropagation::_RunOnce(void)
+bool TrackedIdPropagation::_RunOnce()
 {
   return false;
   // FIXME(wisk):
@@ -61,7 +61,7 @@ bool TrackedIdPropagation::_RunOnce(void)
   //// this functor is used to retrieve the source of a specific tracked id
   //struct FindTrkSrc
   //{
-  //  FindTrkSrc(void) : m_IsAssigned(false) {}
+  //  FindTrkSrc() : m_IsAssigned(false) {}
 
   //  Expression::SPType operator()(Expression::SPType spExpr)
   //  {
@@ -118,7 +118,7 @@ bool TrackedIdPropagation::_RunOnce(void)
   //return true;
 }
 
-bool TrackedIdPropagation::_Finalize(void)
+bool TrackedIdPropagation::_Finalize()
 {
   if (m_spResExpr == nullptr)
     return false;
@@ -170,7 +170,7 @@ TrackedIdMerger::TrackedIdMerger(Expression::SPType spToBeMerged, Expression::VS
 }
 
 // FIXME(wisk):
-bool TrackedIdMerger::_RunOnce(void)
+bool TrackedIdMerger::_RunOnce()
 {
   return false;
   //FilterVisitor FindTrkId([&](Expression::SPType spExpr) -> Expression::SPType
@@ -224,7 +224,7 @@ bool TrackedIdMerger::_RunOnce(void)
   //return true;
 }
 
-bool TrackedIdMerger::_Finalize(void)
+bool TrackedIdMerger::_Finalize()
 {
   return true;
 }
@@ -233,14 +233,14 @@ NormalizeExpression::NormalizeExpression(Expression::SPType spExpr) : m_spExpr(s
 {
 }
 
-bool NormalizeExpression::_RunOnce(void)
+bool NormalizeExpression::_RunOnce()
 {
   return false;
   //// TODO: handle all cases and associativity/commutativity
   //class SwapVisitor : public ExpressionVisitor
   //{
   //public:
-  //  SwapVisitor(void) : m_IsDirty(false) {}
+  //  SwapVisitor() : m_IsDirty(false) {}
   //  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr)
   //  {
   //    ExpressionVisitor::VisitBinaryOperation(spBinOpExpr);
@@ -271,7 +271,7 @@ bool NormalizeExpression::_RunOnce(void)
   //    return nullptr;
   //  }
 
-  //  bool IsDirty(void) const { return m_IsDirty; }
+  //  bool IsDirty() const { return m_IsDirty; }
 
   //private:
   //  bool m_IsDirty;
@@ -284,7 +284,7 @@ bool NormalizeExpression::_RunOnce(void)
   //return true;
 }
 
-bool NormalizeExpression::_Finalize(void)
+bool NormalizeExpression::_Finalize()
 {
   return true;
 }
@@ -293,7 +293,7 @@ ConstantPropagation::ConstantPropagation(Expression::SPType spExpr) : m_spExpr(s
 {
 }
 
-bool ConstantPropagation::_RunOnce(void)
+bool ConstantPropagation::_RunOnce()
 {
   auto FindOpWithConst = [](Expression::SPType spExpr) -> Expression::SPType
   {
@@ -339,7 +339,7 @@ bool ConstantPropagation::_RunOnce(void)
   return m_spExpr->UpdateChild(spBinOpExpr, spConstExpr);
 }
 
-bool ConstantPropagation::_Finalize(void)
+bool ConstantPropagation::_Finalize()
 {
   return true;
 }
@@ -353,7 +353,7 @@ ExpressionRewriter::ExpressionRewriter(Expression::SPType& rspExpr)
 
 }
 
-bool ExpressionRewriter::_RunOnce(void)
+bool ExpressionRewriter::_RunOnce()
 {
   using namespace Pattern;
 
@@ -403,7 +403,7 @@ bool ExpressionRewriter::_RunOnce(void)
   return true;
 }
 
-bool ExpressionRewriter::_Finalize(void)
+bool ExpressionRewriter::_Finalize()
 {
   return true;
 }

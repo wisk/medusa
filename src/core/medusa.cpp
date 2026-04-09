@@ -15,7 +15,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-Medusa::Medusa(void)
+Medusa::Medusa()
   : m_TaskManager([] (Task const* pTask) { })
   , m_Document()
   , m_Analyzer()
@@ -24,12 +24,12 @@ Medusa::Medusa(void)
   Log::Write("core") << GetVersion() << LogEnd;
 }
 
-Medusa::~Medusa(void)
+Medusa::~Medusa()
 {
   m_TaskManager.Stop();
 }
 
-std::string Medusa::GetVersion(void)
+std::string Medusa::GetVersion()
 {
 #ifdef _DEBUG
   char const* pBuildType = "debug";
@@ -52,7 +52,7 @@ bool Medusa::AddTask(Task* pTask)
   return m_TaskManager.AddTask(pTask);
 }
 
-void Medusa::WaitForTasks(void)
+void Medusa::WaitForTasks()
 {
   m_TaskManager.Wait();
 }
@@ -217,7 +217,7 @@ bool Medusa::OpenDocument(AskDatabaseFunctionType AskDatabase)
   return false;
 }
 
-bool Medusa::CloseDocument(void)
+bool Medusa::CloseDocument()
 {
   m_Document.Close();
   return true;

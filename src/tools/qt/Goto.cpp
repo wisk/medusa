@@ -11,7 +11,7 @@ Goto::~Goto()
 {
 }
 
-medusa::Address Goto::address(void) const
+medusa::Address Goto::address() const
 {
   auto addrStr = this->ui->address->text().toStdString();
   return medusa::Address(addrStr);

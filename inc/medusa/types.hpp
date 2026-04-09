@@ -71,7 +71,7 @@ using ap_uint = ap_int;
 class MEDUSA_EXPORT BitVector
 {
 public:
-  BitVector(void) : m_BitSize(0), m_Value() {}
+  BitVector() : m_BitSize(0), m_Value() {}
   explicit BitVector(s8 Value)     : m_BitSize(8),    m_Value(Value) { _Adjust(); }
   explicit BitVector(u8 Value)     : m_BitSize(8),    m_Value(Value) { _Adjust(); }
   explicit BitVector(s16 Value)    : m_BitSize(16),   m_Value(Value) { _Adjust(); }
@@ -95,19 +95,19 @@ public:
   explicit BitVector(u16 BitSize, ap_int Value) : m_BitSize(BitSize), m_Value(Value) { _Adjust(); }
 
   template<typename _Ty>
-  typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo(void) const
+  typename std::enable_if<std::is_same<_Ty, bool>::value, bool>::type ConvertTo() const
   {
     return m_Value.convert_to<u8>() != 0;
   }
 
   template<typename _Ty>
-  typename std::enable_if<boost::multiprecision::is_signed_number<_Ty>::value, _Ty>::type ConvertTo(void) const
+  typename std::enable_if<boost::multiprecision::is_signed_number<_Ty>::value, _Ty>::type ConvertTo() const
   {
     return m_Value.convert_to<_Ty>();
   }
 
   template<typename _Ty>
-  typename std::enable_if<boost::multiprecision::is_unsigned_number<_Ty>::value, _Ty>::type ConvertTo(void) const
+  typename std::enable_if<boost::multiprecision::is_unsigned_number<_Ty>::value, _Ty>::type ConvertTo() const
   {
 
     auto Res = static_cast<_Ty>(m_Value.convert_to<typename std::make_signed<_Ty>::type>());
@@ -127,39 +127,39 @@ public:
 
   std::string ToString(u16 Base = 16) const;
 
-  u16 GetBitSize(void) const { return m_BitSize; }
+  u16 GetBitSize() const { return m_BitSize; }
 
   void SignExtend(u16 NewBitSize);
   void ZeroExtend(u16 NewBitSize);
   void BitCast(u16 NewBitSize);
 
-  ap_int  GetSignedValue(void) const;
-  ap_uint GetUnsignedValue(void) const;
+  ap_int  GetSignedValue() const;
+  ap_uint GetUnsignedValue() const;
 
   // Unary
 
-  BitVector  Not(void) const;
-  BitVector  operator~(void) const { return Not(); }
+  BitVector  Not() const;
+  BitVector  operator~() const { return Not(); }
 
-  BitVector  Neg(void) const;
-  BitVector  operator-(void) const { return Neg(); }
+  BitVector  Neg() const;
+  BitVector  operator-() const { return Neg(); }
 
-  BitVector& PreInc(void);
-  BitVector& operator++(void) { return PreInc(); }
-  BitVector  PostInc(void);
+  BitVector& PreInc();
+  BitVector& operator++() { return PreInc(); }
+  BitVector  PostInc();
   BitVector  operator++(int) { return PostInc(); }
 
-  BitVector& PreDec(void);
-  BitVector& operator--(void) { return PreDec(); }
-  BitVector  PostDec(void);
+  BitVector& PreDec();
+  BitVector& operator--() { return PreDec(); }
+  BitVector  PostDec();
   BitVector  operator--(int) { return PostDec(); }
 
-  BitVector  Bsf(void) const;
-  BitVector  Lsb(void) const;
-  BitVector  Bsr(void) const;
-  BitVector  Msb(void) const;
+  BitVector  Bsf() const;
+  BitVector  Lsb() const;
+  BitVector  Bsr() const;
+  BitVector  Msb() const;
 
-  BitVector  Swap(void) const;
+  BitVector  Swap() const;
 
   // Binary
 
@@ -240,14 +240,14 @@ public:
   BitVector& FModAssign(BitVector const& rVal);
 
 private:
-  void _Adjust(void);
+  void _Adjust();
 
   u16    m_BitSize;
   ap_int m_Value;
 };
 
-template<> float  BitVector::ConvertTo<float> (void) const;
-template<> double BitVector::ConvertTo<double>(void) const;
+template<> float  BitVector::ConvertTo<float> () const;
+template<> double BitVector::ConvertTo<double>() const;
 
 // Address type
 using BaseType     = u16;
@@ -259,15 +259,15 @@ using ImageBaseType = u64;
 //{
 //public:
 //  template<u8 _A, u8 _B, u8 _C, u8 _D>
-//  Tag(void) : m_Value(_A << 24 | _B << 16 | _C << 8 | _D << 0) {}
+//  Tag() : m_Value(_A << 24 | _B << 16 | _C << 8 | _D << 0) {}
 //
-//  operator u32(void) const
+//  operator u32() const
 //  {
 //    return m_Value;
 //  }
 //
 //  // TODO(wisk): Handle non-printable characters
-//  std::string ToString(void) const
+//  std::string ToString() const
 //  {
 //    std::string Result;
 //    Result += m_Value >> 24;

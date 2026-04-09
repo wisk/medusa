@@ -5,11 +5,11 @@
 
 MEDUSA_NAMESPACE_USE
 
-InterpreterEmulator::InterpreterEmulator(void)
+InterpreterEmulator::InterpreterEmulator()
 {
 }
 
-InterpreterEmulator::~InterpreterEmulator(void)
+InterpreterEmulator::~InterpreterEmulator()
 {
 }
 
@@ -63,7 +63,7 @@ Emulator::ReturnType InterpreterEmulator::Execute(Expression::VSPType const& rEx
   return Continue;
 }
 
-InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor(void)
+InterpreterEmulator::InterpreterExpressionVisitor::~InterpreterExpressionVisitor()
 {
   if (!m_Values.empty())
   {

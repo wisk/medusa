@@ -16,12 +16,12 @@ public:
   using SPType = std::shared_ptr<Compiler>;
   using VSPType = std::vector<SPType>;
 
-  virtual ~Compiler(void) = default;
+  virtual ~Compiler() = default;
 
-  virtual std::string GetName(void) const = 0;
+  virtual std::string GetName() const = 0;
 
-  std::string GetFormat(void) const;
-  std::string GetEntryPoint(void) const;
+  std::string GetFormat() const;
+  std::string GetEntryPoint() const;
 
   void SetFormat(std::string const& rFormat = "native");
   void SetEntryPoint(std::string const& rLabelName = "start");

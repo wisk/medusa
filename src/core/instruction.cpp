@@ -31,11 +31,11 @@ Instruction::Instruction(CellData::SPType spDna)
   , m_Expressions()
 {}
 
-Instruction::~Instruction(void)
+Instruction::~Instruction()
 {
 }
 
-std::string Instruction::ToString(void) const
+std::string Instruction::ToString() const
 {
   std::string Res = std::format("mnem: {}({:#08x}), length: {}, prefix: {:#08x}, oprd: {}",
     m_pName, m_Opcode, m_spDna->GetSize(), m_Prefix, m_Operands.size());
@@ -50,52 +50,52 @@ std::string Instruction::ToString(void) const
   return Res;
 }
 
-char const* Instruction::GetFormat(void) const
+char const* Instruction::GetFormat() const
 {
   return m_pFormat;
 }
 
-char const* Instruction::GetName(void) const
+char const* Instruction::GetName() const
 {
   return m_pName;
 }
 
-u32 Instruction::GetOpcode(void) const
+u32 Instruction::GetOpcode() const
 {
   return m_Opcode;
 }
 
-u32 Instruction::GetPrefix(void) const
+u32 Instruction::GetPrefix() const
 {
   return m_Prefix;
 }
 
-u32 Instruction::GetAttributes(void) const
+u32 Instruction::GetAttributes() const
 {
   return m_Attributes;
 }
 
-u32 Instruction::GetTestedFlags(void) const
+u32 Instruction::GetTestedFlags() const
 {
   return m_TestedFlags;
 }
 
-u32 Instruction::GetUpdatedFlags(void) const
+u32 Instruction::GetUpdatedFlags() const
 {
   return m_UpdatedFlags;
 }
 
-u32 Instruction::GetClearedFlags(void) const
+u32 Instruction::GetClearedFlags() const
 {
   return m_ClearedFlags;
 }
 
-u32 Instruction::GetFixedFlags(void) const
+u32 Instruction::GetFixedFlags() const
 {
   return m_FixedFlags;
 }
 
-Expression::LSPType  const& Instruction::GetSemantic(void) const
+Expression::LSPType  const& Instruction::GetSemantic() const
 {
   return m_Expressions;
 }
@@ -147,7 +147,7 @@ bool Instruction::GetOperandReference(Document const& rDoc, u8 OprdNo, Address c
   return false;
 }
 
-u8 Instruction::GetNumberOfOperand(void) const
+u8 Instruction::GetNumberOfOperand() const
 {
   return static_cast<u8>(m_Operands.size());
 }
@@ -234,12 +234,12 @@ void Instruction::AddPostSemantic(Expression::SPType spExpr)
   m_Expressions.push_back(spExpr);
 }
 
-u16& Instruction::Size(void)
+u16& Instruction::Size()
 {
   return m_spDna->Size();
 }
 
-u32& Instruction::Prefix(void)
+u32& Instruction::Prefix()
 {
   return m_Prefix;
 }

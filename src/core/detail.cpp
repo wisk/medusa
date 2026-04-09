@@ -13,7 +13,7 @@ TypeDetail::TypeDetail(std::string const& rName, TypeDetail::Type Type, u32 BitS
 {
 }
 
-std::string TypeDetail::Dump(void) const
+std::string TypeDetail::Dump() const
 {
   return "<type>(" + m_Name + ")";
 }
@@ -23,17 +23,17 @@ TypeDetail::TypeDetail(Detail::Kind Kind, std::string const& rName, Type Type)
 {
 }
 
-TypeDetail::Type TypeDetail::GetType(void) const
+TypeDetail::Type TypeDetail::GetType() const
 {
   return m_Type;
 }
 
-u32 TypeDetail::GetSize(void) const
+u32 TypeDetail::GetSize() const
 {
   return m_BitSize / 8; // TODO: handle 80-bit value
 }
 
-u32 TypeDetail::GetBitSize(void) const
+u32 TypeDetail::GetBitSize() const
 {
   return m_BitSize;
 }
@@ -43,17 +43,17 @@ ValueDetail::ValueDetail(std::string const& rName, ValueDetail::Type ValueType, 
 {
 }
 
-std::string ValueDetail::Dump(void) const
+std::string ValueDetail::Dump() const
 {
   return "<value>(" + m_Name + ")";
 }
 
-ValueDetail::Type ValueDetail::GetType(void) const
+ValueDetail::Type ValueDetail::GetType() const
 {
   return m_Type;
 }
 
-Id ValueDetail::GetRefId(void) const
+Id ValueDetail::GetRefId() const
 {
   return m_RefId;
 }
@@ -72,22 +72,22 @@ TypedValueDetail::TypedValueDetail(TypeDetail::SPType spType, ValueDetail const&
 {
 }
 
-u32 TypedValueDetail::GetSize(void) const
+u32 TypedValueDetail::GetSize() const
 {
   return m_spType->GetSize();
 }
 
-std::string TypedValueDetail::Dump(void) const
+std::string TypedValueDetail::Dump() const
 {
   return m_spType->Dump() + " " + m_Value.Dump();
 }
 
-TypeDetail::SPType const& TypedValueDetail::GetType(void) const
+TypeDetail::SPType const& TypedValueDetail::GetType() const
 {
   return m_spType;
 }
 
-ValueDetail const& TypedValueDetail::GetValue(void) const
+ValueDetail const& TypedValueDetail::GetValue() const
 {
   return m_Value;
 }
@@ -98,7 +98,7 @@ StaticArrayDetail::StaticArrayDetail(TypeDetail::SPType spElementType, u32 Numbe
 {
 }
 
-u32 StaticArrayDetail::GetSize(void) const
+u32 StaticArrayDetail::GetSize() const
 {
   u64 ArrSz = m_spElementType->GetSize() * m_NumberOfElements;
   if (ArrSz > 0xffffffff)
@@ -109,7 +109,7 @@ u32 StaticArrayDetail::GetSize(void) const
   return static_cast<u32>(ArrSz);
 }
 
-u32 StaticArrayDetail::GetBitSize(void) const
+u32 StaticArrayDetail::GetBitSize() const
 {
   u64 ArrSz = m_spElementType->GetBitSize() * m_NumberOfElements;
   if (ArrSz > 0xffffffff)
@@ -120,7 +120,7 @@ u32 StaticArrayDetail::GetBitSize(void) const
   return static_cast<u32>(ArrSz);
 }
 
-std::string StaticArrayDetail::Dump(void) const
+std::string StaticArrayDetail::Dump() const
 {
   std::ostringstream Res;
   for (u32 Count = 0; Count < m_NumberOfElements; ++Count)
@@ -128,12 +128,12 @@ std::string StaticArrayDetail::Dump(void) const
   return Res.str();
 }
 
-TypeDetail::SPType const& StaticArrayDetail::GetElementType(void) const
+TypeDetail::SPType const& StaticArrayDetail::GetElementType() const
 {
   return m_spElementType;
 }
 
-u32 StaticArrayDetail::GetNumberOfElements(void) const
+u32 StaticArrayDetail::GetNumberOfElements() const
 {
   return m_NumberOfElements;
 }
@@ -143,7 +143,7 @@ StructureDetail::StructureDetail(std::string const& rName, u32 Alignment)
 {
 }
 
-u32 StructureDetail::GetSize(void) const
+u32 StructureDetail::GetSize() const
 {
   u32 StructSize = 0;
   // Actually, the next offset is also the structure size
@@ -157,7 +157,7 @@ u32 StructureDetail::GetSize(void) const
   return StructSize;
 }
 
-std::string StructureDetail::Dump(void) const
+std::string StructureDetail::Dump() const
 {
   std::ostringstream Res;
 
@@ -257,22 +257,22 @@ FunctionDetail::FunctionDetail(std::string const& rName, TypeDetail const& rRetu
 {
 }
 
-std::string FunctionDetail::Dump(void) const
+std::string FunctionDetail::Dump() const
 {
   return "<function>(" + m_Name + ")";
 }
 
-TypeDetail const& FunctionDetail::GetReturnType(void) const
+TypeDetail const& FunctionDetail::GetReturnType() const
 {
   return m_ReturnType;
 }
 
-std::list<TypedValueDetail> const& FunctionDetail::GetParameters(void) const
+std::list<TypedValueDetail> const& FunctionDetail::GetParameters() const
 {
   return m_Parameters;
 }
 
-std::string const& FunctionDetail::GetCallingConventionName(void) const
+std::string const& FunctionDetail::GetCallingConventionName() const
 {
   return m_CallingConventionName;
 }

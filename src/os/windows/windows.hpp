@@ -21,10 +21,10 @@ MEDUSA_NAMESPACE_USE
 class WindowsOperatingSystem : public OperatingSystem
 {
 public:
-  WindowsOperatingSystem(void);
-  ~WindowsOperatingSystem(void) override;
+  WindowsOperatingSystem();
+  ~WindowsOperatingSystem() override;
 
-  std::string GetName(void) const override;
+  std::string GetName() const override;
   bool IsSupported(Loader const& rLdr, Architecture const& rArch) const override;
 
   bool InitializeContext(
@@ -43,12 +43,12 @@ public:
   bool GetDefaultCallingConvention(Document const& rDoc, std::string& rCallingConvention, Address const& rAddress) const override;
 
 private:
-  bool _OpenDatabaseIfNeeded(void) const;
+  bool _OpenDatabaseIfNeeded() const;
   bool _GetTypeFromDatabase(std::string const& rTypeId, TypeDetail& rTpDtl) const;
 
   mutable sqlite3* m_Database;
 };
 
-extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem(void);
+extern "C" OS_WINDOWS_EXPORT OperatingSystem* GetOperatingSystem();
 
 #endif // !OS_WINDOWS_HPP

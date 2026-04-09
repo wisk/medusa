@@ -25,12 +25,12 @@ UiAction::UiAction(QObject* pParent, medusa::Action::SPType spAction, QKeySequen
   });
 }
 
-bool UiAction::IsCompatible(void) const
+bool UiAction::IsCompatible() const
 {
   return m_spAction->IsCompatible();
 }
 
-void UiAction::Do(void)
+void UiAction::Do()
 {
   return m_spAction->Do();
 }

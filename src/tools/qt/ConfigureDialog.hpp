@@ -18,29 +18,29 @@ class ConfigureDialog : public QDialog, public Ui::ConfigureDialog
 public:
   ConfigureDialog(QWidget* pParent, medusa::BinaryStream::SPType spBinaryStream);
 
-  ~ConfigureDialog(void);
+  ~ConfigureDialog();
 
-  medusa::Database::SPType           GetSelectedDatabase(void) const;
-  medusa::Loader::SPType             GetSelectedLoader(void) const;
-  medusa::Architecture::VSPType      GetSelectedArchitectures(void) const;
-  medusa::OperatingSystem::SPType    GetSelectedOperatingSystem(void) const;
+  medusa::Database::SPType           GetSelectedDatabase() const;
+  medusa::Loader::SPType             GetSelectedLoader() const;
+  medusa::Architecture::VSPType      GetSelectedArchitectures() const;
+  medusa::OperatingSystem::SPType    GetSelectedOperatingSystem() const;
 
 protected slots:
   void OnItemClicked(QTreeWidgetItem * pItem, int Column);
-  void OnAccepted(void);
+  void OnAccepted();
 
 private:
-  void _GetModulesByLoader(void);
-  void _GetDefaultModules(void);
-  void _CreateTree(void);
-  void _UpdateTree(void);
-  void _DestroyTree(void);
+  void _GetModulesByLoader();
+  void _GetDefaultModules();
+  void _CreateTree();
+  void _UpdateTree();
+  void _DestroyTree();
 
   void _AddTreeChild(QTreeWidgetItem* pParent, QString const& rIconPath, QString const& rName, QString const& rDescription);
 
-  void _DisplayDocumentOptions(void);
+  void _DisplayDocumentOptions();
   void _DisplayConfigurationOptions(medusa::ConfigurationModel& rConfigurationModel);
-  void _ClearOptions(void);
+  void _ClearOptions();
 
   medusa::BinaryStream::SPType          m_spBinaryStream;
   medusa::Database::SPType              m_spDatabase;

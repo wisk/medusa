@@ -31,7 +31,7 @@
 MEDUSA_NAMESPACE_BEGIN
 
 /*! This class defines what an architecture plug-in must implement.
- * Don't forget to export a extern "C" Architecture* GetArchitecture(void) function
+ * Don't forget to export a extern "C" Architecture* GetArchitecture() function
  */
 class MEDUSA_EXPORT Architecture : public IsConfigurable
 {
@@ -43,10 +43,10 @@ public:
   using NamedModeVector = std::vector<NamedMode>;
 
   Architecture(Tag ArchTag);
-  virtual ~Architecture(void) = default;
+  virtual ~Architecture() = default;
 
   //! This method returns the name of the current architecture.
-  virtual std::string GetName(void) const;
+  virtual std::string GetName() const;
 
   //! This method converts an virtual address to a physical one.
   virtual bool Translate(Address const& rVirtAddr, OffsetType& rPhysOff);
@@ -58,32 +58,32 @@ public:
   virtual bool Disassemble(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode);
 
   //! This method returns all available mode
-  virtual NamedModeVector GetModes(void) const = 0;
+  virtual NamedModeVector GetModes() const = 0;
   u8 GetModeByName(std::string const &rModeName) const;
 
   //! This method helps the analyzer to guess the correct mode
   virtual u8 GetDefaultMode(Address const& rAddress) const { return 0; }
 
   //! This method returns the architecture endianness.
-  virtual EEndianness GetEndianness(void) = 0;
+  virtual EEndianness GetEndianness() = 0;
 
-  virtual CpuInformation    const* GetCpuInformation(void) const { return nullptr; }
+  virtual CpuInformation    const* GetCpuInformation() const { return nullptr; }
   virtual CallingConvention const* GetCallingConvention(std::string const& rCallConvName, u8 Mode) const { return nullptr; }
-  virtual std::vector<std::string> GetCallingConventionNames(void) const { return{}; }
+  virtual std::vector<std::string> GetCallingConventionNames() const { return{}; }
 
-  virtual CpuContext*    MakeCpuContext(void)    const { return nullptr; }
-  virtual MemoryContext* MakeMemoryContext(void) const { return nullptr; }
+  virtual CpuContext*    MakeCpuContext()    const { return nullptr; }
+  virtual MemoryContext* MakeMemoryContext() const { return nullptr; }
 
 
   virtual bool HandleExpression(Expression::LSPType& rExprs, std::string const& rName, Instruction& rInsn, Expression::SPType spResExpr);
   virtual bool EmitSetExecutionAddress(Expression::VSPType& rExprs, Address const& rAddr, u8 Mode);
 
   void UpdateId(u8 Id) { m_Tag |= Id; }
-  Tag  GetTag(void) const { return m_Tag; }
+  Tag  GetTag() const { return m_Tag; }
 
   void AnalyzeFunction(Function const& rFunc);
 
-  bool DisassembleBasicBlockOnly(void) const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
+  bool DisassembleBasicBlockOnly() const { return m_CfgMdl.GetBoolean("Disassembly only basic block"); }
 
   bool FormatTypeDetail(
     TypeDetail const& rTypeDtl,

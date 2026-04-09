@@ -21,7 +21,7 @@ public:
     : m_Name(rName), m_rDoc(rDoc), m_Addr(rAddr)
   {}
 
-  std::string const& GetName(void) const { return m_Name; }
+  std::string const& GetName() const { return m_Name; }
 
 protected:
   std::string m_Name;
@@ -37,8 +37,8 @@ public:
   AnalyzerTask(std::string const& rTaskName, Document& rDoc, TaskFunctionType TaskFunc)
     : m_Name(rTaskName), m_rDoc(rDoc), m_TaskFunc(TaskFunc) {}
 
-  virtual std::string GetName(void) const { return m_Name; }
-  virtual void Run(void) { m_TaskFunc(m_rDoc); }
+  virtual std::string GetName() const { return m_Name; }
+  virtual void Run() { m_TaskFunc(m_rDoc); }
 
 private:
   std::string m_Name;
@@ -54,8 +54,8 @@ public:
   AnalyzerTaskAddress(std::string const& rTaskName, Document& rDoc, Address const& rAddr, TaskFunctionType TaskFunc)
     : m_Name(rTaskName), m_rDoc(rDoc), m_Addr(rAddr), m_TaskFunc(TaskFunc) {}
 
-  virtual std::string GetName(void) const { return m_Name; }
-  virtual void Run(void) { m_TaskFunc(m_rDoc, m_Addr); }
+  virtual std::string GetName() const { return m_Name; }
+  virtual void Run() { m_TaskFunc(m_rDoc, m_Addr); }
 
   void SetAddress(Address const& rAddr) { m_Addr = rAddr; }
 
@@ -77,7 +77,7 @@ public:
 
   bool BuildControlFlowGraph(Graph& rCfg);
 
-  bool DisassembleUsingSymbolicExecution(void);
+  bool DisassembleUsingSymbolicExecution();
 };
 
 class AnalyzerInstruction : public AnalyzerPass
@@ -88,8 +88,8 @@ public:
     , m_rInsn(rInsn)
   {}
 
-  bool FindCrossReference(void);
-  bool FindString(void);
+  bool FindCrossReference();
+  bool FindString();
 
 protected:
   Instruction const& m_rInsn;
@@ -106,7 +106,7 @@ class AnalyzerFunction : public AnalyzerPass
 public:
   AnalyzerFunction(Document& rDoc, Address const& rAddr) : AnalyzerPass("function", rDoc, rAddr) {}
 
-  bool CreateFunction(void);
+  bool CreateFunction();
   bool ComputeFunctionLength(u16& rFunctionLength, u16& rInstructionCounter, u32 LengthThreshold = 0x10000);
   //bool DetermineCallingConvention();
   //bool AnalyzeStack();
@@ -117,8 +117,8 @@ class AnalyzerString : public AnalyzerPass
 public:
   AnalyzerString(Document& rDoc, Address const& rAddr) : AnalyzerPass("string", rDoc, rAddr) {}
 
-  bool CreateUtf8String(void);
-  bool CreateUtf16String(void);
+  bool CreateUtf8String();
+  bool CreateUtf16String();
   //bool DetermineStringType();
 };
 

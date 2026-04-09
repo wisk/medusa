@@ -27,8 +27,8 @@ public:
       Remove
     };
     LabelUpdated(Label const& rLbl, UpdateType Type) : m_Lbl(rLbl), m_Type(Type) {}
-    Label const& GetLabel(void) const { return m_Lbl; }
-    UpdateType GetType(void) const { return m_Type; }
+    Label const& GetLabel() const { return m_Lbl; }
+    UpdateType GetType() const { return m_Type; }
   private:
     Label m_Lbl;
     UpdateType m_Type;
@@ -36,8 +36,8 @@ public:
 
   using EventType = std::variant<Quit, DocumentUpdated, LabelUpdated>;
 
-  virtual bool OnQuit(void)                        { return false; }
-  virtual bool OnDocumentUpdated(void)             { return true;  }
+  virtual bool OnQuit()                        { return false; }
+  virtual bool OnDocumentUpdated()             { return true;  }
   virtual bool OnLabelUpdated(LabelUpdated const&) { return true;  }
 
   bool operator()(EventType const& rEvent)

@@ -22,7 +22,7 @@ public:
     : Cell(Cell::ValueType, SubType, Length)
   {}
   Value(CellData::SPType spDna) : Cell(spDna) {}
-  virtual ~Value(void) = default;
+  virtual ~Value() = default;
 
   void Modify(u8&  rValue) const;
   void Modify(u16& rValue) const;

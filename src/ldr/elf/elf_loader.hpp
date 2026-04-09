@@ -26,8 +26,8 @@ MEDUSA_NAMESPACE_USE
 class ElfLoader : public Loader
 {
 public:
-  std::string GetName(void) const override { return "ELF"; }
-  u8          GetDepth(void) const override { return 1; }
+  std::string GetName() const override { return "ELF"; }
+  u8          GetDepth() const override { return 1; }
 
   bool                     IsCompatible(BinaryStream const& rBinStrm) const override;
   std::string              GetDetailedName(BinaryStream const& rBinStrm) const override;
@@ -596,6 +596,6 @@ private:
   }
 };
 
-extern "C" LDR_ELF_EXPORT Loader* GetLoader(void);
+extern "C" LDR_ELF_EXPORT Loader* GetLoader();
 
 #endif // !LDR_ELF_HPP

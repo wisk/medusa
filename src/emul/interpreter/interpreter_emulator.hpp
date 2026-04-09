@@ -15,15 +15,15 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator(void);
+extern "C" EMUL_INTERPRETER_EXPORT Emulator* GetEmulator();
 
 class InterpreterEmulator : public Emulator
 {
 public:
-  InterpreterEmulator(void);
-  ~InterpreterEmulator(void) override;
+  InterpreterEmulator();
+  ~InterpreterEmulator() override;
 
-  std::string GetName(void) const override { return "interpreter"; }
+  std::string GetName() const override { return "interpreter"; }
   ReturnType Execute(Expression::VSPType const& rExprs) override;
 
 protected:
@@ -36,7 +36,7 @@ private:
     InterpreterExpressionVisitor(HookAddressHashMap const& Hooks, CpuContext* pCpuCtxt, MemoryContext* pMemCtxt, std::unordered_map<std::string, BitVector>& rVars)
       : m_rHooks(Hooks), m_pCpuCtxt(pCpuCtxt), m_pMemCtxt(pMemCtxt), m_rVars(rVars), m_NrOfValueToRead(), m_State(Unknown) {}
 
-    ~InterpreterExpressionVisitor(void) override;
+    ~InterpreterExpressionVisitor() override;
 
     Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
     Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;

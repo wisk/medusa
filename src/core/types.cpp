@@ -42,7 +42,7 @@ void BitVector::BitCast(u16 NewBitSize)
   m_Value &= Mask;
 }
 
-ap_int BitVector::GetSignedValue(void) const
+ap_int BitVector::GetSignedValue() const
 {
   if (m_BitSize == 0)
     return 0;
@@ -56,7 +56,7 @@ ap_int BitVector::GetSignedValue(void) const
   return -((m_Value ^ Mask) + 1);
 }
 
-ap_uint BitVector::GetUnsignedValue(void) const
+ap_uint BitVector::GetUnsignedValue() const
 {
   if (m_BitSize == 0)
     return 0;
@@ -71,66 +71,66 @@ ap_uint BitVector::GetUnsignedValue(void) const
   return NegValue;
 }
 
-BitVector BitVector::Not(void) const
+BitVector BitVector::Not() const
 {
   BitVector Tmp(m_BitSize, ~m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-BitVector BitVector::Neg(void) const
+BitVector BitVector::Neg() const
 {
   BitVector Tmp(m_BitSize, -m_Value);
   Tmp._Adjust();
   return Tmp;
 }
 
-BitVector& BitVector::PreInc(void)
+BitVector& BitVector::PreInc()
 {
   ++m_Value;
   _Adjust();
   return *this;
 }
 
-BitVector BitVector::PostInc(void)
+BitVector BitVector::PostInc()
 {
   BitVector Tmp(m_BitSize, m_Value + 1);
   Tmp._Adjust();
   return Tmp;
 }
 
-BitVector& BitVector::PreDec(void)
+BitVector& BitVector::PreDec()
 {
   --m_Value;
   _Adjust();
   return *this;
 }
 
-BitVector BitVector::PostDec(void)
+BitVector BitVector::PostDec()
 {
   BitVector Tmp(m_BitSize, m_Value - 1);
   Tmp._Adjust();
   return Tmp;
 }
 
-BitVector BitVector::Bsf(void) const
+BitVector BitVector::Bsf() const
 {
   return Lsb();
 }
 
-BitVector BitVector::Lsb(void) const
+BitVector BitVector::Lsb() const
 {
   if (m_Value.is_zero())
     return BitVector(m_BitSize, 0);
   return BitVector(m_BitSize, boost::multiprecision::lsb(m_Value));
 }
 
-BitVector BitVector::Bsr(void) const
+BitVector BitVector::Bsr() const
 {
   return Msb();
 }
 
-BitVector BitVector::Msb(void) const
+BitVector BitVector::Msb() const
 {
   if (m_Value.is_zero())
     // Avoid "No bits were set in the operand."
@@ -141,7 +141,7 @@ BitVector BitVector::Msb(void) const
   return BitVector(m_BitSize, boost::multiprecision::msb(m_Value));
 }
 
-BitVector BitVector::Swap(void) const
+BitVector BitVector::Swap() const
 {
   switch (m_BitSize)
   {
@@ -524,21 +524,21 @@ BitVector& BitVector::FModAssign(BitVector const& rVal)
   return *this;
 }
 
-void BitVector::_Adjust(void)
+void BitVector::_Adjust()
 {
   ap_int Mask = (ap_int(1) << m_BitSize) - 1;
   m_Value = Mask & GetUnsignedValue();
 }
 
 template<>
-float BitVector::ConvertTo<float>(void) const
+float BitVector::ConvertTo<float>() const
 {
   auto Tmp = ConvertTo<u32>();
   return *reinterpret_cast<float const*>(&Tmp);
 }
 
 template<>
-double BitVector::ConvertTo<double>(void) const
+double BitVector::ConvertTo<double>() const
 {
   auto Tmp = ConvertTo<u64>();
   return *reinterpret_cast<double const*>(&Tmp);

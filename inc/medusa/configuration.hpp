@@ -23,9 +23,9 @@ namespace Configuration
   public:
     NamedValue(std::string const& rName = "", ConfigType Value = ConfigType()) : m_Name(rName), m_Value(Value) {}
 
-    std::string const& GetName(void) const { return m_Name; }
-    ValueType GetValue(void) const { return m_Value; }
-    ConfigType const& GetConfigurationValue(void) const { return m_Value; }
+    std::string const& GetName() const { return m_Name; }
+    ValueType GetValue() const { return m_Value; }
+    ConfigType const& GetConfigurationValue() const { return m_Value; }
     void SetValue(ValueType Value) { m_Value = Value; }
 
   private:
@@ -38,9 +38,9 @@ namespace Configuration
   public:
     NamedValue(std::string const& rName = "", Configuration::Enum Value = Configuration::Enum()) : m_Name(rName), m_Value(Value) {}
 
-    std::string const& GetName(void) const { return m_Name; }
-    Enum const& GetConfigurationValue(void) const { return m_Value; }
-    u32 GetValue(void) const
+    std::string const& GetName() const { return m_Name; }
+    Enum const& GetConfigurationValue() const { return m_Value; }
+    u32 GetValue() const
     {
       for (auto ValuePair : m_Value)
         if (ValuePair.first == "")
@@ -127,8 +127,8 @@ public:
   std::string GetString(std::string const& rName) const;
   Path        GetPath(std::string const& rName) const;
 
-  ConstIterator  Begin(void) const { return std::begin(m_Values); }
-  ConstIterator  End(void)   const { return std::end(m_Values); }
+  ConstIterator  Begin() const { return std::begin(m_Values); }
+  ConstIterator  End()   const { return std::end(m_Values); }
 
 private:
   VariantNamedValueMapType m_Values;
@@ -137,8 +137,8 @@ private:
 class MEDUSA_EXPORT IsConfigurable
 {
 public:
-  ConfigurationModel& GetConfigurationModel(void);
-  ConfigurationModel const& GetConfigurationModel(void) const;
+  ConfigurationModel& GetConfigurationModel();
+  ConfigurationModel const& GetConfigurationModel() const;
 
 protected:
   ConfigurationModel m_CfgMdl;

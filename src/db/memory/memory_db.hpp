@@ -42,25 +42,25 @@ private:
   bool _GetPreviousMemoryAreaId(MemoryArea const& rMemoryArea, MemoryArea& rPreviousMemoryArea) const;
 
 public:
-  MemoryDatabase(void);
-  ~MemoryDatabase(void) override;
+  MemoryDatabase();
+  ~MemoryDatabase() override;
 
-  std::string GetName(void) const override;
-  std::string GetExtension(void) const override;
+  std::string GetName() const override;
+  std::string GetExtension() const override;
   bool IsCompatible(Path const& rDatabasePath) const override;
 
   bool Open(Path const& rFilePath) override;
   bool Create(Path const& rDatabasePath, bool Force) override;
-  bool Flush(void) override;
-  bool Close(void) override;
+  bool Flush() override;
+  bool Close() override;
 
   // BinaryStream
-  //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
+  //virtual FileBinaryStream const& GetFileBinaryStream() const;
 
   // Architecture
   bool RegisterArchitectureTag(Tag ArchitectureTag) override;
   bool UnregisterArchitectureTag(Tag ArchitectureTag) override;
-  std::vector<Tag> GetArchitectureTags(void) const override;
+  std::vector<Tag> GetArchitectureTags() const override;
 
   bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode) override;
 
@@ -160,13 +160,13 @@ private:
   class CellLayout
   {
   public:
-    CellLayout(void) : m_Offset(), m_Size() {}
-    bool IsEmpty(void) const { return m_Size == 0x0; }
-    void Clear(void) { m_Offset = 0x0; m_Size = 0x0; }
+    CellLayout() : m_Offset(), m_Size() {}
+    bool IsEmpty() const { return m_Size == 0x0; }
+    void Clear() { m_Offset = 0x0; m_Size = 0x0; }
     void Set(u16 CellOffset, u16 CellSize) { m_Offset = CellOffset; m_Size = CellSize; }
-    u16 GetOffset(void) const { return m_Offset; }
-    u16 GetSize(void) const { return m_Size; }
-    u16 GetNextCellOffset(void) const { return m_Size - m_Offset; }
+    u16 GetOffset() const { return m_Offset; }
+    u16 GetSize() const { return m_Size; }
+    u16 GetNextCellOffset() const { return m_Size - m_Offset; }
 
   private:
     u16 m_Offset;
@@ -194,6 +194,6 @@ private:
   std::unordered_map<DetailBindingKey, Id, DetailBindingKeyHash> m_DetailBindingsMap;
 };
 
-extern "C" DB_MEMORY_EXPORT Database* GetDatabase(void);
+extern "C" DB_MEMORY_EXPORT Database* GetDatabase();
 
 #endif // !DB_MEMORY_HPP

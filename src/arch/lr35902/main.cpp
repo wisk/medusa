@@ -1,5 +1,5 @@
 #include "lr35902_architecture.hpp"
 
-Architecture* GetArchitecture(void) { return new LR35902Architecture; }
+Architecture* GetArchitecture() { return new LR35902Architecture; }
 
-int main(void) { return 0; }
+int main() { return 0; }

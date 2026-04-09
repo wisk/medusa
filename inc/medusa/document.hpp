@@ -44,7 +44,7 @@ public:
       TaskUpdated       = 1 << 5,
     };
 
-    virtual ~Subscriber(void)
+    virtual ~Subscriber()
     {
       m_QuitConnection.disconnect();
       m_DocumentUpdatedConnection.disconnect();
@@ -55,8 +55,8 @@ public:
     }
 
   private:
-    using QuitSignalType              = boost::signals2::signal<void (void)>;
-    using DocumentUpdatedSignalType   = boost::signals2::signal<void (void)>;
+    using QuitSignalType              = boost::signals2::signal<void ()>;
+    using DocumentUpdatedSignalType   = boost::signals2::signal<void ()>;
     using MemoryAreaUpdatedSignalType = boost::signals2::signal<void (MemoryArea const& rMemArea, bool Removed)>;
     using AddressUpdatedSignalType    = boost::signals2::signal<void (Address::Vector const& rAddresses)>;
     using LabelUpdatedSignalType      = boost::signals2::signal<void (Address const& rAddress, Label const& rLabel, bool Removed)>;
@@ -77,22 +77,22 @@ public:
     Document::ConnectionType m_TaskUpdatedConnection;
 
   public:
-    virtual void OnQuit(void) {}
-    virtual void OnDocumentUpdated(void) {}
+    virtual void OnQuit() {}
+    virtual void OnDocumentUpdated() {}
     virtual void OnMemoryAreaUpdated(MemoryArea const& rMemArea, bool Removed) {}
     virtual void OnAddressUpdated(Address::Vector const& rAddresses) {}
     virtual void OnLabelUpdated(Address const& rAddress, Label const& rLabel, bool Removed) {}
     virtual void OnTaskUpdated(std::string const& rTaskName, u8 Status) {}
   };
 
-  Document(void);
-  ~Document(void);
+  Document();
+  ~Document();
 
   // Database
 
   bool Open(Database::SPType spDb);
-  bool Flush(void);
-  bool Close(void);
+  bool Flush();
+  bool Close();
 
   // Subscriber
 
@@ -111,7 +111,7 @@ public:
 
   // Binary Stream
 
-  BinaryStream& GetBinaryStream(void) const { return m_spDatabase->GetBinaryStream(); }
+  BinaryStream& GetBinaryStream() const { return m_spDatabase->GetBinaryStream(); }
 
   // Label
 
@@ -229,10 +229,10 @@ public:
   // - Architecture Address → ? (depends on architecture)
   // - ? → Architecture Address (might not be normalized)
   bool    TranslateAddress(Address const& rAddress, Address::Type ToConvert, Address& rTranslatedAddress) const;
-  Address GetStartAddress(void) const;
-  Address GetFirstAddress(void) const;
-  Address GetLastAddress(void)  const;
-  u32     GetNumberOfAddress(void) const;
+  Address GetStartAddress() const;
+  Address GetFirstAddress() const;
+  Address GetLastAddress()  const;
+  u32     GetNumberOfAddress() const;
 
   bool    MoveAddress(Address const& rAddress, Address& rMovedAddress, s64 Offset) const;
   bool    GetPreviousAddress(Address const& rAddress, Address& rPreviousAddress) const;
@@ -246,12 +246,12 @@ public:
   bool ContainsUnknown(Address const& rAddress) const;
 
   Tag              GetArchitectureTag(Address const& rAddress) const;
-  std::vector<Tag> GetArchitectureTags(void) const;
+  std::vector<Tag> GetArchitectureTags() const;
   u8               GetMode(Address const& rAddress) const;
 
   // Operating system
 
-  std::string GetOperatingSystemName(void) const;
+  std::string GetOperatingSystemName() const;
 
 private:
   void RemoveLabelIfNeeded(Address const& rAddr);

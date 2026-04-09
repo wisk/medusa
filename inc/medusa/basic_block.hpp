@@ -19,24 +19,24 @@ public:
     kIsInLoop  = 1 << 2,
   };
 
-  BasicBlockVertexProperties(void);
+  BasicBlockVertexProperties();
   BasicBlockVertexProperties(Document const& rDoc, Address::Vector const& rAddresses);
 
   BasicBlockVertexProperties operator=(BasicBlockVertexProperties const& rBscBlk);
 
-  Address::Vector const& GetAddresses(void) const { return m_Addresses; }
-  Address              GetFirstAddress(void) const;
-  Address              GetLastAddress(void) const;
-  size_t               GetNumberOfInstruction(void) const { return m_Addresses.size(); }
+  Address::Vector const& GetAddresses() const { return m_Addresses; }
+  Address              GetFirstAddress() const;
+  Address              GetLastAddress() const;
+  size_t               GetNumberOfInstruction() const { return m_Addresses.size(); }
   bool                 Contains(Address const& rAddr) const;
   bool                 Split(Address const& rAddr, Address::Vector& rAddresses);
 
   bool                 GetPreviousAddress(Address const& rAddr, Address& rPrevAddr) const;
   bool                 GetNextAddress(Address const& rAddr, Address& rNextAddr) const;
 
-  bool                 IsHead(void) const;
-  bool                 CanReturn(void) const;
-  bool                 IsInLoop(void) const;
+  bool                 IsHead() const;
+  bool                 CanReturn() const;
+  bool                 IsInLoop() const;
 
 private:
   Document const* m_pDoc;
@@ -59,7 +59,7 @@ public:
   };
 
   BasicBlockEdgeProperties(Type Type = Unknown) : m_Type(Type) {}
-  Type GetType(void) const { return m_Type; }
+  Type GetType() const { return m_Type; }
 
 private:
   Type m_Type;

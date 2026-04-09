@@ -23,8 +23,8 @@ class PeLoader : public Loader
 {
 public:
   // Generic methods
-  std::string GetName(void) const override { return "PE"; }
-  u8          GetDepth(void) const override { return 2; }
+  std::string GetName() const override { return "PE"; }
+  u8          GetDepth() const override { return 2; }
 
   // Only binary stream is needed
   bool                     IsCompatible(BinaryStream const& rBinStrm) const override;
@@ -46,6 +46,6 @@ private:
   template<int bit> bool _ResolveExports(Document& rDoc, u64 ImageBase, u64 ExportDirectoryRva) const;
 };
 
-extern "C" LDR_PE_EXPORT Loader* GetLoader(void);
+extern "C" LDR_PE_EXPORT Loader* GetLoader();
 
 #endif // !LDR_PE_HPP

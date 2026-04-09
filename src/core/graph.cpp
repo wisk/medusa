@@ -7,7 +7,7 @@
 
 namespace medusa
 {
-  Graph::VertexProperties::VertexProperties(void)
+  Graph::VertexProperties::VertexProperties()
     : m_Flags()
   {
 

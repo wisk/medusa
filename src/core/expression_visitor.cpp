@@ -463,7 +463,7 @@ void FilterVisitor::_AddExpression(Expression::SPType spExpr)
     m_MatchedExprs.push_back(spExpr);
 }
 
-bool FilterVisitor::_IsDone(void) const
+bool FilterVisitor::_IsDone() const
 {
   if (m_NbrOfResult == 0)
     return false;
@@ -1585,7 +1585,7 @@ Expression::SPType SymbolicVisitor::VisitSymbolic(SymbolicExpression::SPType spS
   return nullptr;
 }
 
-SymbolicVisitor SymbolicVisitor::Fork(void) const
+SymbolicVisitor SymbolicVisitor::Fork() const
 {
   SymbolicVisitor Forked(m_rDoc, m_Mode, m_EvalMemRef);
 
@@ -1610,7 +1610,7 @@ SymbolicVisitor SymbolicVisitor::Fork(void) const
   return Forked;
 }
 
-std::string SymbolicVisitor::ToString(void) const
+std::string SymbolicVisitor::ToString() const
 {
   static const std::string s_Sep(80, '_');
   std::ostringstream oss;

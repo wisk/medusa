@@ -59,8 +59,8 @@ namespace
   public:
     MemoryAreaRelated(int Id = -1, u64 Offset = 0x0) : m_Id(Id), m_Offset(Offset) {}
 
-    int const& GetMemoryAreaId(void) const { return m_Id; }
-    u64 const& GetMemoryAreaOffset(void) const { return m_Offset; }
+    int const& GetMemoryAreaId() const { return m_Id; }
+    u64 const& GetMemoryAreaOffset() const { return m_Offset; }
 
     void SetMemoryAreaId(int Id) { m_Id = Id; }
     void SetMemoryAreaOffset(u64 Offset) { m_Offset = Offset; }
@@ -131,7 +131,7 @@ namespace
       return true;
     }
 
-    Address GetAddress(void) const
+    Address GetAddress() const
     {
       return Address(
         static_cast<Address::Type>(BaseAddressType),
@@ -145,8 +145,8 @@ namespace
     LabelTable(MemoryAreaRelated const& rMemAreaRel, Label const& rLbl)
       : MemoryAreaRelated(rMemAreaRel), Name(rLbl.GetName()), Type(rLbl.GetType()), Version(rLbl.GetVersion()) {}
 
-    int const& GetMemoryAreaId(void) const { return MemoryAreaRelated::GetMemoryAreaId(); }
-    u64 const& GetMemoryAreaOffset(void) const { return MemoryAreaRelated::GetMemoryAreaOffset(); }
+    int const& GetMemoryAreaId() const { return MemoryAreaRelated::GetMemoryAreaId(); }
+    u64 const& GetMemoryAreaOffset() const { return MemoryAreaRelated::GetMemoryAreaOffset(); }
 
     void SetMemoryAreaId(int Id) { MemoryAreaRelated::SetMemoryAreaId(Id); }
     void SetMemoryAreaOffset(u64 Offset) { MemoryAreaRelated::SetMemoryAreaOffset(Offset); }
@@ -192,8 +192,8 @@ namespace
       , MemoryAreaIdFrom(rFrom.GetMemoryAreaId()), MemoryAreaOffsetFrom(rFrom.GetMemoryAreaOffset())
     {}
 
-    MemoryAreaRelated GetTo(void) const { return { MemoryAreaIdTo, MemoryAreaOffsetTo }; }
-    MemoryAreaRelated GetFrom(void) const { return { MemoryAreaIdFrom, MemoryAreaOffsetFrom }; }
+    MemoryAreaRelated GetTo() const { return { MemoryAreaIdTo, MemoryAreaOffsetTo }; }
+    MemoryAreaRelated GetFrom() const { return { MemoryAreaIdFrom, MemoryAreaOffsetFrom }; }
 
     int MemoryAreaIdTo;
     u64 MemoryAreaOffsetTo;
@@ -290,12 +290,12 @@ private:
 
 
 public:
-  Sqlite3Database(void);
-  ~Sqlite3Database(void) override;
+  Sqlite3Database();
+  ~Sqlite3Database() override;
 
 private:
-  bool _ConfigureDatabase(void);
-  bool _CreateTable(void);
+  bool _ConfigureDatabase();
+  bool _CreateTable();
   bool _ConvertIdToAddress(int Id, OffsetType Offset, Address& rAddress) const;
   bool _ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset) const;
   bool _ConvertAddressToId(Address const& rAddress, int& rId, OffsetType& rOffset, OffsetType& rMemoryAreaOffset, u32& rMemoryAreaSize) const;
@@ -304,29 +304,29 @@ private:
 
   bool _AddCellDataToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, CellData const& rCellData);
   bool _FlushCellDataCacheIfRequired(int MemoryAreaId, OffsetType MemoryAreaOffset, u16 CellSize) const;
-  bool _FlushCellDataCache(void) const;
+  bool _FlushCellDataCache() const;
   bool _GetCellDataFromCache(int MemoryAreaId, OffsetType MemoryOffsetType, CellData& rCellData) const;
 
   bool _AddLabelToCache(int MemoryAreaId, OffsetType MemoryAreaOffset, Label const& rLabel);
-  bool _FlushLabelCache(void) const;
+  bool _FlushLabelCache() const;
 
 public:
-  std::string GetName(void) const override;
-  std::string GetExtension(void) const override;
+  std::string GetName() const override;
+  std::string GetExtension() const override;
   bool IsCompatible(Path const& rDatabasePath) const override;
 
   bool Open(Path const& rFilePath) override;
   bool Create(Path const& rDatabasePath, bool Force) override;
-  bool Flush(void) override;
-  bool Close(void) override;
+  bool Flush() override;
+  bool Close() override;
 
   // BinaryStream
-  //virtual FileBinaryStream const& GetFileBinaryStream(void) const;
+  //virtual FileBinaryStream const& GetFileBinaryStream() const;
 
   // Architecture
   bool RegisterArchitectureTag(Tag ArchitectureTag) override;
   bool UnregisterArchitectureTag(Tag ArchitectureTag) override;
-  std::vector<Tag> GetArchitectureTags(void) const override;
+  std::vector<Tag> GetArchitectureTags() const override;
 
   bool SetArchitecture(Address const& rAddress, Tag ArchitectureTag, u8 Mode, SetArchitectureModeType SetArchMode) override;
 
@@ -416,6 +416,6 @@ private:
   static bool _FileRemoves(Path const& rFilePath);
 };
 
-extern "C" DB_SQLITE3_EXPORT Database* GetDatabase(void);
+extern "C" DB_SQLITE3_EXPORT Database* GetDatabase();
 
 #endif // !DB_SQLITE3_HPP

@@ -15,7 +15,7 @@ public:
   explicit GraphScene(QObject* pParent, medusa::Medusa& rCore, medusa::Address const& rGraphAddr);
 
 private:
-  bool _Update(void);
+  bool _Update();
 
   medusa::Medusa& m_rCore;
   medusa::Address m_GraphAddr;

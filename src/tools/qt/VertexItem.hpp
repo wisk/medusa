@@ -19,9 +19,9 @@ class VertexItem : public QObject, public QGraphicsItem, public medusa::Disassem
 public:
   VertexItem(QObject * parent, medusa::Medusa& core, medusa::Address::Vector const& addresses);
 
-  virtual void OnDocumentUpdated(void);
+  virtual void OnDocumentUpdated();
 
-  QRectF boundingRect(void) const;
+  QRectF boundingRect() const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
   void SetBackgroundColor(QColor const& rBgClr);
@@ -33,10 +33,10 @@ private:
   void paintBackground(QPainter& p);
   void paintText(QPainter& p);
 
-  void _Update(void);
+  void _Update();
 
 signals:
-  void moved(void);
+  void moved();
 
 private:
   QObject *                  m_pParent;

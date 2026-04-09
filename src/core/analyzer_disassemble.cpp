@@ -329,7 +329,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
       }
 
       // This lambda handle references during a call or jump
-      auto HandleInstructionReference = [&](void) -> bool
+      auto HandleInstructionReference = [&]() -> bool
       {
         // Try to get the destination
         Address DstAddr;
@@ -431,7 +431,7 @@ bool AnalyzerDisassemble::BuildControlFlowGraph(Graph& rCfg)
   using SymbolicContextType = std::map<Expression::SPType, Expression::SPType>;
   using SymbolicContextMapType = std::unordered_map<Address, SymbolicContextType>;
 
-  bool AnalyzerDisassemble::DisassembleUsingSymbolicExecution(void)
+  bool AnalyzerDisassemble::DisassembleUsingSymbolicExecution()
   {
     auto Lbl = m_rDoc.GetLabelFromAddress(m_Addr);
     if (Lbl.IsImported())

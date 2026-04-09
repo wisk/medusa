@@ -8,7 +8,7 @@
 #include <sstream>
 #include <algorithm>
 
-std::string GameBoyLoader::GetName(void) const
+std::string GameBoyLoader::GetName() const
 {
   return "GameBoy (color)";
 }

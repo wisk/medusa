@@ -57,18 +57,18 @@ public:
     return *this;
   }
 
-  LogWrapper& Flush(void);
+  LogWrapper& Flush();
   LogWrapper& Level(LogLevelType NewLvl);
 
-  std::string& GetBuffer(void);
+  std::string& GetBuffer();
   void Write(char const* pMsg);
-  void Lock(void);
-  void Unlock(void);
+  void Lock();
+  void Unlock();
 
 private:
   using MutexType = std::recursive_mutex;
 
-  bool _CheckLogLevel(void) const;
+  bool _CheckLogLevel() const;
 
   LoggerCallback   m_pLog;
   std::string      m_Name;
@@ -100,12 +100,12 @@ public:
   { m_pLog = pLog; }
 
   static LogWrapper Write(std::string const& rType);
-  static void Flush(void);
+  static void Flush();
   static bool ChangeLogLevel(LogLevelType NewLvl);
 
 private:
-  Log(void);
-  ~Log(void);
+  Log();
+  ~Log();
 
   using LogMap = std::map<std::string, std::string>;
 

@@ -25,13 +25,13 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT Medusa
 {
 public:
-                                  Medusa(void);
-                                 ~Medusa(void);
+                                  Medusa();
+                                 ~Medusa();
 
-  static std::string              GetVersion(void);
+  static std::string              GetVersion();
 
   bool                            AddTask(Task* pTask);
-  void                            WaitForTasks(void);
+  void                            WaitForTasks();
 
   bool                            Start(
     BinaryStream::SPType spBinaryStream,
@@ -66,7 +66,7 @@ public:
     Architecture::VSPType& rspArchitectures,
     OperatingSystem::SPType& rspOperatingSystem);
 
-  using FunctionType = std::function<bool (void)>;
+  using FunctionType = std::function<bool ()>;
 
   bool NewDocument(
     BinaryStream::SPType spBinStrm,
@@ -74,11 +74,11 @@ public:
     AskDatabaseFunctionType AskDatabase = IgnoreDatabasePath,
     ModuleSelectorFunctionType ModuleSelector = DefaultModuleSelector);
   bool OpenDocument(AskDatabaseFunctionType AskDatabase);
-  bool CloseDocument(void);
+  bool CloseDocument();
 
                                   //! This method returns the current document.
-  Document&       GetDocument(void)       { return m_Document; }
-  Document const& GetDocument(void) const { return m_Document; }
+  Document&       GetDocument()       { return m_Document; }
+  Document const& GetDocument() const { return m_Document; }
 
   /*! This method starts the analyze.
   * \param spArch is the selected Architecture.

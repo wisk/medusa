@@ -105,7 +105,7 @@ bool LR35902Architecture::Translate(Address const& rVirtAddr, OffsetType& rPhysO
   return false;
 }
 
-Architecture::NamedModeVector LR35902Architecture::GetModes(void) const
+Architecture::NamedModeVector LR35902Architecture::GetModes() const
 {
   NamedModeVector Modes;
   Modes.push_back(NamedMode("LR35902", LR35902_Mode_Default));

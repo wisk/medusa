@@ -4,21 +4,21 @@
 #include <medusa/log.hpp>
 #include <medusa/util.hpp>
 
-Sqlite3Database::Sqlite3Database(void)
+Sqlite3Database::Sqlite3Database()
 {
 }
 
-Sqlite3Database::~Sqlite3Database(void)
+Sqlite3Database::~Sqlite3Database()
 {
   // FIXME(wisk): wait for locks
 }
 
-bool Sqlite3Database::_ConfigureDatabase(void)
+bool Sqlite3Database::_ConfigureDatabase()
 {
   return false;
 }
 
-bool Sqlite3Database::_CreateTable(void)
+bool Sqlite3Database::_CreateTable()
 {
   m_spStorage->sync_schema();
   m_spStorage->insert<FileInformationTable>({ {}, EndianUnknown, 0x0, 0x0, 0x0 });
@@ -132,7 +132,7 @@ bool Sqlite3Database::_AddCellDataToCache(int MemoryAreaId, OffsetType MemoryAre
   return false;
 }
 
-bool Sqlite3Database::_FlushCellDataCache(void) const
+bool Sqlite3Database::_FlushCellDataCache() const
 {
   return false;
 }
@@ -147,17 +147,17 @@ bool Sqlite3Database::_AddLabelToCache(int MemoryAreaId, OffsetType MemoryAreaOf
   return false;
 }
 
-bool Sqlite3Database::_FlushLabelCache(void) const
+bool Sqlite3Database::_FlushLabelCache() const
 {
   return false;
 }
 
-std::string Sqlite3Database::GetName(void) const
+std::string Sqlite3Database::GetName() const
 {
   return "SQLite3";
 }
 
-std::string Sqlite3Database::GetExtension(void) const
+std::string Sqlite3Database::GetExtension() const
 {
   return ".sqlite";
 }
@@ -205,12 +205,12 @@ bool Sqlite3Database::Create(Path const &rDatabasePath, bool Force)
   return true;
 }
 
-bool Sqlite3Database::Flush(void)
+bool Sqlite3Database::Flush()
 {
   return false;
 }
 
-bool Sqlite3Database::Close(void)
+bool Sqlite3Database::Close()
 {
   return false;
 }
@@ -225,7 +225,7 @@ bool Sqlite3Database::UnregisterArchitectureTag(Tag ArchitectureTag)
   return false;
 }
 
-std::vector<Tag> Sqlite3Database::GetArchitectureTags(void) const
+std::vector<Tag> Sqlite3Database::GetArchitectureTags() const
 {
   return {};
 }

@@ -10,7 +10,7 @@ Architecture::Architecture(Tag ArchTag) : m_Tag(ArchTag)
 }
 
 
-std::string Architecture::GetName(void) const
+std::string Architecture::GetName() const
 {
   return "";
 };

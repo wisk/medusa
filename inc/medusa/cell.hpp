@@ -40,22 +40,22 @@ public:
 
   Cell(CellData::SPType spDna) : m_spDna(spDna) {}
 
-  virtual ~Cell(void) = default;
+  virtual ~Cell() = default;
 
-  size_t GetSize(void)    const { return m_spDna->GetSize(); }
-  u8     GetType(void)    const { return m_spDna->GetType(); }
-  u8     GetSubType(void) const { return m_spDna->GetSubType(); }
-  u8     GetMode(void)    const { return m_spDna->GetMode(); }
+  size_t GetSize()    const { return m_spDna->GetSize(); }
+  u8     GetType()    const { return m_spDna->GetType(); }
+  u8     GetSubType() const { return m_spDna->GetSubType(); }
+  u8     GetMode()    const { return m_spDna->GetMode(); }
 
   void SetArchitectureTag(Tag ArchTag) { m_spDna->SetArchitectureTag(ArchTag); }
   void SetMode(u8 Mode)                { m_spDna->SetMode(Mode);               }
 
-  u8& SubType(void) { return m_spDna->SubType(); }
+  u8& SubType() { return m_spDna->SubType(); }
 
   //! This method returns the used architecture tag.
-  Tag GetArchitectureTag(void) const { return m_spDna->GetArchitectureTag(); }
+  Tag GetArchitectureTag() const { return m_spDna->GetArchitectureTag(); }
 
-  CellData::SPType GetData(void) { return m_spDna; }
+  CellData::SPType GetData() { return m_spDna; }
 
   //! This method returns the internal data
 

@@ -46,14 +46,14 @@ class LlvmEmulator : public medusa::Emulator
 {
 public:
   LlvmEmulator(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
-  virtual ~LlvmEmulator(void);
+  ~LlvmEmulator() override;
 
-  virtual std::string GetName(void) const { return "llvm"; }
+  std::string GetName() const override { return "llvm"; }
 
-  virtual ReturnType Execute(Expression::VSPType const& rExprs);
-  virtual ReturnType Execute(Address const& rAddress);
+  ReturnType Execute(Expression::VSPType const& rExprs) override;
+  ReturnType Execute(Address const& rAddress) override;
 
-  virtual bool InvalidateCache(void);
+  bool InvalidateCache() override;
 
 private:
   using BasicBlockCode = bool (*)(u8* pCpuCtxtObj, u8* pMemCtxtObj);
@@ -71,8 +71,8 @@ private:
   class LlvmJitHelper
   {
   public:
-    LlvmJitHelper(void);
-    ~LlvmJitHelper(void);
+    LlvmJitHelper();
+    ~LlvmJitHelper();
 
     llvm::Function* CreateFunction(std::string const& rFnName);
     BasicBlockCode GetFunctionCode(std::string const& rFnName);
@@ -89,8 +89,8 @@ private:
 //  class EventListener : public llvm::JITEventListener
 //  {
 //  public:
-//    EventListener(void);
-//    virtual ~EventListener(void);
+//    EventListener();
+//    virtual ~EventListener();
 //    virtual void NotifyObjectEmitted(llvm::object::ObjectFile const& rObj, llvm::RuntimeDyld::LoadedObjectInfo const& rLdObjInfo);
 //    virtual void NotifyFreeingObject(llvm::object::ObjectFile const& rObj);
 //  };
@@ -105,23 +105,23 @@ private:
       llvm::IRBuilder<>& rBuilder,
       llvm::Value* pCpuCtxtObjParam, llvm::Value* pMemCtxtObjParam);
 
-    virtual ~LlvmExpressionVisitor(void);
+    ~LlvmExpressionVisitor() override;
 
-    virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-    virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-    virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-    virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-    virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-    virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-    virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
-    virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-    virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr);
-    virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-    virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-    virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-    virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-    virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-    virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+    Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+    Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+    Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+    Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+    Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+    Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+    Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr) override;
+    Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr) override;
+    Expression::SPType VisitBitVector(BitVectorExpression::SPType spConstExpr) override;
+    Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+    Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+    Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+    Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+    Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+    Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
   protected:
     llvm::Value* _MakeInteger(BitVector const& rInt) const;

@@ -21,12 +21,12 @@ class MEDUSA_EXPORT Emulator
 public:
   using SPType = std::shared_ptr<Emulator>;
 
-  Emulator(void);
-  virtual ~Emulator(void);
+  Emulator();
+  virtual ~Emulator();
 
   virtual void Initialize(CpuInformation const* pCpuInfo, CpuContext* pCpuCtxt, MemoryContext *pMemCtxt);
 
-  virtual std::string GetName(void) const = 0;
+  virtual std::string GetName() const = 0;
 
   virtual bool ReadRegister(u32 Reg, void* pVal, u32 BitSize) const;
   template<typename _RegTy>
@@ -82,10 +82,10 @@ public:
   virtual bool AddHook(Address const& rAddress, Emulator::HookType Type, HookCallback Callback);
   virtual bool AddHook(Document const& rDoc, std::string const& rLabelName, Emulator::HookType Type, HookCallback Callback);
   virtual bool RemoveHook(Address const& rAddress);
-  virtual ReturnType CallInstructionHook(void);
+  virtual ReturnType CallInstructionHook();
   virtual ReturnType CallHookOnExecutionIfNeeded(Address const& rAddress) const;
 
-  virtual bool InvalidateCache(void);
+  virtual bool InvalidateCache();
 
 protected:
   using DisasmCbType = std::function<bool (Address const&, Instruction&, Architecture&, u8)>;

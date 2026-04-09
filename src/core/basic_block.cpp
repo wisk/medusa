@@ -3,7 +3,7 @@
 
 MEDUSA_NAMESPACE_USE
 
-BasicBlockVertexProperties::BasicBlockVertexProperties(void)
+BasicBlockVertexProperties::BasicBlockVertexProperties()
 : m_pDoc(nullptr)
 , m_Addresses()
 , m_Flags()
@@ -29,14 +29,14 @@ BasicBlockVertexProperties BasicBlockVertexProperties::operator=(BasicBlockVerte
   return *this;
 }
 
-Address BasicBlockVertexProperties::GetFirstAddress(void) const
+Address BasicBlockVertexProperties::GetFirstAddress() const
 {
   if (m_Addresses.empty())
     return Address();
   return m_Addresses.front();
 }
 
-Address BasicBlockVertexProperties::GetLastAddress(void) const
+Address BasicBlockVertexProperties::GetLastAddress() const
 {
   if (m_Addresses.empty())
     return Address();
@@ -89,7 +89,7 @@ bool BasicBlockVertexProperties::GetNextAddress(Address const& rAddr, Address& r
   return true;
 }
 
-bool BasicBlockVertexProperties::IsHead(void) const
+bool BasicBlockVertexProperties::IsHead() const
 {
   if (m_TestedFlags & kIsHead)
     return (m_Flags & kIsHead) != 0;
@@ -105,7 +105,7 @@ bool BasicBlockVertexProperties::IsHead(void) const
   return true;
 }
 
-bool BasicBlockVertexProperties::CanReturn(void) const
+bool BasicBlockVertexProperties::CanReturn() const
 {
   if (m_TestedFlags & kCanReturn)
     return (m_Flags & kCanReturn) != 0;
@@ -121,7 +121,7 @@ bool BasicBlockVertexProperties::CanReturn(void) const
   return true;
 }
 
-bool BasicBlockVertexProperties::IsInLoop(void) const
+bool BasicBlockVertexProperties::IsInLoop() const
 {
   // TODO: not implemented
   return false;

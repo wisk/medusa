@@ -12,8 +12,8 @@ Q_OBJECT
 public:
   UiAction(QObject* pParent, medusa::Action::SPType spAction, QKeySequence const& rShortcut, medusa::FullDisassemblyView const* pView);
 
-  bool IsCompatible(void) const;
-  void Do(void);
+  bool IsCompatible() const;
+  void Do();
 
 private:
   medusa::Action::SPType m_spAction;

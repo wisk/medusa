@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_USE;
 
-Appearance::MapType& Appearance::GetColors(void)
+Appearance::MapType& Appearance::GetColors()
 {
   static MapType s_Colors;
   if (s_Colors.empty())
@@ -33,7 +33,7 @@ Appearance::MapType& Appearance::GetColors(void)
   return s_Colors;
 }
 
-Appearance::MapType& Appearance::GetFonts(void)
+Appearance::MapType& Appearance::GetFonts()
 {
   static MapType s_Fonts;
   if (s_Fonts.empty())
@@ -246,7 +246,7 @@ DisassemblyView::DisassemblyView(Medusa& rCore, u32 FormatFlags, Address const& 
 {
 }
 
-DisassemblyView::~DisassemblyView(void)
+DisassemblyView::~DisassemblyView()
 {
 
 }
@@ -280,7 +280,7 @@ FullDisassemblyView::FullDisassemblyView(Medusa& rCore, u32 FormatFlags, u32 Wid
 {
 }
 
-FullDisassemblyView::~FullDisassemblyView(void)
+FullDisassemblyView::~FullDisassemblyView()
 {
 }
 
@@ -325,7 +325,7 @@ void FullDisassemblyView::Resize(u32 Width, u32 Height)
   Refresh();
 }
 
-void FullDisassemblyView::Refresh(void)
+void FullDisassemblyView::Refresh()
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 
@@ -589,14 +589,14 @@ void FullDisassemblyView::EndSelection(u32 x, u32 y)
   SetCursor(x, y);
 }
 
-void FullDisassemblyView::ResetSelection(void)
+void FullDisassemblyView::ResetSelection()
 {
   std::lock_guard<MutexType> Lock(m_Mutex);
 
   m_SelectionBegin = m_SelectionEnd = m_Cursor;
 }
 
-u8 FullDisassemblyView::GetSelectionIndex(void) const
+u8 FullDisassemblyView::GetSelectionIndex() const
 {
   u8 Index;
   if (!m_PrintData.GetOperandNo(m_SelectionEnd.m_Address, m_SelectionEnd.m_xAddressOffset, m_SelectionEnd.m_yAddressOffset, Index))

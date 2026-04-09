@@ -1,4 +1,4 @@
 #include "unix.hpp"
 
-OperatingSystem* GetOperatingSystem(void) { return new UnixOperatingSystem; }
-int main(void) { return 0; }
+OperatingSystem* GetOperatingSystem() { return new UnixOperatingSystem; }
+int main() { return 0; }

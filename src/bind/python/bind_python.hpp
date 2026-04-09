@@ -16,15 +16,15 @@
 
 MEDUSA_NAMESPACE_USE
 
-extern "C" BIND_PYTHON_EXPORT Binding* GetBinding(void);
+extern "C" BIND_PYTHON_EXPORT Binding* GetBinding();
 
 class BindingPython : public Binding
 {
 public:
-  BindingPython(void);
-  ~BindingPython(void) override;
+  BindingPython();
+  ~BindingPython() override;
 
-  std::string GetName(void) const override;
+  std::string GetName() const override;
   bool Bind(Medusa& rCore) override;
   bool Unbind(Medusa& rCore) override;
   bool Execute(std::string const& rCode) override;

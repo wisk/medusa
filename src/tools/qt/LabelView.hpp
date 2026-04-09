@@ -17,11 +17,11 @@ class LabelView : public QTreeView, public medusa::View
 
 public:
   LabelView(QWidget * parent, medusa::Medusa& core);
-  ~LabelView(void) override = default;
+  ~LabelView() override = default;
 
   virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
 
-  void Refresh(void);
+  void Refresh();
 
 signals:
   void goTo(medusa::Address const& addr);

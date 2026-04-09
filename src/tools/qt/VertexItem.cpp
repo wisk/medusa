@@ -20,12 +20,12 @@ VertexItem::VertexItem(QObject* pParent, medusa::Medusa& rCore, medusa::Address:
   _Update();
 }
 
-void VertexItem::OnDocumentUpdated(void)
+void VertexItem::OnDocumentUpdated()
 {
   m_NeedRepaint = true;
 }
 
-QRectF VertexItem::boundingRect(void) const
+QRectF VertexItem::boundingRect() const
 {
   return QRectF(0, 0, m_Width, m_Height);
 }
@@ -148,7 +148,7 @@ void VertexItem::paintText(QPainter& p)
   });
 }
 
-void VertexItem::_Update(void)
+void VertexItem::_Update()
 {
   m_Fx->setBlurRadius(25.0);
   setGraphicsEffect(m_Fx);

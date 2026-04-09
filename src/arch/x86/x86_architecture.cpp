@@ -1,7 +1,7 @@
 #include "x86_architecture.hpp"
 #include "x86_calling_convention.hpp"
 
-X86Architecture::X86Architecture(void)
+X86Architecture::X86Architecture()
   : Architecture(MEDUSA_ARCH_TAG('x','8','6'))
   , m_CpuInfo()
 {
@@ -411,7 +411,7 @@ CallingConvention const* X86Architecture::GetCallingConvention(std::string const
   return nullptr;
 }
 
-std::vector<std::string> X86Architecture::GetCallingConventionNames(void) const
+std::vector<std::string> X86Architecture::GetCallingConventionNames() const
 {
   return{ "cdecl", "stdcall", "ms_x64", "system_v" };
 }

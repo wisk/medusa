@@ -7,7 +7,7 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-char const* Module::GetExtension(void)
+char const* Module::GetExtension()
 {
 #ifdef __APPLE__
   return "dylib";

@@ -19,7 +19,7 @@ ScrollbarAddress::ScrollbarAddress(QWidget * parent, medusa::Medusa& core)
   connect(this, SIGNAL(updated()), this, SLOT(update()));
 }
 
-ScrollbarAddress::~ScrollbarAddress(void)
+ScrollbarAddress::~ScrollbarAddress()
 {
 }
 
@@ -61,7 +61,7 @@ void ScrollbarAddress::OnAddressUpdated(medusa::Address::Vector const& rAddresse
   _mutex.unlock();
 }
 
-void ScrollbarAddress::Refresh(void)
+void ScrollbarAddress::Refresh()
 {
   _maxPos = _core.GetDocument().GetNumberOfAddress();
   // TODO(wisk): re-implement using current Document API

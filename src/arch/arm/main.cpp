@@ -1,8 +1,8 @@
 #include "arm_architecture.hpp"
 
-int main(void) { return 0; }
+int main() { return 0; }
 
-Architecture* GetArchitecture(void)
+Architecture* GetArchitecture()
 {
   return new ArmArchitecture;
 }

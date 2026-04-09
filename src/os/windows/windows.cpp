@@ -19,18 +19,18 @@ namespace {
 
 // FIXME: the code is x86 specific
 
-WindowsOperatingSystem::WindowsOperatingSystem(void)
+WindowsOperatingSystem::WindowsOperatingSystem()
   : m_Database(nullptr)
 {
 }
 
-WindowsOperatingSystem::~WindowsOperatingSystem(void)
+WindowsOperatingSystem::~WindowsOperatingSystem()
 {
   if (m_Database != nullptr)
     sqlite3_close(m_Database);
 }
 
-std::string WindowsOperatingSystem::GetName(void) const
+std::string WindowsOperatingSystem::GetName() const
 {
   return "MS Windows";
 }
@@ -270,7 +270,7 @@ bool WindowsOperatingSystem::GetStructureDetail(Id StructureId, StructureDetail&
   return false;
 }
 
-bool WindowsOperatingSystem::_OpenDatabaseIfNeeded(void) const
+bool WindowsOperatingSystem::_OpenDatabaseIfNeeded() const
 {
   if (m_Database != nullptr)
     return true;

@@ -1,5 +1,5 @@
 #include "memory_db.hpp"
 
-medusa::Database* GetDatabase(void)  { return new MemoryDatabase; }
+medusa::Database* GetDatabase()  { return new MemoryDatabase; }
 
-int main(void) { return 0; }
+int main() { return 0; }

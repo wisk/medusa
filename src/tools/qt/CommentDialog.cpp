@@ -12,11 +12,11 @@ CommentDialog::CommentDialog(QWidget* pParent, medusa::Medusa& rCore, medusa::Ad
     CommentEdit->setPlainText(QString::fromStdString(Cmt));
 }
 
-CommentDialog::~CommentDialog(void)
+CommentDialog::~CommentDialog()
 {
 }
 
-void CommentDialog::SetComment(void)
+void CommentDialog::SetComment()
 {
   // TODO Notify the user in case of error.
   m_rCore.GetDocument().SetComment(m_rAddress, CommentEdit->toPlainText().toStdString());

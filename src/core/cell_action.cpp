@@ -15,22 +15,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Undefine>(rCore, pView); }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Undefine"; }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.undefine"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "This option converts the selected item to byte"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return ""; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     m_rCore.GetDocument().DeleteCell(m_pView->GetCursorAddress());
@@ -45,22 +45,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToWord>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_word"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Set to word"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Set the current value to word type"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(m_pView->GetCursorAddress(), 16, true);
@@ -75,22 +75,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToDword>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_dword"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Set to dword"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Set the current value to dword type"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(m_pView->GetCursorAddress(), 32, true);
@@ -105,22 +105,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToQword>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_qword"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Set to qword"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Set the current value to qword type"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     m_rCore.GetDocument().ChangeValueSize(m_pView->GetCursorAddress(), 64, true);
@@ -135,22 +135,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ChangeValueSize>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.change_value_size"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Change value size"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "This option allows to change the size of a value (byte, word, dword, qword)"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     {
@@ -181,22 +181,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToCharacter>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_character"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "To character"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Set the current value to character type"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -223,22 +223,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToReference>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_reference"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "To reference"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Set the current value to reference type"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -265,22 +265,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Not>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.not_value"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Not"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Not the value"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -320,22 +320,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Negate>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.negate_value"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Negate"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Negate the value"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -363,22 +363,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Binary>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_binary"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Binary"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Display value as binary"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -406,22 +406,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Decimal>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_decimal"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Decimal"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Display value as decimal"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -449,22 +449,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Hexadecimal>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_hexadecimal"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Hexadecimal"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Display value as hexadecimal"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -492,22 +492,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Normal>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.reset_value"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Normal"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Reset value modifier"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "number.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -534,22 +534,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_Analyze>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.analyze"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Analyze"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Analyze using the most appropriate architecture"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "analyze.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     // TODO: iterate
     auto rAddr = m_pView->GetCursorAddress();
@@ -576,32 +576,32 @@ public:
     return std::make_shared<CellAction_SymbolicAnalyze>(rCore, pView);
   }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   {
     return "action.symbolic_analyze";
   }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   {
     return "Analyze (symbolically)";
   }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   {
     return "Analyze symbolically using the most appropriate architecture";
   }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   {
     return "analyze.png";
   }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   {
     return true;
   }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     auto rAddr = m_pView->GetCursorAddress();
     m_rCore.AddTask("symbolic disassemble", rAddr);
@@ -616,22 +616,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_CreateFunction>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.create_function"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Create function"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Create a new function from the current address"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "function.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     m_rCore.CreateFunction(m_pView->GetCursorAddress());
   }
@@ -645,22 +645,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToUtf8String>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_utf8_string"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "To UTF-8 string"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Make an UTF-8 string"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return ""; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     //Address OldAddr;
     //u64 StrLen = 0;
@@ -688,22 +688,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_ToUtf16String>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.to_utf16_name"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "To UTF-16 string"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Make an UTF-16 string"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return ""; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     //Address OldAddr;
     //u64 StrLen = 0;
@@ -732,22 +732,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_GoToPreviousAddress>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.go_to_previous_address"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Go to previous address"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Get back to the previous address"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "previous_address.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     auto& rDoc = m_rCore.GetDocument();
     Address PrevAddr;
@@ -770,22 +770,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return std::make_shared<CellAction_GoToNextAddress>(rCore, pView); }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return "action.go_to_next_address"; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return "Go to next address"; }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return "Go to the next address"; }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "next_address.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     auto& rDoc = m_rCore.GetDocument();
     Address NextAddr;
@@ -802,7 +802,7 @@ public:
 
 }
 
-Action::MapType Action::GetMap(void)
+Action::MapType Action::GetMap()
 {
   static MapType s_Actions;
   if (s_Actions.empty())
@@ -840,22 +840,22 @@ public:
   static SPType Create(Medusa& rCore, FullDisassemblyView* pView)
   { return nullptr; }
 
-  static char const* GetBindingName(void)
+  static char const* GetBindingName()
   { return nullptr; }
 
-  virtual std::string GetName(void) const
+  virtual std::string GetName() const
   { return std::string("Analyze with ") + std::get<0>(m_NamedMode); }
 
-  virtual std::string GetDescription(void) const
+  virtual std::string GetDescription() const
   { return std::string("Analyze using the mode ") + std::get<0>(m_NamedMode); }
 
-  virtual std::string GetIconName(void) const
+  virtual std::string GetIconName() const
   { return "analyze.png"; }
 
-  virtual bool IsCompatible(void) const
+  virtual bool IsCompatible() const
   { return true; }
 
-  virtual void Do(void)
+  virtual void Do()
   {
     auto spArch = ModuleManager::Instance().GetArchitecture(m_ArchTag);
     if (spArch == nullptr)

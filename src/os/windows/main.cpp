@@ -1,4 +1,4 @@
 #include "windows.hpp"
 
-OperatingSystem* GetOperatingSystem(void)  { return new WindowsOperatingSystem; }
-int main(void) { return 0; }
+OperatingSystem* GetOperatingSystem()  { return new WindowsOperatingSystem; }
+int main() { return 0; }

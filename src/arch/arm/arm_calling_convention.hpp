@@ -22,7 +22,7 @@ public:
   virtual bool               AnalyzeParameter(
     Expression::SPType spExpr, u16& rParamNr, ValueType& rParamTy)                            const;
   virtual RegisterType       GetRegisterType(u32 Id)                                          const;
-  virtual StackCleanerType   StackCleanupBy(void)                                             const;
+  virtual StackCleanerType   StackCleanupBy()                                             const;
 
 private:
 };

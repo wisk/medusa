@@ -2,12 +2,12 @@
 
 MEDUSA_NAMESPACE_BEGIN
 
-std::string Compiler::GetFormat(void) const
+std::string Compiler::GetFormat() const
 {
   return m_Format;
 }
 
-std::string Compiler::GetEntryPoint(void) const
+std::string Compiler::GetEntryPoint() const
 {
   return m_EntryPoint;
 }

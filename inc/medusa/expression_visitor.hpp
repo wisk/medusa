@@ -10,22 +10,22 @@ MEDUSA_NAMESPACE_BEGIN
 class MEDUSA_EXPORT CloneVisitor : public ExpressionVisitor
 {
 public:
-  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
-  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+  Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+  Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+  Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr) override;
+  Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+  Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+  Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+  Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+  Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+  Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 };
 
 class MEDUSA_EXPORT FilterVisitor : public ExpressionVisitor
@@ -34,29 +34,29 @@ public:
   using Matcher = std::function <Expression::SPType(Expression::SPType spExpr)>;
   FilterVisitor(Matcher ExprMatcher, size_t NrOfResult = 0) : m_ExprMatcher(ExprMatcher), m_NbrOfResult(NrOfResult) {}
 
-  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
-  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+  Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+  Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+  Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr) override;
+  Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+  Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+  Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+  Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+  Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+  Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
-  Expression::VSPType  GetMatchedExpressions(void) { return m_MatchedExprs; }
+  Expression::VSPType  GetMatchedExpressions() { return m_MatchedExprs; }
 
 protected:
   void _Evaluate(Expression::SPType spExpr);
   void _AddExpression(Expression::SPType spExpr);
-  bool _IsDone(void) const;
+  bool _IsDone() const;
 
   Matcher m_ExprMatcher;
   size_t m_NbrOfResult;
@@ -71,28 +71,28 @@ public:
   // lr35902/gb bank:offset...).
   EvaluateVisitor(Document const& rDoc, Address const& rCurAddr, u8 Mode, bool EvalMemRef = true);
 
-  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
-  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+  Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+  Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+  Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr) override;
+  Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+  Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+  Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+  Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+  Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+  Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
-  bool IsSymbolic(void) const { return m_IsSymbolic; }
-  bool IsRelative(void) const { return m_IsRelative; }
-  bool IsMemoryReference(void) const { return m_IsMemoryReference; }
+  bool IsSymbolic() const { return m_IsSymbolic; }
+  bool IsRelative() const { return m_IsRelative; }
+  bool IsMemoryReference() const { return m_IsMemoryReference; }
 
-  Expression::SPType GetResultExpression(void) const { return m_spResExpr; }
+  Expression::SPType GetResultExpression() const { return m_spResExpr; }
   void SetId(u32 Id, Expression::SPType spExpr);
 
 protected:
@@ -114,28 +114,28 @@ class MEDUSA_EXPORT SymbolicVisitor : public ExpressionVisitor
 public:
   SymbolicVisitor(Document const& rDoc, u8 Mode, bool EvalMemRef = true);
 
-  virtual Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr);
-  virtual Expression::SPType VisitBind(BindExpression::SPType spBindExpr);
-  virtual Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr);
-  virtual Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr);
-  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  virtual Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr);
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr);
-  virtual Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
-  virtual Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr);
-  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
-  virtual Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr);
+  Expression::SPType VisitSystem(SystemExpression::SPType spSysExpr) override;
+  Expression::SPType VisitBind(BindExpression::SPType spBindExpr) override;
+  Expression::SPType VisitCondition(ConditionExpression::SPType spCondExpr) override;
+  Expression::SPType VisitTernaryCondition(TernaryConditionExpression::SPType spTernExpr) override;
+  Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+  Expression::SPType VisitWhileCondition(WhileConditionExpression::SPType spWhileExpr) override;
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spOpExpr) override;
+  Expression::SPType VisitBitVector(BitVectorExpression::SPType spIntExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  Expression::SPType VisitVectorIdentifier(VectorIdentifierExpression::SPType spVecIdExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
+  Expression::SPType VisitVariable(VariableExpression::SPType spVarExpr) override;
+  Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
+  Expression::SPType VisitSymbolic(SymbolicExpression::SPType spSymExpr) override;
 
-  SymbolicVisitor Fork(void) const;
+  SymbolicVisitor Fork() const;
 
-  bool IsSymbolic(void) const { return m_IsSymbolic; }
-  bool IsRelative(void) const { return m_IsRelative; }
-  bool IsMemoryReference(void) const { return m_IsMemoryReference; }
+  bool IsSymbolic() const { return m_IsSymbolic; }
+  bool IsRelative() const { return m_IsRelative; }
+  bool IsMemoryReference() const { return m_IsMemoryReference; }
 
   static Expression::SPType  RemoveExpressionAnnotations(Expression::SPType spExpr);
   Expression::SPType         GetValue(Expression::SPType spExpr) const;
@@ -143,7 +143,7 @@ public:
   Expression::VSPType        FindExpressionsByValue(Expression::SPType spPatExpr) const;
   Expression::VSPType        FindExpressionsByUse(Expression::SPType spPatExpr) const;
 
-  std::string ToString(void) const;
+  std::string ToString() const;
   bool BindExpression(Expression::SPType spKeyExpr, Expression::SPType spValueExpr, bool Propagate = false);
   bool UpdateAddress(Architecture& rArch, Address const& rAddr);
 
@@ -179,11 +179,11 @@ class MEDUSA_EXPORT TrackVisitor : public CloneVisitor
 {
 public:
   TrackVisitor(Address const& rCurAddr, Track::Context& rCtxt);
-  Expression::SPType GetTrackedExpression(void); // NOTE: caller take the ownership
+  Expression::SPType GetTrackedExpression(); // NOTE: caller take the ownership
 
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
 
 private:
   Address m_CurAddr;
@@ -203,10 +203,10 @@ public:
     : m_rBtCtxt(rBtCtxt)
     , m_IsAssigned(false), m_TrackSource(false), m_Result(false) {}
 
-  bool GetResult(void) const { return m_Result; }
+  bool GetResult() const { return m_Result; }
 
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr);
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitTrack(TrackExpression::SPType spTrkExpr) override;
 
 private:
   Track::BackTrackContext& m_rBtCtxt;
@@ -220,8 +220,8 @@ class MEDUSA_EXPORT NormalizeIdentifier : public CloneVisitor
 public:
   NormalizeIdentifier(CpuInformation const& rCpuinfo, u8 Mode);
 
-  virtual Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr);
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
+  Expression::SPType VisitAssignment(AssignmentExpression::SPType spAssignExpr) override;
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
 
 protected:
   CpuInformation const& m_rCpuInfo;
@@ -231,8 +231,8 @@ protected:
 class MEDUSA_EXPORT IdentifierToVariable : public CloneVisitor
 {
 public:
-  virtual Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr);
-  std::set<u32> const& GetUsedId(void) { return m_UsedId; }
+  Expression::SPType VisitIdentifier(IdentifierExpression::SPType spIdExpr) override;
+  std::set<u32> const& GetUsedId() { return m_UsedId; }
 
 private:
   std::set<u32> m_UsedId;
@@ -241,10 +241,10 @@ private:
 class MEDUSA_EXPORT SimplifyVisitor : public CloneVisitor
 {
 public:
-  virtual Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr);
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
-  virtual Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr);
-  virtual Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr);
+  Expression::SPType VisitUnaryOperation(UnaryOperationExpression::SPType spUnOpExpr) override;
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr) override;
+  Expression::SPType VisitIfElseCondition(IfElseConditionExpression::SPType spIfElseExpr) override;
+  Expression::SPType VisitMemory(MemoryExpression::SPType spMemExpr) override;
 };
 
 class MEDUSA_EXPORT ConstantFoldingVisitor : public CloneVisitor
@@ -260,7 +260,7 @@ public:
       Right,
   };
 
-  virtual Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr);
+  Expression::SPType VisitBinaryOperation(BinaryOperationExpression::SPType spBinOpExpr) override;
   bool                       IsCommutative(BinaryOperationExpression::SPType spBinOpExpr);
   bool                       IsAssociative(Expression::SPType spBinOpExpr);
   Expression::SPType         GetOperand(BinaryOperationExpression::SPType spBinOpExpr, ConstantFoldingVisitor::Position Operand);

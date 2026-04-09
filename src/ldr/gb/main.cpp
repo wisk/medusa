@@ -1,4 +1,4 @@
 #include "gameboy_loader.hpp"
 
-Loader* GetLoader(void) { return new GameBoyLoader; }
-int main(void) { return 0; }
+Loader* GetLoader() { return new GameBoyLoader; }
+int main() { return 0; }

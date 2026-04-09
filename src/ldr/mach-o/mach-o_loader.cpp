@@ -86,12 +86,12 @@ bool MachOLoader::IsCompatible(BinaryStream const& rBinStrm) const
   return _GetMachineAndEndian(rBinStrm, Machine, Arch64, Endian, HeaderOffset);
 }
 
-std::string MachOLoader::GetName(void) const
+std::string MachOLoader::GetName() const
 {
   return "Mach-O";
 }
 
-u8 MachOLoader::GetDepth(void) const
+u8 MachOLoader::GetDepth() const
 {
   return 1;
 }
