@@ -94,7 +94,7 @@ ValueDetail const& TypedValueDetail::GetValue() const
 
 StaticArrayDetail::StaticArrayDetail(TypeDetail::SPType spElementType, u32 NumberOfElements)
   : TypeDetail(Detail::StaticArray, spElementType->GetName() + "[]", TypeDetail::ArrayType)
-  , m_spElementType(spElementType), m_NumberOfElements(NumberOfElements)
+  , m_spElementType(std::move(spElementType)), m_NumberOfElements(NumberOfElements)
 {
 }
 

@@ -14,9 +14,9 @@ class ScrollbarAddress : public QWidget, public medusa::View
 
 public:
   ScrollbarAddress(QWidget * parent, medusa::Medusa & core);
-  virtual ~ScrollbarAddress();
+  ~ScrollbarAddress() override;
 
-  virtual void OnAddressUpdated(medusa::Address::Vector const& rAddresses);
+  void OnAddressUpdated(medusa::Address::Vector const& rAddresses) override;
 
   void Refresh();
 
@@ -24,10 +24,10 @@ public slots:
   void setCurrentAddress(medusa::Address const& addr);
 
 protected:
-  virtual void paintEvent(QPaintEvent* evt);
-  virtual void resizeEvent(QResizeEvent* evt);
-  virtual void mousePressEvent(QMouseEvent * evt);
-  virtual void mouseMoveEvent(QMouseEvent * evt);
+  void paintEvent(QPaintEvent* evt) override;
+  void resizeEvent(QResizeEvent* evt) override;
+  void mousePressEvent(QMouseEvent * evt) override;
+  void mouseMoveEvent(QMouseEvent * evt) override;
 
 signals:
   void goTo(medusa::Address const& addr);

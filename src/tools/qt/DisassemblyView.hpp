@@ -29,7 +29,7 @@ public:
   DisassemblyView(QWidget * parent, medusa::Medusa * core);
   ~DisassemblyView();
 
-  virtual void OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses);
+  void OnDocumentUpdated(medusa::Address::Vector ErasedCellAddresses) override;
 
   bool goTo(medusa::Address const& address);
 
@@ -51,14 +51,14 @@ public slots:
   void OnUiActionTriggered(medusa::Action::SPType spAction);
 
 protected:
-  virtual void paintEvent(QPaintEvent * evt);
-  virtual void mouseMoveEvent(QMouseEvent * evt);
-  virtual void mousePressEvent(QMouseEvent * evt);
-  virtual void mouseDoubleClickEvent(QMouseEvent * evt);
-  virtual void keyPressEvent(QKeyEvent * evt);
-  virtual void resizeEvent(QResizeEvent * evt);
-  virtual void wheelEvent(QWheelEvent * evt);
-  virtual void actionEvent(QActionEvent * evt);
+  void paintEvent(QPaintEvent * evt) override;
+  void mouseMoveEvent(QMouseEvent * evt) override;
+  void mousePressEvent(QMouseEvent * evt) override;
+  void mouseDoubleClickEvent(QMouseEvent * evt) override;
+  void keyPressEvent(QKeyEvent * evt) override;
+  void resizeEvent(QResizeEvent * evt) override;
+  void wheelEvent(QWheelEvent * evt) override;
+  void actionEvent(QActionEvent * evt) override;
 
 private:
   void paintBackground(QPainter& p);

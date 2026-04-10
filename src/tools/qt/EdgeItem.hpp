@@ -17,15 +17,15 @@
 class EdgeItem : public QAbstractGraphicsShapeItem
 {
 public:
-  typedef medusa::Graph::EdgeProperties::Type EdgeType;
+  using EdgeType = medusa::Graph::EdgeProperties::Type;
   enum { Type = UserType + 1 };
 
   EdgeItem(QGraphicsItem* startItem, QGraphicsItem* endItem, EdgeType type);
 
 #ifdef MEDUSA_HAS_OGDF
   int type() const { return Type; }
-  virtual QRectF boundingRect() const;
-  virtual QPainterPath shape() const;
+  QRectF boundingRect() const override;
+  QPainterPath shape() const override;
   void setBends(ogdf::DPolyline const& bends) { _bends = bends; }
   void SetBends(medusa::GraphData::BendsType const& rBends) { m_Bends = rBends; }
   void computeCoordinates();

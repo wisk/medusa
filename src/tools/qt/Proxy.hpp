@@ -16,19 +16,19 @@ public:
   static char const* GetBindingName()
   { return "action.add_disassembly_view"; }
 
-  virtual std::string GetName() const
+  std::string GetName() const override
   { return "Add disassembly view"; }
 
-  virtual std::string GetDescription() const
+  std::string GetDescription() const override
   { return "Add a new disassembly view"; }
 
-  virtual std::string GetIconName() const
+  std::string GetIconName() const override
   { return "view-disassembly.png"; }
 
-  virtual bool IsCompatible() const
+  bool IsCompatible() const override
   { return true; }
 
-  virtual void Do();
+  void Do() override;
 };
 
 class AddSemanticViewAction : public medusa::Action
@@ -42,19 +42,19 @@ public:
   static char const* GetBindingName()
   { return "action.add_semantic_view"; }
 
-  virtual std::string GetName() const
+  std::string GetName() const override
   { return "Add semantic view"; }
 
-  virtual std::string GetDescription() const
+  std::string GetDescription() const override
   { return "Add a new semantic view"; }
 
-  virtual std::string GetIconName() const
+  std::string GetIconName() const override
   { return "view-semantic.png"; }
 
-  virtual bool IsCompatible() const
+  bool IsCompatible() const override
   { return true; }
 
-  virtual void Do();
+  void Do() override;
 };
 
 class AddGraphViewAction : public medusa::Action
@@ -72,27 +72,27 @@ public:
     return "action.add_graph_view";
   }
 
-  virtual std::string GetName() const
+  std::string GetName() const override
   {
     return "Add graph view";
   }
 
-  virtual std::string GetDescription() const
+  std::string GetDescription() const override
   {
     return "Add a new graph view";
   }
 
-  virtual std::string GetIconName() const
+  std::string GetIconName() const override
   {
     return "view-graph.png";
   }
 
-  virtual bool IsCompatible() const
+  bool IsCompatible() const override
   {
     return true;
   }
 
-  virtual void Do();
+  void Do() override;
 };
 
 //class AddControlFlowGraphViewAction : public medusa::Action
@@ -106,19 +106,19 @@ public:
 //  static char const* GetBindingName()
 //  { return "action.add_control_flow_graph_view"; }
 //
-//  virtual std::string GetName() const
+//  std::string GetName() const override
 //  { return "Add CFG view"; }
 //
-//  virtual std::string GetDescription() const
+//  std::string GetDescription() const override
 //  { return "Add a new control flow graph view"; }
 //
-//  virtual std::string GetIconName() const
+//  std::string GetIconName() const override
 //  { return "view-graph.png"; }
 //
-//  virtual bool IsCompatible() const
+//  bool IsCompatible() const override
 //  { return true; }
 //
-//  virtual void Do();
+//  void Do() override;
 //};
 
 class ShowLabelDialog : public medusa::Action
@@ -132,19 +132,19 @@ public:
   static char const* GetBindingName()
   { return "action.show_label_dialog"; }
 
-  virtual std::string GetName() const
+  std::string GetName() const override
   { return "Show label dialog"; }
 
-  virtual std::string GetDescription() const
+  std::string GetDescription() const override
   { return "Add or edit a label"; }
 
-  virtual std::string GetIconName() const
+  std::string GetIconName() const override
   { return "label.png"; }
 
-  virtual bool IsCompatible() const
+  bool IsCompatible() const override
   { return true; }
 
-  virtual void Do();
+  void Do() override;
 };
 
 class ShowCommentDialog : public medusa::Action
@@ -158,19 +158,19 @@ public:
   static char const* GetBindingName()
   { return "action.show_comment_dialog"; }
 
-  virtual std::string GetName() const
+  std::string GetName() const override
   { return "Show comment dialog"; }
 
-  virtual std::string GetDescription() const
+  std::string GetDescription() const override
   { return "Add or edit a comment"; }
 
-  virtual std::string GetIconName() const
+  std::string GetIconName() const override
   { return "comment.png"; }
 
-  virtual bool IsCompatible() const
+  bool IsCompatible() const override
   { return true; }
 
-  virtual void Do();
+  void Do() override;
 };
 
 void AddUiActions(medusa::Action::MapType& rActions);

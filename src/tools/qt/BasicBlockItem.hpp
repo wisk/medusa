@@ -19,7 +19,7 @@ class BasicBlockItem : public QObject, public QGraphicsItem, public medusa::Disa
 public:
   BasicBlockItem(QObject * parent, medusa::Medusa& core, medusa::Address::Vector const& addresses);
 
-  virtual void OnDocumentUpdated();
+  void OnDocumentUpdated() override;
 
   QRectF boundingRect() const;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -27,7 +27,7 @@ public:
   void SetBackgroundColor(QColor const& rBgClr);
 
 protected:
-  virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+  QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
   void paintBackground(QPainter& p);

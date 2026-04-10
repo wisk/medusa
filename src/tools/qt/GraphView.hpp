@@ -15,12 +15,12 @@ public:
   void Zoom(qreal Factor, QPointF CenterPt);
 
 protected:
-  virtual void wheelEvent       (QWheelEvent *event);
-  virtual void mousePressEvent  (QMouseEvent *event);
-  virtual void mouseReleaseEvent(QMouseEvent *event);
-  virtual void mouseMoveEvent   (QMouseEvent *event);
-  virtual void keyPressEvent    (QKeyEvent   *event);
-  virtual void keyReleaseEvent  (QKeyEvent   *event);
+  void wheelEvent       (QWheelEvent *event) override;
+  void mousePressEvent  (QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent   (QMouseEvent *event) override;
+  void keyPressEvent    (QKeyEvent   *event) override;
+  void keyReleaseEvent  (QKeyEvent   *event) override;
 
 private:
   bool    m_IsMoving;

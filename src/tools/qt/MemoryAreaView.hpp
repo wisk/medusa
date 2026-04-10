@@ -15,7 +15,7 @@ public:
     MemoryAreaView(QWidget * parent, medusa::Medusa& core);
     ~MemoryAreaView() override = default;
 
-    virtual void OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool removed);
+    void OnMemoryAreaUpdated(medusa::MemoryArea const& memArea, bool removed) override;
     void Refresh();
 
 signals:

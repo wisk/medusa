@@ -21,7 +21,7 @@ bool Document::Open(Database::SPType spDb)
 {
   if (m_spDatabase)
     return false;
-  m_spDatabase = spDb;
+  m_spDatabase = std::move(spDb);
   return true;
 }
 

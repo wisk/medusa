@@ -19,7 +19,7 @@ public:
   LabelView(QWidget * parent, medusa::Medusa& core);
   ~LabelView() override = default;
 
-  virtual void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed);
+  void OnLabelUpdated(medusa::Address const& address, medusa::Label const& label, bool removed) override;
 
   void Refresh();
 

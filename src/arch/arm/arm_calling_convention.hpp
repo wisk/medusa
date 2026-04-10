@@ -3,7 +3,8 @@
 
 #include "medusa/calling_convention.hpp"
 
-using namespace medusa;
+namespace medusa
+{
 
 //ref: http://infocenter.arm.com/help/topic/com.arm.doc.ihi0042f/IHI0042F_aapcs.pdf
 class AapcsCallingConvention : public CallingConvention
@@ -26,5 +27,7 @@ public:
 
 private:
 };
+
+} // namespace medusa
 
 #endif // !ARM_CALLING_CONVENTION_HPP

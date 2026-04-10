@@ -45,7 +45,7 @@ public:
     m_spDna = std::make_shared<CellData>(static_cast<u8>(CellType), SubType, Size);
   }
 
-  explicit Cell(CellData::SPType spDna) : m_spDna(spDna) {}
+  explicit Cell(CellData::SPType spDna) : m_spDna(std::move(spDna)) {}
 
   virtual ~Cell() = default;
 
