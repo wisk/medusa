@@ -8,10 +8,8 @@ import yaml
 def main():
 
     for arch_file in sys.argv[1:]:
-        f = open('../arch/%s.yaml' % arch_file)
-        d = yaml.load(f)
-
-        conv = None
+        with open('../arch/%s.yaml' % arch_file) as f:
+            d = yaml.safe_load(f)
 
         arch_name = d['architecture_information']['name']
         mod = __import__('arch_%s' % arch_name)
@@ -25,33 +23,33 @@ def main():
         opd = conv.GenerateOperandDefinition()
         opc = conv.GenerateOperandCode()
 
-        arch_hpp = open('%s_opcode.ipp' % arch_name, 'w')
-        arch_hpp.write(conv.GenerateBanner())
-        arch_hpp.write(enm)
-        arch_hpp.write(hdr)
-        arch_hpp.write(opd)
+        with open('%s_opcode.ipp' % arch_name, 'w') as arch_hpp:
+            arch_hpp.write(conv.GenerateBanner())
+            arch_hpp.write(enm)
+            arch_hpp.write(hdr)
+            arch_hpp.write(opd)
 
-        arch_cpp = open('%s_mnemonic.cpp' % arch_name, 'w')
-        arch_cpp.write(conv.GenerateBanner())
-        arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-        arch_cpp.write(mns)
+        with open('%s_mnemonic.cpp' % arch_name, 'w') as arch_cpp:
+            arch_cpp.write(conv.GenerateBanner())
+            arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+            arch_cpp.write(mns)
 
-        arch_cpp = open('%s_operand.cpp' % arch_name, 'w')
-        arch_cpp.write(conv.GenerateBanner())
-        arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-        arch_cpp.write(opc)
+        with open('%s_operand.cpp' % arch_name, 'w') as arch_cpp:
+            arch_cpp.write(conv.GenerateBanner())
+            arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+            arch_cpp.write(opc)
 
         if isinstance(src, dict):
             for name, code in src.items():
-                arch_cpp = open('%s_opcode_%s.cpp' % (arch_name, name), 'w')
+                with open('%s_opcode_%s.cpp' % (arch_name, name), 'w') as arch_cpp:
+                    arch_cpp.write(conv.GenerateBanner())
+                    arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
+                    arch_cpp.write(code)
+        else:
+            with open('%s_opcode.cpp' % arch_name, 'w') as arch_cpp:
                 arch_cpp.write(conv.GenerateBanner())
                 arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-                arch_cpp.write(code)
-        else:
-            arch_cpp = open('%s_opcode.cpp' % arch_name, 'w')
-            arch_cpp.write(conv.GenerateBanner())
-            arch_cpp.write('#include "%s_architecture.hpp"\n' % arch_name)
-            arch_cpp.write(src)
+                arch_cpp.write(src)
 
 if __name__ == "__main__":
     main()

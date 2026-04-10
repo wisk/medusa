@@ -5,7 +5,7 @@ import ast
 
 class LR35902ArchConvertion(ArchConvertion):
     def __init__(self, arch):
-        ArchConvertion.__init__(self, arch)
+        super().__init__(arch)
         self.id_mapper = {
         'cf':'LR35902_Flg_C',  'hf':'LR35902_Flg_H',
         'nf':'LR35902_Flg_N', 'zf':'LR35902_Flg_Z',
@@ -20,7 +20,7 @@ class LR35902ArchConvertion(ArchConvertion):
             def __init__(self, parent, insn):
                 self.parent = parent
                 self.insn = insn
-                ast.NodeVisitor.__init__(self)
+                super().__init__()
                 self.var_expr = []
 
             def visit_Call(self, node):

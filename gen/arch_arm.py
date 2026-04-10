@@ -2,13 +2,21 @@ from arch import ArchConvertion
 from helper import *
 
 import re
-import compiler
 import ast
-import string
+
+def _flatten(lst):
+    """Recursively flatten nested lists (replaces compiler.ast.flatten from Python 2)."""
+    result = []
+    for item in lst:
+        if isinstance(item, list):
+            result.extend(_flatten(item))
+        else:
+            result.append(item)
+    return result
 
 class ArmArchConvertion(ArchConvertion):
     def __init__(self, arch):
-        ArchConvertion.__init__(self, arch)
+        super().__init__(arch)
         self.all_mnemo = set()
 
         self.id_mapper = {
@@ -28,7 +36,7 @@ class ArmArchConvertion(ArchConvertion):
         for insn in all_instructions:
 
             # We need to flatten the encoding array
-            insn['encoding'] = compiler.ast.flatten(insn['encoding'])
+            insn['encoding'] = _flatten(insn['encoding'])
 
             # Check if instruction is valid
             self._ARM_VerifyInstruction(insn)
@@ -52,7 +60,7 @@ class ArmArchConvertion(ArchConvertion):
     def _ARM_Mangle(insn):
         encoding = []
         for bit in insn['encoding']:
-            if type(bit) == int:
+            if isinstance(bit, int):
                 encoding.append(str(bit))
             elif bit[0] == '(':
                 encoding.append(bit[1])
@@ -64,7 +72,7 @@ class ArmArchConvertion(ArchConvertion):
         fmt = insn['format']
         res = ''
         for c in fmt:
-            if not c in string.ascii_letters+string.digits:
+            if not c.isalnum():
                 break
             res += c
         return res

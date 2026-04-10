@@ -1,5 +1,5 @@
-def Indent(text, indent = 1):
-    if text == None:
+def Indent(text, indent=1):
+    if text is None:
         return ''
     res = ''
     strip = False
@@ -14,6 +14,6 @@ def Indent(text, indent = 1):
             res += '\n'
             continue
         res += '  ' * indent + l + '\n'
-    if strip == True and res[-1] == '\n':
+    if strip and res[-1] == '\n':
         return res[:-1]
     return res

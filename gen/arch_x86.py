@@ -5,7 +5,7 @@ import ast
 
 class X86ArchConvertion(ArchConvertion):
     def __init__(self, arch):
-        ArchConvertion.__init__(self, arch)
+        super().__init__(arch)
         self.all_mnemo = set()
         self.all_oprd = set()
         self.all_dec = set()
@@ -37,10 +37,10 @@ class X86ArchConvertion(ArchConvertion):
     # Architecture dependant methods
     def _X86_GenerateMethodName(self, type_name, opcd_no, in_class = False):
         meth_fmt = 'bool %s(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)'
-        if in_class == False:
+        if not in_class:
             meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)' % self.GetArchName()
 
-        if opcd_no == None:
+        if opcd_no is None:
             return meth_fmt % 'Invalid'
 
         return meth_fmt % ('%s_%02x' % (type_name.capitalize(), opcd_no))
@@ -49,9 +49,9 @@ class X86ArchConvertion(ArchConvertion):
         def Format(opcd):
             res = ''
             for k, v in opcd.items():
-                if type(v) == int:
+                if isinstance(v, int):
                     res += ' * %s: %02x\n' % (k, v)
-                elif v == None:
+                elif v is None:
                     res += ' * %s\n' % k
                 else:
                     res += ' * %s: %s\n' % (k, v)
@@ -97,7 +97,7 @@ class X86ArchConvertion(ArchConvertion):
 
         if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
             cond = self._X86_GenerateInstructionCondition(opcd)
-            if cond == None:
+            if cond is None:
                 res += self._X86_GenerateInstructionBody(opcd)
             else:
                 res += self._GenerateCondition('if', cond, self._X86_GenerateInstructionBody(opcd))
@@ -124,7 +124,7 @@ class X86ArchConvertion(ArchConvertion):
         for opcd in reversed(opcd_arr['sub_opcodes']):
             if 'cpu_model' in opcd or 'attr' in opcd or 'prefix' in opcd or 'suffix' in opcd:
                 cond = self._X86_GenerateInstructionCondition(opcd)
-                if cond_type == 'if' and cond == None:
+                if cond_type == 'if' and cond is None:
                     if opcd != opcd_arr['sub_opcodes'][0]:
                         raise Exception('No condition for if\n%s', str(opcd))
                     cond_type = 'else'
@@ -160,7 +160,7 @@ class X86ArchConvertion(ArchConvertion):
         if 'invalid' in opcd:
             return 'return false; /* INVALID */\n'
 
-        if pfx_n != None:
+        if pfx_n is not None:
             res += 'rInsn.Size()++;\n'
             if 'mnemonic' in opcd:
                 res += 'rInsn.Prefix() |= X86_Prefix_%s;\n' % opcd['mnemonic']
@@ -185,7 +185,7 @@ class X86ArchConvertion(ArchConvertion):
         if 'operand' in opcd:
             res += self._GenerateCondition(
                     'if',
-                    '%s == false' % self._X86_GenerateOperandMethod(opcd['operand']),
+                    '!%s' % self._X86_GenerateOperandMethod(opcd['operand']),
                     'return false;\n')
 
 
@@ -252,7 +252,7 @@ class X86ArchConvertion(ArchConvertion):
         if 'prefix' in opcd:
             prefix_map = { 0x66 : 'X86_Prefix_OpSize', 0xF2 : 'X86_Prefix_RepNz', 0xF3 : 'X86_Prefix_Rep' }
             prefixes = []
-            if type(opcd['prefix']) == list:
+            if isinstance(opcd['prefix'], list):
                 prefixes = opcd['prefix']
             else:
                 prefixes.append(opcd['prefix'])
@@ -264,7 +264,7 @@ class X86ArchConvertion(ArchConvertion):
                 cond.append('(rInsn.GetPrefix() & %s) == %s' % (p_val, p_val))
 
 
-            # if type(opcd['prefix']) == list:
+            # if isinstance(opcd['prefix'], list):
             #     cond.append('(%s)' % ' || '.join(['Prefix == %#04x' % x for x in opcd['prefix']]))
             # else:
             #     cond.append('Prefix == %#04x' % opcd['prefix'])
@@ -300,10 +300,10 @@ class X86ArchConvertion(ArchConvertion):
             grp_no = 0
             for opcd_g in grp:
                 case_statm = ''
-                if type(opcd_g) == list:
+                if isinstance(opcd_g, list):
                     case_statm += self._GenerateMultipleInstruction(opcd_g)
 
-                elif oprd != None:
+                elif oprd is not None:
                     tmp_opcd = opcd_g
                     tmp_opcd['operand'] = oprd
                     case_statm += self._X86_GenerateInstruction(tmp_opcd)
@@ -344,7 +344,7 @@ class X86ArchConvertion(ArchConvertion):
         res = ''
 
         res += 'private:\n'
-        res += Indent('typedef bool (%sArchitecture:: *TDisassembler)(BinaryStream const&, OffsetType, Instruction&, u8);\n' % self.GetArchName())
+        res += Indent('using TDisassembler = bool (%sArchitecture::*)(BinaryStream const&, OffsetType, Instruction&, u8);\n' % self.GetArchName())
 
         for name in sorted(self.arch['instruction']['table']):
             if 'FP' in name:  opcd_no = 0xc0
@@ -359,8 +359,8 @@ class X86ArchConvertion(ArchConvertion):
         return res
 
     def GenerateSource(self):
-	tbl = {}
-	res = ''
+        tbl = {}
+        res = ''
         arch_name = self.GetArchName()
 
         for name in sorted(self.arch['instruction']['table']):
@@ -401,7 +401,7 @@ class X86ArchConvertion(ArchConvertion):
 
     def GenerateOpcodeString(self):
         res = ',\n'.join('"%s"' % x.lower() for x in ['unknown'] + sorted(self.all_mnemo)) + '\n'
-        return 'const char *%sArchitecture::m_Mnemonic[%#x] =\n' % (self.GetArchName(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
+        return 'const char* %sArchitecture::m_Mnemonic[%#x] =\n' % (self.GetArchName(), len(self.all_mnemo) + 1) + self._GenerateBrace(res)[:-1] + ';\n'
 
     def GenerateOperandDefinition(self):
         res = ''
@@ -420,7 +420,7 @@ class X86ArchConvertion(ArchConvertion):
         class OprdVisitor(ast.NodeVisitor):
             def __init__(self, parent):
                 self.parent = parent
-                ast.NodeVisitor.__init__(self)
+                super().__init__()
                 self.var_expr = []
 
             def generic_visit(self, node):
@@ -654,7 +654,7 @@ class X86ArchConvertion(ArchConvertion):
                             'return nullptr;\n'
                             )
 
-                    raise('Unknown read type: %s' % read_type)
+                    raise Exception('Unknown read type: %s' % read_type)
 
                 assert(0)
 
@@ -731,7 +731,7 @@ class X86ArchConvertion(ArchConvertion):
                 oper_name   = self.visit(node.op)
                 target_name = self.visit(node.target)
                 value_name  = self.visit(node.value)
-                print 'AugAssign', oprd_name, target_name, value_name
+                print('AugAssign', oprd_name, target_name, value_name)
                 assert(0)
 
             def visit_BinOp(self, node):
@@ -755,7 +755,7 @@ class X86ArchConvertion(ArchConvertion):
             def visit_Expr(self, node):
                 return self.visit(node.value)
 
-        for oprd in sorted(self.arch['operand'].items(), key = lambda x: x[0]):
+        for oprd in sorted(self.arch['operand'].items(), key=lambda x: str(x[0])):
             oprd_name = str(oprd[0])
             oprd_code = oprd[1]
 

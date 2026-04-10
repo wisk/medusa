@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Feb 05 12:38:19 2017) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Apr  9 18:19:39 2026) */
 #include "x86_architecture.hpp"
 const X86Architecture::TDisassembler X86Architecture::m_Table_fp8[0x40] =
 {
@@ -69,15 +69,15 @@ const X86Architecture::TDisassembler X86Architecture::m_Table_fp8[0x40] =
 };
 
 /** instruction
+ * opcode: 00
  * mnemonic: ffreep
  * operand: ['ST0']
- * opcode: 00
 **/
 bool X86Architecture::Table_fp8_c0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -85,15 +85,15 @@ bool X86Architecture::Table_fp8_c0(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 01
  * mnemonic: ffreep
  * operand: ['ST1']
- * opcode: 01
 **/
 bool X86Architecture::Table_fp8_c1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -101,15 +101,15 @@ bool X86Architecture::Table_fp8_c1(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 02
  * mnemonic: ffreep
  * operand: ['ST2']
- * opcode: 02
 **/
 bool X86Architecture::Table_fp8_c2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -117,15 +117,15 @@ bool X86Architecture::Table_fp8_c2(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 03
  * mnemonic: ffreep
  * operand: ['ST3']
- * opcode: 03
 **/
 bool X86Architecture::Table_fp8_c3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -133,15 +133,15 @@ bool X86Architecture::Table_fp8_c3(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 04
  * mnemonic: ffreep
  * operand: ['ST4']
- * opcode: 04
 **/
 bool X86Architecture::Table_fp8_c4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -149,15 +149,15 @@ bool X86Architecture::Table_fp8_c4(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 05
  * mnemonic: ffreep
  * operand: ['ST5']
- * opcode: 05
 **/
 bool X86Architecture::Table_fp8_c5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -165,15 +165,15 @@ bool X86Architecture::Table_fp8_c5(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 06
  * mnemonic: ffreep
  * operand: ['ST6']
- * opcode: 06
 **/
 bool X86Architecture::Table_fp8_c6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -181,15 +181,15 @@ bool X86Architecture::Table_fp8_c6(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 07
  * mnemonic: ffreep
  * operand: ['ST7']
- * opcode: 07
 **/
 bool X86Architecture::Table_fp8_c7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Ffreep);
-    if (Operand__ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -197,15 +197,15 @@ bool X86Architecture::Table_fp8_c7(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 08
  * mnemonic: fxch
  * operand: ['ST0']
- * opcode: 08
 **/
 bool X86Architecture::Table_fp8_c8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -213,15 +213,15 @@ bool X86Architecture::Table_fp8_c8(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 09
  * mnemonic: fxch
  * operand: ['ST1']
- * opcode: 09
 **/
 bool X86Architecture::Table_fp8_c9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -229,15 +229,15 @@ bool X86Architecture::Table_fp8_c9(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0a
  * mnemonic: fxch
  * operand: ['ST2']
- * opcode: 0a
 **/
 bool X86Architecture::Table_fp8_ca(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -245,15 +245,15 @@ bool X86Architecture::Table_fp8_ca(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0b
  * mnemonic: fxch
  * operand: ['ST3']
- * opcode: 0b
 **/
 bool X86Architecture::Table_fp8_cb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -261,15 +261,15 @@ bool X86Architecture::Table_fp8_cb(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0c
  * mnemonic: fxch
  * operand: ['ST4']
- * opcode: 0c
 **/
 bool X86Architecture::Table_fp8_cc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -277,15 +277,15 @@ bool X86Architecture::Table_fp8_cc(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0d
  * mnemonic: fxch
  * operand: ['ST5']
- * opcode: 0d
 **/
 bool X86Architecture::Table_fp8_cd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -293,15 +293,15 @@ bool X86Architecture::Table_fp8_cd(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0e
  * mnemonic: fxch
  * operand: ['ST6']
- * opcode: 0e
 **/
 bool X86Architecture::Table_fp8_ce(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -309,15 +309,15 @@ bool X86Architecture::Table_fp8_ce(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 0f
  * mnemonic: fxch
  * operand: ['ST7']
- * opcode: 0f
 **/
 bool X86Architecture::Table_fp8_cf(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fxch);
-    if (Operand__ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -325,15 +325,15 @@ bool X86Architecture::Table_fp8_cf(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 10
  * mnemonic: fstp
  * operand: ['ST0']
- * opcode: 10
 **/
 bool X86Architecture::Table_fp8_d0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -341,15 +341,15 @@ bool X86Architecture::Table_fp8_d0(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 11
  * mnemonic: fstp
  * operand: ['ST1']
- * opcode: 11
 **/
 bool X86Architecture::Table_fp8_d1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -357,15 +357,15 @@ bool X86Architecture::Table_fp8_d1(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 12
  * mnemonic: fstp
  * operand: ['ST2']
- * opcode: 12
 **/
 bool X86Architecture::Table_fp8_d2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -373,15 +373,15 @@ bool X86Architecture::Table_fp8_d2(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 13
  * mnemonic: fstp
  * operand: ['ST3']
- * opcode: 13
 **/
 bool X86Architecture::Table_fp8_d3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -389,15 +389,15 @@ bool X86Architecture::Table_fp8_d3(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 14
  * mnemonic: fstp
  * operand: ['ST4']
- * opcode: 14
 **/
 bool X86Architecture::Table_fp8_d4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -405,15 +405,15 @@ bool X86Architecture::Table_fp8_d4(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 15
  * mnemonic: fstp
  * operand: ['ST5']
- * opcode: 15
 **/
 bool X86Architecture::Table_fp8_d5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -421,15 +421,15 @@ bool X86Architecture::Table_fp8_d5(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 16
  * mnemonic: fstp
  * operand: ['ST6']
- * opcode: 16
 **/
 bool X86Architecture::Table_fp8_d6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -437,15 +437,15 @@ bool X86Architecture::Table_fp8_d6(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 17
  * mnemonic: fstp
  * operand: ['ST7']
- * opcode: 17
 **/
 bool X86Architecture::Table_fp8_d7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -453,15 +453,15 @@ bool X86Architecture::Table_fp8_d7(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 18
  * mnemonic: fstp
  * operand: ['ST0']
- * opcode: 18
 **/
 bool X86Architecture::Table_fp8_d8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -469,15 +469,15 @@ bool X86Architecture::Table_fp8_d8(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 19
  * mnemonic: fstp
  * operand: ['ST1']
- * opcode: 19
 **/
 bool X86Architecture::Table_fp8_d9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -485,15 +485,15 @@ bool X86Architecture::Table_fp8_d9(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1a
  * mnemonic: fstp
  * operand: ['ST2']
- * opcode: 1a
 **/
 bool X86Architecture::Table_fp8_da(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -501,15 +501,15 @@ bool X86Architecture::Table_fp8_da(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1b
  * mnemonic: fstp
  * operand: ['ST3']
- * opcode: 1b
 **/
 bool X86Architecture::Table_fp8_db(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -517,15 +517,15 @@ bool X86Architecture::Table_fp8_db(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1c
  * mnemonic: fstp
  * operand: ['ST4']
- * opcode: 1c
 **/
 bool X86Architecture::Table_fp8_dc(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -533,15 +533,15 @@ bool X86Architecture::Table_fp8_dc(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1d
  * mnemonic: fstp
  * operand: ['ST5']
- * opcode: 1d
 **/
 bool X86Architecture::Table_fp8_dd(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -549,15 +549,15 @@ bool X86Architecture::Table_fp8_dd(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1e
  * mnemonic: fstp
  * operand: ['ST6']
- * opcode: 1e
 **/
 bool X86Architecture::Table_fp8_de(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -565,15 +565,15 @@ bool X86Architecture::Table_fp8_de(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 1f
  * mnemonic: fstp
  * operand: ['ST7']
- * opcode: 1f
 **/
 bool X86Architecture::Table_fp8_df(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fstp);
-    if (Operand__ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -581,9 +581,9 @@ bool X86Architecture::Table_fp8_df(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 20
  * mnemonic: fnstsw
  * operand: ['AX']
- * opcode: 20
  * cpu_model: >= X86_Arch_80287
 **/
 bool X86Architecture::Table_fp8_e0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -592,7 +592,7 @@ bool X86Architecture::Table_fp8_e0(BinaryStream const& rBinStrm, OffsetType Offs
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Fnstsw);
-      if (Operand__AX(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__AX(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -618,7 +618,7 @@ bool X86Architecture::Table_fp8_e1(BinaryStream const& rBinStrm, OffsetType Offs
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Fstdw);
-      if (Operand__AX(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__AX(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -646,7 +646,7 @@ bool X86Architecture::Table_fp8_e2(BinaryStream const& rBinStrm, OffsetType Offs
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Fstsg);
-      if (Operand__AX(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__AX(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -704,15 +704,15 @@ bool X86Architecture::Table_fp8_e7(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 28
  * mnemonic: fucomip
  * operand: ['ST0', 'ST0']
- * opcode: 28
 **/
 bool X86Architecture::Table_fp8_e8(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -720,15 +720,15 @@ bool X86Architecture::Table_fp8_e8(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 29
  * mnemonic: fucomip
  * operand: ['ST0', 'ST1']
- * opcode: 29
 **/
 bool X86Architecture::Table_fp8_e9(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -736,15 +736,15 @@ bool X86Architecture::Table_fp8_e9(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2a
  * mnemonic: fucomip
  * operand: ['ST0', 'ST2']
- * opcode: 2a
 **/
 bool X86Architecture::Table_fp8_ea(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -752,15 +752,15 @@ bool X86Architecture::Table_fp8_ea(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2b
  * mnemonic: fucomip
  * operand: ['ST0', 'ST3']
- * opcode: 2b
 **/
 bool X86Architecture::Table_fp8_eb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -768,15 +768,15 @@ bool X86Architecture::Table_fp8_eb(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2c
  * mnemonic: fucomip
  * operand: ['ST0', 'ST4']
- * opcode: 2c
 **/
 bool X86Architecture::Table_fp8_ec(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -784,15 +784,15 @@ bool X86Architecture::Table_fp8_ec(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2d
  * mnemonic: fucomip
  * operand: ['ST0', 'ST5']
- * opcode: 2d
 **/
 bool X86Architecture::Table_fp8_ed(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -800,15 +800,15 @@ bool X86Architecture::Table_fp8_ed(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2e
  * mnemonic: fucomip
  * operand: ['ST0', 'ST6']
- * opcode: 2e
 **/
 bool X86Architecture::Table_fp8_ee(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -816,15 +816,15 @@ bool X86Architecture::Table_fp8_ee(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 2f
  * mnemonic: fucomip
  * operand: ['ST0', 'ST7']
- * opcode: 2f
 **/
 bool X86Architecture::Table_fp8_ef(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fucomip);
-    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -832,15 +832,15 @@ bool X86Architecture::Table_fp8_ef(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 30
  * mnemonic: fcomip
  * operand: ['ST0', 'ST0']
- * opcode: 30
 **/
 bool X86Architecture::Table_fp8_f0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST0(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST0(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -848,15 +848,15 @@ bool X86Architecture::Table_fp8_f0(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 31
  * mnemonic: fcomip
  * operand: ['ST0', 'ST1']
- * opcode: 31
 **/
 bool X86Architecture::Table_fp8_f1(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST1(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST1(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -864,15 +864,15 @@ bool X86Architecture::Table_fp8_f1(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 32
  * mnemonic: fcomip
  * operand: ['ST0', 'ST2']
- * opcode: 32
 **/
 bool X86Architecture::Table_fp8_f2(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST2(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST2(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -880,15 +880,15 @@ bool X86Architecture::Table_fp8_f2(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 33
  * mnemonic: fcomip
  * operand: ['ST0', 'ST3']
- * opcode: 33
 **/
 bool X86Architecture::Table_fp8_f3(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST3(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST3(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -896,15 +896,15 @@ bool X86Architecture::Table_fp8_f3(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 34
  * mnemonic: fcomip
  * operand: ['ST0', 'ST4']
- * opcode: 34
 **/
 bool X86Architecture::Table_fp8_f4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST4(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST4(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -912,15 +912,15 @@ bool X86Architecture::Table_fp8_f4(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 35
  * mnemonic: fcomip
  * operand: ['ST0', 'ST5']
- * opcode: 35
 **/
 bool X86Architecture::Table_fp8_f5(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST5(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST5(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -928,15 +928,15 @@ bool X86Architecture::Table_fp8_f5(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 36
  * mnemonic: fcomip
  * operand: ['ST0', 'ST6']
- * opcode: 36
 **/
 bool X86Architecture::Table_fp8_f6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST6(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST6(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }
@@ -944,15 +944,15 @@ bool X86Architecture::Table_fp8_f6(BinaryStream const& rBinStrm, OffsetType Offs
 }
 
 /** instruction
+ * opcode: 37
  * mnemonic: fcomip
  * operand: ['ST0', 'ST7']
- * opcode: 37
 **/
 bool X86Architecture::Table_fp8_f7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
 {
     rInsn.Size()++;
     rInsn.SetOpcode(X86_Opcode_Fcomip);
-    if (Operand__ST0_ST7(rBinStrm, Offset, rInsn, Mode) == false)
+    if (!Operand__ST0_ST7(rBinStrm, Offset, rInsn, Mode))
     {
       return false;
     }

@@ -1,6 +1,7 @@
 from helper import *
 
 import ast
+import itertools
 import time
 
 class ArchConvertion:
@@ -20,7 +21,7 @@ class ArchConvertion:
     def _GenerateCondition(self, cond_type, cond, statm):
         res = ''
 
-        if cond != None:
+        if cond is not None:
             res += '%s (%s)\n' % (cond_type, cond)
         else:
             res += '%s\n' % (cond_type)
@@ -123,7 +124,7 @@ class ArchConvertion:
 
         class SemVisitor(ast.NodeVisitor):
             def __init__(self, arch, id_mapper):
-                ast.NodeVisitor.__init__(self)
+                super().__init__()
                 self.arch = arch
                 self.id_mapper = id_mapper
                 self.cnt = 0
@@ -347,7 +348,7 @@ class ArchConvertion:
 
             def visit_Call(self, node):
                 func_name = self.visit(node.func)
-                if type(node.func).__name__ == 'Attribute':
+                if isinstance(node.func, ast.Attribute):
                     return func_name
 
                 args_name = []
@@ -647,11 +648,11 @@ class ArchConvertion:
             for f in opcd['set_flags']:
                 res += 'AllExpr.push_back(Expr::MakeAssign(Expr::MakeId(%s, &m_CpuInfo), Expr::MakeBoolean(true)));\n' % ('X86_Fl' + f.capitalize())
 
-        if sem != None:
+        if sem is not None:
             all_expr = []
             need_flat = False
             for x in sem:
-                if type(x) == list:
+                if isinstance(x, list):
                     need_flat = True
                     break
             if need_flat:

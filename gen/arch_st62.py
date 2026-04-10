@@ -5,7 +5,7 @@ import ast
 
 class St62ArchConvertion(ArchConvertion):
     def __init__(self, arch):
-        ArchConvertion.__init__(self, arch)
+        super().__init__(arch)
         self.all_mnemo = set()
         self.all_oprd = set()
         self.all_dec = set()
@@ -81,7 +81,7 @@ class St62ArchConvertion(ArchConvertion):
         if in_class == False:
             meth_fmt = 'bool %sArchitecture::%%s(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)' % self.GetArchName()
 
-        if opcd_no == None:
+        if opcd_no is None:
             return meth_fmt % 'Invalid'
 
         return meth_fmt % ('%s_%02x' % (type_name.capitalize(), opcd_no))
@@ -136,7 +136,7 @@ class St62ArchConvertion(ArchConvertion):
             for oprd in opcd['operand']:
                 res += self._GenerateCondition(
                     'if',
-                    '%s == false' % self._ST62_GenerateOperandMethod(oprd),
+                    '!%s' % self._ST62_GenerateOperandMethod(oprd),
                     'return false;\n')
 
         if 'semantic' in opcd:
@@ -157,7 +157,7 @@ class St62ArchConvertion(ArchConvertion):
             for k, v in opcd.items():
                 if type(v) == int:
                     res += ' * %s: %02x\n' % (k, v)
-                elif v == None:
+                elif v is None:
                     res += ' * %s\n' % k
                 else:
                     res += ' * %s: %s\n' % (k, v)
@@ -212,7 +212,7 @@ class St62ArchConvertion(ArchConvertion):
         class OprdVisitor(ast.NodeVisitor):
             def __init__(self, parent):
                 self.parent = parent
-                ast.NodeVisitor.__init__(self)
+                super().__init__()
                 self.var_expr = []
 
             def generic_visit(self, node):
@@ -264,7 +264,7 @@ class St62ArchConvertion(ArchConvertion):
                 if node_name == 'call':
                     return node_name
 
-                print "Name: %s" % node_name
+                print("Name: %s" % node_name)
                 assert(0)
 
             def visit_Num(self, node):

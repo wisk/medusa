@@ -1,4 +1,4 @@
-/* This file has been automatically generated, you must _NOT_ edit it directly. (Sun Feb 05 12:38:19 2017) */
+/* This file has been automatically generated, you must _NOT_ edit it directly. (Thu Apr  9 18:19:39 2026) */
 #include "x86_architecture.hpp"
 const X86Architecture::TDisassembler X86Architecture::m_Table_3dnow1[0x100] =
 {
@@ -369,9 +369,9 @@ bool X86Architecture::Table_3dnow1_0b(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 0c
  * mnemonic: pi2fw
  * operand: ['Pq', 'Qq']
- * opcode: 0c
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_0c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -380,7 +380,7 @@ bool X86Architecture::Table_3dnow1_0c(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pi2fw);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -391,9 +391,9 @@ bool X86Architecture::Table_3dnow1_0c(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 0d
  * mnemonic: pi2fd
  * operand: ['Pq', 'Qq']
- * opcode: 0d
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_0d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -402,7 +402,7 @@ bool X86Architecture::Table_3dnow1_0d(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pi2fd);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -539,9 +539,9 @@ bool X86Architecture::Table_3dnow1_1b(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 1c
  * mnemonic: pf2iw
  * operand: ['Pq', 'Qq']
- * opcode: 1c
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_1c(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -550,7 +550,7 @@ bool X86Architecture::Table_3dnow1_1c(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pf2iw);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -561,9 +561,9 @@ bool X86Architecture::Table_3dnow1_1c(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 1d
  * mnemonic: pd2id
  * operand: ['Pq', 'Qq']
- * opcode: 1d
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_1d(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -572,7 +572,7 @@ bool X86Architecture::Table_3dnow1_1d(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pd2id);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1519,9 +1519,9 @@ bool X86Architecture::Table_3dnow1_85(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 86
  * mnemonic: pfrcpv
  * operand: ['Pq', 'Qq']
- * opcode: 86
  * attr: ['cyrix']
  * cpu_model: >= X86_Arch_Geode_lx
 **/
@@ -1531,7 +1531,7 @@ bool X86Architecture::Table_3dnow1_86(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpv);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1542,9 +1542,9 @@ bool X86Architecture::Table_3dnow1_86(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 87
  * mnemonic: pfrsqrtv
  * operand: ['Pq', 'Qq']
- * opcode: 87
  * attr: ['cyrix']
  * cpu_model: >= X86_Arch_Geode_lx
 **/
@@ -1554,7 +1554,7 @@ bool X86Architecture::Table_3dnow1_87(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqrtv);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1583,9 +1583,9 @@ bool X86Architecture::Table_3dnow1_89(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 8a
  * mnemonic: pfnacc
  * operand: ['Pq', 'Qq']
- * opcode: 8a
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_8a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1594,7 +1594,7 @@ bool X86Architecture::Table_3dnow1_8a(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfnacc);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1632,9 +1632,9 @@ bool X86Architecture::Table_3dnow1_8d(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 8e
  * mnemonic: pfpnacc
  * operand: ['Pq', 'Qq']
- * opcode: 8e
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_8e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1643,7 +1643,7 @@ bool X86Architecture::Table_3dnow1_8e(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfpnacc);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1663,9 +1663,9 @@ bool X86Architecture::Table_3dnow1_8f(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 90
  * mnemonic: pfcmge
  * operand: ['Pq', 'Qq']
- * opcode: 90
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_90(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1674,7 +1674,7 @@ bool X86Architecture::Table_3dnow1_90(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmge);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1712,9 +1712,9 @@ bool X86Architecture::Table_3dnow1_93(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 94
  * mnemonic: pfmin
  * operand: ['Pq', 'Qq']
- * opcode: 94
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_94(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1723,7 +1723,7 @@ bool X86Architecture::Table_3dnow1_94(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfmin);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1743,9 +1743,9 @@ bool X86Architecture::Table_3dnow1_95(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 96
  * mnemonic: pfrcp
  * operand: ['Pq', 'Qq']
- * opcode: 96
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_96(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1754,7 +1754,7 @@ bool X86Architecture::Table_3dnow1_96(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcp);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1765,9 +1765,9 @@ bool X86Architecture::Table_3dnow1_96(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 97
  * mnemonic: pfrsqrt
  * operand: ['Pq', 'Qq']
- * opcode: 97
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_97(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1776,7 +1776,7 @@ bool X86Architecture::Table_3dnow1_97(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqrt);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1805,9 +1805,9 @@ bool X86Architecture::Table_3dnow1_99(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 9a
  * mnemonic: pfsub
  * operand: ['Pq', 'Qq']
- * opcode: 9a
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_9a(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1816,7 +1816,7 @@ bool X86Architecture::Table_3dnow1_9a(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfsub);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1854,9 +1854,9 @@ bool X86Architecture::Table_3dnow1_9d(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: 9e
  * mnemonic: pfadd
  * operand: ['Pq', 'Qq']
- * opcode: 9e
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_9e(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1865,7 +1865,7 @@ bool X86Architecture::Table_3dnow1_9e(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfadd);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1885,9 +1885,9 @@ bool X86Architecture::Table_3dnow1_9f(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: a0
  * mnemonic: pfcmpgt
  * operand: ['Pq', 'Qq']
- * opcode: a0
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_a0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1896,7 +1896,7 @@ bool X86Architecture::Table_3dnow1_a0(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmpgt);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1934,9 +1934,9 @@ bool X86Architecture::Table_3dnow1_a3(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: a4
  * mnemonic: pfmax
  * operand: ['Pq', 'Qq']
- * opcode: a4
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_a4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1945,7 +1945,7 @@ bool X86Architecture::Table_3dnow1_a4(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfmax);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1965,9 +1965,9 @@ bool X86Architecture::Table_3dnow1_a5(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: a6
  * mnemonic: pfrcpit1
  * operand: ['Pq', 'Qq']
- * opcode: a6
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_a6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1976,7 +1976,7 @@ bool X86Architecture::Table_3dnow1_a6(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpit1);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -1987,9 +1987,9 @@ bool X86Architecture::Table_3dnow1_a6(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: a7
  * mnemonic: pfrsqit1
  * operand: ['Pq', 'Qq']
- * opcode: a7
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_a7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -1998,7 +1998,7 @@ bool X86Architecture::Table_3dnow1_a7(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrsqit1);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2027,9 +2027,9 @@ bool X86Architecture::Table_3dnow1_a9(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: aa
  * mnemonic: pfsubr
  * operand: ['Pq', 'Qq']
- * opcode: aa
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_aa(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2038,7 +2038,7 @@ bool X86Architecture::Table_3dnow1_aa(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfsubr);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2076,9 +2076,9 @@ bool X86Architecture::Table_3dnow1_ad(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: ae
  * mnemonic: pfacc
  * operand: ['Pq', 'Qq']
- * opcode: ae
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_ae(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2087,7 +2087,7 @@ bool X86Architecture::Table_3dnow1_ae(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfacc);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2107,9 +2107,9 @@ bool X86Architecture::Table_3dnow1_af(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: b0
  * mnemonic: pfcmpeq
  * operand: ['Pq', 'Qq']
- * opcode: b0
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_b0(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2118,7 +2118,7 @@ bool X86Architecture::Table_3dnow1_b0(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfcmpeq);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2156,9 +2156,9 @@ bool X86Architecture::Table_3dnow1_b3(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: b4
  * mnemonic: pfmul
  * operand: ['Pq', 'Qq']
- * opcode: b4
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_b4(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2167,7 +2167,7 @@ bool X86Architecture::Table_3dnow1_b4(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfmul);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2187,9 +2187,9 @@ bool X86Architecture::Table_3dnow1_b5(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: b6
  * mnemonic: pfrcpit2
  * operand: ['Pq', 'Qq']
- * opcode: b6
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_b6(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2198,7 +2198,7 @@ bool X86Architecture::Table_3dnow1_b6(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pfrcpit2);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2209,9 +2209,9 @@ bool X86Architecture::Table_3dnow1_b6(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: b7
  * mnemonic: pmulhrw
  * operand: ['Pq', 'Qq']
- * opcode: b7
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_b7(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2220,7 +2220,7 @@ bool X86Architecture::Table_3dnow1_b7(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pmulhrw);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2258,9 +2258,9 @@ bool X86Architecture::Table_3dnow1_ba(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: bb
  * mnemonic: pswapd
  * operand: ['Pq', 'Qq']
- * opcode: bb
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_bb(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2269,7 +2269,7 @@ bool X86Architecture::Table_3dnow1_bb(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pswapd);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
@@ -2307,9 +2307,9 @@ bool X86Architecture::Table_3dnow1_be(BinaryStream const& rBinStrm, OffsetType O
 }
 
 /** instruction
+ * opcode: bf
  * mnemonic: pavgusb
  * operand: ['Pq', 'Qq']
- * opcode: bf
  * attr: ['amd']
 **/
 bool X86Architecture::Table_3dnow1_bf(BinaryStream const& rBinStrm, OffsetType Offset, Instruction& rInsn, u8 Mode)
@@ -2318,7 +2318,7 @@ bool X86Architecture::Table_3dnow1_bf(BinaryStream const& rBinStrm, OffsetType O
     {
       rInsn.Size()++;
       rInsn.SetOpcode(X86_Opcode_Pavgusb);
-      if (Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode) == false)
+      if (!Operand__Pq_Qq(rBinStrm, Offset, rInsn, Mode))
       {
         return false;
       }
